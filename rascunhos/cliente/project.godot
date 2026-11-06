@@ -1,0 +1,38 @@
+; Engine configuration file.
+; Cliente Godot do RPG "Assimilação" — missão JV2.1a (Plano A v1.1).
+; Renderizador Compatibility, só GDScript (C# não exporta para a web).
+
+config_version=5
+
+[application]
+
+config/name="Assimilação"
+config/description="Cliente da mesa: desenha o que o servidor projeta. Nunca calcula regra."
+run/main_scene="res://cenas/arena/arena.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[assimilacao]
+
+; Fallback quando não é web (na web a origem vem de location.host).
+; Também pode vir de user://rede.cfg ou de "-- --servidor=IP:porta".
+rede/host_padrao="127.0.0.1:8080"
+rede/sala_padrao="mesa"
+
+[autoload]
+
+Rede="*res://rede/rede.gd"
+Estado="*res://estado/estado.gd"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=4
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true

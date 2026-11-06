@@ -1,0 +1,13 @@
+{
+  "name": "servidor-mesa-assimilacao",
+  "version": "0.1.0-rascunho",
+  "private": true,
+  "description": "Servidor de mesa do jogo verdadeiro (JV1.1). Rascunho: nada foi executado no PC PCDANASA (NAC-OV-05).",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test testes/"
+  }
+}

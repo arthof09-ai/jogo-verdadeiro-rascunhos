@@ -1,0 +1,175 @@
+// Projeção por destinatário (protocolo v2 §6, ERRATA v0.2 E-P1..E-P14 e v0.2.1).
+// REGRA: sem node:*.
+//
+// Princípio: LISTA DE CAMPOS PERMITIDOS. Um campo que não esteja na lista do tipo de
+// evento, para aquele papel, NÃO SAI. Um tipo de evento que não esteja na lista não sai
+// para nenhum papel que não seja o Mestre (falha fechada).
+// Nada de `soMestre` nem de `publico.recibo` do motor chega à Party: o recibo do motor
+// só é guardado em `soMestre` pelo núcleo, e aqui só se copiam campos da lista.
+
+import { clonarJson } from './util.js';
+
+/**
+ * Campos permitidos por tipo de ROOM_EVENT.
+ *  - `todos`: Party inteira (jogadoras e espectadores);
+ *  - `propria`: só a jogadora a quem o evento diz respeito (ver EH_PROPRIO).
+ * Campo novo entra AQUI primeiro (regra de ouro do §6), e o teste de privacidade
+ * falha se o núcleo emitir para a Party um campo fora desta lista.
+ */
+export const CAMPOS_PERMITIDOS = Object.freeze({
+  entrada: Object.freeze({ todos: ['figuraId', 'nomePublico', 'lado'], propria: [] }),
+  colocacao: Object.freeze({ todos: ['figuraId', 'nomePublico', 'lado', 'x', 'y', 'orientacao', 'visivel'], propria: [] }),
+  turno: Object.freeze({ todos: ['figuraId', 'rodada', 'narra'], propria: [] }), // E-P11: o modo nunca sai
+  movimento: Object.freeze({ todos: ['figuraId', 'de', 'para', 'caminho'], propria: ['custoM', 'reservaM'] }),
+  // v0.2.1: a jogadora vê a expressão, as faces e o total do ataque DELA.
+  ataque: Object.freeze({
+    todos: ['atacanteId', 'alvoId', 'arma', 'resultado', 'ataqueDeOportunidade'],
+    propria: ['total', 'faces', 'expressao'],
+  }),
+  // v0.2.1: o número do dano só a quem causou ou a quem recebeu (A-2: outra jogadora ✘).
+  dano: Object.freeze({ todos: ['alvoId', 'autorId'], propria: ['valor', 'tipos'] }),
+  estado: Object.freeze({ todos: ['figuraId', 'visivel'], propria: ['vidaActual', 'paLivre', 'estadoMorte'] }),
+  desgraca: Object.freeze({ todos: ['figuraId', 'efeito'], propria: [] }), // só a desgraça APLICADA
+  reacao: Object.freeze({ todos: ['figuraId', 'reacao'], propria: [] }),
+  consumivel: Object.freeze({ todos: ['figuraId', 'itemId', 'alvoId'], propria: [] }),
+  ambiente: Object.freeze({ todos: ['efeito'], propria: [] }), // E-P12: só o efeito presente
+  revertido: Object.freeze({ todos: [], propria: [] }), // nada de journalSeq
+  fim: Object.freeze({ todos: ['desfecho'], propria: [] }),
+});
+
+/** "Este evento é dela?" — decide se os campos `propria` entram. */
+const EH_PROPRIO = Object.freeze({
+  movimento: (d, f) => d.figuraId === f,
+  ataque: (d, f) => d.atacanteId === f,
+  dano: (d, f) => d.alvoId === f || d.autorId === f,
+  estado: (d, f) => d.figuraId === f,
+});
+
+// Climas que a Party pode ver como efeito. Texto livre do Mestre nunca sai.
+export const CLIMAS_VISIVEIS = Object.freeze(['limpo', 'nublado', 'chuva', 'tempestade', 'nevoeiro', 'neve']);
+
+/** Efeito presente do ambiente, visto pela Party (o painel é só do Mestre). */
+export function efeitoAmbiente(ambiente) {
+  const clima = CLIMAS_VISIVEIS.includes(ambiente?.clima) ? ambiente.clima : null;
+  let luz = null;
+  const m = /^(\d{1,2}):(\d{2})$/.exec(typeof ambiente?.hora === 'string' ? ambiente.hora : '');
+  if (m) {
+    const h = Number(m[1]);
+    luz = h >= 6 && h < 18 ? 'dia' : 'noite';
+  }
+  return { clima, luz };
+}
+
+/** Nome que a Party pode ver. O nome verdadeiro (`nome`) de criatura/NPC nunca sai. */
+export function nomePublicoDe(ficha) {
+  if (!ficha) return 'Figura';
+  if (ficha.nomePublico) return ficha.nomePublico;
+  if (ficha.papel === 'jogadora') return ficha.nome;
+  return ficha.papel === 'npc' ? 'Personagem' : 'Criatura';
+}
+
+/** Estado visível de uma figura: de_pe, caida, morta ou transformada. */
+export function visivelDe(fig) {
+  if (!fig.vivo) return 'morta';
+  if (fig.caido || fig.estadoMorte?.fase === 'aMorrer') return 'caida';
+  if (fig.transformada) return 'transformada';
+  return 'de_pe';
+}
+
+function escolher(origem, chaves) {
+  const saida = {};
+  for (const k of chaves) {
+    if (origem && Object.prototype.hasOwnProperty.call(origem, k) && origem[k] !== undefined) {
+      // Cópia profunda: nada partilha referência com o estado interno.
+      saida[k] = clonarJson(origem[k]);
+    }
+  }
+  return saida;
+}
+
+/**
+ * Projeta um evento interno do journal para um destinatário.
+ * @param {{journalSeq:number, tipo:string, dados:Object, soMestre:Object|null}} evento
+ * @param {{papel:'mestre'|'jogadora'|'espectador', figuraId?:string|null}} dest
+ * @returns {Object|null} os `dados` do ROOM_EVENT, ou null se este destinatário não o recebe.
+ */
+export function projetarEvento(evento, dest) {
+  if (dest.papel === 'mestre') {
+    // O Mestre vê tudo, incluindo o journalSeq interno (E-P4) e o soMestre.
+    return { ...clonarJson(evento.dados ?? {}), soMestre: clonarJson(evento.soMestre ?? null), journalSeq: evento.journalSeq };
+  }
+  const regra = CAMPOS_PERMITIDOS[evento.tipo];
+  if (!regra) return null; // tipo interno ou desconhecido: falha fechada
+  const saida = escolher(evento.dados, regra.todos);
+  if (dest.papel === 'jogadora' && dest.figuraId && regra.propria.length) {
+    const eh = EH_PROPRIO[evento.tipo];
+    if (eh && eh(evento.dados ?? {}, dest.figuraId)) Object.assign(saida, escolher(evento.dados, regra.propria));
+  }
+  return saida;
+}
+
+/** Figura vista pela Party: posição, orientação e estado visível. Mais nada. */
+export function figuraPublica(fig, fichas) {
+  return {
+    id: fig.id,
+    nomePublico: nomePublicoDe(fichas[fig.fichaId]),
+    lado: fig.lado,
+    x: fig.x,
+    y: fig.y,
+    orientacao: fig.orientacao,
+    visivel: visivelDe(fig),
+  };
+}
+
+/**
+ * Snapshot projetado (sem seq/revision; o núcleo junta-os ao enviar).
+ * @param {Object} mundo estado da sala
+ * @param {Object} fichas mapa id → ficha congelada
+ * @param {{papel:string, figuraId?:string|null}} dest
+ */
+export function projetarSnapshot(mundo, fichas, dest) {
+  const colocadas = Object.values(mundo.figuras).filter((f) => f.colocada);
+  const base = {
+    fase: mundo.fase,
+    mapa: { largura: mundo.mapa.largura, altura: mundo.mapa.altura, casaM: mundo.mapa.casaM },
+    figuras: colocadas.map((f) => figuraPublica(f, fichas)),
+    // E-P (linhas novas do §6): a Party vê só a ORDEM, nunca os valores de iniciativa.
+    iniciativa: mundo.ordem.filter((id) => mundo.figuras[id]?.colocada),
+    vezId: mundo.vez?.figuraId ?? null,
+    rodada: mundo.rodada,
+    ambiente: efeitoAmbiente(mundo.ambiente),
+  };
+
+  if (dest.papel === 'mestre') {
+    base.mestre = {
+      figuras: clonarJson(Object.values(mundo.figuras)), // inclui as não colocadas, fichaId e modo
+      lobby: clonarJson(mundo.lobby),
+      vez: clonarJson(mundo.vez),
+      ambiente: clonarJson(mundo.ambiente),
+      cartoes: clonarJson(mundo.cartoes.filter((c) => c.estado === 'aberto')),
+      pausa: clonarJson(mundo.pausa),
+    };
+    return base;
+  }
+
+  if (dest.papel === 'jogadora' && dest.figuraId) {
+    const f = mundo.figuras[dest.figuraId];
+    const ficha = f ? fichas[f.fichaId] : null;
+    if (f && ficha) {
+      // Vida, PA e ficha DA PRÓPRIA: ✔ só para ela.
+      base.propria = {
+        figuraId: f.id,
+        vidaActual: f.vidaActual,
+        vidaTotal: ficha.vidaTotal,
+        paLivre: ficha.paTotal - f.paGasto,
+        paTotal: ficha.paTotal,
+        estadoMorte: clonarJson(f.estadoMorte),
+        armaCaida: f.armaCaida,
+        armaQuebrada: f.armaQuebrada,
+        corpoPartido: f.corpoPartido,
+        ficha: clonarJson(ficha),
+      };
+    }
+  }
+  return base;
+}

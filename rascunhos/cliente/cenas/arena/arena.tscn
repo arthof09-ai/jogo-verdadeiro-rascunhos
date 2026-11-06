@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://cenas/arena/arena.gd" id="1_arena"]
+[ext_resource type="Script" path="res://camera/camera_mesa.gd" id="2_camera"]
+[ext_resource type="PackedScene" path="res://hud/hud.tscn" id="3_hud"]
+
+[sub_resource type="Environment" id="Environment_mesa"]
+background_mode = 1
+background_color = Color(0.52, 0.66, 0.8, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.85, 0.88, 0.92, 1)
+ambient_light_energy = 0.55
+
+[node name="Arena" type="Node3D"]
+script = ExtResource("1_arena")
+
+[node name="Ambiente" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_mesa")
+
+[node name="Sol" type="DirectionalLight3D" parent="."]
+shadow_enabled = true
+
+[node name="Camera" type="Camera3D" parent="."]
+current = true
+script = ExtResource("2_camera")
+
+[node name="Grelha" type="Node3D" parent="."]
+
+[node name="Figuras" type="Node3D" parent="."]
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]

@@ -1,0 +1,21 @@
+name: Sonda de privacidade
+
+# Este repositório só pode conter código e dados fictícios.
+# A sonda falha o push se encontrar padrões de dados pessoais óbvios.
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  sonda:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Procurar e-mails pessoais
+        run: |
+          if grep -rInE '[a-zA-Z0-9._%+-]+@(gmail|hotmail|outlook|yahoo|icloud)\.com' --exclude-dir=.git . ; then
+            echo '::error::Possível dado pessoal encontrado — este repositório só admite dados fictícios.'
+            exit 1
+          fi
+          echo 'Sonda limpa: nenhum e-mail pessoal encontrado.'

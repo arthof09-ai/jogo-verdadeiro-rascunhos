@@ -1,0 +1,117 @@
+{
+  "formato": "fichas/1",
+  "nota": "FICTÍCIO. Nenhum valor nem nome vem do cânone ou da Party. Os números são CANÁRIOS: se 9137, 7777, 313, 41, 61, 4949, 4848, 6363 ou 6464 aparecerem num payload de jogadora, é vazamento. 8642, 5551, 5150 e 4040 são da heroína e só ela os pode ver.",
+  "fichas": [
+    {
+      "id": "heroina-teste",
+      "nome": "Heroína Teste",
+      "nomePublico": "Heroína Teste",
+      "papel": "jogadora",
+      "classificacao": "prata",
+      "vidaTotal": 5150,
+      "paTotal": 4040,
+      "ca": 5551,
+      "rd": { "geral": 0, "porTipo": {} },
+      "testes": { "ataque": "1d20+3", "fortitude": "1d20+2", "percepcao": "1d20+8642" },
+      "constituicao": 14,
+      "testesDeMorteDesignado": true,
+      "deslocamentoBase": 9,
+      "tecnicas": [
+        {
+          "id": "chicote-teste",
+          "nome": "Chicote de Teste",
+          "expressaoAtaque": "1d20+4",
+          "expressaoDano": "1d6+2",
+          "tipo": "cortante",
+          "custoPA": 2,
+          "alcanceM": 9,
+          "usaArma": true
+        }
+      ],
+      "fonte": { "origem": "fixture fictícia JV1.1 (inventada para testes)", "data": "2026-11-06" }
+    },
+    {
+      "id": "bandido-teste",
+      "nome": "Bandido CANARIO-FANTASMA",
+      "nomePublico": "Bandido CANARIO-FANTASMA",
+      "papel": "npc",
+      "classificacao": "bronze",
+      "vidaTotal": 6363,
+      "paTotal": 0,
+      "ca": 6464,
+      "rd": { "geral": 0, "porTipo": {} },
+      "testes": { "ataque": "1d20+1", "fortitude": "1d20+1" },
+      "constituicao": 10,
+      "deslocamentoBase": 6,
+      "tecnicas": [
+        {
+          "id": "faca-teste",
+          "nome": "Faca de Teste",
+          "expressaoAtaque": "1d20+2",
+          "expressaoDano": "1d4+1",
+          "tipo": "perfurante",
+          "custoPA": 0,
+          "alcanceM": 1.5,
+          "usaArma": true
+        }
+      ],
+      "fonte": { "origem": "fixture fictícia JV1.1 (criatura nunca colocada: canário fantasma)", "data": "2026-11-06" }
+    },
+    {
+      "id": "orc-teste",
+      "nome": "Orc Verdadeiro Teste",
+      "nomePublico": "Orc",
+      "papel": "criatura",
+      "classificacao": "ouro",
+      "vidaTotal": 7777,
+      "paTotal": 313,
+      "ca": 9137,
+      "rd": { "geral": 41, "porTipo": {} },
+      "testes": { "ataque": "1d20+7", "fortitude": "1d20+5" },
+      "constituicao": 18,
+      "bonusCD": 61,
+      "deslocamentoBase": 6,
+      "tecnicas": [
+        {
+          "id": "machado-teste",
+          "nome": "Machado de Teste",
+          "expressaoAtaque": "1d20+7",
+          "expressaoDano": "2d6+4",
+          "tipo": "cortante",
+          "custoPA": 0,
+          "alcanceM": 1.5,
+          "usaArma": true
+        }
+      ],
+      "fonte": { "origem": "fixture fictícia JV1.1 (canários da errata v0.2 do protocolo)", "data": "2026-11-06" }
+    },
+    {
+      "id": "lobo-teste",
+      "nome": "Lobo Teste",
+      "nomePublico": "Lobo",
+      "papel": "criatura",
+      "classificacao": "bronze",
+      "vidaTotal": 4848,
+      "paTotal": 0,
+      "defesaAplicavel": { "valor": 4949, "nomeDaRegra": "Pele grossa (fictícia)", "origem": "fixture" },
+      "rd": { "geral": 0, "porTipo": { "perfurante": 0 } },
+      "testes": { "fortitude": "1d20+3" },
+      "constituicao": 12,
+      "deslocamentoBase": 12,
+      "comportamentoIA": { "nota": "CANARIO-RAZAO-IA" },
+      "tecnicas": [
+        {
+          "id": "mordida-teste",
+          "nome": "Mordida de Teste",
+          "expressaoAtaque": "1d20+5",
+          "componentes": [{ "tipo": "perfurante", "expressao": "1d8+3" }],
+          "tipos": ["perfurante"],
+          "custoPA": 0,
+          "alcanceM": 1.5,
+          "derruba": true
+        }
+      ],
+      "fonte": { "origem": "fixture fictícia JV1.1 (sem ca: usa defesaAplicavel; sem testes.ataque: E7)", "data": "2026-11-06" }
+    }
+  ]
+}

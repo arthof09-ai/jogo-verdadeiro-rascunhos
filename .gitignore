@@ -1,0 +1,6 @@
+# Exclusões da regra de registo (IBX-249 / IBX-253)
+# Saída de pacotes com cópia do motor — nunca sobe
+pacotes/P-PC-01/saida/
+# Artefactos de importação do Godot
+.godot/
+*.import

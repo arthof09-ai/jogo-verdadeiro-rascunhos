@@ -1,0 +1,58 @@
+{
+  "descricao": "Ossos do esqueleto UAL1 (humanoide do GLB-JOGO-v1, §5.1). 'obrigatorios' = lista exigida pelo contrato; 'completa' = skins[0].joints do UAL1_Standard.glb, na ordem de joints.",
+  "contrato": "GLB-JOGO-v1 §5.1",
+  "obrigatorios": [
+    "root", "pelvis", "spine_01", "spine_02", "spine_03", "neck_01", "Head",
+    "clavicle_l", "clavicle_r", "upperarm_l", "upperarm_r", "lowerarm_l", "lowerarm_r",
+    "hand_l", "hand_r", "thigh_l", "thigh_r", "calf_l", "calf_r", "foot_l", "foot_r",
+    "ball_l", "ball_r"
+  ],
+  "completa": [
+    "root", "pelvis", "spine_01", "spine_02", "spine_03", "neck_01", "Head",
+    "clavicle_l", "upperarm_l", "lowerarm_l", "hand_l",
+    "index_01_l", "index_02_l", "index_03_l", "index_04_leaf_l",
+    "middle_01_l", "middle_02_l", "middle_03_l", "middle_04_leaf_l",
+    "pinky_01_l", "pinky_02_l", "pinky_03_l", "pinky_04_leaf_l",
+    "ring_01_l", "ring_02_l", "ring_03_l", "ring_04_leaf_l",
+    "thumb_01_l", "thumb_02_l", "thumb_03_l", "thumb_04_leaf_l",
+    "clavicle_r", "upperarm_r", "lowerarm_r", "hand_r",
+    "index_01_r", "index_02_r", "index_03_r", "index_04_leaf_r",
+    "middle_01_r", "middle_02_r", "middle_03_r", "middle_04_leaf_r",
+    "pinky_01_r", "pinky_02_r", "pinky_03_r", "pinky_04_leaf_r",
+    "ring_01_r", "ring_02_r", "ring_03_r", "ring_04_leaf_r",
+    "thumb_01_r", "thumb_02_r", "thumb_03_r", "thumb_04_leaf_r",
+    "thigh_l", "calf_l", "foot_l", "ball_l", "ball_leaf_l",
+    "thigh_r", "calf_r", "foot_r", "ball_r", "ball_leaf_r"
+  ],
+  "hierarquia": {
+    "root": "Armature (nó sem skin)",
+    "pelvis": "root",
+    "spine_01": "pelvis", "spine_02": "spine_01", "spine_03": "spine_02",
+    "neck_01": "spine_03", "Head": "neck_01",
+    "clavicle_l": "spine_03", "upperarm_l": "clavicle_l", "lowerarm_l": "upperarm_l", "hand_l": "lowerarm_l",
+    "clavicle_r": "spine_03", "upperarm_r": "clavicle_r", "lowerarm_r": "upperarm_r", "hand_r": "lowerarm_r",
+    "dedos": "<dedo>_01_<lado> é filho de hand_<lado>; 02 de 01; 03 de 02; 04_leaf de 03 (dedos: index, middle, pinky, ring, thumb)",
+    "thigh_l": "pelvis", "calf_l": "thigh_l", "foot_l": "calf_l", "ball_l": "foot_l", "ball_leaf_l": "ball_l",
+    "thigh_r": "pelvis", "calf_r": "thigh_r", "foot_r": "calf_r", "ball_r": "foot_r", "ball_leaf_r": "ball_r"
+  },
+  "fonte": {
+    "arquivo": "UAL1_Standard.glb",
+    "caminhoOriginal": "C:\\Users\\txcga\\RPG_Local\\Oficina3D\\staging-mixamo\\ual1\\Universal Animation Library[Standard]\\Unreal-Godot\\UAL1_Standard.glb",
+    "gerador": "Khronos glTF Blender I/O v4.5.48",
+    "metodo": "Leitura do chunk JSON do GLB, sem executar código (NAC-OV-05), em 06/11/2026: skins[0].joints = [64,63,52,51,50,1,0,25,24,23,22,5,4,3,2,9,8,7,6,13,12,11,10,17,16,15,14,21,20,19,18,49,48,47,46,29,28,27,26,33,32,31,30,37,36,35,34,41,40,39,38,45,44,43,42,57,56,55,54,53,62,61,60,59,58] traduzido por nodes[].name.",
+    "sha256": null,
+    "sha256Pendente": "Não foi possível calcular o SHA-256 sem executar código. Regenere este arquivo num pacote NAC-OV-05 com: node validar-glb-jogo.mjs --extrair-ossos-ual1 \"<caminho>/UAL1_Standard.glb\" > ossos-ual1.json",
+    "contagem": 65
+  },
+  "medidasDeReferencia": {
+    "nota": "Lidas do mesmo JSON, para conferência; não são usadas pelo validador.",
+    "alturaMalhaM": 1.829177975654602,
+    "positionMin": [-0.9722270965576172, 0.0004614409990608692, -0.164154052734375],
+    "positionMax": [0.9722270965576172, 1.829177975654602, 0.2054443359375],
+    "vertices": 3389,
+    "rotacaoDoOssoRoot": [-0.7071067690849304, 0, 0, 0.7071067690849304],
+    "notaRotacao": "o osso root roda −90° em X (armature Z-up do Blender); os nós Mannequin e Armature não têm transformação",
+    "materiais": ["M_Main", "M_Joints"],
+    "clipsNativos": 43
+  }
+}

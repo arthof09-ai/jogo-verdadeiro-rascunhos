@@ -1,0 +1,66 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://hud/hud.gd" id="1_hud"]
+
+[node name="HUD" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_hud")
+
+[node name="Raiz" type="Control" parent="."]
+mouse_filter = 2
+
+[node name="TelaVermelha" type="ColorRect" parent="Raiz"]
+visible = false
+mouse_filter = 2
+
+[node name="Numeros" type="Control" parent="Raiz"]
+mouse_filter = 2
+
+[node name="Seguro" type="MarginContainer" parent="Raiz"]
+mouse_filter = 2
+
+[node name="Camadas" type="Control" parent="Raiz/Seguro"]
+mouse_filter = 2
+
+[node name="Faixa" type="Label" parent="Raiz/Seguro/Camadas"]
+horizontal_alignment = 1
+
+[node name="Aviso" type="Label" parent="Raiz/Seguro/Camadas"]
+visible = false
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ColunaEsquerda" type="VBoxContainer" parent="Raiz/Seguro/Camadas"]
+mouse_filter = 2
+
+[node name="BotaoConfig" type="Button" parent="Raiz/Seguro/Camadas/ColunaEsquerda"]
+tooltip_text = "Configurações"
+focus_mode = 0
+
+[node name="PainelConfig" type="PanelContainer" parent="Raiz/Seguro/Camadas/ColunaEsquerda"]
+visible = false
+
+[node name="Barra" type="HBoxContainer" parent="Raiz/Seguro/Camadas"]
+mouse_filter = 2
+alignment = 1
+
+[node name="BotaoAtaque" type="Button" parent="Raiz/Seguro/Camadas/Barra"]
+focus_mode = 0
+toggle_mode = true
+text = "Ataque"
+
+[node name="BotaoMover" type="Button" parent="Raiz/Seguro/Camadas/Barra"]
+focus_mode = 0
+toggle_mode = true
+text = "Mover"
+
+[node name="BotaoConsumivel" type="Button" parent="Raiz/Seguro/Camadas/Barra"]
+focus_mode = 0
+toggle_mode = true
+text = "Consumível"
+
+[node name="PainelEscolha" type="PanelContainer" parent="Raiz/Seguro/Camadas"]
+visible = false
+
+[node name="PainelEntrada" type="PanelContainer" parent="Raiz/Seguro/Camadas"]
+visible = false
