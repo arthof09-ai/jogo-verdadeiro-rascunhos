@@ -49,3 +49,6 @@ c4caf4952b01529f9bce33533c40126d57ec5d4763da582ffe3141e2d744e910  rascunhos/vali
 2cbba1ac6bf3e8ffe6d5b12f09a13bbdc7108a273ca8f46571eee754cbb59041  rascunhos/validador-glb/testes/validar.test.mjs
 ab7507b37d14b6f8a6b09c7d8afe5f2d67b6c4effe6cc562afc0ccb84c37a263  rascunhos/validador-glb/validar-glb-jogo.mjs
 # Actualizacao 2026-11-06 (ponte repetida apos a corrida do P-PC-01, Tentativa 2): pacotes/P-PC-01/PACOTE.md mudou (registo de execucao) — SHA antigo 9105539a9a575246243bfecf1baf9d9bfe138f593173c276985c307e94184c98 -> novo 273dc42e9a934051afa5db98bbdb2dc7bab0edb98c05985385cb69ff15a48a8e. Restantes 46 ficheiros inalterados; saida/ excluida como sempre.
+adac9f93d6afe4ddd3221a0e2b3fffa1b09c76884f0a03cb182efe7863d5899a  rascunhos/servidor/motores/embrulhar.mjs
+258e726669a3afc73f017ff04bd28d003f566c871ec97b6c058feb0ed99c306e  rascunhos/servidor/motores/prova-motor.mjs
+# Actualizacao 2026-11-06 (IBX-261): 2 ficheiros novos da porta dos motores (JV1.1-a) — embrulhar.mjs + prova-motor.mjs. Restantes 47 ficheiros inalterados.

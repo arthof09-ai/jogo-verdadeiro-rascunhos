@@ -31,3 +31,19 @@ jobs:
           node-version: '22'
       - name: Testes do validador
         run: node --test --test-reporter=spec "testes/*.test.mjs"
+
+  motor-real:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: rascunhos/servidor
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Baixar o motor vivo (público)
+        run: curl -fsSL --max-time 30 -o "$RUNNER_TEMP/vlab-completo.js" https://arthof09-ai.github.io/arena-das-bestas-prototipo-cm9/jogo-t1/vlab-completo.js && sha256sum "$RUNNER_TEMP/vlab-completo.js"
+      - name: Prova da porta dos motores (JV1.1-a)
+        run: node motores/prova-motor.mjs "$RUNNER_TEMP/vlab-completo.js" "$RUNNER_TEMP/prova"
