@@ -1,7 +1,7 @@
 # MANIFESTO SHA-256 — ponte PC->Drive de jogo-verdadeiro (IBX-249)
 # Fonte: C:\Users\txcga\RPG_Local\jogo-verdadeiro\ (PC do cunhado) · 2026-11-06
 # Formato: SHA-256 (minusculas) + dois espacos + caminho relativo a jogo-verdadeiro/
-9105539a9a575246243bfecf1baf9d9bfe138f593173c276985c307e94184c98  pacotes/P-PC-01/PACOTE.md
+273dc42e9a934051afa5db98bbdb2dc7bab0edb98c05985385cb69ff15a48a8e  pacotes/P-PC-01/PACOTE.md
 974ac6302fa2c99bb973ab4f3a38e39aa8490875e066c5b0e5d078a9c44df35c  pacotes/P-PC-01/p01.mjs
 ea9b90d9886b274d47c0f0c2e0683d60b683d3542ad1bd917b41b1ebee6a409b  pacotes/P-PC-02/PACOTE.md
 6cfe2067be7e314d47c4177140463fb51612de93092818ed92a1a166f2e2d332  rascunhos/cliente/README.md
@@ -48,3 +48,4 @@ e973840943101c816f6829e68d83b67043429402357369c9e9681a7a7c355cd3  rascunhos/serv
 c4caf4952b01529f9bce33533c40126d57ec5d4763da582ffe3141e2d744e910  rascunhos/validador-glb/ossos-ual1.json
 2cbba1ac6bf3e8ffe6d5b12f09a13bbdc7108a273ca8f46571eee754cbb59041  rascunhos/validador-glb/testes/validar.test.mjs
 ab7507b37d14b6f8a6b09c7d8afe5f2d67b6c4effe6cc562afc0ccb84c37a263  rascunhos/validador-glb/validar-glb-jogo.mjs
+# Actualizacao 2026-11-06 (ponte repetida apos a corrida do P-PC-01, Tentativa 2): pacotes/P-PC-01/PACOTE.md mudou (registo de execucao) — SHA antigo 9105539a9a575246243bfecf1baf9d9bfe138f593173c276985c307e94184c98 -> novo 273dc42e9a934051afa5db98bbdb2dc7bab0edb98c05985385cb69ff15a48a8e. Restantes 46 ficheiros inalterados; saida/ excluida como sempre.

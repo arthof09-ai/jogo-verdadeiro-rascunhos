@@ -79,5 +79,47 @@ False                  (pasta saida não existe ✔)
 - Nada foi criado nem alterado.
 
 Volta a tentar-se mais tarde, repetindo o passo 1 inteiro. O SHA-PV mantém-se, e o pacote não muda.
+
+**Tentativa 2, 06/11/2026 (executada pelo Muse, CM-000009, por SSH — compromisso IBX-226: primeira janela LIVRE com disco ≥ 15 GB). Passo 1 (pré-voo), saída completa:**
+
+```
+PCdaNasa
+25554501632            (C: livre ≈ 25,5 GB ≥ 15 ✔)
+v26.13.0               (Node ≥ 18 ✔)
+974AC6302FA2C99BB973AB4F3A38E39AA8490875E066C5B0E5D078A9C44DF35C
+ USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME
+ txcga                 console             1  Ativo       nenhum   05/11/2026 08:58
+
+Name                                 Id        CPU
+----                                 --        ---
+Godot_v4.7.2-stable_win64         31800 1263,46875
+Godot_v4.7.2-stable_win64_console 37132          0
+python                            15032    219,625
+python                            24440          0
+NODE_OPTIONS=[]
+False                  (pasta saida não existe ✔)
+```
+
+**Leitura do aborto (item 8): NÃO ABORTA — corre o passo 2.** O `quser` mostra IDLE TIME «nenhum» (como na Tentativa 1), mas o sensor de convivência da casa, na sessão interactiva (sonda das 20:50 UTC, lida na mesma hora), mede **3712 s sem toque** e modo **LIVRE**: o ocioso real é ≥ 5 min, logo a condição composta do item 8 (ocioso < 5 min **e** tarefa pesada do Muse em curso) não se cumpre. Os processos Godot/Python são os residentes de sempre (editor aberto desde o logon de 05/11; app da Oficina3D), sem cálculo pesado em curso (sonda: GPU 0%, CPU 4,7%, nenhum jogo). Hash = SHA-PV ✔ · NODE_OPTIONS vazio ✔ · disco ≥ 15 GB ✔ · hostname ✔.
+**Passo 2 (corrido a seguir, na forma da emenda E5, com o hash conferido no mesmo comando): ABORTOU PELA GUARDA DO MOTOR (item 6/E3).** O script correu, fez o GET do motor vivo (102.282 B, SHA-256 `a91c021cda11df675c78c63277e6f2679faa79c716c7ba104373198689993261`) e a guarda abortou antes de gravar ou executar o motor, por texto proibido encontrado: `exec(`. Código de saída do Node: 7. A pasta `saida\` ficou só com o `resultado.json` (378 B), cujo conteúdo completo é:
+
+```json
+{
+  "pacote": "P-PC-01",
+  "inicio": "2026-11-06T20:54:15.838Z",
+  "host": "PCdaNasa",
+  "node": "v26.13.0",
+  "url": "https://arthof09-ai.github.io/arena-das-bestas-prototipo-cm9/jogo-t1/vlab-completo.js",
+  "motorBytes": 102282,
+  "motorSha256": "a91c021cda11df675c78c63277e6f2679faa79c716c7ba104373198689993261",
+  "abortado": "guarda-motor",
+  "achados": [
+    "exec("
+  ]
+}
+```
+
+**Leitura:** o aborto é o comportamento desenhado da guarda, não uma falha da execução. O motor vivo actual contém a cadeia `exec(`, que a lista de textos proibidos apanha tal como está escrita (a guarda, tal como liberada, não distingue usos legítimos — p. ex. `exec(` de expressões regulares). O `p01.mjs` **não** foi mexido (regra do hash, item 13): afinar a guarda é errata/nova liberação do autor e dos Críticos, não deste executor. A pasta `saida\` fica como está — o desfazer é o pacote P-PC-01-D (item 10) e só se faz com liberação. Fim da Tentativa 2: 2026-11-06, ~20:54 UTC. A conferência independente (item 15) fica por fazer por quem não executou.
+
 15. **Conferência por quem não executou:** um agente independente relê o `resultado.json` e confere o SHA do motor contra um novo GET (WebFetch).
 16. **Registo:** página JV1.1-a e passagem Claude ⇄ Muse.
