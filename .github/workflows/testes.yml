@@ -13,7 +13,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          # Node 24: o Node 22 rejeita --test-isolation (bad option, run 42290503911);
+          # a carta IBX-257 manda trocar para 24 nesse caso. O validador fica no 22.
+          node-version: '24'
       - name: Testes do núcleo (só leitura, sem rede, sem escrita)
         run: node --permission --allow-fs-read="$GITHUB_WORKSPACE/rascunhos/servidor/*" --test --test-isolation=none --test-timeout=30000 --test-reporter=spec "testes/*.test.mjs"
   validador-glb:
