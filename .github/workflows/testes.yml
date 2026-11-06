@@ -1,0 +1,31 @@
+name: Testes dos rascunhos
+on: [push, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  servidor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: rascunhos/servidor
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Testes do núcleo (só leitura, sem rede, sem escrita)
+        run: node --permission --allow-fs-read="$GITHUB_WORKSPACE/rascunhos/servidor/*" --test --test-isolation=none --test-timeout=30000 --test-reporter=spec "testes/*.test.mjs"
+  validador-glb:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: rascunhos/validador-glb
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Testes do validador
+        run: node --test --test-reporter=spec "testes/*.test.mjs"
