@@ -22,10 +22,13 @@ const MAX_CHECKPOINTS = 500;
 const EPS = 1e-9;
 const VIZ4 = Object.freeze([[1, 0], [-1, 0], [0, 1], [0, -1]]); // sem diagonais (REF_7 §3)
 
-// §3.1 + `correr` (REF_7 §2). TODO(JV0.4 errata): acrescentar `correr` à tabela §3.1 do protocolo.
+// §3.1 + `correr` e `apanhar_arma` (ERRATA v0.2.2 do protocolo; REF_7 §2 e §4).
 export const TIPOS_ACAO = Object.freeze([
   'mover', 'atacar', 'consumivel', 'defender', 'desvincular', 'transformar', 'reacao', 'encerrar', 'correr',
+  'apanhar_arma',
 ]);
+// P3: todo o laço de rejeição tem teto. Passar dele é rng avariado: lança (a transação desfaz tudo).
+export const MAX_TENTATIVAS_LACO = 1000;
 
 // Textos fixos (E-P7: recusas indistinguíveis; nenhum número do Mestre).
 export const TEXTOS_RECUSA = Object.freeze({
@@ -43,10 +46,63 @@ export const TEXTOS_RECUSA = Object.freeze({
 const MODOS = Object.freeze(['manual', 'semi', 'auto']);
 const DESGRACAS = Object.freeze(['cai', 'arma-cai', 'arma-quebra', 'acerta-se', 'quebra-corpo', 'acerta-amigo']);
 const RESULTADOS = Object.freeze({
-  acerto: 'acerto', erro: 'erro', critico: 'critico', falha_critica: 'falha_critica',
-  // TODO(JV0.3): conferir os nomes reais que o VLAB devolve em `resultado`.
-  falhaCritica: 'falha_critica',
+  // Nomes REAIS do VLAB (medidos no CI, run 42315490663, 74 chamadas): acerta, erra, critico, falhaCritica.
+  acerta: 'acerto', erra: 'erro', critico: 'critico', falhaCritica: 'falha_critica',
+  // Nomes do motor falso dos testes (o servidor fala 'acerto/erro/falha_critica' para dentro).
+  acerto: 'acerto', erro: 'erro', falha_critica: 'falha_critica',
 });
+
+/**
+ * Dano que o alvo sofre de facto.
+ * VLAB real: `danoAplicado = dmg` é o objeto CRU do DMG {parcelas, total, dme, recibo, rdAplicada, erro}, ANTES da RD
+ * ("totalEfectivo = Math.max(0, dmg.total - rdAplicada)"; na falha crítica "totalEfectivo = 0"). Por isso, com a forma
+ * real, o número certo é o `totalEfectivo`; o `danoAplicado.total` só serve de recurso.
+ * O motor falso dá `danoAplicado` como número (e o `totalEfectivo` dele é o total do ATAQUE): fica como estava.
+ */
+function danoTotalDe(saida) {
+  const d = saida?.danoAplicado;
+  if (typeof d === 'number' && Number.isFinite(d)) return d;
+  if (d && typeof d === 'object') {
+    if (typeof saida.totalEfectivo === 'number' && Number.isFinite(saida.totalEfectivo)) return Math.max(0, saida.totalEfectivo);
+    if (Number.isFinite(d.total)) return d.total;
+  }
+  return 0;
+}
+
+/**
+ * Total e faces do ataque, para a jogadora que atacou (v0.2.1).
+ * VLAB real: `rolagem = {expressao, conjuntosDeFaces, bonus, ajusteVantagemDesvantagem, niveisLiquidos, resultados,
+ * escolhido: total, total}`. `conjuntosDeFaces` é um array de arrays (1 + |nível líquido| conjuntos) e
+ * `resultados[i]` é a soma do conjunto i com o bónus; mostram-se as faces do conjunto ESCOLHIDO.
+ * O falso dá `rolagem.faces` (lista simples).
+ */
+function rolagemVisivel(saida) {
+  const r = saida?.rolagem && typeof saida.rolagem === 'object' ? saida.rolagem : {};
+  const total = numeroOuNull(r.total ?? r.escolhido ?? r.totalAtaque ?? saida?.total);
+  let faces = null;
+  if (Array.isArray(r.faces)) faces = r.faces;
+  else if (Array.isArray(r.conjuntosDeFaces) && r.conjuntosDeFaces.length) {
+    let i = Array.isArray(r.resultados) && total !== null ? r.resultados.indexOf(total) : -1;
+    if (i < 0 || !Array.isArray(r.conjuntosDeFaces[i])) i = 0;
+    faces = Array.isArray(r.conjuntosDeFaces[i]) ? r.conjuntosDeFaces[i] : null;
+  }
+  return { total, faces: faces ? faces.filter((x) => Number.isInteger(x)) : null };
+}
+
+/** Id de uma desgraça. VLAB real: objeto {id, nome, gravidade}; o falso usa {tipo} ou uma string. */
+function idDesgraca(d) {
+  if (typeof d === 'string') return d;
+  if (d && typeof d === 'object') {
+    if (typeof d.id === 'string') return d.id;
+    if (typeof d.tipo === 'string') return d.tipo;
+  }
+  return null;
+}
+
+/** Técnica que usa arma. VLAB real: "const usaArmaTec = tecnica.usaArma !== false" (sem o campo, USA arma). */
+function usaArmaDe(t) {
+  return t.usaArma !== false;
+}
 const TIPOS_MESTRE = Object.freeze([
   'MASTER_LOBBY_SET', 'MASTER_START', 'MASTER_PLACE', 'MASTER_MODE', 'MASTER_ACT', 'MASTER_APPROVE',
   'MASTER_CONFIRM_DICE', 'MASTER_AMBIENTE', 'MASTER_SUPERVISOR', 'MASTER_PAUSE', 'MASTER_RESUME',
@@ -209,21 +265,24 @@ export function criarSala({
     return rng() >>> 0;
   }
   function novoId(prefixo, existentes) {
-    // E-P14: ids opacos e aleatórios por sala.
-    for (;;) {
+    // E-P14: ids opacos e aleatórios por sala. P3: com teto (64 bits não colidem 1000 vezes seguidas sem rng avariado).
+    for (let i = 0; i < MAX_TENTATIVAS_LACO; i++) {
       const id = prefixo + hex8(u32()) + hex8(u32());
       if (!existentes || !(id in existentes)) return id;
     }
+    throw new Error('novoId: ' + MAX_TENTATIVAS_LACO + ' colisões seguidas (rng avariado)');
   }
   function novoToken() {
     return hex8(u32()) + hex8(u32()) + hex8(u32()) + hex8(u32()); // 128 bits
   }
   function d6() {
     const limite = Math.floor(0x100000000 / 6) * 6; // rejeição: sem viés de módulo
-    for (;;) {
+    // P3: a rejeição acontece com probabilidade 4/2^32; 1000 seguidas = rng avariado.
+    for (let i = 0; i < MAX_TENTATIVAS_LACO; i++) {
       const x = u32();
       if (x < limite) return 1 + (x % 6);
     }
+    throw new Error('d6: ' + MAX_TENTATIVAS_LACO + ' rejeições seguidas (rng avariado)');
   }
   function isoAgora() {
     return new Date(agora()).toISOString();
@@ -383,24 +442,59 @@ export function criarSala({
     return lista.reverse();
   }
 
+  /** Jogadora fora de combate: a morrer, estabilizada ou com Vida 0 (o VLAB marca `foraDeCombate`). */
+  function jogadoraForaDeCombate(f) {
+    if (f.lado !== 'jogadora') return false;
+    const fase = f.estadoMorte?.fase;
+    // VLAB real: as fases do estadoMorte são só 'aMorrer' e 'estabilizado' (a morte vem em `morteAdjudicada`).
+    return fase === 'aMorrer' || fase === 'estabilizado' || f.vidaActual <= 0;
+  }
+
   /** Metros do Correr, ou null se o motor recusar. Opção honesta: só aparece se der. */
-  function metrosCorrida(f) {
+  function metrosCorrida(f, acaoPadraoDisponivel = true) {
     const base = reservaBase(f);
     const fn = motores.Vlab.validarCorrer;
     if (typeof fn !== 'function') {
-      // TODO(JV1.x R0): regra do Correr sem o motor. Provisório: o dobro da reserva base.
+      // TODO(R0): regra do Correr sem o motor. Provisório: o dobro da reserva base (é o que o VLAB faz).
       return arred(base * 2);
     }
-    // TODO(JV0.3): assinatura real de Vlab.validarCorrer (nos vetores-ouro).
     let r;
     try {
-      r = fn({ deslocamentoBase: base, jaAndou: false, jaAtacou: false });
+      // VLAB real: validarCorrer({deslocamentoBase, acaoPadraoDisponivel}) → {deslocamentoMaximo, custoDeclarado, erro}.
+      // Sem `acaoPadraoDisponivel` devolve erro CORRER_SEM_ACCAO_PADRAO (antes o Correr nunca aparecia com o real).
+      // `deslocamentoBase` vai já com as metades de Fraca e de corpo partido (o motor pede-o assim).
+      r = fn({ deslocamentoBase: base, acaoPadraoDisponivel: acaoPadraoDisponivel === true });
     } catch {
       return null;
     }
-    if (!r || r.valido === false || r.erro) return null;
-    const metros = r.deslocamentoM ?? r.metros ?? r.reservaM;
+    if (!r || typeof r !== 'object' || r.valido === false || r.erro) return null;
+    // VLAB real: `deslocamentoMaximo`. Os outros nomes ficam para o motor falso dos testes.
+    const metros = r.deslocamentoMaximo ?? r.deslocamentoM ?? r.metros ?? r.reservaM;
     return typeof metros === 'number' && Number.isFinite(metros) && metros >= 0 ? arred(metros) : null;
+  }
+
+  /**
+   * Ataques de oportunidade pelo motor. `candidatos` = monstros dos grupos A e B (já sem os cobertos).
+   * VLAB real: validarSaidaDeAdjacencia({inimigosAdjacentes:[{id, reacaoDisponivel}], desvincular?:{gastouAccaoPadrao}})
+   *   → {ataquesDeOportunidade:[{inimigoId, instrucao}], cobertosPorDesvincular:[id], erro}. O motor só filtra por
+   *   `reacaoDisponivel` (não lê caído nem vivo: isso filtra-se aqui antes).
+   * Sem a função, com exceção ou com outra forma (o falso dá {valido:true}): devolve null e a sala usa a lista dela.
+   */
+  function aooPeloMotor(candidatos, desvincular) {
+    const fn = motores.Vlab.validarSaidaDeAdjacencia;
+    if (typeof fn !== 'function') return null;
+    let r;
+    try {
+      const entrada = { inimigosAdjacentes: candidatos.map((x) => ({ id: x.id, reacaoDisponivel: !!x.reacaoDisponivel })) };
+      if (desvincular) entrada.desvincular = { gastouAccaoPadrao: true };
+      r = fn(entrada);
+    } catch {
+      return null;
+    }
+    if (!r || typeof r !== 'object' || r.erro) return null;
+    if (desvincular) return Array.isArray(r.cobertosPorDesvincular) ? r.cobertosPorDesvincular.filter((x) => typeof x === 'string') : null;
+    if (!Array.isArray(r.ataquesDeOportunidade)) return null;
+    return r.ataquesDeOportunidade.map((a) => a && a.inimigoId).filter((x) => typeof x === 'string');
   }
 
   function opcoesVazias(m) {
@@ -416,8 +510,10 @@ export function criarSala({
     const f = m.figuras[figuraId];
     const v = m.vez;
     const ficha = fichaEfetiva(f);
-    if (f.lado === 'jogadora' && f.estadoMorte?.fase === 'aMorrer') {
-      return { ...opcoesVazias(m), vezId: figuraId, acoes: ['encerrar'] }; // a vez dela foi o teste de morte
+    if (jogadoraForaDeCombate(f)) {
+      // A morrer: a vez dela foi o teste de morte. Estabilizada ou com Vida 0: fora de combate.
+      // TODO(R0 §9.7): a estabilizada pode fazer alguma coisa na vez dela? "Estabilizada" é derrota?
+      return { ...opcoesVazias(m), vezId: figuraId, acoes: ['encerrar'] };
     }
 
     const mover = [];
@@ -435,9 +531,11 @@ export function criarSala({
     const ataques = [];
     if (!v.atacou) {
       for (const t of ficha.tecnicas) {
-        if (t.usaArma && f.armaQuebrada) continue;
-        // TODO(JV1.x): a jogadora apanha a arma caída com o movimento (REF_7 §4). Hoje: sem ataque com arma.
-        if (t.usaArma && f.armaCaida && f.lado === 'jogadora') continue;
+        // VLAB real: sem `usaArma` a técnica USA arma (usaArma !== false); antes a sala só olhava para `usaArma === true`.
+        // TODO(R0 §9.8): conserto da arma quebrada. O motor não recusa; a sala esconde a técnica (REF_7 §5).
+        if (usaArmaDe(t) && f.armaQuebrada) continue;
+        // A jogadora com a arma caída tem de a apanhar primeiro (`apanhar_arma`). VLAB real: sem isso dá ARMA_CAIDA.
+        if (usaArmaDe(t) && f.armaCaida && f.lado === 'jogadora') continue;
         if (f.lado === 'jogadora' && t.custoPA > paLivre(f)) continue; // os monstros não gastam PA
         for (const alvo of colocadas(m)) {
           if (alvo.id === f.id || !alvo.vivo || !saoInimigos(f, alvo)) continue;
@@ -451,8 +549,12 @@ export function criarSala({
 
     const acoes = ['encerrar'];
     // Correr: substitui a reserva; só se ainda não andou nem atacou.
-    if (!v.atacou && v.andouM === 0 && !v.correrUsado && metrosCorrida(f) !== null) acoes.push('correr');
+    // TODO(R0 §9.9): pode-se Correr depois de andar uma parte? Hoje não (REF_7).
+    if (!v.atacou && v.andouM === 0 && !v.correrUsado && metrosCorrida(f, !v.atacou) !== null) acoes.push('correr');
     if (f.lado === 'jogadora') {
+      // Errata v0.2.2: `apanhar_arma` só com a arma caída; gasta a reserva toda (sem reserva, não há com que pagar).
+      // TODO(R0): apanhar a arma com a reserva já a zero (ex.: na vez em que se levantou) é permitido?
+      if (f.armaCaida && v.reservaM > EPS) acoes.push('apanhar_arma');
       if (f.reacaoDisponivel && !f.defendendo) acoes.push('defender');
       if (!v.atacou && !v.desvinculou && monstrosAdjacentes(m, f, f).length > 0) acoes.push('desvincular');
       const tr = fichaDe(f).transformacao;
@@ -679,6 +781,10 @@ export function criarSala({
       dados.vidaActual = f.vidaActual;
       dados.paLivre = paLivre(f);
       dados.estadoMorte = f.estadoMorte;
+      // Acrescentados (P2: apanhar_arma): a própria sabe da arma e do corpo sem esperar por um snapshot.
+      dados.armaCaida = f.armaCaida;
+      dados.armaQuebrada = f.armaQuebrada;
+      dados.corpoPartido = f.corpoPartido;
     }
     tx.emitir('estado', dados, ehJog ? null : { vidaActual: f.vidaActual, estadoMorte: f.estadoMorte });
   }
@@ -689,17 +795,24 @@ export function criarSala({
     f.defendendo = false; // a declaração de Defender anterior expira
     m.vez = {
       figuraId: f.id, atacou: false, andouM: 0, reservaM: 0, correrUsado: false, desvinculou: false,
+      cobertos: [], // ids que o Desvincular cobriu nesta vez (C2, opção B)
       iaMoveu: false, iaPausada: false, recusas: 0, intencoes: 0,
     };
     tx.emitir('turno', { figuraId: f.id, rodada: m.rodada, narra: f.lado !== 'jogadora' }, { modo: f.modo });
     if (f.lado === 'jogadora' && f.estadoMorte?.fase === 'aMorrer') {
-      // A Ong nunca sai da ordem: a vez dela vira teste de morte.
+      // A Ong nunca sai da ordem: a vez dela vira teste de morte (reserva 0, ação padrão gasta).
       m.vez.atacou = true;
       testeDeMorte(tx, f);
       return;
     }
+    if (jogadoraForaDeCombate(f)) {
+      // Estabilizada ou com Vida 0: não age. VLAB real recusa o teste de morte em 'estabilizado'.
+      m.vez.atacou = true;
+      return;
+    }
     if (f.caido) {
       // Caída levanta-se e gasta a reserva toda. B6 corrigido: o monstro também se levanta.
+      // TODO(R0 §9.4): levantar custa a reserva toda também para o monstro? Hoje sim (IBX-212 J7).
       const vis = visivelDe(f);
       const vida = f.vidaActual;
       f.caido = false;
@@ -710,22 +823,39 @@ export function criarSala({
     }
   }
 
+  /**
+   * Teste de morte na vez da jogadora a morrer.
+   * VLAB real: resolverTesteDeMorte({moribundo, ajudante?, contexto:{semente|faces}}) lê no moribundo
+   *   testesDeMorteDesignado === true, estadoMorte {fase:'aMorrer', sucessos, falhas} (inteiros), constituicao,
+   *   classificacao (chave de K_TESTE_DE_MORTE: bronze, prata, ouro, ouroNegro, lendario) e testes.fortitude.
+   *   Devolve {cd, cdEfectiva, teste, sucesso, estadoMorte:{fase, sucessos, falhas}, estabilizado, morteAdjudicada,
+   *   morteVia, desfecho:'continua'|'estabilizado'|'morreu', publico:{recibo}, soDoMestre:{cd, cdEfectiva, estadoMorte,
+   *   rodadaPor}, erro}. NÃO há `moribundoDepois`: antes a sala não aplicava nada da saída real.
+   * TODO(R0): estabilização por ajudante (`ajudante`) ainda não tem ação no protocolo.
+   */
   function testeDeMorte(tx, f) {
     const fn = motores.Vlab.resolverTesteDeMorte;
-    if (typeof fn !== 'function') return; // TODO(JV0.3): motor sem teste de morte → a vez fica só com `encerrar`
+    if (typeof fn !== 'function') return; // motor sem teste de morte → a vez fica só com `encerrar`
     const ctx = { semente: sortearSemente() >>> 0 };
     let saida;
     try {
-      // TODO(JV0.3): assinatura e forma da saída de resolverTesteDeMorte nos vetores-ouro.
       saida = fn({ moribundo: entidadeMotor(f), contexto: clonarJson(ctx) });
     } catch (e) {
       saida = { erro: 'EXCECAO:' + (e?.message ?? String(e)) };
     }
     if (!saida || typeof saida !== 'object' || saida.erro) {
-      tx.emitir('erro_motor', { figuraId: f.id }, { erro: String(saida?.erro ?? 'SAIDA_INVALIDA'), contexto: ctx });
+      const erro = saida?.erro && typeof saida.erro === 'object' ? String(saida.erro.codigo ?? 'ERRO') : String(saida?.erro ?? 'SAIDA_INVALIDA');
+      tx.emitir('erro_motor', { figuraId: f.id }, { erro, contexto: ctx });
       return;
     }
-    aplicarDepois(f, saida.soDoMestre?.moribundoDepois ?? saida.soDoMestre?.alvoDepois);
+    const sm = saida.soDoMestre && typeof saida.soDoMestre === 'object' ? saida.soDoMestre : {};
+    // Forma antiga (motor falso): soDoMestre.moribundoDepois / alvoDepois.
+    const depois = { ...((sm.moribundoDepois && typeof sm.moribundoDepois === 'object' ? sm.moribundoDepois : null) ?? (sm.alvoDepois && typeof sm.alvoDepois === 'object' ? sm.alvoDepois : {})) };
+    // VLAB real: o estadoMorte novo vem no topo (e repetido em soDoMestre.estadoMorte); a morte, em morteAdjudicada.
+    const em = saida.estadoMorte ?? sm.estadoMorte;
+    if (em && typeof em === 'object') depois.estadoMorte = em;
+    if (saida.morteAdjudicada === true || saida.desfecho === 'morreu') depois.morteAdjudicada = true;
+    aplicarDepois(f, depois);
     tx.emitir('teste_morte', { figuraId: f.id }, { semente: ctx.semente, saida });
     emitirEstado(tx, f, true);
     verificarFim(tx);
@@ -786,14 +916,21 @@ export function criarSala({
   }
 
   // ------------------------------------------------------------------ ponte para o motor
-  function entidadeMotor(f) {
+  /**
+   * Objeto que o motor recebe: ficha (fixa) + estado da sala (vivo).
+   * @param {Object} [op]
+   * @param {boolean} [op.comoAlvo]  é o alvo de um ataque (pode levar a reação Defender)
+   * @param {boolean} [op.alvoDeAoO]  é o alvo de um ataque de oportunidade (sem reação nenhuma)
+   */
+  function entidadeMotor(f, op = {}) {
     const ficha = fichaEfetiva(f);
     const estado = [];
-    // TODO(JV0.3): nomes exatos dos estados que o VLAB lê.
+    // VLAB real lê estes nomes: "caido" e "fraco" (atacante: desvantagem), "foraDeCombate" (alvo: não repete).
     if (f.caido) estado.push('caido');
     if (ehFraca(f)) estado.push('fraco');
-    if (f.corpoPartido) estado.push('corpoPartido');
-    return {
+    if (f.vidaActual <= 0) estado.push('foraDeCombate');
+    if (f.corpoPartido) estado.push('corpoPartido'); // o motor não o lê: a desvantagem vai em niveisDesvantagem
+    const e = {
       ...ficha,
       vidaActual: f.vidaActual,
       paLivre: f.lado === 'jogadora' ? paLivre(f) : ficha.paTotal,
@@ -802,6 +939,25 @@ export function criarSala({
       armaCaida: f.armaCaida,
       armaQuebrada: f.armaQuebrada,
     };
+    // VLAB real: a corrida 3×3 só nasce com `testesDeMorteDesignado === true` (senão: TESTE_DE_MORTE_NAO_DESIGNADO e,
+    // no ataque, a Vida 0 dá só foraDeCombate). A jogadora "nunca sai da ordem" (REF_7 §1): por omissão, designada.
+    // TODO(R0): o Mestre designa NPCs/criaturas para testes de morte? Hoje só pela ficha.
+    if (typeof ficha.testesDeMorteDesignado !== 'boolean') e.testesDeMorteDesignado = f.lado === 'jogadora';
+    if (op.alvoDeAoO) {
+      // VLAB real: "if (ctx.ataqueDeOportunidade === true && (alvo.reacaoDefensiva || alvo.defesaAplicavel ||
+      // alvo.contraAtaque)) return falha('REACCAO_CONTRA_ATAQUE_DE_OPORTUNIDADE')". REF_7 §3: "sem a reação defensiva".
+      delete e.reacaoDefensiva;
+      delete e.contraAtaque;
+      // `defesaAplicavel` é, para o motor, uma reação-limiar (usouReacaoLimiar). Sai se houver CA para a substituir.
+      // TODO(R0): alvo de AoO que só tem defesaAplicavel (sem ca): que defesa vale? Hoje o motor recusa e fica erro_motor.
+      if (Number.isFinite(e.ca)) delete e.defesaAplicavel;
+    } else if (op.comoAlvo && f.defendendo && config.reacaoDefender && typeof config.reacaoDefender === 'object') {
+      // VLAB real: a reação defensiva lê-se do ALVO ("alvo.reacaoDefensiva.valor" substitui a defesa), e não do
+      // contexto. Antes a sala punha-a em contexto.reacaoDefensiva, que o motor ignora.
+      // TODO(R0): valor da reação Defender (hoje vem só da config do Mestre {tipo, valor, origem}).
+      e.reacaoDefensiva = clonarJson(config.reacaoDefender);
+    }
+    return e;
   }
 
   function flanqueia(m, atacante, alvo) {
@@ -824,21 +980,30 @@ export function criarSala({
       atacanteCaido: !!atacante.caido,
       atacanteFraco: ehFraca(atacante),
     };
+    // VLAB real: um monstro com a arma caída recupera-a de graça ao atacar (sem isto: ARMA_CAIDA).
     if (atacante.lado !== 'jogadora' && atacante.armaCaida) ctx.armaRecuperada = true;
     // Errata JV1.1-a §4: NUNCA enviar modificador de crítico (defeito latente MASTER_DECISIONS).
-    // TODO(JV1.x R0): valor da reação Defender. Hoje só se a config do Mestre o der.
-    if (!extra.semReacaoDefensiva && alvo.defendendo && config.reacaoDefender) {
-      ctx.reacaoDefensiva = clonarJson(config.reacaoDefender);
-    }
+    // VLAB real: verificacaoCritico = três inteiros 1..6 ("6,6 e o 3.º ≥ 5 − margem" = crítico; "1,1 e o 3.º em 1 ou 2"
+    // = falha crítica; não corre para magia). `margemCritico` (0..4) baixa o limiar do 3.º dado.
+    // TODO(R0): de onde vem a margemCritico (técnica? ficha?). Hoje não se envia (= 0).
+    // A reação Defender vai no ALVO (entidadeMotor), e não aqui. `extra.semReacaoDefensiva` fica só como registo.
     return ctx;
   }
 
+  /**
+   * VLAB real: resolverAtaque({atacante, alvo, tecnica, contexto}) → topo {resultado ('acerta'|'erra'|'critico'|
+   * 'falhaCritica'), rolagem, defesaUsada, pa {custo, paLivreAntes, paLivreDepois, exaustao}, danoAplicado (DMG cru),
+   * rdAplicada, totalEfectivo (dano efetivo), reacaoConsumida, contraAtaquePendente, desgracaPendente, publico {recibo},
+   * soDoMestre {alvoDepois, efeitosAtacante[], colapso?, falhaCritica?, atacanteDepois?}, erro {codigo, detalhe}|null}.
+   */
   function chamarMotorAtaque(atacante, alvo, t, ctx) {
     let saida;
     try {
-      // TODO(JV0.3): confirmar nos vetores-ouro a assinatura de Vlab.resolverAtaque (objeto único).
       saida = motores.Vlab.resolverAtaque({
-        atacante: entidadeMotor(atacante), alvo: entidadeMotor(alvo), tecnica: t, contexto: clonarJson(ctx),
+        atacante: entidadeMotor(atacante),
+        alvo: entidadeMotor(alvo, { comoAlvo: true, alvoDeAoO: ctx.ataqueDeOportunidade === true }),
+        tecnica: t,
+        contexto: clonarJson(ctx),
       });
     } catch (e) {
       return { erro: 'EXCECAO:' + (e?.message ?? String(e)) };
@@ -846,6 +1011,11 @@ export function criarSala({
     if (!saida || typeof saida !== 'object') return { erro: 'SAIDA_INVALIDA' };
     if (saida.erro) return { erro: typeof saida.erro === 'string' ? saida.erro : String(saida.erro.codigo ?? 'ERRO') };
     if (!Object.prototype.hasOwnProperty.call(RESULTADOS, saida.resultado)) return { erro: 'RESULTADO_DESCONHECIDO' };
+    // VLAB real: a falha crítica vem em soDoMestre.falhaCritica = {modo, rolagemDesgraca, tabelaEfectiva, excluidas,
+    // desgraca:{id, nome, gravidade}, aplicado, requerConfirmacao? (só no modo 'proposta'), propostaOriginal?}. O falso, no topo.
+    if (saida.falhaCritica === undefined && saida.soDoMestre && typeof saida.soDoMestre === 'object' && saida.soDoMestre.falhaCritica) {
+      saida.falhaCritica = saida.soDoMestre.falhaCritica;
+    }
     return saida;
   }
 
@@ -855,21 +1025,32 @@ export function criarSala({
     if (typeof d.vidaActual === 'number' && Number.isFinite(d.vidaActual)) f.vidaActual = d.vidaActual;
     if (d.estadoMorte !== undefined) f.estadoMorte = d.estadoMorte === null ? null : clonarJson(d.estadoMorte);
     if (Array.isArray(d.estado)) f.caido = d.estado.includes('caido');
+    // VLAB real: soDoMestre.alvoDepois = {estadosNovos, estadosRemovidos, vidaActual}.
+    if (Array.isArray(d.estadosNovos) && d.estadosNovos.includes('caido')) f.caido = true;
+    if (Array.isArray(d.estadosRemovidos) && d.estadosRemovidos.includes('caido')) f.caido = false;
     if (typeof d.caido === 'boolean') f.caido = d.caido;
+    // VLAB real (desgraças): atacanteDepois = {armaCaida:true, custoRecuperacao} | {armaQuebrada:true, duracao} |
+    // {estadosNovos:['caido']} | {vidaActual, estadosNovos} (acerta-se). O quebra-corpo NÃO vem aqui (vem em
+    // falhaCritica.efeitoMecanico); aplica-se por aplicarEfeitoDesgraca.
     for (const k of ['armaCaida', 'armaQuebrada', 'corpoPartido']) if (typeof d[k] === 'boolean') f[k] = d[k];
     if (f.lado !== 'jogadora') {
-      if (f.vidaActual <= 0 || d.vivo === false) f.vivo = false;
-    } else if (d.vivo === false || f.estadoMorte?.fase === 'morreu' || f.estadoMorte?.fase === 'morta') {
-      // TODO(JV0.3): nome exato da fase final do estadoMorte.
+      // VLAB real: Vida a 0 → estadosNovos 'foraDeCombate' e morteAdjudicada:false; o monstro sai da ordem (REF_7 §1).
+      if (f.vidaActual <= 0 || d.vivo === false || d.morteAdjudicada === true) f.vivo = false;
+    } else if (d.vivo === false || d.morteAdjudicada === true || f.estadoMorte?.fase === 'morreu' || f.estadoMorte?.fase === 'morta') {
+      // VLAB real: as fases são só 'aMorrer' e 'estabilizado'; a morte vem em `morteAdjudicada: true`
+      // (morteVia 'testesDeMorte'), no ataque (soDoMestre.alvoDepois) e no teste de morte (topo). 'morreu'/'morta'
+      // ficam por segurança (o `desfecho` do teste de morte chama-se 'morreu').
       f.vivo = false;
     }
   }
 
+  /** Desgraça APLICADA pelo motor (modo 'sorte' ou 'escolha'), ou null. */
   function desgracaAplicada(saida) {
     const fc = saida.falhaCritica;
-    if (!fc || typeof fc !== 'object' || fc.requerConfirmacao) return null;
-    const d = fc.desgraca ?? fc.desgracaAplicada;
-    const tipo = typeof d === 'string' ? d : d && typeof d.tipo === 'string' ? d.tipo : null;
+    // VLAB real: no modo 'proposta' vem `aplicado: false` e `requerConfirmacao: true` (nada se aplica).
+    if (!fc || typeof fc !== 'object' || fc.requerConfirmacao || fc.aplicado === false) return null;
+    // VLAB real: `desgraca` é {id, nome, gravidade}; antes a sala lia `.tipo` e nunca aplicava a desgraça real.
+    const tipo = idDesgraca(fc.desgraca ?? fc.desgracaAplicada);
     return tipo && tipo !== 'nenhuma' ? tipo : null;
   }
   function aplicarEfeitoDesgraca(f, tipo) {
@@ -878,7 +1059,10 @@ export function criarSala({
       case 'arma-cai': f.armaCaida = true; break;
       case 'arma-quebra': f.armaQuebrada = true; break;
       case 'quebra-corpo': f.corpoPartido = true; break; // desvantagem 1 e metade do deslocamento até ao fim
-      // TODO(JV0.3): `acerta-se` e `acerta-amigo` — o dano vem do motor (aliadoAtingidoId); não aplicado aqui.
+      // VLAB real: `acerta-se` traz o dano em soDoMestre.atacanteDepois.vidaActual (já aplicado por aplicarDepois);
+      // sem vida do atacante vem em `desgracaPendente`. `acerta-amigo` exige contexto.aliadosAoAlcance, que a sala
+      // ainda não envia: por isso o motor exclui-o da tabela ("excluidas") e nunca o sorteia nem o aceita em 'escolha'.
+      // TODO(R0): quem conta como "amigo ao alcance" (aliadosAoAlcance) e como se resolve o desgracaPendente.
       default: break;
     }
   }
@@ -897,8 +1081,9 @@ export function criarSala({
     const visAtac = visivelDe(atacante);
     const vidaAtac = atacante.vidaActual;
     const sm = saida.soDoMestre && typeof saida.soDoMestre === 'object' ? saida.soDoMestre : {};
-    const total = numeroOuNull(saida.totalEfectivo ?? saida.total);
-    const faces = Array.isArray(saida.rolagem?.faces) ? saida.rolagem.faces.filter((x) => Number.isInteger(x)) : null;
+    // O `totalEfectivo` do VLAB real é o DANO efetivo (após RD), e não o total do ataque.
+    // VLAB real: o total do ataque é `rolagem.total` (= `rolagem.escolhido`); as faces vêm em `rolagem.conjuntosDeFaces`.
+    const { total, faces } = rolagemVisivel(saida);
     const ehJog = atacante.lado === 'jogadora';
     const dados = {
       atacanteId: atacante.id, alvoId: alvo.id, arma: t.id, resultado, ataqueDeOportunidade: !!extra.ataqueDeOportunidade,
@@ -909,15 +1094,26 @@ export function criarSala({
     tx.emitir('ataque', dados, {
       semente: ctx.semente, verificacaoCritico: ctx.verificacaoCritico, contexto: ctx,
       total, faces, recibo: saida.publico?.recibo ?? null, soDoMestre: sm,
+      // Acrescentados (só Mestre): pendências que o motor devolve e a sala ainda não resolve.
+      totalEfectivo: numeroOuNull(saida.totalEfectivo), reacaoConsumida: saida.reacaoConsumida ?? null,
+      desgracaPendente: saida.desgracaPendente ?? null, contraAtaquePendente: saida.contraAtaquePendente ?? null,
     });
+    // TODO(R0): `contraAtaquePendente` ({expressaoAtaque, contextoSugerido, defesaDoAlvo, instrucao}, só quando erra e o
+    // alvo tem contraAtaque) não se resolve: fica registado para o Mestre.
     aplicarDepois(alvo, sm.alvoDepois);
     aplicarDepois(atacante, sm.atacanteDepois);
+    if (saida.reacaoConsumida === true && alvo.defendendo) {
+      // VLAB real: `reacaoConsumida` = a reação-limiar do alvo foi usada. Uma reação por ronda (REF_7 §2):
+      // a declaração de Defender gasta-se no primeiro ataque que a usa.
+      // TODO(R0 A-4): a `defesaAplicavel` de um monstro também consome a reação dele (fica sem AoO nesta ronda)?
+      alvo.defendendo = false;
+    }
     const des = desgracaAplicada(saida);
     if (des) {
       aplicarEfeitoDesgraca(atacante, des);
       tx.emitir('desgraca', { figuraId: atacante.id, efeito: DESGRACAS.includes(des) ? des : null }, { bruto: saida.falhaCritica });
     }
-    const dano = numeroOuNull(saida.danoAplicado) ?? 0;
+    const dano = danoTotalDe(saida);
     if (dano > 0) tx.emitir('dano', { alvoId: alvo.id, autorId: atacante.id, valor: dano, tipos: tiposDe(t) }, null);
     emitirEstado(tx, alvo, false, visAlvo, vidaAlvo);
     if (atacante.id !== alvo.id) emitirEstado(tx, atacante, false, visAtac, vidaAtac);

@@ -12,7 +12,8 @@ import { carregarFichas } from '../nucleo/carregar-fichas.js';
 import { montarMesa, listaDeFichas, recibo, procurarCanarios } from '../testes/ajudantes.mjs';
 
 const MOTOR_MJS = process.env.MOTOR_MJS;
-const RESULTADOS_CONHECIDOS = new Set(['acerto', 'erro', 'critico', 'falha_critica', 'falhaCritica']);
+// Nomes REAIS do VLAB (medidos no CI): acerta, erra, critico, falhaCritica.
+const RESULTADOS_CONHECIDOS = new Set(['acerta', 'erra', 'critico', 'falhaCritica']);
 
 async function motorRealComEspiao() {
   const mod = await import(pathToFileURL(path.resolve(MOTOR_MJS)).href);
@@ -22,6 +23,11 @@ async function motorRealComEspiao() {
     let s;
     try { s = mod.Vlab.resolverAtaque(entrada); } catch (e) { saidas.push({ excecao: String(e?.message || e) }); throw e; }
     saidas.push({ resultado: s?.resultado, danoAplicado: s?.danoAplicado, erro: s?.erro?.codigo ?? s?.erro ?? null,
+      chavesRolagem: s?.rolagem && typeof s.rolagem === 'object' ? Object.keys(s.rolagem).sort() : null,
+      rolagemExemplo: s?.rolagem ?? null, totalEfectivo: s?.totalEfectivo ?? null,
+      chavesPublico: s?.publico && typeof s.publico === 'object' ? Object.keys(s.publico).sort() : null,
+      chavesFalhaCritica: s?.desgracaPendente && typeof s.desgracaPendente === 'object' ? Object.keys(s.desgracaPendente).sort() : null,
+      desgracaPendente: s?.desgracaPendente ?? null,
       chavesTopo: s && typeof s === 'object' ? Object.keys(s).sort() : null,
       chavesSoDoMestre: s?.soDoMestre ? Object.keys(s.soDoMestre).sort() : null,
       alvoDepois: s?.soDoMestre?.alvoDepois ? Object.keys(s.soDoMestre.alvoDepois).sort() : null });
@@ -72,7 +78,9 @@ test('motor real: ataques da heroína ao orc resolvem sem erro de ponte, com dan
   assert.ok(saidas.length > 0, 'o motor real foi chamado');
   assert.deepEqual(saidas.filter((s) => s.excecao), [], 'o motor real não rebenta');
   assert.deepEqual(desconhecidos, [], 'todos os valores de resultado do VLAB são conhecidos pelo sala.js');
-  assert.ok(saidas.some((s) => typeof s.danoAplicado === 'number' && s.danoAplicado > 0), 'houve pelo menos um acerto com dano');
+  assert.ok(saidas.some((s) => (s.danoAplicado?.total ?? 0) > 0), 'houve pelo menos um acerto com dano (danoAplicado.total)');
+  assert.ok(recibos.some((r) => r && r.type === 'ROOM_RECEIPT' && r.estado === 'APLICADA'), 'pelo menos um ataque aplicado');
+  assert.ok(recibos.filter((r) => r && r.type === 'ROOM_REJECT').length <= 3, 'poucos ataques recusados (antes eram 7 em 8)');
   assert.ok(danos.length > 0, 'a heroína recebeu pelo menos um evento de dano (ela vê o dano que causa)');
 
   // Nada do motor chega cru à jogadora.

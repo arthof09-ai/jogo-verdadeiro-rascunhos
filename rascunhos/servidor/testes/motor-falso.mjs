@@ -26,7 +26,7 @@ export function criarMotorFalso(opcoes = {}) {
         campoNovoDoMotor: 9137, // canário: campo novo do motor que não está na lista permitida
       };
       const base = {
-        resultado, totalEfectivo: total, rolagem: { faces: [face], expressao: tecnica.expressaoAtaque },
+        resultado, totalEfectivo: total, rolagem: { faces: [face], expressao: tecnica.expressaoAtaque, total },
         publico: { recibo }, soDoMestre: {},
       };
       if (resultado === 'falha_critica') {
