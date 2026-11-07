@@ -57,9 +57,21 @@ test('motor real: ataques da heroína ao orc resolvem sem erro de ponte, com dan
   assert.ok(orc, 'a heroína vê o orc');
 
   const recibos = [];
+  // Falha crítica da jogadora → cartão de desgraça ao Mestre (H10). A sala espera, e bem;
+  // o teste faz de Mestre e aprova, como o Mestre faria na mesa (IBX-266).
+  const desgracas = [];
   for (let volta = 0; volta < 25; volta++) {
     const r = recibo(mesa.intencao('heroina', { tipo: 'atacar', alvoId: orc, arma: 'chicote-teste' }));
     recibos.push(r ? { type: r.type, estado: r.estado, motivo: r.motivo } : null);
+    if (r && r.estado === 'AGUARDANDO_MESTRE') {
+      const cartao = mesa.clientes.mestre.ultimo('MASTER_CARD');
+      const aprovado = cartao ? recibo(mesa.mestre('MASTER_APPROVE', { cartaoId: cartao.cartaoId, decisao: 'aprovar' })) : null;
+      desgracas.push({
+        tipo: cartao?.tipo ?? null,
+        proposta: cartao?.proposta ?? null,
+        aprovacao: aprovado ? { type: aprovado.type, estado: aprovado.estado, motivo: aprovado.motivo } : null,
+      });
+    }
     const fim = recibo(mesa.intencao('heroina', { tipo: 'encerrar' }));
     if (!fim) break;
     if (h.eventos('fim').length) break;
@@ -71,8 +83,12 @@ test('motor real: ataques da heroína ao orc resolvem sem erro de ponte, com dan
   console.log('DIAGNOSTICO-MOTOR-REAL ' + JSON.stringify({
     sha: motor.MOTOR_SHA256, chamadas: saidas.length, resultados, desconhecidos,
     excecoes: saidas.filter((s) => s.excecao), erros: [...new Set(saidas.map((s) => s.erro).filter(Boolean))],
-    exemploSaida: saidas.find((s) => s.danoAplicado > 0) ?? saidas[0] ?? null,
-    recibos: recibos.slice(0, 8), eventosDanoHeroina: danos.length,
+    exemploSaida: saidas.find((s) => (s.danoAplicado?.total ?? 0) > 0) ?? saidas[0] ?? null,
+    exemploFalhaCritica: saidas.find((s) => s.resultado === 'falhaCritica') ?? null,
+    voltas: recibos.length,
+    contagem: recibos.reduce((a, r) => { const k = r ? `${r.type}:${r.estado ?? r.motivo}` : 'nulo'; a[k] = (a[k] ?? 0) + 1; return a; }, {}),
+    recusas: recibos.filter((r) => r && r.type === 'ROOM_REJECT'),
+    desgracas, eventosDanoHeroina: danos.length,
   }, null, 1));
 
   assert.ok(saidas.length > 0, 'o motor real foi chamado');
@@ -80,7 +96,16 @@ test('motor real: ataques da heroína ao orc resolvem sem erro de ponte, com dan
   assert.deepEqual(desconhecidos, [], 'todos os valores de resultado do VLAB são conhecidos pelo sala.js');
   assert.ok(saidas.some((s) => (s.danoAplicado?.total ?? 0) > 0), 'houve pelo menos um acerto com dano (danoAplicado.total)');
   assert.ok(recibos.some((r) => r && r.type === 'ROOM_RECEIPT' && r.estado === 'APLICADA'), 'pelo menos um ataque aplicado');
-  assert.ok(recibos.filter((r) => r && r.type === 'ROOM_REJECT').length <= 3, 'poucos ataques recusados (antes eram 7 em 8)');
+  // Cada desgraça aprovada pelo Mestre tem de se aplicar com o motor real (a proposta real do VLAB serve à sala).
+  for (const d of desgracas) {
+    assert.equal(d.tipo, 'desgraca', 'o cartão aberto pela falha crítica é de desgraça');
+    assert.ok(d.aprovacao && d.aprovacao.type === 'ROOM_RECEIPT' && d.aprovacao.estado === 'APLICADA',
+      'a aprovação do Mestre aplica a desgraça com o motor real: ' + JSON.stringify(d));
+  }
+  // Com o Mestre a decidir, nenhuma recusa por espera; as restantes (do motor/regra) continuam poucas.
+  const recusas = recibos.filter((r) => r && r.type === 'ROOM_REJECT');
+  assert.deepEqual(recusas.filter((r) => r.motivo === 'aguardando_mestre'), [], 'nenhum ataque recusado por espera do Mestre');
+  assert.ok(recusas.length <= 3, 'poucos ataques recusados: ' + JSON.stringify(recusas));
   assert.ok(danos.length > 0, 'a heroína recebeu pelo menos um evento de dano (ela vê o dano que causa)');
 
   // Nada do motor chega cru à jogadora.
