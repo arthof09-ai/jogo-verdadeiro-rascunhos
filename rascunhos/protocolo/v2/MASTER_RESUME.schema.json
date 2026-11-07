@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MASTER_RESUME.schema.json",
+  "title": "MASTER_RESUME (Mestre → servidor)",
+  "description": "E-C13 (comando novo). Recusado (acao_invalida) se a pausa veio de versão de motor diferente (E-C11).",
+  "type": "object",
+  "required": ["v", "type", "roomId", "cmdId", "revision"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "MASTER_RESUME" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "cmdId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+    "revision": { "$ref": "comum.schema.json#/$defs/revision" }
+  },
+  "additionalProperties": false
+}

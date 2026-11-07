@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ROOM_PAUSED.schema.json",
+  "title": "ROOM_PAUSED (servidor → todos)",
+  "description": "§4 + princípio 7 + E-C4/E-C11. Não é ROOM_EVENT: não gasta seq. MASTER_PAUSE usa o motivo 'manutencao' (sala.js).",
+  "type": "object",
+  "required": ["v", "type", "roomId", "motivo"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "ROOM_PAUSED" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "motivo": { "$ref": "comum.schema.json#/$defs/motivoPausa" }
+  },
+  "additionalProperties": false
+}

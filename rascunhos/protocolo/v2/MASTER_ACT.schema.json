@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MASTER_ACT.schema.json",
+  "title": "MASTER_ACT (Mestre → servidor)",
+  "description": "§5: o Mestre joga uma criatura à mão, pelo mesmo caminho do motor. Usa `intentId` (não cmdId), num espaço de ids separado do da Party (E-P8).",
+  "type": "object",
+  "required": ["v", "type", "roomId", "intentId", "revision", "figuraId", "acao"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "MASTER_ACT" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "intentId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+    "revision": { "$ref": "comum.schema.json#/$defs/revision" },
+    "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+    "acao": { "$ref": "comum.schema.json#/$defs/acao" }
+  },
+  "additionalProperties": false
+}

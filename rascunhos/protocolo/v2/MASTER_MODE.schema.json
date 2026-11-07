@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MASTER_MODE.schema.json",
+  "title": "MASTER_MODE (Mestre → servidor)",
+  "description": "§5: H10 por criatura. E-P11: o modo nunca é projetado; oráculo: não muda o revision nem o seq da Party.",
+  "type": "object",
+  "required": ["v", "type", "roomId", "cmdId", "revision", "figuraId", "modo"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "MASTER_MODE" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "cmdId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+    "revision": { "$ref": "comum.schema.json#/$defs/revision" },
+    "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+    "modo": { "enum": ["manual", "semi", "auto"] }
+  },
+  "additionalProperties": false
+}

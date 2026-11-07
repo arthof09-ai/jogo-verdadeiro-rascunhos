@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ROOM_REJECT.schema.json",
+  "title": "ROOM_REJECT (servidor → o autor)",
+  "description": "§4 + E-C1/E-C5/E-C13 + E-P7 (recusas indistinguíveis, texto fixo). Lista FECHADA de motivos. O id é `intentId` (ROOM_INTENT, MASTER_ACT) ou `cmdId` (outros MASTER_*): errata proposta D-18. O id é null quando a mensagem nem trazia um id válido (formato).",
+  "type": "object",
+  "required": ["v", "type", "roomId", "motivo", "texto"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "ROOM_REJECT" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "intentId": { "$ref": "comum.schema.json#/$defs/idOuNull" },
+    "cmdId": { "$ref": "comum.schema.json#/$defs/idOuNull" },
+    "motivo": { "$ref": "comum.schema.json#/$defs/motivoRejeicao" },
+    "texto": { "$ref": "comum.schema.json#/$defs/textoSemNumeros" }
+  },
+  "additionalProperties": false,
+  "oneOf": [
+    { "required": ["intentId"], "not": { "required": ["cmdId"] } },
+    { "required": ["cmdId"], "not": { "required": ["intentId"] } }
+  ]
+}

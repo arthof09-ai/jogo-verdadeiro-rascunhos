@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "comum.schema.json",
+  "title": "Protocolo v2 — definições comuns",
+  "description": "Peças partilhadas pelos schemas das mensagens. Fonte: JV0.4 Protocolo v2 (Notion 410c2b32…) + ERRATA v0.2, v0.2.1, v0.2.2. Onde uma regra vem só do servidor (sala.js/projecao.js) e é proposta como errata, a descrição diz 'errata proposta D-xx' (ver ../DIVERGENCIAS.md).",
+  "$defs": {
+    "v": { "const": 2, "description": "§2: versão do protocolo. Versão maior desconhecida → ERRO {codigo:'versao'}." },
+    "idOpaco": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,64}$",
+      "description": "Id opaco (E-P14). Formato aceite pelo servidor (RE_ID de sala.js). Errata proposta D-24."
+    },
+    "idOuNull": { "type": ["string", "null"], "pattern": "^[A-Za-z0-9_-]{1,64}$" },
+    "roomId": { "$ref": "#/$defs/idOpaco" },
+    "uuidV4": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+      "description": "§3: intentId = UUID v4 gerado no aparelho, igual em todas as tentativas."
+    },
+    "seq": { "type": "integer", "minimum": 0, "description": "E-P4: seq do fluxo DESTE lugar, de 1 em 1, sem buracos." },
+    "revision": { "type": "integer", "minimum": 0, "description": "E-P5: revisão por lugar (só muda quando muda o que esse lugar vê)." },
+    "ts": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,6})?Z$",
+      "description": "§2: hora do servidor, ISO-8601 (UTC)."
+    },
+    "casa": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "integer", "minimum": 0 },
+        "y": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "papel": { "enum": ["jogadora", "espectador", "mestre"] },
+    "fase": { "enum": ["lobby", "combate", "pausa", "fim"] },
+    "lado": { "enum": ["jogadora", "criatura", "npc"] },
+    "visivel": {
+      "enum": ["de_pe", "caida", "transformada", "morta"],
+      "description": "§6: estado visível. Tokens do servidor (projecao.js visivelDe). Errata proposta D-05."
+    },
+    "orientacao": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8,
+      "description": "Orientação da figura. O servidor usa texto ('S' por omissão); o conjunto fechado ainda não existe. Errata proposta D-14."
+    },
+    "nomePublico": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "resultadoAtaque": { "enum": ["acerto", "erro", "critico", "falha_critica"] },
+    "desgraca": { "enum": ["cai", "arma-cai", "arma-quebra", "acerta-se", "quebra-corpo", "acerta-amigo"] },
+    "motivoRejeicao": {
+      "enum": ["revisao_antiga", "fora_da_vez", "acao_invalida", "aguardando_mestre", "sala_pausada", "formato", "intent_conflito", "cartao_aberto"],
+      "description": "§4 + E-C13: lista FECHADA de motivos do ROOM_REJECT."
+    },
+    "motivoRecibo": {
+      "enum": ["revisao_antiga", "fora_da_vez", "acao_invalida", "aguardando_mestre", "sala_pausada", "formato", "intent_conflito", "cartao_aberto", "revertido"],
+      "description": "Motivo de um ROOM_RECEIPT RECUSADA. 'revertido' vem da E-C6 (voltar fecha as intenções posteriores). Errata proposta D-17."
+    },
+    "motivoPausa": { "enum": ["mestre_desconectado", "cota", "manutencao"] },
+    "textoSemNumeros": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[^0-9]*$",
+      "description": "§4: frase simples, sem nenhum número do Mestre. Aqui: sem nenhum dígito."
+    },
+    "tipoAcao": {
+      "enum": ["mover", "atacar", "consumivel", "defender", "desvincular", "transformar", "reacao", "encerrar", "correr", "apanhar_arma"]
+    },
+    "acaoSemParametros": { "enum": ["defender", "desvincular", "transformar", "encerrar", "correr", "apanhar_arma"] },
+    "acao": {
+      "description": "§3.1 + ERRATA v0.2.2. Chaves a mais → formato (o hashAcao fica estável).",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["tipo", "destino"],
+          "properties": { "tipo": { "const": "mover" }, "destino": { "$ref": "#/$defs/casa" } },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["tipo", "alvoId", "arma"],
+          "properties": {
+            "tipo": { "const": "atacar" },
+            "alvoId": { "type": "string", "minLength": 1, "maxLength": 64 },
+            "arma": { "type": "string", "minLength": 1, "maxLength": 64 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["tipo", "itemId"],
+          "properties": {
+            "tipo": { "const": "consumivel" },
+            "itemId": { "type": "string", "minLength": 1, "maxLength": 64 },
+            "alvoId": { "type": "string", "minLength": 1, "maxLength": 64 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["tipo", "reacaoId", "aceitar"],
+          "properties": {
+            "tipo": { "const": "reacao" },
+            "reacaoId": { "type": "string", "minLength": 1, "maxLength": 64 },
+            "aceitar": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["tipo"],
+          "properties": { "tipo": { "$ref": "#/$defs/acaoSemParametros" } },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "dadosFisicos": {
+      "type": "object",
+      "required": ["faces"],
+      "properties": {
+        "faces": { "type": "array", "minItems": 1, "maxItems": 10, "items": { "type": "integer", "minimum": 1, "maximum": 100 } }
+      },
+      "additionalProperties": false,
+      "description": "§8.2. O intervalo exato por face (M-28) é do servidor (TODO no sala.js)."
+    },
+    "figuraPublica": {
+      "type": "object",
+      "description": "§6 linha 1: posição, orientação e estado visível. Mais nada (projecao.js figuraPublica).",
+      "required": ["id", "nomePublico", "lado", "x", "y", "orientacao", "visivel"],
+      "properties": {
+        "id": { "$ref": "#/$defs/idOpaco" },
+        "nomePublico": { "$ref": "#/$defs/nomePublico" },
+        "lado": { "$ref": "#/$defs/lado" },
+        "x": { "type": "integer", "minimum": 0 },
+        "y": { "type": "integer", "minimum": 0 },
+        "orientacao": { "$ref": "#/$defs/orientacao" },
+        "visivel": { "$ref": "#/$defs/visivel" }
+      },
+      "additionalProperties": false
+    },
+    "mapa": {
+      "type": "object",
+      "required": ["largura", "altura", "casaM"],
+      "properties": {
+        "largura": { "type": "integer", "minimum": 1 },
+        "altura": { "type": "integer", "minimum": 1 },
+        "casaM": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "ambienteEfeito": {
+      "type": "object",
+      "description": "E-P12: na Party, só o efeito presente. O painel (hora exata, futuro) é só do Mestre.",
+      "required": ["clima", "luz"],
+      "properties": {
+        "clima": { "enum": ["limpo", "nublado", "chuva", "tempestade", "nevoeiro", "neve", null] },
+        "luz": { "enum": ["dia", "noite", null] }
+      },
+      "additionalProperties": false
+    },
+    "motores": {
+      "type": "object",
+      "required": ["vlabSha", "dmgVersao", "levelupSha"],
+      "properties": {
+        "vlabSha": { "type": ["string", "null"], "maxLength": 128 },
+        "dmgVersao": { "type": ["string", "null"], "maxLength": 64 },
+        "levelupSha": { "type": ["string", "null"], "maxLength": 128 }
+      },
+      "additionalProperties": false
+    },
+    "estadoMorte": {
+      "type": ["object", "null"],
+      "description": "Forma vem do motor (JV0.3). Só a própria a recebe (lista `propria`)."
+    }
+  }
+}

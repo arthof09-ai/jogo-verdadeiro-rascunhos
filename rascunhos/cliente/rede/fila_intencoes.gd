@@ -43,6 +43,12 @@ func estado_de(intent_id: String) -> String:
 	return String(_itens[intent_id]["estado"])
 
 
+func motivo_de(intent_id: String) -> String:
+	if not _itens.has(intent_id):
+		return ""
+	return String(_itens[intent_id]["motivo"])
+
+
 func texto_de(intent_id: String) -> String:
 	if not _itens.has(intent_id):
 		return ""
@@ -82,6 +88,11 @@ func aplicar_recibo(recibo: Dictionary) -> int:
 
 	item["estado"] = novo
 	item["seq"] = _int(recibo.get("seq"))
+	# Servidor real: RECUSADA por RECEIPT_QUERY ou por "voltar" do Mestre traz `motivo`
+	# (ex.: "revertido", com `revertidaEm`), sem `texto`.
+	var m = recibo.get("motivo")
+	if m is String:
+		item["motivo"] = m
 	if novo == APLICADA or novo == RECUSADA:
 		_terminar(id)
 	return Resultado.NOVO

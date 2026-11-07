@@ -1,0 +1,290 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ROOM_EVENT.schema.json",
+  "title": "ROOM_EVENT (servidor → cada lugar, projetado)",
+  "description": "§4 + §4.1 + E-P1 (lista de campos permitidos por tipo, §6.1) + v0.2.1. Um $defs `dados_<tipo>` (o que a Party inteira vê: outra jogadora e espectador) e, quando existe, `dados_<tipo>_propria` (o que a jogadora a quem o evento diz respeito vê a mais). Papéis: #/$defs/paraJogadora, #/$defs/paraEspectador, #/$defs/paraMestre. ATENÇÃO: o schema da jogadora aceita os campos `propria`; a regra 'só se o evento é DELA' (outra jogadora ✘) é semântica e é conferida por conferirPropria() em ../validar.mjs. Os campos dos `dados` vêm de projecao.js CAMPOS_PERMITIDOS (a spec não os lista: errata proposta D-16).",
+  "anyOf": [
+    { "$ref": "#/$defs/paraJogadora" },
+    { "$ref": "#/$defs/paraMestre" }
+  ],
+  "$defs": {
+    "xy": { "$ref": "comum.schema.json#/$defs/casa" },
+
+    "dados_entrada": {
+      "type": "object",
+      "required": ["figuraId", "nomePublico", "lado"],
+      "properties": {
+        "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "nomePublico": { "$ref": "comum.schema.json#/$defs/nomePublico" },
+        "lado": { "$ref": "comum.schema.json#/$defs/lado" }
+      },
+      "additionalProperties": false
+    },
+    "dados_colocacao": {
+      "type": "object",
+      "description": "A criatura ou o NPC só existe para a Party a partir daqui. Nada de fichaId nem modo (E-P11, linhas novas do §6).",
+      "required": ["figuraId", "nomePublico", "lado", "x", "y", "orientacao", "visivel"],
+      "properties": {
+        "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "nomePublico": { "$ref": "comum.schema.json#/$defs/nomePublico" },
+        "lado": { "$ref": "comum.schema.json#/$defs/lado" },
+        "x": { "type": "integer", "minimum": 0 },
+        "y": { "type": "integer", "minimum": 0 },
+        "orientacao": { "$ref": "comum.schema.json#/$defs/orientacao" },
+        "visivel": { "$ref": "comum.schema.json#/$defs/visivel" }
+      },
+      "additionalProperties": false
+    },
+    "dados_turno": {
+      "type": "object",
+      "description": "E-P11: `narra` é igual para qualquer modo; o modo H10 nunca sai.",
+      "required": ["figuraId", "rodada", "narra"],
+      "properties": {
+        "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "rodada": { "type": "integer", "minimum": 0 },
+        "narra": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "dados_movimento": {
+      "type": "object",
+      "required": ["figuraId", "de", "para", "caminho"],
+      "properties": {
+        "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "de": { "$ref": "#/$defs/xy" },
+        "para": { "$ref": "#/$defs/xy" },
+        "caminho": { "type": "array", "items": { "$ref": "#/$defs/xy" } }
+      },
+      "additionalProperties": false
+    },
+    "dados_movimento_propria": {
+      "type": "object",
+      "required": ["figuraId", "de", "para", "caminho"],
+      "properties": {
+        "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "de": { "$ref": "#/$defs/xy" },
+        "para": { "$ref": "#/$defs/xy" },
+        "caminho": { "type": "array", "items": { "$ref": "#/$defs/xy" } },
+        "custoM": { "type": "number", "minimum": 0 },
+        "reservaM": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "dados_ataque": {
+      "type": "object",
+      "description": "Party: só o efeito qualitativo. Nunca defesaAplicavel, reacaoDefensiva, CA, RD, semente (E-P3, v0.2.1 §4).",
+      "required": ["atacanteId", "alvoId", "arma", "resultado", "ataqueDeOportunidade"],
+      "properties": {
+        "atacanteId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "alvoId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "arma": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "resultado": { "$ref": "comum.schema.json#/$defs/resultadoAtaque" },
+        "ataqueDeOportunidade": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "dados_ataque_propria": {
+      "type": "object",
+      "description": "v0.2.1: a jogadora vê a expressão, as faces e o total do ataque DELA (só quando ela é a atacante).",
+      "required": ["atacanteId", "alvoId", "arma", "resultado", "ataqueDeOportunidade"],
+      "properties": {
+        "atacanteId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "alvoId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "arma": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "resultado": { "$ref": "comum.schema.json#/$defs/resultadoAtaque" },
+        "ataqueDeOportunidade": { "type": "boolean" },
+        "total": { "type": ["number", "null"] },
+        "faces": { "type": ["array", "null"], "items": { "type": "integer", "minimum": 1, "maximum": 100 } },
+        "expressao": { "type": "string", "maxLength": 64 }
+      },
+      "additionalProperties": false
+    },
+    "dados_dano": {
+      "type": "object",
+      "description": "v0.2.1: o número só a quem causou ou a quem recebeu (A-2: outra jogadora ✘; espectador ✘).",
+      "required": ["alvoId", "autorId"],
+      "properties": {
+        "alvoId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "autorId": { "$ref": "comum.schema.json#/$defs/idOpaco" }
+      },
+      "additionalProperties": false
+    },
+    "dados_dano_propria": {
+      "type": "object",
+      "required": ["alvoId", "autorId"],
+      "properties": {
+        "alvoId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "autorId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "valor": { "type": "number", "minimum": 0 },
+        "tipos": { "type": "array", "items": { "type": "string", "minLength": 1, "maxLength": 32 } }
+      },
+      "additionalProperties": false
+    },
+    "dados_estado": {
+      "type": "object",
+      "required": ["figuraId", "visivel"],
+      "properties": {
+        "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "visivel": { "$ref": "comum.schema.json#/$defs/visivel" }
+      },
+      "additionalProperties": false
+    },
+    "dados_estado_propria": {
+      "type": "object",
+      "description": "Vida, PA e estadoMorte só da PRÓPRIA (§6). Nunca de criatura (o servidor guarda-os em soMestre).",
+      "required": ["figuraId", "visivel"],
+      "properties": {
+        "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "visivel": { "$ref": "comum.schema.json#/$defs/visivel" },
+        "vidaActual": { "type": "number" },
+        "paLivre": { "type": "number" },
+        "estadoMorte": { "$ref": "comum.schema.json#/$defs/estadoMorte" }
+      },
+      "additionalProperties": false
+    },
+    "dados_desgraca": {
+      "type": "object",
+      "description": "Só a desgraça APLICADA. A proposta (cartão) é só do Mestre.",
+      "required": ["figuraId", "efeito"],
+      "properties": {
+        "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "efeito": { "enum": ["cai", "arma-cai", "arma-quebra", "acerta-se", "quebra-corpo", "acerta-amigo", null] }
+      },
+      "additionalProperties": false
+    },
+    "dados_reacao": {
+      "type": "object",
+      "description": "A-4: o servidor ainda não emite este tipo. Campos de projecao.js; o tipo de `reacao` está por fixar (D-20).",
+      "required": ["figuraId", "reacao"],
+      "properties": {
+        "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "reacao": { "type": ["string", "boolean"], "maxLength": 64 }
+      },
+      "additionalProperties": false
+    },
+    "dados_consumivel": {
+      "type": "object",
+      "description": "REF_7 §9.10: ainda sem conteúdo; o servidor ainda não emite este tipo. Campos de projecao.js.",
+      "required": ["figuraId", "itemId"],
+      "properties": {
+        "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "itemId": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "alvoId": { "$ref": "comum.schema.json#/$defs/idOpaco" }
+      },
+      "additionalProperties": false
+    },
+    "dados_ambiente": {
+      "type": "object",
+      "description": "E-P12: só o efeito presente. Hora exata, texto livre e futuro ficam no painel do Mestre.",
+      "required": ["efeito"],
+      "properties": { "efeito": { "$ref": "comum.schema.json#/$defs/ambienteEfeito" } },
+      "additionalProperties": false
+    },
+    "dados_revertido": {
+      "type": "object",
+      "description": "Nada de journalSeq nem ateSeq para a Party.",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "dados_fim": {
+      "type": "object",
+      "required": ["desfecho"],
+      "properties": { "desfecho": { "enum": ["vitoria", "morte"] } },
+      "additionalProperties": false
+    },
+
+    "envelopeParty": {
+      "description": "Envelope comum (Party). Os `dados` são restringidos pelo ramo do tipo.",
+      "type": "object",
+      "required": ["v", "type", "roomId", "seq", "revision", "ts", "tipo", "dados"],
+      "properties": {
+        "v": { "$ref": "comum.schema.json#/$defs/v" },
+        "type": { "const": "ROOM_EVENT" },
+        "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+        "seq": { "type": "integer", "minimum": 1 },
+        "revision": { "$ref": "comum.schema.json#/$defs/revision" },
+        "ts": { "$ref": "comum.schema.json#/$defs/ts" },
+        "tipo": { "enum": ["entrada", "colocacao", "turno", "movimento", "ataque", "dano", "estado", "desgraca", "reacao", "consumivel", "ambiente", "revertido", "fim"] },
+        "dados": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+
+    "paraEspectador": {
+      "description": "Espectador e 'outra jogadora': só os campos `todos`.",
+      "allOf": [
+        { "$ref": "#/$defs/envelopeParty" },
+        {
+          "oneOf": [
+            { "properties": { "tipo": { "const": "entrada" }, "dados": { "$ref": "#/$defs/dados_entrada" } } },
+            { "properties": { "tipo": { "const": "colocacao" }, "dados": { "$ref": "#/$defs/dados_colocacao" } } },
+            { "properties": { "tipo": { "const": "turno" }, "dados": { "$ref": "#/$defs/dados_turno" } } },
+            { "properties": { "tipo": { "const": "movimento" }, "dados": { "$ref": "#/$defs/dados_movimento" } } },
+            { "properties": { "tipo": { "const": "ataque" }, "dados": { "$ref": "#/$defs/dados_ataque" } } },
+            { "properties": { "tipo": { "const": "dano" }, "dados": { "$ref": "#/$defs/dados_dano" } } },
+            { "properties": { "tipo": { "const": "estado" }, "dados": { "$ref": "#/$defs/dados_estado" } } },
+            { "properties": { "tipo": { "const": "desgraca" }, "dados": { "$ref": "#/$defs/dados_desgraca" } } },
+            { "properties": { "tipo": { "const": "reacao" }, "dados": { "$ref": "#/$defs/dados_reacao" } } },
+            { "properties": { "tipo": { "const": "consumivel" }, "dados": { "$ref": "#/$defs/dados_consumivel" } } },
+            { "properties": { "tipo": { "const": "ambiente" }, "dados": { "$ref": "#/$defs/dados_ambiente" } } },
+            { "properties": { "tipo": { "const": "revertido" }, "dados": { "$ref": "#/$defs/dados_revertido" } } },
+            { "properties": { "tipo": { "const": "fim" }, "dados": { "$ref": "#/$defs/dados_fim" } } }
+          ]
+        }
+      ]
+    },
+
+    "paraJogadora": {
+      "description": "A jogadora: `todos` + `propria`. Use conferirPropria(msg, minhaFiguraId) para a regra 'só se o evento é dela'.",
+      "allOf": [
+        { "$ref": "#/$defs/envelopeParty" },
+        {
+          "oneOf": [
+            { "properties": { "tipo": { "const": "entrada" }, "dados": { "$ref": "#/$defs/dados_entrada" } } },
+            { "properties": { "tipo": { "const": "colocacao" }, "dados": { "$ref": "#/$defs/dados_colocacao" } } },
+            { "properties": { "tipo": { "const": "turno" }, "dados": { "$ref": "#/$defs/dados_turno" } } },
+            { "properties": { "tipo": { "const": "movimento" }, "dados": { "$ref": "#/$defs/dados_movimento_propria" } } },
+            { "properties": { "tipo": { "const": "ataque" }, "dados": { "$ref": "#/$defs/dados_ataque_propria" } } },
+            { "properties": { "tipo": { "const": "dano" }, "dados": { "$ref": "#/$defs/dados_dano_propria" } } },
+            { "properties": { "tipo": { "const": "estado" }, "dados": { "$ref": "#/$defs/dados_estado_propria" } } },
+            { "properties": { "tipo": { "const": "desgraca" }, "dados": { "$ref": "#/$defs/dados_desgraca" } } },
+            { "properties": { "tipo": { "const": "reacao" }, "dados": { "$ref": "#/$defs/dados_reacao" } } },
+            { "properties": { "tipo": { "const": "consumivel" }, "dados": { "$ref": "#/$defs/dados_consumivel" } } },
+            { "properties": { "tipo": { "const": "ambiente" }, "dados": { "$ref": "#/$defs/dados_ambiente" } } },
+            { "properties": { "tipo": { "const": "revertido" }, "dados": { "$ref": "#/$defs/dados_revertido" } } },
+            { "properties": { "tipo": { "const": "fim" }, "dados": { "$ref": "#/$defs/dados_fim" } } }
+          ]
+        }
+      ]
+    },
+
+    "paraMestre": {
+      "description": "O Mestre vê tudo: os dados do tipo, o `soMestre` e o `journalSeq` interno (E-P4). Inclui os tipos internos que nunca saem para a Party (errata proposta D-16).",
+      "type": "object",
+      "required": ["v", "type", "roomId", "seq", "revision", "ts", "tipo", "dados"],
+      "properties": {
+        "v": { "$ref": "comum.schema.json#/$defs/v" },
+        "type": { "const": "ROOM_EVENT" },
+        "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+        "seq": { "type": "integer", "minimum": 1 },
+        "revision": { "$ref": "comum.schema.json#/$defs/revision" },
+        "ts": { "$ref": "comum.schema.json#/$defs/ts" },
+        "tipo": {
+          "enum": [
+            "entrada", "colocacao", "turno", "movimento", "ataque", "dano", "estado", "desgraca", "reacao", "consumivel", "ambiente", "revertido", "fim",
+            "pausa", "retomada", "cartao", "cartao_fechado", "lobby", "modo", "ia", "recusa", "acao", "teste_morte", "erro_motor", "ambiente_mestre"
+          ]
+        },
+        "dados": {
+          "type": "object",
+          "required": ["soMestre", "journalSeq"],
+          "properties": {
+            "soMestre": { "type": ["object", "null"] },
+            "journalSeq": { "type": "integer", "minimum": 1 }
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

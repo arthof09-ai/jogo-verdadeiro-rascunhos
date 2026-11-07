@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ROOM_OPTIONS.schema.json",
+  "title": "ROOM_OPTIONS (servidor → só a jogadora da vez, e o Mestre na vez de criatura)",
+  "description": "§4 + E-P6 (calculado sobre o mundo projetado) + E-C5. Invariante 11: toda a opção listada, enviada na sua revisão, dá APLICADA. Nada aqui pode trazer número de criatura (Vida, CA, RD). Os campos `nome` (nas opções) e `texto` (na reação) que o cliente lê (PROVISÓRIO) não existem em lado nenhum da spec nem do servidor — ver D-19.",
+  "type": "object",
+  "required": ["v", "type", "roomId", "revision", "vezId", "orcamentoM", "mover", "ataques", "consumiveis", "acoes", "reacoes"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "ROOM_OPTIONS" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "revision": { "$ref": "comum.schema.json#/$defs/revision" },
+    "vezId": { "$ref": "comum.schema.json#/$defs/idOuNull" },
+    "orcamentoM": { "type": "number", "minimum": 0 },
+    "mover": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["x", "y", "custoM"],
+        "properties": {
+          "x": { "type": "integer", "minimum": 0 },
+          "y": { "type": "integer", "minimum": 0 },
+          "custoM": { "type": "number", "minimum": 0 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "ataques": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["alvoId", "arma"],
+        "properties": {
+          "alvoId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+          "arma": { "type": "string", "minLength": 1, "maxLength": 64 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "consumiveis": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["itemId", "alvos"],
+        "properties": {
+          "itemId": { "type": "string", "minLength": 1, "maxLength": 64 },
+          "alvos": { "type": "array", "items": { "$ref": "comum.schema.json#/$defs/idOpaco" } }
+        },
+        "additionalProperties": false
+      }
+    },
+    "acoes": {
+      "type": "array",
+      "items": { "$ref": "comum.schema.json#/$defs/acaoSemParametros" }
+    },
+    "reacoes": {
+      "type": "array",
+      "description": "A-4: forma da janela de reação ainda aberta. Hoje só se conhece o reacaoId (sala.js acaoNasOpcoes).",
+      "items": {
+        "type": "object",
+        "required": ["reacaoId"],
+        "properties": { "reacaoId": { "type": "string", "minLength": 1, "maxLength": 64 } },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

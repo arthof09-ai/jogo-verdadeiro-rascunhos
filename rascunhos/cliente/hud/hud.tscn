@@ -59,8 +59,10 @@ focus_mode = 0
 toggle_mode = true
 text = "Consumível"
 
-[node name="PainelEscolha" type="PanelContainer" parent="Raiz/Seguro/Camadas"]
+[node name="BotaoEncerrar" type="Button" parent="Raiz/Seguro/Camadas/Barra"]
 visible = false
+focus_mode = 0
+text = "Encerrar"
 
-[node name="PainelEntrada" type="PanelContainer" parent="Raiz/Seguro/Camadas"]
+[node name="PainelEscolha" type="PanelContainer" parent="Raiz/Seguro/Camadas"]
 visible = false

@@ -1,13 +1,15 @@
 extends CanvasLayer
-## HUD da jogadora (JV2.1a base + comportamento da JV2.3; o visual fino é da V1.2).
+## HUD da jogadora (JV2.3, pelo que o Mestre aprovou; o visual fino é da V1.2).
 ##
-## - Barra SÓ com Ataque · Mover · Consumível (palavra do Mestre).
-## - ⚙ no canto superior esquerdo com TODAS as configurações (perfil gráfico, câmera,
-##   tela vermelha com 2 interruptores, encerrar a vez, sair da mesa).
+## - Barra SÓ com Ataque · Mover · Consumível, e Encerrar quando a vez é dela (palavra do Mestre).
+## - ⚙ no canto SUPERIOR ESQUERDO com TODAS as configurações (gráficos, câmera, zoom,
+##   tela vermelha com 2 interruptores, sair da mesa).
 ## - Painéis a 55% de opacidade, texto sólido.
-## - Números de dano flutuantes por tipo (só os que o servidor deixa ela ver).
+## - Números de dano flutuantes por tipo, também nos golpes recebidos (só os que o servidor deixa ela ver).
 ## - Tela vermelha gradual desde 25% da vida DELA, com pulso.
 ## - Safe-area; textos com 12 px reais ou mais; nada técnico na tela.
+## - Mostra ROOM_OPTIONS como o servidor as manda: nunca calcula alcance, caminho nem CA.
+## A entrada (nome e senha) é do lobby (cenas/lobby).
 
 signal modo_pedido(modo: int, extra: Dictionary)
 signal acao_pedida(acao: Dictionary)
@@ -27,18 +29,29 @@ const PERFIS := ["baixo", "medio", "alto"]
 const NOMES_PERFIS := ["Baixo", "Médio", "Alto"]
 const CAMERAS := ["fixa", "360", "panorama"]
 const NOMES_CAMERAS := ["Fixa", "360°", "Panorama"]
-## PROVISÓRIO: a paleta final é da V1.2 (Plano B).
+## PROVISÓRIO: a paleta final é da V1.2 (Plano B). As chaves "cortante" e "perfurante"
+## são as das fichas de exemplo do servidor (campo `tipo`/`tipos` das técnicas).
 const CORES_DANO := {
 	"fisico": Color(1.0, 0.96, 0.88),
 	"corte": Color(1.0, 0.85, 0.80),
+	"cortante": Color(1.0, 0.85, 0.80),
 	"perfuracao": Color(1.0, 0.90, 0.75),
+	"perfurante": Color(1.0, 0.90, 0.75),
 	"impacto": Color(0.95, 0.90, 0.80),
+	"contundente": Color(0.95, 0.90, 0.80),
 	"agua": Color(0.40, 0.75, 1.0),
 	"fogo": Color(1.0, 0.55, 0.15),
 	"eletrico": Color(1.0, 0.95, 0.30),
 	"gelo": Color(0.75, 0.95, 1.0),
 	"veneno": Color(0.55, 0.95, 0.35),
 	"cura": Color(0.45, 1.0, 0.60),
+}
+## `resultado` do evento `ataque` (sala.js RESULTADOS) → frase simples.
+const FRASES_ATAQUE := {
+	"acerto": "Acertou!",
+	"erro": "Errou.",
+	"critico": "Crítico!",
+	"falha_critica": "Falha crítica!",
 }
 const SHADER_TELA_VERMELHA := """
 shader_type canvas_item;
@@ -68,8 +81,8 @@ var pref := {"perfil": "medio", "camera": "fixa", "tela_vermelha": true, "pulso"
 @onready var _b_ataque: Button = $Raiz/Seguro/Camadas/Barra/BotaoAtaque
 @onready var _b_mover: Button = $Raiz/Seguro/Camadas/Barra/BotaoMover
 @onready var _b_consumivel: Button = $Raiz/Seguro/Camadas/Barra/BotaoConsumivel
+@onready var _b_encerrar: Button = $Raiz/Seguro/Camadas/Barra/BotaoEncerrar
 @onready var _painel_escolha: PanelContainer = $Raiz/Seguro/Camadas/PainelEscolha
-@onready var _painel_entrada: PanelContainer = $Raiz/Seguro/Camadas/PainelEntrada
 
 var _tema := Theme.new()
 var _escala := 1.0
@@ -84,12 +97,8 @@ var _op_perfil: OptionButton
 var _op_camera: OptionButton
 var _chk_vermelha: CheckButton
 var _chk_pulso: CheckButton
-var _b_encerrar: Button
 var _caixa_escolha: VBoxContainer
 var _titulo_escolha: Label
-var _campo_nome: LineEdit
-var _campo_senha: LineEdit
-var _texto_entrada: Label
 
 
 func _ready() -> void:
@@ -98,7 +107,6 @@ func _ready() -> void:
 	_montar_layout()
 	_montar_config()
 	_montar_escolha()
-	_montar_entrada()
 	_montar_tela_vermelha()
 	get_viewport().size_changed.connect(_ao_redimensionar)
 	_ao_redimensionar()
@@ -108,18 +116,19 @@ func _ready() -> void:
 	_b_ataque.pressed.connect(_ao_botao.bind(Arena.Modo.ATAQUE))
 	_b_mover.pressed.connect(_ao_botao.bind(Arena.Modo.MOVER))
 	_b_consumivel.pressed.connect(_ao_botao_consumivel)
+	_b_encerrar.pressed.connect(_pedir_encerrar)
 
-	Rede.ligacao_mudou.connect(func(_e): _atualizar())
-	Rede.precisa_entrar.connect(_mostrar_entrada)
-	Rede.boas_vindas_recebidas.connect(_ao_boas_vindas)
-	Rede.recibo_recebido.connect(func(_i, _e, _m): _atualizar())
+	Rede.ligacao_mudou.connect(_ao_ligacao)
+	Rede.recibo_recebido.connect(_ao_recibo)
 	Rede.recusa_recebida.connect(_ao_recusa)
 	Rede.erro_recebido.connect(_ao_erro)
 	Estado.opcoes_mudaram.connect(_atualizar)
 	Estado.snapshot_aplicado.connect(_atualizar)
-	Estado.evento_aplicado.connect(func(_e): _atualizar())
-	Estado.pausa_mudou.connect(func(_p): _atualizar())
+	Estado.evento_aplicado.connect(_ao_evento)
+	Estado.pausa_mudou.connect(_ao_pausa)
 	Estado.dano_visto.connect(_ao_dano)
+	Estado.ataque_visto.connect(_ao_ataque)
+	Estado.fase_mudou.connect(_ao_fase)
 	_atualizar()
 
 
@@ -144,6 +153,7 @@ func ao_modo_mudou(m: int) -> void:
 	_b_ataque.set_pressed_no_signal(m == Arena.Modo.ATAQUE)
 	_b_mover.set_pressed_no_signal(m == Arena.Modo.MOVER)
 	_b_consumivel.set_pressed_no_signal(m == Arena.Modo.CONSUMIVEL)
+	_faixa.text = _texto_faixa()
 
 
 ## Mostra uma lista de escolhas. `itens` = [[texto, Callable], ...]
@@ -167,6 +177,7 @@ func escolher(titulo: String, itens: Array) -> void:
 
 
 ## Nome para mostrar. Nunca mostra um id opaco: usa `nome`, um id legível, ou `padrao`.
+## (A `arma` do ROOM_OPTIONS é o id da técnica, ex.: "chicote-teste" → "Chicote teste".)
 func nome_legivel(v, nome, padrao: String) -> String:
 	if nome is String and nome != "":
 		return nome
@@ -244,38 +255,32 @@ func _montar_config() -> void:
 	for i in NOMES_PERFIS.size():
 		_op_perfil.add_item(NOMES_PERFIS[i], i)
 	_op_perfil.select(maxi(0, PERFIS.find(pref["perfil"])))
-	_op_perfil.item_selected.connect(func(i): _mudar_pref("perfil", PERFIS[i]))
+	_op_perfil.item_selected.connect(_ao_perfil)
 	caixa.add_child(_linha("Gráficos", _op_perfil))
 
 	_op_camera = OptionButton.new()
 	for i in NOMES_CAMERAS.size():
 		_op_camera.add_item(NOMES_CAMERAS[i], i)
 	_op_camera.select(maxi(0, CAMERAS.find(pref["camera"])))
-	_op_camera.item_selected.connect(func(i): _mudar_pref("camera", CAMERAS[i]))
+	_op_camera.item_selected.connect(_ao_camera)
 	caixa.add_child(_linha("Câmera", _op_camera))
 
 	var repor := Button.new()
 	repor.text = "Repor o zoom"
-	repor.pressed.connect(func(): preferencia_mudou.emit("zoom_padrao", true))
+	repor.pressed.connect(_ao_repor_zoom)
 	caixa.add_child(repor)
 
 	_chk_vermelha = CheckButton.new()
 	_chk_vermelha.text = "Tela vermelha"
 	_chk_vermelha.set_pressed_no_signal(bool(pref["tela_vermelha"]))
-	_chk_vermelha.toggled.connect(func(v): _mudar_pref("tela_vermelha", v))
+	_chk_vermelha.toggled.connect(_ao_chk_vermelha)
 	caixa.add_child(_chk_vermelha)
 
 	_chk_pulso = CheckButton.new()
 	_chk_pulso.text = "Pulso da tela vermelha"
 	_chk_pulso.set_pressed_no_signal(bool(pref["pulso"]))
-	_chk_pulso.toggled.connect(func(v): _mudar_pref("pulso", v))
+	_chk_pulso.toggled.connect(_ao_chk_pulso)
 	caixa.add_child(_chk_pulso)
-
-	# PROVISÓRIO: o "Terminar" extra saiu da barra para a ⚙ (JV2.3); a R0 confirma a forma.
-	_b_encerrar = Button.new()
-	_b_encerrar.text = "Encerrar a vez"
-	_b_encerrar.pressed.connect(_pedir_encerrar)
-	caixa.add_child(_b_encerrar)
 
 	var sair := Button.new()
 	sair.text = "Sair da mesa"
@@ -284,7 +289,7 @@ func _montar_config() -> void:
 
 	var fechar := Button.new()
 	fechar.text = "Fechar"
-	fechar.pressed.connect(func(): _painel_config.visible = false)
+	fechar.pressed.connect(_fechar_config)
 	caixa.add_child(fechar)
 
 
@@ -306,33 +311,6 @@ func _montar_escolha() -> void:
 	_titulo_escolha = Label.new()
 	_titulo_escolha.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_caixa_escolha.add_child(_titulo_escolha)
-
-
-func _montar_entrada() -> void:
-	var caixa := VBoxContainer.new()
-	caixa.add_theme_constant_override("separation", 12)
-	_painel_entrada.add_child(caixa)
-	var titulo := Label.new()
-	titulo.text = "Entrar na mesa"
-	titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	caixa.add_child(titulo)
-	_texto_entrada = Label.new()
-	_texto_entrada.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_texto_entrada.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_texto_entrada.visible = false
-	caixa.add_child(_texto_entrada)
-	_campo_nome = LineEdit.new()
-	_campo_nome.placeholder_text = "Nome da personagem"
-	caixa.add_child(_campo_nome)
-	_campo_senha = LineEdit.new()
-	_campo_senha.placeholder_text = "Senha"
-	_campo_senha.secret = true
-	_campo_senha.text_submitted.connect(func(_t): _entrar())
-	caixa.add_child(_campo_senha)
-	var b := Button.new()
-	b.text = "Entrar"
-	b.pressed.connect(_entrar)
-	caixa.add_child(b)
 
 
 func _montar_tela_vermelha() -> void:
@@ -357,10 +335,9 @@ func _ao_redimensionar() -> void:
 	_tema.default_font_size = _fonte
 	var lado := float(_fonte) * 2.4
 	_botao_config.custom_minimum_size = Vector2(lado, lado)
-	for b in [_b_ataque, _b_mover, _b_consumivel]:
+	for b in [_b_ataque, _b_mover, _b_consumivel, _b_encerrar]:
 		(b as Button).custom_minimum_size = Vector2(_fonte * 7.5, _fonte * 2.8)
 	_painel_config.custom_minimum_size = Vector2(_fonte * 17.0, 0.0)
-	_painel_entrada.custom_minimum_size = Vector2(_fonte * 16.0, 0.0)
 	_painel_escolha.custom_minimum_size = Vector2(_fonte * 12.0, 0.0)
 	_aplicar_safe_area()
 	_reposicionar.call_deferred()
@@ -397,7 +374,6 @@ func _reposicionar() -> void:
 	_ancorar(_barra, Control.PRESET_CENTER_BOTTOM)
 	_barra.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	_ancorar(_painel_escolha, Control.PRESET_CENTER)
-	_ancorar(_painel_entrada, Control.PRESET_CENTER)
 
 
 func _ancorar(c: Control, preset: int) -> void:
@@ -427,17 +403,18 @@ func _atualizar() -> void:
 	_b_ataque.disabled = not livre or Estado.lista_opcao("ataques").is_empty()
 	_b_mover.disabled = not livre or Estado.lista_opcao("mover").is_empty()
 	_b_consumivel.disabled = not livre or Estado.lista_opcao("consumiveis").is_empty()
-	_b_encerrar.disabled = not livre or not Estado.e_minha_vez()
-	_barra.visible = na_mesa and Estado.fase != "lobby"
+	# Encerrar só aparece quando a vez é dela e o servidor o pôs em `acoes`.
+	_b_encerrar.visible = Estado.e_minha_vez() and Estado.tem_acao("encerrar")
+	_b_encerrar.disabled = not livre
+	_barra.visible = na_mesa and Estado.fase == "combate"
 	_faixa.text = _texto_faixa()
 	_ver_reacao(livre)
 
 
 func _texto_faixa() -> String:
-	var lig: int = Rede.estado_ligacao
-	if lig == Rede.Ligacao.A_LIGAR or lig == Rede.Ligacao.A_ENTRAR or lig == Rede.Ligacao.A_ESPERAR:
+	if Rede.a_ligar():
 		return "A conexão caiu. Voltando à mesa..." if Rede.ja_esteve_na_mesa() else "Conectando à mesa..."
-	if lig != Rede.Ligacao.NA_MESA:
+	if not Rede.na_mesa():
 		return ""
 	if Estado.pausada:
 		return "A mesa está em pausa. O Mestre já volta."
@@ -446,8 +423,13 @@ func _texto_faixa() -> String:
 	if Estado.fase == "lobby":
 		return "Esperando o Mestre começar..."
 	if Estado.fase == "fim":
+		if Estado.desfecho == "vitoria":
+			return "Vitória!"
 		return "Fim da batalha"
 	if Estado.e_minha_vez():
+		var orc: float = Estado.orcamento_m()
+		if _modo_atual == Arena.Modo.MOVER and orc >= 0.0:
+			return "Sua vez · pode andar até %s m" % _metros(orc)
 		return "Sua vez"
 	if Estado.vez_id != "":
 		var f = Estado.figuras.get(Estado.vez_id)
@@ -457,7 +439,12 @@ func _texto_faixa() -> String:
 	return ""
 
 
+func _metros(m: float) -> String:
+	return ("%.1f" % m).replace(".", ",")
+
+
 func _ver_reacao(livre: bool) -> void:
+	# TODO(JV1.x A-4): o servidor ainda manda `reacoes: []` sempre; a forma final vem com a janela de reação.
 	var reacoes := Estado.lista_opcao("reacoes")
 	if reacoes.is_empty() or not livre:
 		return
@@ -468,10 +455,9 @@ func _ver_reacao(livre: bool) -> void:
 	if rid == _reacao_mostrada:
 		return
 	_reacao_mostrada = rid
-	var pergunta: String = r["texto"] if r.get("texto") is String else "Reagir agora?"
-	escolher(pergunta, [
-		["Sim", func(): acao_pedida.emit({"tipo": "reacao", "reacaoId": rid, "aceitar": true})],
-		["Não", func(): acao_pedida.emit({"tipo": "reacao", "reacaoId": rid, "aceitar": false})],
+	escolher("Reagir agora?", [
+		["Sim", _emitir_acao.bind({"tipo": "reacao", "reacaoId": rid, "aceitar": true})],
+		["Não", _emitir_acao.bind({"tipo": "reacao", "reacaoId": rid, "aceitar": false})],
 	])
 
 
@@ -490,6 +476,22 @@ func _atualizar_tela_vermelha() -> void:
 
 
 # ---------------------------------------------------------------- reações
+
+func _ao_ligacao(_e: int) -> void:
+	_atualizar()
+
+
+func _ao_evento(_e: Dictionary) -> void:
+	_atualizar()
+
+
+func _ao_pausa(_p: bool) -> void:
+	_atualizar()
+
+
+func _ao_fase(_f: String) -> void:
+	_atualizar()
+
 
 func _ao_botao(m: int) -> void:
 	_painel_config.visible = false
@@ -512,7 +514,7 @@ func _ao_botao_consumivel() -> void:
 		if o is Dictionary:
 			var item: Dictionary = o
 			itens.append([nome_legivel(item.get("itemId"), item.get("nome"), "Item %d" % (i + 1)),
-				func(): modo_pedido.emit(Arena.Modo.CONSUMIVEL, item)])
+				_emitir_modo.bind(Arena.Modo.CONSUMIVEL, item)])
 	if itens.size() == 1:
 		var unico: Callable = itens[0][1]
 		unico.call()
@@ -520,15 +522,14 @@ func _ao_botao_consumivel() -> void:
 		escolher("Usar o quê?", itens)
 
 
+func _emitir_modo(m: int, extra: Dictionary) -> void:
+	modo_pedido.emit(m, extra)
+
+
 func _ao_escolha(cb: Callable) -> void:
 	_painel_escolha.visible = false
 	if cb.is_valid():
 		cb.call()
-
-
-func _ao_boas_vindas(_msg: Dictionary) -> void:
-	_painel_entrada.visible = false
-	_atualizar()
 
 
 func _pedir_encerrar() -> void:
@@ -548,6 +549,30 @@ func _emitir_acao(acao: Dictionary) -> void:
 func _alternar_config() -> void:
 	_painel_config.visible = not _painel_config.visible
 	_ancorar.call_deferred(_coluna, Control.PRESET_TOP_LEFT)
+
+
+func _fechar_config() -> void:
+	_painel_config.visible = false
+
+
+func _ao_perfil(i: int) -> void:
+	_mudar_pref("perfil", PERFIS[i])
+
+
+func _ao_camera(i: int) -> void:
+	_mudar_pref("camera", CAMERAS[i])
+
+
+func _ao_repor_zoom() -> void:
+	preferencia_mudou.emit("zoom_padrao", true)
+
+
+func _ao_chk_vermelha(v: bool) -> void:
+	_mudar_pref("tela_vermelha", v)
+
+
+func _ao_chk_pulso(v: bool) -> void:
+	_mudar_pref("pulso", v)
 
 
 func _mudar_pref(chave: String, valor) -> void:
@@ -583,6 +608,19 @@ func _ao_dano(alvo_id: String, valor, tipo_dano: String, em_mim: bool) -> void:
 	tw.chain().tween_callback(rotulo.queue_free)
 
 
+## O ataque DELA: o servidor manda o resultado e (v0.2.1) o total; ela vê como no jogo do site.
+func _ao_ataque(dados: Dictionary) -> void:
+	if Estado.minha_figura_id == "" or dados.get("atacanteId") != Estado.minha_figura_id:
+		return
+	var frase: String = FRASES_ATAQUE.get(str(dados.get("resultado")), "")
+	if frase == "":
+		return
+	var total = dados.get("total")
+	if total is int or total is float:
+		frase += " Total %s." % _texto_numero(total)
+	_mostrar_aviso(frase)
+
+
 func _texto_numero(v) -> String:
 	if v is float and v == floorf(v):
 		return str(int(v))
@@ -599,8 +637,17 @@ func _cor_dano(tipo: String) -> Color:
 	return CORES_DANO.get(t, Color.WHITE)
 
 
+func _ao_recibo(_intent_id: String, estado: String, msg: Dictionary) -> void:
+	# RECUSADA por RECEIPT_QUERY ou por "voltar" do Mestre vem sem `texto` (sala.js tratarConsulta).
+	if msg.get("revertidaEm") != null:
+		_mostrar_aviso("A jogada foi desfeita pelo Mestre.")
+	elif estado == "RECUSADA":
+		_mostrar_aviso("A ação não foi feita. Escolha outra vez.")
+	_atualizar()
+
+
 func _ao_recusa(_intent_id: String, _motivo: String, texto: String) -> void:
-	# O servidor manda uma frase simples, sem números do Mestre (§4).
+	# O servidor manda uma frase simples, sem números do Mestre (sala.js TEXTOS_RECUSA).
 	_mostrar_aviso(texto if texto != "" else "Não deu certo. Escolha outra vez.")
 	_atualizar()
 
@@ -615,27 +662,6 @@ func _mostrar_aviso(texto: String, segundos: float = 3.5) -> void:
 	_aviso.text = texto
 	_aviso.visible = true
 	_aviso_restante = segundos
-
-
-func _mostrar_entrada(motivo: String) -> void:
-	var frases := {
-		"senha": "O nome ou a senha não conferem.",
-		"token": "Entre de novo, por favor.",
-		"outro_aparelho": "Esta personagem entrou em outro aparelho.",
-		"nome": "Escreva o nome da personagem.",
-	}
-	var frase: String = frases.get(motivo, "")
-	_texto_entrada.text = frase
-	_texto_entrada.visible = frase != ""
-	_painel_entrada.visible = true
-	_ancorar.call_deferred(_painel_entrada, Control.PRESET_CENTER)
-	_atualizar()
-
-
-func _entrar() -> void:
-	_painel_entrada.visible = false
-	Rede.entrar(_campo_nome.text, _campo_senha.text)
-	_campo_senha.text = ""
 
 
 # ---------------------------------------------------------------- preferências

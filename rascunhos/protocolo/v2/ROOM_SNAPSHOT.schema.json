@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ROOM_SNAPSHOT.schema.json",
+  "title": "ROOM_SNAPSHOT (servidor → cada lugar, projetado)",
+  "description": "§4 + §6 + E-P. Um schema por papel: #/$defs/paraJogadora (com `propria`), #/$defs/paraEspectador (sem `propria`) e #/$defs/paraMestre (com o bloco `mestre`). `vezId`, `rodada` e `propria` vêm do servidor (projecao.js) e entram por errata proposta D-04/D-03. `iniciativa` é a ORDEM (lista de ids), nunca os valores (E-P, linhas novas do §6).",
+  "anyOf": [
+    { "$ref": "#/$defs/paraJogadora" },
+    { "$ref": "#/$defs/paraEspectador" },
+    { "$ref": "#/$defs/paraMestre" }
+  ],
+  "$defs": {
+    "basePropriedades": {
+      "description": "Só documentação: os campos comuns aos três papéis (repetidos em cada papel por causa do additionalProperties:false).",
+      "type": "object"
+    },
+    "propria": {
+      "type": "object",
+      "description": "§6: Vida, PA e ficha DA PRÓPRIA. Só no snapshot dela.",
+      "required": ["figuraId", "vidaActual", "vidaTotal", "paLivre", "paTotal", "estadoMorte", "armaCaida", "armaQuebrada", "corpoPartido", "ficha"],
+      "properties": {
+        "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "vidaActual": { "type": "number" },
+        "vidaTotal": { "type": "number", "minimum": 0 },
+        "paLivre": { "type": "number" },
+        "paTotal": { "type": "number", "minimum": 0 },
+        "estadoMorte": { "$ref": "comum.schema.json#/$defs/estadoMorte" },
+        "armaCaida": { "type": "boolean" },
+        "armaQuebrada": { "type": "boolean" },
+        "corpoPartido": { "type": "boolean" },
+        "ficha": { "type": "object", "description": "A ficha dela, inteira (§6 ✔ para a própria)." }
+      },
+      "additionalProperties": false
+    },
+    "mestre": {
+      "type": "object",
+      "description": "Só no snapshot do Mestre: figuras não colocadas, fichaId, modo H10, lobby, vez, painel do ambiente, cartões abertos, pausa.",
+      "required": ["figuras", "lobby", "vez", "ambiente", "cartoes", "pausa"],
+      "properties": {
+        "figuras": { "type": "array", "items": { "type": "object" } },
+        "lobby": { "type": ["object", "null"] },
+        "vez": { "type": ["object", "null"] },
+        "ambiente": { "type": "object" },
+        "cartoes": { "type": "array", "items": { "type": "object" } },
+        "pausa": { "type": ["object", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "paraEspectador": {
+      "type": "object",
+      "required": ["v", "type", "roomId", "seq", "revision", "ts", "fase", "mapa", "figuras", "iniciativa", "vezId", "rodada", "ambiente"],
+      "properties": {
+        "v": { "$ref": "comum.schema.json#/$defs/v" },
+        "type": { "const": "ROOM_SNAPSHOT" },
+        "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+        "seq": { "$ref": "comum.schema.json#/$defs/seq" },
+        "revision": { "$ref": "comum.schema.json#/$defs/revision" },
+        "ts": { "$ref": "comum.schema.json#/$defs/ts" },
+        "fase": { "$ref": "comum.schema.json#/$defs/fase" },
+        "mapa": { "$ref": "comum.schema.json#/$defs/mapa" },
+        "figuras": { "type": "array", "items": { "$ref": "comum.schema.json#/$defs/figuraPublica" } },
+        "iniciativa": { "type": "array", "items": { "$ref": "comum.schema.json#/$defs/idOpaco" } },
+        "vezId": { "$ref": "comum.schema.json#/$defs/idOuNull" },
+        "rodada": { "type": "integer", "minimum": 0 },
+        "ambiente": { "$ref": "comum.schema.json#/$defs/ambienteEfeito" }
+      },
+      "additionalProperties": false
+    },
+    "paraJogadora": {
+      "type": "object",
+      "required": ["v", "type", "roomId", "seq", "revision", "ts", "fase", "mapa", "figuras", "iniciativa", "vezId", "rodada", "ambiente", "propria"],
+      "properties": {
+        "v": { "$ref": "comum.schema.json#/$defs/v" },
+        "type": { "const": "ROOM_SNAPSHOT" },
+        "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+        "seq": { "$ref": "comum.schema.json#/$defs/seq" },
+        "revision": { "$ref": "comum.schema.json#/$defs/revision" },
+        "ts": { "$ref": "comum.schema.json#/$defs/ts" },
+        "fase": { "$ref": "comum.schema.json#/$defs/fase" },
+        "mapa": { "$ref": "comum.schema.json#/$defs/mapa" },
+        "figuras": { "type": "array", "items": { "$ref": "comum.schema.json#/$defs/figuraPublica" } },
+        "iniciativa": { "type": "array", "items": { "$ref": "comum.schema.json#/$defs/idOpaco" } },
+        "vezId": { "$ref": "comum.schema.json#/$defs/idOuNull" },
+        "rodada": { "type": "integer", "minimum": 0 },
+        "ambiente": { "$ref": "comum.schema.json#/$defs/ambienteEfeito" },
+        "propria": { "$ref": "#/$defs/propria" }
+      },
+      "additionalProperties": false
+    },
+    "paraMestre": {
+      "type": "object",
+      "required": ["v", "type", "roomId", "seq", "revision", "ts", "fase", "mapa", "figuras", "iniciativa", "vezId", "rodada", "ambiente", "mestre"],
+      "properties": {
+        "v": { "$ref": "comum.schema.json#/$defs/v" },
+        "type": { "const": "ROOM_SNAPSHOT" },
+        "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+        "seq": { "$ref": "comum.schema.json#/$defs/seq" },
+        "revision": { "$ref": "comum.schema.json#/$defs/revision" },
+        "ts": { "$ref": "comum.schema.json#/$defs/ts" },
+        "fase": { "$ref": "comum.schema.json#/$defs/fase" },
+        "mapa": { "$ref": "comum.schema.json#/$defs/mapa" },
+        "figuras": { "type": "array", "items": { "$ref": "comum.schema.json#/$defs/figuraPublica" } },
+        "iniciativa": { "type": "array", "items": { "$ref": "comum.schema.json#/$defs/idOpaco" } },
+        "vezId": { "$ref": "comum.schema.json#/$defs/idOuNull" },
+        "rodada": { "type": "integer", "minimum": 0 },
+        "ambiente": { "$ref": "comum.schema.json#/$defs/ambienteEfeito" },
+        "mestre": { "$ref": "#/$defs/mestre" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

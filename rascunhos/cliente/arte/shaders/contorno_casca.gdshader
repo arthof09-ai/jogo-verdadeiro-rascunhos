@@ -36,8 +36,13 @@ uniform float piso_contorno : hint_range(0.0, 0.1) = 0.02;
 uniform float largura_px : hint_range(0.5, 3.0) = 1.25;
 // true: largura_px vale "a 1080p" e escala com a altura do viewport 3D.
 uniform bool escalar_com_resolucao = true;
-// Mínimo absoluto em píxeis do viewport 3D (com escala 3D 0,6-0,75 o contorno some sem isto).
-uniform float largura_minima_px : hint_range(0.0, 2.0) = 0.75;
+// Mínimo absoluto em píxeis do RENDER 3D INTERNO (revisão V1.1, 06/11).
+// No Compatibility 4.7, VIEWPORT_SIZE é o tamanho interno já escalado: o render_scene passa
+// "Size2i screen_size = rb->internal_size;" ao _setup_environment. Logo, com escala 3D 0,6 a
+// 1080p, o viewport interno tem 648 px de altura e 1,25 px "a 1080p" viram 0,75 px internos:
+// uma casca abaixo de 1 px parte-se e cintila (era a causa do "contorno que some").
+// Com mínimo 1,0: escala 0,67 -> 1,5 px finais; escala 0,6 -> 1,67 px finais.
+uniform float largura_minima_px : hint_range(0.0, 2.0) = 1.0;
 uniform bool normal_suave_em_cor = false;
 
 float luminancia(vec3 c) {
@@ -60,14 +65,18 @@ void vertex() {
 
 	float px = largura_px;
 	if (escalar_com_resolucao) {
-		px = max(largura_px * VIEWPORT_SIZE.y / 1080.0, largura_minima_px);
+		px = largura_px * VIEWPORT_SIZE.y / 1080.0;
 	}
+	// O mínimo vale nos dois modos (antes só valia com escalar_com_resolucao = true).
+	px = max(px, largura_minima_px);
 	if (comp > 0.00001) {
 		// 1 px em NDC = 2 / VIEWPORT_SIZE; x clip.w para valer em clip space.
 		clip.xy += (dir_px / comp) * px * (2.0 / VIEWPORT_SIZE) * clip.w;
 	}
 
 	// A casca não deve entrar no mapa de sombra: atira-a para fora do volume de recorte.
+	// (Os 3 vértices caem no mesmo ponto: triângulo degenerado, sem píxeis. A chamada de
+	// desenho do passe de sombra pode continuar a existir; contar no orçamento e medir.)
 	if (IN_SHADOW_PASS) {
 		clip = vec4(2.0, 2.0, 2.0, 1.0);
 	}

@@ -6,8 +6,16 @@ extends Node3D
 ## - Destaca SÓ as casas que vieram em ROOM_OPTIONS.mover, e os alvos de ROOM_OPTIONS.ataques.
 ## - Toque ou clique numa casa destacada → ROOM_INTENT. Setas do teclado só no modo Mover.
 ## - O cliente NUNCA calcula regra: não decide casas, custos nem alvos; só mostra e envia.
+## - Chega-se aqui pelo lobby (cenas/lobby) quando a fase passa a "combate"; se o lugar
+##   se perder (token inválido, outro aparelho, "Sair da mesa"), volta-se ao lobby.
 
 enum Modo { NENHUM, MOVER, ATAQUE, CONSUMIVEL }
+
+const CENA_LOBBY := "res://cenas/lobby/lobby.tscn"
+## `orientacao` do servidor é uma letra (sala.js: 'S' por omissão; MASTER_PLACE aceita até 8 letras).
+## Rumo em graus à volta do Y; a frente do Node3D é -Z e a casa y cresce para +Z (sul).
+## PROVISÓRIO: o conjunto exato de letras não está na especificação; aceitam-se N/S/L/O e E/W.
+const RUMO_ORIENTACAO := {"N": 0.0, "S": 180.0, "L": -90.0, "E": -90.0, "O": 90.0, "W": 90.0}
 
 @export var largura_padrao: int = 20
 @export var altura_padrao: int = 20
@@ -45,6 +53,7 @@ var _marcador: MeshInstance3D
 var _rotulo_custo: Label3D
 var _nos: Dictionary = {}  # figuraId -> Node3D
 var _focou := false
+var _saindo := false
 
 
 func _ready() -> void:
@@ -59,8 +68,19 @@ func _ready() -> void:
 	hud.acao_pedida.connect(enviar_acao)
 	hud.preferencia_mudou.connect(_ao_preferencia)
 	hud.aplicar_preferencias_iniciais()
-	Rede.iniciar()
+	Rede.precisa_entrar.connect(_ao_precisa_entrar)
+	Rede.iniciar()  # não faz nada se o lobby já ligou
+	# O snapshot pode ter chegado antes de a cena abrir (veio do lobby): desenha já.
+	if Estado.tem_snapshot:
+		_ao_snapshot()
 	print("pronto")  # o CI (JV0.2) espera esta linha no console
+
+
+func _ao_precisa_entrar(_motivo: String) -> void:
+	if _saindo:
+		return
+	_saindo = true
+	get_tree().change_scene_to_file.call_deferred(CENA_LOBBY)
 
 
 # ---------------------------------------------------------------- grelha
@@ -423,32 +443,36 @@ func _atualizar_figura(no: Node3D, id: String, f: Dictionary, c: Vector2i) -> vo
 		tw.tween_property(no, "position", destino, 0.25)
 	var corpo: MeshInstance3D = no.get_node("Corpo")
 	var mat: StandardMaterial3D = (corpo.mesh as CapsuleMesh).material
-	var estado = f.get("estado")
+	# `visivel` (projecao.js visivelDe): de_pe | caida | morta | transformada.
+	var visivel = f.get("visivel")
 	var cor := COR_CRIATURA
 	if id == Estado.minha_figura_id:
 		cor = COR_PROPRIA
 	elif Estado.e_jogadora(f):
 		cor = COR_JOGADORA
-	if estado == "morta":
+	if visivel == "morta":
 		cor = COR_MORTA
+	elif visivel == "transformada":
+		cor = cor.lightened(0.35)  # PROVISÓRIO: o visual da transformação é do Plano B
 	mat.albedo_color = cor
-	var deitada: bool = estado == "caida" or estado == "caída" or estado == "morta"
+	var deitada: bool = visivel == "caida" or visivel == "morta"
 	corpo.rotation_degrees = Vector3(0.0, 0.0, 90.0 if deitada else 0.0)
 	corpo.position = Vector3(0.0, casa_m * 0.28 if deitada else 0.85, 0.0)
 	var ori = f.get("orientacao")
-	if ori is float or ori is int:
-		no.rotation_degrees.y = -float(ori)
+	if ori is String and RUMO_ORIENTACAO.has(ori.to_upper()):
+		no.rotation_degrees.y = float(RUMO_ORIENTACAO[ori.to_upper()])
 	var rotulo: Label3D = no.get_node("Nome")
-	var texto = f.get("nome")
+	var texto = f.get("nomePublico")
 	rotulo.text = texto if texto is String else ""
 
 
 # ---------------------------------------------------------------- reações ao Estado
 
 func _ao_snapshot() -> void:
-	var w := _num_ou(Estado.mapa.get("largura"), largura_padrao)  # PROVISÓRIO
-	var h := _num_ou(Estado.mapa.get("altura"), altura_padrao)  # PROVISÓRIO
-	var bruto_casa = Estado.mapa.get("casaM")  # PROVISÓRIO
+	# projecao.js: mapa = {largura, altura, casaM} (conferido contra o servidor).
+	var w := _num_ou(Estado.mapa.get("largura"), largura_padrao)
+	var h := _num_ou(Estado.mapa.get("altura"), altura_padrao)
+	var bruto_casa = Estado.mapa.get("casaM")
 	var casa: float = casa_m_padrao
 	if (bruto_casa is float or bruto_casa is int) and float(bruto_casa) > 0.0:
 		casa = float(bruto_casa)

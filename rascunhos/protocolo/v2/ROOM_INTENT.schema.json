@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ROOM_INTENT.schema.json",
+  "title": "ROOM_INTENT (jogadora → servidor)",
+  "description": "§3 + §3.1 + ERRATA v0.2.2 (correr, apanhar_arma) + E-C1 (hashAcao sobre {acao, dadosFisicos, revision}). O cliente manda intenção, nunca estado. `dadosFisicos` só com `atacar` (o servidor recusa o resto como acao_invalida).",
+  "type": "object",
+  "required": ["v", "type", "roomId", "intentId", "revision", "acao"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "ROOM_INTENT" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "intentId": { "$ref": "comum.schema.json#/$defs/uuidV4" },
+    "revision": { "$ref": "comum.schema.json#/$defs/revision" },
+    "acao": { "$ref": "comum.schema.json#/$defs/acao" },
+    "dadosFisicos": { "$ref": "comum.schema.json#/$defs/dadosFisicos" }
+  },
+  "additionalProperties": false
+}

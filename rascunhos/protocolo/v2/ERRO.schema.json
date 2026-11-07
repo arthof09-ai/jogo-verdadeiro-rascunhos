@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ERRO.schema.json",
+  "title": "ERRO (servidor → quem causou)",
+  "description": "§2 + §4. A spec só fixa 'versao'; a lista fechada abaixo é a do servidor (sala.js + adaptador Node): errata proposta D-21. `roomId` falta quando o adaptador responde antes de saber a sala (JSON inválido, sem lugar). O texto nunca leva números do Mestre.",
+  "type": "object",
+  "required": ["v", "type", "codigo", "texto"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "ERRO" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "codigo": { "enum": ["versao", "formato", "proibido", "bloqueado", "credenciais", "interno", "sem_lugar"] },
+    "texto": { "$ref": "comum.schema.json#/$defs/textoSemNumeros" }
+  },
+  "additionalProperties": false
+}

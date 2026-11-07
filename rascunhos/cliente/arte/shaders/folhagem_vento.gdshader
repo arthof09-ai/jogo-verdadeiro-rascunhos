@@ -4,8 +4,13 @@
 // - Alpha scissor (pipeline opaco, projeta sombra). usar_alpha_hash = true troca por dither
 //   estocástico (Alpha Hash) para copas altas que tapam figuras; opacidade_dither (por instância)
 //   faz o desvanecimento.
-//   NOTA: a doc oficial diz que o Compatibility tem MSAA 3D "but no alpha to coverage";
-//   por isso este shader NÃO usa alpha_to_coverage (ver README, divergência com a B2.2).
+//   NOTA: no Compatibility 4.7 o alpha to coverage não faz nada. O código-fonte tem
+//   "case BLEND_MODE_ALPHA_TO_COVERAGE: { // Do nothing for now. }", e a doc "latest" diz
+//   "Supported, but no alpha to coverage". Por isso este shader NÃO usa alpha_to_coverage
+//   (ver docs/NOTAS-COMPATIBILITY.md).
+//   opacidade_dither é por GeometryInstance3D: numa MultiMesh vale para TODAS as instâncias.
+//   As copas que tapam figuras têm de ser MeshInstance3D próprias. A propriedade
+//   GeometryInstance3D.transparency é ignorada no Compatibility (doc da classe).
 // - Vento no vértice: balanço (soma de senos) + rajada (ruído de valor) + tremor da folha.
 //   Peso: cor do vértice R (base 0, ponta 1) ou UV.y. Malha sem cor de vértice lê branco = tudo mexe.
 // - Normais "de volume": a normal é puxada para a esfera em volta de centro_copa (espaço do modelo),
@@ -37,6 +42,13 @@ uniform float forca_rajada : hint_range(0.0, 2.0) = 0.6;
 uniform float tremor_folha : hint_range(0.0, 0.2) = 0.03;
 // 0 = COLOR.r ; 1 = UV.y ; 2 = 1 - UV.y
 uniform int fonte_peso : hint_range(0, 2) = 0;
+// Base presa pela ALTURA no espaço do modelo (revisão V1.1, 06/11). O contrato GLB-JOGO-v1
+// põe o pivô no chão (Y mínimo = 0), então VERTEX.y = altura acima do chão. O peso é
+// multiplicado por smoothstep(altura_presa, altura_presa + faixa_presa, VERTEX.y).
+// Sem isto, uma malha sem cor de vértice (COLOR = branco) mexia-se inteira e a base
+// descolava do chão. Para uma copa separada com pivô no centro, use altura_presa < -raio.
+uniform float altura_presa = 0.3;
+uniform float faixa_presa : hint_range(0.01, 20.0) = 2.0;
 
 // ---------- normais de volume ----------
 uniform vec3 centro_copa = vec3(0.0, 8.0, 0.0);
@@ -92,6 +104,7 @@ void vertex() {
 	}
 	peso = clamp(peso, 0.0, 1.0);
 	peso *= peso; // base presa, ponta solta
+	peso *= smoothstep(altura_presa, altura_presa + faixa_presa, VERTEX.y);
 
 	// Normal de volume (antes do deslocamento).
 	vec3 n_esfera = normalize(VERTEX - centro_copa + vec3(0.0, 0.0001, 0.0));
@@ -126,12 +139,15 @@ void fragment() {
 	alb *= mix(vec3(1.0), cor_variacao, v_var * variacao);
 	ALBEDO = alb;
 
-	float a = tex.a * cor_albedo.a;
+	// Revisão V1.1 (06/11): a borda da folha é SEMPRE cortada por limiar_alpha (também no passe
+	// de sombra, que antes usava 0,5 com o hash ligado). O dither só faz o desvanecimento
+	// (opacidade_dither), e não a borda: sem TAA no Compatibility, uma borda estocástica cintila.
+	float cobre = step(limiar_alpha, tex.a * cor_albedo.a);
 	if (usar_alpha_hash && !IN_SHADOW_PASS) {
-		a = step(ruido_ecra(FRAGCOORD.xy), a * opacidade_dither);
+		cobre *= step(ruido_ecra(FRAGCOORD.xy), opacidade_dither);
 	}
-	ALPHA = a;
-	ALPHA_SCISSOR_THRESHOLD = usar_alpha_hash ? 0.5 : limiar_alpha;
+	ALPHA = cobre;
+	ALPHA_SCISSOR_THRESHOLD = 0.5;
 
 	ROUGHNESS = 1.0;
 	SPECULAR = 0.1;
@@ -153,7 +169,10 @@ void light() {
 		float energia = luminancia(luz);
 		DIFFUSE_LIGHT += mix(cor_sombra * energia, luz, k * s);
 		// Translucidez: sol atrás da folha, em relação à câmara.
-		float tr = pow(clamp(dot(-VIEW, LIGHT), 0.0, 1.0), 4.0) * translucidez * s;
+		float tr = clamp(dot(-VIEW, LIGHT), 0.0, 1.0);
+		tr *= tr;
+		tr *= tr; // ^4 sem pow (mais barato no celular)
+		tr *= translucidez * s;
 		DIFFUSE_LIGHT += luz * cor_translucidez * tr;
 	} else {
 		DIFFUSE_LIGHT += luz * k * ATTENUATION;

@@ -49,6 +49,10 @@ uniform float forca_pinceladas : hint_range(0.0, 1.0) = 0.0;
 
 // Sol
 uniform float tamanho_sol : hint_range(0.5, 8.0) = 2.0;   // multiplica LIGHT0_SIZE
+// Raio mínimo do disco, em radianos (revisão V1.1, 06/11). LIGHT0_SIZE é o diâmetro angular
+// (doc do sky shader) e vem do light_angular_distance da luz, que por padrão é 0: sem este
+// mínimo, o disco ficava com 0,002 rad (~0,1°) e não se via. 0,03 rad ≈ 1,7°.
+uniform float raio_sol_minimo : hint_range(0.0, 0.2) = 0.03;
 uniform float borda_sol : hint_range(0.05, 1.0) = 0.35;   // suavidade do disco (fração do raio)
 uniform float forca_sol : hint_range(0.0, 2.0) = 0.9;
 uniform float dureza_halo : hint_range(1.0, 256.0) = 24.0;
@@ -77,7 +81,11 @@ void sky() {
 	vec3 hor = por_hora(horizonte_manha, horizonte_tarde, horizonte_crepusculo, horizonte_noite);
 	vec3 baixo = por_hora(baixo_manha, baixo_tarde, baixo_crepusculo, baixo_noite);
 
-	float pin = texture(pinceladas, SKY_COORDS * escala_pinceladas).r - 0.5;
+	// Sem pinceladas, não lê a textura (ramo por uniform: coerente, sem custo de divergência).
+	float pin = 0.0;
+	if (forca_pinceladas > 0.0) {
+		pin = texture(pinceladas, SKY_COORDS * escala_pinceladas).r - 0.5;
+	}
 	float y = EYEDIR.y - altura_horizonte + pin * forca_pinceladas * 0.15;
 
 	vec3 cor;
@@ -96,8 +104,10 @@ void sky() {
 		cor += cor_sol * (halo + calor);
 		// Disco só no fundo visível; fora do cubemap para não criar um brilho duro nos reflexos.
 		if (!AT_CUBEMAP_PASS) {
-			float ang = acos(c);
-			float raio = max(LIGHT0_SIZE * 0.5 * tamanho_sol, 0.002);
+			// Corda em vez de acos (revisão V1.1): 2·sen(θ/2) ≈ θ para ângulos pequenos, sem
+			// o custo nem a perda de precisão do acos perto de c = 1 em GPUs de celular.
+			float ang = length(EYEDIR - LIGHT0_DIRECTION);
+			float raio = max(LIGHT0_SIZE * 0.5 * tamanho_sol, raio_sol_minimo);
 			float disco = 1.0 - smoothstep(raio * (1.0 - borda_sol), raio * (1.0 + borda_sol), ang);
 			cor = mix(cor, cor_sol, clamp(disco * forca_sol, 0.0, 1.0));
 		}

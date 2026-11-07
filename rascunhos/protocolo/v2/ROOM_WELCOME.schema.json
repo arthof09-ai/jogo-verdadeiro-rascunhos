@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ROOM_WELCOME.schema.json",
+  "title": "ROOM_WELCOME (servidor → quem entrou)",
+  "description": "§4. O seatToken é o do PRÓPRIO lugar (roda a cada JOIN; nunca em log nem em página pública). Nenhum outro campo: o `figuraId` que o cliente procura aqui (PROVISÓRIO) não existe — ver D-03.",
+  "type": "object",
+  "required": ["v", "type", "roomId", "seatId", "seatToken", "papel", "protocolo", "motores"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "ROOM_WELCOME" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "seatId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+    "seatToken": { "type": "string", "minLength": 32, "maxLength": 128, "pattern": "^[A-Za-z0-9_-]+$", "description": "≥128 bits." },
+    "papel": { "$ref": "comum.schema.json#/$defs/papel" },
+    "protocolo": { "const": 2 },
+    "motores": { "$ref": "comum.schema.json#/$defs/motores" }
+  },
+  "additionalProperties": false
+}

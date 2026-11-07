@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MASTER_AMBIENTE.schema.json",
+  "title": "MASTER_AMBIENTE (Mestre → servidor)",
+  "description": "§5: o painel só existe para ele. `futuro` (ambiente futuro, linha nova do §6) vem do servidor: errata proposta D-22. A Party só recebe evento `ambiente` quando o EFEITO presente muda.",
+  "type": "object",
+  "required": ["v", "type", "roomId", "cmdId", "revision"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "MASTER_AMBIENTE" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "cmdId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+    "revision": { "$ref": "comum.schema.json#/$defs/revision" },
+    "hora": { "type": ["string", "null"], "maxLength": 16, "description": "HH:MM. A Party vê só dia/noite." },
+    "clima": { "type": ["string", "null"], "maxLength": 64 },
+    "futuro": { "type": ["string", "null"], "maxLength": 500 }
+  },
+  "additionalProperties": false
+}

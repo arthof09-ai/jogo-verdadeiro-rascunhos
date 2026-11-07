@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ROOM_RECEIPT.schema.json",
+  "title": "ROOM_RECEIPT (servidor → o autor)",
+  "description": "§4 + §4.2 + E-C2 (revertidaEm) + E-P4 (seq do fluxo do lugar) + E-P8 (RECEIPT_QUERY alheio → DESCONHECIDA). Formas: conhecido (APLICADA | AGUARDANDO_MESTRE | RECUSADA com motivo) ou DESCONHECIDA (sem seq nem revision). `motivo` e `cmdId` vêm do servidor (errata proposta D-17, D-18). Nota: na PRIMEIRA recusa o servidor manda ROOM_REJECT, não ROOM_RECEIPT RECUSADA; o RECUSADA aparece no RECEIPT_QUERY e na reversão.",
+  "anyOf": [
+    { "$ref": "#/$defs/paraJogadora" },
+    { "$ref": "#/$defs/doMestre" }
+  ],
+  "$defs": {
+    "conhecido": {
+      "type": "object",
+      "required": ["v", "type", "roomId", "estado", "seq", "revision"],
+      "properties": {
+        "v": { "$ref": "comum.schema.json#/$defs/v" },
+        "type": { "const": "ROOM_RECEIPT" },
+        "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+        "intentId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "cmdId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "estado": { "enum": ["APLICADA", "RECUSADA", "AGUARDANDO_MESTRE"] },
+        "seq": { "$ref": "comum.schema.json#/$defs/seq" },
+        "revision": { "$ref": "comum.schema.json#/$defs/revision" },
+        "motivo": { "$ref": "comum.schema.json#/$defs/motivoRecibo" },
+        "revertidaEm": { "$ref": "comum.schema.json#/$defs/ts" }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "oneOf": [
+            { "required": ["intentId"], "not": { "required": ["cmdId"] } },
+            { "required": ["cmdId"], "not": { "required": ["intentId"] } }
+          ]
+        },
+        {
+          "oneOf": [
+            { "properties": { "estado": { "enum": ["APLICADA", "AGUARDANDO_MESTRE"] } }, "not": { "required": ["motivo"] } },
+            { "properties": { "estado": { "const": "RECUSADA" } }, "required": ["motivo"] }
+          ]
+        }
+      ]
+    },
+    "desconhecida": {
+      "type": "object",
+      "required": ["v", "type", "roomId", "intentId", "estado"],
+      "properties": {
+        "v": { "$ref": "comum.schema.json#/$defs/v" },
+        "type": { "const": "ROOM_RECEIPT" },
+        "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+        "intentId": { "type": ["string", "null"], "maxLength": 64 },
+        "estado": { "const": "DESCONHECIDA" }
+      },
+      "additionalProperties": false
+    },
+    "paraJogadora": {
+      "description": "A jogadora só tem intentId (nunca cmdId).",
+      "oneOf": [
+        { "allOf": [{ "$ref": "#/$defs/conhecido" }, { "required": ["intentId"] }] },
+        { "$ref": "#/$defs/desconhecida" }
+      ]
+    },
+    "doMestre": {
+      "oneOf": [
+        { "$ref": "#/$defs/conhecido" },
+        { "$ref": "#/$defs/desconhecida" }
+      ]
+    }
+  }
+}

@@ -14,6 +14,14 @@
 //  - rendering/shading/overrides/force_vertex_shading = false
 //    (com vertex shading a função light() não é executada — doc oficial, spatial shader).
 //  - Só a DirectionalLight3D tem sombra (B2.2). Tochas (Omni/Spot) sem sombra.
+//  - Ambiente: Environment.ambient_light_source = AMBIENT_SOURCE_COLOR, senão o
+//    ambient_light_color escrito pelo color_script é ignorado e a sombra perde o azul.
+//
+// Custo no Compatibility 4.7 (código-fonte drivers/gles3/rasterizer_scene_gles3.cpp):
+//  cada luz com sombra acrescenta UM passe aditivo por malha iluminada
+//  ("pass < MAX(1, light_passes.size() + directional_shadow_count)"). Com o sol a fazer
+//  sombra, cada superfície com este shader custa 2 chamadas no passe de cor, mais as do mapa
+//  de sombra. O light() corre nesse passe aditivo; somar em DIFFUSE_LIGHT continua correto.
 //
 // PROVISÓRIO: valores padrão das uniforms até ao guia V0.1. O color_script.gd escreve cor_sombra por hora.
 
@@ -39,7 +47,10 @@ uniform float forca_pincel : hint_range(0.0, 1.0) = 0.25;
 uniform vec3 cor_sombra : source_color = vec3(0.29, 0.35, 0.62);
 // Largura da borda da sombra projetada (ATTENUATION), antes do pincel.
 uniform float suavidade_sombra : hint_range(0.01, 0.5) = 0.12;
-// Piso emissivo mínimo na cor da sombra: garante que nenhum píxel cai a preto (B3: L* >= 5).
+// Piso emissivo mínimo na cor da sombra, PROPORCIONAL ao albedo (revisão V1.1, 06/11).
+// Não garante sozinho o L* >= 5 da B3: com albedo muito escuro (< ~0,04 linear) o piso também
+// fica escuro. O preenchimento real vem da luz ambiente (ambient_light_source = COLOR, escrita
+// pelo color_script). O guia V0.1 tem de fixar um albedo mínimo por família.
 uniform float piso_sombra : hint_range(0.0, 0.2) = 0.03;
 
 // ---------- luz de contorno (rim) ----------

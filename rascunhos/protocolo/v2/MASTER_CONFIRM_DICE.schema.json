@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MASTER_CONFIRM_DICE.schema.json",
+  "title": "MASTER_CONFIRM_DICE (Mestre → servidor)",
+  "description": "§5 + §8.2: confirma os dados físicos de uma jogadora. `intentId` é o da intenção DELA (o do cartão ativo de tipo 'dados'); o comando tem o seu próprio cmdId e revision (E-C3).",
+  "type": "object",
+  "required": ["v", "type", "roomId", "cmdId", "revision", "intentId", "aceitar"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "MASTER_CONFIRM_DICE" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "cmdId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+    "revision": { "$ref": "comum.schema.json#/$defs/revision" },
+    "intentId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+    "aceitar": { "type": "boolean" }
+  },
+  "additionalProperties": false
+}

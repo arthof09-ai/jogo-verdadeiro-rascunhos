@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "RECEIPT_QUERY.schema.json",
+  "title": "RECEIPT_QUERY (cliente → servidor)",
+  "description": "§3 + E-P8: só responde ids do próprio lugar; os alheios vêm como DESCONHECIDA. O servidor responde só aos primeiros 50 (sala.js slice(0,50)): errata proposta D-25.",
+  "type": "object",
+  "required": ["v", "type", "roomId", "intentIds"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "RECEIPT_QUERY" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "intentIds": { "type": "array", "minItems": 1, "maxItems": 50, "items": { "$ref": "comum.schema.json#/$defs/idOpaco" } }
+  },
+  "additionalProperties": false
+}

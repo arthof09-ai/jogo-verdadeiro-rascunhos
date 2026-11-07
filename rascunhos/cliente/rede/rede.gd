@@ -1,25 +1,37 @@
 extends Node
-## Autoload "Rede": ligação WebSocket à mesa (Protocolo v2 + erratas v0.2 / v0.2.1).
+## Autoload "Rede": ligação WebSocket ao servidor de mesa (Protocolo v2 + erratas v0.2, v0.2.1, v0.2.2).
 ##
-## - Liga a ws://<mesma origem>/mesa (wss se a página for https). Na web a origem
-##   vem de location.host; fora dela, de um fallback configurável.
+## ALINHADO AO SERVIDOR REAL (rascunhos/servidor/nucleo/sala.js e adaptadores/node/servidor-ws.js).
+## Em caso de divergência, o servidor manda; onde ele parece errado face à especificação,
+## fica um comentário "# DIVERGÊNCIA:".
+##
+## - Liga a ws://<mesma origem>/ws (wss se a página for https). Na web a origem vem de
+##   location.host; fora dela, do campo do lobby (user://rede.cfg) ou de "-- --servidor=".
 ## - Reconecta com espera crescente (1 s, 2 s, 4 s ... até 30 s, com variação).
-## - Guarda o seatToken em user:// (nunca na URL, nunca no log).
-## - Mantém a fila das intenções (ENVIADA, DESCONHECIDA, AGUARDANDO_MESTRE ...).
-## - Ping de aplicação "p" a cada 20 s.
-## - NÃO calcula regra: só transporta intenções e entrega o que o servidor manda.
+## - Guarda o seatToken em user:// (nunca na URL, nunca no log). PIN e senha: só em memória.
+## - Mantém a fila das intenções da jogadora (ENVIADA, DESCONHECIDA, AGUARDANDO_MESTRE ...).
+## - O ping é só da camada WebSocket (princípio 6): nada de ping de aplicação.
+## - NÃO calcula regra: só transporta intenções e comandos e entrega o que o servidor manda.
 
 signal snapshot_recebido(msg: Dictionary)
 signal evento_recebido(msg: Dictionary)
 signal opcoes_recebidas(msg: Dictionary)
 signal recibo_recebido(intent_id: String, estado: String, msg: Dictionary)
 signal recusa_recebida(intent_id: String, motivo: String, texto: String)
+## Toda a `revision` que chega fora de eventos/snapshot/opções (ex.: no ROOM_RECEIPT).
+signal revisao_vista(revision: int)
 signal boas_vindas_recebidas(msg: Dictionary)
 signal sala_pausada(motivo: String)
 signal sala_retomada
 signal ligacao_mudou(estado: int)
 signal precisa_entrar(motivo: String)
+## ERRO do servidor durante a entrada (credenciais, bloqueado ...). `texto` é a frase do servidor.
+signal entrada_recusada(codigo: String, texto: String)
 signal erro_recebido(codigo: String, texto: String)
+## Só o Mestre: MASTER_VIEW, MASTER_CARD, MASTER_RESULTS, MASTER_ALERTA, MASTER_EXPORT.
+signal mestre_recebido(msg: Dictionary)
+## Só o Mestre: ROOM_RECEIPT / ROOM_REJECT de um comando (id = cmdId, ou intentId no MASTER_ACT).
+signal comando_respondido(id: String, msg: Dictionary)
 
 const FilaIntencoes := preload("res://rede/fila_intencoes.gd")
 const Uuid := preload("res://rede/uuid.gd")
@@ -27,23 +39,34 @@ const Uuid := preload("res://rede/uuid.gd")
 enum Ligacao { DESLIGADA, A_LIGAR, A_ENTRAR, NA_MESA, A_ESPERAR, PARADA }
 
 const PROTOCOLO := 2
-const VERSAO_CLIENTE := "0.1.0-jv2.1a"
-const CAMINHO_WS := "/mesa"
-const INTERVALO_PING_S := 20.0
-const SILENCIO_MAX_S := 45.0
+const VERSAO_CLIENTE := "0.2.0-jv3.1"
+## O adaptador Node cria o WebSocket com caminhoWs = '/ws' por omissão (servidor-ws.js).
+## O rascunho anterior do cliente usava '/mesa': o servidor manda.
+const CAMINHO_WS := "/ws"
+## O servidor manda um ping WebSocket a cada 20 s e fecha sem pong aos 45 s.
+## Fora da web, o Godot também pinga (a propriedade não tem efeito na web: o navegador cuida).
+const HEARTBEAT_S := 20.0
 const ESPERA_MIN_S := 1.0
 const ESPERA_MAX_S := 30.0
 const LIMITE_BYTES := 16384  # §2: mensagem do cliente ≤ 16 KB
-const LIMITE_INTENCOES_POR_S := 10  # §2: ≤ 10 intenções por segundo
+const LIMITE_COMANDOS_POR_S := 10  # §2: ≤ 10 por segundo (o servidor conta ROOM_INTENT e MASTER_*)
 const CODIGO_OUTRO_APARELHO := 4002  # E-P9: o segundo JOIN fecha o primeiro
 const ARQ_LUGAR := "user://lugar.cfg"
 const ARQ_REDE := "user://rede.cfg"
 const ARQ_PENDENTES := "user://pendentes.json"
 const CHAVE_HOST := "assimilacao/rede/host_padrao"
-const CHAVE_SALA := "assimilacao/rede/sala_padrao"
 
 var fila = FilaIntencoes.new()
 var estado_ligacao: int = Ligacao.DESLIGADA
+## "jogadora" ou "mestre" (o espectador ainda não tem cena: convite do Mestre, JV1.x).
+var papel := "jogadora"
+## Último motivo pelo qual se pediu a entrada (para a cena do lobby o mostrar ao abrir).
+var motivo_entrada := ""
+## Última frase de ERRO do servidor (só para mostrar; nunca técnica).
+var texto_ultimo_erro := ""
+## Só do Mestre: a última MASTER_VIEW e o cartão ativo (podem chegar antes de a cena abrir).
+var ultima_vista_mestre: Dictionary = {}
+var cartao_ativo: Dictionary = {}
 ## Os testes sem tela desligam a escrita em disco.
 var persistir := true
 
@@ -54,13 +77,11 @@ var _seat_id := ""
 var _seat_token := ""
 var _nome := ""
 var _senha := ""  # só em memória, só até ao ROOM_WELCOME
+var _pin := ""  # idem (E-P13: o PIN nunca vai ao disco)
 var _entrou_com_token := false
 var _ja_esteve_na_mesa := false
 var _espera_s := ESPERA_MIN_S
 var _relogio_reconexao := 0.0
-var _relogio_ping := 0.0
-var _silencio_s := 0.0
-var _servidor_responde_ping := false
 var _envios_recentes: Array = []
 
 
@@ -70,40 +91,40 @@ func _ready() -> void:
 
 # ---------------------------------------------------------------- API pública
 
-## Chamado pela cena principal. Nos testes sem tela ninguém chama: nada liga.
+## Chamado pela cena do lobby (e, por segurança, pela arena). Nos testes sem tela ninguém chama.
 func iniciar() -> void:
 	if _ativo:
 		return
 	_ativo = true
-	_room_id = _sala_configurada()
 	_carregar_lugar()
 	_carregar_pendentes()
 	set_process(true)
 	if _seat_token != "":
 		_ligar()
 	else:
-		precisa_entrar.emit("")
+		_pedir_entrada("")
 
 
-## Entrada com o nome da personagem e a senha simples (o lobby completo é a JV3.1).
+## Entrada da jogadora com o nome da personagem e a senha simples.
 func entrar(nome: String, senha: String) -> void:
 	_nome = nome.strip_edges()
 	_senha = senha
+	_pin = ""
 	if _nome == "":
-		precisa_entrar.emit("nome")
+		_pedir_entrada("nome")
 		return
-	_seat_token = ""
-	_guardar_lugar()
-	fila.limpar()
-	_guardar_pendentes()
-	_ativo = true
-	set_process(true)
-	if _ws != null and estado_ligacao == Ligacao.A_ENTRAR:
-		_enviar_join()
+	_comecar_entrada("jogadora")
+
+
+## Entrada do Mestre com o PIN (E-P9: 6 dígitos ou mais; quem confere é o servidor).
+func entrar_mestre(pin: String) -> void:
+	_pin = pin.strip_edges()
+	_nome = ""
+	_senha = ""
+	if _pin == "":
+		_pedir_entrada("pin")
 		return
-	_fechar_socket()
-	_espera_s = ESPERA_MIN_S
-	_ligar()
+	_comecar_entrada("mestre")
 
 
 ## Esquece o lugar neste aparelho.
@@ -112,30 +133,40 @@ func sair() -> void:
 	_mudar_estado(Ligacao.DESLIGADA)
 	_seat_token = ""
 	_seat_id = ""
+	_room_id = ""
 	_guardar_lugar()
 	fila.limpar()
 	_guardar_pendentes()
+	ultima_vista_mestre = {}
+	cartao_ativo = {}
 	var est = _estado_no()
 	if est != null:
 		est.limpar()
-	precisa_entrar.emit("")
+	_pedir_entrada("")
+
+
+## Endereço "IP:porta" do servidor fora da web (campo do lobby). Na web, a origem manda.
+func definir_servidor(host: String) -> void:
+	var h := host.strip_edges()
+	if h == "" or not persistir:
+		return
+	var cfg := ConfigFile.new()
+	cfg.load(ARQ_REDE)  # pode não existir: começa vazio
+	cfg.set_value("servidor", "host", h)
+	cfg.save(ARQ_REDE)
 
 
 ## Envia uma ROOM_INTENT com intentId UUID v4. Devolve o intentId, ou "" se não deu.
 ## `revision` é a revisão que o aparelho viu (a das ROOM_OPTIONS).
 func enviar_intencao(acao: Dictionary, revision) -> String:
-	if estado_ligacao != Ligacao.NA_MESA or _ws == null:
+	if estado_ligacao != Ligacao.NA_MESA or _ws == null or papel != "jogadora":
 		return ""
 	if fila.tem_em_voo():
 		return ""
 	if not _dentro_do_limite():
 		return ""
 	var id := Uuid.v4()
-	var msg := {
-		"v": PROTOCOLO, "type": "ROOM_INTENT", "roomId": _room_id,
-		"intentId": id, "revision": _normalizar(revision), "acao": acao
-	}
-	var texto := JSON.stringify(msg)
+	var texto := JSON.stringify(montar_intencao(acao, revision, id))
 	if texto.to_utf8_buffer().size() > LIMITE_BYTES:
 		return ""
 	fila.registar(id, texto)
@@ -144,25 +175,94 @@ func enviar_intencao(acao: Dictionary, revision) -> String:
 	return id
 
 
+## Monta a ROOM_INTENT exatamente como o servidor a valida (sala.js tratarIntencao).
+func montar_intencao(acao: Dictionary, revision, id: String) -> Dictionary:
+	var msg := {
+		"v": PROTOCOLO, "type": "ROOM_INTENT",
+		"intentId": id, "revision": _normalizar(revision), "acao": acao
+	}
+	if _room_id != "":
+		msg["roomId"] = _room_id
+	return msg
+
+
+## Só o Mestre. Envia um MASTER_* com revisão. Devolve o id (cmdId, ou intentId no MASTER_ACT).
+func enviar_mestre(tipo: String, campos: Dictionary, revision) -> String:
+	if estado_ligacao != Ligacao.NA_MESA or _ws == null or papel != "mestre":
+		return ""
+	if not _dentro_do_limite():
+		return ""
+	var id := Uuid.v4()
+	var texto := JSON.stringify(montar_comando_mestre(tipo, campos, revision, id))
+	if texto.to_utf8_buffer().size() > LIMITE_BYTES:
+		return ""
+	return id if _enviar_texto(texto) else ""
+
+
+## Monta um MASTER_* como o servidor o valida (sala.js tratarMestre): `cmdId` em todos,
+## menos no MASTER_ACT, que usa `intentId`. Todos os que mudam estado levam `revision` (E-C3).
+func montar_comando_mestre(tipo: String, campos: Dictionary, revision, id: String) -> Dictionary:
+	var msg: Dictionary = campos.duplicate(true)
+	msg["v"] = PROTOCOLO
+	msg["type"] = tipo
+	msg["revision"] = _normalizar(revision)
+	if tipo == "MASTER_ACT":
+		msg["intentId"] = id
+	else:
+		msg["cmdId"] = id
+	if _room_id != "":
+		msg["roomId"] = _room_id
+	return msg
+
+
+## Só o Mestre: pede a MASTER_VIEW (isenta de revisão e de recibo, E-C3).
+func pedir_vista_mestre() -> void:
+	if papel != "mestre" or estado_ligacao != Ligacao.NA_MESA or not _dentro_do_limite():
+		return
+	_enviar_dict(_com_sala({"v": PROTOCOLO, "type": "MASTER_VIEW"}))
+
+
+## Só o Mestre: MASTER_SEARCH (pesquisa de criatura ou NPC por nome; "" lista tudo).
+func pesquisar_fichas(texto: String) -> void:
+	if papel != "mestre" or estado_ligacao != Ligacao.NA_MESA or not _dentro_do_limite():
+		return
+	_enviar_dict(_com_sala({"v": PROTOCOLO, "type": "MASTER_SEARCH", "texto": texto}))
+
+
 ## Pede os eventos depois de `ultimo_seq` (fluxo deste lugar, E-P4).
+## Um `ultimo_seq` negativo faz o servidor mandar um ROOM_SNAPSHOT inteiro
+## (sala.js mensagensDeSincronizacao: lastSeq fora do intervalo → snapshot).
 func enviar_resync(ultimo_seq: int) -> void:
 	if estado_ligacao != Ligacao.NA_MESA:
-		return  # ao religar, o RESYNC sai sozinho
-	_enviar_dict({"v": PROTOCOLO, "type": "ROOM_RESYNC", "roomId": _room_id, "lastSeq": ultimo_seq})
+		return  # ao religar, o próprio ROOM_JOIN traz a sincronização
+	_enviar_dict(_com_sala({"v": PROTOCOLO, "type": "ROOM_RESYNC", "lastSeq": ultimo_seq}))
 
 
 func consultar_recibos(ids: Array) -> void:
 	if ids.is_empty() or estado_ligacao != Ligacao.NA_MESA:
 		return
-	_enviar_dict({"v": PROTOCOLO, "type": "RECEIPT_QUERY", "roomId": _room_id, "intentIds": ids})
+	_enviar_dict(_com_sala({"v": PROTOCOLO, "type": "RECEIPT_QUERY", "intentIds": ids.slice(0, 50)}))
 
 
 func na_mesa() -> bool:
 	return estado_ligacao == Ligacao.NA_MESA
 
 
+func a_ligar() -> bool:
+	return estado_ligacao == Ligacao.A_LIGAR or estado_ligacao == Ligacao.A_ENTRAR \
+		or estado_ligacao == Ligacao.A_ESPERAR
+
+
 func ja_esteve_na_mesa() -> bool:
 	return _ja_esteve_na_mesa
+
+
+func tem_token() -> bool:
+	return _seat_token != ""
+
+
+func room_id() -> String:
+	return _room_id
 
 
 func ha_intencao_em_voo() -> bool:
@@ -184,8 +284,21 @@ func url_servidor() -> String:
 		if p is String and p == "https:":
 			esquema = "wss"  # E-P9: wss sempre que houver TLS
 	if host == "":
-		host = _host_configurado()
+		host = host_configurado()
 	return "%s://%s%s" % [esquema, host, CAMINHO_WS]
+
+
+## "IP:porta" fora da web: argumento "--servidor=", depois user://rede.cfg, depois o project.godot.
+func host_configurado() -> String:
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--servidor="):
+			return arg.substr("--servidor=".length())
+	var cfg := ConfigFile.new()
+	if cfg.load(ARQ_REDE) == OK:
+		var h = cfg.get_value("servidor", "host", "")
+		if h is String and h != "":
+			return h
+	return str(ProjectSettings.get_setting(CHAVE_HOST, "127.0.0.1:8080"))
 
 
 # ---------------------------------------------------------------- laço
@@ -205,37 +318,48 @@ func _process(delta: float) -> void:
 			_ao_abrir()
 		while _ws != null and _ws.get_available_packet_count() > 0:
 			var pacote := _ws.get_packet()
-			_silencio_s = 0.0
-			if _ws.was_string_packet():
+			if _ws != null and _ws.was_string_packet():
 				_ao_receber(pacote.get_string_from_utf8())
-		if _ws == null:
-			return
-		_relogio_ping += delta
-		if _relogio_ping >= INTERVALO_PING_S:
-			_relogio_ping = 0.0
-			_ws.send_text("p")
-		_silencio_s += delta
-		# Só se o servidor responde ao "p" é que o silêncio prova uma ligação morta.
-		if _servidor_responde_ping and _silencio_s > SILENCIO_MAX_S:
-			_ws.close(-1)
 	elif st == WebSocketPeer.STATE_CLOSED:
 		var codigo := _ws.get_close_code()
 		_ws = null
 		_ao_fechar(codigo)
 
 
+func _comecar_entrada(novo_papel: String) -> void:
+	papel = novo_papel
+	_seat_token = ""
+	_seat_id = ""
+	_room_id = ""
+	_guardar_lugar()
+	fila.limpar()
+	_guardar_pendentes()
+	ultima_vista_mestre = {}
+	cartao_ativo = {}
+	var est = _estado_no()
+	if est != null:
+		est.limpar()  # o lastSeq de outro lugar não serve (E-P4: seq por destinatário)
+	_ativo = true
+	set_process(true)
+	if _ws != null and estado_ligacao == Ligacao.A_ENTRAR:
+		_enviar_join()
+		return
+	_fechar_socket()
+	_espera_s = ESPERA_MIN_S
+	_ligar()
+
+
 func _ligar() -> void:
 	var url := url_servidor()
 	_ws = WebSocketPeer.new()
 	_ws.inbound_buffer_size = 1 << 20  # snapshots grandes cabem
+	if not OS.has_feature("web"):
+		_ws.heartbeat_interval = HEARTBEAT_S
 	var err := _ws.connect_to_url(url)
 	if err != OK:
 		_ws = null
 		_agendar_reconexao()
 		return
-	_relogio_ping = 0.0
-	_silencio_s = 0.0
-	_servidor_responde_ping = false
 	_mudar_estado(Ligacao.A_LIGAR)
 
 
@@ -245,23 +369,27 @@ func _ao_abrir() -> void:
 
 
 func _enviar_join() -> void:
-	var msg := {
-		"v": PROTOCOLO, "type": "ROOM_JOIN", "roomId": _room_id,
-		"papel": "jogadora", "cliente": VERSAO_CLIENTE
-	}
+	# sala.js entrar(): papel + (seatToken) ou (nome+senha) ou (pin); lastSeq opcional.
+	# O roomId não é exigido no JOIN; só vai se já o conhecemos de um WELCOME anterior.
+	var msg := _com_sala({"v": PROTOCOLO, "type": "ROOM_JOIN", "papel": papel, "cliente": VERSAO_CLIENTE})
 	if _seat_token != "":
 		msg["seatToken"] = _seat_token  # dentro da mensagem, nunca na URL (E-P9)
 		_entrou_com_token = true
-	elif _nome != "":
+		var est = _estado_no()
+		if est != null and est.tem_snapshot:
+			msg["lastSeq"] = est.ultimo_seq  # o mesmo lugar: o fluxo é o mesmo
+	elif papel == "mestre" and _pin != "":
+		msg["pin"] = _pin
+		_entrou_com_token = false
+	elif papel != "mestre" and _nome != "":
 		msg["nome"] = _nome
 		msg["senha"] = _senha
 		_entrou_com_token = false
 	else:
-		precisa_entrar.emit("")
+		_fechar_socket()
+		_mudar_estado(Ligacao.DESLIGADA)
+		_pedir_entrada("")
 		return
-	var est = _estado_no()
-	if est != null and est.tem_snapshot:
-		msg["lastSeq"] = est.ultimo_seq
 	_enviar_dict(msg)
 
 
@@ -275,7 +403,7 @@ func _ao_fechar(codigo: int) -> void:
 		_seat_token = ""
 		_guardar_lugar()
 		_mudar_estado(Ligacao.PARADA)
-		precisa_entrar.emit("outro_aparelho")
+		_pedir_entrada("outro_aparelho")
 		return
 	_agendar_reconexao()
 
@@ -294,12 +422,16 @@ func _fechar_socket() -> void:
 		_guardar_pendentes()
 
 
+func _pedir_entrada(motivo: String) -> void:
+	motivo_entrada = motivo
+	precisa_entrar.emit(motivo)
+
+
 # ---------------------------------------------------------------- receção
 
 func _ao_receber(texto: String) -> void:
 	if not texto.begins_with("{"):
-		_servidor_responde_ping = true  # resposta ao "p" (auto-resposta do servidor)
-		return
+		return  # o servidor só fala JSON; qualquer outra coisa é ignorada
 	var dados = JSON.parse_string(texto)
 	if not (dados is Dictionary):
 		return
@@ -313,7 +445,7 @@ func _ao_receber(texto: String) -> void:
 		"ROOM_SNAPSHOT":
 			snapshot_recebido.emit(msg)
 		"ROOM_EVENT":
-			evento_recebido.emit(msg)
+			_ao_evento(msg)
 		"ROOM_OPTIONS":
 			opcoes_recebidas.emit(msg)
 		"ROOM_RECEIPT":
@@ -326,6 +458,14 @@ func _ao_receber(texto: String) -> void:
 			sala_retomada.emit()
 		"ERRO":
 			_ao_erro(msg)
+		"MASTER_VIEW":
+			ultima_vista_mestre = msg
+			mestre_recebido.emit(msg)
+		"MASTER_CARD":
+			cartao_ativo = msg
+			mestre_recebido.emit(msg)
+		"MASTER_RESULTS", "MASTER_ALERTA", "MASTER_EXPORT":
+			mestre_recebido.emit(msg)  # o MASTER_EXPORT nunca se escreve em log
 		_:
 			pass
 
@@ -338,27 +478,46 @@ func _ao_boas_vindas(msg: Dictionary) -> void:
 	var sala := _texto(msg.get("roomId"))
 	if sala != "":
 		_room_id = sala
+	var p := _texto(msg.get("papel"))
+	if p != "":
+		papel = p
 	_guardar_lugar()
 	_nome = ""
 	_senha = ""
+	_pin = ""
 	_espera_s = ESPERA_MIN_S
 	_ja_esteve_na_mesa = true
+	motivo_entrada = ""
 	_mudar_estado(Ligacao.NA_MESA)
 	boas_vindas_recebidas.emit(msg)
-	# E-C7: ao religar, sempre RESYNC; depois, perguntar pelas intenções pendentes.
-	var est = _estado_no()
-	if est != null and est.tem_snapshot:
-		enviar_resync(est.ultimo_seq)
-	consultar_recibos(fila.ids_para_consulta())
+	# E-C7 ("ao religar, sempre RESYNC"): o servidor já junta a sincronização à resposta do
+	# ROOM_JOIN (sala.js entrar → mensagensDeSincronizacao), por isso não se pede outra vez.
+	# Falta só perguntar pelas intenções que ficaram sem recibo.
+	if papel == "jogadora":
+		consultar_recibos(fila.ids_para_consulta())
+
+
+func _ao_evento(msg: Dictionary) -> void:
+	# Só do Mestre: o cartão fecha com o evento `cartao_fechado` (sala.js fecharCartao).
+	if not cartao_ativo.is_empty() and _texto(msg.get("tipo")) == "cartao_fechado":
+		var d = msg.get("dados")
+		if d is Dictionary and d.get("cartaoId") == cartao_ativo.get("cartaoId"):
+			cartao_ativo = {}
+	evento_recebido.emit(msg)
 
 
 func _ao_recibo(msg: Dictionary) -> void:
+	if msg.get("revision") != null:
+		revisao_vista.emit(_int(msg.get("revision")))
+	if papel == "mestre":
+		comando_respondido.emit(_id_de(msg), msg)
+		return
 	var id := _texto(msg.get("intentId"))
 	var r: int = fila.aplicar_recibo(msg)
 	if r == FilaIntencoes.Resultado.REENVIAR:
 		var t: String = fila.texto_de(id)
 		if t != "":
-			_enviar_texto(t)  # MESMO intentId, MESMO texto: o servidor deduplica
+			_enviar_texto(t)  # MESMO intentId, MESMO texto: o servidor deduplica (E-C1)
 	elif r == FilaIntencoes.Resultado.NOVO:
 		recibo_recebido.emit(id, fila.estado_de(id), msg)
 	# IGNORADO: recibo duplicado ou alheio, não se mostra nada.
@@ -366,6 +525,9 @@ func _ao_recibo(msg: Dictionary) -> void:
 
 
 func _ao_recusa(msg: Dictionary) -> void:
+	if papel == "mestre":
+		comando_respondido.emit(_id_de(msg), msg)
+		return
 	var id := _texto(msg.get("intentId"))
 	var motivo := _texto(msg.get("motivo"))
 	var texto := _texto(msg.get("texto"))
@@ -378,24 +540,31 @@ func _ao_recusa(msg: Dictionary) -> void:
 	# Recusa repetida ou de id que não é nosso: ignora.
 
 
+## Códigos reais do servidor: formato, versao, proibido, credenciais, bloqueado, interno, sem_lugar.
 func _ao_erro(msg: Dictionary) -> void:
 	var codigo := _texto(msg.get("codigo"))
+	var texto := _texto(msg.get("texto"))
+	texto_ultimo_erro = texto
 	if codigo == "versao":
 		_parar_por_versao()
 		return
 	if estado_ligacao == Ligacao.A_ENTRAR:
 		_fechar_socket()
 		_mudar_estado(Ligacao.DESLIGADA)
-		if _entrou_com_token:
+		entrada_recusada.emit(codigo, texto)
+		if codigo == "credenciais" and _entrou_com_token:
+			# O token já não vale: esquece-o e pede o nome e a senha (ou o PIN).
 			_seat_token = ""
 			_guardar_lugar()
 			fila.limpar()
 			_guardar_pendentes()
-			precisa_entrar.emit("token")
+			_pedir_entrada("token")
+		elif codigo == "credenciais":
+			_pedir_entrada("senha")
 		else:
-			precisa_entrar.emit("senha")
+			_pedir_entrada(codigo)  # ex.: "bloqueado" — o token (se houver) fica guardado
 		return
-	erro_recebido.emit(codigo, _texto(msg.get("texto")))
+	erro_recebido.emit(codigo, texto)
 
 
 func _parar_por_versao() -> void:
@@ -405,6 +574,12 @@ func _parar_por_versao() -> void:
 
 
 # ---------------------------------------------------------------- envio
+
+func _com_sala(msg: Dictionary) -> Dictionary:
+	if _room_id != "":
+		msg["roomId"] = _room_id
+	return msg
+
 
 func _enviar_dict(msg: Dictionary) -> bool:
 	return _enviar_texto(JSON.stringify(msg))
@@ -420,7 +595,7 @@ func _dentro_do_limite() -> bool:
 	var agora := Time.get_ticks_msec()
 	while not _envios_recentes.is_empty() and agora - int(_envios_recentes[0]) > 1000:
 		_envios_recentes.pop_front()
-	if _envios_recentes.size() >= LIMITE_INTENCOES_POR_S:
+	if _envios_recentes.size() >= LIMITE_COMANDOS_POR_S:
 		return false
 	_envios_recentes.append(agora)
 	return true
@@ -433,56 +608,34 @@ func _mudar_estado(novo: int) -> void:
 	ligacao_mudou.emit(novo)
 
 
-# ---------------------------------------------------------------- configuração e disco
+# ---------------------------------------------------------------- disco
 
-func _host_configurado() -> String:
-	for arg in OS.get_cmdline_user_args():
-		if arg.begins_with("--servidor="):
-			return arg.substr("--servidor=".length())
-	var cfg := ConfigFile.new()
-	if cfg.load(ARQ_REDE) == OK:
-		var h = cfg.get_value("servidor", "host", "")
-		if h is String and h != "":
-			return h
-	return str(ProjectSettings.get_setting(CHAVE_HOST, "127.0.0.1:8080"))
-
-
-func _sala_configurada() -> String:
-	if OS.has_feature("web"):
-		var s = JavaScriptBridge.eval("new URLSearchParams(location.search).get('sala') || ''", true)
-		if s is String and s != "":
-			return s
-	for arg in OS.get_cmdline_user_args():
-		if arg.begins_with("--sala="):
-			return arg.substr("--sala=".length())
-	var cfg := ConfigFile.new()
-	if cfg.load(ARQ_REDE) == OK:
-		var v = cfg.get_value("servidor", "sala", "")
-		if v is String and v != "":
-			return v
-	return str(ProjectSettings.get_setting(CHAVE_SALA, "mesa"))
-
-
+## O lugar só vale para o mesmo servidor (o roomId é dado pelo servidor no WELCOME).
 func _carregar_lugar() -> void:
 	if not persistir:
 		return
 	var cfg := ConfigFile.new()
 	if cfg.load(ARQ_LUGAR) != OK:
 		return
-	var sala = cfg.get_value("lugar", "roomId", "")
-	if sala != _room_id:
-		return  # o token é de outra sala: não serve
+	if _texto(cfg.get_value("lugar", "servidor", "")) != url_servidor():
+		return  # token de outro servidor: não serve
+	_room_id = _texto(cfg.get_value("lugar", "roomId", ""))
 	_seat_id = _texto(cfg.get_value("lugar", "seatId", ""))
 	_seat_token = _texto(cfg.get_value("lugar", "seatToken", ""))
+	var p := _texto(cfg.get_value("lugar", "papel", ""))
+	if p == "jogadora" or p == "mestre":
+		papel = p
 
 
 func _guardar_lugar() -> void:
 	if not persistir:
 		return
 	var cfg := ConfigFile.new()
+	cfg.set_value("lugar", "servidor", url_servidor())
 	cfg.set_value("lugar", "roomId", _room_id)
 	cfg.set_value("lugar", "seatId", _seat_id)
 	cfg.set_value("lugar", "seatToken", _seat_token)
+	cfg.set_value("lugar", "papel", papel)
 	cfg.save(ARQ_LUGAR)
 
 
@@ -521,6 +674,15 @@ func _estado_no() -> Node:
 	return get_node_or_null("/root/Estado")
 
 
+## Id de um recibo ou recusa: `cmdId` (comandos do Mestre) ou `intentId`.
+static func _id_de(msg: Dictionary) -> String:
+	var c = msg.get("cmdId")
+	if c is String and c != "":
+		return c
+	var i = msg.get("intentId")
+	return i if i is String else ""
+
+
 static func _texto(v) -> String:
 	return v if v is String else ""
 
@@ -533,6 +695,7 @@ static func _int(v) -> int:
 	return 0
 
 
+## O JSON do Godot devolve números como float; o servidor exige inteiros (Number.isInteger).
 static func _normalizar(v):
 	if v is float and v == floorf(v):
 		return int(v)

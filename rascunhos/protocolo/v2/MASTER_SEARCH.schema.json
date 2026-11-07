@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MASTER_SEARCH.schema.json",
+  "title": "MASTER_SEARCH (Mestre → servidor)",
+  "description": "§5: pesquisa de monstro por nome. E-C3: isento de revision; não muda estado, não tem recibo (cmdId opcional: errata proposta D-27). Resposta: MASTER_RESULTS.",
+  "type": "object",
+  "required": ["v", "type", "roomId", "texto"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "MASTER_SEARCH" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "cmdId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+    "revision": { "$ref": "comum.schema.json#/$defs/revision" },
+    "texto": { "type": "string", "maxLength": 64 }
+  },
+  "additionalProperties": false
+}

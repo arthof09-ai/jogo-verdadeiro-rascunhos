@@ -1,14 +1,21 @@
 extends Node
 ## Autoload "Estado": espelho do que o servidor projeta para ESTE lugar.
 ##
+## ALINHADO AO SERVIDOR REAL (rascunhos/servidor/nucleo/projecao.js e sala.js):
+##   ROOM_SNAPSHOT = {seq, revision, ts, fase, mapa{largura,altura,casaM},
+##                    figuras[{id,nomePublico,lado,x,y,orientacao,visivel}],
+##                    iniciativa[ids por ordem], vezId, rodada, ambiente{clima,luz},
+##                    propria{figuraId,vidaActual,vidaTotal,paLivre,paTotal,estadoMorte,...} (só a jogadora),
+##                    mestre{...} (só o Mestre)}
+##   ROOM_EVENT    = {seq, revision, ts, tipo, dados} com os campos de CAMPOS_PERMITIDOS.
+##
 ## - Aplica ROOM_EVENT pela ordem do `seq` (fluxo por destinatário, errata E-P4).
 ## - Evento repetido (seq já aplicado) é descartado.
 ## - Evento adiantado fica em espera; o buraco faz pedir ROOM_RESYNC (E-C7).
 ## - ROOM_SNAPSHOT substitui tudo até ao seu `seq` (E-C8).
-## - ROOM_OPTIONS só vale na revisão em que foi feito (E-C5).
+## - `revision` é um contador por lugar que SÓ SOBE (sala.js atualizarRevisoes). Guarda-se a
+##   maior vista; ROOM_OPTIONS só vale se foi feito para essa revisão (E-C5).
 ## - NÃO calcula regra. Só guarda e devolve o que o servidor mandou.
-##
-## Nomes de campos marcados (PROVISÓRIO) esperam a conferência A-1 contra o TEST34–36.
 
 signal snapshot_aplicado
 signal evento_aplicado(evento: Dictionary)
@@ -16,6 +23,8 @@ signal opcoes_mudaram
 signal resync_necessario(ultimo_seq: int)
 signal dano_visto(alvo_id: String, valor: Variant, tipo_dano: String, em_mim: bool)
 signal pausa_mudou(pausada: bool)
+signal fase_mudou(fase: String)
+signal ataque_visto(dados: Dictionary)
 
 ## Se o RESYNC não fechar o buraco neste tempo, pede outra vez.
 const REPETIR_RESYNC_S := 5.0
@@ -25,15 +34,21 @@ const MAX_EM_ESPERA := 512
 var tem_snapshot := false
 var ultimo_seq := 0
 var revisao: Variant = null
-var fase := ""
+var fase := ""  # lobby | combate | fim (a pausa vai à parte, em `pausada`)
+var rodada := 0
+var desfecho := ""
 var mapa: Dictionary = {}
-var figuras: Dictionary = {}  # id -> Dictionary (como o servidor projetou)
-var iniciativa: Variant = null
-var ambiente: Dictionary = {}
+var figuras: Dictionary = {}  # id -> {id, nomePublico, lado, x, y, orientacao, visivel}
+var iniciativa: Array = []  # só a ORDEM (a Party nunca vê os valores)
+var ambiente: Dictionary = {}  # só o efeito presente {clima, luz} (E-P12)
 var vez_id := ""
 var opcoes: Dictionary = {}
 var seat_id := ""
 var minha_figura_id := ""
+## Só a própria jogadora: vida, PA e ficha DELA (projecao.js `propria`).
+var propria: Dictionary = {}
+## Só o Mestre: o bloco `mestre` do snapshot (figuras não colocadas, lobby, vez, cartões).
+var mestre: Dictionary = {}
 var pausada := false
 
 var _espera: Dictionary = {}  # seq -> mensagem
@@ -49,8 +64,9 @@ func _ready() -> void:
 	rede.evento_recebido.connect(receber_evento)
 	rede.opcoes_recebidas.connect(receber_opcoes)
 	rede.boas_vindas_recebidas.connect(_ao_boas_vindas)
-	rede.sala_pausada.connect(func(_motivo): _definir_pausa(true))
-	rede.sala_retomada.connect(func(): _definir_pausa(false))
+	rede.sala_pausada.connect(_ao_pausar)
+	rede.sala_retomada.connect(_ao_retomar)
+	rede.revisao_vista.connect(ver_revisao)
 	resync_necessario.connect(rede.enviar_resync)
 
 
@@ -69,12 +85,23 @@ func aplicar_snapshot(msg: Dictionary) -> void:
 	var s := _int(msg.get("seq"))
 	if tem_snapshot and s < ultimo_seq:
 		return  # snapshot mais velho do que o que já temos
+	var fase_antes := fase
 	tem_snapshot = true
 	ultimo_seq = s
 	if msg.has("revision"):
-		revisao = _num(msg["revision"])
-	fase = _texto(msg.get("fase"))
-	_definir_pausa(fase == "pausa")
+		_subir_revisao(msg["revision"])
+	rodada = _int(msg.get("rodada"))
+	var f_bruta := _texto(msg.get("fase"))
+	if f_bruta == "pausa":
+		# DIVERGÊNCIA: em pausa o snapshot traz fase "pausa" e perde a fase de antes
+		# (projecao.js usa mundo.fase; sala.js guarda pausa.faseAnterior só para o Mestre).
+		# O cliente não inventa: a rodada só passa de 0 no MASTER_START, logo rodada > 0 = combate.
+		# Sugestão para o servidor: projetar `faseAnterior` (ou `pausada: true`) no snapshot.
+		fase = "combate" if rodada > 0 else "lobby"
+		_definir_pausa(true)
+	else:
+		fase = f_bruta
+		_definir_pausa(false)
 	mapa = _dict(msg.get("mapa"))
 	figuras = {}
 	var lista = msg.get("figuras")
@@ -82,20 +109,25 @@ func aplicar_snapshot(msg: Dictionary) -> void:
 		for f in lista:
 			if f is Dictionary and f.get("id") is String:
 				figuras[f["id"]] = f.duplicate(true)
-	iniciativa = msg.get("iniciativa")
-	vez_id = _vez_da_iniciativa(iniciativa)
-	ambiente = _dict(msg.get("ambiente"))
-	var mf = msg.get("minhaFiguraId")  # PROVISÓRIO
+	var ini = msg.get("iniciativa")
+	iniciativa = ini.duplicate() if ini is Array else []
+	vez_id = _texto(msg.get("vezId"))
+	ambiente = _dict(msg.get("ambiente")).duplicate(true)
+	propria = _dict(msg.get("propria")).duplicate(true)
+	var mf = propria.get("figuraId")
 	if mf is String and mf != "":
 		minha_figura_id = mf
-	else:
-		_deduzir_minha_figura()
+	mestre = _dict(msg.get("mestre")).duplicate(true)
+	if fase != "fim":
+		desfecho = ""  # DIVERGÊNCIA menor: o snapshot não projeta o `desfecho` (só o evento `fim`)
 	for k in _espera.keys():
 		if int(k) <= s:
 			_espera.erase(k)
 	_resync_pendente = false
 	_tempo_resync = 0.0
 	snapshot_aplicado.emit()
+	if fase != fase_antes:
+		fase_mudou.emit(fase)
 	_drenar()
 	if not _espera.is_empty():
 		_pedir_resync()  # ainda há buraco depois do snapshot
@@ -119,9 +151,22 @@ func receber_evento(msg: Dictionary) -> void:
 		_pedir_resync()
 
 
+## ROOM_OPTIONS {revision, vezId, orcamentoM, mover[], ataques[], consumiveis[], acoes[], reacoes[]}.
 func receber_opcoes(msg: Dictionary) -> void:
+	var r = _num(msg.get("revision"))
+	if _e_numero(r) and revisao != null and float(r) < float(revisao):
+		return  # feitas para uma revisão já passada
 	opcoes = msg.duplicate(true)
+	if _e_numero(r):
+		_subir_revisao(r)
 	opcoes_mudaram.emit()
+
+
+## Uma revisão vista fora de eventos (ex.: no ROOM_RECEIPT). Só conta se for maior.
+## Caso real: com um cartão aberto ou em pausa, a revisão dela sobe sem ROOM_EVENT nenhum.
+func ver_revisao(r) -> void:
+	if _subir_revisao(r):
+		opcoes_mudaram.emit()
 
 
 func limpar() -> void:
@@ -129,14 +174,18 @@ func limpar() -> void:
 	ultimo_seq = 0
 	revisao = null
 	fase = ""
+	rodada = 0
+	desfecho = ""
 	mapa = {}
 	figuras = {}
-	iniciativa = null
+	iniciativa = []
 	ambiente = {}
 	vez_id = ""
 	opcoes = {}
 	seat_id = ""
 	minha_figura_id = ""
+	propria = {}
+	mestre = {}
 	_espera.clear()
 	_resync_pendente = false
 	_definir_pausa(false)
@@ -170,6 +219,17 @@ func lista_opcao(chave: String) -> Array:
 	return v if v is Array else []
 
 
+## `acoes` do ROOM_OPTIONS (encerrar, correr, defender, desvincular, transformar).
+func tem_acao(tipo: String) -> bool:
+	return lista_opcao("acoes").has(tipo)
+
+
+## Orçamento de movimento em metros, como o servidor o mandou; -1 se não veio.
+func orcamento_m() -> float:
+	var o = opcoes_validas().get("orcamentoM")
+	return float(o) if _e_numero(o) else -1.0
+
+
 func e_minha_vez() -> bool:
 	return minha_figura_id != "" and vez_id == minha_figura_id
 
@@ -177,11 +237,8 @@ func e_minha_vez() -> bool:
 func casa_de(f) -> Vector2i:
 	if not (f is Dictionary):
 		return Vector2i(-1, -1)
-	if f.get("x") != null and f.get("y") != null:
+	if _e_numero(f.get("x")) and _e_numero(f.get("y")):
 		return Vector2i(_int(f["x"]), _int(f["y"]))
-	var c = f.get("casa")  # PROVISÓRIO: {x,y}
-	if c is Dictionary and c.get("x") != null and c.get("y") != null:
-		return Vector2i(_int(c["x"]), _int(c["y"]))
 	return Vector2i(-1, -1)
 
 
@@ -192,7 +249,7 @@ func figura_na_casa(c: Vector2i) -> String:
 		var f: Dictionary = figuras[id]
 		if casa_de(f) != c:
 			continue
-		if _texto(f.get("estado")) == "morta":
+		if _texto(f.get("visivel")) == "morta":
 			morta = id
 			continue
 		return id
@@ -202,29 +259,24 @@ func figura_na_casa(c: Vector2i) -> String:
 func e_jogadora(f) -> bool:
 	if not (f is Dictionary):
 		return false
-	return f.get("jogadora") == true or _texto(f.get("seatId")) != "" or _texto(f.get("lado")) == "jogadora"
+	return _texto(f.get("lado")) == "jogadora"
 
 
+## Nome que a Party pode ver (o servidor já o projeta: "Criatura", "Personagem" ou o público).
 func nome_de(id: String) -> String:
 	var f = figuras.get(id)
 	if f is Dictionary:
-		return _texto(f.get("nome"))
+		return _texto(f.get("nomePublico"))
 	return ""
 
 
 ## Fração da vida DELA (só a própria vem projetada). -1 se o servidor não mandou.
 ## Não é regra: é só dividir dois números que o servidor já deu, para a tela vermelha.
 func vida_fracao_propria() -> float:
-	var f = figuras.get(minha_figura_id)
-	if not (f is Dictionary):
-		return -1.0
-	var fr = f.get("vidaFracao")  # PROVISÓRIO
-	if fr is float or fr is int:
-		return clampf(float(fr), 0.0, 1.0)
-	var vida = f.get("vida")  # PROVISÓRIO
-	var maximo = f.get("vidaMax")  # PROVISÓRIO
-	if (vida is float or vida is int) and (maximo is float or maximo is int) and float(maximo) > 0.0:
-		return clampf(float(vida) / float(maximo), 0.0, 1.0)
+	var vida = propria.get("vidaActual")
+	var total = propria.get("vidaTotal")
+	if _e_numero(vida) and _e_numero(total) and float(total) > 0.0:
+		return clampf(float(vida) / float(total), 0.0, 1.0)
 	return -1.0
 
 
@@ -260,99 +312,112 @@ func _aplicar_evento(msg: Dictionary) -> void:
 	ultimo_seq = _int(msg.get("seq"))
 	var rev_mudou := false
 	if msg.has("revision"):
-		var r = _num(msg["revision"])
-		rev_mudou = not _iguais(r, revisao)
-		revisao = r
+		rev_mudou = _subir_revisao(msg["revision"])
 	var tipo := _texto(msg.get("tipo"))
 	var dados := _dict(msg.get("dados"))
-
-	# Remendos genéricos de figura: o servidor diz o que mudou, o cliente copia.
-	if dados.get("figura") is Dictionary:
-		_remendar_figura(dados["figura"])
-	var varias = dados.get("figuras")
-	if varias is Array:
-		for p in varias:
-			if p is Dictionary:
-				_remendar_figura(p)
+	var fid := _texto(dados.get("figuraId"))
+	var fase_antes := fase
 
 	match tipo:
+		"colocacao":
+			# {figuraId, nomePublico, lado, x, y, orientacao, visivel}: a figura passa a existir.
+			if fid != "":
+				figuras[fid] = {
+					"id": fid, "nomePublico": dados.get("nomePublico"), "lado": dados.get("lado"),
+					"x": dados.get("x"), "y": dados.get("y"),
+					"orientacao": dados.get("orientacao"), "visivel": dados.get("visivel"),
+				}
+		"turno":
+			# {figuraId, rodada, narra}. O servidor só emite `turno` em combate: o MASTER_START
+			# não manda snapshot novo (sala.js), por isso é o primeiro `turno` que tira do lobby.
+			vez_id = fid
+			if _e_numero(dados.get("rodada")):
+				rodada = _int(dados["rodada"])
+			if fase == "lobby" or fase == "":
+				fase = "combate"
 		"movimento":
-			var fid := _texto(dados.get("figuraId"))
-			var para = dados.get("para", dados.get("destino"))  # PROVISÓRIO
+			# {figuraId, de, para, caminho} (+ custoM, reservaM se for ela).
+			var para = dados.get("para")
 			if figuras.has(fid) and para is Dictionary:
 				figuras[fid]["x"] = para.get("x")
 				figuras[fid]["y"] = para.get("y")
+			if fid != "" and fid == minha_figura_id and dados.has("reservaM"):
+				propria["reservaM"] = dados["reservaM"]
 		"estado":
-			var fid := _texto(dados.get("figuraId"))
-			var e = dados.get("estado")
-			if figuras.has(fid) and e is String:
-				figuras[fid]["estado"] = e
-		"turno":
-			vez_id = _texto(dados.get("vezId", dados.get("figuraId")))
+			# {figuraId, visivel} (+ vidaActual, paLivre, estadoMorte se for ela).
+			var v = dados.get("visivel")
+			if figuras.has(fid) and v is String:
+				figuras[fid]["visivel"] = v
+			if fid != "" and fid == minha_figura_id:
+				for k in ["vidaActual", "paLivre", "estadoMorte"]:
+					if dados.has(k):
+						propria[k] = dados[k]
+		"ataque":
+			# {atacanteId, alvoId, arma, resultado, ataqueDeOportunidade} (+ total, faces, expressao se for dela).
+			ataque_visto.emit(dados)
 		"dano":
 			_emitir_dano(dados)
 		"ambiente":
-			ambiente.merge(dados, true)
+			var efeito = dados.get("efeito")
+			if efeito is Dictionary:
+				ambiente = efeito.duplicate(true)
 		"fim":
 			fase = "fim"
+			desfecho = _texto(dados.get("desfecho"))
+			vez_id = ""
 		_:
-			pass  # entrada, colocacao, ataque, reacao, consumivel, desgraca, revertido: só remendos
+			pass  # entrada, desgraca, reacao, consumivel, revertido (o snapshot vem a seguir)
 
-	if minha_figura_id == "":
-		_deduzir_minha_figura()
 	evento_aplicado.emit(msg)
+	if fase != fase_antes:
+		fase_mudou.emit(fase)
 	if rev_mudou:
 		opcoes_mudaram.emit()
 
 
+## Servidor real: {alvoId, autorId} (+ valor, tipos só a quem causou ou recebeu, v0.2.1).
+## DIVERGÊNCIA: o Mestre aprovou "números de dano por tipo", mas o servidor manda UM `valor`
+## (o total) e a lista `tipos` da técnica. O cliente mostra um número, com a cor do 1.º tipo.
+## Se o servidor passar a mandar `partes` [{tipo, valor}], sai um número por tipo.
 func _emitir_dano(dados: Dictionary) -> void:
 	var alvo := _texto(dados.get("alvoId"))
 	var em_mim := alvo != "" and alvo == minha_figura_id
-	var partes = dados.get("partes")  # PROVISÓRIO: [{tipo, valor}] um número por tipo
+	var partes = dados.get("partes")
 	if partes is Array:
 		for p in partes:
 			if p is Dictionary and p.get("valor") != null:
 				dano_visto.emit(alvo, p["valor"], _texto(p.get("tipo")), em_mim)
 		return
-	if dados.get("valor") != null:  # só chega se ela pode ver (projeção do servidor)
-		dano_visto.emit(alvo, dados["valor"], _texto(dados.get("tipoDano")), em_mim)
+	if dados.get("valor") == null:
+		return  # outra jogadora ou espectador: o servidor não mandou o número
+	var tipo := ""
+	var tipos = dados.get("tipos")
+	if tipos is Array and not tipos.is_empty() and tipos[0] is String:
+		tipo = tipos[0]
+	dano_visto.emit(alvo, dados["valor"], tipo, em_mim)
 
 
-func _remendar_figura(p: Dictionary) -> void:
-	var id := _texto(p.get("id"))
-	if id == "":
-		return
-	if figuras.has(id):
-		figuras[id].merge(p.duplicate(true), true)
-	else:
-		figuras[id] = p.duplicate(true)
-
-
-func _deduzir_minha_figura() -> void:
-	if seat_id == "":
-		return
-	for id in figuras:
-		if _texto(figuras[id].get("seatId")) == seat_id:
-			minha_figura_id = id
-			return
-
-
-func _vez_da_iniciativa(ini) -> String:
-	if ini is Dictionary:
-		for k in ["vezId", "vez", "figuraId"]:  # PROVISÓRIO
-			var v = ini.get(k)
-			if v is String:
-				return v
-	return ""
+## A revisão só sobe. Devolve true se mudou.
+func _subir_revisao(r) -> bool:
+	var n = _num(r)
+	if not _e_numero(n):
+		return false
+	if revisao == null or float(n) > float(revisao):
+		revisao = n
+		return true
+	return false
 
 
 func _ao_boas_vindas(msg: Dictionary) -> void:
 	seat_id = _texto(msg.get("seatId"))
-	var fid := _texto(msg.get("figuraId"))  # PROVISÓRIO
-	if fid != "":
-		minha_figura_id = fid
-	else:
-		_deduzir_minha_figura()
+
+
+func _ao_pausar(_motivo: String) -> void:
+	_definir_pausa(true)
+
+
+func _ao_retomar() -> void:
+	_definir_pausa(false)
 
 
 func _definir_pausa(p: bool) -> void:
@@ -360,6 +425,10 @@ func _definir_pausa(p: bool) -> void:
 		return
 	pausada = p
 	pausa_mudou.emit(p)
+
+
+static func _e_numero(v) -> bool:
+	return v is int or v is float
 
 
 static func _int(v) -> int:

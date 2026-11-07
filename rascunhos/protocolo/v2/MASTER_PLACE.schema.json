@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MASTER_PLACE.schema.json",
+  "title": "MASTER_PLACE (Mestre → servidor)",
+  "description": "§5: a criatura ou o NPC entra só agora; antes não existe para as jogadoras. O servidor gera um figuraId opaco novo (E-P14); o fichaId nunca sai para a Party.",
+  "type": "object",
+  "required": ["v", "type", "roomId", "cmdId", "revision", "fichaId", "casa"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "MASTER_PLACE" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "cmdId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+    "revision": { "$ref": "comum.schema.json#/$defs/revision" },
+    "fichaId": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "casa": { "$ref": "comum.schema.json#/$defs/casa" },
+    "orientacao": { "anyOf": [{ "$ref": "comum.schema.json#/$defs/orientacao" }, { "type": "null" }] }
+  },
+  "additionalProperties": false
+}

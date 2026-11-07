@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ROOM_RESYNC.schema.json",
+  "title": "ROOM_RESYNC (cliente → servidor)",
+  "description": "§3 + E-P4 + E-C7/E-C8. Resposta: os eventos lastSeq+1 … atual do fluxo DESTE lugar, ou um ROOM_SNAPSHOT; depois ROOM_OPTIONS se for a vez; ao Mestre, também MASTER_VIEW e o MASTER_CARD ativo. `lastSeq` ausente = pedir snapshot (comportamento do servidor; errata proposta D-26).",
+  "type": "object",
+  "required": ["v", "type", "roomId"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "ROOM_RESYNC" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "lastSeq": { "$ref": "comum.schema.json#/$defs/seq" }
+  },
+  "additionalProperties": false
+}

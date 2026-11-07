@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ROOM_RESUMED.schema.json",
+  "title": "ROOM_RESUMED (servidor → todos)",
+  "description": "§4 + E-C4: só sai depois do RESYNC do Mestre. O `motivo` é o da pausa que terminou.",
+  "type": "object",
+  "required": ["v", "type", "roomId", "motivo"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "ROOM_RESUMED" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "motivo": { "$ref": "comum.schema.json#/$defs/motivoPausa" }
+  },
+  "additionalProperties": false
+}

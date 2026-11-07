@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ROOM_JOIN.schema.json",
+  "title": "ROOM_JOIN (cliente → servidor)",
+  "description": "§3 + E-P9. Três formas exclusivas: (A) reconexão com seatToken; (B) jogadora/espectador com nome + senha; (C) Mestre com PIN. O campo `pin` vem do servidor (sala.js entrar) — errata proposta D-15. O seatToken vai SEMPRE dentro da mensagem, nunca na URL.",
+  "type": "object",
+  "required": ["v", "type", "roomId", "papel"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "ROOM_JOIN" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "papel": { "$ref": "comum.schema.json#/$defs/papel" },
+    "nome": { "type": "string", "minLength": 1, "maxLength": 64, "description": "Nome da personagem (jogadora) ou do lugar (espectador)." },
+    "senha": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "pin": { "type": "string", "pattern": "^[0-9]{6,32}$", "description": "E-P9: PIN do Mestre com 6 dígitos ou mais." },
+    "seatToken": { "type": "string", "minLength": 32, "maxLength": 128, "pattern": "^[A-Za-z0-9_-]+$" },
+    "lastSeq": { "$ref": "comum.schema.json#/$defs/seq" },
+    "cliente": { "type": "string", "minLength": 1, "maxLength": 64, "description": "Versão do app." }
+  },
+  "additionalProperties": false,
+  "oneOf": [
+    {
+      "title": "A: reconexão",
+      "required": ["seatToken"],
+      "not": { "anyOf": [{ "required": ["senha"] }, { "required": ["pin"] }] }
+    },
+    {
+      "title": "B: jogadora ou espectador com nome e senha",
+      "required": ["nome", "senha"],
+      "properties": { "papel": { "enum": ["jogadora", "espectador"] } },
+      "not": { "anyOf": [{ "required": ["seatToken"] }, { "required": ["pin"] }] }
+    },
+    {
+      "title": "C: Mestre com PIN (papel mestre sem PIN é recusado)",
+      "required": ["pin"],
+      "properties": { "papel": { "const": "mestre" } },
+      "not": { "anyOf": [{ "required": ["seatToken"] }, { "required": ["senha"] }] }
+    }
+  ]
+}

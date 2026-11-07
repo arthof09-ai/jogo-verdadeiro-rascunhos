@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MASTER_APPROVE.schema.json",
+  "title": "MASTER_APPROVE (Mestre → servidor)",
+  "description": "§5 + E-C6: fecha o cartão ATIVO (FIFO). A decisão é idempotente por cartaoId: a primeira ganha. Nenhum timeout aprova. `edicao` (com decisao 'editar'): {desgraca} num cartão de desgraça, {acao} num cartão de IA (sala.js aprovarCartao).",
+  "type": "object",
+  "required": ["v", "type", "roomId", "cmdId", "revision", "cartaoId", "decisao"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "MASTER_APPROVE" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "cmdId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+    "revision": { "$ref": "comum.schema.json#/$defs/revision" },
+    "cartaoId": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "decisao": { "enum": ["aprovar", "recusar", "editar"] },
+    "edicao": {
+      "type": ["object", "null"],
+      "properties": {
+        "desgraca": { "enum": ["cai", "arma-cai", "arma-quebra", "acerta-se", "quebra-corpo", "acerta-amigo", "nenhuma"] },
+        "acao": { "$ref": "comum.schema.json#/$defs/acao" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
