@@ -47,3 +47,10 @@ jobs:
         run: curl -fsSL --max-time 30 -o "$RUNNER_TEMP/vlab-completo.js" https://arthof09-ai.github.io/arena-das-bestas-prototipo-cm9/jogo-t1/vlab-completo.js && sha256sum "$RUNNER_TEMP/vlab-completo.js"
       - name: Prova da porta dos motores (JV1.1-a)
         run: node motores/prova-motor.mjs "$RUNNER_TEMP/vlab-completo.js" "$RUNNER_TEMP/prova"
+      - name: Gerar o módulo embrulhado
+        run: node motores/embrulhar.mjs "$RUNNER_TEMP/vlab-completo.js" "$RUNNER_TEMP/motores.mjs"
+      - name: Integração da sala com o motor real
+        if: always()
+        env:
+          MOTOR_MJS: ${{ runner.temp }}/motores.mjs
+        run: node --test --test-reporter=spec "testes-motor-real/*.test.mjs"

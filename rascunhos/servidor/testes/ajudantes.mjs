@@ -102,9 +102,9 @@ export class Cliente {
  */
 export function montarMesa({
   motor = criarMotorFalso(), comAliada = false, comEspectador = false, rngSemente, modoPadrao = 'auto',
-  mapa = { largura: 20, altura: 20 }, casas = {},
+  mapa = { largura: 20, altura: 20 }, casas = {}, fichas: fichasProprias = null,
 } = {}) {
-  const fichas = fichasDeTeste({ comAliada });
+  const fichas = fichasProprias ?? fichasDeTeste({ comAliada });
   const lugares = [
     { papel: 'jogadora', nome: 'Heroína Teste', senha: SENHAS.heroina, fichaId: 'heroina-teste', casa: casas.heroina ?? { x: 2, y: 2 } },
   ];

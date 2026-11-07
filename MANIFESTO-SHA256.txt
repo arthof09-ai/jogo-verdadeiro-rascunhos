@@ -33,7 +33,8 @@ f81a2ee8f3154e8d15a143a9794ed2d06a67e9aef512730cd7204f3869a2ad03  rascunhos/serv
 43c344ae9140deb91e8fd827c5f07a743b8db33e0f6d210bcdef8ae4d19faad6  rascunhos/servidor/nucleo/sha256.js
 595007392bbf45135fc74afb057fb597351c1f68d6b2e68ecc1482cfe027dd64  rascunhos/servidor/nucleo/util.js
 bce2417295de8228242ffabc9e0006d5e32137827bf4b2d1dbeb8f83ed1c78f0  rascunhos/servidor/package.json
-60cbe58224b3da82ff7a0cbe0132ff3bba7a9d504f60fa11b8cde7900fd316c1  rascunhos/servidor/testes/ajudantes.mjs
+8082235182f81d4ab665087a126a53f8991da7c28f46f0f22a0afa872cf0ef9b  rascunhos/servidor/testes-motor-real/integracao.test.mjs
+b8d35363b9836616a54b42cf52d895bb6081dc8646e3043388f882d99e8fe050  rascunhos/servidor/testes/ajudantes.mjs
 7df50d3cb02dc338fd2db238ae0e48594043bced36b4a113974ba2aad702c23f  rascunhos/servidor/testes/fichas.test.mjs
 b5f5bb4af942311366c6545073d120670e24171085964e95286653e47086774d  rascunhos/servidor/testes/ia.test.mjs
 d640e5ed8371b4d1b7a1a036916d08a6e920078537270195ab31a46753625b65  rascunhos/servidor/testes/idempotencia.test.mjs
@@ -52,3 +53,4 @@ ab7507b37d14b6f8a6b09c7d8afe5f2d67b6c4effe6cc562afc0ccb84c37a263  rascunhos/vali
 adac9f93d6afe4ddd3221a0e2b3fffa1b09c76884f0a03cb182efe7863d5899a  rascunhos/servidor/motores/embrulhar.mjs
 258e726669a3afc73f017ff04bd28d003f566c871ec97b6c058feb0ed99c306e  rascunhos/servidor/motores/prova-motor.mjs
 # Actualizacao 2026-11-06 (IBX-261): 2 ficheiros novos da porta dos motores (JV1.1-a) — embrulhar.mjs + prova-motor.mjs. Restantes 47 ficheiros inalterados.
+# Actualizacao 2026-11-06 (IBX-263): novo rascunhos/servidor/testes-motor-real/integracao.test.mjs (4448 B); rascunhos/servidor/testes/ajudantes.mjs editado (só montarMesa ganha o parametro opcional fichas) — SHA antigo 60cbe58224b3da82ff7a0cbe0132ff3bba7a9d504f60fa11b8cde7900fd316c1 -> novo b8d35363b9836616a54b42cf52d895bb6081dc8646e3043388f882d99e8fe050. Restantes ficheiros inalterados; saida/ excluida como sempre.
