@@ -8,9 +8,10 @@ Antes de tocar em qualquer coisa, o ritual da casa: **Central dos Claudes → IN
 
 - **Repositório:** `arthof09-ai/jogo-verdadeiro-rascunhos`.
 - **Ramo do trabalho:** `i0004/ci4-protocolo`, criado a partir do `main` no commit `9cbaca88b6e4951d41e518579afd3b32d846fee6` (ponte IBX-281). **O `main` não foi tocado.**
-- **Último commit com código:** `7c6430814e42183552c6cadcbf87df9110db8734`. Os commits seguintes só acrescentam este ficheiro, `retoma-i0004/`, o `MANIFESTO-SHA256.txt` actualizado e o job `retoma-pc` do CI.
-- **CI do ramo:** 6 jobs (`servidor`, `validador-glb`, `motor-real`, `protocolo`, `cliente`, `retoma-pc`), todos verdes.
-- **Ficheiros mudados:** 13 mudados e 46 novos em `rascunhos/`, com SHA-256 antes e depois em `retoma-i0004/antes.txt` e `retoma-i0004/depois.txt`. O `MANIFESTO-SHA256.txt` já tem os SHA novos.
+- **Último commit com código:** `c5dd8c120415c52139e427ad3522f798b742d086` (ecrã do Mestre, partes a, b e c, 08/11 à tarde). O commit seguinte só actualiza este ficheiro.
+- **CI do ramo:** 6 jobs (`servidor`, `validador-glb`, `motor-real`, `protocolo`, `cliente`, `retoma-pc`), todos verdes no run `42511205017` (commit `c5dd8c1`).
+- **Ficheiros mudados:** 17 mudados e 58 novos em `rascunhos/` (75 no total), com SHA-256 antes e depois em `retoma-i0004/antes.txt` e `retoma-i0004/depois.txt`. O `MANIFESTO-SHA256.txt` já tem os SHA novos (139 ficheiros).
+- **As listas fazem-se sozinhas:** depois de cada commit que mude `rascunhos/`, correr `python3 retoma-i0004/actualizar-listas.py` na raiz e juntar as listas ao commit. Se alguém se esquecer, o job `retoma-pc` fica vermelho.
 - **READMEs com o detalhe:** `rascunhos/protocolo/README.md` e `rascunhos/cliente/README.md`.
 - **Notion:** errata 0.2 da JV1.1-b (a comparação com o site), carta IBX-300 (a 4.ª corrida), página de passagem e Central.
 
@@ -18,13 +19,13 @@ Antes de tocar em qualquer coisa, o ritual da casa: **Central dos Claudes → IN
 
 | Frente | Estado | Onde | Próximo passo |
 | --- | --- | --- | --- |
-| Servidor | Remendo IBX-298, regra dos 25% do quebrar (REF_19), «voltar» que repõe os cartões (REF_21/24), guarda REF_17. **58/58** no CI; motor real 1/1 (desgraça aprovada e APLICADA, zero recusas) | `rascunhos/servidor/` | Entrar no PC e no `main` (§3) |
-| Protocolo v2 | 26 schemas conferidos contra 5.082 mensagens reais, 5 schemas novos do Mestre, exemplos reais, ferramentas, job `protocolo` | `rascunhos/protocolo/` (README) | Apertar o bloco `mestre` do snapshot; conferir as erratas D-xx contra a JV0.4 |
-| Cliente Godot | Corre no CI (Godot 4.7.2 oficial, sem janela): 15 scripts compilam, **73/73**, arena e lobby arrancam. Uma só tabela de perfis; frases do site na desgraça, morte e fim; «Atualiza a página» | `rascunhos/cliente/` (README) | Botão Recomeçar (e a cláusula guardada); resposta 7 do Mestre |
+| Servidor | Remendo IBX-298, regra dos 25% do quebrar (REF_19), «voltar» que repõe os cartões (REF_21/24), guarda REF_17. **Ecrã do Mestre (a):** L1 (nome, nome público, vida total e PA total de cada figura na vista do Mestre) e L2 (lista de desgraças no cartão; edição fora dela recusada). Fixture real do ecrã do Mestre (`dados-exemplo/mesa-mestre.json`, conferida por `fixture-mestre.test.mjs`). **66/66** no CI; motor real 1/1 | `rascunhos/servidor/` | Entrar no PC e no `main` (§3) |
+| Protocolo v2 | 26 schemas conferidos contra o tráfego real (6.002 mensagens, zero falhas), 5 schemas novos do Mestre, exemplos reais, job `protocolo`. L1: `#/$defs/figuraMestre`; L2: `MASTER_CARD.desgracas` e `#/$defs/desgracaEditavel`. Ferramenta nova `validar-mensagens.py` (os comandos do ecrã do Mestre passam nos schemas: 5/5) | `rascunhos/protocolo/` (README) | Apertar `vez`, `lobby` e `cartoes` do bloco `mestre`; erratas D-xx contra a JV0.4 |
+| Cliente Godot | Corre no CI (Godot 4.7.2 oficial, sem janela): **22 scripts** compilam, **73/73**, arena e lobby arrancam. Uma só tabela de perfis; frases do site na desgraça, morte e fim; «Atualiza a página». Segunda tranca de privacidade: `rede.gd` não guarda `MASTER_*` e `estado.gd` não guarda o bloco `mestre` fora do lugar do Mestre. Os passos Godot do CI falham se houver SCRIPT ERROR | `rascunhos/cliente/` (README) | Botão Recomeçar (e a cláusula guardada); resposta 7 do Mestre |
 | Comparação com o site (REF_8 → REF_25) | **Completa**; errata 0.2 da JV1.1-b | Notion, JV1.1-b | — |
 | Clareira de prova | Cena feita (`arte/cenas/clareira_prova.tscn`), abre no CI (**22/22**); pontilhado das copas desligado | `rascunhos/cliente/arte/` | Assets da V2.1; abrir num computador com GPU para ver os shaders |
-| Ecrã do Mestre | **Desenho escrito** (rascunho 0.1, à revisão do Muse); **código ainda não existe** (o lobby aponta para `cenas/mestre/mestre.tscn`, que falta) | Notion: «JV3.1 — Ecrã do Mestre no cliente: desenho para revisão», sob «Planos do Jogo Verdadeiro» | Esperar a revisão do Muse; só depois código (§12 do desenho) |
-| Perguntas ao Mestre | 13 perguntas na Central, com o que o jogo faz hoje | Notion, Central | Aplicar as respostas quando chegarem |
+| Ecrã do Mestre | **Desenho APROVADO COM EMENDAS** pelo Muse (rascunho 0.2). **Código:** (a) L1 e L2 no servidor; (b) a cena `cenas/mestre/` (recusa noutro papel, 4 cartões com as palavras do site, nada por tempo, aviso da 1.ª entrada uma vez só, terminar/recomeçar marcado `TODO(N4-TERMINAR)` sem comando) — **32/32**; canário de privacidade no aparelho da jogadora **10/10**; (c) prova de ecrã baixo F5-MESTRE-01 (`medir_mestre.gd`) a 844×390, 780×360 e 1920×1080 — **45/45**, letra 13,0 px reais | `rascunhos/cliente/cenas/mestre/`; Notion: «JV3.1 — Ecrã do Mestre no cliente: desenho aprovado com emendas (rascunho 0.2)» | §12 do desenho: arena 3D, aba Lobby/Colocar, «Voltar até aqui» (L8), aba Agir |
+| Perguntas ao Mestre | 13 perguntas na Central, com o que o jogo faz hoje, e 3 novas do desenho do ecrã do Mestre (N2–N4; a N4 com o «terminarBatalha» do site, M-014) | Notion, Central | Aplicar as respostas quando chegarem |
 
 ## 3. O passo do PC — receita completa
 
@@ -47,7 +48,7 @@ Objectivo: pôr o original do PC (`C:\Users\txcga\RPG_Local\jogo-verdadeiro\`) i
    cd "$env:TEMP\jvr-i0004"
    git log --oneline -5
    ```
-   Confirmar que o commit `7c64308` aparece no histórico.
+   Confirmar que o commit `c5dd8c1` aparece no histórico.
 3. **Ensaio (não escreve nada):**
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\retoma-i0004\aplicar-no-pc.ps1
@@ -57,7 +58,7 @@ Objectivo: pôr o original do PC (`C:\Users\txcga\RPG_Local\jogo-verdadeiro\`) i
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\retoma-i0004\aplicar-no-pc.ps1 -Aplicar
    ```
-   Tem de acabar com `FEITO: 59 ficheiros no PC iguais ao ramo`. Faz uma cópia de segurança dos 13 substituídos em `C:\Users\txcga\RPG_Local\jogo-verdadeiro-antes-i0004-<data>`.
+   Tem de acabar com `FEITO: 75 ficheiros no PC iguais ao ramo`. Faz uma cópia de segurança dos 17 substituídos em `C:\Users\txcga\RPG_Local\jogo-verdadeiro-antes-i0004-<data>`.
 5. **Levar o ramo ao `main` (em linha recta, sem fusão):**
    ```powershell
    git fetch origin main
@@ -68,7 +69,7 @@ Objectivo: pôr o original do PC (`C:\Users\txcga\RPG_Local\jogo-verdadeiro\`) i
    git merge-base --is-ancestor origin/main HEAD; if ($LASTEXITCODE -eq 0) { git push origin HEAD:main } else { Write-Host 'PARAR: nao e linha recta' }
    ```
    Depois, ver o CI do `main` verde (`gh run list --branch main --limit 1`, ou a página Actions).
-6. **Drive (ponte):** subir para `RPG Assimilação/12 — Código/jogo-verdadeiro/` (pasta `1uouRMbs_CLzuTAizP9YUVDuE2f0DdScG`) os 59 ficheiros de `retoma-i0004/depois.txt` e o `MANIFESTO-SHA256.txt` novo, conferindo os SHA. É o passo de sempre da ponte, do Muse.
+6. **Drive (ponte):** subir para `RPG Assimilação/12 — Código/jogo-verdadeiro/` (pasta `1uouRMbs_CLzuTAizP9YUVDuE2f0DdScG`) os 75 ficheiros de `retoma-i0004/depois.txt` e o `MANIFESTO-SHA256.txt` novo, conferindo os SHA. É o passo de sempre da ponte, do Muse.
 7. ~~Apagar o ramo temporário `i0004/sonda-frases`~~ — **FEITO pelo Muse (CM-000009) a 08/11/2026**; o ramo já não existe. Não há nada a fazer neste passo.
 8. **Registar:** na Central, uma linha assinada com o ID completo e o formato `[AAAA-MM-DD HH:MM] [ID] texto` (o original do PC igual ao ramo, o commit no `main`, o CI); marcar a carta IBX-300 como CONCLUÍDA, com a evidência.
 
@@ -84,6 +85,6 @@ Objectivo: pôr o original do PC (`C:\Users\txcga\RPG_Local\jogo-verdadeiro\`) i
 
 ## 5. Próximo passo nomeado
 
-O desenho do **ecrã do Mestre** (JV3.1) está escrito no Notion (página «JV3.1 — Ecrã do Mestre no cliente: desenho para revisão (rascunho 0.1, 08/11/2026)», filha de «Planos do Jogo Verdadeiro», ligada da passagem). **Não escrever código do ecrã do Mestre antes da revisão do Muse.** Depois da revisão, a ordem de construção é a do §12 desse desenho (primeiro as lacunas L1 e L2 no servidor e nos schemas).
+O ecrã do Mestre (JV3.1) tem o desenho aprovado com emendas pelo Muse e as partes (a), (b) e (c) da ordem dele feitas e verdes no CI. O passo seguinte é o §12 do desenho: a arena 3D no tabuleiro, a aba Lobby/Colocar (com a L5), o «Voltar até aqui» (precisa da L8 no servidor) e a aba Agir (jogar a criatura à mão; «Escolher outra» no cartão de IA). «Terminar/recomeçar a batalha» **não se faz** até o Mestre responder à pergunta N4 (emenda 3). As respostas do Mestre às 13 + 3 perguntas aplicam-se quando chegarem.
 
 — CM-000008-I0004
