@@ -92,3 +92,11 @@ Os presets e o CI são da **JV2.1b (Muse)**. A referência é esta:
 4. **A Clareira de prova não tem cena.** O `clareira_prova.gd` compila, mas espera os nós `Ambiente`, `Sol`, `Camera`, `Perfis` e `Medicao/Rotulo`, e não há `.tscn`.
 5. `docs/orcamento-perfis.md`, citado pelos perfis, não está no repositório.
 6. **Registo da língua:** o cliente fala por «você» («Entre», «Escreva», «Espere», «Sua vez»); o site usa o imperativo de «tu» («aperta», «Atualiza»). Pergunta para o Mestre, pelo Muse.
+
+## REF_18, REF_20 e REF_23 do site contra o cliente (I0004, 08/11/2026)
+
+| REF | O site | O cliente | Pede mudança? |
+| --- | --- | --- | --- |
+| REF_18 (IBX-287) | Textos visíveis com «aperta» (sai «prime» e «carrega») e a família «quebrar» (sai «partir») | Nenhum texto visível tem «prime», «carrega» nem «partir»: os achados de `grep` são nomes de código (`pressed`, `_carregar_preferencias`, `_rotulo_quebrado`). O cliente não tem frases de instrução com o verbo do botão | **Não.** Fica a regra para as frases novas (desgraças, teste de morte) |
+| REF_20 (IBX-290) | Painel ⚙ inutilizável em ecrãs baixos (a 844×390 só 29% visível); passou a folha lateral de duas colunas | O HUD escala por inteiro (`canvas_items` + `expand`, base 1920×1080) e a letra nunca desce de 13 px reais. **Medido no CI** (`testes/medir_painel_config.gd`, Godot 4.7.2): a 844×390 o «Fechar» acaba em 791 de 1080 unidades; a 780×360 em 830; a 1920×1080 em 605. Cabe sempre, sem rolagem | **Não.** A pendência F5-MESTRE-01 (vista do Mestre) não existe aqui porque não há cena do Mestre |
+| REF_23 (IBX-295) | Limpeza visual v5: árvores pintadas como arte, chão sem malha xadrez (dither), crista limpa (anel de perto com `fAltAnel = 0,42`); palavra do Mestre «Boa. Perfeito» | A arena do cliente é provisória: chão de cor lisa (`COR_CHAO`, sem textura nem xadrez) e as linhas da grelha táctica; não há árvores, terreno nem crista. A Clareira de prova só tem primitivas | **Não, por agora.** Fica como referência aprovada pelo olho do Mestre para a Clareira final (V2.1). Atenção: a folhagem usa `usar_alpha_hash` (um pontilhado) nas copas que tapam figuras; o Mestre mandou tirar o pontilhado do chão do site, por isso o hash da folhagem tem de lhe ser mostrado antes de ficar |
