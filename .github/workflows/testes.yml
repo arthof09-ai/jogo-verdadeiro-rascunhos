@@ -76,3 +76,37 @@ jobs:
         run: PROTOCOLO_DUMP="$RUNNER_TEMP/trafego.jsonl" node --test --test-isolation=none --test-timeout=30000 "servidor/testes/*.test.mjs"
       - name: Conferir schemas, exemplos e tráfego
         run: python3 protocolo/ferramentas/conferir-schemas.py "$RUNNER_TEMP/trafego.jsonl"
+
+  cliente:
+    # Primeira execução do cliente Godot fora do PC (I0004, 08/11/2026): importar, abrir todos os
+    # scripts, correr os testes próprios e arrancar a cena principal sem janela.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: rascunhos/cliente
+    steps:
+      - uses: actions/checkout@v4
+      - name: Baixar o Godot 4.7 (linux, sem janela)
+        run: |
+          for v in 4.7.2-stable 4.7.1-stable 4.7-stable; do
+            url="https://github.com/godotengine/godot/releases/download/$v/Godot_v${v}_linux.x86_64.zip"
+            if curl -fsSL --max-time 180 -o "$RUNNER_TEMP/godot.zip" "$url"; then echo "Godot $v"; break; fi
+          done
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "GODOT=$(ls "$RUNNER_TEMP"/godot/Godot_v*)" >> "$GITHUB_ENV"
+      - name: Importar o projeto (regista os class_name)
+        run: timeout 300 "$GODOT" --headless --path . --import 2>&1 | tail -40 || true
+      - name: Abrir todos os scripts
+        if: always()
+        run: timeout 120 "$GODOT" --headless --path . -s res://testes/abrir_scripts.gd
+      - name: Testes do cliente
+        if: always()
+        run: timeout 120 "$GODOT" --headless --path . -s res://testes/rodar_testes.gd
+      - name: Arrancar a cena principal e esperar «pronto»
+        if: always()
+        run: |
+          timeout 60 "$GODOT" --headless --path . --quit-after 600 > "$RUNNER_TEMP/arranque.log" 2>&1 || true
+          tail -40 "$RUNNER_TEMP/arranque.log"
+          grep -q pronto "$RUNNER_TEMP/arranque.log"
+          ! grep -E "SCRIPT ERROR|Parse Error" "$RUNNER_TEMP/arranque.log"

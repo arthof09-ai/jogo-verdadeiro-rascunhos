@@ -654,7 +654,7 @@ func _ao_recusa(_intent_id: String, _motivo: String, texto: String) -> void:
 
 func _ao_erro(codigo: String, _texto: String) -> void:
 	if codigo == "versao":
-		_mostrar_aviso("Há uma versão nova do jogo. Recarregue a página.", 3600.0)
+		_mostrar_aviso("Há uma versão nova do jogo. Atualiza a página.", 3600.0)
 	# Outros erros não aparecem: nada técnico na tela da jogadora.
 
 

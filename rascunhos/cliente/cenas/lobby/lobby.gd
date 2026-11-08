@@ -272,7 +272,7 @@ func _ao_entrada_recusada(codigo: String, texto: String) -> void:
 
 func _ao_erro(codigo: String, _texto: String) -> void:
 	if codigo == "versao":
-		_aviso.text = "Há uma versão nova do jogo. Recarregue a página."
+		_aviso.text = "Há uma versão nova do jogo. Atualiza a página."
 	# Os outros erros não aparecem: nada técnico na tela.
 
 
