@@ -119,8 +119,8 @@ func _correr() -> void:
 		return
 	_m.pedir_recomecar()
 	_m.pedir_recomecar()
-	await _esperar(func(): return str(_m.vista.get("fase", "")) == "combate" and int(_m.vista.get("rodada", 0)) == 1
-		and _eventos.has("recomeco"), "«Recomeçar» → a mesma batalha do zero (combate, rodada 1)")
+	var recomecou := func(): return str(_m.vista.get("fase", "")) == "combate" and int(_m.vista.get("rodada", 0)) == 1 and _eventos.has("recomeco")
+	await _esperar(recomecou, "«Recomeçar» → a mesma batalha do zero (combate, rodada 1)")
 
 	var recusas: Array = _m.alertas.filter(func(t): return str(t).begins_with("O servidor não aceitou"))
 	_ok(recusas.is_empty(), "nenhum comando do Mestre foi recusado %s" % [recusas])
