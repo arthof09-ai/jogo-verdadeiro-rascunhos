@@ -14,14 +14,12 @@ jobs:
           curl -s -o index.html "$B/"; curl -s -o jogo.js "$B/jogo.js"
           echo "=========== index.html: botões e barras"
           grep -n -i -E "<button|class=\"barra|id=\"barra|correr|defender|desvincular|transforma|apanhar" index.html | cut -c1-260 | head -60
-          echo "=========== jogo.js 1280-1350"
-          sed -n 1280,1350p jogo.js | cut -c1-230
-          echo "=========== jogo.js 2260-2290"
-          sed -n 2260,2290p jogo.js | cut -c1-200
-          echo "=========== jogo.js 2400-2425"
-          sed -n 2400,2425p jogo.js | cut -c1-200
-          echo "=========== jogo.js 2540-2560"
-          sed -n 2540,2560p jogo.js | cut -c1-200
-          echo "=========== desvinc / botao( / transform na ficha"
-          grep -n -i -E "desvinc" jogo.js | cut -c1-200 | head -20
-          grep -n -E "botao\(|btnAcao\(|data-acao=|'correr'|'transformar'|'desvincular'" jogo.js | cut -c1-200 | head -40
+          echo "=========== jogo.js 1350-1400"
+          sed -n 1350,1400p jogo.js | cut -c1-230
+          echo "=========== jogo.js 2245-2262"
+          sed -n 2245,2262p jogo.js | cut -c1-230
+          echo "=========== jogo.js 2385-2400"
+          sed -n 2385,2400p jogo.js | cut -c1-230
+          echo "=========== ficha: Reacção / declarar-defender"
+          grep -n -E "seccaoReacaoDefender\(\)|data-declarar-defender\]|declararDefender\(" jogo.js | cut -c1-200 | head
+          echo "=========== FIM"
