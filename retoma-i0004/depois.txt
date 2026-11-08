@@ -1,4 +1,4 @@
-# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 74 ficheiros mudados ou novos em rascunhos/.
+# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 75 ficheiros mudados ou novos em rascunhos/.
 9c409b8c612eadaa69a8b6bd4cba5032f6e608d2c34d2d2b7d4fd9cb24051f1f  rascunhos/cliente/README.md
 788d62ee94b08834bce8822fb93052183fb766194e885995cd261a3a07afe312  rascunhos/cliente/arte/cenas/clareira_prova.gd
 dd55941279825704fba76ae427b0bd13e08267471f23a8a1efc2f90b71d759cb  rascunhos/cliente/arte/cenas/clareira_prova.tscn
@@ -18,6 +18,7 @@ f3d1fe5c548d040effcd6f7c2785892a421163bfd8ca1ff5b2ecd589a108c47b  rascunhos/clie
 9900aa222f646c38a44d6867973343af9bbfee461a9b25b94e4ca75b8a2b9a75  rascunhos/cliente/testes/abrir_mestre.gd
 816b10f875b0561792f96d6465a1d02f54656a15f269ad3e26294bb8525ba51d  rascunhos/cliente/testes/abrir_scripts.gd
 1d221346e8760811aa7df60d0936a9165a3ba1936819ab505bef59f37647466f  rascunhos/cliente/testes/canario_privacidade.gd
+1b0250978e3e145b457f0131a5a1444769570169df1207c1cd61845106fb75f8  rascunhos/cliente/testes/medir_mestre.gd
 a0cb98e5c3c5bf5ca698b532c6122f45ce05df2d0fe96c2aeb0cb5e6aaf37e29  rascunhos/cliente/testes/medir_painel_config.gd
 18ab06421a926b7dedb51ac9874447554cbe2d44e24d98f96d377ec2e38f1011  rascunhos/cliente/testes/rodar_testes.gd
 2369a3157cfc8db33ff74c2e4a15ea4e64194a21bb7358d7dbe657a8d1d77996  rascunhos/protocolo/README.md
