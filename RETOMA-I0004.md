@@ -8,9 +8,9 @@ Antes de tocar em qualquer coisa, o ritual da casa: **Central dos Claudes → IN
 
 - **Repositório:** `arthof09-ai/jogo-verdadeiro-rascunhos`.
 - **Ramo do trabalho:** `i0004/ci4-protocolo`, criado a partir do `main` no commit `9cbaca88b6e4951d41e518579afd3b32d846fee6` (ponte IBX-281). **O `main` não foi tocado.**
-- **Último commit com código:** `f9d502a` (arena do Mestre com os marcadores do site, Plano B; antes, `845986d`: a ponta a ponta com o VLAB real, e `c5893ba`: Q12 e Q8; 08/11 ao fim da tarde). O commit seguinte só actualiza este ficheiro.
-- **CI do ramo:** 7 jobs (`servidor`, `validador-glb`, `motor-real`, `protocolo`, `cliente`, `ponta-a-ponta`, `retoma-pc`), todos verdes no run `42517190411` (commit `f9d502a`).
-- **Ficheiros mudados:** 22 mudados e 68 novos em `rascunhos/` (90 no total), com SHA-256 antes e depois em `retoma-i0004/antes.txt` e `retoma-i0004/depois.txt`. O `MANIFESTO-SHA256.txt` já tem os SHA novos (149 ficheiros).
+- **Último commit com código:** `b049f93` (escolha do amigo no cartão de desgraça; antes, `ba07682`: acções da jogadora onde o site as tem; `c426cd0`: fotos com render no CI; `f9d502a`: marcadores do site; 08/11 ao fim da tarde). O commit seguinte só actualiza este ficheiro.
+- **CI do ramo:** 8 jobs (`servidor`, `validador-glb`, `motor-real`, `protocolo`, `cliente`, `ponta-a-ponta`, `foto-mestre`, `retoma-pc`), todos verdes no run `42519770897` (commit `b049f93`). O `foto-mestre` põe as fotos no ramo órfão `i0004/fotos-mestre` (não é para o PC nem para o `main`).
+- **Ficheiros mudados:** 22 mudados e 70 novos em `rascunhos/` (92 no total), com SHA-256 antes e depois em `retoma-i0004/antes.txt` e `retoma-i0004/depois.txt`. O `MANIFESTO-SHA256.txt` já tem os SHA novos (151 ficheiros).
 - **As listas fazem-se sozinhas:** depois de cada commit que mude `rascunhos/`, correr `python3 retoma-i0004/actualizar-listas.py` na raiz e juntar as listas ao commit. Se alguém se esquecer, o job `retoma-pc` fica vermelho.
 - **READMEs com o detalhe:** `rascunhos/protocolo/README.md` e `rascunhos/cliente/README.md`.
 - **Notion:** errata 0.2 da JV1.1-b (a comparação com o site), carta IBX-300 (a 4.ª corrida), página de passagem e Central.
@@ -48,7 +48,7 @@ Objectivo: pôr o original do PC (`C:\Users\txcga\RPG_Local\jogo-verdadeiro\`) i
    cd "$env:TEMP\jvr-i0004"
    git log --oneline -5
    ```
-   Confirmar que o commit `f9d502a` aparece no histórico.
+   Confirmar que o commit `b049f93` aparece no histórico.
 3. **Ensaio (não escreve nada):**
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\retoma-i0004\aplicar-no-pc.ps1
@@ -58,7 +58,7 @@ Objectivo: pôr o original do PC (`C:\Users\txcga\RPG_Local\jogo-verdadeiro\`) i
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\retoma-i0004\aplicar-no-pc.ps1 -Aplicar
    ```
-   Tem de acabar com `FEITO: 90 ficheiros no PC iguais ao ramo`. Faz uma cópia de segurança dos 22 substituídos em `C:\Users\txcga\RPG_Local\jogo-verdadeiro-antes-i0004-<data>`.
+   Tem de acabar com `FEITO: 92 ficheiros no PC iguais ao ramo`. Faz uma cópia de segurança dos 22 substituídos em `C:\Users\txcga\RPG_Local\jogo-verdadeiro-antes-i0004-<data>`.
 5. **Levar o ramo ao `main` (em linha recta, sem fusão):**
    ```powershell
    git fetch origin main
@@ -69,7 +69,7 @@ Objectivo: pôr o original do PC (`C:\Users\txcga\RPG_Local\jogo-verdadeiro\`) i
    git merge-base --is-ancestor origin/main HEAD; if ($LASTEXITCODE -eq 0) { git push origin HEAD:main } else { Write-Host 'PARAR: nao e linha recta' }
    ```
    Depois, ver o CI do `main` verde (`gh run list --branch main --limit 1`, ou a página Actions).
-6. **Drive (ponte):** subir para `RPG Assimilação/12 — Código/jogo-verdadeiro/` (pasta `1uouRMbs_CLzuTAizP9YUVDuE2f0DdScG`) os 90 ficheiros de `retoma-i0004/depois.txt` e o `MANIFESTO-SHA256.txt` novo, conferindo os SHA. É o passo de sempre da ponte, do Muse.
+6. **Drive (ponte):** subir para `RPG Assimilação/12 — Código/jogo-verdadeiro/` (pasta `1uouRMbs_CLzuTAizP9YUVDuE2f0DdScG`) os 92 ficheiros de `retoma-i0004/depois.txt` e o `MANIFESTO-SHA256.txt` novo, conferindo os SHA. É o passo de sempre da ponte, do Muse.
 7. ~~Apagar o ramo temporário `i0004/sonda-frases`~~ — **FEITO pelo Muse (CM-000009) a 08/11/2026**; o ramo já não existe. Não há nada a fazer neste passo.
 8. **Registar:** na Central, uma linha assinada com o ID completo e o formato `[AAAA-MM-DD HH:MM] [ID] texto` (o original do PC igual ao ramo, o commit no `main`, o CI); marcar a carta IBX-300 como CONCLUÍDA, com a evidência.
 
@@ -87,21 +87,28 @@ Objectivo: pôr o original do PC (`C:\Users\txcga\RPG_Local\jogo-verdadeiro\`) i
 
 ## 5. Próximo passo nomeado
 
-**Feito e verde no CI** (run `42517190411`, 7 jobs):
-- o ecrã do Mestre, com a revisão do Muse, o §12, a ponta a ponta e as lacunas L5, L6, L8, L9 e L10;
-- a N4: «Terminar batalha» e «Recomeçar»;
-- a regra-mãe: estabilizada = fim, a desgraça não se recusa, a língua «tu»;
-- **Q12 «amigo ao alcance»** e o dano pendente da desgraça (`amigo-ao-alcance.test.mjs`, 12 testes);
-- **Q8:** apanhar a arma caída (o ramo que faltava no servidor e o botão no cliente) e a arma quebrada sem conserto;
-- **a ponta a ponta com o VLAB real** (job `ponta-a-ponta`, segunda corrida): 16/16 no Mestre e a jogadora OK. A desgraça real («acerta-se») foi proposta, confirmada e APLICADA. Os dados de crítico da heroína vão carregados a 1,1,1, para o cartão abrir sempre;
-- **a arena do Mestre com os marcadores do site** (Plano B): `cenas/comum/marcador_figura.gd` copia o `cena.js` vivo. Tem o anel de identificação com a paleta do site pela ordem de entrada, a sombra de contacto e o corpo de pedra mate («marcador» ou «marcador-lobo») com a altura da ficha (`visual.alturaM`, `visual.marcador`). As casas do «mover», o fundo, a grelha e o sol também seguem o site. Peças do ecrã: 57/57.
+**Feito e verde no CI** (run `42519770897`, 8 jobs):
+- **o ecrã do Mestre:** com a revisão do Muse, o §12, a ponta a ponta e as lacunas L5, L6, L8, L9 e L10;
+- **a N4:** «Terminar batalha» e «Recomeçar»;
+- **a regra-mãe:** estabilizada = fim, a desgraça não se recusa, a língua «tu»;
+- **Q12 «amigo ao alcance»** (`BANCADA-DESGRACA-JULGAMENTO.md`) e o dano pendente da desgraça. A **escolha do amigo** no cartão (`amigos` no MASTER_CARD, `edicao.aliadoAtingidoId`) só aparece com mais de um amigo;
+- **Q8:** apanhar a arma caída (o ramo que faltava no servidor e o botão no cliente). A arma quebrada não tem conserto; a frase do site é «até ser consertada»;
+- **a ponta a ponta com o VLAB real:** 16/16 no Mestre e a jogadora OK. A desgraça real foi proposta, confirmada e aplicada;
+- **a arena do Mestre com os marcadores do site** (Plano B): `cenas/comum/marcador_figura.gd`. A caída viva fica deitada (decisão do Muse, 17:03);
+- **as fotos para o olho do Mestre:** job `foto-mestre`, com render verdadeiro (xvfb + llvmpipe; fecha a verificação do Plano B §B6). Saem 5 fotos no ramo `i0004/fotos-mestre`; as fotos 4 e 5 são demonstração dos estados;
+- **o ecrã da jogadora com as acções onde o site as tem:**
+  - na gaveta do Mover: «Sair c/ segurança» e «Correr»;
+  - na gaveta do Ataque: «Transformação · N PA»;
+  - no chip «FICHA ▸»: «Declarar Defender»;
+  - a barra continua Ataque · Mover · Consumível · Encerrar (`hud_acoes.gd`, 17/17).
 
-O que vem a seguir (por ordem):
+O que vem a seguir: a palavra do Muse/Mestre sobre as fotos. **N3** (o aparelho do Mestre), quando o Mestre responder.
 
-1. **Foto para o olho do Mestre** dos marcadores (falta a captura com render no CI: B3/B6 do Plano B, ainda por verificar).
-2. Se o Muse mandar: a mesma arena para a jogadora; a ponta a ponta com uma criatura em semi.
-3. **N3** (o aparelho do Mestre): quando o Mestre responder.
-
-Pendentes pequenos, registados: a figura CAÍDA (viva) deita-se como a morta, o que é escolha nossa (o site só deita a morta); o GLB de cada figura só entra pela V3.1; a linha de visão por supercover do B9 (C-42) ainda não bloqueia o alcance; o HUD da jogadora ainda não tem botões para Correr, Defender, Desvincular e Transformar (o servidor já os aceita).
+**Pendentes pequenos, registados:**
+- o GLB de cada figura só entra pela V3.1;
+- a linha de visão por supercover do B9 (C-42) ainda não bloqueia o alcance;
+- os nomes das figuras vizinhas sobrepõem-se na câmara Fixa;
+- o Defender não mostra o valor da Defesa (o servidor tira-o da configuração da sala, TODO R0);
+- a escolha do amigo não tem teste com dois amigos no servidor (a fixture só tem duas jogadoras).
 
 — CM-000008-I0004
