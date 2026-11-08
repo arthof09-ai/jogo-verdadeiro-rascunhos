@@ -16,9 +16,9 @@ jobs:
           echo "=========== jogo.js: desgracaPendente / acertaSe / acertaAmigo / aliados"
           grep -n -E "desgracaPendente|acertaSe|acertaAmigo|aliadosAoAlcance|aliadoAtingido" jogo.js | cut -c1-220 | head -40
           for r in $(grep -n -E "desgracaPendente" jogo.js | head -4 | cut -d: -f1); do echo "----- jogo.js $r"; sed -n "$((r-6)),$((r+30))p" jogo.js | cut -c1-200; done
-          echo "=========== vlab.js linhas 996-1075"
-          sed -n 996,1075p vlab.js | cut -c1-220
-          echo "=========== vlab.js: aplicarDesgracaPendente / tecto"
-          grep -n -E "aplicarDesgracaPendente|resolverDesgracaPendente|tectoLetalidade|nuncaAbaixo|acertaSe" vlab.js | cut -c1-200 | head -30
-          echo "=========== jogo.js: distanciaEntre / alcance"
-          grep -n -E "function distanciaEntre|distanciaEntre\(|alcanceCasas|function alcance" jogo.js | cut -c1-200 | head -20
+          echo "=========== vlab.js linhas 1060-1110"
+          sed -n 1060,1110p vlab.js | cut -c1-400
+          echo "=========== vlab.js elegiveis"
+          for r in $(grep -n -E "elegiveis =|const elegiveis|let elegiveis" vlab.js | head -3 | cut -d: -f1); do echo "----- $r"; sed -n "$((r-4)),$((r+14))p" vlab.js | cut -c1-300; done
+          echo "=========== jogo.js armaQuebrada / armaCaida / conserto"
+          grep -n -E "armaQuebrada|armaCaida|consert|armaRecuperada" jogo.js | cut -c1-240 | head -40
