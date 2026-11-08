@@ -19,13 +19,7 @@ jobs:
           done
           echo "== ficheiros citados no index do jogo-t1"
           grep -oE '(src|href)="[^"]+"' jogo-t1_index.html | sort -u
-          for f in jogo-t1_jogo.js jogo-t1_index.html jogo-t1_mestre.html mestre.html jogo-t1_mestre.js; do
-            [ -s "$f" ] || continue
-            echo "==================== $f: terminar / M-014"
-            grep -n -iE 'terminarBatalha|M-014|terminar' "$f" | cut -c1-300 | head -40
-            echo "==================== $f: linhas com Mestre"
-            grep -n 'Mestre' "$f" | cut -c1-260 | head -120
-            echo "==================== $f: textos de botões"
-            grep -n -oE "(textContent|innerText|title|aria-label)[ ]*=[ ]*['\"\`][^'\"\`]{2,80}" "$f" | head -150
-            grep -n -oE "<button[^>]*>[^<]{1,60}" "$f" | head -80
-          done
+          f=jogo-t1_jogo.js
+          for r in 1310,1372 2430,2470 3340,3372 4290,4380 3692,3712; do echo "=========== linhas $r"; sed -n "${r}p" "$f" | cut -c1-240; done
+          echo "=========== Aprovar/Recusar/Confirmar/Autorizar/Editar"
+          grep -n -E "Aprovar|Recusar|Confirmar|Autorizar|Editar|Pausar|Retomar|Colocar" "$f" | cut -c1-240 | head -80
