@@ -14,11 +14,14 @@ jobs:
           curl -s -o index.html "$B/"; curl -s -o jogo.js "$B/jogo.js"
           echo "=========== index.html: botões e barras"
           grep -n -i -E "<button|class=\"barra|id=\"barra|correr|defender|desvincular|transforma|apanhar" index.html | cut -c1-260 | head -60
-          echo "=========== jogo.js 630-700"
-          sed -n 630,700p jogo.js | cut -c1-230
-          echo "=========== <button em jogo.js"
-          grep -n -o -E "<button[^>]*>[^<]{0,60}" jogo.js | cut -c1-200 | head -60
-          echo "=========== data-* das acções"
-          grep -n -i -E "data-(correr|desvinc|transform|apanhar|acao)|correrUsado = true|desvincular = true|transformada = true" jogo.js | cut -c1-220 | head -30
-          echo "=========== index.html 64-120"
-          sed -n 64,120p index.html | cut -c1-220
+          echo "=========== jogo.js 1280-1350"
+          sed -n 1280,1350p jogo.js | cut -c1-230
+          echo "=========== jogo.js 2260-2290"
+          sed -n 2260,2290p jogo.js | cut -c1-200
+          echo "=========== jogo.js 2400-2425"
+          sed -n 2400,2425p jogo.js | cut -c1-200
+          echo "=========== jogo.js 2540-2560"
+          sed -n 2540,2560p jogo.js | cut -c1-200
+          echo "=========== desvinc / botao( / transform na ficha"
+          grep -n -i -E "desvinc" jogo.js | cut -c1-200 | head -20
+          grep -n -E "botao\(|btnAcao\(|data-acao=|'correr'|'transformar'|'desvincular'" jogo.js | cut -c1-200 | head -40
