@@ -9,7 +9,9 @@ extends SceneTree
 ##
 ## Código de saída 0 se tudo passa, 1 se algo falha.
 
-const Arena := preload("res://cenas/arena/arena.gd")
+## Os modos da arena (cenas/arena/arena.gd `enum Modo`): sem preload, porque a arena usa os autoloads, que num
+## script -s ainda não são identificadores na hora de compilar.
+var Modo: Dictionary = {}
 
 var _rede: Node
 var _estado: Node
@@ -58,6 +60,7 @@ func _correr() -> void:
 	})
 	var hud = (load("res://hud/hud.tscn") as PackedScene).instantiate()
 	root.add_child(hud)
+	Modo = hud.Arena.Modo
 	await _quadros(2)
 	hud.acao_pedida.connect(func(a): _pedidas.append(a))
 	var modos: Array = []
@@ -68,12 +71,12 @@ func _correr() -> void:
 	await _quadros(1)
 	var nomes: Array = []
 	for b in hud._barra.get_children():
-		nomes.append(b.name)
+		nomes.append(str(b.name))
 	_ok(nomes == ["BotaoAtaque", "BotaoMover", "BotaoConsumivel", "BotaoEncerrar"], "a barra continua Ataque, Mover, Consumível e Encerrar %s" % [nomes])
 	_ok(not hud._gaveta.visible, "sem modo, não há gaveta")
 
 	print("== modo Mover: «Sair c/ segurança» e «Correr» ==")
-	hud._ao_botao(Arena.Modo.MOVER)
+	hud._ao_botao(Modo.MOVER)
 	await _quadros(1)
 	_ok(hud._gaveta.visible and hud._g_seguranca.visible and hud._g_correr.visible and not hud._g_transformar.visible,
 		"a gaveta do Mover tem «Sair c/ segurança» e «Correr» (e não a Transformação)")
@@ -88,15 +91,15 @@ func _correr() -> void:
 	_opcoes(["encerrar", "defender"], 6)
 	await _quadros(1)
 	_ok(hud._a_correr and hud._g_correr.text.ends_with("A correr ✓") and hud._g_correr.disabled, "depois de correr: «A correr ✓», como no site")
-	_ok(modos.back() == Arena.Modo.MOVER, "e volta ao modo Mover com o orçamento novo")
+	_ok(modos.back() == Modo.MOVER, "e volta ao modo Mover com o orçamento novo")
 
 	print("== gaveta do Ataque: Transformação ==")
 	_opcoes(["encerrar", "transformar"], 7)
 	hud.fechar_gaveta()
-	hud.ao_modo_mudou(Arena.Modo.NENHUM)
+	hud.ao_modo_mudou(Modo.NENHUM)
 	await _quadros(1)
 	_ok(not hud._b_ataque.disabled, "o Ataque abre mesmo sem alvos, quando há Transformação")
-	hud._ao_botao(Arena.Modo.ATAQUE)
+	hud._ao_botao(Modo.ATAQUE)
 	await _quadros(1)
 	_ok(hud._g_transformar.visible and hud._g_transformar.text == "✦ Transformação · 12 PA" and not hud._g_seguranca.visible,
 		"a gaveta do Ataque tem «Transformação · 12 PA» (o custo da ficha dela)")
@@ -126,7 +129,7 @@ func _correr() -> void:
 	print("== fora da vez dela ==")
 	_estado.vez_id = "fB"
 	_opcoes(["encerrar", "correr", "desvincular"], 10)
-	hud._ao_botao(Arena.Modo.MOVER)
+	hud._ao_botao(Modo.MOVER)
 	await _quadros(1)
 	_ok(not hud._gaveta.visible, "fora da vez dela, nenhuma gaveta")
 	hud.queue_free()

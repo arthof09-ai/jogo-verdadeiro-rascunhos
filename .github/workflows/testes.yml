@@ -258,7 +258,7 @@ jobs:
           cd "$RUNNER_TEMP/fotos"
           git init -q -b i0004/fotos-mestre
           git config user.name "foto-mestre (CI)"; git config user.email "ci@users.noreply.github.com"
-          printf 'Fotos da arena do Mestre (Plano B). Run %s, commit %s.\nA foto 4 é uma DEMONSTRAÇÃO dos estados: a marcação é nossa — não é o jogo.\n' "$GITHUB_RUN_ID" "$GITHUB_SHA" > LEIA-ME.txt
+          printf 'Fotos da arena do Mestre (Plano B). Run %s, commit %s.\nAs fotos 4 e 5 são DEMONSTRAÇÃO dos estados: a marcação é nossa — não é o jogo.\n' "$GITHUB_RUN_ID" "$GITHUB_SHA" > LEIA-ME.txt
           sha256sum *.png >> LEIA-ME.txt
           git add -A && git commit -q -m "Fotos da arena do Mestre — run $GITHUB_RUN_ID ($GITHUB_SHA)"
           git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:i0004/fotos-mestre
