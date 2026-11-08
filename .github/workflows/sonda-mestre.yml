@@ -1,0 +1,19 @@
+name: Sonda temporária — botões da jogadora no site (I0004; apagar a seguir)
+on: [push]
+permissions:
+  contents: read
+jobs:
+  sonda:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ler a página e o jogo.js vivos
+        run: |
+          set +e
+          B=https://arthof09-ai.github.io/arena-das-bestas-prototipo-cm9/jogo-t1
+          curl -s -o index.html "$B/"; curl -s -o jogo.js "$B/jogo.js"
+          echo "=========== index.html: botões e barras"
+          grep -n -i -E "<button|class=\"barra|id=\"barra|correr|defender|desvincular|transforma|apanhar" index.html | cut -c1-260 | head -60
+          echo "=========== jogo.js: Correr/Defender/Desvincular/Transformar na UI"
+          grep -n -E "'(btn|bt|botao)[A-Za-z]*(Correr|Defender|Desvinc|Transform)|getElementById\('[^']*(correr|defend|desvinc|transform)[^']*'\)|textContent = '[^']*(Correr|Defender|Desvincular|Transformar)" jogo.js | cut -c1-240 | head -40
+          grep -n -i -E "Correr|Defender|Desvincular|Transformar" jogo.js | grep -i -E "button|botao|btn|textContent|innerHTML|label|aria|title" | cut -c1-240 | head -50
