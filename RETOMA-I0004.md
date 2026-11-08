@@ -8,8 +8,8 @@ Antes de tocar em qualquer coisa, o ritual da casa: **Central dos Claudes → IN
 
 - **Repositório:** `arthof09-ai/jogo-verdadeiro-rascunhos`.
 - **Ramo do trabalho:** `i0004/ci4-protocolo`, criado a partir do `main` no commit `9cbaca88b6e4951d41e518579afd3b32d846fee6` (ponte IBX-281). **O `main` não foi tocado.**
-- **Último commit com código:** `c5893ba` (Q12 «amigo ao alcance» e Q8 arma caída/quebrada, com a regra-mãe; 08/11 ao fim da tarde). O commit seguinte só actualiza este ficheiro.
-- **CI do ramo:** 7 jobs (`servidor`, `validador-glb`, `motor-real`, `protocolo`, `cliente`, `ponta-a-ponta`, `retoma-pc`), todos verdes no run `42516308522` (commit `c5893ba`).
+- **Último commit com código:** `845986d` (a ponta a ponta também com o VLAB real; antes, `c5893ba`: Q12 «amigo ao alcance» e Q8; 08/11 ao fim da tarde). O commit seguinte só actualiza este ficheiro.
+- **CI do ramo:** 7 jobs (`servidor`, `validador-glb`, `motor-real`, `protocolo`, `cliente`, `ponta-a-ponta`, `retoma-pc`), todos verdes no run `42516578298` (commit `845986d`).
 - **Ficheiros mudados:** 20 mudados e 67 novos em `rascunhos/` (87 no total), com SHA-256 antes e depois em `retoma-i0004/antes.txt` e `retoma-i0004/depois.txt`. O `MANIFESTO-SHA256.txt` já tem os SHA novos (148 ficheiros).
 - **As listas fazem-se sozinhas:** depois de cada commit que mude `rascunhos/`, correr `python3 retoma-i0004/actualizar-listas.py` na raiz e juntar as listas ao commit. Se alguém se esquecer, o job `retoma-pc` fica vermelho.
 - **READMEs com o detalhe:** `rascunhos/protocolo/README.md` e `rascunhos/cliente/README.md`.
@@ -48,7 +48,7 @@ Objectivo: pôr o original do PC (`C:\Users\txcga\RPG_Local\jogo-verdadeiro\`) i
    cd "$env:TEMP\jvr-i0004"
    git log --oneline -5
    ```
-   Confirmar que o commit `c5893ba` aparece no histórico.
+   Confirmar que o commit `845986d` aparece no histórico.
 3. **Ensaio (não escreve nada):**
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\retoma-i0004\aplicar-no-pc.ps1
@@ -87,17 +87,18 @@ Objectivo: pôr o original do PC (`C:\Users\txcga\RPG_Local\jogo-verdadeiro\`) i
 
 ## 5. Próximo passo nomeado
 
-**Feito e verde no CI** (run `42516308522`, 7 jobs):
+**Feito e verde no CI** (run `42516578298`, 7 jobs):
 - o ecrã do Mestre, com a revisão do Muse, o §12, a ponta a ponta e as lacunas L5, L6, L8, L9 e L10;
 - a N4: «Terminar batalha» e «Recomeçar»;
 - a regra-mãe: estabilizada = fim, a desgraça não se recusa, a língua «tu»;
 - **Q12 «amigo ao alcance»** e o dano pendente da desgraça (`amigo-ao-alcance.test.mjs`, 12 testes);
-- **Q8:** apanhar a arma caída (o ramo que faltava no servidor e o botão no cliente) e a arma quebrada sem conserto.
+- **Q8:** apanhar a arma caída (o ramo que faltava no servidor e o botão no cliente) e a arma quebrada sem conserto;
+- **a ponta a ponta com o VLAB real** (job `ponta-a-ponta`, segunda corrida): 16/16 no Mestre e a jogadora OK. A desgraça real («acerta-se») foi proposta, confirmada e APLICADA. Os dados de crítico da heroína vão carregados a 1,1,1, para o cartão abrir sempre.
 
 O que vem a seguir (por ordem):
 
-1. **A ponta a ponta com o motor real (VLAB)** e com uma criatura em semi.
-2. **Os marcadores 3D definitivos** da arena do Mestre (Plano B).
+1. **Os marcadores 3D definitivos** da arena do Mestre (Plano B).
+2. Se o Muse mandar: a ponta a ponta com uma criatura em semi.
 3. **N3** (o aparelho do Mestre): quando o Mestre responder.
 
 Pendentes pequenos, registados: a linha de visão por supercover do B9 (C-42) ainda não bloqueia o alcance; o HUD da jogadora ainda não tem botões para Correr, Defender, Desvincular e Transformar (o servidor já os aceita).
