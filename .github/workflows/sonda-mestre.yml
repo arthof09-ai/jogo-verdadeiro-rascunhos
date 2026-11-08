@@ -14,6 +14,11 @@ jobs:
           curl -s -o index.html "$B/"; curl -s -o jogo.js "$B/jogo.js"
           echo "=========== index.html: botões e barras"
           grep -n -i -E "<button|class=\"barra|id=\"barra|correr|defender|desvincular|transforma|apanhar" index.html | cut -c1-260 | head -60
-          echo "=========== jogo.js: Correr/Defender/Desvincular/Transformar na UI"
-          grep -n -E "'(btn|bt|botao)[A-Za-z]*(Correr|Defender|Desvinc|Transform)|getElementById\('[^']*(correr|defend|desvinc|transform)[^']*'\)|textContent = '[^']*(Correr|Defender|Desvincular|Transformar)" jogo.js | cut -c1-240 | head -40
-          grep -n -i -E "Correr|Defender|Desvincular|Transformar" jogo.js | grep -i -E "button|botao|btn|textContent|innerHTML|label|aria|title" | cut -c1-240 | head -50
+          echo "=========== jogo.js 630-700"
+          sed -n 630,700p jogo.js | cut -c1-230
+          echo "=========== <button em jogo.js"
+          grep -n -o -E "<button[^>]*>[^<]{0,60}" jogo.js | cut -c1-200 | head -60
+          echo "=========== data-* das acções"
+          grep -n -i -E "data-(correr|desvinc|transform|apanhar|acao)|correrUsado = true|desvincular = true|transformada = true" jogo.js | cut -c1-220 | head -30
+          echo "=========== index.html 64-120"
+          sed -n 64,120p index.html | cut -c1-220
