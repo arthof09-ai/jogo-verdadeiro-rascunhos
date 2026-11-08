@@ -87,7 +87,7 @@ Os presets e o CI são da **JV2.1b (Muse)**. A referência é esta:
 **Achados, por resolver:**
 
 1. **Falta a cena do Mestre.** O lobby manda o Mestre para `res://cenas/mestre/mestre.tscn`, que não existe (já estava no ponto 6 acima). O Mestre não joga por este cliente.
-2. **A desgraça e o teste de morte não aparecem à jogadora.** O `estado.gd` ignora os eventos `desgraca` e `teste_morte`; ela só vê «Falha crítica!». Faltam as frases de cada desgraça, incluindo a da REF_19 («…e perde um quarto da vida que tem agora.», só quando vem `perdeQuarto`). As frases exactas estão no site vivo: o Muse vai mandá-las. **Sítio marcado no código:** `TODO(FRASES-DESGRACA)` em `estado/estado.gd` (ramo `_` de aplicar o evento) e em `hud/hud.gd` (a seguir a `FRASES_ATAQUE`).
+2. ~~**A desgraça e o teste de morte não aparecem à jogadora.**~~ **Resolvido (I0004, 08/11):** ver «Frases de batalha do site» abaixo.
 3. ~~**Duas tabelas de perfis gráficos.**~~ **Resolvido (I0004, 08/11):** a arena passou a usar o `AplicadorPerfil` (nó `Perfis` na cena; `Sol` e `Ambiente` nos grupos `sol` e `ambiente`; o corpo das figuras no `figura`). Uma só tabela, guardada pelo teste «Uma só tabela de perfis gráficos». Muda o Baixo da arena: escala 3D de 0,75 para 0,5, como na tabela dos perfis.
 4. ~~**A Clareira de prova não tem cena.**~~ **Resolvido (I0004, 08/11):** ver a secção «Clareira de prova» abaixo.
 5. `docs/orcamento-perfis.md`, citado pelos perfis, não está no repositório.
@@ -131,3 +131,20 @@ Montado pelo script, tudo PLACEHOLDER: chão 44×44 m com textura de ruído, 6 �
 4. **Os shaders nunca foram compilados**: o Godot sem janela usa um renderizador vazio. Falta abrir a cena num computador com GPU (ou no telemóvel) para ver erros de shader e o aspecto.
 5. **A medição de FPS** (B3) no Redmi Note 10 Pro, com os 3 perfis: só com o telemóvel.
 6. **O olho do Mestre**: a luz das 4 horas, a cor das sombras e o pontilhado das copas.
+
+## Frases de batalha do site (I0004, 08/11/2026)
+
+As frases que a jogadora vê na desgraça, no relógio de morte e no fim são **as mesmas do site vivo**. Vieram do Muse e eu conferi-as contra o `jogo-t1/jogo.js` servido (REF_25, SHA `d022aae4…`): `vlabFraseDesgraca` (linha 1020), o relógio de morte (1083–1090) e o fim (2162–2165).
+
+- **Onde estão:** `hud/frases_batalha.gd` (só texto, sem regra). O `estado.gd` escolhe a frase a partir do que o servidor projeta e emite `frase_batalha`; o `hud.gd` mostra-a no aviso durante 6 s.
+- **Desgraça:** «Falha crítica · » + a frase do efeito. A arma é a do último `ataque` de quem falhou. «Perde um quarto da vida que tem agora.» só entra quando vem `perdeQuarto`, ou seja, só para a própria. Jogadora com artigo e no feminino («a Ong», «própria», «dela»); criatura com o nome e no masculino.
+- **Relógio de morte (só dela):** ao entrar a morrer, «A Ong caiu — a batalha continua à volta dela.»; depois de cada `teste_morte`, o `estadoMorte` seguinte diz se foi «aguenta-se» (mais um sucesso) ou «piora visivelmente» (mais uma falha). A Party nunca vê a CD nem os números.
+- **Fim:** morte, estabilizada e vitória. A frase de vitória não estava na lista do Muse: copiei-a do mesmo `jogo.js` (linha 2162).
+- **Testes:** 18 de texto exacto contra as frases do site e 9 a partir de eventos (no `rodar_testes.gd`). O cliente está em 73/73.
+
+**Duas diferenças conscientes:**
+
+1. **Sem «Aperta Recomeçar para jogar outra vez.»** O site acaba as frases de fim com isto, mas o cliente não tem o botão Recomeçar, e o texto só promete o que a casca faz (a regra da REF_14). A cláusula está guardada em `CLAUSULA_RECOMECAR`; entra mudando `HA_BOTAO_RECOMECAR` para `true` quando o botão existir.
+2. **«Estabilizada» como fim:** no site, estabilizar acaba a batalha; o servidor não a acaba (o `desfecho` só é `vitoria` ou `morte`), por isso a frase de fim estabilizada fica pronta mas não sai. É a pergunta 7 ao Mestre («Estabilizada é derrota?»).
+
+**Tratamento:** as frases usam «tu», como no site. A pergunta tu/você está com o Mestre.
