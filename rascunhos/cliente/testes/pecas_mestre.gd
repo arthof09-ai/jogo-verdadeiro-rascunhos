@@ -14,6 +14,7 @@ extends SceneTree
 ##   (MASTER_ACT mover), ataques e acções (MASTER_ACT); «Jogo eu» no cartão de IA leva à aba Agir.
 ## Com MESTRE_COMANDOS=<ficheiro> escreve os comandos montados para o CI os conferir com os schemas.
 
+const MarcadorFig := preload("res://cenas/comum/marcador_figura.gd")
 const CENA := "res://cenas/mestre/mestre.tscn"
 const Textos := preload("res://cenas/mestre/textos_mestre.gd")
 
@@ -93,6 +94,42 @@ func _correr() -> void:
 	_ok(c._arena.figuras_desenhadas() == colocadas, "uma figura 3D por figura colocada (%d)" % colocadas)
 	_ok(c._arena.casa_de_ponto(c._arena.centro_da_casa(Vector2i(3, 4))) == Vector2i(3, 4), "o centro de uma casa volta à mesma casa")
 	_ok(c._arena.largura == int(vista["mapa"]["largura"]) and c._arena.altura == int(vista["mapa"]["altura"]), "a grelha tem o tamanho do mapa")
+
+	print("== marcadores do site (Plano B; cena.js) ==")
+	var orc_f: Dictionary = {}
+	var lobo_f: Dictionary = {}
+	for f in vista["mestre"]["figuras"]:
+		if f.get("fichaId") == "orc-teste":
+			orc_f = f
+		elif f.get("fichaId") == "lobo-teste":
+			lobo_f = f
+	var no_orc: Node3D = c._arena._nos.get(str(orc_f.get("id", "")))
+	var no_lobo: Node3D = c._arena._nos.get(str(lobo_f.get("id", "")))
+	_ok(no_orc != null and no_lobo != null, "o orc e o lobo estão na arena")
+	if no_orc != null and no_lobo != null:
+		var m_orc := no_orc.get_node("Marcador") as Node3D
+		var m_lobo := no_lobo.get_node("Marcador") as Node3D
+		_ok(is_equal_approx(float(m_orc.get_meta("altura_m")), 3.6), "a altura do orc vem da ficha (3,6 m, como no site)")
+		var cil = (m_orc.get_node("Pivo/Corpo") as MeshInstance3D).mesh
+		_ok(cil is CylinderMesh and is_equal_approx(cil.top_radius, 0.22) and is_equal_approx(cil.bottom_radius, 0.38)
+			and is_equal_approx(cil.height, 3.6 * 0.68) and cil.radial_segments == 8, "corpo «marcador»: cilindro 0,22/0,38, 0,68 × altura, 8 lados")
+		_ok(is_equal_approx((m_orc.get_node("Pivo/Cabeca") as Node3D).position.y, 3.6 * 0.86), "cabeça a 0,86 × altura")
+		_ok(str(m_lobo.get_meta("forma")) == "marcador-lobo" and not m_lobo.has_node("Pivo/Cabeca")
+			and (m_lobo.get_node("Pivo/Corpo") as Node3D).scale.is_equal_approx(Vector3(0.3, 1.35 * 0.5, 0.7)), "o lobo usa o «marcador-lobo» (icosaedro 0,3 × 0,5·altura × 0,7)")
+		var cores: Array = []
+		for f in vista["mestre"]["figuras"]:
+			var n: Node3D = c._arena._nos.get(str(f.get("id", "")))
+			if n != null:
+				var anel := (n.get_node("Marcador/Anel") as MeshInstance3D).mesh
+				cores.append((anel.surface_get_material(0) as StandardMaterial3D).albedo_color.to_html(false))
+		_ok(cores.size() >= 4 and cores.slice(0, 4) == ["87b4b0", "e5bb74", "b98b9d", "b5c3ce"], "anéis com a paleta do site pela ordem de entrada %s" % [cores])
+		var contacto := (m_orc.get_node("Contacto") as MeshInstance3D)
+		_ok(is_equal_approx((contacto.mesh as CylinderMesh).top_radius, 0.5) and is_equal_approx(contacto.position.y, 0.018), "sombra de contacto de 0,5 m")
+		MarcadorFig.deitar(m_orc, true)
+		var pivo := m_orc.get_node("Pivo") as Node3D
+		_ok(is_equal_approx(pivo.rotation.z, PI * 0.5) and is_equal_approx(MarcadorFig._y_minimo(pivo) + 0.0, 0.03), "morta: deitada e assente no chão com 0,03 m de folga")
+		MarcadorFig.deitar(m_orc, false)
+		_ok(is_zero_approx(pivo.rotation.z) and is_zero_approx(pivo.position.y), "viva: de pé outra vez")
 
 	print("== «Voltar até aqui» (L8) ==")
 	var pontos: Array = vista["pontos"]

@@ -138,6 +138,9 @@ export function figuraDoMestre(fig, fichas) {
     nomePublico: nomePublicoDe(ficha),
     vidaTotal: ficha?.vidaTotal ?? null,
     paTotal: ficha?.paTotal ?? null,
+    // Plano B: o desenho da figura na arena do Mestre (marcador do site; sem ficha visual, o cliente usa o padrão).
+    alturaM: Number.isFinite(ficha?.visual?.alturaM) ? ficha.visual.alturaM : null,
+    marcador: ficha?.visual?.marcador ?? null,
   };
 }
 

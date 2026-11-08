@@ -46,7 +46,9 @@
         "paTotal": { "type": ["integer", "null"], "minimum": 0 },
         "modo": { "enum": ["manual", "semi", "auto", null] },
         "nome": { "type": ["string", "null"] },
-        "nomePublico": { "type": "string" }
+        "nomePublico": { "type": "string" },
+        "alturaM": { "type": ["number", "null"], "description": "Plano B (08/11): altura do marcador em metros, da ficha (visual.alturaM). null = o cliente usa 2,25 m (humano 1,80 × 1,25)." },
+        "marcador": { "enum": ["marcador", "marcador-lobo", null], "description": "Plano B (08/11): a forma do marcador do site (cena.js addMarker), da ficha (visual.marcador). null = 'marcador'." }
       }
     },
     "mestre": {

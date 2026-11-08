@@ -115,7 +115,16 @@ export const SCHEMA_FICHAS_1 = Object.freeze({
     },
     transformacao: { type: ['object', 'null'] },
     comportamentoIA: { type: ['object', 'null'] },
-    visual: { type: 'object', properties: { glb: { type: 'string' }, alturaM: { type: 'number' } } },
+    // Plano B (I0004, 08/11): enquanto não há GLB, a figura desenha-se com o marcador do site (cena.js addMarker):
+    // 'marcador' (humanoide) ou 'marcador-lobo' (quadrúpede), com a altura em metros (as figuras do site já vêm ×1,25).
+    visual: {
+      type: 'object',
+      properties: {
+        glb: { type: 'string' },
+        alturaM: { type: 'number', exclusiveMinimum: 0, maximum: 15 },
+        marcador: { enum: ['marcador', 'marcador-lobo'] },
+      },
+    },
     fonte: {
       type: 'object',
       required: ['origem', 'data'],

@@ -105,7 +105,9 @@
       "nome": "Heroína Teste",
       "nomePublico": "Heroína Teste",
       "vidaTotal": 5150,
-      "paTotal": 4040
+      "paTotal": 4040,
+      "alturaM": 2.625,
+      "marcador": "marcador"
      },
      {
       "id": "f0c1870b843e1465f",
@@ -139,7 +141,9 @@
       "nome": "Aliada Teste",
       "nomePublico": "Aliada Teste",
       "vidaTotal": 3579,
-      "paTotal": 1357
+      "paTotal": 1357,
+      "alturaM": 2.625,
+      "marcador": "marcador"
      },
      {
       "id": "f1c8fc87e558f2d7e",
@@ -170,7 +174,9 @@
       "nome": "Orc Verdadeiro Teste",
       "nomePublico": "Orc",
       "vidaTotal": 7777,
-      "paTotal": 313
+      "paTotal": 313,
+      "alturaM": 3.6,
+      "marcador": "marcador"
      },
      {
       "id": "fb43618ae935f84df",
@@ -201,7 +207,9 @@
       "nome": "Lobo Teste",
       "nomePublico": "Lobo",
       "vidaTotal": 4848,
-      "paTotal": 0
+      "paTotal": 0,
+      "alturaM": 1.35,
+      "marcador": "marcador-lobo"
      }
     ],
     "lobby": {
@@ -417,7 +425,9 @@
       "nome": "Heroína Teste",
       "nomePublico": "Heroína Teste",
       "vidaTotal": 5150,
-      "paTotal": 4040
+      "paTotal": 4040,
+      "alturaM": 2.625,
+      "marcador": "marcador"
      },
      {
       "id": "f0c1870b843e1465f",
@@ -446,7 +456,9 @@
       "nome": "Aliada Teste",
       "nomePublico": "Aliada Teste",
       "vidaTotal": 3579,
-      "paTotal": 1357
+      "paTotal": 1357,
+      "alturaM": 2.625,
+      "marcador": "marcador"
      }
     ],
     "lobby": null,
@@ -570,7 +582,9 @@
       "nome": "Heroína Teste",
       "nomePublico": "Heroína Teste",
       "vidaTotal": 5150,
-      "paTotal": 4040
+      "paTotal": 4040,
+      "alturaM": 2.625,
+      "marcador": "marcador"
      }
     ],
     "lobby": {
@@ -730,7 +744,9 @@
       "nome": "Heroína Teste",
       "nomePublico": "Heroína Teste",
       "vidaTotal": 5150,
-      "paTotal": 4040
+      "paTotal": 4040,
+      "alturaM": 2.625,
+      "marcador": "marcador"
      },
      {
       "id": "f0eca9c7df5e7493f",
@@ -761,7 +777,9 @@
       "nome": "Orc Verdadeiro Teste",
       "nomePublico": "Orc",
       "vidaTotal": 7777,
-      "paTotal": 313
+      "paTotal": 313,
+      "alturaM": 3.6,
+      "marcador": "marcador"
      }
     ],
     "lobby": {
@@ -1106,6 +1124,10 @@
       "rd": {
        "geral": 0,
        "porTipo": {}
+      },
+      "visual": {
+       "alturaM": 2.625,
+       "marcador": "marcador"
       },
       "testes": {
        "ataque": "1d20+3",
