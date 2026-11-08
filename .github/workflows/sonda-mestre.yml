@@ -14,5 +14,9 @@ jobs:
           curl -s -o index.html "$B/"; grep -o -E 'src="[^"]+\.js[^"]*"' index.html | head -30
           for f in $(grep -o -E 'src="[^"]+\.js' index.html | sed 's/src="//' | grep -v -E '^https?:' | head -20); do curl -s -o "$(basename $f)" "$B/$f"; done
           ls -la *.js | awk '{print $5, $9}'
-          echo "=========== círculo / anel / escala das figuras / jitter"
-          grep -n -i -E "circulo|círculo|anel|elipse|ESCALA_FIG|escalaFig|1\.22|\* ?1\.25|1\.25 ?\*|jitter|RingGeometry|CircleGeometry" *.js | cut -c1-230 | head -80
+          echo "=========== cena.js 1-130"
+          sed -n 1,130p cena.js | cut -c1-200
+          echo "=========== cena.js 200-330"
+          sed -n 200,330p cena.js | cut -c1-200
+          echo "=========== cena.js: ring( / cores"
+          grep -n -E "ring\(|COR_|cores|0x[0-9a-fA-F]{6}|escala|scale\.set|1\.25" cena.js | cut -c1-200 | head -60
