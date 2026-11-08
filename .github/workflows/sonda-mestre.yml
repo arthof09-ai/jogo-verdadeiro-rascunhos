@@ -1,0 +1,31 @@
+name: Sonda temporária — palavras do Mestre no site (I0004; apagar a seguir)
+on: [push]
+permissions:
+  contents: read
+jobs:
+  sonda:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ler as páginas do site e listar as palavras do Mestre
+        run: |
+          set +e
+          B=https://arthof09-ai.github.io/arena-das-bestas-prototipo-cm9
+          mkdir -p s && cd s
+          for p in jogo-t1/index.html jogo-t1/jogo.js jogo-t1/mestre.html mestre.html jogo-t1/mestre.js index.html; do
+            f=$(echo "$p" | tr '/' '_')
+            code=$(curl -s -o "$f" -w '%{http_code}' --max-time 30 "$B/$p")
+            echo "== $p -> $code $(wc -c < "$f" 2>/dev/null) B $(sha256sum "$f" | cut -c1-12)"
+          done
+          echo "== ficheiros citados no index do jogo-t1"
+          grep -oE '(src|href)="[^"]+"' jogo-t1_index.html | sort -u
+          for f in jogo-t1_jogo.js jogo-t1_index.html jogo-t1_mestre.html mestre.html jogo-t1_mestre.js; do
+            [ -s "$f" ] || continue
+            echo "==================== $f: terminar / M-014"
+            grep -n -iE 'terminarBatalha|M-014|terminar' "$f" | cut -c1-300 | head -40
+            echo "==================== $f: linhas com Mestre"
+            grep -n 'Mestre' "$f" | cut -c1-260 | head -120
+            echo "==================== $f: textos de botões"
+            grep -n -oE "(textContent|innerText|title|aria-label)[ ]*=[ ]*['\"\`][^'\"\`]{2,80}" "$f" | head -150
+            grep -n -oE "<button[^>]*>[^<]{1,60}" "$f" | head -80
+          done
