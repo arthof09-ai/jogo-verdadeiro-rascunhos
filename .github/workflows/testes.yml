@@ -116,3 +116,43 @@ jobs:
           tail -40 "$RUNNER_TEMP/arranque.log"
           grep -q pronto "$RUNNER_TEMP/arranque.log"
           ! grep -E "SCRIPT ERROR|Parse Error" "$RUNNER_TEMP/arranque.log"
+
+  retoma-pc:
+    # Ensaio da receita do PC (I0004, 08/11/2026): num Windows, simula o original do PC no 9cbaca8,
+    # corre retoma-i0004/aplicar-no-pc.ps1 em ensaio e a sério, e confirma que pára se o PC divergir.
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - name: Sem conversão de fins de linha (os SHA são dos bytes do repositório)
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Simular o original do PC no 9cbaca8
+        shell: powershell
+        run: |
+          $orig = Join-Path $env:RUNNER_TEMP 'jogo-verdadeiro'
+          New-Item -ItemType Directory -Force -Path $orig | Out-Null
+          git archive --format=tar -o (Join-Path $env:RUNNER_TEMP 'base.tar') 9cbaca88b6e4951d41e518579afd3b32d846fee6 rascunhos
+          tar -xf (Join-Path $env:RUNNER_TEMP 'base.tar') -C $orig
+      - name: Ensaio, cópia e ensaio outra vez (Windows PowerShell)
+        shell: powershell
+        run: |
+          $orig = Join-Path $env:RUNNER_TEMP 'jogo-verdadeiro'
+          powershell -ExecutionPolicy Bypass -File retoma-i0004\aplicar-no-pc.ps1 -Original $orig
+          if ($LASTEXITCODE -ne 0) { throw 'o ensaio falhou' }
+          powershell -ExecutionPolicy Bypass -File retoma-i0004\aplicar-no-pc.ps1 -Original $orig -Aplicar
+          if ($LASTEXITCODE -ne 0) { throw 'a copia falhou' }
+          powershell -ExecutionPolicy Bypass -File retoma-i0004\aplicar-no-pc.ps1 -Original $orig
+          if ($LASTEXITCODE -ne 0) { throw 'o segundo ensaio falhou' }
+      - name: Controlo — com o PC divergente, a receita pára sem copiar
+        shell: powershell
+        run: |
+          $orig2 = Join-Path $env:RUNNER_TEMP 'divergente'
+          New-Item -ItemType Directory -Force -Path $orig2 | Out-Null
+          tar -xf (Join-Path $env:RUNNER_TEMP 'base.tar') -C $orig2
+          Add-Content -LiteralPath (Join-Path $orig2 'rascunhos\servidor\nucleo\sala.js') -Value '// mexido no PC'
+          powershell -ExecutionPolicy Bypass -File retoma-i0004\aplicar-no-pc.ps1 -Original $orig2 -Aplicar
+          if ($LASTEXITCODE -eq 0) { throw 'devia ter parado' }
+          if (Test-Path (Join-Path $orig2 'rascunhos\cliente\hud\frases_batalha.gd')) { throw 'copiou apesar de parar' }
+          Write-Host 'Controlo OK: parou e nao copiou.'
