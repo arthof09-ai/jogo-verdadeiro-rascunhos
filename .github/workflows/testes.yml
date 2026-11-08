@@ -103,6 +103,9 @@ jobs:
       - name: Testes do cliente
         if: always()
         run: timeout 120 "$GODOT" --headless --path . -s res://testes/rodar_testes.gd
+      - name: Abrir a Clareira de prova
+        if: always()
+        run: timeout 180 "$GODOT" --headless --path . -s res://testes/abrir_clareira.gd
       - name: Painel ⚙ em ecrãs baixos (REF_20)
         if: always()
         run: timeout 120 "$GODOT" --headless --path . -s res://testes/medir_painel_config.gd

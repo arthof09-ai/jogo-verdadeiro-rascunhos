@@ -21,6 +21,8 @@ const HORAS_CHAVE: Array[float] = [8.0, 15.0, 18.5, 22.0]
 const PERFIS: Array[String] = ["baixo", "medio", "alto"]
 const AQUECIMENTO_S := 10.0  # B3: medir depois de 10 s
 const JANELA_QUADROS := 1800  # ~60 s a 30 fps
+## PONTO PARA O OLHO DO MESTRE (REF_23): pontilhado nas copas que tapam figuras. Desligado por defeito.
+const USAR_PONTILHADO_COPAS := false
 
 const SHADER_TOON := preload("res://arte/shaders/toon_pintado.gdshader")
 const SHADER_CONTORNO := preload("res://arte/shaders/contorno_casca.gdshader")
@@ -216,6 +218,9 @@ func _mat_folhagem(cor: Color, altura_presa: float, faixa_presa: float) -> Shade
 	m.set_shader_parameter("centro_copa", Vector3.ZERO)
 	m.set_shader_parameter("altura_presa", altura_presa)
 	m.set_shader_parameter("faixa_presa", faixa_presa)
+	# REF_23 (I0004, 08/11): o pontilhado das copas (alpha hash) fica DESLIGADO até à palavra do Mestre:
+	# ele mandou tirar o pontilhado do chão do site. Por defeito, copas sem pontilhado (alpha scissor).
+	m.set_shader_parameter("usar_alpha_hash", USAR_PONTILHADO_COPAS)
 	_mats_luz.append(m)
 	return m
 

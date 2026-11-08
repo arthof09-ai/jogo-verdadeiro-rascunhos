@@ -1,0 +1,48 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://arte/cenas/clareira_prova.gd" id="1_clareira"]
+[ext_resource type="Shader" path="res://arte/shaders/ceu_pintado.gdshader" id="2_ceu"]
+[ext_resource type="Script" path="res://camera/camera_mesa.gd" id="3_camera"]
+[ext_resource type="Script" path="res://arte/perfis/aplicar_perfil.gd" id="4_perfis"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ceu"]
+shader = ExtResource("2_ceu")
+
+[sub_resource type="Sky" id="Sky_clareira"]
+sky_material = SubResource("ShaderMaterial_ceu")
+
+[sub_resource type="Environment" id="Environment_clareira"]
+background_mode = 2
+sky = SubResource("Sky_clareira")
+ambient_light_source = 2
+fog_enabled = true
+fog_density = 0.004
+
+[node name="ClareiraProva" type="Node3D"]
+script = ExtResource("1_clareira")
+
+[node name="Ambiente" type="WorldEnvironment" parent="." groups=["ambiente"]]
+environment = SubResource("Environment_clareira")
+
+[node name="Sol" type="DirectionalLight3D" parent="." groups=["sol"]]
+shadow_enabled = true
+sky_mode = 0
+
+[node name="Camera" type="Camera3D" parent="."]
+current = true
+script = ExtResource("3_camera")
+
+[node name="Perfis" type="Node" parent="."]
+script = ExtResource("4_perfis")
+
+[node name="Medicao" type="CanvasLayer" parent="."]
+
+[node name="Rotulo" type="Label" parent="Medicao"]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 900.0
+offset_bottom = 48.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+text = "PLACEHOLDERS"
