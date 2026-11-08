@@ -156,3 +156,4 @@ jobs:
           if ($LASTEXITCODE -eq 0) { throw 'devia ter parado' }
           if (Test-Path (Join-Path $orig2 'rascunhos\cliente\hud\frases_batalha.gd')) { throw 'copiou apesar de parar' }
           Write-Host 'Controlo OK: parou e nao copiou.'
+          exit 0  # o código 1 era o do script, que parou como devia
