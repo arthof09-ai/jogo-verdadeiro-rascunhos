@@ -11,6 +11,10 @@ extends SceneTree
 ## - com o texto de cartão mais longo (razão comprida) e 4 cartões na fila, os botões não mexem;
 ## - com a folha encolhida, o cartão e os botões continuam à vista.
 ## Código de saída 0 se couber nas três, 1 se não couber, 2 se não der para medir.
+##
+## N3 RESPONDIDA (palavra do Mestre, 2026-11-08 20:37 -03): «Vou usar todos, acredito que talvez um pouco mais o
+## celular, mas todos tem que ter a mesma qualidade e ser funcional.» As três janelas ficam no CI como prova
+## permanente: celular deitado (844×390, 780×360) e computador (1920×1080), com a mesma régua para todos.
 
 const CENA := "res://cenas/mestre/mestre.tscn"
 const JANELAS := [Vector2i(844, 390), Vector2i(780, 360), Vector2i(1920, 1080)]

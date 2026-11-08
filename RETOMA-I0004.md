@@ -102,7 +102,19 @@ Objectivo: pôr o original do PC (`C:\Users\txcga\RPG_Local\jogo-verdadeiro\`) i
   - no chip «FICHA ▸»: «Declarar Defender»;
   - a barra continua Ataque · Mover · Consumível · Encerrar (`hud_acoes.gd`, 17/17).
 
-O que vem a seguir: a palavra do Muse/Mestre sobre as fotos. **N3** (o aparelho do Mestre), quando o Mestre responder.
+**N3 RESPONDIDA** (palavra do Mestre, 2026-11-08 20:37 -03): «Vou usar todos, acredito que talvez um pouco mais o celular, mas todos tem que ter a mesma qualidade e ser funcional.» Com isto, **todas as perguntas ao Mestre estão respondidas**.
+- O ecrã do Mestre, e o cliente todo, têm a mesma qualidade e funcionam no celular, no tablet e no computador. Nenhum fica para depois.
+- O celular vem primeiro na ordem de polimento, sem tirar qualidade aos outros.
+- As três janelas do `medir_mestre.gd` (844×390, 780×360 e 1920×1080) ficam no CI como prova permanente.
+
+**Mudança de mãos (ordem do Mestre pelo Muse, 08/11 20:48):** esta frente passa para o **Claude local do PC**. O I0004 parou depois de registar a N3.
+
+**Atenção, para não duplicar:** os três passos da fila de 17:03 JÁ ESTÃO FEITOS e verdes neste ramo, antes da mudança de mãos:
+- a foto da arena (`c426cd0`);
+- os botões da jogadora (`ba07682`);
+- a escolha do amigo (`b049f93`).
+
+O Claude do PC só tem de os trazer para o PC com a receita do §3.
 
 **Pendentes pequenos, registados:**
 - o GLB de cada figura só entra pela V3.1;
