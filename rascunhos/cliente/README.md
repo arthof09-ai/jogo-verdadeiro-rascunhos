@@ -86,7 +86,7 @@ Os presets e o CI são da **JV2.1b (Muse)**. A referência é esta:
 
 **Achados, por resolver:**
 
-1. **Falta a cena do Mestre.** O lobby manda o Mestre para `res://cenas/mestre/mestre.tscn`, que não existe (já estava no ponto 6 acima). O Mestre não joga por este cliente.
+1. ~~Falta a cena do Mestre.~~ **Feita a 08/11** (ver «Ecrã do Mestre» abaixo).
 2. ~~**A desgraça e o teste de morte não aparecem à jogadora.**~~ **Resolvido (I0004, 08/11):** ver «Frases de batalha do site» abaixo.
 3. ~~**Duas tabelas de perfis gráficos.**~~ **Resolvido (I0004, 08/11):** a arena passou a usar o `AplicadorPerfil` (nó `Perfis` na cena; `Sol` e `Ambiente` nos grupos `sol` e `ambiente`; o corpo das figuras no `figura`). Uma só tabela, guardada pelo teste «Uma só tabela de perfis gráficos». Muda o Baixo da arena: escala 3D de 0,75 para 0,5, como na tabela dos perfis.
 4. ~~**A Clareira de prova não tem cena.**~~ **Resolvido (I0004, 08/11):** ver a secção «Clareira de prova» abaixo.
@@ -148,3 +148,33 @@ As frases que a jogadora vê na desgraça, no relógio de morte e no fim são **
 2. **«Estabilizada» como fim:** no site, estabilizar acaba a batalha; o servidor não a acaba (o `desfecho` só é `vitoria` ou `morte`), por isso a frase de fim estabilizada fica pronta mas não sai. É a pergunta 7 ao Mestre («Estabilizada é derrota?»).
 
 **Tratamento:** as frases usam «tu», como no site. A pergunta tu/você está com o Mestre.
+
+## Ecrã do Mestre (JV3.1, I0004, 08/11/2026)
+
+O desenho foi aprovado com emendas pelo Muse (Notion: «JV3.1 — Ecrã do Mestre no cliente: desenho aprovado com emendas (rascunho 0.2)»). O código está em `cenas/mestre/`:
+
+| Ficheiro | O que faz |
+| --- | --- |
+| `mestre.tscn`, `mestre.gd` | A cena. Recusa abrir para quem não é Mestre e volta ao lobby. À esquerda fica a arena 3D; à direita a folha do Mestre, em duas colunas: a coluna 1 é fixa (cartão activo com os botões, fila, sala, alertas, encolher); a coluna 2 tem abas que rolam por dentro. O aviso da 1.ª entrada aparece uma vez só. Nada se decide por tempo |
+| `modelo_mestre.gd` | Funções puras: o texto das figuras, do ambiente, dos cartões e dos pontos de «voltar», e o comando de cada botão. A frase que a Party vai ler sai das frases do site |
+| `textos_mestre.gd` | As palavras visíveis: as do site (Confirmar, Voltar, Registo da batalha, Exportar registo…) e a regra da casa. Inclui o `TODO(N4-TERMINAR)`: terminar ou recomeçar a batalha **não existe** até a resposta N4 do Mestre |
+| `arena_mestre.gd` | A arena 3D num SubViewport, com a câmara da mesa. Mostra todas as figuras colocadas e um anel na figura da vez; destaca as casas que o servidor mandou e diz que casa se tocou |
+| `aba_agir.gd` | O modo H10 da criatura da vez (MASTER_MODE). Mover, atacar e as acções vêm das ROOM_OPTIONS do servidor e saem como MASTER_ACT |
+| `aba_mesa.gd` | Procurar fichas, «Guardar a mesa» (MASTER_LOBBY_SET), «Começar a batalha» com 2.º toque (MASTER_START) e «Colocar» a ficha numa casa (MASTER_PLACE, uma de cada vez) |
+| `aba_registo.gd` | «Exportar registo» (MESTRE-ONLY no nome) e «Voltar até aqui». Os pontos vêm do servidor (L8). Escolher o ponto só pergunta; só o botão de confirmar o manda |
+
+**Privacidade (segunda tranca):** `rede.gd` não guarda nenhum `MASTER_*` e `estado.gd` não guarda o bloco `mestre` fora do lugar do Mestre. A prova é `testes/canario_privacidade.gd`, que também varre o código.
+
+**Testes no CI**, todos com mensagens reais do servidor (`servidor/dados-exemplo/mesa-mestre.json`):
+- `abrir_mestre.gd`: recusa noutro papel, os 4 cartões, nada por tempo, a lista do «Escolher outra», as emendas 1 e 2.
+- `pecas_mestre.gd`: arena 3D, «Voltar até aqui», aba Mesa, aba Agir, «Jogo eu» → aba Agir.
+- `canario_privacidade.gd`.
+- `medir_mestre.gd`: F5-MESTRE-01 a 844×390, 780×360 e 1920×1080.
+- Os comandos que os testes montam são conferidos contra os schemas (`protocolo/ferramentas/validar-mensagens.py`).
+
+**Por fazer:**
+- «Escolher outra» acção no cartão de IA: enquanto há cartão aberto o servidor não manda opções, por isso o caminho é «Jogo eu» e depois a aba Agir.
+- O lote de colocação por esquema (L5, D5) e o agrupar das marchas (L6, D4).
+- O selo TESTE e as estatísticas (L9).
+- Terminar ou recomeçar a batalha (N4).
+- Os marcadores 3D definitivos (Plano B).

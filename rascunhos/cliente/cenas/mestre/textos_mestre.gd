@@ -59,8 +59,6 @@ const ABA_REGISTO_CURTA := "Registo"
 const ABA_SALA := "Sala"
 const EXPORTAR_REGISTO := "Exportar registo"
 const REGISTO_EXPORTADO := "Registo exportado: %s"
-## L8: o «Voltar até aqui» precisa da lista dos pontos guardados, que o servidor ainda não dá.
-const VOLTAR_ATE_AQUI_FALTA := "Voltar até aqui: chega quando o servidor disser os pontos guardados (L8)."
 const PAUSAR := "Pausar"
 const ATUALIZAR := "Atualizar"
 const SOM_LIGADO := "Aviso de cartão: ligado"
@@ -71,6 +69,53 @@ const CLIMA := "Clima: %s"
 const FUTURO := "A seguir: %s"
 const SEM_VALOR := "—"
 const JOURNAL := "Ponto actual do registo: %d"
+
+# ---------------------------------------------------------------- aba Agir (§12 do desenho)
+const ABA_AGIR := "Agir"
+const AGIR_SEM_VEZ := "Nada para jogar: não é a vez de uma criatura."
+const AGIR_VEZ := "Vez de %s"
+const AGIR_MODO := "Modo:"
+const AGIR_SEM_OPCOES := "As opções chegam do servidor quando a criatura está «À mão» (ou depois de «Jogo eu»)."
+const MOVER := "Mover"
+const MOVER_ESCOLHER := "Mover: escolher a casa no tabuleiro (%d casas)."
+const ATACAR := "Atacar %s (%s)"
+const CANCELAR := "Cancelar"
+const NOME_ACAO := {
+	"encerrar": "Encerrar a vez",
+	"correr": "Correr",
+	"defender": "Defender",
+	"desvincular": "Sair com segurança",
+	"transformar": "Transformação",
+	"apanhar_arma": "Apanhar a arma",
+}
+
+# ---------------------------------------------------------------- aba Mesa (Lobby/Colocar)
+const ABA_MESA := "Mesa"
+const PROCURAR := "Procurar"
+const PROCURAR_DICA := "Nome da criatura ou do NPC"
+const NA_MESA := "Na mesa"
+const GUARDAR_MESA := "Guardar a mesa"
+const COMECAR := "Começar a batalha"
+const COLOCAR := "Colocar %s"
+const COLOCAR_ESCOLHER := "%s: escolher a casa no tabuleiro. Aparece à Party logo que for colocada."
+const PARAR_COLOCAR := "Parar de colocar"
+const RESULTADO := "%s · %s · %s"
+const SEM_RESULTADOS := "Sem resultados."
+const PAPEL_FICHA := {"criatura": "criatura", "npc": "NPC"}
+
+# ---------------------------------------------------------------- «Voltar até aqui» (L8)
+const PONTO := "Rodada %d · vez de %s · %s"
+const PONTO_INICIO := "Início da sala"
+const VOLTAR_PERGUNTA := "Voltar até aqui? Todos vão ver a batalha voltar a este ponto."
+const VOLTAR_ATE_AQUI := "Voltar até aqui"
+const SEM_PONTOS := "Ainda não há pontos para voltar."
+const NOME_EVENTO := {
+	"inicio": "início", "colocacao": "colocação", "turno": "vez nova", "movimento": "movimento",
+	"ataque": "ataque", "dano": "dano", "desgraca": "desgraça", "cartao": "cartão", "cartao_fechado": "cartão decidido",
+	"ambiente": "ambiente", "ambiente_mestre": "ambiente", "estado": "estado", "entrada": "entrada",
+	"revertido": "voltar", "modo": "modo", "lobby": "mesa", "fim": "fim", "teste_morte": "teste de morte",
+	"recusa": "recusa", "reacao": "reacção", "consumivel": "consumível", "pausa": "pausa", "retomada": "continuar",
+}
 
 # ---------------------------------------------------------------- estado da sala e alertas
 const FASE := {"lobby": "Sala: à espera de começar", "combate": "Sala: em combate", "fim": "Sala: batalha acabada",

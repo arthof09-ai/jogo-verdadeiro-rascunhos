@@ -140,6 +140,22 @@ static func cartao_interno(vista: Dictionary, cartao_id: String) -> Dictionary:
 	return {}
 
 
+## Um ponto de «voltar» (MASTER_VIEW.pontos, L8) em texto: «Rodada 2 · vez de Orc · movimento, vez nova».
+static func linha_ponto(vista: Dictionary, p: Dictionary) -> String:
+	var tipos = p.get("tipos")
+	if tipos is Array and tipos.size() == 1 and str(tipos[0]) == "inicio":
+		return Textos.PONTO_INICIO
+	var nomes := PackedStringArray()
+	if tipos is Array:
+		for t in tipos:
+			nomes.append(str(Textos.NOME_EVENTO.get(str(t), str(t))))
+	var vez := _texto(p.get("vezId"))
+	var quem := nome_mestre(figura(vista, vez)) if vez != "" else Textos.SEM_VALOR
+	if quem == "":
+		quem = Textos.SEM_VALOR
+	return Textos.PONTO % [int(p.get("rodada", 0)), quem, ", ".join(nomes)]
+
+
 # ---------------------------------------------------------------- cartões
 
 ## A desgraça proposta: {id} do VLAB, {tipo} do motor falso, ou texto.
@@ -196,7 +212,8 @@ static func descrever_cartao(cartao: Dictionary, vista: Dictionary) -> Dictionar
 			var razao := _texto(cartao.get("razao"))
 			if razao != "":
 				linhas.append(Textos.RAZAO % razao)
-			# TODO(AGIR): «Escolher outra» acção chega com a aba Agir (as opções do ROOM_OPTIONS).
+			# «Escolher outra» acção fica desligado: com um cartão aberto o servidor não manda opções
+			# (sala.js opcoesDoLugar). O caminho é «Jogo eu» e depois a aba Agir.
 			botoes = [
 				_botao(Textos.CONFIRMAR, "confirmar", false),
 				_botao(Textos.ESCOLHER_OUTRA, "escolher", false, false),

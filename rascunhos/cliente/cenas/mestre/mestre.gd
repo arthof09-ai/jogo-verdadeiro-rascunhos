@@ -2,19 +2,22 @@ extends Control
 ## Ecrã do Mestre (JV3.1 — desenho aprovado com emendas pelo Muse, CM-000009, 08/11/2026). I0004.
 ##
 ## - Só abre para o lugar do Mestre: noutro papel recusa, escreve no registo e volta ao lobby.
-## - Tabuleiro à esquerda; à direita a folha do Mestre, a toda a altura, em duas colunas:
-##   coluna 1 FIXA (o cartão activo e os botões, a fila, a sala, os alertas) e coluna 2 com abas que
-##   rolam por dentro (Figuras, Ambiente, Registo da batalha, Sala). Cabe a 844×390 e a 780×360,
-##   com letra de 13 px reais ou mais (testes/medir_mestre.gd).
+## - À esquerda a arena 3D (arena_mestre.gd, num SubViewport); à direita a folha do Mestre, a toda a
+##   altura, em duas colunas: coluna 1 FIXA (o cartão activo e os botões, a fila, a sala, os alertas) e
+##   coluna 2 com abas que rolam por dentro (Figuras, Agir, Mesa, Ambiente, Registo, Sala). Cabe a
+##   844×390 e a 780×360, com letra de 13 px reais ou mais (testes/medir_mestre.gd).
 ## - Nada se decide por tempo: os botões só mandam comandos quando o Mestre toca neles.
 ## - Palavras: cenas/mestre/textos_mestre.gd (as do site e a regra da casa; emenda 1).
 ## - Terminar/recomeçar a batalha: TODO(N4-TERMINAR) em textos_mestre.gd (emenda 3; não se inventa).
-## - Ainda por fazer (ordem do §12 do desenho): a arena 3D, a aba Lobby/Colocar, o «Voltar até
-##   aqui» (precisa da L8) e a aba Agir (jogar a criatura à mão; «Escolher outra» no cartão de IA).
+## - §12 do desenho: arena 3D, aba Mesa (lobby e colocar), «Voltar até aqui» (L8) e aba Agir (jogar a
+##   criatura à mão). «Escolher outra» no cartão de IA fica desligado (ver aba_agir.gd).
 
 const Textos := preload("res://cenas/mestre/textos_mestre.gd")
 const Modelo := preload("res://cenas/mestre/modelo_mestre.gd")
-const Tabuleiro := preload("res://cenas/mestre/tabuleiro_mestre.gd")
+const ArenaMestre := preload("res://cenas/mestre/arena_mestre.gd")
+const AbaRegisto := preload("res://cenas/mestre/aba_registo.gd")
+const AbaMesa := preload("res://cenas/mestre/aba_mesa.gd")
+const AbaAgir := preload("res://cenas/mestre/aba_agir.gd")
 
 const CENA_LOBBY := "res://cenas/lobby/lobby.tscn"
 const LARGURA_BASE := 1920.0
@@ -33,6 +36,8 @@ var recusado := false
 var enviar_fn: Callable
 ## Pedido da MASTER_VIEW (os testes trocam-no).
 var pedir_vista_fn: Callable
+## Pesquisa de fichas, MASTER_SEARCH (os testes trocam-no).
+var pesquisar_fn: Callable
 
 var vista: Dictionary = {}
 var cartao: Dictionary = {}
@@ -51,7 +56,11 @@ var _armado := ""  # acção à espera do segundo toque
 var _espera_vista := -1.0
 var _repassar := false
 
-var _tabuleiro: Control
+var _tabuleiro: SubViewportContainer
+var _arena: ArenaMestre
+var _aba_registo: AbaRegisto
+var _aba_mesa: AbaMesa
+var _aba_agir: AbaAgir
 var _folha: PanelContainer
 var _colunas: HBoxContainer
 var _col1: VBoxContainer
@@ -68,8 +77,6 @@ var _encolher: Button
 var _abas: TabContainer
 var _lista_figuras: VBoxContainer
 var _lista_ambiente: VBoxContainer
-var _registo_info: Label
-var _exportar: Button
 var _pausar: Button
 var _continuar: Button
 var _atualizar: Button
@@ -87,6 +94,8 @@ func _ready() -> void:
 		enviar_fn = Callable(Rede, "enviar_mestre")
 	if not pedir_vista_fn.is_valid():
 		pedir_vista_fn = Callable(Rede, "pedir_vista_mestre")
+	if not pesquisar_fn.is_valid():
+		pesquisar_fn = Callable(Rede, "pesquisar_fichas")
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	theme = _tema
 	_montar()
@@ -97,6 +106,7 @@ func _ready() -> void:
 	Rede.sala_retomada.connect(_ao_retomada)
 	Rede.ligacao_mudou.connect(_ao_ligacao)
 	Rede.precisa_entrar.connect(_ao_precisa_entrar)
+	Estado.opcoes_mudaram.connect(func(): _aba_agir.atualizar())
 	get_viewport().size_changed.connect(_ao_redimensionar)
 	_ao_redimensionar()
 	if not Rede.ultima_vista_mestre.is_empty():
@@ -135,10 +145,12 @@ func _pedir_vista_em_breve() -> void:
 
 func aplicar_vista(msg: Dictionary) -> void:
 	vista = msg
-	(_tabuleiro as Tabuleiro).vista = msg
+	_arena.aplicar_vista(msg)
 	_desenhar_figuras()
 	_desenhar_ambiente()
-	_registo_info.text = Textos.JOURNAL % int(msg.get("journalSeq", 0))
+	_aba_registo.atualizar(msg)
+	_aba_mesa.atualizar(msg)
+	_aba_agir.atualizar(msg)
 	_desenhar_cartao()
 	if _aviso_primeira.visible and str(msg.get("fase", "")) == "combate":
 		_aviso_primeira.visible = false  # emenda 2: nunca por cima da batalha
@@ -163,6 +175,8 @@ func _ao_mestre(msg: Dictionary) -> void:
 			aplicar_cartao(msg)
 		"MASTER_ALERTA":
 			_juntar_alerta(Modelo.texto_alerta(msg))
+		"MASTER_RESULTS":
+			_aba_mesa.receber_resultados(msg)
 		"MASTER_EXPORT":
 			_guardar_export(msg)
 		_:
@@ -215,6 +229,27 @@ func _ao_precisa_entrar(_motivo: String) -> void:
 
 # ---------------------------------------------------------------- comandos
 
+## Para as abas: manda um comando do Mestre (com cmdId/intentId e revisão) e devolve o id ("" se não saiu).
+func enviar(tipo: String, campos: Dictionary) -> String:
+	return _enviar(tipo, campos)
+
+
+func pesquisar(texto: String) -> void:
+	pesquisar_fn.call(texto)
+
+
+## Destaca casas na arena (as que o servidor mandou nas opções).
+func destacar(casas: Array[Vector2i]) -> void:
+	_arena.destacar(casas)
+
+
+## Casa tocada na arena: primeiro o «Colocar» da aba Mesa, depois o «Mover» da aba Agir.
+func casa_tocada(casa: Vector2i) -> void:
+	if _aba_mesa.colocar(casa):
+		return
+	_aba_agir.mover(casa)
+
+
 func _enviar(tipo: String, campos: Dictionary) -> String:
 	var id: String = enviar_fn.call(tipo, campos, Estado.revisao)
 	if id == "":
@@ -246,7 +281,16 @@ func tocar(acao: String) -> void:
 	var cmd := Modelo.comando(cartao, acao)
 	if not cmd.is_empty():
 		_enviar(cmd["tipo"], cmd["campos"])
+		if acao == "jogo_eu":
+			mostrar_aba(_aba_agir)  # a IA pára: a vez passa à mão do Mestre
 	_desenhar_cartao()
+
+
+func mostrar_aba(aba: Control) -> void:
+	var rolar := aba.get_parent()
+	for i in _abas.get_tab_count():
+		if _abas.get_tab_control(i) == rolar:
+			_abas.current_tab = i
 
 
 ## Escolha na lista do «Escolher outra» (L2: só a lista do cartão).
@@ -261,7 +305,7 @@ func escolher(desgraca: String) -> void:
 	_desenhar_cartao()
 
 
-func _exportar_registo() -> void:
+func exportar_registo() -> void:
 	# «exportar» é isento de revisão e não tem recibo: a resposta é o MASTER_EXPORT.
 	enviar_fn.call("MASTER_SUPERVISOR", {"op": "exportar"}, Estado.revisao)
 
@@ -272,7 +316,7 @@ func _guardar_export(msg: Dictionary) -> void:
 	if f != null:
 		f.store_string(JSON.stringify(msg.get("conteudo", {})))
 		f.close()
-	_registo_info.text = Textos.REGISTO_EXPORTADO % nome.get_file()
+	_aba_registo.mostrar_export(nome.get_file())
 
 
 # ---------------------------------------------------------------- desenho
@@ -390,9 +434,20 @@ func _alternar_folha() -> void:
 # ---------------------------------------------------------------- montagem e tamanho
 
 func _montar() -> void:
-	_tabuleiro = Tabuleiro.new()
+	# Arena 3D num SubViewport (o lado esquerdo). stretch: o SubViewport segue o tamanho do contentor.
+	_tabuleiro = SubViewportContainer.new()
 	_tabuleiro.name = "Tabuleiro"
+	_tabuleiro.stretch = true
 	add_child(_tabuleiro)
+	var sv := SubViewport.new()
+	sv.name = "Vista3D"
+	sv.own_world_3d = true
+	sv.handle_input_locally = true
+	_tabuleiro.add_child(sv)
+	_arena = ArenaMestre.new()
+	_arena.name = "ArenaMestre"
+	sv.add_child(_arena)
+	_arena.casa_tocada.connect(casa_tocada)
 
 	_folha = PanelContainer.new()
 	_folha.name = "Folha"
@@ -448,12 +503,13 @@ func _montar() -> void:
 	_abas.clip_tabs = false
 	col2.add_child(_abas)
 	_lista_figuras = _aba(Textos.ABA_FIGURAS)
+	_aba_agir = _aba_com(Textos.ABA_AGIR, AbaAgir.new()) as AbaAgir
+	_aba_agir.montar(self)
+	_aba_mesa = _aba_com(Textos.ABA_MESA, AbaMesa.new()) as AbaMesa
+	_aba_mesa.montar(self)
 	_lista_ambiente = _aba(Textos.ABA_AMBIENTE)
-	var registo := _aba(Textos.ABA_REGISTO_CURTA)
-	_rotulo(registo, "RegistoTitulo").text = Textos.ABA_REGISTO
-	_registo_info = _rotulo(registo, "RegistoInfo")
-	_exportar = _botao(registo, Textos.EXPORTAR_REGISTO, _exportar_registo)
-	_rotulo(registo, "VoltarFalta").text = Textos.VOLTAR_ATE_AQUI_FALTA
+	_aba_registo = _aba_com(Textos.ABA_REGISTO_CURTA, AbaRegisto.new()) as AbaRegisto
+	_aba_registo.montar(self)
 	var sala := _aba(Textos.ABA_SALA)
 	_pausar = _botao(sala, Textos.PAUSAR, func(): _enviar("MASTER_PAUSE", {}))
 	_continuar = _botao(sala, Textos.CONTINUAR, func(): _enviar("MASTER_RESUME", {}))
@@ -485,14 +541,18 @@ func _montar() -> void:
 
 
 func _aba(titulo: String) -> VBoxContainer:
+	return _aba_com(titulo, VBoxContainer.new())
+
+
+## Uma aba que rola por dentro, com `conteudo` lá dentro.
+func _aba_com(titulo: String, conteudo: VBoxContainer) -> VBoxContainer:
 	var rolar := ScrollContainer.new()
 	rolar.name = titulo
 	rolar.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_abas.add_child(rolar)
-	var v := VBoxContainer.new()
-	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	rolar.add_child(v)
-	return v
+	conteudo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	rolar.add_child(conteudo)
+	return conteudo
 
 
 func _rotulo(pai: Node, nome: String) -> Label:
