@@ -1,0 +1,18 @@
+name: Sonda temporária — marcadores 3D do site (I0004; apagar a seguir)
+on: [push]
+permissions:
+  contents: read
+jobs:
+  sonda:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ler a página e os scripts vivos
+        run: |
+          set +e
+          B=https://arthof09-ai.github.io/arena-das-bestas-prototipo-cm9/jogo-t1
+          curl -s -o index.html "$B/"; grep -o -E 'src="[^"]+\.js[^"]*"' index.html | head -30
+          for f in $(grep -o -E 'src="[^"]+\.js' index.html | sed 's/src="//' | grep -v -E '^https?:' | head -20); do curl -s -o "$(basename $f)" "$B/$f"; done
+          ls -la *.js | awk '{print $5, $9}'
+          echo "=========== círculo / anel / escala das figuras / jitter"
+          grep -n -i -E "circulo|círculo|anel|elipse|ESCALA_FIG|escalaFig|1\.22|\* ?1\.25|1\.25 ?\*|jitter|RingGeometry|CircleGeometry" *.js | cut -c1-230 | head -80
