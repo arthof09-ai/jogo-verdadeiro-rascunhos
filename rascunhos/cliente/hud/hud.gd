@@ -433,8 +433,8 @@ func _texto_faixa() -> String:
 	if Estado.e_minha_vez():
 		var orc: float = Estado.orcamento_m()
 		if _modo_atual == Arena.Modo.MOVER and orc >= 0.0:
-			return "Sua vez · pode andar até %s m" % _metros(orc)
-		return "Sua vez"
+			return "A tua vez · podes andar até %s m" % _metros(orc)
+		return "A tua vez"
 	if Estado.vez_id != "":
 		var f = Estado.figuras.get(Estado.vez_id)
 		if Estado.e_jogadora(f) and Estado.nome_de(Estado.vez_id) != "":
@@ -538,7 +538,7 @@ func _ao_escolha(cb: Callable) -> void:
 
 func _pedir_encerrar() -> void:
 	_painel_config.visible = false
-	escolher("Encerrar a sua vez?", [["Sim, encerrar", _emitir_acao.bind({"tipo": "encerrar"})]])
+	escolher("Encerrar a tua vez?", [["Sim, encerrar", _emitir_acao.bind({"tipo": "encerrar"})]])
 
 
 func _pedir_sair() -> void:
@@ -651,13 +651,13 @@ func _ao_recibo(_intent_id: String, estado: String, msg: Dictionary) -> void:
 	if msg.get("revertidaEm") != null:
 		_mostrar_aviso("A jogada foi desfeita pelo Mestre.")
 	elif estado == "RECUSADA":
-		_mostrar_aviso("A ação não foi feita. Escolha outra vez.")
+		_mostrar_aviso("A ação não foi feita. Escolhe outra vez.")
 	_atualizar()
 
 
 func _ao_recusa(_intent_id: String, _motivo: String, texto: String) -> void:
 	# O servidor manda uma frase simples, sem números do Mestre (sala.js TEXTOS_RECUSA).
-	_mostrar_aviso(texto if texto != "" else "Não deu certo. Escolha outra vez.")
+	_mostrar_aviso(texto if texto != "" else "Não deu certo. Escolhe outra vez.")
 	_atualizar()
 
 

@@ -48,12 +48,14 @@ export const TEXTOS_RECUSA = Object.freeze({
 const MODOS = Object.freeze(['manual', 'semi', 'auto']);
 const DESGRACAS = Object.freeze(['cai', 'arma-cai', 'arma-quebra', 'acerta-se', 'quebra-corpo', 'acerta-amigo']);
 /**
- * L2 do desenho JV3.1 (revisão do Muse, 08/11): a lista que o Mestre pode escolher no «Editar» do cartão de
- * desgraça. Vai dentro do MASTER_CARD e o servidor só aceita uma edição que esteja nela.
- * PERGUNTA PARA O MESTRE 11: «nenhuma» é o que «Recusar» aplica hoje. PERGUNTA 12: «acerta-amigo» está na
- * lista, mas quem conta como amigo ao alcance ainda não está decidido (hoje essa desgraça nunca sai sozinha).
+ * L2 do desenho JV3.1 (revisão do Muse, 08/11): a lista que o Mestre pode escolher no «Escolher outra» do cartão de
+ * desgraça. Vai dentro do MASTER_CARD e o servidor só aceita uma escolha que esteja nela.
+ * Regra-mãe do Mestre (08/11, «vale o site»): no site a rolagem da falha crítica NUNCA se deita fora (jogo.js J1 e
+ * EM-J1-04: o «Voltar» devolve à mesma rolagem; só o Confirmar a resolve). Por isso já não há «nenhuma» nem
+ * «recusar» na desgraça — e o VLAB não tem «nenhuma» na tabela. As que o motor declara inaplicáveis nesta cena
+ * (`falhaCritica.excluidas`: sem arma, sem aliado) saem da lista do cartão.
  */
-const DESGRACAS_EDITAVEIS = Object.freeze([...DESGRACAS, 'nenhuma']);
+const DESGRACAS_EDITAVEIS = DESGRACAS;
 const RESULTADOS = Object.freeze({
   // Nomes REAIS do VLAB (medidos no CI, run 42315490663, 74 chamadas): acerta, erra, critico, falhaCritica.
   acerta: 'acerto', erra: 'erro', critico: 'critico', falhaCritica: 'falha_critica',
@@ -647,8 +649,8 @@ export function criarSala({
       v: PROTOCOLO, type: 'MASTER_CARD', roomId, cartaoId: c.cartaoId, tipo: c.tipo, figuraId: c.figuraId ?? null,
       proposta: clonarJson(c.proposta ?? null), razao: c.razao ?? null, faces: clonarJson(c.faces ?? null),
       intentIdOrigem: c.origem?.id ?? null,
-      // L2: só o cartão de desgraça leva a lista do «Editar»; os outros levam null.
-      desgracas: c.tipo === 'desgraca' ? DESGRACAS_EDITAVEIS.slice() : null,
+      // L2: só o cartão de desgraça leva a lista do «Escolher outra»; os outros levam null.
+      desgracas: c.tipo === 'desgraca' ? desgracasDoCartao(c) : null,
     };
   }
   /** Recibo → mensagem. Só campos da lista; nada do motor (E-P1). Determinista (mesmos bytes no reenvio). */
@@ -1238,6 +1240,7 @@ export function criarSala({
       abrirCartao(tx, {
         tipo: 'desgraca', figuraId: f.id, alvoId: alvo.id, tecnicaId: t.id, contexto: ctx,
         proposta: saida.falhaCritica.desgracaProposta ?? saida.falhaCritica.proposta ?? saida.falhaCritica.desgraca ?? null,
+        excluidas: Array.isArray(saida.falhaCritica.excluidas) ? clonarJson(saida.falhaCritica.excluidas) : [],
         razao: null, origem: origemCartao(origem),
       });
       return 'AGUARDANDO_MESTRE';
@@ -1794,6 +1797,12 @@ export function criarSala({
     return null;
   }
 
+  /** L2 + regra-mãe: as desgraças que o Mestre pode escolher neste cartão (sem as que o motor excluiu). */
+  function desgracasDoCartao(c) {
+    const excluidas = new Set((c.excluidas ?? []).map((e) => (typeof e === 'string' ? e : e?.id)));
+    return DESGRACAS_EDITAVEIS.filter((d) => !excluidas.has(d));
+  }
+
   function aprovarCartao(tx, seatId, msg) {
     const m = tx.estado;
     const c = m.cartoes.find((x) => x.cartaoId === msg.cartaoId && x.estado === 'aberto');
@@ -1807,9 +1816,11 @@ export function criarSala({
       if (decisao === 'aprovar') escolhida = typeof c.proposta === 'string' ? c.proposta : c.proposta?.tipo ?? c.proposta?.id ?? null;
       else if (decisao === 'editar') {
         escolhida = msg.edicao?.desgraca;
-        if (!DESGRACAS_EDITAVEIS.includes(escolhida)) throw new ErroRecusa('acao_invalida'); // L2: só da lista do cartão
+        if (!desgracasDoCartao(c).includes(escolhida)) throw new ErroRecusa('acao_invalida'); // L2: só da lista do cartão
+      } else {
+        // Regra-mãe (vale o site): recusar não deita a rolagem fora. O cartão fica por decidir, como no site.
+        throw new ErroRecusa('acao_invalida');
       }
-      else escolhida = 'nenhuma'; // TODO(JV1.x R0): o que "recusar a desgraça" significa na regra
       if (typeof escolhida !== 'string') throw new ErroRecusa('acao_invalida');
       // Resolve de novo com a MESMA semente e a escolha do Mestre (JV1.1-a §4).
       const ctx = { ...c.contexto, modoDesgraca: 'escolha', desgracaEscolhida: escolhida };

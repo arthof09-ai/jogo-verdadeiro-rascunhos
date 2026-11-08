@@ -260,6 +260,7 @@
        "tipo": "arma-cai",
        "texto": "CANARIO-DESGRACA"
       },
+      "excluidas": [],
       "razao": null,
       "origem": {
        "seatId": "sa8c5ee39b55a53b8",
@@ -480,8 +481,7 @@
      "arma-quebra",
      "acerta-se",
      "quebra-corpo",
-     "acerta-amigo",
-     "nenhuma"
+     "acerta-amigo"
     ]
    },
    "ia": {

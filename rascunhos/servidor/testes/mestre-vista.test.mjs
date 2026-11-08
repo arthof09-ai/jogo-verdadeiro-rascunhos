@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { montarMesa, exigirAplicada, recibo, FIXTURE } from './ajudantes.mjs';
 
 const fichaPorId = Object.fromEntries((FIXTURE.fichas ?? FIXTURE).map((f) => [f.id, f]));
-const LISTA = ['cai', 'arma-cai', 'arma-quebra', 'acerta-se', 'quebra-corpo', 'acerta-amigo', 'nenhuma'];
+const LISTA = ['cai', 'arma-cai', 'arma-quebra', 'acerta-se', 'quebra-corpo', 'acerta-amigo'];
 
 function pedirVista(m) {
   const r = m.enviar('mestre', { type: 'MASTER_VIEW' });
@@ -74,7 +74,7 @@ function cartaoDeDesgraca() {
 }
 const abertos = (m) => m.sala.depuracao.estado().cartoes.filter((c) => c.estado === 'aberto');
 
-test('L2: o cartão de desgraça traz a lista do «Editar» (6 desgraças + «nenhuma»), pela ordem', () => {
+test('L2: o cartão de desgraça traz a lista do «Escolher outra» (as 6 desgraças; sem «nenhuma», como no site), pela ordem', () => {
   const { cartao } = cartaoDeDesgraca();
   assert.equal(cartao.tipo, 'desgraca');
   assert.deepEqual(cartao.desgracas, LISTA);
@@ -86,7 +86,17 @@ test('L2: editar com uma desgraça da lista aplica; com uma de fora, o servidor 
   const rec = recibo(r);
   assert.ok(rec && (rec.type === 'ROOM_REJECT' || rec.estado === 'RECUSADA'), 'fora da lista: recusado');
   assert.equal(abertos(m).length, 1, 'o cartão continua por decidir');
-  exigirAplicada(m.mestre('MASTER_APPROVE', { cartaoId: cartao.cartaoId, decisao: 'editar', edicao: { desgraca: 'nenhuma' } }));
+  exigirAplicada(m.mestre('MASTER_APPROVE', { cartaoId: cartao.cartaoId, decisao: 'editar', edicao: { desgraca: 'cai' } }));
+  assert.equal(abertos(m).length, 0);
+});
+
+test('regra-mãe (vale o site): recusar a desgraça não deita a rolagem fora — o cartão fica por decidir', () => {
+  const { m, cartao } = cartaoDeDesgraca();
+  const r = m.mestre('MASTER_APPROVE', { cartaoId: cartao.cartaoId, decisao: 'recusar' });
+  const rec = recibo(r);
+  assert.ok(rec && (rec.type === 'ROOM_REJECT' || rec.estado === 'RECUSADA'), 'recusar é recusado');
+  assert.equal(abertos(m).length, 1, 'o cartão continua aberto, com a mesma rolagem');
+  exigirAplicada(m.mestre('MASTER_APPROVE', { cartaoId: cartao.cartaoId, decisao: 'aprovar' }), 'só o Confirmar a resolve');
   assert.equal(abertos(m).length, 0);
 });
 

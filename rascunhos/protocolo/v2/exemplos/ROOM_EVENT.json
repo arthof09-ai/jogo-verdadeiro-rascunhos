@@ -706,6 +706,7 @@
             "tipo": "arma-cai",
             "texto": "EXEMPLO-DESGRACA"
           },
+          "excluidas": [],
           "razao": null,
           "origem": {
             "seatId": "sa8c5ee39b55a53b8",

@@ -99,7 +99,7 @@ func _medir(janela: Vector2i) -> void:
 	print("%s: área %.0f × %.0f unidades; letra %d (= %.1f px reais)" % [janela, visivel.size.x, visivel.size.y, m._fonte, m._fonte * escala])
 	_verificar(m._fonte * escala >= MIN_PX_REAIS - 0.01, "%s letra ≥ 13 px reais" % [janela])
 	var botoes := _botoes_visiveis(m)
-	_verificar(botoes.size() == 3, "%s três botões no cartão de desgraça" % [janela])
+	_verificar(botoes.size() == 2, "%s dois botões no cartão de desgraça (Confirmar, Escolher outra)" % [janela])
 	var fundos_antes: Array = []
 	for b in botoes:
 		_verificar(_dentro(b, visivel), "%s botão «%s» inteiro à vista (fundo em %.0f de %.0f)" % [janela, b.text, b.get_global_rect().end.y, visivel.end.y])

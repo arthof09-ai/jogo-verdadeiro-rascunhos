@@ -12,8 +12,6 @@ extends RefCounted
 # ---------------------------------------------------------------- botões dos cartões
 const CONFIRMAR := "Confirmar"
 const ESCOLHER_OUTRA := "Escolher outra"
-## Recusar a desgraça aplica hoje «nenhuma» (PERGUNTA PARA O MESTRE 11). O rótulo muda com a resposta.
-const SEM_DESGRACA := "Sem desgraça"
 const JOGO_EU := "Jogo eu"
 const ENCERRAR_A_VEZ := "Encerrar a vez"
 const CONTINUAR := "Continuar"
@@ -49,8 +47,7 @@ const NOME_DESGRACA := {
 	"arma-quebra": "A arma quebra",
 	"acerta-se": "Atinge-se a si",
 	"quebra-corpo": "Quebra algo no corpo",
-	"acerta-amigo": "Atinge um aliado",  # PERGUNTA PARA O MESTRE 12: quem conta como amigo ao alcance
-	"nenhuma": "Sem desgraça",
+	"acerta-amigo": "Atinge um aliado",
 }
 
 # ---------------------------------------------------------------- abas e secções

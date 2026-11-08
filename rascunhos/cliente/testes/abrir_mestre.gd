@@ -134,14 +134,13 @@ func _correr() -> void:
 	for b in c._botoes:
 		if b.visible:
 			rot.append(b.text)
-	_ok(rot == [Textos.CONFIRMAR, Textos.ESCOLHER_OUTRA, Textos.SEM_DESGRACA], "botões: %s" % [rot])
+	_ok(rot == [Textos.CONFIRMAR, Textos.ESCOLHER_OUTRA], "botões (sem «Sem desgraça»: no site a rolagem não se deita fora): %s" % [rot])
 
 	await _quadros(120)
 	_ok(_comandos.is_empty(), "nada se decide por tempo (120 quadros, zero comandos)")
 
 	c.tocar("sem_desgraca")
-	_ok(_comandos.is_empty() and c._botoes[2].text == Textos.DE_NOVO_PARA % Textos.SEM_DESGRACA, "«Sem desgraça» pede o segundo toque")
-	c._armado = ""
+	_ok(_comandos.is_empty(), "recusar a desgraça não existe (regra-mãe: vale o site)")
 	c.tocar("escolher")
 	_ok(c._escolha.visible, "«Escolher outra» abre a lista por cima da coluna 2")
 	var escolhas: Array = []

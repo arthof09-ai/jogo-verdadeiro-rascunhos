@@ -35,8 +35,8 @@
     },
     "papel": { "enum": ["jogadora", "espectador", "mestre"] },
     "desgracaEditavel": {
-      "description": "L2 (JV3.1, 08/11): as desgraças que o Mestre pode escolher no «Editar». «nenhuma» é o que «Recusar» aplica hoje (PERGUNTA PARA O MESTRE 11); «acerta-amigo» espera a PERGUNTA 12.",
-      "enum": ["cai", "arma-cai", "arma-quebra", "acerta-se", "quebra-corpo", "acerta-amigo", "nenhuma"]
+      "description": "L2 (JV3.1, 08/11): as desgraças que o Mestre pode escolher no «Escolher outra» (as da tabela do VLAB). Regra-mãe do Mestre (08/11, vale o site): não há «nenhuma» nem recusa da desgraça — no site a rolagem da falha crítica nunca se deita fora.",
+      "enum": ["cai", "arma-cai", "arma-quebra", "acerta-se", "quebra-corpo", "acerta-amigo"]
     },
     "fase": { "enum": ["lobby", "combate", "pausa", "fim"] },
     "lado": { "enum": ["jogadora", "criatura", "npc"] },

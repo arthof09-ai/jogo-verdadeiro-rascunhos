@@ -203,10 +203,10 @@ static func descrever_cartao(cartao: Dictionary, vista: Dictionary) -> Dictionar
 			var frase := frase_prevista(cartao, vista)
 			if frase != "":
 				linhas.append(Textos.A_PARTY_VAI_LER % frase)
+			# Regra-mãe (vale o site): a rolagem da falha crítica não se deita fora — sem «Sem desgraça».
 			botoes = [
 				_botao(Textos.CONFIRMAR, "confirmar", false),
 				_botao(Textos.ESCOLHER_OUTRA, "escolher", false, cartao.get("desgracas") is Array),
-				_botao(Textos.SEM_DESGRACA, "sem_desgraca", true),
 			]
 		"ia":
 			linhas.append(quem)
@@ -297,7 +297,7 @@ static func comando(cartao: Dictionary, acao: String, escolha: String = "") -> D
 			return {"tipo": "MASTER_APPROVE", "campos": {"cartaoId": id, "decisao": "aprovar"}}
 		"continuar_rodada":
 			return {"tipo": "MASTER_APPROVE", "campos": {"cartaoId": id, "decisao": "aprovar", "rodada": true}}
-		"sem_desgraca", "jogo_eu", "continuar":
+		"jogo_eu", "continuar":
 			return {"tipo": "MASTER_APPROVE", "campos": {"cartaoId": id, "decisao": "recusar"}}
 		"escolha":
 			var lista = cartao.get("desgracas")

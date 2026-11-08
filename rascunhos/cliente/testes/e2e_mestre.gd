@@ -112,9 +112,14 @@ func _correr() -> void:
 	await _esperar(func(): return _eventos.has("revertido"), "«Voltar até aqui» → o servidor voltou (evento revertido)")
 
 	print("== terminar e recomeçar (N4) ==")
+	var seq_voltar := int(_m.vista.get("journalSeq", 0))
+	var vista_nova := func(): return int(_m.vista.get("journalSeq", 0)) > seq_voltar and _m._espera_vista < 0.0
+	await _esperar(vista_nova, "a vista depois do «voltar» chegou")
+	print("  fase=", _m.vista.get("fase"), " revisao=", _estado.revisao, " alertas=", _m.alertas)
 	_m.pedir_terminar()
 	_m.pedir_terminar()
 	if not (await _esperar(func(): return str(_m.vista.get("fase", "")) == "fim" and _eventos.has("fim"), "«Terminar batalha» → a batalha acabou")):
+		print("  fase=", _m.vista.get("fase"), " revisao=", _estado.revisao, " alertas=", _m.alertas, " eventos=", _eventos.slice(-8))
 		_fim()
 		return
 	_m.pedir_recomecar()
