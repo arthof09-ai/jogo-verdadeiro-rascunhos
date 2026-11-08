@@ -12,6 +12,7 @@ const JANELAS := [Vector2i(844, 390), Vector2i(780, 360), Vector2i(1920, 1080)]
 
 var _falhas := 0
 var _sem_medida := 0
+var _medidas := 0
 
 
 func _init() -> void:
@@ -22,6 +23,9 @@ func _init() -> void:
 func _medir_todas() -> void:
 	for j in JANELAS:
 		await _medir(j)
+	if _medidas < JANELAS.size() - _sem_medida:
+		printerr("só %d medida(s) feitas" % _medidas)
+		_falhas += 1
 	print("painel ⚙: %d falha(s), %d sem medida" % [_falhas, _sem_medida])
 	quit(1 if _falhas > 0 else (2 if _sem_medida > 0 else 0))
 
@@ -33,7 +37,7 @@ func _medir(janela: Vector2i) -> void:
 		printerr("%s pedida, mas a janela ficou %s: sem medida" % [janela, root.size])
 		_sem_medida += 1
 		return
-	var hud: Control = (load("res://hud/hud.tscn") as PackedScene).instantiate()
+	var hud = (load("res://hud/hud.tscn") as PackedScene).instantiate()  # a raiz do HUD é um CanvasLayer
 	root.add_child(hud)
 	await process_frame
 	hud._ao_redimensionar()
@@ -50,6 +54,7 @@ func _medir(janela: Vector2i) -> void:
 		_falhas += 1
 	else:
 		var fundo := ultima.get_global_rect().end.y
+		_medidas += 1
 		var cabe := fundo <= visivel.end.y + 0.5
 		print("%s pedida, %s real: área visível %.0f × %.0f unidades; fonte %d; fundo de «%s» em %.0f → %s" % [
 			janela, root.size, visivel.size.x, visivel.size.y, hud._fonte, (ultima as Button).text if ultima is Button else ultima.name,
