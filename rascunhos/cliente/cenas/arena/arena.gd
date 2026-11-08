@@ -38,6 +38,8 @@ const CameraMesa := preload("res://camera/camera_mesa.gd")
 @onready var _sol: DirectionalLight3D = $Sol
 @onready var _grelha: Node3D = $Grelha
 @onready var _figuras: Node3D = $Figuras
+## Uma só tabela de perfis gráficos: a do AplicadorPerfil (arte/perfis/aplicar_perfil.gd). I0004, 08/11.
+@onready var _perfis: AplicadorPerfil = $Perfis
 
 var largura := 20
 var altura := 20
@@ -416,6 +418,7 @@ func _criar_figura() -> Node3D:
 	var no := Node3D.new()
 	var corpo := MeshInstance3D.new()
 	corpo.name = "Corpo"
+	corpo.add_to_group(&"figura")  # o AplicadorPerfil liga/desliga o contorno por este grupo
 	var capsula := CapsuleMesh.new()
 	capsula.radius = casa_m * 0.28
 	capsula.height = 1.7
@@ -528,22 +531,11 @@ func _ao_preferencia(chave: String, valor) -> void:
 			pass
 
 
-## Perfis Baixo / Médio / Alto (PROVISÓRIO até docs/orcamento-perfis.md, Plano B V1.1).
+## Perfis Baixo / Médio / Alto: a tabela é a do AplicadorPerfil (PROVISÓRIA até a V4.4 medir).
+## O Sol e o Ambiente da cena estão nos grupos "sol" e "ambiente"; o corpo das figuras no "figura".
 func _aplicar_perfil(perfil: String) -> void:
-	var vp := get_viewport()
-	match perfil:
-		"baixo":
-			vp.msaa_3d = Viewport.MSAA_DISABLED
-			vp.scaling_3d_scale = 0.75
-			_sol.shadow_enabled = false
-		"alto":
-			vp.msaa_3d = Viewport.MSAA_4X
-			vp.scaling_3d_scale = 1.0
-			_sol.shadow_enabled = true
-		_:
-			vp.msaa_3d = Viewport.MSAA_2X
-			vp.scaling_3d_scale = 1.0
-			_sol.shadow_enabled = true
+	if not _perfis.aplicar(perfil):
+		_perfis.aplicar("medio")
 
 
 static func _num_ou(v, padrao: int) -> int:

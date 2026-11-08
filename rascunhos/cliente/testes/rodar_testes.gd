@@ -10,6 +10,7 @@ const EstadoScript := preload("res://estado/estado.gd")
 const RedeScript := preload("res://rede/rede.gd")
 const FilaIntencoes := preload("res://rede/fila_intencoes.gd")
 const Uuid := preload("res://rede/uuid.gd")
+const Perfis := preload("res://arte/perfis/aplicar_perfil.gd")
 
 var _total := 0
 var _falhas := 0
@@ -30,6 +31,7 @@ func _initialize() -> void:
 	_teste_queda_marca_desconhecida()
 	_teste_recusa_duplicada_ignorada()
 	_teste_uuid_v4()
+	_teste_uma_tabela_de_perfis()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -233,3 +235,22 @@ func _teste_uuid_v4() -> void:
 		vistos[u] = true
 	_ok(todos_validos, "formato v4 (versão 4, variante RFC 4122)")
 	_ok(vistos.size() == 200, "200 ids sem repetição")
+
+
+## I0004 (08/11): uma só tabela de perfis gráficos. A arena usa o AplicadorPerfil e não tem números
+## próprios; as chaves do AplicadorPerfil são as que a ⚙ do HUD oferece (hud.gd PERFIS).
+func _teste_uma_tabela_de_perfis() -> void:
+	print("Uma só tabela de perfis gráficos:")
+	var chaves: Array = Perfis.PERFIS.keys()
+	chaves.sort()
+	_ok(chaves == ["alto", "baixo", "medio"], "o AplicadorPerfil tem baixo, medio e alto")
+	_ok(Perfis.normalizar(" Médio ") == "medio", "«Médio» da ⚙ chega como «medio»")
+	var cena := FileAccess.get_file_as_string("res://cenas/arena/arena.tscn")
+	_ok(cena.contains("res://arte/perfis/aplicar_perfil.gd") and cena.contains('[node name="Perfis"'),
+			"a arena tem o nó Perfis com o AplicadorPerfil")
+	_ok(cena.contains('name="Sol" type="DirectionalLight3D" parent="." groups=["sol"]'), "o Sol está no grupo «sol»")
+	_ok(cena.contains('name="Ambiente" type="WorldEnvironment" parent="." groups=["ambiente"]'), "o Ambiente está no grupo «ambiente»")
+	var arena := FileAccess.get_file_as_string("res://cenas/arena/arena.gd")
+	_ok(not arena.contains("msaa_3d") and not arena.contains("scaling_3d_scale"), "a arena não tem números de perfil próprios")
+	var hud := FileAccess.get_file_as_string("res://hud/hud.gd")
+	_ok(hud.contains('const PERFIS := ["baixo", "medio", "alto"]'), "a ⚙ do HUD oferece as mesmas três chaves")

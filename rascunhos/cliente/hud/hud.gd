@@ -53,6 +53,8 @@ const FRASES_ATAQUE := {
 	"critico": "Crítico!",
 	"falha_critica": "Falha crítica!",
 }
+## TODO(FRASES-DESGRACA, I0004 08/11): aqui entram as frases das desgraças e do teste de morte, iguais
+## às do site vivo (o Muse manda a lista). Ver estado.gd, ramo `_` de aplicar o evento.
 const SHADER_TELA_VERMELHA := """
 shader_type canvas_item;
 uniform float intensidade : hint_range(0.0, 1.0) = 0.0;

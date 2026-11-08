@@ -87,8 +87,8 @@ Os presets e o CI são da **JV2.1b (Muse)**. A referência é esta:
 **Achados, por resolver:**
 
 1. **Falta a cena do Mestre.** O lobby manda o Mestre para `res://cenas/mestre/mestre.tscn`, que não existe (já estava no ponto 6 acima). O Mestre não joga por este cliente.
-2. **A desgraça e o teste de morte não aparecem à jogadora.** O `estado.gd` ignora os eventos `desgraca` e `teste_morte`; ela só vê «Falha crítica!». Faltam as frases de cada desgraça, incluindo a da REF_19 («…e perde um quarto da vida que tem agora.», só quando vem `perdeQuarto`). As frases exactas estão no site vivo: pedi-las ao Muse.
-3. **Duas tabelas de perfis gráficos.** A arena tem o seu `_aplicar_perfil` (Baixo com escala 0,75) e não usa o `AplicadorPerfil` (Baixo com 0,5, sombras, contorno, folhagem). Tem de ficar uma só.
+2. **A desgraça e o teste de morte não aparecem à jogadora.** O `estado.gd` ignora os eventos `desgraca` e `teste_morte`; ela só vê «Falha crítica!». Faltam as frases de cada desgraça, incluindo a da REF_19 («…e perde um quarto da vida que tem agora.», só quando vem `perdeQuarto`). As frases exactas estão no site vivo: o Muse vai mandá-las. **Sítio marcado no código:** `TODO(FRASES-DESGRACA)` em `estado/estado.gd` (ramo `_` de aplicar o evento) e em `hud/hud.gd` (a seguir a `FRASES_ATAQUE`).
+3. ~~**Duas tabelas de perfis gráficos.**~~ **Resolvido (I0004, 08/11):** a arena passou a usar o `AplicadorPerfil` (nó `Perfis` na cena; `Sol` e `Ambiente` nos grupos `sol` e `ambiente`; o corpo das figuras no `figura`). Uma só tabela, guardada pelo teste «Uma só tabela de perfis gráficos». Muda o Baixo da arena: escala 3D de 0,75 para 0,5, como na tabela dos perfis.
 4. **A Clareira de prova não tem cena.** O `clareira_prova.gd` compila, mas espera os nós `Ambiente`, `Sol`, `Camera`, `Perfis` e `Medicao/Rotulo`, e não há `.tscn`.
 5. `docs/orcamento-perfis.md`, citado pelos perfis, não está no repositório.
 6. **Registo da língua:** o cliente fala por «você» («Entre», «Escreva», «Espere», «Sua vez»); o site usa o imperativo de «tu» («aperta», «Atualiza»). Pergunta para o Mestre, pelo Muse.

@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://cenas/arena/arena.gd" id="1_arena"]
 [ext_resource type="Script" path="res://camera/camera_mesa.gd" id="2_camera"]
 [ext_resource type="PackedScene" path="res://hud/hud.tscn" id="3_hud"]
+[ext_resource type="Script" path="res://arte/perfis/aplicar_perfil.gd" id="4_perfis"]
 
 [sub_resource type="Environment" id="Environment_mesa"]
 background_mode = 1
@@ -14,10 +15,10 @@ ambient_light_energy = 0.55
 [node name="Arena" type="Node3D"]
 script = ExtResource("1_arena")
 
-[node name="Ambiente" type="WorldEnvironment" parent="."]
+[node name="Ambiente" type="WorldEnvironment" parent="." groups=["ambiente"]]
 environment = SubResource("Environment_mesa")
 
-[node name="Sol" type="DirectionalLight3D" parent="."]
+[node name="Sol" type="DirectionalLight3D" parent="." groups=["sol"]]
 shadow_enabled = true
 
 [node name="Camera" type="Camera3D" parent="."]
@@ -27,5 +28,8 @@ script = ExtResource("2_camera")
 [node name="Grelha" type="Node3D" parent="."]
 
 [node name="Figuras" type="Node3D" parent="."]
+
+[node name="Perfis" type="Node" parent="."]
+script = ExtResource("4_perfis")
 
 [node name="HUD" parent="." instance=ExtResource("3_hud")]

@@ -366,7 +366,11 @@ func _aplicar_evento(msg: Dictionary) -> void:
 			desfecho = _texto(dados.get("desfecho"))
 			vez_id = ""
 		_:
-			pass  # entrada, desgraca, reacao, consumivel, revertido (o snapshot vem a seguir)
+			# TODO(FRASES-DESGRACA, I0004 08/11): `desgraca` {figuraId, efeito, perdeQuarto? só à própria} e
+			# `teste_morte` {figuraId} chegam aqui e a jogadora não vê nada (só «Falha crítica!» do ataque).
+			# Falta: um sinal para o HUD e as frases EXACTAS do site vivo (o Muse manda-as), incluindo a da
+			# REF_19, «…e perde um quarto da vida que tem agora.», só quando vem `perdeQuarto`.
+			pass  # entrada, desgraca, teste_morte, reacao, consumivel, revertido (o snapshot vem a seguir)
 
 	evento_aplicado.emit(msg)
 	if fase != fase_antes:
