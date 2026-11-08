@@ -44,10 +44,15 @@ def main():
             f.write('%s  %s\n' % (h, p))
 
     linhas = open('MANIFESTO-SHA256.txt', encoding='utf-8').read().split('\n')
+    em_head = set(git('ls-tree', '-r', '--name-only', 'HEAD', 'rascunhos').splitlines())
     vistos = set()
     saida = []
+    tirados = 0
     for l in linhas:
         partes = l.split('  ', 1)
+        if len(partes) == 2 and not l.startswith('#') and partes[1].startswith('rascunhos/') and partes[1] not in em_head:
+            tirados += 1  # ficheiro que já não existe no ramo (ex.: criado e depois apagado pelo ramo)
+            continue
         if len(partes) == 2 and not l.startswith('#') and partes[1] in depois:
             saida.append('%s  %s' % (depois[partes[1]], partes[1]))
             vistos.add(partes[1])
@@ -68,8 +73,8 @@ def main():
         saida = topo + corpo + comentarios_fim
     total = sum(1 for l in saida if l and not l.startswith('#'))
     open('MANIFESTO-SHA256.txt', 'w', encoding='utf-8', newline='\n').write('\n'.join(saida))
-    print('antes.txt: %d · depois.txt: %d · MANIFESTO: %d ficheiros (%d novos nesta passagem)' % (
-        len(antes), len(depois), total, len(novos)))
+    print('antes.txt: %d · depois.txt: %d · MANIFESTO: %d ficheiros (%d novos, %d tirados nesta passagem)' % (
+        len(antes), len(depois), total, len(novos), tirados))
 
 
 if __name__ == '__main__':
