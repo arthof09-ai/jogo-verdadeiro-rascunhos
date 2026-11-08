@@ -38,13 +38,15 @@ static func nome_mestre(f: Dictionary) -> String:
 	return nome
 
 
-## Visibilidade para a Party: vem da lista pública da vista (só as colocadas têm `visivel`).
+## A Party vê a figura? Só se está na lista pública da vista (a figura só existe para a Party depois do
+## MASTER_PLACE). O campo público `visivel` é o estado visual (de_pe, caida, transformada, morta), não
+## esconder: o servidor não tem figuras escondidas além das não colocadas.
 static func visivel_para_party(vista: Dictionary, id: String) -> bool:
 	var lista = vista.get("figuras")
 	if lista is Array:
 		for p in lista:
 			if p is Dictionary and str(p.get("id", "")) == id:
-				return p.get("visivel", true) != false
+				return true
 	return false
 
 
@@ -62,7 +64,9 @@ static func linha_figura(vista: Dictionary, f: Dictionary) -> String:
 		partes.append(Textos.NAO_COLOCADA)
 	elif not visivel_para_party(vista, _texto(f.get("id"))):
 		partes.append(Textos.OCULTA)
-	if f.get("caido") == true:
+	if f.get("vivo") == false:
+		partes.append(Textos.MORTA)
+	elif f.get("caido") == true:
 		partes.append(Textos.CAIDA)
 	if f.get("armaCaida") == true:
 		partes.append(Textos.ARMA_CAIDA)

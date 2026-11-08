@@ -124,7 +124,7 @@ func aplicar_snapshot(msg: Dictionary) -> void:
 		minha_figura_id = mf
 	# Privacidade (desenho JV3.1 §7): o bloco do Mestre só se guarda no lugar do Mestre. O servidor nunca o
 	# manda à Party; isto é a segunda tranca, provada por testes/canario_privacidade.gd.
-	mestre = _dict(msg.get("mestre")).duplicate(true) if Rede.papel == "mestre" else {}
+	mestre = _dict(msg.get("mestre")).duplicate(true) if _no_lugar_do_mestre() else {}
 	if fase != "fim":
 		desfecho = ""  # DIVERGÊNCIA menor: o snapshot não projeta o `desfecho` (só o evento `fim`)
 	for k in _espera.keys():
@@ -139,6 +139,15 @@ func aplicar_snapshot(msg: Dictionary) -> void:
 	if not _espera.is_empty():
 		_pedir_resync()  # ainda há buraco depois do snapshot
 	opcoes_mudaram.emit()
+
+
+## O papel vem da Rede pela árvore (e não pelo identificador do autoload), para este script continuar a
+## compilar nos testes que o carregam antes de os autoloads existirem (testes/rodar_testes.gd).
+func _no_lugar_do_mestre() -> bool:
+	if not is_inside_tree():
+		return false
+	var rede = get_node_or_null("/root/Rede")
+	return rede != null and rede.papel == "mestre"
 
 
 func receber_evento(msg: Dictionary) -> void:

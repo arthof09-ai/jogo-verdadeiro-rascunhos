@@ -102,7 +102,11 @@ jobs:
         run: timeout 120 "$GODOT" --headless --path . -s res://testes/abrir_scripts.gd
       - name: Testes do cliente
         if: always()
-        run: timeout 120 "$GODOT" --headless --path . -s res://testes/rodar_testes.gd
+        run: |
+          set -o pipefail
+          timeout 120 "$GODOT" --headless --path . -s res://testes/rodar_testes.gd 2>&1 | tee "$RUNNER_TEMP/rodar_testes.gd.log"
+          # Um script que não compila não pode passar calado (o rodar_testes perdeu 27 testes assim no 3b0da14).
+          ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/rodar_testes.gd.log"
       - name: Abrir a Clareira de prova
         if: always()
         run: timeout 180 "$GODOT" --headless --path . -s res://testes/abrir_clareira.gd
@@ -111,7 +115,11 @@ jobs:
         run: timeout 120 "$GODOT" --headless --path . -s res://testes/medir_painel_config.gd
       - name: Ecrã do Mestre — cena, cartões, recusa noutro papel (JV3.1)
         if: always()
-        run: MESTRE_COMANDOS="$RUNNER_TEMP/comandos-mestre.jsonl" timeout 120 "$GODOT" --headless --path . -s res://testes/abrir_mestre.gd
+        run: |
+          set -o pipefail
+          MESTRE_COMANDOS="$RUNNER_TEMP/comandos-mestre.jsonl" timeout 120 "$GODOT" --headless --path . -s res://testes/abrir_mestre.gd 2>&1 | tee "$RUNNER_TEMP/abrir_mestre.gd.log"
+          # Um script que não compila não pode passar calado (o rodar_testes perdeu 27 testes assim no 3b0da14).
+          ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/abrir_mestre.gd.log"
       - name: Comandos do ecrã do Mestre contra os schemas do protocolo v2
         if: always()
         run: |
@@ -119,10 +127,18 @@ jobs:
           python3 ../protocolo/ferramentas/validar-mensagens.py "$RUNNER_TEMP/comandos-mestre.jsonl" --minimo 5
       - name: Ecrã do Mestre em ecrãs baixos (F5-MESTRE-01, 844×390 e 780×360)
         if: always()
-        run: timeout 120 "$GODOT" --headless --path . -s res://testes/medir_mestre.gd
+        run: |
+          set -o pipefail
+          timeout 120 "$GODOT" --headless --path . -s res://testes/medir_mestre.gd 2>&1 | tee "$RUNNER_TEMP/medir_mestre.gd.log"
+          # Um script que não compila não pode passar calado (o rodar_testes perdeu 27 testes assim no 3b0da14).
+          ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/medir_mestre.gd.log"
       - name: Canário de privacidade no aparelho da jogadora (JV3.1 §7)
         if: always()
-        run: timeout 120 "$GODOT" --headless --path . -s res://testes/canario_privacidade.gd
+        run: |
+          set -o pipefail
+          timeout 120 "$GODOT" --headless --path . -s res://testes/canario_privacidade.gd 2>&1 | tee "$RUNNER_TEMP/canario_privacidade.gd.log"
+          # Um script que não compila não pode passar calado (o rodar_testes perdeu 27 testes assim no 3b0da14).
+          ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/canario_privacidade.gd.log"
       - name: Arrancar a cena principal e esperar «pronto»
         if: always()
         run: |

@@ -23,6 +23,7 @@ const FONTE_BASE := 22
 const FONTE_MIN_PX_REAIS := 13.0
 const FRACAO_TABULEIRO := 0.55
 const LINHAS_CARTAO := 6
+const LINHAS_TITULO := 2
 const ARQ_CFG := "user://mestre.cfg"
 const ESPERA_VISTA_S := 0.25
 
@@ -48,6 +49,7 @@ var _encolhida := false
 var _em_voo := {}  # id do comando -> true
 var _armado := ""  # acção à espera do segundo toque
 var _espera_vista := -1.0
+var _repassar := false
 
 var _tabuleiro: Control
 var _folha: PanelContainer
@@ -56,6 +58,8 @@ var _col1: VBoxContainer
 var _titulo_cartao: Label
 var _texto_cartao: Label
 var _caixa_botoes: VBoxContainer
+## Doca do cartão: altura FIXA e corta o que sobra, para os botões nunca mexerem (F5-MESTRE-01).
+var _doca: Control
 var _botoes: Array[Button] = []
 var _fila: Label
 var _sala: Label
@@ -401,8 +405,16 @@ func _montar() -> void:
 	_col1.name = "Coluna1"
 	_col1.clip_contents = true
 	_colunas.add_child(_col1)
-	_titulo_cartao = _rotulo(_col1, "TituloCartao")
-	_texto_cartao = _rotulo(_col1, "TextoCartao")
+	_doca = Control.new()
+	_doca.name = "Doca"
+	_doca.clip_contents = true
+	_col1.add_child(_doca)
+	var dentro := VBoxContainer.new()
+	dentro.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_doca.add_child(dentro)
+	_titulo_cartao = _rotulo(dentro, "TituloCartao")
+	_titulo_cartao.max_lines_visible = LINHAS_TITULO
+	_texto_cartao = _rotulo(dentro, "TextoCartao")
 	_texto_cartao.max_lines_visible = LINHAS_CARTAO
 	_texto_cartao.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_caixa_botoes = VBoxContainer.new()
@@ -437,7 +449,8 @@ func _montar() -> void:
 	col2.add_child(_abas)
 	_lista_figuras = _aba(Textos.ABA_FIGURAS)
 	_lista_ambiente = _aba(Textos.ABA_AMBIENTE)
-	var registo := _aba(Textos.ABA_REGISTO)
+	var registo := _aba(Textos.ABA_REGISTO_CURTA)
+	_rotulo(registo, "RegistoTitulo").text = Textos.ABA_REGISTO
 	_registo_info = _rotulo(registo, "RegistoInfo")
 	_exportar = _botao(registo, Textos.EXPORTAR_REGISTO, _exportar_registo)
 	_rotulo(registo, "VoltarFalta").text = Textos.VOLTAR_ATE_AQUI_FALTA
@@ -518,11 +531,18 @@ func _ao_redimensionar() -> void:
 	_col1.custom_minimum_size = Vector2(largura_col1, 0.0)
 	for b in _botoes:
 		b.custom_minimum_size = Vector2(0.0, _fonte * 2.2)
-	_texto_cartao.custom_minimum_size = Vector2(0.0, float(_fonte) * 1.45 * LINHAS_CARTAO)
+	var fonte_res := get_theme_default_font()
+	var altura_linha := fonte_res.get_height(_fonte) if fonte_res != null else float(_fonte) * 1.4
+	_doca.custom_minimum_size = Vector2(0.0, ceilf(altura_linha * (LINHAS_TITULO + LINHAS_CARTAO) + float(_fonte) * 0.5))
 	var margem := float(_fonte) * 0.5
 	var largura_folha := area.x * (1.0 - FRACAO_TABULEIRO)
 	if _encolhida:
 		largura_folha = largura_col1 + margem * 2.0
+	# A barra das abas nunca se corta: a folha alarga o que for preciso (o tabuleiro encolhe).
+	if not _encolhida:
+		var largura_abas := _abas.get_tab_bar().get_minimum_size().x + float(_fonte)
+		largura_folha = maxf(largura_folha, largura_col1 + largura_abas + margem * 3.0)
+		largura_folha = minf(largura_folha, area.x * 0.85)
 	largura_folha = maxf(largura_folha, largura_col1 + margem * 2.0)
 	_folha.position = Vector2(area.x - largura_folha, 0.0)
 	_folha.size = Vector2(largura_folha, area.y)
@@ -533,3 +553,9 @@ func _ao_redimensionar() -> void:
 	_aviso_primeira.position = Vector2(margem * 2.0, margem * 2.0)
 	_aviso_primeira.custom_minimum_size = Vector2(minf(area.x - largura_folha - margem * 4.0, float(_fonte) * 18.0), 0.0)
 	_aviso_primeira.size = _aviso_primeira.custom_minimum_size
+	# A letra nova só muda o tamanho mínimo da barra das abas no quadro seguinte: uma segunda passagem.
+	if _repassar:
+		_repassar = false
+	else:
+		_repassar = true
+		_ao_redimensionar.call_deferred()

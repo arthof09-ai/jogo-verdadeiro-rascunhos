@@ -1,9 +1,9 @@
 extends Control
 ## Tabuleiro do Mestre, visto de cima (JV3.1, primeira versão, I0004 08/11/2026).
 ##
-## Desenha a grelha da arena e TODAS as figuras colocadas: as que a Party não vê levam um anel
-## tracejado; a figura da vez leva um anel cheio. As não colocadas não têm casa e ficam só na aba
-## Figuras. A arena 3D com a câmara da mesa (camera_mesa) entra num passo seguinte; esta grelha
+## Desenha a grelha da arena e TODAS as figuras colocadas; a figura da vez leva um anel cheio. As não
+## colocadas (as únicas que a Party não vê) não têm casa e ficam só na aba Figuras. O anel tracejado
+## fica para quando o servidor tiver figuras colocadas e escondidas (hoje não tem). A arena 3D com a câmara da mesa (camera_mesa) entra num passo seguinte; esta grelha
 ## chega para o Mestre saber onde está cada figura e serve de prova no CI.
 
 const Modelo := preload("res://cenas/mestre/modelo_mestre.gd")
