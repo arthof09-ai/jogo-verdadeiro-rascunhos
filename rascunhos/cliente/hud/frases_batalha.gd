@@ -50,6 +50,11 @@ static func desgraca(efeito: String, nome: String, e_jogadora: bool, arma: Strin
 			return "O golpe correu mal."
 
 
+## Apanhar a arma caída (jogo.js linha 2360, botão de ataque com a arma no chão): gasta o movimento desta vez.
+static func apanhou_arma(nome: String, arma: String) -> String:
+	return "A %s apanha o %s do chão — isso gasta o movimento desta vez." % [nome, arma]
+
+
 static func com_cabecalho(frase: String) -> String:
 	return CABECALHO_DESGRACA + frase
 

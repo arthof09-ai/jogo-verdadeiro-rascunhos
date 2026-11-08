@@ -36,7 +36,25 @@ export function criarMotorFalso(opcoes = {}) {
             falhaCritica: { requerConfirmacao: true, desgracaProposta: { tipo: 'arma-cai', texto: 'CANARIO-DESGRACA' } },
           };
         }
-        const d = contexto.modoDesgraca === 'escolha' ? contexto.desgracaEscolhida : 'cai';
+        const d = contexto.modoDesgraca === 'escolha' ? contexto.desgracaEscolhida : (cfg.desgraca ?? 'cai');
+        const tipos = Array.isArray(tecnica.tipos) ? tecnica.tipos : tecnica.tipo ? [tecnica.tipo] : [];
+        const derivado = cfg.danoDerivado ?? cfg.dano; // o falso não rola: o «DMG» do dano derivado é este número
+        if (d === 'acerta-amigo') {
+          // Como o VLAB real: só os elegíveis (adjacente | naLinha); o declarado ou o primeiro da lista.
+          const eleg = (contexto.aliadosAoAlcance ?? []).filter((x) => x && x.id && (x.posicao === 'adjacente' || x.posicao === 'naLinha'));
+          const aliado = contexto.aliadoAtingidoId ? eleg.find((x) => x.id === contexto.aliadoAtingidoId) : eleg[0];
+          if (!aliado) return { erro: contexto.aliadoAtingidoId ? 'ALIADO_ATINGIDO_NAO_ELEGIVEL' : 'DESGRACA_NAO_APLICAVEL' };
+          return {
+            ...base, danoAplicado: 0, totalEfectivo: 0, falhaCritica: { desgraca: d, aplicado: true },
+            desgracaPendente: { tipo: 'acertaAmigo', aliadoId: aliado.id, danoBruto: derivado, danoAntesDaRD: Math.floor(derivado / 2), tipos, reflectivel: false, verificavel: false },
+          };
+        }
+        if (d === 'acerta-se' && cfg.acertaSePendente) {
+          return {
+            ...base, danoAplicado: 0, totalEfectivo: 0, falhaCritica: { desgraca: d, aplicado: true },
+            desgracaPendente: { tipo: 'acertaSiProprio', danoBruto: derivado, danoAntesDaRD: Math.floor(derivado / 2), tipos, reflectivel: false, verificavel: false },
+          };
+        }
         return { ...base, danoAplicado: 0, falhaCritica: { desgraca: d } };
       }
       if (resultado === 'erro') return { ...base, danoAplicado: 0 };

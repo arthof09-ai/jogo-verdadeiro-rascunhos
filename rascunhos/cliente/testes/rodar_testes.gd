@@ -277,6 +277,7 @@ func _teste_frases_do_site() -> void:
 	for c in casos:
 		var nome := "Ong" if c[1] else "Lobo"
 		_ok(Frases.desgraca(c[0], nome, c[1], "chicote", c[2]) == c[3], "%s (%s%s)" % [c[0], nome, ", perde" if c[2] else ""])
+	_ok(Frases.apanhou_arma("Ong", "chicote") == "A Ong apanha o chicote do chão — isso gasta o movimento desta vez.", "apanhar a arma (Q8)")
 	_ok(Frases.caiu("Ong") == "A Ong caiu — a batalha continua à volta dela.", "cair")
 	_ok(Frases.aguenta("Ong") == "A Ong, caída, aguenta-se — continua a respirar.", "teste ganho")
 	_ok(Frases.piora("Ong") == "A Ong, caída, piora visivelmente.", "teste perdido")
@@ -309,26 +310,29 @@ func _teste_frases_no_estado() -> void:
 			"quebrar o corpo, com a perda só porque veio perdeQuarto")
 	est.receber_evento(_evento(4, -1, "desgraca", {"figuraId": "fA", "efeito": "arma-cai"}))
 	_ok(frases.back() == "Falha crítica · A arma (chicote teste) caiu-lhe da mão.", "a arma é a do último ataque dela")
-	est.receber_evento(_evento(5, -1, "desgraca", {"figuraId": "fB", "efeito": "acerta-se"}))
+	est.receber_evento(_evento(5, -1, "estado", {"figuraId": "fA", "visivel": "normal", "armaCaida": true}))
+	est.receber_evento(_evento(6, -1, "estado", {"figuraId": "fA", "visivel": "normal", "armaCaida": false}))
+	_ok(frases.back() == "A Ong apanha o chicote teste do chão — isso gasta o movimento desta vez.", "apanhar a arma: a frase do site sai quando a arma volta à mão")
+	est.receber_evento(_evento(7, -1, "desgraca", {"figuraId": "fB", "efeito": "acerta-se"}))
 	_ok(frases.back() == "Falha crítica · Lobo atingiu-se a si próprio com o próprio golpe.", "a desgraça do monstro, no masculino")
-	est.receber_evento(_evento(6, -1, "estado", {"figuraId": "fA", "visivel": "caida", "vidaActual": 0,
+	est.receber_evento(_evento(8, -1, "estado", {"figuraId": "fA", "visivel": "caida", "vidaActual": 0,
 			"estadoMorte": {"fase": "aMorrer", "sucessos": 0, "falhas": 0}}))
 	_ok(frases.back() == "A Ong caiu — a batalha continua à volta dela.", "ao cair")
 	var n := frases.size()
-	est.receber_evento(_evento(7, -1, "estado", {"figuraId": "fA", "visivel": "caida",
+	est.receber_evento(_evento(9, -1, "estado", {"figuraId": "fA", "visivel": "caida",
 			"estadoMorte": {"fase": "aMorrer", "sucessos": 0, "falhas": 0}}))
 	_ok(frases.size() == n, "sem teste de morte nem mudança, nenhuma frase nova")
-	est.receber_evento(_evento(8, -1, "teste_morte", {"figuraId": "fA"}))
-	est.receber_evento(_evento(9, -1, "estado", {"figuraId": "fA", "visivel": "caida",
-			"estadoMorte": {"fase": "aMorrer", "sucessos": 1, "falhas": 0}}))
-	_ok(frases.back() == "A Ong, caída, aguenta-se — continua a respirar.", "teste ganho")
 	est.receber_evento(_evento(10, -1, "teste_morte", {"figuraId": "fA"}))
 	est.receber_evento(_evento(11, -1, "estado", {"figuraId": "fA", "visivel": "caida",
+			"estadoMorte": {"fase": "aMorrer", "sucessos": 1, "falhas": 0}}))
+	_ok(frases.back() == "A Ong, caída, aguenta-se — continua a respirar.", "teste ganho")
+	est.receber_evento(_evento(12, -1, "teste_morte", {"figuraId": "fA"}))
+	est.receber_evento(_evento(13, -1, "estado", {"figuraId": "fA", "visivel": "caida",
 			"estadoMorte": {"fase": "aMorrer", "sucessos": 1, "falhas": 1}}))
 	_ok(frases.back() == "A Ong, caída, piora visivelmente.", "teste perdido")
-	est.receber_evento(_evento(12, -1, "fim", {"desfecho": "morte"}))
+	est.receber_evento(_evento(14, -1, "fim", {"desfecho": "morte"}))
 	_ok(frases.back() == "A Ong caiu — fim desta batalha. Aperta Recomeçar para jogar outra vez.", "fim por morte (frase completa do site)")
-	est.receber_evento(_evento(13, -1, "fim", {"desfecho": "terminada"}))
+	est.receber_evento(_evento(15, -1, "fim", {"desfecho": "terminada"}))
 	_ok(frases.back() == Frases.fim_terminada(), "fim declarado pelo Mestre → a frase do site")
 	var sem_numeros := true
 	for t in frases:

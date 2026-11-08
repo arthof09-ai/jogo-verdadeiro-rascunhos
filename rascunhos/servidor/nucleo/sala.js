@@ -555,7 +555,8 @@ export function criarSala({
     if (!v.atacou) {
       for (const t of ficha.tecnicas) {
         // VLAB real: sem `usaArma` a técnica USA arma (usaArma !== false); antes a sala só olhava para `usaArma === true`.
-        // TODO(R0 §9.8): conserto da arma quebrada. O motor não recusa; a sala esconde a técnica (REF_7 §5).
+        // Q8 + site («fica inutilizável até ser consertada»): não há conserto em combate; a sala esconde a técnica
+        // (REF_7 §5) e o VLAB recusa-a de qualquer modo (ARMA_QUEBRADA).
         if (usaArmaDe(t) && f.armaQuebrada) continue;
         // A jogadora com a arma caída tem de a apanhar primeiro (`apanhar_arma`). VLAB real: sem isso dá ARMA_CAIDA.
         if (usaArmaDe(t) && f.armaCaida && f.lado === 'jogadora') continue;
@@ -1047,6 +1048,48 @@ export function criarSala({
     return colocadas(m).some((f) => f.id !== atacante.id && f.id !== alvo.id && f.vivo && f.x === x && f.y === y);
   }
 
+  /**
+   * Casas que o segmento entre os centros de `a` e `b` atravessa, sem as duas pontas (supercover, como no C-42
+   * desenho v2: quando passa exactamente num canto, entram as duas casas desse canto).
+   */
+  function casasNaLinha(a, b) {
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const nx = Math.abs(dx), ny = Math.abs(dy), sx = Math.sign(dx), sy = Math.sign(dy);
+    const casas = [];
+    let x = a.x, y = a.y, ix = 0, iy = 0;
+    while (ix < nx || iy < ny) {
+      const d = (1 + 2 * ix) * ny - (1 + 2 * iy) * nx;
+      if (d === 0) {
+        casas.push({ x: x + sx, y }, { x, y: y + sy });
+        x += sx; y += sy; ix++; iy++;
+      } else if (d < 0) { x += sx; ix++; } else { y += sy; iy++; }
+      casas.push({ x, y });
+    }
+    const vistas = new Set();
+    return casas.filter((c) => {
+      const k = chaveCasa(c.x, c.y);
+      if (vistas.has(k) || (c.x === b.x && c.y === b.y) || (c.x === a.x && c.y === a.y)) return false;
+      vistas.add(k);
+      return true;
+    });
+  }
+  /**
+   * Q12 «amigo ao alcance» (julgamento da casa de 2026-11-03, bancada da desgraça; Musa 08/11/2026 16:31): aliado do
+   * atacante (do mesmo lado, vivo, colocado, que não é o alvo) ADJACENTE ao atacante ou NA LINHA entre ele e o alvo.
+   * Lista ordenada por proximidade ao atacante (empate: id), para o VLAB escolher «primeiroDaListaPorProximidade».
+   * O site é uma batalha a solo e manda sempre `[]` (jogo.js: «sem aliados de nenhum dos lados nesta casca»): a forma
+   * {id, posicao: 'adjacente'|'naLinha'} é a que o VLAB lê. Quem está adjacente e na linha conta como 'adjacente'.
+   */
+  function aliadosAoAlcance(m, atacante, alvo) {
+    const linha = new Set(casasNaLinha(atacante, alvo).map((c) => chaveCasa(c.x, c.y)));
+    return colocadas(m)
+      .filter((f) => f.id !== atacante.id && f.id !== alvo.id && f.vivo && !saoInimigos(atacante, f))
+      .map((f) => ({ f, posicao: adjacentes(atacante, f) ? 'adjacente' : linha.has(chaveCasa(f.x, f.y)) ? 'naLinha' : null }))
+      .filter((a) => a.posicao)
+      .sort((p, q) => distanciaM(atacante, p.f) - distanciaM(atacante, q.f) || (p.f.id < q.f.id ? -1 : p.f.id > q.f.id ? 1 : 0))
+      .map((a) => ({ id: a.f.id, posicao: a.posicao }));
+  }
+
   function montarContexto(m, atacante, alvo, extra) {
     const ctx = {
       semente: sortearSemente() >>> 0, // uma por resolução, gravada no evento
@@ -1058,6 +1101,7 @@ export function criarSala({
       flanqueando: atacante.lado !== 'jogadora' && alvo.lado === 'jogadora' ? flanqueia(m, atacante, alvo) : false,
       atacanteCaido: !!atacante.caido,
       atacanteFraco: ehFraca(atacante),
+      aliadosAoAlcance: aliadosAoAlcance(m, atacante, alvo), // Q12; sem eles o VLAB exclui o «acerta-amigo»
     };
     // VLAB real: um monstro com a arma caída recupera-a de graça ao atacar (sem isto: ARMA_CAIDA).
     if (atacante.lado !== 'jogadora' && atacante.armaCaida) ctx.armaRecuperada = true;
@@ -1155,12 +1199,53 @@ export function criarSala({
         return perda;
       }
       // VLAB real: `acerta-se` traz o dano em soDoMestre.atacanteDepois.vidaActual (já aplicado por aplicarDepois);
-      // sem vida do atacante vem em `desgracaPendente`. `acerta-amigo` exige contexto.aliadosAoAlcance, que a sala
-      // ainda não envia: por isso o motor exclui-o da tabela ("excluidas") e nunca o sorteia nem o aceita em 'escolha'.
-      // TODO(R0): quem conta como "amigo ao alcance" (aliadosAoAlcance) e como se resolve o desgracaPendente.
+      // sem vida do atacante vem em `desgracaPendente` (acertaSiProprio). `acerta-amigo` vem SEMPRE em
+      // `desgracaPendente` (acertaAmigo): resolve-se em resolverDesgracaPendente (Q12).
       default: break;
     }
     return 0;
+  }
+  /**
+   * RD de quem recebe o dano da desgraça — a mesma regra do VLAB (rdDe): sem RD → 0; RD geral OU específica do único
+   * tipo; dois tipos ou as duas RD ao mesmo tempo → o VLAB recusa (RD_SEM_DISTRIBUICAO_POR_TIPO /
+   * RD_EMPILHAMENTO_SEM_DECISAO): aqui não se aplica e fica para o Mestre, sem inventar.
+   */
+  function rdDaDesgraca(f, tipos) {
+    const rd = fichaEfetiva(f).rd;
+    const temRd = rd && ((rd.geral | 0) > 0 || (rd.porTipo && Object.values(rd.porTipo).some((x) => x > 0)));
+    if (!temRd) return { rd: 0 };
+    const unicos = [...new Set(tipos)];
+    if (unicos.length !== 1) return { erro: 'RD_SEM_DISTRIBUICAO_POR_TIPO' };
+    const geral = rd.geral | 0, especifica = (rd.porTipo && rd.porTipo[unicos[0]]) | 0;
+    if (geral > 0 && especifica > 0) return { erro: 'RD_EMPILHAMENTO_SEM_DECISAO' };
+    return { rd: geral > 0 ? geral : especifica };
+  }
+  /**
+   * Q12 (julgamento da casa de 2026-11-03; instrução do VLAB no próprio pendente): o dano da desgraça já vem como metade
+   * com piso (`danoAntesDaRD`), nunca crítico. Quem chama aplica: − RD de quem recebe → Vida, com o TECTO de nunca
+   * baixar de 1 de Vida (logo nunca abre testes de morte), e sem reacção defensiva. Devolve o registo (só Mestre).
+   */
+  function resolverDesgracaPendente(m, atacante, pend) {
+    const reg = { tipo: pend.tipo ?? null, aplicada: false };
+    const quem = pend.tipo === 'acertaAmigo' ? m.figuras[pend.aliadoId] ?? null : pend.tipo === 'acertaSiProprio' ? atacante : null;
+    const metade = Number(pend.danoAntesDaRD);
+    if (!quem || !Number.isFinite(metade)) {
+      reg.motivo = !quem ? 'figura desconhecida' : 'sem danoAntesDaRD';
+      return { reg, quem: null };
+    }
+    reg.figuraId = quem.id;
+    const r = rdDaDesgraca(quem, Array.isArray(pend.tipos) ? pend.tipos : []);
+    if (r.erro) {
+      reg.motivo = r.erro; // fica para o Mestre (TODO(R0): a RD com dois tipos ou empilhada não tem decisão)
+      return { reg, quem: null };
+    }
+    const vida = Number.isFinite(quem.vidaActual) ? quem.vidaActual : 0;
+    const preTecto = Math.max(0, Math.floor(metade) - r.rd);
+    const efectivo = Math.min(preTecto, Math.max(0, vida - 1));
+    quem.vidaActual = vida - efectivo;
+    Object.assign(reg, { aplicada: true, danoAntesDaRD: Math.floor(metade), rdAplicada: r.rd, danoSofrido: efectivo,
+      tetoAplicado: efectivo < preTecto, vidaAntes: vida, vidaDepois: quem.vidaActual });
+    return { reg, quem, efectivo };
   }
   function tiposDe(t) {
     if (Array.isArray(t.tipos)) return t.tipos.slice();
@@ -1176,6 +1261,8 @@ export function criarSala({
     const vidaAlvo = alvo.vidaActual;
     const visAtac = visivelDe(atacante);
     const vidaAtac = atacante.vidaActual;
+    const bandeiras = (f) => `${f.armaCaida}|${f.armaQuebrada}|${f.corpoPartido}`;
+    const bandAtac = bandeiras(atacante);
     const sm = saida.soDoMestre && typeof saida.soDoMestre === 'object' ? saida.soDoMestre : {};
     // O `totalEfectivo` do VLAB real é o DANO efetivo (após RD), e não o total do ataque.
     // VLAB real: o total do ataque é `rolagem.total` (= `rolagem.escolhido`); as faces vêm em `rolagem.conjuntosDeFaces`.
@@ -1209,15 +1296,32 @@ export function criarSala({
       // Uma vez por desgraça: aplicarSaida é o único ponto onde a desgraça aplicada entra (vez, oportunidade, pós-cartão).
       const perdaVida = aplicarEfeitoDesgraca(atacante, des);
       const dadosDesgraca = { figuraId: atacante.id, efeito: DESGRACAS.includes(des) ? des : null };
+      // Q12: o dano pendente do «acerta-amigo» (sempre) e do «acerta-se» (quando o motor não tinha a Vida).
+      const pend = saida.desgracaPendente && typeof saida.desgracaPendente === 'object' ? saida.desgracaPendente : null;
+      let pendente = null;
+      if (pend) {
+        const atingido = pend.tipo === 'acertaAmigo' ? tx.estado.figuras[pend.aliadoId] : atacante;
+        const visP = atingido ? visivelDe(atingido) : null;
+        const vidaP = atingido ? atingido.vidaActual : null;
+        pendente = { ...resolverDesgracaPendente(tx.estado, atacante, pend), visP, vidaP };
+      }
       // REF_19: a frase «…e perde um quarto da vida que tem agora» só quando a perda acontece. Vai só à própria
       // (campo `propria`); o número fica no soMestre e a Vida nova segue pelo evento `estado`.
       if (perdaVida > 0) dadosDesgraca.perdeQuarto = true;
-      tx.emitir('desgraca', dadosDesgraca, { bruto: saida.falhaCritica, perdaVida });
+      tx.emitir('desgraca', dadosDesgraca, { bruto: saida.falhaCritica, perdaVida, ...(pendente ? { pendente: pendente.reg } : {}) });
+      if (pendente?.quem) {
+        if (pendente.efectivo > 0) {
+          tx.emitir('dano', { alvoId: pendente.quem.id, autorId: atacante.id, valor: pendente.efectivo, tipos: saida.desgracaPendente.tipos ?? [] }, null);
+        }
+        // O alvo e o atacante saem já no fim de aplicarSaida; o amigo atingido sai aqui.
+        if (pendente.quem.id !== alvo.id && pendente.quem.id !== atacante.id) emitirEstado(tx, pendente.quem, false, pendente.visP, pendente.vidaP);
+      }
     }
     const dano = danoTotalDe(saida);
     if (dano > 0) tx.emitir('dano', { alvoId: alvo.id, autorId: atacante.id, valor: dano, tipos: tiposDe(t) }, null);
     emitirEstado(tx, alvo, false, visAlvo, vidaAlvo);
-    if (atacante.id !== alvo.id) emitirEstado(tx, atacante, false, visAtac, vidaAtac);
+    // A própria sabe logo da arma caída/quebrada e do corpo partido (o `estado` só saía com a Vida a mudar).
+    if (atacante.id !== alvo.id) emitirEstado(tx, atacante, atacante.lado === 'jogadora' && bandeiras(atacante) !== bandAtac, visAtac, vidaAtac);
   }
 
   function finalizarAtaque(tx, f, alvo, t, ctx, saida) {
@@ -1352,6 +1456,18 @@ export function criarSala({
         v.atacou = true; // gasta a ação padrão
         v.reservaM = metros; // substitui a reserva, não soma
         tx.emitir('acao', { figuraId: f.id, tipo: 'correr' }, { reservaM: metros });
+        return 'APLICADA';
+      }
+      case 'apanhar_arma': {
+        // Q8 (julgamento da casa de 2026-11-03; Musa 08/11/2026) e o site (jogo.js: «recuperar = 1 Acção de
+        // Movimento»): apanhar a arma caída gasta a Acção de Movimento — a reserva toda. Faltava este ramo: a opção
+        // aparecia, mas a intenção era recusada (acao_invalida) e a arma caída da jogadora nunca voltava.
+        const vis = visivelDe(f);
+        const vida = f.vidaActual;
+        f.armaCaida = false;
+        v.reservaM = 0;
+        tx.emitir('acao', { figuraId: f.id, tipo: 'apanhar_arma' }, null);
+        emitirEstado(tx, f, true, vis, vida); // a própria sabe já que tem a arma na mão
         return 'APLICADA';
       }
       case 'defender':

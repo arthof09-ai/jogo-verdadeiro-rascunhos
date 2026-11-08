@@ -404,7 +404,8 @@ func _desenhar_engrenagem() -> void:
 func _atualizar() -> void:
 	var na_mesa: bool = Rede.na_mesa()
 	var livre: bool = na_mesa and not Estado.pausada and not Rede.ha_intencao_em_voo() and not Rede.aguardando_mestre()
-	_b_ataque.disabled = not livre or Estado.lista_opcao("ataques").is_empty()
+	# Q8 / site: com a arma no chão, o botão de ataque apanha-a (gasta o movimento desta vez).
+	_b_ataque.disabled = not livre or (Estado.lista_opcao("ataques").is_empty() and not Estado.tem_acao("apanhar_arma"))
 	_b_mover.disabled = not livre or Estado.lista_opcao("mover").is_empty()
 	_b_consumivel.disabled = not livre or Estado.lista_opcao("consumiveis").is_empty()
 	# Encerrar só aparece quando a vez é dela e o servidor o pôs em `acoes`.
@@ -499,6 +500,10 @@ func _ao_fase(_f: String) -> void:
 
 func _ao_botao(m: int) -> void:
 	_painel_config.visible = false
+	if m == Arena.Modo.ATAQUE and Estado.tem_acao("apanhar_arma"):
+		# Como no site (jogo.js 2355): a arma caída apanha-se ao tocar no ataque; o ataque fica para depois.
+		_emitir_acao({"tipo": "apanhar_arma"})
+		return
 	if _modo_atual == m:
 		modo_pedido.emit(Arena.Modo.NENHUM, {})
 	else:

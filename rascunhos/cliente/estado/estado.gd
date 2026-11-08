@@ -407,7 +407,10 @@ func _aplicar_evento(msg: Dictionary) -> void:
 			if fid != "" and fid == minha_figura_id:
 				if dados.has("estadoMorte"):
 					_frase_relogio_morte(propria.get("estadoMorte"), dados["estadoMorte"])
-				for k in ["vidaActual", "paLivre", "estadoMorte"]:
+				# Q8 / site: a arma estava no chão e deixou de estar → ela apanhou-a (frase do site).
+				if propria.get("armaCaida") == true and dados.get("armaCaida") == false:
+					frase_batalha.emit(Frases.apanhou_arma(nome_de(fid), arma_legivel(_texto(_arma_de.get(fid, "")))))
+				for k in ["vidaActual", "paLivre", "estadoMorte", "armaCaida", "armaQuebrada", "corpoPartido"]:
 					if dados.has(k):
 						propria[k] = dados[k]
 		"ataque":

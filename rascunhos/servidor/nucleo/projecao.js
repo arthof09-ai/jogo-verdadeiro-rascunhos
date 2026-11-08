@@ -28,7 +28,8 @@ export const CAMPOS_PERMITIDOS = Object.freeze({
   }),
   // v0.2.1: o número do dano só a quem causou ou a quem recebeu (A-2: outra jogadora ✘).
   dano: Object.freeze({ todos: ['alvoId', 'autorId'], propria: ['valor', 'tipos'] }),
-  estado: Object.freeze({ todos: ['figuraId', 'visivel'], propria: ['vidaActual', 'paLivre', 'estadoMorte'] }),
+  // Q8: a arma e o corpo DELA (os mesmos campos do ROOM_SNAPSHOT.propria) também seguem no `estado` da própria.
+  estado: Object.freeze({ todos: ['figuraId', 'visivel'], propria: ['vidaActual', 'paLivre', 'estadoMorte', 'armaCaida', 'armaQuebrada', 'corpoPartido'] }),
   desgraca: Object.freeze({ todos: ['figuraId', 'efeito'], propria: ['perdeQuarto'] }), // só a desgraça APLICADA; REF_19
   teste_morte: Object.freeze({ todos: ['figuraId'], propria: [] }), // só que houve teste; a CD e a saída ficam no soMestre
   reacao: Object.freeze({ todos: ['figuraId', 'reacao'], propria: [] }),

@@ -131,14 +131,17 @@
     },
     "dados_estado_propria": {
       "type": "object",
-      "description": "Vida, PA e estadoMorte só da PRÓPRIA (§6). Nunca de criatura (o servidor guarda-os em soMestre).",
+      "description": "Vida, PA, estadoMorte e (Q8, 08/11/2026) armaCaida/armaQuebrada/corpoPartido só da PRÓPRIA (§6), os mesmos do ROOM_SNAPSHOT.propria. Nunca de criatura (o servidor guarda-os em soMestre).",
       "required": ["figuraId", "visivel"],
       "properties": {
         "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
         "visivel": { "$ref": "comum.schema.json#/$defs/visivel" },
         "vidaActual": { "type": "number" },
         "paLivre": { "type": "number" },
-        "estadoMorte": { "$ref": "comum.schema.json#/$defs/estadoMorte" }
+        "estadoMorte": { "$ref": "comum.schema.json#/$defs/estadoMorte" },
+        "armaCaida": { "type": "boolean" },
+        "armaQuebrada": { "type": "boolean" },
+        "corpoPartido": { "type": "boolean" }
       },
       "additionalProperties": false
     },

@@ -254,7 +254,8 @@
        "ataqueDeOportunidade": false,
        "flanqueando": false,
        "atacanteCaido": false,
-       "atacanteFraco": false
+       "atacanteFraco": false,
+       "aliadosAoAlcance": []
       },
       "proposta": {
        "tipo": "arma-cai",
