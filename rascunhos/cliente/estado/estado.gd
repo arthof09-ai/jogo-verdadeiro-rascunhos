@@ -122,7 +122,9 @@ func aplicar_snapshot(msg: Dictionary) -> void:
 	var mf = propria.get("figuraId")
 	if mf is String and mf != "":
 		minha_figura_id = mf
-	mestre = _dict(msg.get("mestre")).duplicate(true)
+	# Privacidade (desenho JV3.1 §7): o bloco do Mestre só se guarda no lugar do Mestre. O servidor nunca o
+	# manda à Party; isto é a segunda tranca, provada por testes/canario_privacidade.gd.
+	mestre = _dict(msg.get("mestre")).duplicate(true) if Rede.papel == "mestre" else {}
 	if fase != "fim":
 		desfecho = ""  # DIVERGÊNCIA menor: o snapshot não projeta o `desfecho` (só o evento `fim`)
 	for k in _espera.keys():

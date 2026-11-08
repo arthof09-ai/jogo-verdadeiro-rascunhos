@@ -458,6 +458,8 @@ func _ao_receber(texto: String) -> void:
 			sala_retomada.emit()
 		"ERRO":
 			_ao_erro(msg)
+		"MASTER_VIEW", "MASTER_CARD", "MASTER_RESULTS", "MASTER_ALERTA", "MASTER_EXPORT" when papel != "mestre":
+			pass  # privacidade (desenho JV3.1 §7): fora do lugar do Mestre, nada do Mestre se guarda nem se mostra
 		"MASTER_VIEW":
 			ultima_vista_mestre = msg
 			mestre_recebido.emit(msg)

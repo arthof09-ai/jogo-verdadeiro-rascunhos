@@ -109,6 +109,17 @@ jobs:
       - name: Painel ⚙ em ecrãs baixos (REF_20)
         if: always()
         run: timeout 120 "$GODOT" --headless --path . -s res://testes/medir_painel_config.gd
+      - name: Ecrã do Mestre — cena, cartões, recusa noutro papel (JV3.1)
+        if: always()
+        run: MESTRE_COMANDOS="$RUNNER_TEMP/comandos-mestre.jsonl" timeout 120 "$GODOT" --headless --path . -s res://testes/abrir_mestre.gd
+      - name: Comandos do ecrã do Mestre contra os schemas do protocolo v2
+        if: always()
+        run: |
+          python3 -m pip install --quiet "jsonschema>=4.18"
+          python3 ../protocolo/ferramentas/validar-mensagens.py "$RUNNER_TEMP/comandos-mestre.jsonl" --minimo 6
+      - name: Canário de privacidade no aparelho da jogadora (JV3.1 §7)
+        if: always()
+        run: timeout 120 "$GODOT" --headless --path . -s res://testes/canario_privacidade.gd
       - name: Arrancar a cena principal e esperar «pronto»
         if: always()
         run: |

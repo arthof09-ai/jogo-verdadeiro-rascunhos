@@ -1,0 +1,1697 @@
+{
+ "origem": "Gerado por rascunhos/servidor/testes/fixture-mestre.test.mjs (servidor real, motor falso). Não editar à mão.",
+ "canarios": [
+  "Orc Verdadeiro",
+  "7777",
+  "313",
+  "03:33",
+  "CANARIO-FUTURO",
+  "CANARIO-DESGRACA",
+  "CANARIO-RAZAO-IA"
+ ],
+ "mestre": {
+  "vista": {
+   "v": 2,
+   "type": "MASTER_VIEW",
+   "roomId": "sala-teste",
+   "journalSeq": 10,
+   "fase": "combate",
+   "mapa": {
+    "largura": 20,
+    "altura": 20,
+    "casaM": 1.5
+   },
+   "figuras": [
+    {
+     "id": "f1a88a9eef918a8b4",
+     "nomePublico": "Heroína Teste",
+     "lado": "jogadora",
+     "x": 2,
+     "y": 2,
+     "orientacao": "S",
+     "visivel": "de_pe"
+    },
+    {
+     "id": "f0c1870b843e1465f",
+     "nomePublico": "Aliada Teste",
+     "lado": "jogadora",
+     "x": 2,
+     "y": 4,
+     "orientacao": "S",
+     "visivel": "de_pe"
+    },
+    {
+     "id": "f1c8fc87e558f2d7e",
+     "nomePublico": "Orc",
+     "lado": "criatura",
+     "x": 2,
+     "y": 3,
+     "orientacao": "S",
+     "visivel": "de_pe"
+    },
+    {
+     "id": "fb43618ae935f84df",
+     "nomePublico": "Lobo",
+     "lado": "criatura",
+     "x": 9,
+     "y": 9,
+     "orientacao": "S",
+     "visivel": "de_pe"
+    }
+   ],
+   "iniciativa": [
+    "f1a88a9eef918a8b4",
+    "f0c1870b843e1465f",
+    "fb43618ae935f84df",
+    "f1c8fc87e558f2d7e"
+   ],
+   "vezId": "f1a88a9eef918a8b4",
+   "rodada": 1,
+   "ambiente": {
+    "clima": "nevoeiro",
+    "luz": "noite"
+   },
+   "mestre": {
+    "figuras": [
+     {
+      "id": "f1a88a9eef918a8b4",
+      "fichaId": "heroina-teste",
+      "lado": "jogadora",
+      "colocada": true,
+      "x": 2,
+      "y": 2,
+      "orientacao": "S",
+      "casaInicial": {
+       "x": 2,
+       "y": 2
+      },
+      "vidaActual": 5150,
+      "paGasto": 0,
+      "vivo": true,
+      "caido": false,
+      "estadoMorte": null,
+      "armaCaida": false,
+      "armaQuebrada": false,
+      "corpoPartido": false,
+      "transformada": false,
+      "reacaoDisponivel": true,
+      "defendendo": false,
+      "modo": null,
+      "nome": "Heroína Teste",
+      "nomePublico": "Heroína Teste",
+      "vidaTotal": 5150,
+      "paTotal": 4040
+     },
+     {
+      "id": "f0c1870b843e1465f",
+      "fichaId": "aliada-teste",
+      "lado": "jogadora",
+      "colocada": true,
+      "x": 2,
+      "y": 4,
+      "orientacao": "S",
+      "casaInicial": {
+       "x": 2,
+       "y": 4
+      },
+      "vidaActual": 3579,
+      "paGasto": 0,
+      "vivo": true,
+      "caido": false,
+      "estadoMorte": null,
+      "armaCaida": false,
+      "armaQuebrada": false,
+      "corpoPartido": false,
+      "transformada": false,
+      "reacaoDisponivel": true,
+      "defendendo": false,
+      "modo": null,
+      "nome": "Aliada Teste",
+      "nomePublico": "Aliada Teste",
+      "vidaTotal": 3579,
+      "paTotal": 1357
+     },
+     {
+      "id": "f1c8fc87e558f2d7e",
+      "fichaId": "orc-teste",
+      "lado": "criatura",
+      "colocada": true,
+      "x": 2,
+      "y": 3,
+      "orientacao": "S",
+      "casaInicial": null,
+      "vidaActual": 7777,
+      "paGasto": 0,
+      "vivo": true,
+      "caido": false,
+      "estadoMorte": null,
+      "armaCaida": false,
+      "armaQuebrada": false,
+      "corpoPartido": false,
+      "transformada": false,
+      "reacaoDisponivel": true,
+      "defendendo": false,
+      "modo": "auto",
+      "nome": "Orc Verdadeiro Teste",
+      "nomePublico": "Orc",
+      "vidaTotal": 7777,
+      "paTotal": 313
+     },
+     {
+      "id": "fb43618ae935f84df",
+      "fichaId": "lobo-teste",
+      "lado": "criatura",
+      "colocada": true,
+      "x": 9,
+      "y": 9,
+      "orientacao": "S",
+      "casaInicial": null,
+      "vidaActual": 4848,
+      "paGasto": 0,
+      "vivo": true,
+      "caido": false,
+      "estadoMorte": null,
+      "armaCaida": false,
+      "armaQuebrada": false,
+      "corpoPartido": false,
+      "transformada": false,
+      "reacaoDisponivel": true,
+      "defendendo": false,
+      "modo": "auto",
+      "nome": "Lobo Teste",
+      "nomePublico": "Lobo",
+      "vidaTotal": 4848,
+      "paTotal": 0
+     }
+    ],
+    "lobby": {
+     "mapaId": "arena-teste",
+     "criaturasDisponiveis": [
+      "orc-teste",
+      "lobo-teste"
+     ],
+     "npcsDisponiveis": [
+      "bandido-teste"
+     ]
+    },
+    "vez": {
+     "figuraId": "f1a88a9eef918a8b4",
+     "atacou": false,
+     "andouM": 0,
+     "reservaM": 9,
+     "correrUsado": false,
+     "desvinculou": false,
+     "cobertos": [],
+     "iaMoveu": false,
+     "iaPausada": false,
+     "recusas": 0,
+     "intencoes": 1
+    },
+    "ambiente": {
+     "hora": "03:33",
+     "clima": "nevoeiro",
+     "futuro": "CANARIO-FUTURO"
+    },
+    "cartoes": [
+     {
+      "cartaoId": "c1",
+      "estado": "aberto",
+      "decisao": null,
+      "tipo": "desgraca",
+      "figuraId": "f1a88a9eef918a8b4",
+      "alvoId": "f1c8fc87e558f2d7e",
+      "tecnicaId": "chicote-teste",
+      "contexto": {
+       "semente": 458158749,
+       "verificacaoCritico": [
+        2,
+        6,
+        3
+       ],
+       "modoDesgraca": "proposta",
+       "niveisVantagem": 0,
+       "niveisDesvantagem": 0,
+       "ataqueDeOportunidade": false,
+       "flanqueando": false,
+       "atacanteCaido": false,
+       "atacanteFraco": false
+      },
+      "proposta": {
+       "tipo": "arma-cai",
+       "texto": "CANARIO-DESGRACA"
+      },
+      "razao": null,
+      "origem": {
+       "seatId": "sa8c5ee39b55a53b8",
+       "id": "fc-1",
+       "idCampo": "intentId",
+       "chave": "sa8c5ee39b55a53b8\u0000fc-1"
+      }
+     }
+    ],
+    "pausa": null
+   }
+  },
+  "snapshot": {
+   "v": 2,
+   "type": "ROOM_SNAPSHOT",
+   "roomId": "sala-teste",
+   "seq": 0,
+   "revision": 1,
+   "ts": "2026-11-06T20:00:00.750Z",
+   "fase": "lobby",
+   "mapa": {
+    "largura": 20,
+    "altura": 20,
+    "casaM": 1.5
+   },
+   "figuras": [],
+   "iniciativa": [],
+   "vezId": null,
+   "rodada": 0,
+   "ambiente": {
+    "clima": null,
+    "luz": null
+   },
+   "mestre": {
+    "figuras": [
+     {
+      "id": "f1a88a9eef918a8b4",
+      "fichaId": "heroina-teste",
+      "lado": "jogadora",
+      "colocada": false,
+      "x": 2,
+      "y": 2,
+      "orientacao": "S",
+      "casaInicial": {
+       "x": 2,
+       "y": 2
+      },
+      "vidaActual": 5150,
+      "paGasto": 0,
+      "vivo": true,
+      "caido": false,
+      "estadoMorte": null,
+      "armaCaida": false,
+      "armaQuebrada": false,
+      "corpoPartido": false,
+      "transformada": false,
+      "reacaoDisponivel": true,
+      "defendendo": false,
+      "modo": null,
+      "nome": "Heroína Teste",
+      "nomePublico": "Heroína Teste",
+      "vidaTotal": 5150,
+      "paTotal": 4040
+     },
+     {
+      "id": "f0c1870b843e1465f",
+      "fichaId": "aliada-teste",
+      "lado": "jogadora",
+      "colocada": false,
+      "x": 2,
+      "y": 4,
+      "orientacao": "S",
+      "casaInicial": {
+       "x": 2,
+       "y": 4
+      },
+      "vidaActual": 3579,
+      "paGasto": 0,
+      "vivo": true,
+      "caido": false,
+      "estadoMorte": null,
+      "armaCaida": false,
+      "armaQuebrada": false,
+      "corpoPartido": false,
+      "transformada": false,
+      "reacaoDisponivel": true,
+      "defendendo": false,
+      "modo": null,
+      "nome": "Aliada Teste",
+      "nomePublico": "Aliada Teste",
+      "vidaTotal": 3579,
+      "paTotal": 1357
+     }
+    ],
+    "lobby": null,
+    "vez": null,
+    "ambiente": {
+     "hora": null,
+     "clima": null,
+     "futuro": null
+    },
+    "cartoes": [],
+    "pausa": null
+   }
+  },
+  "cartoes": {
+   "desgraca": {
+    "v": 2,
+    "type": "MASTER_CARD",
+    "roomId": "sala-teste",
+    "cartaoId": "c1",
+    "tipo": "desgraca",
+    "figuraId": "f1a88a9eef918a8b4",
+    "proposta": {
+     "tipo": "arma-cai",
+     "texto": "CANARIO-DESGRACA"
+    },
+    "razao": null,
+    "faces": null,
+    "intentIdOrigem": "fc-1",
+    "desgracas": [
+     "cai",
+     "arma-cai",
+     "arma-quebra",
+     "acerta-se",
+     "quebra-corpo",
+     "acerta-amigo",
+     "nenhuma"
+    ]
+   },
+   "ia": {
+    "v": 2,
+    "type": "MASTER_CARD",
+    "roomId": "sala-teste",
+    "cartaoId": "c1",
+    "tipo": "ia",
+    "figuraId": "f0eca9c7df5e7493f",
+    "proposta": {
+     "tipo": "mover",
+     "destino": {
+      "x": 3,
+      "y": 2
+     }
+    },
+    "razao": "Aproxima-se da jogadora. [CANARIO-RAZAO-IA]",
+    "faces": null,
+    "intentIdOrigem": null,
+    "desgracas": null
+   },
+   "dados": {
+    "v": 2,
+    "type": "MASTER_CARD",
+    "roomId": "sala-teste",
+    "cartaoId": "c1",
+    "tipo": "dados",
+    "figuraId": "fba2529d0fcfbedbf",
+    "proposta": null,
+    "razao": null,
+    "faces": [
+     17
+    ],
+    "intentIdOrigem": "dados-1",
+    "desgracas": null
+   }
+  }
+ },
+ "jogadora": {
+  "mensagens": [
+   {
+    "v": 2,
+    "type": "ROOM_WELCOME",
+    "roomId": "sala-teste",
+    "seatId": "sa8c5ee39b55a53b8",
+    "seatToken": "b3c8f91c318ec249d13543ea504fd68e",
+    "papel": "jogadora",
+    "protocolo": 2,
+    "motores": {
+     "vlabSha": "falso00000000000000000000000000000000000000000000000000000000000",
+     "dmgVersao": "falso-0",
+     "levelupSha": null
+    }
+   },
+   {
+    "v": 2,
+    "type": "ROOM_SNAPSHOT",
+    "roomId": "sala-teste",
+    "seq": 1,
+    "revision": 1,
+    "ts": "2026-11-06T20:00:01.500Z",
+    "fase": "lobby",
+    "mapa": {
+     "largura": 20,
+     "altura": 20,
+     "casaM": 1.5
+    },
+    "figuras": [],
+    "iniciativa": [],
+    "vezId": null,
+    "rodada": 0,
+    "ambiente": {
+     "clima": null,
+     "luz": null
+    },
+    "propria": {
+     "figuraId": "f1a88a9eef918a8b4",
+     "vidaActual": 5150,
+     "vidaTotal": 5150,
+     "paLivre": 4040,
+     "paTotal": 4040,
+     "estadoMorte": null,
+     "armaCaida": false,
+     "armaQuebrada": false,
+     "corpoPartido": false,
+     "ficha": {
+      "id": "heroina-teste",
+      "nome": "Heroína Teste",
+      "nomePublico": "Heroína Teste",
+      "papel": "jogadora",
+      "classificacao": "prata",
+      "vidaTotal": 5150,
+      "paTotal": 4040,
+      "ca": 5551,
+      "rd": {
+       "geral": 0,
+       "porTipo": {}
+      },
+      "testes": {
+       "ataque": "1d20+3",
+       "fortitude": "1d20+2",
+       "percepcao": "1d20+8642"
+      },
+      "constituicao": 14,
+      "testesDeMorteDesignado": true,
+      "deslocamentoBase": 9,
+      "tecnicas": [
+       {
+        "id": "chicote-teste",
+        "nome": "Chicote de Teste",
+        "expressaoAtaque": "1d20+4",
+        "expressaoDano": "1d6+2",
+        "tipo": "cortante",
+        "custoPA": 2,
+        "alcanceM": 9,
+        "usaArma": true
+       }
+      ],
+      "fonte": {
+       "origem": "fixture fictícia JV1.1 (inventada para testes)",
+       "data": "2026-11-06"
+      }
+     }
+    }
+   },
+   {
+    "v": 2,
+    "type": "ROOM_EVENT",
+    "roomId": "sala-teste",
+    "seq": 2,
+    "revision": 1,
+    "ts": "2026-11-06T20:00:02.000Z",
+    "tipo": "entrada",
+    "dados": {
+     "figuraId": "f0c1870b843e1465f",
+     "nomePublico": "Aliada Teste",
+     "lado": "jogadora"
+    }
+   },
+   {
+    "v": 2,
+    "type": "ROOM_EVENT",
+    "roomId": "sala-teste",
+    "seq": 3,
+    "revision": 2,
+    "ts": "2026-11-06T20:00:04.000Z",
+    "tipo": "colocacao",
+    "dados": {
+     "figuraId": "f1a88a9eef918a8b4",
+     "nomePublico": "Heroína Teste",
+     "lado": "jogadora",
+     "x": 2,
+     "y": 2,
+     "orientacao": "S",
+     "visivel": "de_pe"
+    }
+   },
+   {
+    "v": 2,
+    "type": "ROOM_EVENT",
+    "roomId": "sala-teste",
+    "seq": 4,
+    "revision": 2,
+    "ts": "2026-11-06T20:00:04.000Z",
+    "tipo": "colocacao",
+    "dados": {
+     "figuraId": "f0c1870b843e1465f",
+     "nomePublico": "Aliada Teste",
+     "lado": "jogadora",
+     "x": 2,
+     "y": 4,
+     "orientacao": "S",
+     "visivel": "de_pe"
+    }
+   },
+   {
+    "v": 2,
+    "type": "ROOM_EVENT",
+    "roomId": "sala-teste",
+    "seq": 5,
+    "revision": 2,
+    "ts": "2026-11-06T20:00:04.000Z",
+    "tipo": "turno",
+    "dados": {
+     "figuraId": "f1a88a9eef918a8b4",
+     "rodada": 1,
+     "narra": false
+    }
+   },
+   {
+    "v": 2,
+    "type": "ROOM_OPTIONS",
+    "roomId": "sala-teste",
+    "revision": 2,
+    "vezId": "f1a88a9eef918a8b4",
+    "orcamentoM": 9,
+    "mover": [
+     {
+      "x": 2,
+      "y": 1,
+      "custoM": 1.5
+     },
+     {
+      "x": 1,
+      "y": 2,
+      "custoM": 1.5
+     },
+     {
+      "x": 3,
+      "y": 2,
+      "custoM": 1.5
+     },
+     {
+      "x": 2,
+      "y": 3,
+      "custoM": 1.5
+     },
+     {
+      "x": 2,
+      "y": 0,
+      "custoM": 3
+     },
+     {
+      "x": 1,
+      "y": 1,
+      "custoM": 3
+     },
+     {
+      "x": 3,
+      "y": 1,
+      "custoM": 3
+     },
+     {
+      "x": 0,
+      "y": 2,
+      "custoM": 3
+     },
+     {
+      "x": 4,
+      "y": 2,
+      "custoM": 3
+     },
+     {
+      "x": 1,
+      "y": 3,
+      "custoM": 3
+     },
+     {
+      "x": 3,
+      "y": 3,
+      "custoM": 3
+     },
+     {
+      "x": 1,
+      "y": 0,
+      "custoM": 4.5
+     },
+     {
+      "x": 3,
+      "y": 0,
+      "custoM": 4.5
+     },
+     {
+      "x": 0,
+      "y": 1,
+      "custoM": 4.5
+     },
+     {
+      "x": 4,
+      "y": 1,
+      "custoM": 4.5
+     },
+     {
+      "x": 5,
+      "y": 2,
+      "custoM": 4.5
+     },
+     {
+      "x": 0,
+      "y": 3,
+      "custoM": 4.5
+     },
+     {
+      "x": 4,
+      "y": 3,
+      "custoM": 4.5
+     },
+     {
+      "x": 1,
+      "y": 4,
+      "custoM": 4.5
+     },
+     {
+      "x": 3,
+      "y": 4,
+      "custoM": 4.5
+     },
+     {
+      "x": 0,
+      "y": 0,
+      "custoM": 6
+     },
+     {
+      "x": 4,
+      "y": 0,
+      "custoM": 6
+     },
+     {
+      "x": 5,
+      "y": 1,
+      "custoM": 6
+     },
+     {
+      "x": 6,
+      "y": 2,
+      "custoM": 6
+     },
+     {
+      "x": 5,
+      "y": 3,
+      "custoM": 6
+     },
+     {
+      "x": 0,
+      "y": 4,
+      "custoM": 6
+     },
+     {
+      "x": 4,
+      "y": 4,
+      "custoM": 6
+     },
+     {
+      "x": 1,
+      "y": 5,
+      "custoM": 6
+     },
+     {
+      "x": 3,
+      "y": 5,
+      "custoM": 6
+     },
+     {
+      "x": 5,
+      "y": 0,
+      "custoM": 7.5
+     },
+     {
+      "x": 6,
+      "y": 1,
+      "custoM": 7.5
+     },
+     {
+      "x": 7,
+      "y": 2,
+      "custoM": 7.5
+     },
+     {
+      "x": 6,
+      "y": 3,
+      "custoM": 7.5
+     },
+     {
+      "x": 5,
+      "y": 4,
+      "custoM": 7.5
+     },
+     {
+      "x": 0,
+      "y": 5,
+      "custoM": 7.5
+     },
+     {
+      "x": 2,
+      "y": 5,
+      "custoM": 7.5
+     },
+     {
+      "x": 4,
+      "y": 5,
+      "custoM": 7.5
+     },
+     {
+      "x": 1,
+      "y": 6,
+      "custoM": 7.5
+     },
+     {
+      "x": 3,
+      "y": 6,
+      "custoM": 7.5
+     },
+     {
+      "x": 6,
+      "y": 0,
+      "custoM": 9
+     },
+     {
+      "x": 7,
+      "y": 1,
+      "custoM": 9
+     },
+     {
+      "x": 8,
+      "y": 2,
+      "custoM": 9
+     },
+     {
+      "x": 7,
+      "y": 3,
+      "custoM": 9
+     },
+     {
+      "x": 6,
+      "y": 4,
+      "custoM": 9
+     },
+     {
+      "x": 5,
+      "y": 5,
+      "custoM": 9
+     },
+     {
+      "x": 0,
+      "y": 6,
+      "custoM": 9
+     },
+     {
+      "x": 2,
+      "y": 6,
+      "custoM": 9
+     },
+     {
+      "x": 4,
+      "y": 6,
+      "custoM": 9
+     },
+     {
+      "x": 1,
+      "y": 7,
+      "custoM": 9
+     },
+     {
+      "x": 3,
+      "y": 7,
+      "custoM": 9
+     }
+    ],
+    "ataques": [],
+    "consumiveis": [],
+    "acoes": [
+     "encerrar",
+     "correr",
+     "defender"
+    ],
+    "reacoes": []
+   },
+   {
+    "v": 2,
+    "type": "ROOM_EVENT",
+    "roomId": "sala-teste",
+    "seq": 6,
+    "revision": 3,
+    "ts": "2026-11-06T20:00:04.500Z",
+    "tipo": "colocacao",
+    "dados": {
+     "figuraId": "f1c8fc87e558f2d7e",
+     "nomePublico": "Orc",
+     "lado": "criatura",
+     "x": 2,
+     "y": 3,
+     "orientacao": "S",
+     "visivel": "de_pe"
+    }
+   },
+   {
+    "v": 2,
+    "type": "ROOM_OPTIONS",
+    "roomId": "sala-teste",
+    "revision": 3,
+    "vezId": "f1a88a9eef918a8b4",
+    "orcamentoM": 9,
+    "mover": [
+     {
+      "x": 2,
+      "y": 1,
+      "custoM": 1.5
+     },
+     {
+      "x": 1,
+      "y": 2,
+      "custoM": 1.5
+     },
+     {
+      "x": 3,
+      "y": 2,
+      "custoM": 1.5
+     },
+     {
+      "x": 2,
+      "y": 0,
+      "custoM": 3
+     },
+     {
+      "x": 1,
+      "y": 1,
+      "custoM": 3
+     },
+     {
+      "x": 3,
+      "y": 1,
+      "custoM": 3
+     },
+     {
+      "x": 0,
+      "y": 2,
+      "custoM": 3
+     },
+     {
+      "x": 4,
+      "y": 2,
+      "custoM": 3
+     },
+     {
+      "x": 1,
+      "y": 3,
+      "custoM": 3
+     },
+     {
+      "x": 3,
+      "y": 3,
+      "custoM": 3
+     },
+     {
+      "x": 1,
+      "y": 0,
+      "custoM": 4.5
+     },
+     {
+      "x": 3,
+      "y": 0,
+      "custoM": 4.5
+     },
+     {
+      "x": 0,
+      "y": 1,
+      "custoM": 4.5
+     },
+     {
+      "x": 4,
+      "y": 1,
+      "custoM": 4.5
+     },
+     {
+      "x": 5,
+      "y": 2,
+      "custoM": 4.5
+     },
+     {
+      "x": 0,
+      "y": 3,
+      "custoM": 4.5
+     },
+     {
+      "x": 4,
+      "y": 3,
+      "custoM": 4.5
+     },
+     {
+      "x": 1,
+      "y": 4,
+      "custoM": 4.5
+     },
+     {
+      "x": 3,
+      "y": 4,
+      "custoM": 4.5
+     },
+     {
+      "x": 0,
+      "y": 0,
+      "custoM": 6
+     },
+     {
+      "x": 4,
+      "y": 0,
+      "custoM": 6
+     },
+     {
+      "x": 5,
+      "y": 1,
+      "custoM": 6
+     },
+     {
+      "x": 6,
+      "y": 2,
+      "custoM": 6
+     },
+     {
+      "x": 5,
+      "y": 3,
+      "custoM": 6
+     },
+     {
+      "x": 0,
+      "y": 4,
+      "custoM": 6
+     },
+     {
+      "x": 4,
+      "y": 4,
+      "custoM": 6
+     },
+     {
+      "x": 1,
+      "y": 5,
+      "custoM": 6
+     },
+     {
+      "x": 3,
+      "y": 5,
+      "custoM": 6
+     },
+     {
+      "x": 5,
+      "y": 0,
+      "custoM": 7.5
+     },
+     {
+      "x": 6,
+      "y": 1,
+      "custoM": 7.5
+     },
+     {
+      "x": 7,
+      "y": 2,
+      "custoM": 7.5
+     },
+     {
+      "x": 6,
+      "y": 3,
+      "custoM": 7.5
+     },
+     {
+      "x": 5,
+      "y": 4,
+      "custoM": 7.5
+     },
+     {
+      "x": 0,
+      "y": 5,
+      "custoM": 7.5
+     },
+     {
+      "x": 2,
+      "y": 5,
+      "custoM": 7.5
+     },
+     {
+      "x": 4,
+      "y": 5,
+      "custoM": 7.5
+     },
+     {
+      "x": 1,
+      "y": 6,
+      "custoM": 7.5
+     },
+     {
+      "x": 3,
+      "y": 6,
+      "custoM": 7.5
+     },
+     {
+      "x": 6,
+      "y": 0,
+      "custoM": 9
+     },
+     {
+      "x": 7,
+      "y": 1,
+      "custoM": 9
+     },
+     {
+      "x": 8,
+      "y": 2,
+      "custoM": 9
+     },
+     {
+      "x": 7,
+      "y": 3,
+      "custoM": 9
+     },
+     {
+      "x": 6,
+      "y": 4,
+      "custoM": 9
+     },
+     {
+      "x": 5,
+      "y": 5,
+      "custoM": 9
+     },
+     {
+      "x": 0,
+      "y": 6,
+      "custoM": 9
+     },
+     {
+      "x": 2,
+      "y": 6,
+      "custoM": 9
+     },
+     {
+      "x": 4,
+      "y": 6,
+      "custoM": 9
+     },
+     {
+      "x": 1,
+      "y": 7,
+      "custoM": 9
+     },
+     {
+      "x": 3,
+      "y": 7,
+      "custoM": 9
+     }
+    ],
+    "ataques": [
+     {
+      "alvoId": "f1c8fc87e558f2d7e",
+      "arma": "chicote-teste"
+     }
+    ],
+    "consumiveis": [],
+    "acoes": [
+     "encerrar",
+     "correr",
+     "defender",
+     "desvincular"
+    ],
+    "reacoes": []
+   },
+   {
+    "v": 2,
+    "type": "ROOM_EVENT",
+    "roomId": "sala-teste",
+    "seq": 7,
+    "revision": 4,
+    "ts": "2026-11-06T20:00:05.000Z",
+    "tipo": "colocacao",
+    "dados": {
+     "figuraId": "fb43618ae935f84df",
+     "nomePublico": "Lobo",
+     "lado": "criatura",
+     "x": 9,
+     "y": 9,
+     "orientacao": "S",
+     "visivel": "de_pe"
+    }
+   },
+   {
+    "v": 2,
+    "type": "ROOM_OPTIONS",
+    "roomId": "sala-teste",
+    "revision": 4,
+    "vezId": "f1a88a9eef918a8b4",
+    "orcamentoM": 9,
+    "mover": [
+     {
+      "x": 2,
+      "y": 1,
+      "custoM": 1.5
+     },
+     {
+      "x": 1,
+      "y": 2,
+      "custoM": 1.5
+     },
+     {
+      "x": 3,
+      "y": 2,
+      "custoM": 1.5
+     },
+     {
+      "x": 2,
+      "y": 0,
+      "custoM": 3
+     },
+     {
+      "x": 1,
+      "y": 1,
+      "custoM": 3
+     },
+     {
+      "x": 3,
+      "y": 1,
+      "custoM": 3
+     },
+     {
+      "x": 0,
+      "y": 2,
+      "custoM": 3
+     },
+     {
+      "x": 4,
+      "y": 2,
+      "custoM": 3
+     },
+     {
+      "x": 1,
+      "y": 3,
+      "custoM": 3
+     },
+     {
+      "x": 3,
+      "y": 3,
+      "custoM": 3
+     },
+     {
+      "x": 1,
+      "y": 0,
+      "custoM": 4.5
+     },
+     {
+      "x": 3,
+      "y": 0,
+      "custoM": 4.5
+     },
+     {
+      "x": 0,
+      "y": 1,
+      "custoM": 4.5
+     },
+     {
+      "x": 4,
+      "y": 1,
+      "custoM": 4.5
+     },
+     {
+      "x": 5,
+      "y": 2,
+      "custoM": 4.5
+     },
+     {
+      "x": 0,
+      "y": 3,
+      "custoM": 4.5
+     },
+     {
+      "x": 4,
+      "y": 3,
+      "custoM": 4.5
+     },
+     {
+      "x": 1,
+      "y": 4,
+      "custoM": 4.5
+     },
+     {
+      "x": 3,
+      "y": 4,
+      "custoM": 4.5
+     },
+     {
+      "x": 0,
+      "y": 0,
+      "custoM": 6
+     },
+     {
+      "x": 4,
+      "y": 0,
+      "custoM": 6
+     },
+     {
+      "x": 5,
+      "y": 1,
+      "custoM": 6
+     },
+     {
+      "x": 6,
+      "y": 2,
+      "custoM": 6
+     },
+     {
+      "x": 5,
+      "y": 3,
+      "custoM": 6
+     },
+     {
+      "x": 0,
+      "y": 4,
+      "custoM": 6
+     },
+     {
+      "x": 4,
+      "y": 4,
+      "custoM": 6
+     },
+     {
+      "x": 1,
+      "y": 5,
+      "custoM": 6
+     },
+     {
+      "x": 3,
+      "y": 5,
+      "custoM": 6
+     },
+     {
+      "x": 5,
+      "y": 0,
+      "custoM": 7.5
+     },
+     {
+      "x": 6,
+      "y": 1,
+      "custoM": 7.5
+     },
+     {
+      "x": 7,
+      "y": 2,
+      "custoM": 7.5
+     },
+     {
+      "x": 6,
+      "y": 3,
+      "custoM": 7.5
+     },
+     {
+      "x": 5,
+      "y": 4,
+      "custoM": 7.5
+     },
+     {
+      "x": 0,
+      "y": 5,
+      "custoM": 7.5
+     },
+     {
+      "x": 2,
+      "y": 5,
+      "custoM": 7.5
+     },
+     {
+      "x": 4,
+      "y": 5,
+      "custoM": 7.5
+     },
+     {
+      "x": 1,
+      "y": 6,
+      "custoM": 7.5
+     },
+     {
+      "x": 3,
+      "y": 6,
+      "custoM": 7.5
+     },
+     {
+      "x": 6,
+      "y": 0,
+      "custoM": 9
+     },
+     {
+      "x": 7,
+      "y": 1,
+      "custoM": 9
+     },
+     {
+      "x": 8,
+      "y": 2,
+      "custoM": 9
+     },
+     {
+      "x": 7,
+      "y": 3,
+      "custoM": 9
+     },
+     {
+      "x": 6,
+      "y": 4,
+      "custoM": 9
+     },
+     {
+      "x": 5,
+      "y": 5,
+      "custoM": 9
+     },
+     {
+      "x": 0,
+      "y": 6,
+      "custoM": 9
+     },
+     {
+      "x": 2,
+      "y": 6,
+      "custoM": 9
+     },
+     {
+      "x": 4,
+      "y": 6,
+      "custoM": 9
+     },
+     {
+      "x": 1,
+      "y": 7,
+      "custoM": 9
+     },
+     {
+      "x": 3,
+      "y": 7,
+      "custoM": 9
+     }
+    ],
+    "ataques": [
+     {
+      "alvoId": "f1c8fc87e558f2d7e",
+      "arma": "chicote-teste"
+     }
+    ],
+    "consumiveis": [],
+    "acoes": [
+     "encerrar",
+     "correr",
+     "defender",
+     "desvincular"
+    ],
+    "reacoes": []
+   },
+   {
+    "v": 2,
+    "type": "ROOM_EVENT",
+    "roomId": "sala-teste",
+    "seq": 8,
+    "revision": 5,
+    "ts": "2026-11-06T20:00:05.500Z",
+    "tipo": "ambiente",
+    "dados": {
+     "efeito": {
+      "clima": "nevoeiro",
+      "luz": "noite"
+     }
+    }
+   },
+   {
+    "v": 2,
+    "type": "ROOM_OPTIONS",
+    "roomId": "sala-teste",
+    "revision": 5,
+    "vezId": "f1a88a9eef918a8b4",
+    "orcamentoM": 9,
+    "mover": [
+     {
+      "x": 2,
+      "y": 1,
+      "custoM": 1.5
+     },
+     {
+      "x": 1,
+      "y": 2,
+      "custoM": 1.5
+     },
+     {
+      "x": 3,
+      "y": 2,
+      "custoM": 1.5
+     },
+     {
+      "x": 2,
+      "y": 0,
+      "custoM": 3
+     },
+     {
+      "x": 1,
+      "y": 1,
+      "custoM": 3
+     },
+     {
+      "x": 3,
+      "y": 1,
+      "custoM": 3
+     },
+     {
+      "x": 0,
+      "y": 2,
+      "custoM": 3
+     },
+     {
+      "x": 4,
+      "y": 2,
+      "custoM": 3
+     },
+     {
+      "x": 1,
+      "y": 3,
+      "custoM": 3
+     },
+     {
+      "x": 3,
+      "y": 3,
+      "custoM": 3
+     },
+     {
+      "x": 1,
+      "y": 0,
+      "custoM": 4.5
+     },
+     {
+      "x": 3,
+      "y": 0,
+      "custoM": 4.5
+     },
+     {
+      "x": 0,
+      "y": 1,
+      "custoM": 4.5
+     },
+     {
+      "x": 4,
+      "y": 1,
+      "custoM": 4.5
+     },
+     {
+      "x": 5,
+      "y": 2,
+      "custoM": 4.5
+     },
+     {
+      "x": 0,
+      "y": 3,
+      "custoM": 4.5
+     },
+     {
+      "x": 4,
+      "y": 3,
+      "custoM": 4.5
+     },
+     {
+      "x": 1,
+      "y": 4,
+      "custoM": 4.5
+     },
+     {
+      "x": 3,
+      "y": 4,
+      "custoM": 4.5
+     },
+     {
+      "x": 0,
+      "y": 0,
+      "custoM": 6
+     },
+     {
+      "x": 4,
+      "y": 0,
+      "custoM": 6
+     },
+     {
+      "x": 5,
+      "y": 1,
+      "custoM": 6
+     },
+     {
+      "x": 6,
+      "y": 2,
+      "custoM": 6
+     },
+     {
+      "x": 5,
+      "y": 3,
+      "custoM": 6
+     },
+     {
+      "x": 0,
+      "y": 4,
+      "custoM": 6
+     },
+     {
+      "x": 4,
+      "y": 4,
+      "custoM": 6
+     },
+     {
+      "x": 1,
+      "y": 5,
+      "custoM": 6
+     },
+     {
+      "x": 3,
+      "y": 5,
+      "custoM": 6
+     },
+     {
+      "x": 5,
+      "y": 0,
+      "custoM": 7.5
+     },
+     {
+      "x": 6,
+      "y": 1,
+      "custoM": 7.5
+     },
+     {
+      "x": 7,
+      "y": 2,
+      "custoM": 7.5
+     },
+     {
+      "x": 6,
+      "y": 3,
+      "custoM": 7.5
+     },
+     {
+      "x": 5,
+      "y": 4,
+      "custoM": 7.5
+     },
+     {
+      "x": 0,
+      "y": 5,
+      "custoM": 7.5
+     },
+     {
+      "x": 2,
+      "y": 5,
+      "custoM": 7.5
+     },
+     {
+      "x": 4,
+      "y": 5,
+      "custoM": 7.5
+     },
+     {
+      "x": 1,
+      "y": 6,
+      "custoM": 7.5
+     },
+     {
+      "x": 3,
+      "y": 6,
+      "custoM": 7.5
+     },
+     {
+      "x": 6,
+      "y": 0,
+      "custoM": 9
+     },
+     {
+      "x": 7,
+      "y": 1,
+      "custoM": 9
+     },
+     {
+      "x": 8,
+      "y": 2,
+      "custoM": 9
+     },
+     {
+      "x": 7,
+      "y": 3,
+      "custoM": 9
+     },
+     {
+      "x": 6,
+      "y": 4,
+      "custoM": 9
+     },
+     {
+      "x": 5,
+      "y": 5,
+      "custoM": 9
+     },
+     {
+      "x": 0,
+      "y": 6,
+      "custoM": 9
+     },
+     {
+      "x": 2,
+      "y": 6,
+      "custoM": 9
+     },
+     {
+      "x": 4,
+      "y": 6,
+      "custoM": 9
+     },
+     {
+      "x": 1,
+      "y": 7,
+      "custoM": 9
+     },
+     {
+      "x": 3,
+      "y": 7,
+      "custoM": 9
+     }
+    ],
+    "ataques": [
+     {
+      "alvoId": "f1c8fc87e558f2d7e",
+      "arma": "chicote-teste"
+     }
+    ],
+    "consumiveis": [],
+    "acoes": [
+     "encerrar",
+     "correr",
+     "defender",
+     "desvincular"
+    ],
+    "reacoes": []
+   },
+   {
+    "v": 2,
+    "type": "ROOM_RECEIPT",
+    "roomId": "sala-teste",
+    "intentId": "fc-1",
+    "estado": "AGUARDANDO_MESTRE",
+    "seq": 8,
+    "revision": 6
+   }
+  ]
+ }
+}
