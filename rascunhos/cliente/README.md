@@ -89,7 +89,7 @@ Os presets e o CI são da **JV2.1b (Muse)**. A referência é esta:
 1. **Falta a cena do Mestre.** O lobby manda o Mestre para `res://cenas/mestre/mestre.tscn`, que não existe (já estava no ponto 6 acima). O Mestre não joga por este cliente.
 2. **A desgraça e o teste de morte não aparecem à jogadora.** O `estado.gd` ignora os eventos `desgraca` e `teste_morte`; ela só vê «Falha crítica!». Faltam as frases de cada desgraça, incluindo a da REF_19 («…e perde um quarto da vida que tem agora.», só quando vem `perdeQuarto`). As frases exactas estão no site vivo: o Muse vai mandá-las. **Sítio marcado no código:** `TODO(FRASES-DESGRACA)` em `estado/estado.gd` (ramo `_` de aplicar o evento) e em `hud/hud.gd` (a seguir a `FRASES_ATAQUE`).
 3. ~~**Duas tabelas de perfis gráficos.**~~ **Resolvido (I0004, 08/11):** a arena passou a usar o `AplicadorPerfil` (nó `Perfis` na cena; `Sol` e `Ambiente` nos grupos `sol` e `ambiente`; o corpo das figuras no `figura`). Uma só tabela, guardada pelo teste «Uma só tabela de perfis gráficos». Muda o Baixo da arena: escala 3D de 0,75 para 0,5, como na tabela dos perfis.
-4. **A Clareira de prova não tem cena.** O `clareira_prova.gd` compila, mas espera os nós `Ambiente`, `Sol`, `Camera`, `Perfis` e `Medicao/Rotulo`, e não há `.tscn`.
+4. ~~**A Clareira de prova não tem cena.**~~ **Resolvido (I0004, 08/11):** ver a secção «Clareira de prova» abaixo.
 5. `docs/orcamento-perfis.md`, citado pelos perfis, não está no repositório.
 6. **Registo da língua:** o cliente fala por «você» («Entre», «Escreva», «Espere», «Sua vez»); o site usa o imperativo de «tu» («aperta», «Atualiza»). Pergunta para o Mestre, pelo Muse.
 
@@ -100,3 +100,34 @@ Os presets e o CI são da **JV2.1b (Muse)**. A referência é esta:
 | REF_18 (IBX-287) | Textos visíveis com «aperta» (sai «prime» e «carrega») e a família «quebrar» (sai «partir») | Nenhum texto visível tem «prime», «carrega» nem «partir»: os achados de `grep` são nomes de código (`pressed`, `_carregar_preferencias`, `_rotulo_quebrado`). O cliente não tem frases de instrução com o verbo do botão | **Não.** Fica a regra para as frases novas (desgraças, teste de morte) |
 | REF_20 (IBX-290) | Painel ⚙ inutilizável em ecrãs baixos (a 844×390 só 29% visível); passou a folha lateral de duas colunas | O HUD escala por inteiro (`canvas_items` + `expand`, base 1920×1080) e a letra nunca desce de 13 px reais. **Medido no CI** (`testes/medir_painel_config.gd`, Godot 4.7.2): a 844×390 o «Fechar» acaba em 791 de 1080 unidades; a 780×360 em 830; a 1920×1080 em 605. Cabe sempre, sem rolagem | **Não.** A pendência F5-MESTRE-01 (vista do Mestre) não existe aqui porque não há cena do Mestre |
 | REF_23 (IBX-295) | Limpeza visual v5: árvores pintadas como arte, chão sem malha xadrez (dither), crista limpa (anel de perto com `fAltAnel = 0,42`); palavra do Mestre «Boa. Perfeito» | A arena do cliente é provisória: chão de cor lisa (`COR_CHAO`, sem textura nem xadrez) e as linhas da grelha táctica; não há árvores, terreno nem crista. A Clareira de prova só tem primitivas | **Não, por agora.** Fica como referência aprovada pelo olho do Mestre para a Clareira final (V2.1). Atenção: a folhagem usa `usar_alpha_hash` (um pontilhado) nas copas que tapam figuras; o Mestre mandou tirar o pontilhado do chão do site, por isso o hash da folhagem tem de lhe ser mostrado antes de ficar |
+
+## Clareira de prova (I0004, 08/11/2026)
+
+**Abrir:** `arte/cenas/clareira_prova.tscn` no editor, ou sem janela pelo teste
+`godot --headless --path cliente -s res://testes/abrir_clareira.gd`. Teclas da bancada: 1–4 (horas), P (perfil), C (ciclo), M (medição em JSON).
+
+**O que a cena tem:**
+
+| Nó | O que é |
+| --- | --- |
+| `ClareiraProva` | `Node3D` com o `clareira_prova.gd`, que monta o resto em código |
+| `Ambiente` | `WorldEnvironment` (grupo `ambiente`): céu pelo `ceu_pintado.gdshader`, luz ambiente de cor (o color script escreve-a), neblina leve |
+| `Sol` | `DirectionalLight3D` (grupo `sol`), com sombra, a iluminar o céu (`sky_mode` luz e céu) |
+| `Camera` | `Camera3D` com o `camera_mesa.gd` (a mesma câmara da arena) |
+| `Perfis` | o `AplicadorPerfil`, a mesma tabela que a arena usa |
+| `Medicao/Rotulo` | rótulo com perfil, fps, chamadas, primitivas e hora |
+
+Montado pelo script, tudo PLACEHOLDER: chão 44×44 m com textura de ruído, 6 árvores frondosas e 1 gigante, 60 arbustos numa MultiMesh, 6 rochas, 2 tochas sem sombra, 4 figuras de 1,80 m × 1,25 e a besta, com contorno.
+
+**Pontilhado das copas (REF_23):** `USAR_PONTILHADO_COPAS = false` no `clareira_prova.gd`. As copas usam o recorte simples (alpha scissor), sem pontilhado. Ligar o pontilhado (alpha hash) nas copas que tapam figuras é **ponto para o olho do Mestre**: fica desligado até à palavra dele.
+
+**Teste (`testes/abrir_clareira.gd`, no CI):** 22 verificações — a cena carrega e o `_ready` corre; os 5 nós existem; o céu é o shader pintado; os grupos estão cheios (1 sol, 1 ambiente, 5 figuras, 8 folhagens, 1 MultiMesh densa); o perfil médio entra no arranque; nenhuma copa tem pontilhado; as 4 horas-chave aplicam-se; Baixo tira o contorno e põe metade dos arbustos, Alto repõe; o rótulo actualiza-se.
+
+**O que ainda lhe falta:**
+
+1. **Os assets verdadeiros** (V2.1): FICA/LAPIDA, o T1 do chão, a Besta Cristalina, os vagalumes. Tudo o que lá está é placeholder.
+2. **As rampas** (`rampa_<família>.png`): correr o `gerar_rampas.gd` no editor. Até lá, uma rampa genérica.
+3. **A máscara de pincel** verdadeira (V0.1): hoje é ruído.
+4. **Os shaders nunca foram compilados**: o Godot sem janela usa um renderizador vazio. Falta abrir a cena num computador com GPU (ou no telemóvel) para ver erros de shader e o aspecto.
+5. **A medição de FPS** (B3) no Redmi Note 10 Pro, com os 3 perfis: só com o telemóvel.
+6. **O olho do Mestre**: a luz das 4 horas, a cor das sombras e o pontilhado das copas.
