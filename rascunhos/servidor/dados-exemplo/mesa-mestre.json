@@ -250,7 +250,90 @@
      }
     ],
     "pausa": null
-   }
+   },
+   "pontos": [
+    {
+     "journalSeq": 9,
+     "ts": "2026-11-06T20:00:05.500Z",
+     "fase": "combate",
+     "rodada": 1,
+     "vezId": "f1a88a9eef918a8b4",
+     "tipos": [
+      "ambiente"
+     ]
+    },
+    {
+     "journalSeq": 8,
+     "ts": "2026-11-06T20:00:05.000Z",
+     "fase": "combate",
+     "rodada": 1,
+     "vezId": "f1a88a9eef918a8b4",
+     "tipos": [
+      "colocacao"
+     ]
+    },
+    {
+     "journalSeq": 7,
+     "ts": "2026-11-06T20:00:04.500Z",
+     "fase": "combate",
+     "rodada": 1,
+     "vezId": "f1a88a9eef918a8b4",
+     "tipos": [
+      "colocacao"
+     ]
+    },
+    {
+     "journalSeq": 6,
+     "ts": "2026-11-06T20:00:04.000Z",
+     "fase": "combate",
+     "rodada": 1,
+     "vezId": "f1a88a9eef918a8b4",
+     "tipos": [
+      "colocacao",
+      "turno"
+     ]
+    },
+    {
+     "journalSeq": 3,
+     "ts": "2026-11-06T20:00:03.500Z",
+     "fase": "lobby",
+     "rodada": 0,
+     "vezId": null,
+     "tipos": [
+      "lobby"
+     ]
+    },
+    {
+     "journalSeq": 2,
+     "ts": "2026-11-06T20:00:02.000Z",
+     "fase": "lobby",
+     "rodada": 0,
+     "vezId": null,
+     "tipos": [
+      "entrada"
+     ]
+    },
+    {
+     "journalSeq": 1,
+     "ts": "2026-11-06T20:00:01.250Z",
+     "fase": "lobby",
+     "rodada": 0,
+     "vezId": null,
+     "tipos": [
+      "entrada"
+     ]
+    },
+    {
+     "journalSeq": 0,
+     "ts": null,
+     "fase": "lobby",
+     "rodada": 0,
+     "vezId": null,
+     "tipos": [
+      "inicio"
+     ]
+    }
+   ]
   },
   "snapshot": {
    "v": 2,
@@ -404,6 +487,502 @@
     "intentIdOrigem": "dados-1",
     "desgracas": null
    }
+  }
+ },
+ "lobby": {
+  "vista": {
+   "v": 2,
+   "type": "MASTER_VIEW",
+   "roomId": "sala-teste",
+   "journalSeq": 2,
+   "fase": "lobby",
+   "mapa": {
+    "largura": 20,
+    "altura": 20,
+    "casaM": 1.5
+   },
+   "figuras": [],
+   "iniciativa": [],
+   "vezId": null,
+   "rodada": 0,
+   "ambiente": {
+    "clima": null,
+    "luz": null
+   },
+   "mestre": {
+    "figuras": [
+     {
+      "id": "fba2529d0fcfbedbf",
+      "fichaId": "heroina-teste",
+      "lado": "jogadora",
+      "colocada": false,
+      "x": 2,
+      "y": 2,
+      "orientacao": "S",
+      "casaInicial": {
+       "x": 2,
+       "y": 2
+      },
+      "vidaActual": 5150,
+      "paGasto": 0,
+      "vivo": true,
+      "caido": false,
+      "estadoMorte": null,
+      "armaCaida": false,
+      "armaQuebrada": false,
+      "corpoPartido": false,
+      "transformada": false,
+      "reacaoDisponivel": true,
+      "defendendo": false,
+      "modo": null,
+      "nome": "Heroína Teste",
+      "nomePublico": "Heroína Teste",
+      "vidaTotal": 5150,
+      "paTotal": 4040
+     }
+    ],
+    "lobby": {
+     "mapaId": "arena-teste",
+     "criaturasDisponiveis": [
+      "orc-teste",
+      "lobo-teste"
+     ],
+     "npcsDisponiveis": [
+      "bandido-teste"
+     ]
+    },
+    "vez": null,
+    "ambiente": {
+     "hora": null,
+     "clima": null,
+     "futuro": null
+    },
+    "cartoes": [],
+    "pausa": null
+   },
+   "pontos": [
+    {
+     "journalSeq": 1,
+     "ts": "2026-11-06T20:00:01.250Z",
+     "fase": "lobby",
+     "rodada": 0,
+     "vezId": null,
+     "tipos": [
+      "entrada"
+     ]
+    },
+    {
+     "journalSeq": 0,
+     "ts": null,
+     "fase": "lobby",
+     "rodada": 0,
+     "vezId": null,
+     "tipos": [
+      "inicio"
+     ]
+    }
+   ]
+  },
+  "resultados": {
+   "v": 2,
+   "type": "MASTER_RESULTS",
+   "roomId": "sala-teste",
+   "resultados": [
+    {
+     "fichaId": "bandido-teste",
+     "nome": "Bandido CANARIO-FANTASMA",
+     "nomePublico": "Bandido CANARIO-FANTASMA",
+     "papel": "npc",
+     "classificacao": "bronze"
+    },
+    {
+     "fichaId": "orc-teste",
+     "nome": "Orc Verdadeiro Teste",
+     "nomePublico": "Orc",
+     "papel": "criatura",
+     "classificacao": "ouro"
+    },
+    {
+     "fichaId": "lobo-teste",
+     "nome": "Lobo Teste",
+     "nomePublico": "Lobo",
+     "papel": "criatura",
+     "classificacao": "bronze"
+    }
+   ]
+  }
+ },
+ "agir": {
+  "vista": {
+   "v": 2,
+   "type": "MASTER_VIEW",
+   "roomId": "sala-teste",
+   "journalSeq": 6,
+   "fase": "combate",
+   "mapa": {
+    "largura": 20,
+    "altura": 20,
+    "casaM": 1.5
+   },
+   "figuras": [
+    {
+     "id": "fba2529d0fcfbedbf",
+     "nomePublico": "Heroína Teste",
+     "lado": "jogadora",
+     "x": 2,
+     "y": 2,
+     "orientacao": "S",
+     "visivel": "de_pe"
+    },
+    {
+     "id": "f0eca9c7df5e7493f",
+     "nomePublico": "Orc",
+     "lado": "criatura",
+     "x": 2,
+     "y": 3,
+     "orientacao": "S",
+     "visivel": "de_pe"
+    }
+   ],
+   "iniciativa": [
+    "fba2529d0fcfbedbf",
+    "f0eca9c7df5e7493f"
+   ],
+   "vezId": "f0eca9c7df5e7493f",
+   "rodada": 1,
+   "ambiente": {
+    "clima": null,
+    "luz": null
+   },
+   "mestre": {
+    "figuras": [
+     {
+      "id": "fba2529d0fcfbedbf",
+      "fichaId": "heroina-teste",
+      "lado": "jogadora",
+      "colocada": true,
+      "x": 2,
+      "y": 2,
+      "orientacao": "S",
+      "casaInicial": {
+       "x": 2,
+       "y": 2
+      },
+      "vidaActual": 5150,
+      "paGasto": 0,
+      "vivo": true,
+      "caido": false,
+      "estadoMorte": null,
+      "armaCaida": false,
+      "armaQuebrada": false,
+      "corpoPartido": false,
+      "transformada": false,
+      "reacaoDisponivel": true,
+      "defendendo": false,
+      "modo": null,
+      "nome": "Heroína Teste",
+      "nomePublico": "Heroína Teste",
+      "vidaTotal": 5150,
+      "paTotal": 4040
+     },
+     {
+      "id": "f0eca9c7df5e7493f",
+      "fichaId": "orc-teste",
+      "lado": "criatura",
+      "colocada": true,
+      "x": 2,
+      "y": 3,
+      "orientacao": "S",
+      "casaInicial": null,
+      "vidaActual": 7777,
+      "paGasto": 0,
+      "vivo": true,
+      "caido": false,
+      "estadoMorte": null,
+      "armaCaida": false,
+      "armaQuebrada": false,
+      "corpoPartido": false,
+      "transformada": false,
+      "reacaoDisponivel": true,
+      "defendendo": false,
+      "modo": "manual",
+      "nome": "Orc Verdadeiro Teste",
+      "nomePublico": "Orc",
+      "vidaTotal": 7777,
+      "paTotal": 313
+     }
+    ],
+    "lobby": {
+     "mapaId": "arena-teste",
+     "criaturasDisponiveis": [
+      "orc-teste",
+      "lobo-teste"
+     ],
+     "npcsDisponiveis": [
+      "bandido-teste"
+     ]
+    },
+    "vez": {
+     "figuraId": "f0eca9c7df5e7493f",
+     "atacou": false,
+     "andouM": 0,
+     "reservaM": 6,
+     "correrUsado": false,
+     "desvinculou": false,
+     "cobertos": [],
+     "iaMoveu": false,
+     "iaPausada": false,
+     "recusas": 0,
+     "intencoes": 0
+    },
+    "ambiente": {
+     "hora": null,
+     "clima": null,
+     "futuro": null
+    },
+    "cartoes": [],
+    "pausa": null
+   },
+   "pontos": [
+    {
+     "journalSeq": 5,
+     "ts": "2026-11-06T20:00:03.000Z",
+     "fase": "combate",
+     "rodada": 1,
+     "vezId": "fba2529d0fcfbedbf",
+     "tipos": [
+      "colocacao"
+     ]
+    },
+    {
+     "journalSeq": 4,
+     "ts": "2026-11-06T20:00:02.500Z",
+     "fase": "combate",
+     "rodada": 1,
+     "vezId": "fba2529d0fcfbedbf",
+     "tipos": [
+      "colocacao",
+      "turno"
+     ]
+    },
+    {
+     "journalSeq": 2,
+     "ts": "2026-11-06T20:00:02.000Z",
+     "fase": "lobby",
+     "rodada": 0,
+     "vezId": null,
+     "tipos": [
+      "lobby"
+     ]
+    },
+    {
+     "journalSeq": 1,
+     "ts": "2026-11-06T20:00:01.250Z",
+     "fase": "lobby",
+     "rodada": 0,
+     "vezId": null,
+     "tipos": [
+      "entrada"
+     ]
+    },
+    {
+     "journalSeq": 0,
+     "ts": null,
+     "fase": "lobby",
+     "rodada": 0,
+     "vezId": null,
+     "tipos": [
+      "inicio"
+     ]
+    }
+   ]
+  },
+  "opcoes": {
+   "v": 2,
+   "type": "ROOM_OPTIONS",
+   "roomId": "sala-teste",
+   "revision": 5,
+   "vezId": "f0eca9c7df5e7493f",
+   "orcamentoM": 6,
+   "mover": [
+    {
+     "x": 1,
+     "y": 3,
+     "custoM": 1.5
+    },
+    {
+     "x": 3,
+     "y": 3,
+     "custoM": 1.5
+    },
+    {
+     "x": 2,
+     "y": 4,
+     "custoM": 1.5
+    },
+    {
+     "x": 1,
+     "y": 2,
+     "custoM": 3
+    },
+    {
+     "x": 3,
+     "y": 2,
+     "custoM": 3
+    },
+    {
+     "x": 0,
+     "y": 3,
+     "custoM": 3
+    },
+    {
+     "x": 4,
+     "y": 3,
+     "custoM": 3
+    },
+    {
+     "x": 1,
+     "y": 4,
+     "custoM": 3
+    },
+    {
+     "x": 3,
+     "y": 4,
+     "custoM": 3
+    },
+    {
+     "x": 2,
+     "y": 5,
+     "custoM": 3
+    },
+    {
+     "x": 1,
+     "y": 1,
+     "custoM": 4.5
+    },
+    {
+     "x": 3,
+     "y": 1,
+     "custoM": 4.5
+    },
+    {
+     "x": 0,
+     "y": 2,
+     "custoM": 4.5
+    },
+    {
+     "x": 4,
+     "y": 2,
+     "custoM": 4.5
+    },
+    {
+     "x": 5,
+     "y": 3,
+     "custoM": 4.5
+    },
+    {
+     "x": 0,
+     "y": 4,
+     "custoM": 4.5
+    },
+    {
+     "x": 4,
+     "y": 4,
+     "custoM": 4.5
+    },
+    {
+     "x": 1,
+     "y": 5,
+     "custoM": 4.5
+    },
+    {
+     "x": 3,
+     "y": 5,
+     "custoM": 4.5
+    },
+    {
+     "x": 2,
+     "y": 6,
+     "custoM": 4.5
+    },
+    {
+     "x": 1,
+     "y": 0,
+     "custoM": 6
+    },
+    {
+     "x": 3,
+     "y": 0,
+     "custoM": 6
+    },
+    {
+     "x": 0,
+     "y": 1,
+     "custoM": 6
+    },
+    {
+     "x": 2,
+     "y": 1,
+     "custoM": 6
+    },
+    {
+     "x": 4,
+     "y": 1,
+     "custoM": 6
+    },
+    {
+     "x": 5,
+     "y": 2,
+     "custoM": 6
+    },
+    {
+     "x": 6,
+     "y": 3,
+     "custoM": 6
+    },
+    {
+     "x": 5,
+     "y": 4,
+     "custoM": 6
+    },
+    {
+     "x": 0,
+     "y": 5,
+     "custoM": 6
+    },
+    {
+     "x": 4,
+     "y": 5,
+     "custoM": 6
+    },
+    {
+     "x": 1,
+     "y": 6,
+     "custoM": 6
+    },
+    {
+     "x": 3,
+     "y": 6,
+     "custoM": 6
+    },
+    {
+     "x": 2,
+     "y": 7,
+     "custoM": 6
+    }
+   ],
+   "ataques": [
+    {
+     "alvoId": "fba2529d0fcfbedbf",
+     "arma": "machado-teste"
+    }
+   ],
+   "consumiveis": [],
+   "acoes": [
+    "encerrar",
+    "correr"
+   ],
+   "reacoes": []
   }
  },
  "jogadora": {

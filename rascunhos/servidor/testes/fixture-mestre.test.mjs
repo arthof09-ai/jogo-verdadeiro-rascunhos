@@ -53,6 +53,30 @@ function cenarioDados() {
   return m.clientes.mestre.ultimo('MASTER_CARD');
 }
 
+// Lobby: a mesa montada pelo Mestre, antes do START, e a pesquisa de fichas.
+function cenarioLobby() {
+  const m = montarMesa();
+  m.entrarTodos();
+  exigirAplicada(m.mestre('MASTER_LOBBY_SET', {
+    mapaId: 'arena-teste', criaturasDisponiveis: ['orc-teste', 'lobo-teste'], npcsDisponiveis: ['bandido-teste'],
+  }));
+  const resultados = m.enviar('mestre', { type: 'MASTER_SEARCH', texto: '' }).find((x) => x.type === 'MASTER_RESULTS');
+  const vista = m.enviar('mestre', { type: 'MASTER_VIEW' }).find((x) => x.type === 'MASTER_VIEW');
+  return { vista, resultados };
+}
+
+// Agir: o orc em «manual» na vez dele — o Mestre recebe as opções e joga à mão.
+function cenarioAgir() {
+  const m = montarMesa({ modoPadrao: 'manual' });
+  m.entrarTodos();
+  m.iniciarCombate([['orc-teste', { x: 2, y: 3 }]]); // ao lado dela: há ataque nas opções
+  exigirAplicada(m.intencao('heroina', { tipo: 'encerrar' }));
+  const opcoes = m.clientes.mestre.ultimo('ROOM_OPTIONS');
+  const vista = m.enviar('mestre', { type: 'MASTER_VIEW' }).find((x) => x.type === 'MASTER_VIEW');
+  assert.equal(opcoes?.vezId, vista.vezId, 'as opções são da criatura da vez');
+  return { vista, opcoes };
+}
+
 function gerar() {
   const d = cenarioDesgraca();
   const ia = cenarioIA();
@@ -65,6 +89,8 @@ function gerar() {
     canarios: ['Orc Verdadeiro', '7777', '313', '03:33', 'CANARIO-FUTURO', 'CANARIO-DESGRACA', 'CANARIO-RAZAO-IA'],
     // (O clima «nevoeiro» NÃO é canário: o efeito presente do clima é público, E-P12.)
     mestre: { vista: d.vista, snapshot: d.snapshotMestre, cartoes: { desgraca: d.cartao, ia, dados } },
+    lobby: cenarioLobby(),
+    agir: cenarioAgir(),
     jogadora: { mensagens: d.jogadora },
   };
 }

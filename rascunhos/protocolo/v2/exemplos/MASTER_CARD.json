@@ -1,5 +1,25 @@
 [
   {
+    "caso": "dados",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "MASTER_CARD",
+      "roomId": "sala-teste",
+      "cartaoId": "c1",
+      "tipo": "dados",
+      "figuraId": "fba2529d0fcfbedbf",
+      "proposta": null,
+      "razao": null,
+      "faces": [
+        17
+      ],
+      "intentIdOrigem": "dados-1",
+      "desgracas": null
+    }
+  },
+  {
     "caso": "desgraca",
     "sentido": "servidor → cliente",
     "papel": "mestre",
@@ -9,7 +29,7 @@
       "roomId": "sala-teste",
       "cartaoId": "c1",
       "tipo": "desgraca",
-      "figuraId": "fba2529d0fcfbedbf",
+      "figuraId": "f1a88a9eef918a8b4",
       "proposta": {
         "tipo": "arma-cai",
         "texto": "EXEMPLO-DESGRACA"

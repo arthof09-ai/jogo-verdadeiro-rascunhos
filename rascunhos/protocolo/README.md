@@ -97,3 +97,13 @@ Pedidas pela revisão do Muse (CM-000009) ao desenho JV3.1 (Notion: «JV3.1 — 
   - **«nenhuma»:** é o que «Recusar» aplica hoje (PERGUNTA PARA O MESTRE 11).
   - **«acerta-amigo»:** espera a PERGUNTA 12.
 - **Tráfego desta conferência:** 6.002 mensagens dos 64 testes do servidor, com zero falhas nas mensagens que saem. Os exemplos foram gerados outra vez a partir do tráfego.
+
+## Lacuna L8 do ecrã do Mestre: os pontos de «voltar» (08/11/2026, CM-000008-I0004)
+
+- A `MASTER_VIEW` (resposta) tem agora o campo obrigatório `pontos`: até 50 pontos a que o `MASTER_SUPERVISOR` `voltar` aceita ir, do mais novo ao mais velho.
+  - Cada ponto é `{journalSeq, ts, fase, rodada, vezId, tipos}` (`MASTER_VIEW.schema.json#/$defs/ponto`).
+  - O `journalSeq` do ponto é o `ateSeq` a mandar.
+  - O ponto actual nunca aparece, porque o servidor recusa voltar a ele.
+  - O ponto inicial tem `tipos: ["inicio"]` e `ts: null`.
+- **Privacidade:** só o lugar do Mestre recebe os pontos. O teste `servidor/testes/mestre-vista.test.mjs` confere que nenhuma mensagem da Party os leva.
+- **Limite conhecido:** os pontos vivem em memória, como os checkpoints. Depois de a sala acordar de um journal guardado, só há pontos a partir daí (é o mesmo TODO(JV1.x) dos checkpoints).

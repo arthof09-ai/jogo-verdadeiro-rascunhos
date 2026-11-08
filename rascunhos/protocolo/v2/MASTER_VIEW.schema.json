@@ -52,7 +52,8 @@
         "vezId",
         "rodada",
         "ambiente",
-        "mestre"
+        "mestre",
+        "pontos"
       ],
       "properties": {
         "v": {
@@ -98,7 +99,26 @@
         },
         "mestre": {
           "$ref": "ROOM_SNAPSHOT.schema.json#/$defs/mestre"
+        },
+        "pontos": {
+          "description": "L8 do desenho JV3.1 (I0004, 08/11/2026): os pontos a que o MASTER_SUPERVISOR voltar aceita ir (ateSeq), do mais novo ao mais velho, no máximo 50. Só o Mestre os recebe.",
+          "type": "array",
+          "maxItems": 50,
+          "items": { "$ref": "#/$defs/ponto" }
         }
+      },
+      "additionalProperties": false
+    },
+    "ponto": {
+      "type": "object",
+      "required": ["journalSeq", "ts", "fase", "rodada", "vezId", "tipos"],
+      "properties": {
+        "journalSeq": { "type": "integer", "minimum": 0, "description": "O ateSeq a mandar no MASTER_SUPERVISOR voltar." },
+        "ts": { "type": ["string", "null"], "description": "Hora do servidor em que o ponto ficou guardado (null no ponto inicial)." },
+        "fase": { "type": ["string", "null"] },
+        "rodada": { "type": "integer", "minimum": 0 },
+        "vezId": { "$ref": "comum.schema.json#/$defs/idOuNull" },
+        "tipos": { "type": "array", "items": { "type": "string" }, "description": "Tipos dos eventos que fecharam este ponto (ou [\"inicio\"])." }
       },
       "additionalProperties": false
     }

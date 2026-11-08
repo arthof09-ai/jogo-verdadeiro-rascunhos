@@ -100,3 +100,47 @@ test('L2: os cartões que não são de desgraça levam a lista a null', () => {
   assert.equal(c?.tipo, 'ia');
   assert.equal(c.desgracas, null);
 });
+
+// L8 do desenho JV3.1 (I0004, 08/11/2026): o servidor diz ao Mestre a que pontos o «voltar» aceita ir.
+test('L8: a vista do Mestre traz os pontos de «voltar», do mais novo ao mais velho, todos antes do ponto actual', () => {
+  const m = montarMesa();
+  m.entrarTodos();
+  m.iniciarCombate([['orc-teste', { x: 2, y: 6 }]]);
+  exigirAplicada(m.intencao('heroina', { tipo: 'encerrar' }));
+  const v = pedirVista(m);
+  assert.ok(Array.isArray(v.pontos) && v.pontos.length > 0, 'há pontos');
+  assert.ok(v.pontos.length <= 50);
+  for (let i = 0; i < v.pontos.length; i++) {
+    const p = v.pontos[i];
+    assert.ok(p.journalSeq < v.journalSeq, 'nunca o ponto actual (o servidor recusa-o)');
+    if (i > 0) assert.ok(p.journalSeq < v.pontos[i - 1].journalSeq, 'do mais novo ao mais velho');
+    assert.ok(Array.isArray(p.tipos) && p.tipos.length > 0);
+    assert.ok(Number.isInteger(p.rodada));
+  }
+  const inicial = v.pontos.find((p) => p.journalSeq === 0);
+  assert.deepEqual(inicial?.tipos, ['inicio'], 'o ponto inicial está na lista');
+});
+
+test('L8: o «voltar» aceita qualquer ponto da lista e recusa o ponto actual', () => {
+  const m = montarMesa();
+  m.entrarTodos();
+  m.iniciarCombate([['orc-teste', { x: 2, y: 6 }]]);
+  exigirAplicada(m.intencao('heroina', { tipo: 'encerrar' }));
+  const v = pedirVista(m);
+  const actual = m.mestre('MASTER_SUPERVISOR', { op: 'voltar', ateSeq: v.journalSeq });
+  assert.ok(recibo(actual)?.type === 'ROOM_REJECT' || recibo(actual)?.estado === 'RECUSADA', 'o ponto actual é recusado');
+  const alvo = v.pontos[Math.min(1, v.pontos.length - 1)];
+  exigirAplicada(m.mestre('MASTER_SUPERVISOR', { op: 'voltar', ateSeq: alvo.journalSeq }), 'voltar a um ponto da lista');
+  const depois = pedirVista(m);
+  assert.ok(depois.pontos.some((p) => p.journalSeq === alvo.journalSeq), 'o ponto continua na lista (o journal não apaga)');
+});
+
+test('L8: os pontos só vão ao Mestre (nenhuma mensagem da Party os leva)', () => {
+  const m = montarMesa({ comAliada: true, comEspectador: true });
+  m.entrarTodos();
+  m.iniciarCombate([['orc-teste', { x: 2, y: 6 }]]);
+  pedirVista(m);
+  for (const chave of ['heroina', 'aliada', 'espectador']) {
+    for (const msg of m.clientes[chave].msgs) assert.equal(msg.pontos, undefined, `${chave} recebeu pontos em ${msg.type}`);
+  }
+});

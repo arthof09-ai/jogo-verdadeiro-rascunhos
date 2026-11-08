@@ -14,6 +14,20 @@
           "nomePublico": "Bandido EXEMPLO-FANTASMA",
           "papel": "npc",
           "classificacao": "bronze"
+        },
+        {
+          "fichaId": "orc-teste",
+          "nome": "Orc Verdadeiro Teste",
+          "nomePublico": "Orc",
+          "papel": "criatura",
+          "classificacao": "ouro"
+        },
+        {
+          "fichaId": "lobo-teste",
+          "nome": "Lobo Teste",
+          "nomePublico": "Lobo",
+          "papel": "criatura",
+          "classificacao": "bronze"
         }
       ]
     }

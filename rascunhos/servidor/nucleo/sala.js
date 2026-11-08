@@ -19,6 +19,8 @@ export const PROTOCOLO = 2;
 export const CASA_M = 1.5;
 export const MAX_INTENCOES_TURNO = 20; // E-C12, invariante 12
 const MAX_CHECKPOINTS = 500;
+/** L8: quantos pontos de «voltar» vão na MASTER_VIEW (os mais novos). */
+const MAX_PONTOS_VISTA = 50;
 const EPS = 1e-9;
 const VIZ4 = Object.freeze([[1, 0], [-1, 0], [0, 1], [0, -1]]); // sem diagonais (REF_7 §3)
 
@@ -249,6 +251,9 @@ export function criarSala({
   const tentativas = new Map(); // travão do ROOM_JOIN (E-P9)
   const ritmo = new Map(); // seatId → carimbos (10 intenções/s)
   const checkpoints = new Map(); // journalSeq → mundo (para MASTER_SUPERVISOR voltar)
+  // L8 do desenho JV3.1 (I0004, 08/11): o resumo de cada ponto guardado, para o Mestre saber a que pontos
+  // pode voltar. Vai SÓ na MASTER_VIEW (o lugar do Mestre), em `pontos`.
+  const pontosInfo = new Map(); // journalSeq → {journalSeq, ts, fase, rodada, vezId, tipos}
   const fila = [];
   let drenando = false;
 
@@ -614,7 +619,10 @@ export function criarSala({
   function mensagemVistaMestre() {
     const m = journal.estado;
     const s = Object.values(m.lugares).find((x) => x.papel === 'mestre');
-    return { v: PROTOCOLO, type: 'MASTER_VIEW', roomId, journalSeq: journal.journalSeq, ...projetarSnapshot(m, fichas, destinatario(s)) };
+    return {
+      v: PROTOCOLO, type: 'MASTER_VIEW', roomId, journalSeq: journal.journalSeq, ...projetarSnapshot(m, fichas, destinatario(s)),
+      pontos: pontosParaVoltar(),
+    };
   }
   function mensagemCartao(c) {
     return {
@@ -686,7 +694,7 @@ export function criarSala({
       recibos: tx.recibos.map((r) => [r.chave, r.recibo]),
       fluxos: tx.fluxos,
     });
-    if (tx.eventos.length) guardarCheckpoint();
+    if (tx.eventos.length) guardarCheckpoint(tx);
     return { saidas: tx.saidas, resultado };
   }
 
@@ -740,10 +748,30 @@ export function criarSala({
     if (m.fase === 'pausa' && m.pausa) o.fase = m.pausa.faseAnterior;
     return o;
   }
-  function guardarCheckpoint() {
+  function guardarCheckpoint(tx = null) {
     // TODO(JV1.x): os checkpoints vivem só em memória; depois de restaurar, o "voltar" só alcança o que vier depois.
-    checkpoints.set(journal.journalSeq, mundoDe(journal.estado));
-    while (checkpoints.size > MAX_CHECKPOINTS) checkpoints.delete(checkpoints.keys().next().value);
+    const mundo = mundoDe(journal.estado);
+    checkpoints.set(journal.journalSeq, mundo);
+    pontosInfo.set(journal.journalSeq, {
+      journalSeq: journal.journalSeq,
+      ts: tx?.ts ?? null,
+      fase: mundo.fase,
+      rodada: mundo.rodada ?? 0,
+      vezId: mundo.vez?.figuraId ?? null,
+      tipos: tx ? [...new Set(tx.eventos.map((e) => e.tipo))] : ['inicio'],
+    });
+    while (checkpoints.size > MAX_CHECKPOINTS) {
+      const velho = checkpoints.keys().next().value;
+      checkpoints.delete(velho);
+      pontosInfo.delete(velho);
+    }
+  }
+  /** L8: os pontos a que o «voltar» aceita ir (journalSeq < actual e com checkpoint), do mais novo ao mais velho. */
+  function pontosParaVoltar() {
+    const saida = [];
+    for (const [seq, info] of pontosInfo) if (seq < journal.journalSeq && checkpoints.has(seq)) saida.push(clonarJson(info));
+    saida.sort((a, b) => b.journalSeq - a.journalSeq);
+    return saida.slice(0, MAX_PONTOS_VISTA);
   }
 
   // =================================================================== regras de jogo (dentro de tx)

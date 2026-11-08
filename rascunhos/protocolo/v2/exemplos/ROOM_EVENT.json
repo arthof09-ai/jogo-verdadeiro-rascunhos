@@ -9,11 +9,11 @@
       "roomId": "sala-teste",
       "seq": 8,
       "revision": 5,
-      "ts": "2026-11-06T20:00:06.000Z",
+      "ts": "2026-11-06T20:00:05.500Z",
       "tipo": "ambiente",
       "dados": {
         "efeito": {
-          "clima": "tempestade",
+          "clima": "nevoeiro",
           "luz": "noite"
         }
       }
@@ -228,11 +228,11 @@
       "roomId": "sala-teste",
       "seq": 8,
       "revision": 5,
-      "ts": "2026-11-06T20:00:06.000Z",
+      "ts": "2026-11-06T20:00:05.500Z",
       "tipo": "ambiente",
       "dados": {
         "efeito": {
-          "clima": "tempestade",
+          "clima": "nevoeiro",
           "luz": "noite"
         }
       }
@@ -501,21 +501,21 @@
       "v": 2,
       "type": "ROOM_EVENT",
       "roomId": "sala-teste",
-      "seq": 10,
-      "revision": 7,
-      "ts": "2026-11-06T20:00:06.000Z",
+      "seq": 9,
+      "revision": 6,
+      "ts": "2026-11-06T20:00:05.500Z",
       "tipo": "ambiente",
       "dados": {
         "efeito": {
-          "clima": "tempestade",
+          "clima": "nevoeiro",
           "luz": "noite"
         },
         "soMestre": {
-          "hora": "23:59",
-          "clima": "tempestade",
-          "futuro": "raio 23:59 EXEMPLO"
+          "hora": "03:33",
+          "clima": "nevoeiro",
+          "futuro": "EXEMPLO-FUTURO"
         },
-        "journalSeq": 10
+        "journalSeq": 9
       }
     }
   },
@@ -625,30 +625,49 @@
       "v": 2,
       "type": "ROOM_EVENT",
       "roomId": "sala-teste",
-      "seq": 8,
+      "seq": 10,
       "revision": 7,
-      "ts": "2026-11-06T20:00:04.250Z",
+      "ts": "2026-11-06T20:00:06.000Z",
       "tipo": "cartao",
       "dados": {
         "cartaoId": "c1",
-        "tipo": "ia",
+        "tipo": "desgraca",
         "soMestre": {
           "cartaoId": "c1",
           "estado": "aberto",
           "decisao": null,
-          "tipo": "ia",
-          "figuraId": "f0eca9c7df5e7493f",
-          "proposta": {
-            "tipo": "mover",
-            "destino": {
-              "x": 3,
-              "y": 2
-            }
+          "tipo": "desgraca",
+          "figuraId": "f1a88a9eef918a8b4",
+          "alvoId": "f1c8fc87e558f2d7e",
+          "tecnicaId": "chicote-teste",
+          "contexto": {
+            "semente": 458158749,
+            "verificacaoCritico": [
+              2,
+              6,
+              3
+            ],
+            "modoDesgraca": "proposta",
+            "niveisVantagem": 0,
+            "niveisDesvantagem": 0,
+            "ataqueDeOportunidade": false,
+            "flanqueando": false,
+            "atacanteCaido": false,
+            "atacanteFraco": false
           },
-          "razao": "Aproxima-se da jogadora. [EXEMPLO-RAZAO-IA]",
-          "origem": null
+          "proposta": {
+            "tipo": "arma-cai",
+            "texto": "EXEMPLO-DESGRACA"
+          },
+          "razao": null,
+          "origem": {
+            "seatId": "sa8c5ee39b55a53b8",
+            "id": "fc-1",
+            "idCampo": "intentId",
+            "chave": "sa8c5ee39b55a53b8\u0000fc-1"
+          }
         },
-        "journalSeq": 8
+        "journalSeq": 10
       }
     }
   },

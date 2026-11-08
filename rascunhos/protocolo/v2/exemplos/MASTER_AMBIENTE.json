@@ -7,9 +7,11 @@
       "v": 2,
       "roomId": "sala-teste",
       "type": "MASTER_AMBIENTE",
-      "cmdId": "cmd-6",
-      "revision": 7,
-      "hora": "12:00"
+      "cmdId": "cmd-5",
+      "revision": 5,
+      "hora": "03:33",
+      "clima": "nevoeiro",
+      "futuro": "EXEMPLO-FUTURO"
     }
   }
 ]

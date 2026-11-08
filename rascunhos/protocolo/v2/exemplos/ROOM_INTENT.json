@@ -7,11 +7,11 @@
       "v": 2,
       "roomId": "sala-teste",
       "type": "ROOM_INTENT",
-      "intentId": "5b0c2c1e-9d7e-4a43-8f2a-1c6f0e2b9a11",
-      "revision": 3,
+      "intentId": "56234897-cab2-42a8-b6c7-07f1b0efbb0b",
+      "revision": 5,
       "acao": {
         "tipo": "atacar",
-        "alvoId": "ff9563be1fb6a9a74",
+        "alvoId": "f1c8fc87e558f2d7e",
         "arma": "chicote-teste"
       }
     }
