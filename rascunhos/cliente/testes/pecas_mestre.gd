@@ -15,6 +15,7 @@ extends SceneTree
 ## Com MESTRE_COMANDOS=<ficheiro> escreve os comandos montados para o CI os conferir com os schemas.
 
 const MarcadorFig := preload("res://cenas/comum/marcador_figura.gd")
+const ArenaMestre := preload("res://cenas/mestre/arena_mestre.gd")
 const CENA := "res://cenas/mestre/mestre.tscn"
 const Textos := preload("res://cenas/mestre/textos_mestre.gd")
 
@@ -96,15 +97,21 @@ func _correr() -> void:
 	_ok(c._arena.largura == int(vista["mapa"]["largura"]) and c._arena.altura == int(vista["mapa"]["altura"]), "a grelha tem o tamanho do mapa")
 
 	print("== marcadores do site (Plano B; cena.js) ==")
+	# A vista «mestre» da fixture tem as quatro figuras colocadas (heroína, aliada, orc e lobo).
+	var vista_m: Dictionary = fx["mestre"]["vista"]
+	var arena_m = ArenaMestre.new()
+	root.add_child(arena_m)
+	await _quadros(1)
+	arena_m.aplicar_vista(vista_m)
 	var orc_f: Dictionary = {}
 	var lobo_f: Dictionary = {}
-	for f in vista["mestre"]["figuras"]:
+	for f in vista_m["mestre"]["figuras"]:
 		if f.get("fichaId") == "orc-teste":
 			orc_f = f
 		elif f.get("fichaId") == "lobo-teste":
 			lobo_f = f
-	var no_orc: Node3D = c._arena._nos.get(str(orc_f.get("id", "")))
-	var no_lobo: Node3D = c._arena._nos.get(str(lobo_f.get("id", "")))
+	var no_orc: Node3D = arena_m._nos.get(str(orc_f.get("id", "")))
+	var no_lobo: Node3D = arena_m._nos.get(str(lobo_f.get("id", "")))
 	_ok(no_orc != null and no_lobo != null, "o orc e o lobo estão na arena")
 	if no_orc != null and no_lobo != null:
 		var m_orc := no_orc.get_node("Marcador") as Node3D
@@ -117,8 +124,8 @@ func _correr() -> void:
 		_ok(str(m_lobo.get_meta("forma")) == "marcador-lobo" and not m_lobo.has_node("Pivo/Cabeca")
 			and (m_lobo.get_node("Pivo/Corpo") as Node3D).scale.is_equal_approx(Vector3(0.3, 1.35 * 0.5, 0.7)), "o lobo usa o «marcador-lobo» (icosaedro 0,3 × 0,5·altura × 0,7)")
 		var cores: Array = []
-		for f in vista["mestre"]["figuras"]:
-			var n: Node3D = c._arena._nos.get(str(f.get("id", "")))
+		for f in vista_m["mestre"]["figuras"]:
+			var n: Node3D = arena_m._nos.get(str(f.get("id", "")))
 			if n != null:
 				var anel := (n.get_node("Marcador/Anel") as MeshInstance3D).mesh
 				cores.append((anel.surface_get_material(0) as StandardMaterial3D).albedo_color.to_html(false))
@@ -130,6 +137,7 @@ func _correr() -> void:
 		_ok(is_equal_approx(pivo.rotation.z, PI * 0.5) and is_equal_approx(MarcadorFig._y_minimo(pivo) + 0.0, 0.03), "morta: deitada e assente no chão com 0,03 m de folga")
 		MarcadorFig.deitar(m_orc, false)
 		_ok(is_zero_approx(pivo.rotation.z) and is_zero_approx(pivo.position.y), "viva: de pé outra vez")
+	arena_m.queue_free()
 
 	print("== «Voltar até aqui» (L8) ==")
 	var pontos: Array = vista["pontos"]
