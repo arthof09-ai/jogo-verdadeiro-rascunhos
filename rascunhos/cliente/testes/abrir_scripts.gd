@@ -13,6 +13,12 @@ const IGNORAR := ["res://.godot", "res://testes/abrir_scripts.gd", "res://arte/r
 
 
 func _init() -> void:
+	# No _init os autoloads (Rede, Estado) ainda não existem e os scripts que os usam não compilam;
+	# no primeiro quadro já existem.
+	process_frame.connect(_verificar, CONNECT_ONE_SHOT)
+
+
+func _verificar() -> void:
 	var caminhos: Array[String] = []
 	_juntar("res://", caminhos)
 	caminhos.sort()
