@@ -167,7 +167,8 @@
           "futuro": null
         },
         "cartoes": [],
-        "pausa": null
+        "pausa": null,
+        "marchaLivreRodada": null
       }
     }
   }

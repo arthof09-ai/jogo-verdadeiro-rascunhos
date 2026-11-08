@@ -249,7 +249,8 @@
       }
      }
     ],
-    "pausa": null
+    "pausa": null,
+    "marchaLivreRodada": null
    },
    "pontos": [
     {
@@ -333,7 +334,16 @@
       "inicio"
      ]
     }
-   ]
+   ],
+   "selo": null,
+   "estatisticas": {
+    "eventos": 10,
+    "rodada": 1,
+    "ataques": {},
+    "danoCausado": {},
+    "danoSofrido": {},
+    "cartoes": {}
+   }
   },
   "snapshot": {
    "v": 2,
@@ -425,7 +435,8 @@
      "futuro": null
     },
     "cartoes": [],
-    "pausa": null
+    "pausa": null,
+    "marchaLivreRodada": null
    }
   },
   "cartoes": {
@@ -558,7 +569,8 @@
      "futuro": null
     },
     "cartoes": [],
-    "pausa": null
+    "pausa": null,
+    "marchaLivreRodada": null
    },
    "pontos": [
     {
@@ -581,7 +593,16 @@
       "inicio"
      ]
     }
-   ]
+   ],
+   "selo": null,
+   "estatisticas": {
+    "eventos": 2,
+    "rodada": 0,
+    "ataques": {},
+    "danoCausado": {},
+    "danoSofrido": {},
+    "cartoes": {}
+   }
   },
   "resultados": {
    "v": 2,
@@ -741,7 +762,8 @@
      "futuro": null
     },
     "cartoes": [],
-    "pausa": null
+    "pausa": null,
+    "marchaLivreRodada": null
    },
    "pontos": [
     {
@@ -795,7 +817,16 @@
       "inicio"
      ]
     }
-   ]
+   ],
+   "selo": null,
+   "estatisticas": {
+    "eventos": 6,
+    "rodada": 1,
+    "ataques": {},
+    "danoCausado": {},
+    "danoSofrido": {},
+    "cartoes": {}
+   }
   },
   "opcoes": {
    "v": 2,

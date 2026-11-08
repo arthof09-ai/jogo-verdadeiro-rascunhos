@@ -167,6 +167,8 @@ export function projetarSnapshot(mundo, fichas, dest) {
       ambiente: clonarJson(mundo.ambiente),
       cartoes: clonarJson(mundo.cartoes.filter((c) => c.estado === 'aberto')),
       pausa: clonarJson(mundo.pausa),
+      // L6: a rodada em que o Mestre deu «Continuar a rodada» às marchas puras (null: nenhuma).
+      marchaLivreRodada: mundo.marchaLivre ?? null,
     };
     return base;
   }

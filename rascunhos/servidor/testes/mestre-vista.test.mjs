@@ -144,3 +144,98 @@ test('L8: os pontos só vão ao Mestre (nenhuma mensagem da Party os leva)', () 
     for (const msg of m.clientes[chave].msgs) assert.equal(msg.pontos, undefined, `${chave} recebeu pontos em ${msg.type}`);
   }
 });
+
+// L10 do desenho JV3.1 (I0004, 08/11/2026): com o cartão de IA aberto, o Mestre recebe as opções da criatura,
+// para o «Escolher outra» acção (MASTER_APPROVE editar {acao}).
+function cartaoIA() {
+  const m = montarMesa();
+  m.entrarTodos();
+  m.iniciarCombate([['lobo-teste', { x: 10, y: 2 }]]);
+  const lobo = m.clientes.heroina.idPorNome('Lobo');
+  exigirAplicada(m.mestre('MASTER_MODE', { figuraId: lobo, modo: 'semi' }));
+  exigirAplicada(m.intencao('heroina', { tipo: 'encerrar' }));
+  const cartao = m.clientes.mestre.ultimo('MASTER_CARD');
+  assert.equal(cartao?.tipo, 'ia');
+  return { m, lobo, cartao };
+}
+
+test('L10: com o cartão de IA aberto, o Mestre recebe as opções da criatura da vez (e a jogadora não)', () => {
+  const { m, lobo } = cartaoIA();
+  const op = m.clientes.mestre.ultimo('ROOM_OPTIONS');
+  assert.equal(op?.vezId, lobo, 'opções da criatura da vez');
+  assert.ok(op.mover.length > 0, 'com casas para mover');
+  for (const msg of m.clientes.heroina.msgs) {
+    if (msg.type === 'ROOM_OPTIONS') assert.notEqual(msg.vezId, lobo, 'a jogadora nunca recebe as opções do lobo');
+  }
+});
+
+test('L10: «Escolher outra» acção — editar o cartão de IA com uma casa das opções move o lobo para lá', () => {
+  const { m, lobo, cartao } = cartaoIA();
+  const op = m.clientes.mestre.ultimo('ROOM_OPTIONS');
+  const proposta = cartao.proposta?.destino;
+  const outra = op.mover.find((c) => !proposta || c.x !== proposta.x || c.y !== proposta.y);
+  exigirAplicada(m.mestre('MASTER_APPROVE', {
+    cartaoId: cartao.cartaoId, decisao: 'editar', edicao: { acao: { tipo: 'mover', destino: { x: outra.x, y: outra.y } } },
+  }), 'editar com uma acção das opções');
+  const f = pedirVista(m).mestre.figuras.find((x) => x.id === lobo);
+  assert.deepEqual({ x: f.x, y: f.y }, { x: outra.x, y: outra.y }, 'o lobo foi para a casa escolhida pelo Mestre');
+});
+
+// L6 (D4 do Plano A; I0004 08/11/2026): «Continuar a rodada» — as marchas puras seguem sem cartão até ao fim da rodada.
+test('L6: «Continuar a rodada» deixa as marchas puras do lobo seguir sem cartão nessa rodada; na rodada seguinte volta o cartão', () => {
+  // O lobo longe dela: numa vez só anda e encerra (duas marchas puras), sem chegar a atacar.
+  const m = montarMesa();
+  m.entrarTodos();
+  m.iniciarCombate([['lobo-teste', { x: 19, y: 19 }]]);
+  const lobo = m.clientes.heroina.idPorNome('Lobo');
+  exigirAplicada(m.mestre('MASTER_MODE', { figuraId: lobo, modo: 'semi' }));
+  exigirAplicada(m.intencao('heroina', { tipo: 'encerrar' }));
+  const cartao = m.clientes.mestre.ultimo('MASTER_CARD');
+  assert.equal(cartao?.tipo, 'ia');
+  assert.equal(cartao.proposta.tipo, 'mover', 'a primeira proposta é uma marcha pura');
+  const cartoesAntes = m.clientes.mestre.msgs.filter((x) => x.type === 'MASTER_CARD').length;
+  exigirAplicada(m.mestre('MASTER_APPROVE', { cartaoId: cartao.cartaoId, decisao: 'aprovar', rodada: true }), 'Continuar a rodada');
+  const v = pedirVista(m);
+  assert.equal(v.mestre.marchaLivreRodada, 1, 'a rodada 1 ficou livre para marchas');
+  assert.equal(m.clientes.mestre.msgs.filter((x) => x.type === 'MASTER_CARD').length, cartoesAntes, 'nenhum cartão novo nesta rodada');
+  assert.equal(v.vezId, m.clientes.heroina.figuraId, 'o lobo andou e encerrou sozinho: a vez voltou a ela');
+  const lf = v.mestre.figuras.find((f) => f.id === lobo);
+  assert.notDeepEqual({ x: lf.x, y: lf.y }, { x: 19, y: 19 }, 'o lobo andou');
+  // Rodada 2: a marcha pura volta a pedir cartão.
+  exigirAplicada(m.intencao('heroina', { tipo: 'encerrar' }));
+  const c2 = m.clientes.mestre.ultimo('MASTER_CARD');
+  assert.equal(pedirVista(m).rodada, 2);
+  assert.equal(c2.tipo, 'ia', 'na rodada 2 há cartão outra vez');
+  assert.notEqual(c2.cartaoId, cartao.cartaoId);
+});
+
+test('L6: «Continuar a rodada» só serve para aprovar uma marcha pura (com recusar, o servidor recusa)', () => {
+  const { m, cartao } = cartaoIA();
+  const r = m.mestre('MASTER_APPROVE', { cartaoId: cartao.cartaoId, decisao: 'recusar', rodada: true });
+  assert.ok(recibo(r)?.type === 'ROOM_REJECT' || recibo(r)?.estado === 'RECUSADA');
+  assert.equal(pedirVista(m).mestre.marchaLivreRodada, null);
+});
+
+// L9 (C-28; I0004 08/11/2026): o selo TESTE e as estatísticas só no papel Mestre.
+test('L9: selo TESTE só numa sala de teste; estatísticas contam ataques, dano e cartões; nada disto vai à Party', () => {
+  const normal = montarMesa();
+  normal.entrarTodos();
+  assert.equal(pedirVista(normal).selo, null, 'sem config.teste não há selo');
+  const m = montarMesa({ teste: true, comEspectador: true });
+  m.entrarTodos();
+  m.iniciarCombate([['orc-teste', { x: 2, y: 3 }]]);
+  const h = m.clientes.heroina;
+  const orc = h.idPorNome('Orc');
+  exigirAplicada(m.intencao('heroina', { tipo: 'atacar', alvoId: orc, arma: 'chicote-teste' }));
+  const v = pedirVista(m);
+  assert.equal(v.selo, 'TESTE');
+  assert.equal(v.estatisticas.ataques[h.figuraId], 1, 'um ataque dela');
+  assert.equal(v.estatisticas.danoCausado[h.figuraId], 1176, 'o dano que ela causou');
+  assert.equal(v.estatisticas.danoSofrido[orc], 1176, 'o dano que o orc sofreu');
+  for (const chave of ['heroina', 'espectador']) {
+    for (const msg of m.clientes[chave].msgs) {
+      assert.equal(msg.selo, undefined, `${chave} recebeu o selo`);
+      assert.equal(msg.estatisticas, undefined, `${chave} recebeu estatísticas`);
+    }
+  }
+});

@@ -20,6 +20,7 @@ const sala = criarSala({
   agora: () => Date.now(),
   config: {
     roomId: 'sala-e2e',
+    teste: true, // L9: sala de TESTE (o selo só o Mestre o vê)
     mapa: { largura: 20, altura: 20 },
     iniciativa: INICIATIVA,
     modoPadrao: 'manual', // o orc não joga sozinho: a corrida fica determinista

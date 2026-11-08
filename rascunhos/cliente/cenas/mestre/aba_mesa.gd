@@ -6,8 +6,10 @@ extends VBoxContainer
 ## - Marcar as que ficam «Na mesa» e «Guardar a mesa» (MASTER_LOBBY_SET), só no lobby.
 ## - «Começar a batalha» (MASTER_START), com segundo toque.
 ## - «Colocar»: escolher a ficha e depois a casa no tabuleiro (MASTER_PLACE, orientação «S», a do servidor
-##   por omissão). Uma de cada vez, à espera do recibo (L5: o lote por esquema fica para quando a série
-##   se mostrar lenta). A figura aparece à Party logo que é colocada: o texto avisa.
+##   por omissão). A figura aparece à Party logo que é colocada: o texto avisa.
+## - L5 (D5 do Plano A): «Montar esquema» junta casas (e fichas) numa lista sem mandar nada; «Colocar o
+##   esquema» manda-as EM SÉRIE, uma de cada vez, cada uma só depois do recibo da anterior (MASTER_PLACE).
+##   Se o servidor recusar uma, o esquema pára e o resto fica na lista. Não há mensagem de lote nova.
 
 const Textos := preload("res://cenas/mestre/textos_mestre.gd")
 
@@ -28,6 +30,15 @@ var _comecar: Button
 var _estado: Label
 var _lista_colocar: VBoxContainer
 var _parar: Button
+## L5: o esquema de colocação. Cada item: {fichaId, casa: Vector2i}.
+var esquema: Array = []
+var esquema_ligado := false
+var _em_serie := false
+var _id_serie := ""
+var _botao_esquema: Button
+var _esquema_info: Label
+var _colocar_esquema: Button
+var _limpar_esquema: Button
 
 
 func montar(m) -> void:
@@ -69,6 +80,24 @@ func montar(m) -> void:
 	_parar.visible = false
 	_parar.pressed.connect(parar)
 	add_child(_parar)
+	_botao_esquema = Button.new()
+	_botao_esquema.name = "MontarEsquema"
+	_botao_esquema.toggle_mode = true
+	_botao_esquema.text = Textos.MONTAR_ESQUEMA
+	_botao_esquema.toggled.connect(ligar_esquema)
+	add_child(_botao_esquema)
+	_esquema_info = Label.new()
+	_esquema_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	add_child(_esquema_info)
+	_colocar_esquema = Button.new()
+	_colocar_esquema.text = Textos.COLOCAR_ESQUEMA
+	_colocar_esquema.pressed.connect(colocar_esquema)
+	add_child(_colocar_esquema)
+	_limpar_esquema = Button.new()
+	_limpar_esquema.text = Textos.LIMPAR_ESQUEMA
+	_limpar_esquema.pressed.connect(limpar_esquema)
+	add_child(_limpar_esquema)
+	_desenhar_esquema()
 
 
 func procurar() -> void:
@@ -171,8 +200,84 @@ func escolher_colocar(ficha_id: String) -> void:
 func colocar(casa: Vector2i) -> bool:
 	if a_colocar == "":
 		return false
+	if esquema_ligado:
+		esquema.append({"fichaId": a_colocar, "casa": casa})
+		_desenhar_esquema()
+		return true
 	mestre.enviar("MASTER_PLACE", {"fichaId": a_colocar, "casa": {"x": casa.x, "y": casa.y}, "orientacao": "S"})
 	return true
+
+
+func ligar_esquema(sim: bool) -> void:
+	esquema_ligado = sim
+	_botao_esquema.set_pressed_no_signal(sim)
+	_desenhar_esquema()
+
+
+## L5: manda o esquema em série (um MASTER_PLACE de cada vez, à espera do recibo).
+func colocar_esquema() -> void:
+	if esquema.is_empty() or _em_serie:
+		return
+	_em_serie = true
+	_proximo_do_esquema()
+
+
+func limpar_esquema() -> void:
+	if _em_serie:
+		return
+	esquema.clear()
+	_desenhar_esquema()
+
+
+## Chamado pelo ecrã do Mestre a cada recibo de comando.
+func resposta(id: String, recusada: bool) -> void:
+	if not _em_serie or id != _id_serie:
+		return
+	_id_serie = ""
+	if recusada:
+		_em_serie = false
+		_estado.text = Textos.ESQUEMA_PAROU
+		_desenhar_esquema()
+		return
+	esquema.pop_front()
+	_proximo_do_esquema()
+
+
+func em_serie() -> bool:
+	return _em_serie
+
+
+func _proximo_do_esquema() -> void:
+	if esquema.is_empty():
+		_em_serie = false
+		_desenhar_esquema()
+		return
+	var item: Dictionary = esquema[0]
+	var casa: Vector2i = item["casa"]
+	_id_serie = mestre.enviar("MASTER_PLACE", {"fichaId": item["fichaId"], "casa": {"x": casa.x, "y": casa.y}, "orientacao": "S"})
+	if _id_serie == "":
+		_em_serie = false
+	_desenhar_esquema()
+
+
+func _desenhar_esquema() -> void:
+	if _esquema_info == null:
+		return
+	var linhas := PackedStringArray()
+	if esquema_ligado:
+		linhas.append(Textos.ESQUEMA_LIGADO)
+	if not esquema.is_empty():
+		linhas.append(Textos.ESQUEMA % esquema.size())
+	_esquema_info.text = "\n".join(linhas)
+	_colocar_esquema.visible = not esquema.is_empty()
+	_colocar_esquema.disabled = _em_serie
+	_limpar_esquema.visible = not esquema.is_empty()
+	_limpar_esquema.disabled = _em_serie
+	if mestre != null and (esquema_ligado or not esquema.is_empty()):
+		var casas: Array[Vector2i] = []
+		for item in esquema:
+			casas.append(item["casa"])
+		mestre.destacar(casas)
 
 
 func parar() -> void:

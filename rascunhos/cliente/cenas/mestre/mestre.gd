@@ -162,6 +162,7 @@ func aplicar_cartao(msg: Dictionary) -> void:
 	if not mesmo:
 		_armado = ""
 		_fechar_escolha()
+		_aba_agir.editar("")
 		if som_ligado:
 			_avisar_cartao()
 	_desenhar_cartao()
@@ -190,6 +191,7 @@ func _ao_evento(msg: Dictionary) -> void:
 			cartao = {}
 			_armado = ""
 			_fechar_escolha()
+			_aba_agir.editar("")
 			_desenhar_cartao()
 	_pedir_vista_em_breve()
 
@@ -202,6 +204,7 @@ func _ao_resposta(id: String, msg: Dictionary) -> void:
 	if recusada:
 		var texto := str(msg.get("texto", "")) if msg.get("texto") is String else str(msg.get("motivo", ""))
 		_juntar_alerta(Textos.ALERTA["recusa"] % texto)
+	_aba_mesa.resposta(id, recusada)  # L5: o esquema de colocação segue (ou pára) com cada recibo
 	_desenhar_cartao()
 	_pedir_vista_em_breve()
 
@@ -271,7 +274,12 @@ func tocar(acao: String) -> void:
 	if botao.is_empty() or botao.get("ligado") != true:
 		return
 	if acao == "escolher":
-		_abrir_escolha()
+		if str(cartao.get("tipo", "")) == "ia":
+			# L10: o servidor manda as opções da criatura com o cartão aberto; escolhe-se na aba Agir.
+			_aba_agir.editar(str(cartao.get("cartaoId", "")))
+			mostrar_aba(_aba_agir)
+		else:
+			_abrir_escolha()
 		return
 	if botao["duas_vezes"] and _armado != acao:
 		_armado = acao

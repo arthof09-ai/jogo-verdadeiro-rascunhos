@@ -131,7 +131,7 @@ jobs:
         run: |
           python3 -m pip install --quiet "jsonschema>=4.18"
           python3 ../protocolo/ferramentas/validar-mensagens.py "$RUNNER_TEMP/comandos-mestre.jsonl" --minimo 5
-          python3 ../protocolo/ferramentas/validar-mensagens.py "$RUNNER_TEMP/comandos-pecas.jsonl" --minimo 9
+          python3 ../protocolo/ferramentas/validar-mensagens.py "$RUNNER_TEMP/comandos-pecas.jsonl" --minimo 14
       - name: Ecrã do Mestre em ecrãs baixos (F5-MESTRE-01, 844×390 e 780×360)
         if: always()
         run: |

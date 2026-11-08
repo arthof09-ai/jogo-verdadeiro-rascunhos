@@ -5,8 +5,8 @@ extends VBoxContainer
 ## - As opções vêm do servidor (ROOM_OPTIONS ao lugar do Mestre na vez de uma criatura, quando não há
 ##   cartão aberto): o cliente não escolhe casas, custos nem alvos. Mover destaca as casas no tabuleiro;
 ##   tocar numa delas manda MASTER_ACT {mover}. Cada ataque e cada acção sem parâmetros é um botão.
-## - «Escolher outra» no cartão de IA continua desligado: enquanto um cartão está aberto o servidor não
-##   manda opções (sala.js opcoesDoLugar). O caminho é «Jogo eu» (a IA pára) e depois esta aba.
+## - L10: com o cartão de IA aberto, o servidor manda ao Mestre as opções da criatura; o «Escolher outra»
+##   do cartão abre esta aba em modo de troca, e a acção escolhida sai como MASTER_APPROVE editar {acao}.
 
 const Textos := preload("res://cenas/mestre/textos_mestre.gd")
 const Modelo := preload("res://cenas/mestre/modelo_mestre.gd")
@@ -15,6 +15,8 @@ const MODOS := ["manual", "semi", "auto"]
 ## O ecrã do Mestre (mestre.gd): enviar(tipo, campos), destacar(casas) e vista.
 var mestre
 var a_mover := false
+## L10: o cartão de IA cuja proposta se está a trocar ("" = jogar à mão com MASTER_ACT).
+var editar_cartao := ""
 
 var _vez := ""
 var _titulo: Label
@@ -80,6 +82,11 @@ func atualizar(_vista: Dictionary = {}) -> void:
 		parar_mover()
 		return
 	_info.text = ""
+	if editar_cartao != "":
+		_info.text = Textos.AGIR_EDITAR
+	var m = vista.get("mestre")
+	if m is Dictionary and m.get("marchaLivreRodada") != null and int(m.get("marchaLivreRodada")) == int(vista.get("rodada", -1)):
+		_info.text = (_info.text + "\n" if _info.text != "" else "") + Textos.AGIR_MARCHA_LIVRE
 	if op.get("mover") is Array and not op["mover"].is_empty():
 		_botao(Textos.MOVER, iniciar_mover)
 	for a in op.get("ataques", []):
@@ -133,7 +140,20 @@ func agir(acao: Dictionary) -> void:
 	if _vez == "":
 		return
 	parar_mover()
+	if editar_cartao != "":
+		# L10: «Escolher outra» no cartão de IA — a acção escolhida troca a proposta da criatura.
+		var id := editar_cartao
+		editar_cartao = ""
+		mestre.enviar("MASTER_APPROVE", {"cartaoId": id, "decisao": "editar", "edicao": {"acao": acao}})
+		return
 	mestre.enviar("MASTER_ACT", {"figuraId": _vez, "acao": acao})
+
+
+## L10: entra (id) ou sai ("") do modo de trocar a proposta de um cartão de IA.
+func editar(cartao_id: String) -> void:
+	editar_cartao = cartao_id
+	if mestre != null and mestre.vista is Dictionary:
+		atualizar()
 
 
 func parar_mover() -> void:

@@ -1,6 +1,6 @@
 extends VBoxContainer
 ## Aba «Registo» do ecrã do Mestre: o «Registo da batalha», o «Exportar registo» e o «Voltar até aqui»
-## (§12 do desenho JV3.1, I0004 08/11/2026). Os pontos vêm do servidor (MASTER_VIEW.pontos, L8): o cliente
+## (§12 do desenho JV3.1, I0004 08/11/2026), e as estatísticas da batalha (L9, C-28: só no papel Mestre). Os pontos vêm do servidor (MASTER_VIEW.pontos, L8): o cliente
 ## não inventa pontos nem calcula nada. Voltar pede dois passos: escolher o ponto e confirmar.
 
 const Textos := preload("res://cenas/mestre/textos_mestre.gd")
@@ -15,6 +15,7 @@ var _info: Label
 var _confirmar: VBoxContainer
 var _pergunta: Label
 var _lista: VBoxContainer
+var _estat: VBoxContainer
 
 
 func montar(m) -> void:
@@ -45,10 +46,19 @@ func montar(m) -> void:
 	_lista = VBoxContainer.new()
 	_lista.name = "Pontos"
 	add_child(_lista)
+	add_child(HSeparator.new())
+	_rotulo(Textos.ESTATISTICAS)
+	_estat = VBoxContainer.new()
+	_estat.name = "Estatisticas"
+	add_child(_estat)
 
 
 func atualizar(vista: Dictionary) -> void:
 	_info.text = Textos.JOURNAL % int(vista.get("journalSeq", 0))
+	for n in _estat.get_children():
+		n.queue_free()
+	for linha in Modelo.linhas_estatisticas(vista):
+		_rotulo_em(_estat, linha)
 	for n in _lista.get_children():
 		n.queue_free()
 	var pontos = vista.get("pontos")

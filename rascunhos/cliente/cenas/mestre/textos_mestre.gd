@@ -17,6 +17,9 @@ const SEM_DESGRACA := "Sem desgraça"
 const JOGO_EU := "Jogo eu"
 const ENCERRAR_A_VEZ := "Encerrar a vez"
 const CONTINUAR := "Continuar"
+## L6 (D4 do Plano A): numa proposta de marcha pura (andar ou encerrar), o Mestre deixa as marchas puras
+## desta rodada seguir sem cartão. Os ataques continuam a pedir cartão.
+const CONTINUAR_RODADA := "Continuar a rodada"
 const NAO_ACEITAR := "Não aceitar"
 const VOLTAR := "Voltar"
 ## Segundo toque (Escolher outra e Sem desgraça pedem confirmação).
@@ -75,6 +78,8 @@ const ABA_AGIR := "Agir"
 const AGIR_SEM_VEZ := "Nada para jogar: não é a vez de uma criatura."
 const AGIR_VEZ := "Vez de %s"
 const AGIR_MODO := "Modo:"
+const AGIR_EDITAR := "Escolher outra acção para a proposta da criatura (o cartão continua aberto até escolher)."
+const AGIR_MARCHA_LIVRE := "Marchas puras livres nesta rodada («Continuar a rodada»)."
 const AGIR_SEM_OPCOES := "As opções chegam do servidor quando a criatura está «À mão» (ou depois de «Jogo eu»)."
 const MOVER := "Mover"
 const MOVER_ESCOLHER := "Mover: escolher a casa no tabuleiro (%d casas)."
@@ -102,6 +107,23 @@ const PARAR_COLOCAR := "Parar de colocar"
 const RESULTADO := "%s · %s · %s"
 const SEM_RESULTADOS := "Sem resultados."
 const PAPEL_FICHA := {"criatura": "criatura", "npc": "NPC"}
+
+# ---------------------------------------------------------------- esquema de colocação (L5, D5)
+const MONTAR_ESQUEMA := "Montar esquema"
+const ESQUEMA_LIGADO := "Esquema: cada casa tocada junta-se à lista (nada vai ao servidor até «Colocar o esquema»)."
+const ESQUEMA := "Esquema: %d por colocar"
+const COLOCAR_ESQUEMA := "Colocar o esquema"
+const LIMPAR_ESQUEMA := "Limpar o esquema"
+const ESQUEMA_PAROU := "O esquema parou: o servidor não aceitou uma colocação."
+
+# ---------------------------------------------------------------- selo e estatísticas (L9, C-28)
+const SELO := "[%s] "
+const ESTATISTICAS := "Estatísticas (só o Mestre)"
+const ESTAT_FIGURA := "%s: %d ataque(s) · dano causado %s · sofrido %s"
+const ESTAT_CARTOES := "Cartões: %s"
+const ESTAT_SEM := "Ainda sem ataques nem cartões."
+const NOME_DECISAO := {"aprovar": "confirmados", "recusar": "recusados", "editar": "trocados", "aceitar": "dados aceites",
+	"revertido": "desfeitos pelo voltar"}
 
 # ---------------------------------------------------------------- «Voltar até aqui» (L8)
 const PONTO := "Rodada %d · vez de %s · %s"

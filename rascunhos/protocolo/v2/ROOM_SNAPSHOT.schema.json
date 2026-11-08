@@ -59,7 +59,8 @@
         "vez": { "type": ["object", "null"] },
         "ambiente": { "type": "object" },
         "cartoes": { "type": "array", "items": { "type": "object" } },
-        "pausa": { "type": ["object", "null"] }
+        "pausa": { "type": ["object", "null"] },
+        "marchaLivreRodada": { "type": ["integer", "null"], "description": "L6: a rodada em que o Mestre deu «Continuar a rodada» às marchas puras (null: nenhuma)." }
       },
       "additionalProperties": false
     },

@@ -13,6 +13,10 @@
     "revision": { "$ref": "comum.schema.json#/$defs/revision" },
     "cartaoId": { "type": "string", "minLength": 1, "maxLength": 64 },
     "decisao": { "enum": ["aprovar", "recusar", "editar"] },
+    "rodada": {
+      "type": "boolean",
+      "description": "L6 (D4 do Plano A; I0004 08/11): «Continuar a rodada». Só com decisao 'aprovar' num cartão de IA cuja proposta é uma marcha pura (mover ou encerrar): as marchas puras das criaturas em semi seguem sem cartão até ao fim desta rodada. Noutro caso o servidor recusa (acao_invalida)."
+    },
     "edicao": {
       "type": ["object", "null"],
       "properties": {

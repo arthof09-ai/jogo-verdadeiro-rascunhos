@@ -62,9 +62,19 @@
           "futuro": null
         },
         "cartoes": [],
-        "pausa": null
+        "pausa": null,
+        "marchaLivreRodada": null
       },
-      "pontos": []
+      "pontos": [],
+      "selo": null,
+      "estatisticas": {
+        "eventos": 0,
+        "rodada": 0,
+        "ataques": {},
+        "danoCausado": {},
+        "danoSofrido": {},
+        "cartoes": {}
+      }
     }
   }
 ]

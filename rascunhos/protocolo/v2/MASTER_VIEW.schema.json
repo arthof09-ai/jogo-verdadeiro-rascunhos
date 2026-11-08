@@ -53,7 +53,9 @@
         "rodada",
         "ambiente",
         "mestre",
-        "pontos"
+        "pontos",
+        "selo",
+        "estatisticas"
       ],
       "properties": {
         "v": {
@@ -105,7 +107,26 @@
           "type": "array",
           "maxItems": 50,
           "items": { "$ref": "#/$defs/ponto" }
-        }
+        },
+        "selo": {
+          "description": "L9 (C-28; I0004 08/11): 'TESTE' numa sala de teste (config.teste), senão null. Só o Mestre o vê.",
+          "enum": ["TESTE", null]
+        },
+        "estatisticas": { "$ref": "#/$defs/estatisticas" }
+      },
+      "additionalProperties": false
+    },
+    "estatisticas": {
+      "description": "L9 (C-28): estatísticas da batalha, só para o Mestre. Contam a história toda do journal (o «voltar» não apaga história). Mapas figuraId → número; `cartoes` é decisão → número.",
+      "type": "object",
+      "required": ["eventos", "rodada", "ataques", "danoCausado", "danoSofrido", "cartoes"],
+      "properties": {
+        "eventos": { "type": "integer", "minimum": 0 },
+        "rodada": { "type": "integer", "minimum": 0 },
+        "ataques": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+        "danoCausado": { "type": "object", "additionalProperties": { "type": "number", "minimum": 0 } },
+        "danoSofrido": { "type": "object", "additionalProperties": { "type": "number", "minimum": 0 } },
+        "cartoes": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } }
       },
       "additionalProperties": false
     },

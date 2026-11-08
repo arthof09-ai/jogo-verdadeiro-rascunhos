@@ -118,7 +118,13 @@ const TIPOS_MESTRE = Object.freeze([
 ]);
 const RE_ID = /^[A-Za-z0-9_-]{1,64}$/;
 // `cartoes` entra no checkpoint para o «voltar» repor os cartões do instante (rolagem por resolver incluída).
-const CHAVES_MUNDO = Object.freeze(['fase', 'mapa', 'lobby', 'figuras', 'ordem', 'vezIdx', 'rodada', 'vez', 'ambiente', 'desfecho', 'cartoes']);
+const CHAVES_MUNDO = Object.freeze(['fase', 'mapa', 'lobby', 'figuras', 'ordem', 'vezIdx', 'rodada', 'vez', 'ambiente', 'desfecho', 'cartoes', 'marchaLivre']);
+/**
+ * L6 (D4 do Plano A, desenho JV3.1; I0004 08/11): «marcha pura» = proposta da IA sem efeito de regra sobre ninguém
+ * (andar ou encerrar a vez). Com o «Continuar a rodada» do Mestre (MASTER_APPROVE {rodada:true}), as marchas puras
+ * das criaturas em semi seguem sem cartão até ao fim dessa rodada. Ataques e o resto continuam a pedir cartão.
+ */
+const MARCHA_PURA = Object.freeze(new Set(['mover', 'encerrar']));
 
 /** Recusa terminal de uma intenção (E-C5): fica gravada como recibo RECUSADA. */
 export class ErroRecusa extends Error {
@@ -254,6 +260,8 @@ export function criarSala({
   // L8 do desenho JV3.1 (I0004, 08/11): o resumo de cada ponto guardado, para o Mestre saber a que pontos
   // pode voltar. Vai SÓ na MASTER_VIEW (o lugar do Mestre), em `pontos`.
   const pontosInfo = new Map(); // journalSeq → {journalSeq, ts, fase, rodada, vezId, tipos}
+  // L9 (C-28): sala de TESTE (config.teste === true). O selo só aparece ao Mestre (MASTER_VIEW.selo).
+  const seloTeste = config.teste === true ? 'TESTE' : null;
   const fila = [];
   let drenando = false;
 
@@ -584,8 +592,15 @@ export function criarSala({
 
   /** Opções que este lugar recebe agora (ou null). Com cartão aberto, ninguém tem opções. */
   function opcoesDoLugar(m, s) {
-    if (m.fase !== 'combate' || !m.vez || cartaoAtivo(m)) return null;
+    if (m.fase !== 'combate' || !m.vez) return null;
     const vezFig = m.figuras[m.vez.figuraId];
+    const ativo = cartaoAtivo(m);
+    if (ativo) {
+      // L10 do desenho JV3.1 (I0004, 08/11): com o cartão de IA aberto, o Mestre recebe as opções da criatura
+      // da vez, para o «Escolher outra» (MASTER_APPROVE editar {acao}). Mais ninguém recebe opções com cartão aberto.
+      if (s.papel === 'mestre' && ativo.tipo === 'ia' && ativo.figuraId === vezFig.id) return calcularOpcoes(m, vezFig.id);
+      return null;
+    }
     if (s.papel === 'jogadora') return s.figuraId === vezFig.id ? calcularOpcoes(m, vezFig.id) : null;
     if (s.papel === 'mestre') return vezFig.lado !== 'jogadora' ? calcularOpcoes(m, vezFig.id) : null;
     return null;
@@ -622,6 +637,9 @@ export function criarSala({
     return {
       v: PROTOCOLO, type: 'MASTER_VIEW', roomId, journalSeq: journal.journalSeq, ...projetarSnapshot(m, fichas, destinatario(s)),
       pontos: pontosParaVoltar(),
+      // L9 (C-28; I0004 08/11): o selo TESTE e as estatísticas só existem no papel Mestre.
+      selo: seloTeste,
+      estatisticas: estatisticas(),
     };
   }
   function mensagemCartao(c) {
@@ -765,6 +783,23 @@ export function criarSala({
       checkpoints.delete(velho);
       pontosInfo.delete(velho);
     }
+  }
+  /**
+   * L9 (C-28): estatísticas da batalha, só para o Mestre. Contam a história TODA do journal (o «voltar» não
+   * apaga história), por figura: ataques feitos, dano causado e sofrido; e as decisões dos cartões.
+   */
+  function estatisticas() {
+    const e = { eventos: journal.journalSeq, rodada: journal.estado.rodada ?? 0, ataques: {}, danoCausado: {}, danoSofrido: {}, cartoes: {} };
+    const somar = (o, k, v) => { if (k) o[k] = (o[k] ?? 0) + v; };
+    for (const ev of journal.eventos()) {
+      if (ev.tipo === 'ataque') somar(e.ataques, ev.dados?.atacanteId, 1);
+      if (ev.tipo === 'dano') {
+        somar(e.danoCausado, ev.dados?.autorId, ev.dados?.valor ?? 0);
+        somar(e.danoSofrido, ev.dados?.alvoId, ev.dados?.valor ?? 0);
+      }
+      if (ev.tipo === 'cartao_fechado') somar(e.cartoes, ev.dados?.decisao, 1);
+    }
+    return e;
   }
   /** L8: os pontos a que o «voltar» aceita ir (journalSeq < actual e com checkpoint), do mais novo ao mais velho. */
   function pontosParaVoltar() {
@@ -1413,6 +1448,11 @@ export function criarSala({
       if (f.lado === 'jogadora' || f.modo === 'manual') break;
       if (f.modo === 'semi') {
         if (m.vez.iaPausada) break;
+        // L6: com o «Continuar a rodada» dado nesta rodada, a marcha pura segue sem cartão (como no auto).
+        if (m.marchaLivre === m.rodada && MARCHA_PURA.has(proporIA(m, f).acao?.tipo)) {
+          saidas.push(...passoIAAuto(f.id));
+          continue;
+        }
         saidas.push(...transacao((tx) => {
           const p = proporIA(tx.estado, tx.estado.figuras[f.id]);
           abrirCartao(tx, { tipo: 'ia', figuraId: f.id, proposta: p.acao, razao: p.razao, origem: null });
@@ -1585,6 +1625,7 @@ export function criarSala({
         return s(msg.figuraId) && acaoBemFormada(msg.acao);
       case 'MASTER_APPROVE':
         return s(msg.cartaoId) && ['aprovar', 'recusar', 'editar'].includes(msg.decisao)
+          && (msg.rodada === undefined || typeof msg.rodada === 'boolean')
           && (msg.edicao === undefined || msg.edicao === null || (typeof msg.edicao === 'object' && !Array.isArray(msg.edicao)));
       case 'MASTER_CONFIRM_DICE':
         return typeof msg.intentId === 'string' && RE_ID.test(msg.intentId) && typeof msg.aceitar === 'boolean';
@@ -1771,6 +1812,11 @@ export function criarSala({
       return 'APLICADA';
     }
     if (c.tipo === 'ia') {
+      if (msg.rodada === true) {
+        // L6: «Continuar a rodada» só para uma marcha pura aprovada tal como está.
+        if (decisao !== 'aprovar' || !MARCHA_PURA.has(c.proposta?.tipo)) throw new ErroRecusa('acao_invalida');
+        m.marchaLivre = m.rodada;
+      }
       fecharCartao(tx, c, decisao);
       if (decisao === 'recusar') {
         m.vez.iaPausada = true; // o Mestre joga esta vez à mão (MASTER_ACT)

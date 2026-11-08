@@ -27,13 +27,13 @@
       "v": 2,
       "type": "ROOM_EVENT",
       "roomId": "sala-teste",
-      "seq": 9,
-      "revision": 5,
-      "ts": "2026-11-06T20:00:06.750Z",
+      "seq": 5,
+      "revision": 3,
+      "ts": "2026-11-06T20:00:04.250Z",
       "tipo": "ataque",
       "dados": {
-        "atacanteId": "f1a88a9eef918a8b4",
-        "alvoId": "f1c8fc87e558f2d7e",
+        "atacanteId": "fa8c5ee39b55a53b8",
+        "alvoId": "fd13543ea504fd68e",
         "arma": "chicote-teste",
         "resultado": "acerto",
         "ataqueDeOportunidade": false
@@ -71,13 +71,13 @@
       "v": 2,
       "type": "ROOM_EVENT",
       "roomId": "sala-teste",
-      "seq": 10,
-      "revision": 5,
-      "ts": "2026-11-06T20:00:06.750Z",
+      "seq": 6,
+      "revision": 3,
+      "ts": "2026-11-06T20:00:04.250Z",
       "tipo": "dano",
       "dados": {
-        "alvoId": "f1c8fc87e558f2d7e",
-        "autorId": "f1a88a9eef918a8b4"
+        "alvoId": "fd13543ea504fd68e",
+        "autorId": "fa8c5ee39b55a53b8"
       }
     }
   },

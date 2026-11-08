@@ -148,6 +148,52 @@ func _correr() -> void:
 		rotulos.append(b.text)
 	_ok(rotulos.has(Textos.MOVER) and rotulos.has(Textos.NOME_ACAO["encerrar"]), "rótulos com as palavras da casa %s" % [rotulos])
 
+	print("== L10: «Escolher outra» no cartão de IA ==")
+	var ia_vez := {"v": 2, "type": "MASTER_CARD", "roomId": "sala-teste", "cartaoId": "c7", "tipo": "ia",
+		"figuraId": vista["vezId"], "proposta": {"tipo": "atacar", "alvoId": "x", "arma": "y"}, "razao": "teste",
+		"faces": null, "intentIdOrigem": null, "desgracas": null}
+	_rede._ao_receber(JSON.stringify(ia_vez))
+	await _quadros(1)
+	_ok(c._botoes[0].text == Textos.CONFIRMAR, "proposta de ataque: o primeiro botão é «Confirmar» (não é marcha pura)")
+	c._abas.current_tab = 0
+	c.tocar("escolher")
+	_ok(c._abas.get_tab_control(c._abas.current_tab) == c._aba_agir.get_parent() and c._aba_agir.editar_cartao == "c7",
+		"«Escolher outra» abre a aba Agir em modo de troca")
+	c._aba_agir.agir({"tipo": "encerrar"})
+	u = _ultimo()
+	_ok(u.get("type") == "MASTER_APPROVE" and u.get("cartaoId") == "c7" and u.get("decisao") == "editar"
+		and u.get("edicao", {}).get("acao", {}).get("tipo") == "encerrar", "a acção escolhida → MASTER_APPROVE editar {acao}")
+	_ok(c._aba_agir.editar_cartao == "", "depois de escolher, a aba sai do modo de troca")
+	_responder(c, u)
+	_rede._ao_receber(JSON.stringify({"v": 2, "type": "ROOM_EVENT", "roomId": "sala-teste", "seq": 9999, "revision": 999,
+		"ts": "2026-11-08T00:00:00Z", "tipo": "cartao_fechado", "dados": {"cartaoId": "c7", "decisao": "editar"}}))
+	await _quadros(1)
+
+	print("== L6: «Continuar a rodada» ==")
+	_rede._ao_receber(JSON.stringify(fx["mestre"]["cartoes"]["ia"]))
+	await _quadros(1)
+	_ok(c._botoes[0].text == Textos.CONTINUAR_RODADA, "marcha pura → «Continuar a rodada»")
+	c.tocar("continuar_rodada")
+	u = _ultimo()
+	_ok(u.get("type") == "MASTER_APPROVE" and u.get("decisao") == "aprovar" and u.get("rodada") == true, "→ MASTER_APPROVE aprovar {rodada: true}")
+	_responder(c, u)
+
+	print("== L9: selo TESTE e estatísticas ==")
+	var com_selo: Dictionary = vista.duplicate(true)
+	com_selo["selo"] = "TESTE"
+	com_selo["estatisticas"] = {"eventos": 9, "rodada": 1, "ataques": {vista["vezId"]: 2}, "danoCausado": {vista["vezId"]: 1176},
+		"danoSofrido": {}, "cartoes": {"aprovar": 1, "revertido": 1}}
+	c.aplicar_vista(com_selo)
+	await _quadros(1)
+	_ok(c._sala.text.begins_with("[TESTE] "), "o selo TESTE aparece no ecrã do Mestre")
+	var est: Array = []
+	for n in c._aba_registo._estat.get_children():
+		if not n.is_queued_for_deletion():
+			est.append(n.text)
+	_ok(est.size() == 2 and str(est[0]).contains("2 ataque(s)") and str(est[0]).contains("dano causado 1176")
+		and str(est[1]).contains("confirmados 1"), "as estatísticas por figura e por decisão %s" % [est])
+	c.aplicar_vista(vista)
+
 	print("== «Jogo eu» leva à aba Agir ==")
 	_rede._ao_receber(JSON.stringify(fx["mestre"]["cartoes"]["ia"]))
 	await _quadros(1)
@@ -195,6 +241,30 @@ func _correr() -> void:
 	_ok(u.get("type") == "MASTER_PLACE" and u.get("fichaId") == "orc-teste" and int(u["casa"]["x"]) == 5 and int(u["casa"]["y"]) == 6,
 		"casa no tabuleiro → MASTER_PLACE")
 	_responder(c, u)
+	print("== L5: esquema de colocação em série ==")
+	c._aba_mesa.ligar_esquema(true)
+	antes = _comandos.size()
+	c.casa_tocada(Vector2i(7, 7))
+	c.casa_tocada(Vector2i(8, 7))
+	_ok(_comandos.size() == antes and c._aba_mesa.esquema.size() == 2, "com o esquema ligado, as casas juntam-se sem mandar nada")
+	_ok(c._arena.casas_destacadas().size() == 2, "as casas do esquema ficam destacadas na arena")
+	c._aba_mesa.colocar_esquema()
+	u = _ultimo()
+	_ok(_comandos.size() == antes + 1 and int(u["casa"]["x"]) == 7, "«Colocar o esquema» manda só a primeira")
+	_responder(c, u)
+	u = _ultimo()
+	_ok(_comandos.size() == antes + 2 and int(u["casa"]["x"]) == 8, "o recibo da primeira manda a segunda")
+	_responder(c, u)
+	_ok(c._aba_mesa.esquema.is_empty() and not c._aba_mesa.em_serie(), "o esquema acabou")
+	c.casa_tocada(Vector2i(9, 7))
+	c.casa_tocada(Vector2i(10, 7))
+	c._aba_mesa.colocar_esquema()
+	u = _ultimo()
+	c._ao_resposta(str(u.get("cmdId", "")), {"type": "ROOM_REJECT", "motivo": "acao_invalida", "texto": "Essa acção não é possível."})
+	_ok(not c._aba_mesa.em_serie() and c._aba_mesa.esquema.size() == 2 and c._aba_mesa._estado.text == Textos.ESQUEMA_PAROU,
+		"uma recusa pára o esquema e o resto fica na lista")
+	c._aba_mesa.limpar_esquema()
+	c._aba_mesa.ligar_esquema(false)
 	c._aba_mesa.parar()
 	_ok(c._aba_mesa.a_colocar == "", "«Parar de colocar»")
 

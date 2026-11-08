@@ -102,6 +102,8 @@ static func linha_sala(vista: Dictionary) -> String:
 	if m is Dictionary and m.get("pausa") is Dictionary:
 		fase = "pausa"
 	var linha := str(Textos.FASE.get(fase, fase))
+	if vista.get("selo") is String and vista.get("selo") != "":
+		linha = Textos.SELO % vista["selo"] + linha  # L9: o selo TESTE, só no ecrã do Mestre
 	var vez := _texto(vista.get("vezId"))
 	if vez != "":
 		linha += "\n" + Textos.RODADA_VEZ % [int(vista.get("rodada", 0)), nome_mestre(figura(vista, vez))]
@@ -212,11 +214,14 @@ static func descrever_cartao(cartao: Dictionary, vista: Dictionary) -> Dictionar
 			var razao := _texto(cartao.get("razao"))
 			if razao != "":
 				linhas.append(Textos.RAZAO % razao)
-			# «Escolher outra» acção fica desligado: com um cartão aberto o servidor não manda opções
-			# (sala.js opcoesDoLugar). O caminho é «Jogo eu» e depois a aba Agir.
+			# L10: com o cartão de IA aberto o servidor manda ao Mestre as opções da criatura, por isso
+			# «Escolher outra» abre a aba Agir para escolher a acção (MASTER_APPROVE editar {acao}).
+			# L6: numa marcha pura o primeiro botão é «Continuar a rodada» (D4: um Continuar por rodada).
+			var primeiro := _botao(Textos.CONTINUAR_RODADA, "continuar_rodada", false) if marcha_pura(cartao.get("proposta")) \
+				else _botao(Textos.CONFIRMAR, "confirmar", false)
 			botoes = [
-				_botao(Textos.CONFIRMAR, "confirmar", false),
-				_botao(Textos.ESCOLHER_OUTRA, "escolher", false, false),
+				primeiro,
+				_botao(Textos.ESCOLHER_OUTRA, "escolher", false),
 				_botao(Textos.JOGO_EU, "jogo_eu", true),
 			]
 		"progresso":
@@ -252,12 +257,46 @@ static func descrever_acao(acao, vista: Dictionary) -> String:
 			return t
 
 
+## L6: a proposta é uma marcha pura (andar ou encerrar a vez)? Igual à lista do servidor (sala.js MARCHA_PURA).
+static func marcha_pura(proposta) -> bool:
+	return proposta is Dictionary and ["mover", "encerrar"].has(_texto(proposta.get("tipo")))
+
+
+## L9: as linhas das estatísticas (só o Mestre). Vazio se a vista não as traz.
+static func linhas_estatisticas(vista: Dictionary) -> Array[String]:
+	var saida: Array[String] = []
+	var e = vista.get("estatisticas")
+	if not (e is Dictionary):
+		return saida
+	var ids := {}
+	for k in ["ataques", "danoCausado", "danoSofrido"]:
+		if e.get(k) is Dictionary:
+			for id in e[k]:
+				ids[str(id)] = true
+	for id in ids:
+		var f := figura(vista, id)
+		var nome := nome_mestre(f) if not f.is_empty() else id
+		saida.append(Textos.ESTAT_FIGURA % [nome, int(e.get("ataques", {}).get(id, 0)),
+			_num_txt(e.get("danoCausado", {}).get(id, 0)), _num_txt(e.get("danoSofrido", {}).get(id, 0))])
+	var c = e.get("cartoes")
+	if c is Dictionary and not c.is_empty():
+		var partes := PackedStringArray()
+		for d in c:
+			partes.append("%s %d" % [str(Textos.NOME_DECISAO.get(str(d), str(d))), int(c[d])])
+		saida.append(Textos.ESTAT_CARTOES % ", ".join(partes))
+	if saida.is_empty():
+		saida.append(Textos.ESTAT_SEM)
+	return saida
+
+
 ## O comando que um botão do cartão monta: {tipo, campos}, ou {} se o botão não manda nada.
 static func comando(cartao: Dictionary, acao: String, escolha: String = "") -> Dictionary:
 	var id := _texto(cartao.get("cartaoId"))
 	match acao:
 		"confirmar", "encerrar":
 			return {"tipo": "MASTER_APPROVE", "campos": {"cartaoId": id, "decisao": "aprovar"}}
+		"continuar_rodada":
+			return {"tipo": "MASTER_APPROVE", "campos": {"cartaoId": id, "decisao": "aprovar", "rodada": true}}
 		"sem_desgraca", "jogo_eu", "continuar":
 			return {"tipo": "MASTER_APPROVE", "campos": {"cartaoId": id, "decisao": "recusar"}}
 		"escolha":
