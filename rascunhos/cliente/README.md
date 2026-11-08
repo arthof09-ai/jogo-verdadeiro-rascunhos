@@ -63,7 +63,7 @@ Os presets e o CI são da **JV2.1b (Muse)**. A referência é esta:
 
 ## O que falta
 
-1. **Primeira execução** e correção de erros de compilação. Nada foi rodado.
+1. ~~**Primeira execução** e correção de erros de compilação.~~ Feito no CI (08/11, ver abaixo). Falta a execução com servidor e o export.
 2. **A-1:** os nomes dos campos marcados `PROVISÓRIO` têm de ser conferidos contra o TEST34–36. São: `minhaFiguraId`, `figuraId` no WELCOME, `x`/`y` ou `casa`, `para`, `vezId`, `partes`/`tipoDano`, `vida`/`vidaMax`/`vidaFracao`, `mapa.largura`/`altura`/`casaM`, `nome` nas opções e `texto` na reação.
 3. **R0 (JV0.1):** falta o ângulo exato da Fixa (aceite ±2° e ±0,05), a forma de encerrar a vez e onde ficam Defender, Desvincular e Transformar, já que a barra só tem 3 botões.
 4. **JV2.2:** câmera dinâmica e retrato (M-33); medir os rostos com 24 px ou mais no Panorama.
@@ -72,3 +72,23 @@ Os presets e o CI são da **JV2.1b (Muse)**. A referência é esta:
 7. **Um servidor de teste** para o aceite "conecta e desenha o `ROOM_SNAPSHOT`".
 8. Os perfis gráficos segundo o `docs/orcamento-perfis.md` (Plano B, V1.1).
 9. O grep de regra do aceite (JV2.1a e JV2.4) tem de ser rodado no CI.
+
+## Conferência de 08/11/2026 (CM-000008-I0004)
+
+**Primeira execução real**, no CI do repositório (job `cliente`, Godot **4.7.2** oficial, sem janela):
+
+- `--import` limpo;
+- `testes/abrir_scripts.gd` (novo): os **11 scripts** do projeto compilam (o `gerar_rampas.gd` fica de fora: é um EditorScript, só existe no editor);
+- `testes/rodar_testes.gd`: **40/40**;
+- arranque da cena principal: a arena abre, vê que não há lugar e passa ao lobby; as duas imprimem `pronto`; zero `SCRIPT ERROR`.
+
+**Textos (regra 12 e REF_22):** «Recarregue a página.» passou a «Atualiza a página.» (palavra do Mestre), no lobby e no HUD. Os outros achados de «carregar» e «press» são nomes de código (`_carregar_preferencias`, `pressed`), não texto visível.
+
+**Achados, por resolver:**
+
+1. **Falta a cena do Mestre.** O lobby manda o Mestre para `res://cenas/mestre/mestre.tscn`, que não existe (já estava no ponto 6 acima). O Mestre não joga por este cliente.
+2. **A desgraça e o teste de morte não aparecem à jogadora.** O `estado.gd` ignora os eventos `desgraca` e `teste_morte`; ela só vê «Falha crítica!». Faltam as frases de cada desgraça, incluindo a da REF_19 («…e perde um quarto da vida que tem agora.», só quando vem `perdeQuarto`). As frases exactas estão no site vivo: pedi-las ao Muse.
+3. **Duas tabelas de perfis gráficos.** A arena tem o seu `_aplicar_perfil` (Baixo com escala 0,75) e não usa o `AplicadorPerfil` (Baixo com 0,5, sombras, contorno, folhagem). Tem de ficar uma só.
+4. **A Clareira de prova não tem cena.** O `clareira_prova.gd` compila, mas espera os nós `Ambiente`, `Sol`, `Camera`, `Perfis` e `Medicao/Rotulo`, e não há `.tscn`.
+5. `docs/orcamento-perfis.md`, citado pelos perfis, não está no repositório.
+6. **Registo da língua:** o cliente fala por «você» («Entre», «Escreva», «Espere», «Sua vez»); o site usa o imperativo de «tu» («aperta», «Atualiza»). Pergunta para o Mestre, pelo Muse.
