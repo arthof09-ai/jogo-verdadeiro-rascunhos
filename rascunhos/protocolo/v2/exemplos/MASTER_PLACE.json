@@ -9,9 +9,9 @@
       "type": "MASTER_PLACE",
       "cmdId": "cmd-3",
       "revision": 3,
-      "fichaId": "lobo-teste",
+      "fichaId": "orc-teste",
       "casa": {
-        "x": 10,
+        "x": 6,
         "y": 2
       }
     }

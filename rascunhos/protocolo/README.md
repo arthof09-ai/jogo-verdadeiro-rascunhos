@@ -83,7 +83,17 @@ Tráfego: 5.082 mensagens dos 57 testes do servidor (com os patches da 4.ª corr
 
 1. `ROOM_EVENT` e `comum` citam `../validar.mjs` (`conferirPropria()`) e `../DIVERGENCIAS.md`, que **não estão no repositório**. Se existirem no PC, falta a ponte; se não, a conferência acima faz o papel do `conferirPropria()`.
 2. O schema exige `intentId` UUID v4 (§3); o servidor aceita qualquer id opaco (`RE_ID`). O cliente tem de gerar UUID v4; o servidor fica tolerante.
-3. O bloco `mestre` do snapshot (`figuras`, `vez`, `lobby`, `cartoes`) só diz «objeto»: os campos internos não estão fixados.
+3. O bloco `mestre` do snapshot: `figuras` já está fixado (`#/$defs/figuraMestre`, ver abaixo); `vez`, `lobby` e `cartoes` ainda só dizem «objeto».
 4. `MASTER_CONFIRM_DICE` e `MASTER_EXPORT` não aparecem em nenhum teste: os schemas não foram conferidos contra tráfego real.
 5. Em `comum.schema.json`, os `$defs` `desgraca` e `tipoAcao` não são usados por nenhum schema.
 6. As erratas propostas D-xx não foram conferidas, uma a uma, contra a página JV0.4 nesta sessão.
+
+## Lacunas L1 e L2 do ecrã do Mestre (08/11/2026, CM-000008-I0004)
+
+Pedidas pela revisão do Muse (CM-000009) ao desenho JV3.1 (Notion: «JV3.1 — Ecrã do Mestre no cliente: desenho para revisão»).
+
+- **L1, vista do Mestre:** cada figura de `mestre.figuras` (no `MASTER_VIEW` e no snapshot do Mestre) traz agora, além do estado interno, `nome` (verdadeiro), `nomePublico`, `vidaTotal` e `paTotal`, tirados da ficha (`projecao.js`, `figuraDoMestre`). Schema: `ROOM_SNAPSHOT.schema.json#/$defs/figuraMestre`, com os campos obrigatórios. Nada disto vai à Party (canários em `servidor/testes/privacidade.test.mjs` e controlo positivo em `mestre-vista.test.mjs`).
+- **L2, cartão de desgraça:** o `MASTER_CARD` tem o campo obrigatório `desgracas`: a lista que o Mestre pode escolher no «Editar» (as 6 desgraças e «nenhuma»), e `null` nos outros tipos de cartão. O servidor recusa (`acao_invalida`) um `MASTER_APPROVE` com `edicao.desgraca` fora dessa lista, e o cartão fica aberto. O enum vive em `comum.schema.json#/$defs/desgracaEditavel`.
+  - **«nenhuma»:** é o que «Recusar» aplica hoje (PERGUNTA PARA O MESTRE 11).
+  - **«acerta-amigo»:** espera a PERGUNTA 12.
+- **Tráfego desta conferência:** 6.002 mensagens dos 64 testes do servidor, com zero falhas nas mensagens que saem. Os exemplos foram gerados outra vez a partir do tráfego.

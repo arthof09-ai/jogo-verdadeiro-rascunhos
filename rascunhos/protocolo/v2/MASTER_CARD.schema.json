@@ -14,7 +14,8 @@
     "proposta",
     "razao",
     "faces",
-    "intentIdOrigem"
+    "intentIdOrigem",
+    "desgracas"
   ],
   "properties": {
     "v": {
@@ -72,7 +73,21 @@
         "null"
       ],
       "description": "A intenção da jogadora que abriu o cartão (o recibo dela fica AGUARDANDO_MESTRE)."
+    },
+    "desgracas": {
+      "description": "L2 (JV3.1, revisão do Muse 08/11): só no cartão de desgraça, a lista que o Mestre pode escolher no «Editar» (MASTER_APPROVE edicao.desgraca). Nos outros tipos é null.",
+      "type": ["array", "null"],
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "comum.schema.json#/$defs/desgracaEditavel" }
     }
   },
+  "allOf": [
+    {
+      "if": { "properties": { "tipo": { "const": "desgraca" } } },
+      "then": { "properties": { "desgracas": { "type": "array" } } },
+      "else": { "properties": { "desgracas": { "type": "null" } } }
+    }
+  ],
   "additionalProperties": false
 }

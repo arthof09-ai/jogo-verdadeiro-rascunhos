@@ -1,19 +1,5 @@
 [
   {
-    "caso": "AGUARDANDO_MESTRE",
-    "sentido": "servidor → cliente",
-    "papel": "aliada",
-    "mensagem": {
-      "v": 2,
-      "type": "ROOM_RECEIPT",
-      "roomId": "sala-teste",
-      "intentId": "37f92c3b-2225-4205-933a-10a4f67f87e7",
-      "estado": "AGUARDANDO_MESTRE",
-      "seq": 11,
-      "revision": 7
-    }
-  },
-  {
     "caso": "DESCONHECIDA",
     "sentido": "servidor → cliente",
     "papel": "aliada",
@@ -23,6 +9,20 @@
       "roomId": "sala-teste",
       "intentId": "5b0c2c1e-9d7e-4a43-8f2a-1c6f0e2b9a11",
       "estado": "DESCONHECIDA"
+    }
+  },
+  {
+    "caso": "AGUARDANDO_MESTRE",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_RECEIPT",
+      "roomId": "sala-teste",
+      "intentId": "56234897-cab2-42a8-b6c7-07f1b0efbb0b",
+      "estado": "AGUARDANDO_MESTRE",
+      "seq": 4,
+      "revision": 4
     }
   },
   {

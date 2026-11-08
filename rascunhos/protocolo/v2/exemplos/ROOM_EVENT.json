@@ -246,12 +246,12 @@
       "v": 2,
       "type": "ROOM_EVENT",
       "roomId": "sala-teste",
-      "seq": 7,
-      "revision": 6,
-      "ts": "2026-11-06T20:00:04.000Z",
+      "seq": 8,
+      "revision": 7,
+      "ts": "2026-11-06T20:00:04.500Z",
       "tipo": "ataque",
       "dados": {
-        "atacanteId": "f0eca9c7df5e7493f",
+        "atacanteId": "f84d44cbfa536e9de",
         "alvoId": "fba2529d0fcfbedbf",
         "arma": "mordida-teste",
         "resultado": "acerto",
@@ -290,13 +290,13 @@
       "v": 2,
       "type": "ROOM_EVENT",
       "roomId": "sala-teste",
-      "seq": 8,
-      "revision": 6,
-      "ts": "2026-11-06T20:00:04.000Z",
+      "seq": 9,
+      "revision": 7,
+      "ts": "2026-11-06T20:00:04.500Z",
       "tipo": "dano",
       "dados": {
         "alvoId": "fba2529d0fcfbedbf",
-        "autorId": "f0eca9c7df5e7493f",
+        "autorId": "f84d44cbfa536e9de",
         "valor": 1176,
         "tipos": [
           "perfurante"
@@ -349,9 +349,9 @@
       "v": 2,
       "type": "ROOM_EVENT",
       "roomId": "sala-teste",
-      "seq": 9,
-      "revision": 6,
-      "ts": "2026-11-06T20:00:04.000Z",
+      "seq": 10,
+      "revision": 7,
+      "ts": "2026-11-06T20:00:04.500Z",
       "tipo": "estado",
       "dados": {
         "figuraId": "fba2529d0fcfbedbf",
@@ -387,52 +387,36 @@
       "v": 2,
       "type": "ROOM_EVENT",
       "roomId": "sala-teste",
-      "seq": 6,
-      "revision": 5,
-      "ts": "2026-11-06T20:00:03.750Z",
+      "seq": 7,
+      "revision": 6,
+      "ts": "2026-11-06T20:00:04.250Z",
       "tipo": "movimento",
       "dados": {
-        "figuraId": "f0eca9c7df5e7493f",
+        "figuraId": "f84d44cbfa536e9de",
         "de": {
-          "x": 10,
-          "y": 2
+          "x": 2,
+          "y": 6
         },
         "para": {
-          "x": 3,
-          "y": 2
+          "x": 2,
+          "y": 3
         },
         "caminho": [
           {
-            "x": 10,
-            "y": 2
+            "x": 2,
+            "y": 6
           },
           {
-            "x": 9,
-            "y": 2
+            "x": 2,
+            "y": 5
           },
           {
-            "x": 8,
-            "y": 2
+            "x": 2,
+            "y": 4
           },
           {
-            "x": 7,
-            "y": 2
-          },
-          {
-            "x": 6,
-            "y": 2
-          },
-          {
-            "x": 5,
-            "y": 2
-          },
-          {
-            "x": 4,
-            "y": 2
-          },
-          {
-            "x": 3,
-            "y": 2
+            "x": 2,
+            "y": 3
           }
         ]
       }
@@ -565,29 +549,29 @@
       "v": 2,
       "type": "ROOM_EVENT",
       "roomId": "sala-teste",
-      "seq": 10,
-      "revision": 7,
-      "ts": "2026-11-06T20:00:04.000Z",
+      "seq": 11,
+      "revision": 8,
+      "ts": "2026-11-06T20:00:04.500Z",
       "tipo": "ataque",
       "dados": {
-        "atacanteId": "f0eca9c7df5e7493f",
+        "atacanteId": "f84d44cbfa536e9de",
         "alvoId": "fba2529d0fcfbedbf",
         "arma": "mordida-teste",
         "resultado": "acerto",
         "ataqueDeOportunidade": false,
         "soMestre": {
-          "semente": 2228505791,
+          "semente": 2041556696,
           "verificacaoCritico": [
             3,
             3,
-            3
+            6
           ],
           "contexto": {
-            "semente": 2228505791,
+            "semente": 2041556696,
             "verificacaoCritico": [
               3,
               3,
-              3
+              6
             ],
             "modoDesgraca": "sorte",
             "niveisVantagem": 0,
@@ -597,15 +581,15 @@
             "atacanteCaido": false,
             "atacanteFraco": false
           },
-          "total": 17,
+          "total": 22,
           "faces": [
-            12
+            17
           ],
           "recibo": {
             "eventId": "pagina-1",
-            "total": 17,
+            "total": 22,
             "faces": [
-              12
+              17
             ],
             "defesa": 5551,
             "ca": 5551,
@@ -615,7 +599,7 @@
             },
             "bonusCD": null,
             "paTotal": 4040,
-            "semente": 2228505791,
+            "semente": 2041556696,
             "vidaDepois": 3974,
             "campoNovoDoMotor": 9137
           },
@@ -624,12 +608,12 @@
               "vidaActual": 3974
             }
           },
-          "totalEfectivo": 17,
+          "totalEfectivo": 22,
           "reacaoConsumida": null,
           "desgracaPendente": null,
           "contraAtaquePendente": null
         },
-        "journalSeq": 10
+        "journalSeq": 11
       }
     }
   },
@@ -723,19 +707,19 @@
       "v": 2,
       "type": "ROOM_EVENT",
       "roomId": "sala-teste",
-      "seq": 11,
-      "revision": 7,
-      "ts": "2026-11-06T20:00:04.000Z",
+      "seq": 12,
+      "revision": 8,
+      "ts": "2026-11-06T20:00:04.500Z",
       "tipo": "dano",
       "dados": {
         "alvoId": "fba2529d0fcfbedbf",
-        "autorId": "f0eca9c7df5e7493f",
+        "autorId": "f84d44cbfa536e9de",
         "valor": 1176,
         "tipos": [
           "perfurante"
         ],
         "soMestre": null,
-        "journalSeq": 11
+        "journalSeq": 12
       }
     }
   },
@@ -793,9 +777,9 @@
       "v": 2,
       "type": "ROOM_EVENT",
       "roomId": "sala-teste",
-      "seq": 12,
-      "revision": 7,
-      "ts": "2026-11-06T20:00:04.000Z",
+      "seq": 13,
+      "revision": 8,
+      "ts": "2026-11-06T20:00:04.500Z",
       "tipo": "estado",
       "dados": {
         "figuraId": "fba2529d0fcfbedbf",
@@ -807,7 +791,7 @@
         "armaQuebrada": false,
         "corpoPartido": false,
         "soMestre": null,
-        "journalSeq": 12
+        "journalSeq": 13
       }
     }
   },
@@ -838,24 +822,24 @@
       "v": 2,
       "type": "ROOM_EVENT",
       "roomId": "sala-teste",
-      "seq": 7,
-      "revision": 6,
-      "ts": "2026-11-06T20:00:03.750Z",
+      "seq": 8,
+      "revision": 7,
+      "ts": "2026-11-06T20:00:04.250Z",
       "tipo": "ia",
       "dados": {
-        "figuraId": "f0eca9c7df5e7493f",
+        "figuraId": "f84d44cbfa536e9de",
         "soMestre": {
           "intentId": "442546ce-8764-4344-a21c-d43b6af2b261",
           "acao": {
             "tipo": "mover",
             "destino": {
-              "x": 3,
-              "y": 2
+              "x": 2,
+              "y": 3
             }
           },
           "razao": "Aproxima-se da jogadora. [EXEMPLO-RAZAO-IA]"
         },
-        "journalSeq": 7
+        "journalSeq": 8
       }
     }
   },
@@ -915,58 +899,42 @@
       "v": 2,
       "type": "ROOM_EVENT",
       "roomId": "sala-teste",
-      "seq": 8,
-      "revision": 6,
-      "ts": "2026-11-06T20:00:03.750Z",
+      "seq": 9,
+      "revision": 7,
+      "ts": "2026-11-06T20:00:04.250Z",
       "tipo": "movimento",
       "dados": {
-        "figuraId": "f0eca9c7df5e7493f",
+        "figuraId": "f84d44cbfa536e9de",
         "de": {
-          "x": 10,
-          "y": 2
+          "x": 2,
+          "y": 6
         },
         "para": {
-          "x": 3,
-          "y": 2
+          "x": 2,
+          "y": 3
         },
         "caminho": [
           {
-            "x": 10,
-            "y": 2
+            "x": 2,
+            "y": 6
           },
           {
-            "x": 9,
-            "y": 2
+            "x": 2,
+            "y": 5
           },
           {
-            "x": 8,
-            "y": 2
+            "x": 2,
+            "y": 4
           },
           {
-            "x": 7,
-            "y": 2
-          },
-          {
-            "x": 6,
-            "y": 2
-          },
-          {
-            "x": 5,
-            "y": 2
-          },
-          {
-            "x": 4,
-            "y": 2
-          },
-          {
-            "x": 3,
-            "y": 2
+            "x": 2,
+            "y": 3
           }
         ],
-        "custoM": 10.5,
-        "reservaM": 1.5,
+        "custoM": 4.5,
+        "reservaM": 7.5,
         "soMestre": null,
-        "journalSeq": 8
+        "journalSeq": 9
       }
     }
   },

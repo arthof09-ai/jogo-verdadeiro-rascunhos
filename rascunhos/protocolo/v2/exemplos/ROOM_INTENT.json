@@ -69,8 +69,8 @@
       "v": 2,
       "roomId": "sala-teste",
       "type": "ROOM_INTENT",
-      "intentId": "24565f69-a243-4450-ba38-fac627d14870",
-      "revision": 3,
+      "intentId": "813c15e1-d3f5-41d2-b2f3-03b47b892769",
+      "revision": 4,
       "acao": {
         "tipo": "encerrar"
       }

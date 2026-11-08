@@ -9,14 +9,23 @@
       "roomId": "sala-teste",
       "cartaoId": "c1",
       "tipo": "desgraca",
-      "figuraId": "f0c1870b843e1465f",
+      "figuraId": "fba2529d0fcfbedbf",
       "proposta": {
         "tipo": "arma-cai",
         "texto": "EXEMPLO-DESGRACA"
       },
       "razao": null,
       "faces": null,
-      "intentIdOrigem": "37f92c3b-2225-4205-933a-10a4f67f87e7"
+      "intentIdOrigem": "56234897-cab2-42a8-b6c7-07f1b0efbb0b",
+      "desgracas": [
+        "cai",
+        "arma-cai",
+        "arma-quebra",
+        "acerta-se",
+        "quebra-corpo",
+        "acerta-amigo",
+        "nenhuma"
+      ]
     }
   },
   {
@@ -39,7 +48,8 @@
       },
       "razao": "Aproxima-se da jogadora. [EXEMPLO-RAZAO-IA]",
       "faces": null,
-      "intentIdOrigem": null
+      "intentIdOrigem": null,
+      "desgracas": null
     }
   }
 ]

@@ -124,6 +124,21 @@ export function figuraPublica(fig, fichas) {
 }
 
 /**
+ * Figura vista pelo Mestre (só no bloco `mestre`): o estado interno inteiro + o que a ficha diz e o ecrã
+ * precisa — nome verdadeiro, nome público, vida total e PA total (L1, JV3.1). Nunca vai à Party.
+ */
+export function figuraDoMestre(fig, fichas) {
+  const ficha = fichas[fig.fichaId];
+  return {
+    ...clonarJson(fig),
+    nome: ficha?.nome ?? null,
+    nomePublico: nomePublicoDe(ficha),
+    vidaTotal: ficha?.vidaTotal ?? null,
+    paTotal: ficha?.paTotal ?? null,
+  };
+}
+
+/**
  * Snapshot projetado (sem seq/revision; o núcleo junta-os ao enviar).
  * @param {Object} mundo estado da sala
  * @param {Object} fichas mapa id → ficha congelada
@@ -144,7 +159,9 @@ export function projetarSnapshot(mundo, fichas, dest) {
 
   if (dest.papel === 'mestre') {
     base.mestre = {
-      figuras: clonarJson(Object.values(mundo.figuras)), // inclui as não colocadas, fichaId e modo
+      // Inclui as não colocadas, fichaId e modo. L1 do desenho JV3.1 (revisão do Muse, 08/11): o ecrã do
+      // Mestre precisa dos totais e dos nomes para mostrar «12/20» e quem é quem — vêm da ficha, só aqui.
+      figuras: Object.values(mundo.figuras).map((f) => figuraDoMestre(f, fichas)),
       lobby: clonarJson(mundo.lobby),
       vez: clonarJson(mundo.vez),
       ambiente: clonarJson(mundo.ambiente),

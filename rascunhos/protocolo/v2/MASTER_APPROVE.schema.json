@@ -16,7 +16,7 @@
     "edicao": {
       "type": ["object", "null"],
       "properties": {
-        "desgraca": { "enum": ["cai", "arma-cai", "arma-quebra", "acerta-se", "quebra-corpo", "acerta-amigo", "nenhuma"] },
+        "desgraca": { "$ref": "comum.schema.json#/$defs/desgracaEditavel", "description": "Tem de estar na lista `desgracas` do MASTER_CARD (o servidor recusa com acao_invalida)." },
         "acao": { "$ref": "comum.schema.json#/$defs/acao" }
       },
       "additionalProperties": false

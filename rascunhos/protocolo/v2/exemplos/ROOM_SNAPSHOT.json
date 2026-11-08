@@ -152,7 +152,11 @@
             "transformada": false,
             "reacaoDisponivel": true,
             "defendendo": false,
-            "modo": null
+            "modo": null,
+            "nome": "Heroína Teste",
+            "nomePublico": "Heroína Teste",
+            "vidaTotal": 5150,
+            "paTotal": 4040
           }
         ],
         "lobby": null,

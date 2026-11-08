@@ -31,12 +31,30 @@
       },
       "additionalProperties": false
     },
+    "figuraMestre": {
+      "type": "object",
+      "description": "Figura no bloco do Mestre: o estado interno inteiro (posição, vida actual, PA gasto, estados, modo H10, fichaId, colocada) + nome verdadeiro, nome público e os totais da ficha (L1 do desenho JV3.1, revisão do Muse 08/11). Nunca vai à Party.",
+      "required": ["id", "fichaId", "lado", "colocada", "x", "y", "orientacao", "vidaActual", "vidaTotal", "paGasto", "paTotal", "estadoMorte", "modo", "nome", "nomePublico"],
+      "properties": {
+        "id": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "fichaId": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "lado": { "enum": ["jogadora", "criatura", "npc"] },
+        "colocada": { "type": "boolean" },
+        "vidaActual": { "type": "integer" },
+        "vidaTotal": { "type": ["integer", "null"], "minimum": 1 },
+        "paGasto": { "type": "integer", "minimum": 0 },
+        "paTotal": { "type": ["integer", "null"], "minimum": 0 },
+        "modo": { "enum": ["manual", "semi", "auto", null] },
+        "nome": { "type": ["string", "null"] },
+        "nomePublico": { "type": "string" }
+      }
+    },
     "mestre": {
       "type": "object",
       "description": "Só no snapshot do Mestre: figuras não colocadas, fichaId, modo H10, lobby, vez, painel do ambiente, cartões abertos, pausa.",
       "required": ["figuras", "lobby", "vez", "ambiente", "cartoes", "pausa"],
       "properties": {
-        "figuras": { "type": "array", "items": { "type": "object" } },
+        "figuras": { "type": "array", "items": { "$ref": "#/$defs/figuraMestre" } },
         "lobby": { "type": ["object", "null"] },
         "vez": { "type": ["object", "null"] },
         "ambiente": { "type": "object" },
