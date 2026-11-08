@@ -139,6 +139,12 @@ jobs:
           timeout 120 "$GODOT" --headless --path . -s res://testes/medir_mestre.gd 2>&1 | tee "$RUNNER_TEMP/medir_mestre.gd.log"
           # Um script que não compila não pode passar calado (o rodar_testes perdeu 27 testes assim no 3b0da14).
           ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/medir_mestre.gd.log"
+      - name: Acções da jogadora onde o site as tem (gavetas do Mover e do Ataque; Defender na ficha)
+        if: always()
+        run: |
+          set -o pipefail
+          timeout 120 "$GODOT" --headless --path . -s res://testes/hud_acoes.gd 2>&1 | tee "$RUNNER_TEMP/hud_acoes.gd.log"
+          ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/hud_acoes.gd.log"
       - name: Canário de privacidade no aparelho da jogadora (JV3.1 §7)
         if: always()
         run: |

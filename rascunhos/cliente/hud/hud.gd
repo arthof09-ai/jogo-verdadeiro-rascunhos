@@ -103,6 +103,25 @@ var _chk_pulso: CheckButton
 var _caixa_escolha: VBoxContainer
 var _titulo_escolha: Label
 
+# Gavetas do site (jogo.js renderAcoes, lido no site vivo a 08/11/2026): a barra de baixo continua só com
+# Ataque, Mover, Consumível (e Encerrar) — regra do Mestre. As outras acções vivem onde o site as tem:
+# - no modo Mover: «Sair c/ segurança» (Desvincular: uma intenção que se gasta na partida) e «Correr»;
+# - na gaveta do Ataque: «Transformação · N PA», com Confirmar;
+# - na ficha (o chip «FICHA ▸»), secção Reacção: «Declarar Defender».
+var _gaveta: HBoxContainer
+var _g_seguranca: Button
+var _g_correr: Button
+var _g_transformar: Button
+var _gaveta_de: int = 0  # Arena.Modo.NENHUM; o modo cuja gaveta está aberta
+var sair_com_seguranca := false  # a intenção do Desvincular, que a arena gasta na partida
+var _a_correr := false
+var _correr_pedido := false
+var _avisar_corrida := false
+var _b_ficha: Button
+var _painel_ficha: PanelContainer
+var _b_defender: Button
+var _texto_defender: Label
+
 
 func _ready() -> void:
 	_carregar_preferencias()
@@ -110,6 +129,8 @@ func _ready() -> void:
 	_montar_layout()
 	_montar_config()
 	_montar_escolha()
+	_montar_gaveta()
+	_montar_ficha()
 	_montar_tela_vermelha()
 	get_viewport().size_changed.connect(_ao_redimensionar)
 	_ao_redimensionar()
@@ -126,6 +147,7 @@ func _ready() -> void:
 	Rede.recusa_recebida.connect(_ao_recusa)
 	Rede.erro_recebido.connect(_ao_erro)
 	Estado.opcoes_mudaram.connect(_atualizar)
+	Estado.opcoes_mudaram.connect(_ao_opcoes_novas)
 	Estado.snapshot_aplicado.connect(_atualizar)
 	Estado.evento_aplicado.connect(_ao_evento)
 	Estado.pausa_mudou.connect(_ao_pausa)
@@ -343,6 +365,10 @@ func _ao_redimensionar() -> void:
 		(b as Button).custom_minimum_size = Vector2(_fonte * 7.5, _fonte * 2.8)
 	_painel_config.custom_minimum_size = Vector2(_fonte * 17.0, 0.0)
 	_painel_escolha.custom_minimum_size = Vector2(_fonte * 12.0, 0.0)
+	for b in [_g_seguranca, _g_correr, _g_transformar]:
+		(b as Button).custom_minimum_size = Vector2(_fonte * 9.0, _fonte * 2.8)
+	_b_ficha.custom_minimum_size = Vector2(_fonte * 6.0, _fonte * 2.4)
+	_painel_ficha.custom_minimum_size = Vector2(_fonte * 17.0, 0.0)
 	_aplicar_safe_area()
 	_reposicionar.call_deferred()
 
@@ -377,6 +403,12 @@ func _reposicionar() -> void:
 	_ancorar(_coluna, Control.PRESET_TOP_LEFT)
 	_ancorar(_barra, Control.PRESET_CENTER_BOTTOM)
 	_barra.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	# A gaveta fica logo acima da barra (a barra nunca muda de tamanho, como a faixa do site).
+	_ancorar(_gaveta, Control.PRESET_CENTER_BOTTOM)
+	_gaveta.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	var subir := _barra.get_combined_minimum_size().y + 14.0
+	_gaveta.offset_top -= subir
+	_gaveta.offset_bottom -= subir
 	_ancorar(_painel_escolha, Control.PRESET_CENTER)
 
 
@@ -405,13 +437,16 @@ func _atualizar() -> void:
 	var na_mesa: bool = Rede.na_mesa()
 	var livre: bool = na_mesa and not Estado.pausada and not Rede.ha_intencao_em_voo() and not Rede.aguardando_mestre()
 	# Q8 / site: com a arma no chão, o botão de ataque apanha-a (gasta o movimento desta vez).
-	_b_ataque.disabled = not livre or (Estado.lista_opcao("ataques").is_empty() and not Estado.tem_acao("apanhar_arma"))
+	_b_ataque.disabled = not livre or (Estado.lista_opcao("ataques").is_empty() and not Estado.tem_acao("apanhar_arma")
+		and not Estado.tem_acao("transformar"))
 	_b_mover.disabled = not livre or Estado.lista_opcao("mover").is_empty()
 	_b_consumivel.disabled = not livre or Estado.lista_opcao("consumiveis").is_empty()
 	# Encerrar só aparece quando a vez é dela e o servidor o pôs em `acoes`.
 	_b_encerrar.visible = Estado.e_minha_vez() and Estado.tem_acao("encerrar")
 	_b_encerrar.disabled = not livre
 	_barra.visible = na_mesa and Estado.fase == "combate"
+	_atualizar_gaveta(livre)
+	_atualizar_ficha(livre)
 	_faixa.text = _texto_faixa()
 	_ver_reacao(livre)
 
@@ -504,10 +539,13 @@ func _ao_botao(m: int) -> void:
 		# Como no site (jogo.js 2355): a arma caída apanha-se ao tocar no ataque; o ataque fica para depois.
 		_emitir_acao({"tipo": "apanhar_arma"})
 		return
-	if _modo_atual == m:
+	if _modo_atual == m or _gaveta_de == m:
+		_gaveta_de = Arena.Modo.NENHUM
 		modo_pedido.emit(Arena.Modo.NENHUM, {})
 	else:
+		_gaveta_de = m
 		modo_pedido.emit(m, {})
+	_atualizar()
 
 
 func _ao_botao_consumivel() -> void:
@@ -552,7 +590,156 @@ func _pedir_sair() -> void:
 
 
 func _emitir_acao(acao: Dictionary) -> void:
+	fechar_gaveta()
 	acao_pedida.emit(acao)
+
+
+# ---------------------------------------------------------------- gavetas e ficha (como no site)
+
+func _montar_gaveta() -> void:
+	_gaveta = HBoxContainer.new()
+	_gaveta.name = "Gaveta"
+	_gaveta.add_theme_constant_override("separation", 14)
+	_gaveta.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	$Raiz/Seguro/Camadas.add_child(_gaveta)
+	_g_seguranca = Button.new()
+	_g_seguranca.name = "SairComSeguranca"
+	_g_seguranca.pressed.connect(_ao_seguranca)
+	_g_correr = Button.new()
+	_g_correr.name = "Correr"
+	_g_correr.pressed.connect(_ao_correr)
+	_g_transformar = Button.new()
+	_g_transformar.name = "Transformacao"
+	_g_transformar.pressed.connect(_ao_transformar)
+	for b in [_g_seguranca, _g_correr, _g_transformar]:
+		_gaveta.add_child(b)
+	_gaveta.visible = false
+
+
+func _montar_ficha() -> void:
+	_b_ficha = Button.new()
+	_b_ficha.name = "BotaoFicha"
+	_b_ficha.text = "FICHA ▸"
+	_b_ficha.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	_b_ficha.pressed.connect(_alternar_ficha)
+	_coluna.add_child(_b_ficha)
+	_painel_ficha = PanelContainer.new()
+	_painel_ficha.name = "PainelFicha"
+	_painel_ficha.visible = false
+	var caixa := VBoxContainer.new()
+	caixa.add_theme_constant_override("separation", 10)
+	_painel_ficha.add_child(caixa)
+	var titulo := Label.new()
+	titulo.name = "TituloReacao"
+	titulo.text = "REACÇÃO"
+	caixa.add_child(titulo)
+	_b_defender = Button.new()
+	_b_defender.name = "DeclararDefender"
+	_b_defender.text = "Declarar Defender"
+	_b_defender.pressed.connect(_ao_defender)
+	caixa.add_child(_b_defender)
+	_texto_defender = Label.new()
+	_texto_defender.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	caixa.add_child(_texto_defender)
+	_coluna.add_child(_painel_ficha)
+
+
+## A arena chama isto quando manda uma intenção: a gaveta fecha, como no site.
+func fechar_gaveta() -> void:
+	_gaveta_de = Arena.Modo.NENHUM
+	if _gaveta != null:
+		_atualizar_gaveta(false)
+
+
+## A arena gastou a intenção «Sair c/ segurança» na partida.
+func consumir_seguranca() -> void:
+	sair_com_seguranca = false
+
+
+func _atualizar_gaveta(livre: bool) -> void:
+	var minha := Estado.e_minha_vez()
+	if not minha:
+		sair_com_seguranca = false
+		_a_correr = false
+	var no_mover := _gaveta_de == Arena.Modo.MOVER or _modo_atual == Arena.Modo.MOVER
+	var no_ataque := _gaveta_de == Arena.Modo.ATAQUE or _modo_atual == Arena.Modo.ATAQUE
+	# Sair c/ segurança: só quando o servidor o oferece (há inimigo ao lado) ou já está declarado.
+	_g_seguranca.visible = no_mover and (Estado.tem_acao("desvincular") or sair_com_seguranca)
+	_g_seguranca.text = "↩ Sair c/ segurança ✓" if sair_com_seguranca else "↩ Sair c/ segurança"
+	_g_seguranca.disabled = not livre
+	_g_correr.visible = no_mover and (Estado.tem_acao("correr") or _a_correr)
+	_g_correr.text = "» A correr ✓" if _a_correr else "» Correr"
+	_g_correr.disabled = not livre or _a_correr or not Estado.tem_acao("correr")
+	var custo := _custo_transformacao()
+	_g_transformar.visible = no_ataque and Estado.tem_acao("transformar")
+	_g_transformar.text = "✦ Transformação · %d PA" % custo if custo >= 0 else "✦ Transformação"
+	_g_transformar.disabled = not livre
+	_gaveta.visible = minha and (_g_seguranca.visible or _g_correr.visible or _g_transformar.visible)
+
+
+func _atualizar_ficha(livre: bool) -> void:
+	_b_ficha.visible = Rede.na_mesa() and Estado.fase == "combate"
+	if not _b_ficha.visible:
+		_painel_ficha.visible = false
+	var pode := Estado.tem_acao("defender")
+	_b_defender.visible = pode
+	_b_defender.disabled = not livre or not Estado.e_minha_vez()
+	# As frases do site (seccaoReacaoDefender), sem números: o valor da Defesa é do Mestre (config da sala).
+	_texto_defender.text = ("Declara-se na vez dela, ANTES de a atacarem. Vale para o próximo ataque que a atinja e gasta-se com ele."
+		if pode else "DEFENDER — não está disponível agora (já declarada ou já usada nesta ronda). A Reacção renova na próxima vez dela.")
+
+
+func _custo_transformacao() -> int:
+	var ficha = Estado.propria.get("ficha")
+	if ficha is Dictionary and ficha.get("transformacao") is Dictionary:
+		var c = ficha["transformacao"].get("custo")
+		if c is float or c is int:
+			return int(c)
+	return -1
+
+
+func _ao_seguranca() -> void:
+	# Como no site: é uma declaração do modo Mover; liga e desliga sem gastar nada até ela partir.
+	sair_com_seguranca = not sair_com_seguranca
+	_mostrar_aviso("Ao sair de junto de um inimigo, afastas-te com segurança — protege-te de todos os inimigos ao lado (gasta a acção principal ao sair)."
+		if sair_com_seguranca else "Sair com segurança desligado — ao afastares-te de um inimigo, ficas exposta ao golpe de oportunidade dele.")
+	_atualizar()
+
+
+func _ao_correr() -> void:
+	if not Estado.tem_acao("correr"):
+		return
+	_correr_pedido = true
+	acao_pedida.emit({"tipo": "correr"})
+
+
+func _ao_transformar() -> void:
+	var custo := _custo_transformacao()
+	var livre = Estado.propria.get("paLivre")
+	var texto := "Transformação"
+	if custo >= 0 and (livre is float or livre is int):
+		texto = "Transformação · custa %d PA dos %d livres — ficarias com %d de alma livre." % [custo, int(livre), int(livre) - custo]
+	escolher(texto, [["Confirmar", _emitir_acao.bind({"tipo": "transformar"})]])
+
+
+func _ao_defender() -> void:
+	_painel_ficha.visible = false
+	_emitir_acao({"tipo": "defender"})
+
+
+func _alternar_ficha() -> void:
+	_painel_config.visible = false
+	_painel_ficha.visible = not _painel_ficha.visible
+	_ancorar.call_deferred(_coluna, Control.PRESET_TOP_LEFT)
+	_atualizar()
+
+
+func _ao_opcoes_novas() -> void:
+	if _avisar_corrida and Estado.e_minha_vez():
+		_avisar_corrida = false
+		# A frase do site (jogo.js, acao 'correr'), em «tu»; e continua no modo Mover, como no site.
+		_mostrar_aviso("Corres — podes andar até %s m nesta vez (gastaste a acção principal)." % _metros(maxf(0.0, Estado.orcamento_m())))
+		modo_pedido.emit(Arena.Modo.MOVER, {})
 
 
 func _alternar_config() -> void:
@@ -652,6 +839,13 @@ func _cor_dano(tipo: String) -> Color:
 
 
 func _ao_recibo(_intent_id: String, estado: String, msg: Dictionary) -> void:
+	if _correr_pedido:
+		_correr_pedido = false
+		if estado == "APLICADA":
+			# Como no site: corre e continua no modo Mover, com o novo orçamento.
+			_a_correr = true
+			_gaveta_de = Arena.Modo.MOVER
+			_avisar_corrida = true  # a frase sai quando chegarem as opções novas (com o novo orçamento)
 	# RECUSADA por RECEIPT_QUERY ou por "voltar" do Mestre vem sem `texto` (sala.js tratarConsulta).
 	if msg.get("revertidaEm") != null:
 		_mostrar_aviso("A jogada foi desfeita pelo Mestre.")

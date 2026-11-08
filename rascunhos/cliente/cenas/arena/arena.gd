@@ -56,6 +56,7 @@ var _rotulo_custo: Label3D
 var _nos: Dictionary = {}  # figuraId -> Node3D
 var _focou := false
 var _saindo := false
+var _mover_depois: Dictionary = {}  # o movimento que segue o «Sair c/ segurança» aceite
 
 
 func _ready() -> void:
@@ -71,6 +72,7 @@ func _ready() -> void:
 	hud.preferencia_mudou.connect(_ao_preferencia)
 	hud.aplicar_preferencias_iniciais()
 	Rede.precisa_entrar.connect(_ao_precisa_entrar)
+	Rede.recibo_recebido.connect(_ao_recibo_seguranca)
 	Rede.iniciar()  # não faz nada se o lobby já ligou
 	# O snapshot pode ter chegado antes de a cena abrir (veio do lobby): desenha já.
 	if Estado.tem_snapshot:
@@ -253,6 +255,7 @@ func enviar_acao(acao: Dictionary) -> bool:
 	_alvos.clear()
 	_mostrar_destaques()
 	_atualizar_cursor()
+	hud.fechar_gaveta()
 	hud.ao_modo_mudou(modo)
 	return true
 
@@ -269,7 +272,17 @@ func _escolher_casa(c: Vector2i) -> void:
 	match modo:
 		Modo.MOVER:
 			if _casas.has(c):
-				enviar_acao({"tipo": "mover", "destino": {"x": c.x, "y": c.y}})
+				var destino := {"tipo": "mover", "destino": {"x": c.x, "y": c.y}}
+				if hud.sair_com_seguranca and Estado.tem_acao("desvincular"):
+					# Como no site: a intenção «Sair c/ segurança» gasta-se na partida. O servidor recebe primeiro
+					# o Desvincular e, aceite esse, o movimento (uma intenção de cada vez).
+					_mover_depois = destino
+					if enviar_acao({"tipo": "desvincular"}):
+						hud.consumir_seguranca()
+					else:
+						_mover_depois = {}
+				else:
+					enviar_acao(destino)
 		Modo.ATAQUE:
 			var fid: String = Estado.figura_na_casa(c)
 			if fid == "" or not _alvos.has(fid):
@@ -289,6 +302,16 @@ func _escolher_casa(c: Vector2i) -> void:
 				enviar_acao({"tipo": "consumivel", "itemId": _item.get("itemId"), "alvoId": fid})
 		_:
 			pass
+
+
+## O recibo do Desvincular: aceite, segue o movimento (com a revisão nova); recusado, o movimento não sai.
+func _ao_recibo_seguranca(_intent_id: String, estado: String, _msg: Dictionary) -> void:
+	if _mover_depois.is_empty():
+		return
+	var m := _mover_depois
+	_mover_depois = {}
+	if estado == "APLICADA":
+		(func(): enviar_acao(m)).call_deferred()
 
 
 func _enviar_ataque(o: Dictionary) -> void:
