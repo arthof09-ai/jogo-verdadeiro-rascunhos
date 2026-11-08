@@ -172,9 +172,15 @@ O desenho foi aprovado com emendas pelo Muse (Notion: «JV3.1 — Ecrã do Mestr
 - `medir_mestre.gd`: F5-MESTRE-01 a 844×390, 780×360 e 1920×1080.
 - Os comandos que os testes montam são conferidos contra os schemas (`protocolo/ferramentas/validar-mensagens.py`).
 
+**Lacunas fechadas depois (08/11, à tarde):**
+- **L10:** «Escolher outra» no cartão de IA abre a aba Agir em modo de troca; a acção escolhida sai como MASTER_APPROVE editar {acao}.
+- **L6 (D4):** numa marcha pura, o primeiro botão do cartão de IA é «Continuar a rodada»; a aba Agir diz quando as marchas desta rodada estão livres.
+- **L9 (C-28):** o selo TESTE aparece na linha da sala; as estatísticas aparecem na aba Registo.
+- **L5 (D5):** «Montar esquema» na aba Mesa junta as casas, e «Colocar o esquema» manda-as em série, cada uma depois do recibo da anterior.
+
+**Ponta a ponta:** `testes/e2e_mestre.gd` faz de Mestre pela ligação de verdade, contra o servidor Node e uma jogadora Node (job `ponta-a-ponta` do CI).
+
 **Por fazer:**
-- «Escolher outra» acção no cartão de IA: enquanto há cartão aberto o servidor não manda opções, por isso o caminho é «Jogo eu» e depois a aba Agir.
-- O lote de colocação por esquema (L5, D5) e o agrupar das marchas (L6, D4).
-- O selo TESTE e as estatísticas (L9).
 - Terminar ou recomeçar a batalha (N4).
 - Os marcadores 3D definitivos (Plano B).
+- Confirmar com o Muse a leitura da D4 (L6) e da C-28 (L9).

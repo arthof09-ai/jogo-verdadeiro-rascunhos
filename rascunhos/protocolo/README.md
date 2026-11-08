@@ -107,3 +107,17 @@ Pedidas pela revisão do Muse (CM-000009) ao desenho JV3.1 (Notion: «JV3.1 — 
   - O ponto inicial tem `tipos: ["inicio"]` e `ts: null`.
 - **Privacidade:** só o lugar do Mestre recebe os pontos. O teste `servidor/testes/mestre-vista.test.mjs` confere que nenhuma mensagem da Party os leva.
 - **Limite conhecido:** os pontos vivem em memória, como os checkpoints. Depois de a sala acordar de um journal guardado, só há pontos a partir daí (é o mesmo TODO(JV1.x) dos checkpoints).
+
+## Lacunas L10, L6 e L9 do ecrã do Mestre (08/11/2026, CM-000008-I0004)
+
+- **L10:** com um cartão de IA aberto, o lugar do Mestre recebe o `ROOM_OPTIONS` da criatura da vez. Mais ninguém recebe opções com um cartão aberto. É o que deixa o «Escolher outra» acção mandar `MASTER_APPROVE` com `decisao: 'editar'` e `edicao: {acao}`.
+- **L6 (D4 do Plano A):** o `MASTER_APPROVE` aceita `rodada: true`, o «Continuar a rodada».
+  - Só vale com `decisao: 'aprovar'` num cartão de IA cuja proposta é uma marcha pura (`mover` ou `encerrar`); noutro caso dá `acao_invalida`.
+  - A partir daí, as marchas puras das criaturas em semi seguem sem cartão até ao fim dessa rodada. Os ataques continuam a pedir cartão.
+  - O bloco `mestre` do snapshot traz `marchaLivreRodada`.
+  - **Leitura minha da D4, por confirmar pelo Muse:** «um Continuar por rodada» = aprovar a primeira marcha pura com «Continuar a rodada».
+- **L9 (C-28):** a `MASTER_VIEW` traz `selo` (`'TESTE'` quando a sala é de teste, `config.teste`; senão `null`) e `estatisticas`.
+  - As estatísticas são, por figura, os ataques e o dano causado e sofrido, e as decisões dos cartões.
+  - Contam a história toda do journal: o «voltar» não a apaga.
+  - Só o Mestre recebe o selo e as estatísticas.
+  - **Leitura minha da C-28, por confirmar pelo Muse.**

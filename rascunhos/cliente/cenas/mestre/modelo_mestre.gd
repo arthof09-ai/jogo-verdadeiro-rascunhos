@@ -217,7 +217,7 @@ static func descrever_cartao(cartao: Dictionary, vista: Dictionary) -> Dictionar
 			# L10: com o cartão de IA aberto o servidor manda ao Mestre as opções da criatura, por isso
 			# «Escolher outra» abre a aba Agir para escolher a acção (MASTER_APPROVE editar {acao}).
 			# L6: numa marcha pura o primeiro botão é «Continuar a rodada» (D4: um Continuar por rodada).
-			var primeiro := _botao(Textos.CONTINUAR_RODADA, "continuar_rodada", false) if marcha_pura(cartao.get("proposta")) \
+			var primeiro: Dictionary = _botao(Textos.CONTINUAR_RODADA, "continuar_rodada", false) if marcha_pura(cartao.get("proposta")) \
 				else _botao(Textos.CONFIRMAR, "confirmar", false)
 			botoes = [
 				primeiro,
@@ -275,7 +275,7 @@ static func linhas_estatisticas(vista: Dictionary) -> Array[String]:
 				ids[str(id)] = true
 	for id in ids:
 		var f := figura(vista, id)
-		var nome := nome_mestre(f) if not f.is_empty() else id
+		var nome: String = nome_mestre(f) if not f.is_empty() else str(id)
 		saida.append(Textos.ESTAT_FIGURA % [nome, int(e.get("ataques", {}).get(id, 0)),
 			_num_txt(e.get("danoCausado", {}).get(id, 0)), _num_txt(e.get("danoSofrido", {}).get(id, 0))])
 	var c = e.get("cartoes")
