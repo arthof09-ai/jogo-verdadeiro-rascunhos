@@ -50,7 +50,7 @@ function levarHeroinaAMorrer(desfecho) {
   return { m, h, testes };
 }
 
-test('morte: a heroína a 0 de Vida não sai da ordem e a vez dela é um teste de morte', () => {
+test('morte: a heroína a 0 de Vida não sai da ordem, a vez dela é um teste de morte e estabilizar acaba a batalha (como no site)', () => {
   const { m, h, testes } = levarHeroinaAMorrer('estabilizado');
   const est = m.sala.depuracao.estado();
   const her = Object.values(est.figuras).find((f) => f.fichaId === 'heroina-teste' || f.id === h.figuraId);
@@ -62,22 +62,14 @@ test('morte: a heroína a 0 de Vida não sai da ordem e a vez dela é um teste d
   assert.equal(her.estadoMorte?.fase, 'estabilizado', 'a saída real (estadoMorte no topo) foi aplicada');
   assert.equal(her.vivo, true, 'estabilizada continua viva');
   assert.ok(h.eventos('teste_morte').length >= 1, 'a jogadora vê que houve teste de morte');
-  assert.equal(est.vez?.figuraId, her.id, 'a vez é dela');
-
-  // Na vez do teste não há ataque; só encerrar.
-  const r = recibo(m.intencao('heroina', { tipo: 'atacar', alvoId: h.idPorNome('Orc'), arma: 'chicote-teste' }));
-  assert.equal(r?.type, 'ROOM_REJECT', 'a moribunda não ataca');
-  exigirAplicada(m.intencao('heroina', { tipo: 'encerrar' }), 'encerrar 2');
-
-  // Estabilizada: na vez seguinte não há novo teste (VLAB real recusa o teste em 'estabilizado').
-  const vezDela = () => m.sala.depuracao.estado().vez?.figuraId === her.id;
-  for (let i = 0; i < 6 && !vezDela(); i++) {
-    if (m.sala.depuracao.estado().fase !== 'combate') break;
-    const c = m.clientes.mestre.ultimo('MASTER_CARD');
-    if (c && m.sala.depuracao.estado().cartoes.some((x) => x.cartaoId === c.cartaoId && x.estado === 'aberto')) {
-      m.mestre('MASTER_APPROVE', { cartaoId: c.cartaoId, decisao: 'aprovar' });
-    } else break;
-  }
+  // Regra-mãe do Mestre (08/11): como no site, estabilizar ACABA a batalha (desfecho 'estabilizada').
+  assert.equal(est.fase, 'fim', 'estabilizada: a batalha acaba, como no site');
+  assert.equal(est.desfecho, 'estabilizada');
+  const fim = h.eventos('fim');
+  assert.equal(fim.length, 1, 'a jogadora recebe o fim uma vez');
+  assert.equal(fim[0].dados?.desfecho, 'estabilizada');
+  const r = recibo(m.intencao('heroina', { tipo: 'encerrar' }));
+  assert.equal(r?.type, 'ROOM_REJECT', 'depois do fim não há vez');
   assert.equal(testes.length, 1, 'estabilizada não volta a fazer teste de morte');
 
   // Privacidade: a CD é só do Mestre.

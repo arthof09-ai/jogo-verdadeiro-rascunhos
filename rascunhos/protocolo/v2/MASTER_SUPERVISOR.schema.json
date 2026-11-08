@@ -2,21 +2,87 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "MASTER_SUPERVISOR.schema.json",
   "title": "MASTER_SUPERVISOR (Mestre → servidor)",
-  "description": "§5 + E-C2/E-C3/E-C6 + E-P13. 'voltar' cria um evento `revertido` com revisão nova (o journal nunca apaga história) e leva cmdId + revision; `ateSeq` é o journalSeq do Mestre (errata proposta D-23). 'exportar' é isento de revision e responde MASTER_EXPORT (só o lugar do Mestre, MESTRE-ONLY).",
+  "description": "§5 + E-C2/E-C3/E-C6 + E-P13. 'voltar' cria um evento `revertido` com revisão nova (o journal nunca apaga história) e leva cmdId + revision; `ateSeq` é o journalSeq do Mestre (errata proposta D-23). 'exportar' é isento de revision e responde MASTER_EXPORT (só o lugar do Mestre, MESTRE-ONLY). N4 (palavra do Mestre, 08/11): 'terminar' (a batalha termina a meio, desfecho 'terminada'; só em combate) e 'recomecar' (a mesma batalha do zero; em combate ou no fim), como no site (terminarBatalha, M-014); levam cmdId + revision e são aceites com um cartão aberto (fecham-no).",
   "type": "object",
-  "required": ["v", "type", "roomId", "op"],
+  "required": [
+    "v",
+    "type",
+    "roomId",
+    "op"
+  ],
   "properties": {
-    "v": { "$ref": "comum.schema.json#/$defs/v" },
-    "type": { "const": "MASTER_SUPERVISOR" },
-    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
-    "cmdId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
-    "revision": { "$ref": "comum.schema.json#/$defs/revision" },
-    "op": { "enum": ["voltar", "exportar"] },
-    "ateSeq": { "type": "integer", "minimum": 0 }
+    "v": {
+      "$ref": "comum.schema.json#/$defs/v"
+    },
+    "type": {
+      "const": "MASTER_SUPERVISOR"
+    },
+    "roomId": {
+      "$ref": "comum.schema.json#/$defs/roomId"
+    },
+    "cmdId": {
+      "$ref": "comum.schema.json#/$defs/idOpaco"
+    },
+    "revision": {
+      "$ref": "comum.schema.json#/$defs/revision"
+    },
+    "op": {
+      "enum": [
+        "voltar",
+        "exportar",
+        "terminar",
+        "recomecar"
+      ]
+    },
+    "ateSeq": {
+      "type": "integer",
+      "minimum": 0
+    }
   },
   "additionalProperties": false,
   "oneOf": [
-    { "properties": { "op": { "const": "voltar" } }, "required": ["cmdId", "revision", "ateSeq"] },
-    { "properties": { "op": { "const": "exportar" } }, "not": { "required": ["ateSeq"] } }
+    {
+      "properties": {
+        "op": {
+          "const": "voltar"
+        }
+      },
+      "required": [
+        "cmdId",
+        "revision",
+        "ateSeq"
+      ]
+    },
+    {
+      "properties": {
+        "op": {
+          "const": "exportar"
+        }
+      },
+      "not": {
+        "required": [
+          "ateSeq"
+        ]
+      }
+    },
+    {
+      "properties": {
+        "op": {
+          "enum": [
+            "terminar",
+            "recomecar"
+          ]
+        }
+      },
+      "required": [
+        "cmdId",
+        "revision"
+      ],
+      "not": {
+        "required": [
+          "ateSeq"
+        ]
+      }
+    }
   ]
 }

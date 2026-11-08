@@ -308,6 +308,8 @@ func _frase_fim(d: String) -> void:
 	var nome := nome_de(minha_figura_id)
 	if d == "vitoria":
 		frase_batalha.emit(Frases.fim_vitoria(nome))
+	elif d == "terminada":
+		frase_batalha.emit(Frases.fim_terminada())  # N4: o Mestre terminou a batalha (a todos)
 	elif minha_figura_id == "":
 		return
 	elif d == "morte":

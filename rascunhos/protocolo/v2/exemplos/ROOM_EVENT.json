@@ -137,6 +137,23 @@
     }
   },
   {
+    "caso": "fim · espectador",
+    "sentido": "servidor → cliente",
+    "papel": "espectador",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 6,
+      "revision": 5,
+      "ts": "2026-11-06T20:00:04.750Z",
+      "tipo": "fim",
+      "dados": {
+        "desfecho": "terminada"
+      }
+    }
+  },
+  {
     "caso": "movimento · espectador",
     "sentido": "servidor → cliente",
     "papel": "espectador",
@@ -197,6 +214,21 @@
           }
         ]
       }
+    }
+  },
+  {
+    "caso": "recomeco · espectador",
+    "sentido": "servidor → cliente",
+    "papel": "espectador",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 8,
+      "revision": 4,
+      "ts": "2026-11-06T20:00:05.750Z",
+      "tipo": "recomeco",
+      "dados": {}
     }
   },
   {
@@ -375,7 +407,7 @@
       "ts": "2026-11-06T20:00:04.000Z",
       "tipo": "fim",
       "dados": {
-        "desfecho": "morte"
+        "desfecho": "estabilizada"
       }
     }
   },
@@ -420,6 +452,21 @@
           }
         ]
       }
+    }
+  },
+  {
+    "caso": "recomeco · jogadora",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 8,
+      "revision": 6,
+      "ts": "2026-11-06T20:00:05.750Z",
+      "tipo": "recomeco",
+      "dados": {}
     }
   },
   {
@@ -827,7 +874,7 @@
       "ts": "2026-11-06T20:00:04.000Z",
       "tipo": "fim",
       "dados": {
-        "desfecho": "morte",
+        "desfecho": "estabilizada",
         "soMestre": null,
         "journalSeq": 15
       }
@@ -975,6 +1022,24 @@
           "origem": "desconexao"
         },
         "journalSeq": 6
+      }
+    }
+  },
+  {
+    "caso": "recomeco · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 10,
+      "revision": 8,
+      "ts": "2026-11-06T20:00:05.750Z",
+      "tipo": "recomeco",
+      "dados": {
+        "soMestre": null,
+        "journalSeq": 10
       }
     }
   },

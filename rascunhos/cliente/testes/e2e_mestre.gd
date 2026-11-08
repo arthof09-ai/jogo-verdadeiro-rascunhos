@@ -111,6 +111,17 @@ func _correr() -> void:
 	_m._aba_registo.confirmar()
 	await _esperar(func(): return _eventos.has("revertido"), "«Voltar até aqui» → o servidor voltou (evento revertido)")
 
+	print("== terminar e recomeçar (N4) ==")
+	_m.pedir_terminar()
+	_m.pedir_terminar()
+	if not (await _esperar(func(): return str(_m.vista.get("fase", "")) == "fim" and _eventos.has("fim"), "«Terminar batalha» → a batalha acabou")):
+		_fim()
+		return
+	_m.pedir_recomecar()
+	_m.pedir_recomecar()
+	await _esperar(func(): return str(_m.vista.get("fase", "")) == "combate" and int(_m.vista.get("rodada", 0)) == 1
+		and _eventos.has("recomeco"), "«Recomeçar» → a mesma batalha do zero (combate, rodada 1)")
+
 	var recusas: Array = _m.alertas.filter(func(t): return str(t).begins_with("O servidor não aceitou"))
 	_ok(recusas.is_empty(), "nenhum comando do Mestre foi recusado %s" % [recusas])
 	_fim()

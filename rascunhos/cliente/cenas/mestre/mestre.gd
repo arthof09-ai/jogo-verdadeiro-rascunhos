@@ -8,7 +8,8 @@ extends Control
 ##   844×390 e a 780×360, com letra de 13 px reais ou mais (testes/medir_mestre.gd).
 ## - Nada se decide por tempo: os botões só mandam comandos quando o Mestre toca neles.
 ## - Palavras: cenas/mestre/textos_mestre.gd (as do site e a regra da casa; emenda 1).
-## - Terminar/recomeçar a batalha: TODO(N4-TERMINAR) em textos_mestre.gd (emenda 3; não se inventa).
+## - «Terminar batalha» e «Recomeçar» (N4, palavra do Mestre de 08/11, como no site): aba Sala, com segundo toque;
+##   MASTER_SUPERVISOR terminar/recomecar.
 ## - §12 do desenho: arena 3D, aba Mesa (lobby e colocar), «Voltar até aqui» (L8) e aba Agir (jogar a
 ##   criatura à mão). «Escolher outra» no cartão de IA fica desligado (ver aba_agir.gd).
 
@@ -78,6 +79,10 @@ var _abas: TabContainer
 var _lista_figuras: VBoxContainer
 var _lista_ambiente: VBoxContainer
 var _pausar: Button
+var _terminar: Button
+var _recomecar: Button
+## N4: o botão de fim à espera do segundo toque ("terminar", "recomecar" ou "").
+var armado_fim := ""
 var _continuar: Button
 var _atualizar: Button
 var _som: Button
@@ -143,6 +148,43 @@ func _pedir_vista_em_breve() -> void:
 
 # ---------------------------------------------------------------- entrada
 
+## N4: «Terminar batalha» (só em combate), com segundo toque «Sim, terminar», como no site.
+func pedir_terminar() -> void:
+	if str(vista.get("fase", "")) != "combate":
+		return
+	if armado_fim != "terminar":
+		armado_fim = "terminar"
+		_desenhar_fim()
+		return
+	armado_fim = ""
+	_enviar("MASTER_SUPERVISOR", {"op": "terminar"})
+	_desenhar_fim()
+
+
+## N4: «Recomeçar» (a mesma batalha do zero; em combate ou depois do fim), com segundo toque.
+func pedir_recomecar() -> void:
+	var fase := str(vista.get("fase", ""))
+	if fase != "combate" and fase != "fim":
+		return
+	if armado_fim != "recomecar":
+		armado_fim = "recomecar"
+		_desenhar_fim()
+		return
+	armado_fim = ""
+	_enviar("MASTER_SUPERVISOR", {"op": "recomecar"})
+	_desenhar_fim()
+
+
+func _desenhar_fim() -> void:
+	if _terminar == null:
+		return
+	var fase := str(vista.get("fase", ""))
+	_terminar.disabled = fase != "combate"
+	_recomecar.disabled = fase != "combate" and fase != "fim"
+	_terminar.text = Textos.SIM_TERMINAR if armado_fim == "terminar" else Textos.TERMINAR_BATALHA
+	_recomecar.text = Textos.SIM_RECOMECAR if armado_fim == "recomecar" else Textos.RECOMECAR
+
+
 func aplicar_vista(msg: Dictionary) -> void:
 	vista = msg
 	_arena.aplicar_vista(msg)
@@ -151,6 +193,7 @@ func aplicar_vista(msg: Dictionary) -> void:
 	_aba_registo.atualizar(msg)
 	_aba_mesa.atualizar(msg)
 	_aba_agir.atualizar(msg)
+	_desenhar_fim()
 	_desenhar_cartao()
 	if _aviso_primeira.visible and str(msg.get("fase", "")) == "combate":
 		_aviso_primeira.visible = false  # emenda 2: nunca por cima da batalha
@@ -519,6 +562,8 @@ func _montar() -> void:
 	_aba_registo = _aba_com(Textos.ABA_REGISTO_CURTA, AbaRegisto.new()) as AbaRegisto
 	_aba_registo.montar(self)
 	var sala := _aba(Textos.ABA_SALA)
+	_terminar = _botao(sala, Textos.TERMINAR_BATALHA, pedir_terminar)
+	_recomecar = _botao(sala, Textos.RECOMECAR, pedir_recomecar)
 	_pausar = _botao(sala, Textos.PAUSAR, func(): _enviar("MASTER_PAUSE", {}))
 	_continuar = _botao(sala, Textos.CONTINUAR, func(): _enviar("MASTER_RESUME", {}))
 	_atualizar = _botao(sala, Textos.ATUALIZAR, func(): pedir_vista_fn.call())

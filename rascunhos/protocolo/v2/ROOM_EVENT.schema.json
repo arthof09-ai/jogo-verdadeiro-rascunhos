@@ -204,10 +204,16 @@
       "properties": {},
       "additionalProperties": false
     },
+    "dados_recomeco": {
+      "type": "object",
+      "description": "N4 (08/11): o Mestre recomeçou a batalha do zero. Sem dados; o snapshot vem a seguir.",
+      "properties": {},
+      "additionalProperties": false
+    },
     "dados_fim": {
       "type": "object",
       "required": ["desfecho"],
-      "properties": { "desfecho": { "enum": ["vitoria", "morte"] } },
+      "properties": { "desfecho": { "enum": ["vitoria", "morte", "estabilizada", "terminada"], "description": "'estabilizada': como no site, estabilizar acaba a batalha (regra-mãe do Mestre, 08/11). 'terminada': o Mestre terminou a batalha a meio (N4, «Terminar batalha»)." } },
       "additionalProperties": false
     },
 
@@ -222,7 +228,7 @@
         "seq": { "type": "integer", "minimum": 1 },
         "revision": { "$ref": "comum.schema.json#/$defs/revision" },
         "ts": { "$ref": "comum.schema.json#/$defs/ts" },
-        "tipo": { "enum": ["entrada", "colocacao", "turno", "movimento", "ataque", "dano", "estado", "desgraca", "teste_morte", "reacao", "consumivel", "ambiente", "revertido", "fim"] },
+        "tipo": { "enum": ["entrada", "colocacao", "turno", "movimento", "ataque", "dano", "estado", "desgraca", "teste_morte", "reacao", "consumivel", "ambiente", "revertido", "recomeco", "fim"] },
         "dados": { "type": "object" }
       },
       "additionalProperties": false
@@ -247,6 +253,7 @@
             { "properties": { "tipo": { "const": "consumivel" }, "dados": { "$ref": "#/$defs/dados_consumivel" } } },
             { "properties": { "tipo": { "const": "ambiente" }, "dados": { "$ref": "#/$defs/dados_ambiente" } } },
             { "properties": { "tipo": { "const": "revertido" }, "dados": { "$ref": "#/$defs/dados_revertido" } } },
+            { "properties": { "tipo": { "const": "recomeco" }, "dados": { "$ref": "#/$defs/dados_recomeco" } } },
             { "properties": { "tipo": { "const": "fim" }, "dados": { "$ref": "#/$defs/dados_fim" } } }
           ]
         }
@@ -272,6 +279,7 @@
             { "properties": { "tipo": { "const": "consumivel" }, "dados": { "$ref": "#/$defs/dados_consumivel" } } },
             { "properties": { "tipo": { "const": "ambiente" }, "dados": { "$ref": "#/$defs/dados_ambiente" } } },
             { "properties": { "tipo": { "const": "revertido" }, "dados": { "$ref": "#/$defs/dados_revertido" } } },
+            { "properties": { "tipo": { "const": "recomeco" }, "dados": { "$ref": "#/$defs/dados_recomeco" } } },
             { "properties": { "tipo": { "const": "fim" }, "dados": { "$ref": "#/$defs/dados_fim" } } }
           ]
         }
@@ -291,7 +299,7 @@
         "ts": { "$ref": "comum.schema.json#/$defs/ts" },
         "tipo": {
           "enum": [
-            "entrada", "colocacao", "turno", "movimento", "ataque", "dano", "estado", "desgraca", "reacao", "consumivel", "ambiente", "revertido", "fim",
+            "entrada", "colocacao", "turno", "movimento", "ataque", "dano", "estado", "desgraca", "reacao", "consumivel", "ambiente", "revertido", "recomeco", "fim",
             "pausa", "retomada", "cartao", "cartao_fechado", "lobby", "modo", "ia", "recusa", "acao", "teste_morte", "erro_motor", "ambiente_mestre"
           ]
         },

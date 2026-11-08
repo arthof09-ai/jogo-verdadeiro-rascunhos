@@ -121,3 +121,16 @@ Pedidas pela revisão do Muse (CM-000009) ao desenho JV3.1 (Notion: «JV3.1 — 
   - Contam a história toda do journal: o «voltar» não a apaga.
   - Só o Mestre recebe o selo e as estatísticas.
   - **Leitura minha da C-28, por confirmar pelo Muse.**
+
+## N4 e regra-mãe: «Terminar batalha», «Recomeçar» e estabilizada = fim (08/11/2026, CM-000008-I0004)
+
+- **Palavra do Mestre sobre a N4: «Claro que quero».** Como no site (jogo.js `terminarBatalha`, M-014), o `MASTER_SUPERVISOR` tem dois `op` novos, ambos com `cmdId` + `revision` e aceites mesmo com um cartão aberto (fecham-no):
+  - `terminar`: termina a batalha a meio, só em combate. Desfecho `terminada`; a Party recebe `fim {desfecho: 'terminada'}`.
+  - `recomecar`: a mesma batalha do zero, em combate ou depois do fim.
+    - Cada figura colocada volta à casa onde foi colocada, com a ficha inteira; o modo H10 fica o que o Mestre escolheu.
+    - A batalha volta à rodada 1, na vez dela.
+    - A Party recebe o evento `recomeco` (sem dados) e um snapshot novo.
+  - Os cartões abertos fecham como `revertido`, e o recibo que esperava por eles fica RECUSADA `revertido`, com o carimbo `revertidaEm`.
+- **Regra-mãe do Mestre** («todas as mecânicas do jogo do site têm que seguir no jogo do Godot»): estabilizar ACABA a batalha, como no site, com o desfecho `estabilizada`.
+  - Com mais de uma jogadora, a batalha acaba quando todas estão mortas ou estabilizadas; se alguma estabilizou, o desfecho é `estabilizada`.
+- O `ROOM_EVENT` `fim` aceita agora `vitoria`, `morte`, `estabilizada` e `terminada`; o tipo novo é `recomeco`.

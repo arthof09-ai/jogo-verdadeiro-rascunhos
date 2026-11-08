@@ -97,6 +97,11 @@
       "reacaoDisponivel": true,
       "defendendo": false,
       "modo": null,
+      "casaColocacao": {
+       "x": 2,
+       "y": 2,
+       "orientacao": "S"
+      },
       "nome": "Heroína Teste",
       "nomePublico": "Heroína Teste",
       "vidaTotal": 5150,
@@ -126,6 +131,11 @@
       "reacaoDisponivel": true,
       "defendendo": false,
       "modo": null,
+      "casaColocacao": {
+       "x": 2,
+       "y": 4,
+       "orientacao": "S"
+      },
       "nome": "Aliada Teste",
       "nomePublico": "Aliada Teste",
       "vidaTotal": 3579,
@@ -152,6 +162,11 @@
       "reacaoDisponivel": true,
       "defendendo": false,
       "modo": "auto",
+      "casaColocacao": {
+       "x": 2,
+       "y": 3,
+       "orientacao": "S"
+      },
       "nome": "Orc Verdadeiro Teste",
       "nomePublico": "Orc",
       "vidaTotal": 7777,
@@ -178,6 +193,11 @@
       "reacaoDisponivel": true,
       "defendendo": false,
       "modo": "auto",
+      "casaColocacao": {
+       "x": 9,
+       "y": 9,
+       "orientacao": "S"
+      },
       "nome": "Lobo Teste",
       "nomePublico": "Lobo",
       "vidaTotal": 4848,
@@ -701,6 +721,11 @@
       "reacaoDisponivel": true,
       "defendendo": false,
       "modo": null,
+      "casaColocacao": {
+       "x": 2,
+       "y": 2,
+       "orientacao": "S"
+      },
       "nome": "Heroína Teste",
       "nomePublico": "Heroína Teste",
       "vidaTotal": 5150,
@@ -727,6 +752,11 @@
       "reacaoDisponivel": true,
       "defendendo": false,
       "modo": "manual",
+      "casaColocacao": {
+       "x": 2,
+       "y": 3,
+       "orientacao": "S"
+      },
       "nome": "Orc Verdadeiro Teste",
       "nomePublico": "Orc",
       "vidaTotal": 7777,

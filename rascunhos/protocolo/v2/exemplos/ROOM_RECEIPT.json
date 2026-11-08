@@ -63,12 +63,12 @@
       "v": 2,
       "type": "ROOM_RECEIPT",
       "roomId": "sala-teste",
-      "intentId": "56234897-cab2-42a8-b6c7-07f1b0efbb0b",
+      "intentId": "b1ab6f79-4140-4d8b-8de5-594cbde87e4a",
       "estado": "RECUSADA",
-      "seq": 5,
-      "revision": 5,
+      "seq": 6,
+      "revision": 6,
       "motivo": "revertido",
-      "revertidaEm": "2026-11-06T20:00:04.000Z"
+      "revertidaEm": "2026-11-06T20:00:05.250Z"
     }
   },
   {

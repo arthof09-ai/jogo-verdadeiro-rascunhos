@@ -941,10 +941,14 @@ export function criarSala({
     const jog = todas.filter((f) => f.lado === 'jogadora');
     const mon = todas.filter((f) => f.lado !== 'jogadora');
     let desfecho = null;
-    if (jog.length && jog.every((f) => !f.vivo)) desfecho = 'morte';
+    // Regra-mãe do Mestre (08/11: «todas as mecânicas do jogo do site têm que seguir no jogo do Godot»): no site,
+    // estabilizar ACABA a batalha (jogo.js: s.desfecho === 'estabilizado' → fimDeBatalha('estabilizada')). Com mais
+    // de uma jogadora, a batalha acaba quando nenhuma pode ainda agir nem morrer: todas mortas ou estabilizadas;
+    // se alguma estabilizou, o desfecho é 'estabilizada'.
+    const estabilizada = (f) => f.vivo && f.estadoMorte?.fase === 'estabilizado';
+    if (jog.length && jog.every((f) => !f.vivo || estabilizada(f))) desfecho = jog.some(estabilizada) ? 'estabilizada' : 'morte';
     // TODO(JV1.x): a vitória é automática quando todas as criaturas COLOCADAS caem; o Mestre pode querer pôr mais.
     else if (mon.length && mon.every((f) => !f.vivo)) desfecho = 'vitoria';
-    // TODO(JV1.x R0 §9.7): "estabilizada" é derrota?
     if (!desfecho) return false;
     m.fase = 'fim';
     m.desfecho = desfecho;
@@ -1632,6 +1636,7 @@ export function criarSala({
       case 'MASTER_AMBIENTE':
         return sn(msg.hora, 16) && sn(msg.clima, 64) && sn(msg.futuro, 500);
       case 'MASTER_SUPERVISOR':
+        if (msg.op === 'terminar' || msg.op === 'recomecar') return msg.ateSeq === undefined; // N4 (palavra do Mestre, 08/11)
         return msg.op === 'voltar' && Number.isInteger(msg.ateSeq) && msg.ateSeq >= 0;
       default:
         return false;
@@ -1657,7 +1662,7 @@ export function criarSala({
     const liberadoComCartao =
       (tipo === 'MASTER_APPROVE' && ativo && msg.cartaoId === ativo.cartaoId)
       || (tipo === 'MASTER_CONFIRM_DICE' && ativo && ativo.tipo === 'dados' && ativo.origem?.id === msg.intentId)
-      || (tipo === 'MASTER_SUPERVISOR' && msg.op === 'voltar')
+      || (tipo === 'MASTER_SUPERVISOR' && ['voltar', 'terminar', 'recomecar'].includes(msg.op))
       || tipo === 'MASTER_PAUSE' || tipo === 'MASTER_RESUME';
     if (ativo && !liberadoComCartao) throw new ErroRecusa('cartao_aberto'); // E-C6
     if (m.fase === 'pausa' && tipo !== 'MASTER_RESUME' && tipo !== 'MASTER_PAUSE') throw new ErroRecusa('sala_pausada');
@@ -1686,6 +1691,7 @@ export function criarSala({
           f.x = casa.x;
           f.y = casa.y;
           f.colocada = true;
+          f.casaColocacao = { x: casa.x, y: casa.y, orientacao: f.orientacao }; // para o «Recomeçar» (N4)
           tx.emitir('colocacao', {
             figuraId: f.id, nomePublico: nomePublicoDe(fichaDe(f)), lado: f.lado, x: f.x, y: f.y, orientacao: f.orientacao, visivel: visivelDe(f),
           }, { fichaId: f.fichaId });
@@ -1712,6 +1718,7 @@ export function criarSala({
         f.y = msg.casa.y;
         f.orientacao = msg.orientacao ?? 'S';
         f.colocada = true; // só AGORA existe para as jogadoras
+        f.casaColocacao = { x: f.x, y: f.y, orientacao: f.orientacao }; // para o «Recomeçar» (N4)
         m.figuras[id] = f;
         tx.emitir('colocacao', {
           figuraId: id, nomePublico: nomePublicoDe(ficha), lado: f.lado, x: f.x, y: f.y, orientacao: f.orientacao, visivel: visivelDe(f),
@@ -1767,6 +1774,8 @@ export function criarSala({
         return 'APLICADA';
       }
       case 'MASTER_SUPERVISOR':
+        if (msg.op === 'terminar') return terminarBatalha(tx);
+        if (msg.op === 'recomecar') return recomecarBatalha(tx);
         return voltar(tx, msg.ateSeq);
       case 'MASTER_PAUSE':
         if (!pausar(tx, 'manutencao', 'mestre')) throw new ErroRecusa('acao_invalida');
@@ -1836,6 +1845,64 @@ export function criarSala({
       return 'APLICADA';
     }
     throw new ErroRecusa('acao_invalida');
+  }
+
+  /** Fecha os cartões abertos (história: decisão 'revertido') e recusa os recibos que esperavam por eles. */
+  function fecharCartoesAbertos(tx) {
+    for (const c of tx.estado.cartoes) {
+      if (c.estado !== 'aberto') continue;
+      fecharCartao(tx, c, 'revertido');
+      // Como no «voltar»: o recibo que esperava pelo cartão fica RECUSADA 'revertido', com o carimbo revertidaEm.
+      const atual = c.origem?.chave ? journal.recibo(c.origem.chave) : null;
+      if (atual) {
+        tx.recibos.push({ chave: c.origem.chave, recibo: { ...atual, estado: 'RECUSADA', motivo: 'revertido', revertidaEm: tx.ts }, enviar: true });
+      }
+    }
+  }
+
+  /**
+   * N4 (palavra do Mestre, 08/11: «Claro que quero»), como o site (jogo.js terminarBatalha, M-014): a batalha
+   * termina a meio, quando o Mestre disser. Fim declarado: desfecho 'terminada'. Só em combate.
+   */
+  function terminarBatalha(tx) {
+    const m = tx.estado;
+    if (m.fase !== 'combate') throw new ErroRecusa('acao_invalida');
+    fecharCartoesAbertos(tx);
+    m.fase = 'fim';
+    m.desfecho = 'terminada';
+    m.vez = null;
+    tx.emitir('fim', { desfecho: 'terminada' }, { origem: 'terminar' });
+    return 'APLICADA';
+  }
+
+  /**
+   * N4, como o site (jogo.js: «Recomeçar» = a mesma batalha do zero). Cada figura colocada volta à casa onde foi
+   * colocada, com a ficha inteira (vida, PA, sem estados); o modo H10 das criaturas fica o que o Mestre escolheu.
+   * Rodada 1, a começar na vez dela (D-13.3), cartões abertos fechados. O journal não apaga história: nasce o
+   * evento `recomeco` e um snapshot novo para todos. Em combate ou depois do fim.
+   */
+  function recomecarBatalha(tx) {
+    const m = tx.estado;
+    if (m.fase !== 'combate' && m.fase !== 'fim') throw new ErroRecusa('acao_invalida');
+    fecharCartoesAbertos(tx);
+    for (const f of colocadas(m)) {
+      const novo = novaFigura(f.id, fichas[f.fichaId], null);
+      const c = f.casaColocacao ?? { x: f.x, y: f.y, orientacao: f.orientacao };
+      Object.assign(f, novo, {
+        colocada: true, x: c.x, y: c.y, orientacao: c.orientacao ?? 'S', casaInicial: f.casaInicial,
+        casaColocacao: c, modo: f.modo,
+      });
+    }
+    m.fase = 'combate';
+    m.desfecho = null;
+    m.marchaLivre = null;
+    m.rodada = 1;
+    m.ordem = ordenarPorIniciativa(colocadas(m).map((f) => f.id), m);
+    m.vezIdx = m.ordem.findIndex((id) => m.figuras[id].lado === 'jogadora');
+    tx.emitir('recomeco', {}, null);
+    iniciarVez(tx, m.figuras[m.ordem[m.vezIdx]]);
+    tx.snapshotsTodos = true;
+    return 'APLICADA';
   }
 
   /** MASTER_SUPERVISOR voltar: cria `revertido`; o journal nunca apaga história. */

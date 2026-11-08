@@ -170,6 +170,10 @@ const CORPO := "corpo quebrado"
 const AVISO_PRIMEIRA := "Este ecrã é só do Mestre."
 const ENTENDIDO := "Entendido"
 
-# TODO(N4-TERMINAR): «Terminar/recomeçar a batalha» NÃO existe aqui. Depende da pergunta N4 ao Mestre
-# (emenda 3 do Muse). No site existe o fim declarado (terminarBatalha, M-014: «Terminar» → «Sim,
-# terminar» ou «Voltar»; o automático nunca termina sozinho). Sem resposta, não há botão nem comando.
+# ---------------------------------------------------------------- terminar e recomeçar (N4, 08/11)
+# Resposta do Mestre à N4: «Claro que quero». Como no site (jogo.js terminarBatalha, M-014): «Terminar»
+# pede «Sim, terminar»; «Recomeçar» é a mesma batalha do zero. Os dois pedem segundo toque.
+const TERMINAR_BATALHA := "Terminar batalha"
+const SIM_TERMINAR := "Sim, terminar"
+const RECOMECAR := "Recomeçar"
+const SIM_RECOMECAR := "Sim, recomeçar"

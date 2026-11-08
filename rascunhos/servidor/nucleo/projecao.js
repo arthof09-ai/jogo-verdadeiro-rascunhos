@@ -36,6 +36,8 @@ export const CAMPOS_PERMITIDOS = Object.freeze({
   ambiente: Object.freeze({ todos: ['efeito'], propria: [] }), // E-P12: só o efeito presente
   revertido: Object.freeze({ todos: [], propria: [] }), // nada de journalSeq
   fim: Object.freeze({ todos: ['desfecho'], propria: [] }),
+  // N4 (08/11): o Mestre recomeçou a batalha do zero; o snapshot vem a seguir.
+  recomeco: Object.freeze({ todos: [], propria: [] }),
 });
 
 /** "Este evento é dela?" — decide se os campos `propria` entram. */

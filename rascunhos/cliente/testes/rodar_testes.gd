@@ -280,10 +280,12 @@ func _teste_frases_do_site() -> void:
 	_ok(Frases.caiu("Ong") == "A Ong caiu — a batalha continua à volta dela.", "cair")
 	_ok(Frases.aguenta("Ong") == "A Ong, caída, aguenta-se — continua a respirar.", "teste ganho")
 	_ok(Frases.piora("Ong") == "A Ong, caída, piora visivelmente.", "teste perdido")
-	_ok(Frases.fim_estabilizada("Ong") == "A Ong caiu, mas estabilizou — fim desta batalha.", "fim estabilizada (sem «Aperta Recomeçar»: não há botão)")
-	_ok(Frases.fim_morte("Ong") == "A Ong caiu — fim desta batalha.", "fim por morte (sem «Aperta Recomeçar»)")
-	_ok(Frases.fim_vitoria("Ong") == "Os inimigos caíram todos — vitória da Ong nesta batalha.", "vitória")
-	_ok(not Frases.HA_BOTAO_RECOMECAR, "a cláusula do Recomeçar fica guardada até haver botão")
+	# Regra-mãe e N4 (08/11): a frase completa do site volta a valer (há «Recomeçar» no ecrã do Mestre).
+	_ok(Frases.fim_estabilizada("Ong") == "A Ong caiu, mas estabilizou — fim desta batalha. Aperta Recomeçar para jogar outra vez.", "fim estabilizada (frase completa do site)")
+	_ok(Frases.fim_morte("Ong") == "A Ong caiu — fim desta batalha. Aperta Recomeçar para jogar outra vez.", "fim por morte (frase completa do site)")
+	_ok(Frases.fim_vitoria("Ong") == "Os inimigos caíram todos — vitória da Ong nesta batalha. Aperta Recomeçar para jogar outra vez.", "vitória (frase completa do site)")
+	_ok(Frases.fim_terminada() == "A batalha terminou — a mesa fechou este encontro. Aperta Recomeçar para jogar outra vez.", "fim declarado pelo Mestre (terminarBatalha do site)")
+	_ok(Frases.HA_BOTAO_RECOMECAR, "a cláusula do Recomeçar está ligada (N4)")
 
 
 ## As frases saem do Estado ao aplicar os eventos que o servidor projeta.
@@ -325,7 +327,9 @@ func _teste_frases_no_estado() -> void:
 			"estadoMorte": {"fase": "aMorrer", "sucessos": 1, "falhas": 1}}))
 	_ok(frases.back() == "A Ong, caída, piora visivelmente.", "teste perdido")
 	est.receber_evento(_evento(12, -1, "fim", {"desfecho": "morte"}))
-	_ok(frases.back() == "A Ong caiu — fim desta batalha.", "fim por morte")
+	_ok(frases.back() == "A Ong caiu — fim desta batalha. Aperta Recomeçar para jogar outra vez.", "fim por morte (frase completa do site)")
+	est.receber_evento(_evento(13, -1, "fim", {"desfecho": "terminada"}))
+	_ok(frases.back() == Frases.fim_terminada(), "fim declarado pelo Mestre → a frase do site")
 	var sem_numeros := true
 	for t in frases:
 		if (t as String).contains("0") or (t as String).contains("1"):

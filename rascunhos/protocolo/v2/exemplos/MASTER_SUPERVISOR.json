@@ -1,5 +1,31 @@
 [
   {
+    "caso": "recomecar",
+    "sentido": "cliente → servidor",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "MASTER_SUPERVISOR",
+      "cmdId": "cmd-2",
+      "revision": 1,
+      "op": "recomecar"
+    }
+  },
+  {
+    "caso": "terminar",
+    "sentido": "cliente → servidor",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "MASTER_SUPERVISOR",
+      "cmdId": "cmd-5",
+      "revision": 5,
+      "op": "terminar"
+    }
+  },
+  {
     "caso": "voltar",
     "sentido": "cliente → servidor",
     "papel": "mestre",

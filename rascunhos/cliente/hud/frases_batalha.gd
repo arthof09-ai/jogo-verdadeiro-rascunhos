@@ -13,11 +13,11 @@ extends RefCounted
 ## Cabeçalho que o site põe antes da frase da desgraça.
 const CABECALHO_DESGRACA := "Falha crítica · "
 
-## O site acaba as frases de fim com «Aperta Recomeçar para jogar outra vez.», mas o cliente ainda
-## não tem o botão Recomeçar: o texto só promete o que a casca faz (REF_14). A cláusula está
-## guardada aqui e entra quando o botão existir.
+## O site acaba as frases de fim com «Aperta Recomeçar para jogar outra vez.». Com a resposta N4 do Mestre
+## (08/11: «Claro que quero») o jogo tem o «Recomeçar» (no ecrã do Mestre) e, pela regra-mãe (vale o site),
+## a frase completa do site volta a valer.
 const CLAUSULA_RECOMECAR := " Aperta Recomeçar para jogar outra vez."
-const HA_BOTAO_RECOMECAR := false
+const HA_BOTAO_RECOMECAR := true
 
 
 ## Nome como o site o escreve dentro da frase: a jogadora com artigo («a Ong»), a criatura só com
@@ -76,6 +76,11 @@ static func fim_vitoria(nome: String) -> String:
 
 static func fim_estabilizada(nome: String) -> String:
 	return "A %s caiu, mas estabilizou — fim desta batalha.%s" % [nome, CLAUSULA_RECOMECAR if HA_BOTAO_RECOMECAR else ""]
+
+
+## Fim declarado pelo Mestre («Terminar batalha», N4), com a frase do site (jogo.js terminarBatalha, M-014).
+static func fim_terminada() -> String:
+	return "A batalha terminou — a mesa fechou este encontro.%s" % [CLAUSULA_RECOMECAR if HA_BOTAO_RECOMECAR else ""]
 
 
 static func fim_morte(nome: String) -> String:
