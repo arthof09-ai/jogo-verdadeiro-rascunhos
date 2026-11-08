@@ -11,6 +11,7 @@ const RedeScript := preload("res://rede/rede.gd")
 const FilaIntencoes := preload("res://rede/fila_intencoes.gd")
 const Uuid := preload("res://rede/uuid.gd")
 const Perfis := preload("res://arte/perfis/aplicar_perfil.gd")
+const Frases := preload("res://hud/frases_batalha.gd")
 
 var _total := 0
 var _falhas := 0
@@ -32,6 +33,8 @@ func _initialize() -> void:
 	_teste_recusa_duplicada_ignorada()
 	_teste_uuid_v4()
 	_teste_uma_tabela_de_perfis()
+	_teste_frases_do_site()
+	_teste_frases_no_estado()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -254,3 +257,78 @@ func _teste_uma_tabela_de_perfis() -> void:
 	_ok(not arena.contains("msaa_3d") and not arena.contains("scaling_3d_scale"), "a arena não tem números de perfil próprios")
 	var hud := FileAccess.get_file_as_string("res://hud/hud.gd")
 	_ok(hud.contains('const PERFIS := ["baixo", "medio", "alto"]'), "a ⚙ do HUD oferece as mesmas três chaves")
+
+
+## I0004 (08/11): frases IGUAIS às do site vivo (jogo.js REF_25: vlabFraseDesgraca, relógio de morte, fim).
+func _teste_frases_do_site() -> void:
+	print("Frases do site (texto exacto):")
+	var casos := [
+		["cai", true, false, "a Ong foi ao chão com o golpe falhado."],
+		["arma-cai", true, false, "A arma (chicote) caiu-lhe da mão."],
+		["arma-quebra", true, false, "A arma (chicote) quebrou — fica inutilizável até ser consertada."],
+		["acerta-se", true, false, "a Ong atingiu-se a si própria com o próprio golpe."],
+		["acerta-se", false, false, "Lobo atingiu-se a si próprio com o próprio golpe."],
+		["quebra-corpo", true, false, "a Ong quebrou algo no corpo — os golpes dela ficam prejudicados e anda metade até ao fim do combate."],
+		["quebra-corpo", true, true, "a Ong quebrou algo no corpo — os golpes dela ficam prejudicados e anda metade até ao fim do combate. Perde um quarto da vida que tem agora."],
+		["quebra-corpo", false, false, "Lobo quebrou algo no corpo — os golpes dele ficam prejudicados e anda metade até ao fim do combate."],
+		["acerta-amigo", true, false, "O golpe atingiu um aliado sem querer."],
+		["outra-coisa", true, false, "O golpe correu mal."],
+	]
+	for c in casos:
+		var nome := "Ong" if c[1] else "Lobo"
+		_ok(Frases.desgraca(c[0], nome, c[1], "chicote", c[2]) == c[3], "%s (%s%s)" % [c[0], nome, ", perde" if c[2] else ""])
+	_ok(Frases.caiu("Ong") == "A Ong caiu — a batalha continua à volta dela.", "cair")
+	_ok(Frases.aguenta("Ong") == "A Ong, caída, aguenta-se — continua a respirar.", "teste ganho")
+	_ok(Frases.piora("Ong") == "A Ong, caída, piora visivelmente.", "teste perdido")
+	_ok(Frases.fim_estabilizada("Ong") == "A Ong caiu, mas estabilizou — fim desta batalha.", "fim estabilizada (sem «Aperta Recomeçar»: não há botão)")
+	_ok(Frases.fim_morte("Ong") == "A Ong caiu — fim desta batalha.", "fim por morte (sem «Aperta Recomeçar»)")
+	_ok(Frases.fim_vitoria("Ong") == "Os inimigos caíram todos — vitória da Ong nesta batalha.", "vitória")
+	_ok(not Frases.HA_BOTAO_RECOMECAR, "a cláusula do Recomeçar fica guardada até haver botão")
+
+
+## As frases saem do Estado ao aplicar os eventos que o servidor projeta.
+func _teste_frases_no_estado() -> void:
+	print("Frases a partir dos eventos:")
+	var est = EstadoScript.new()
+	var frases: Array = []
+	est.frase_batalha.connect(func(t): frases.append(t))
+	est.aplicar_snapshot({
+		"v": 2, "type": "ROOM_SNAPSHOT", "roomId": "sala-teste", "seq": 1, "revision": 1, "fase": "combate",
+		"mapa": {"largura": 20, "altura": 20}, "iniciativa": ["fA", "fB"], "vezId": "fA", "rodada": 1, "ambiente": {},
+		"figuras": [
+			{"id": "fA", "nomePublico": "Ong", "lado": "jogadora", "x": 1, "y": 1},
+			{"id": "fB", "nomePublico": "Lobo", "lado": "criatura", "x": 2, "y": 1},
+		],
+		"propria": {"figuraId": "fA", "estadoMorte": null},
+	})
+	est.receber_evento(_evento(2, -1, "ataque", {"atacanteId": "fA", "alvoId": "fB", "arma": "chicote-teste", "resultado": "falha_critica"}))
+	est.receber_evento(_evento(3, -1, "desgraca", {"figuraId": "fA", "efeito": "quebra-corpo", "perdeQuarto": true}))
+	_ok(frases.back() == "Falha crítica · a Ong quebrou algo no corpo — os golpes dela ficam prejudicados e anda metade até ao fim do combate. Perde um quarto da vida que tem agora.",
+			"quebrar o corpo, com a perda só porque veio perdeQuarto")
+	est.receber_evento(_evento(4, -1, "desgraca", {"figuraId": "fA", "efeito": "arma-cai"}))
+	_ok(frases.back() == "Falha crítica · A arma (chicote teste) caiu-lhe da mão.", "a arma é a do último ataque dela")
+	est.receber_evento(_evento(5, -1, "desgraca", {"figuraId": "fB", "efeito": "acerta-se"}))
+	_ok(frases.back() == "Falha crítica · Lobo atingiu-se a si próprio com o próprio golpe.", "a desgraça do monstro, no masculino")
+	est.receber_evento(_evento(6, -1, "estado", {"figuraId": "fA", "visivel": "caida", "vidaActual": 0,
+			"estadoMorte": {"fase": "aMorrer", "sucessos": 0, "falhas": 0}}))
+	_ok(frases.back() == "A Ong caiu — a batalha continua à volta dela.", "ao cair")
+	var n := frases.size()
+	est.receber_evento(_evento(7, -1, "estado", {"figuraId": "fA", "visivel": "caida",
+			"estadoMorte": {"fase": "aMorrer", "sucessos": 0, "falhas": 0}}))
+	_ok(frases.size() == n, "sem teste de morte nem mudança, nenhuma frase nova")
+	est.receber_evento(_evento(8, -1, "teste_morte", {"figuraId": "fA"}))
+	est.receber_evento(_evento(9, -1, "estado", {"figuraId": "fA", "visivel": "caida",
+			"estadoMorte": {"fase": "aMorrer", "sucessos": 1, "falhas": 0}}))
+	_ok(frases.back() == "A Ong, caída, aguenta-se — continua a respirar.", "teste ganho")
+	est.receber_evento(_evento(10, -1, "teste_morte", {"figuraId": "fA"}))
+	est.receber_evento(_evento(11, -1, "estado", {"figuraId": "fA", "visivel": "caida",
+			"estadoMorte": {"fase": "aMorrer", "sucessos": 1, "falhas": 1}}))
+	_ok(frases.back() == "A Ong, caída, piora visivelmente.", "teste perdido")
+	est.receber_evento(_evento(12, -1, "fim", {"desfecho": "morte"}))
+	_ok(frases.back() == "A Ong caiu — fim desta batalha.", "fim por morte")
+	var sem_numeros := true
+	for t in frases:
+		if (t as String).contains("0") or (t as String).contains("1"):
+			sem_numeros = false
+	_ok(sem_numeros, "nenhuma frase leva números")
+	est.free()

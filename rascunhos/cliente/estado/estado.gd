@@ -25,8 +25,11 @@ signal dano_visto(alvo_id: String, valor: Variant, tipo_dano: String, em_mim: bo
 signal pausa_mudou(pausada: bool)
 signal fase_mudou(fase: String)
 signal ataque_visto(dados: Dictionary)
+## Frase de batalha do site (desgraça, relógio de morte, fim), já pronta para mostrar.
+signal frase_batalha(texto: String)
 
 ## Se o RESYNC não fechar o buraco neste tempo, pede outra vez.
+const Frases := preload("res://hud/frases_batalha.gd")
 const REPETIR_RESYNC_S := 5.0
 ## Acima disto não se guarda mais: o RESYNC traz o resto.
 const MAX_EM_ESPERA := 512
@@ -54,6 +57,8 @@ var pausada := false
 var _espera: Dictionary = {}  # seq -> mensagem
 var _resync_pendente := false
 var _tempo_resync := 0.0
+var _arma_de: Dictionary = {}  # figuraId -> id da técnica do último `ataque` (para a frase da desgraça)
+var _teste_morte_pendente := false  # houve `teste_morte` DELA: o `estado` seguinte diz se aguentou
 
 
 func _ready() -> void:
@@ -186,6 +191,8 @@ func limpar() -> void:
 	minha_figura_id = ""
 	propria = {}
 	mestre = {}
+	_arma_de.clear()
+	_teste_morte_pendente = false
 	_espera.clear()
 	_resync_pendente = false
 	_definir_pausa(false)
@@ -260,6 +267,42 @@ func e_jogadora(f) -> bool:
 	if not (f is Dictionary):
 		return false
 	return _texto(f.get("lado")) == "jogadora"
+
+
+## Nome legível de uma técnica a partir do id que o servidor manda («chicote-teste» → «chicote teste»).
+static func arma_legivel(id: String) -> String:
+	return id.replace("-", " ").replace("_", " ").strip_edges()
+
+
+## Relógio de morte DELA (frases do site): cair, aguentar-se, piorar.
+func _frase_relogio_morte(antes, depois) -> void:
+	if not (depois is Dictionary):
+		return
+	var nome := nome_de(minha_figura_id)
+	var estava := antes is Dictionary and _texto(antes.get("fase")) != ""
+	if _teste_morte_pendente:
+		_teste_morte_pendente = false
+		var suc_antes := _int(antes.get("sucessos")) if antes is Dictionary else 0
+		var fal_antes := _int(antes.get("falhas")) if antes is Dictionary else 0
+		if _int(depois.get("sucessos")) > suc_antes:
+			frase_batalha.emit(Frases.aguenta(nome))
+		elif _int(depois.get("falhas")) > fal_antes:
+			frase_batalha.emit(Frases.piora(nome))
+	elif _texto(depois.get("fase")) == "aMorrer" and not estava:
+		frase_batalha.emit(Frases.caiu(nome))
+
+
+## Frases de fim do site. A cláusula «Aperta Recomeçar…» só entra quando o botão existir.
+func _frase_fim(d: String) -> void:
+	var nome := nome_de(minha_figura_id)
+	if d == "vitoria":
+		frase_batalha.emit(Frases.fim_vitoria(nome))
+	elif minha_figura_id == "":
+		return
+	elif d == "morte":
+		frase_batalha.emit(Frases.fim_morte(nome))
+	elif d == "estabilizada":
+		frase_batalha.emit(Frases.fim_estabilizada(nome))
 
 
 ## Nome que a Party pode ver (o servidor já o projeta: "Criatura", "Personagem" ou o público).
@@ -349,11 +392,15 @@ func _aplicar_evento(msg: Dictionary) -> void:
 			if figuras.has(fid) and v is String:
 				figuras[fid]["visivel"] = v
 			if fid != "" and fid == minha_figura_id:
+				if dados.has("estadoMorte"):
+					_frase_relogio_morte(propria.get("estadoMorte"), dados["estadoMorte"])
 				for k in ["vidaActual", "paLivre", "estadoMorte"]:
 					if dados.has(k):
 						propria[k] = dados[k]
 		"ataque":
 			# {atacanteId, alvoId, arma, resultado, ataqueDeOportunidade} (+ total, faces, expressao se for dela).
+			if dados.get("arma") is String:
+				_arma_de[_texto(dados.get("atacanteId"))] = dados["arma"]
 			ataque_visto.emit(dados)
 		"dano":
 			_emitir_dano(dados)
@@ -365,12 +412,20 @@ func _aplicar_evento(msg: Dictionary) -> void:
 			fase = "fim"
 			desfecho = _texto(dados.get("desfecho"))
 			vez_id = ""
+			_frase_fim(desfecho)
+		"desgraca":
+			# {figuraId, efeito} a todos (+ perdeQuarto só à própria, REF_19). Frase igual à do site.
+			var quem = figuras.get(fid)
+			var frase: String = Frases.desgraca(_texto(dados.get("efeito")), nome_de(fid), e_jogadora(quem),
+					arma_legivel(_texto(_arma_de.get(fid, ""))), dados.get("perdeQuarto") == true)
+			frase_batalha.emit(Frases.com_cabecalho(frase))
+		"teste_morte":
+			# {figuraId}: a Party só sabe QUE houve teste. Se é dela, o `estado` que vem a seguir traz o
+			# estadoMorte novo, e é aí que se escolhe «aguenta-se» ou «piora».
+			if fid != "" and fid == minha_figura_id:
+				_teste_morte_pendente = true
 		_:
-			# TODO(FRASES-DESGRACA, I0004 08/11): `desgraca` {figuraId, efeito, perdeQuarto? só à própria} e
-			# `teste_morte` {figuraId} chegam aqui e a jogadora não vê nada (só «Falha crítica!» do ataque).
-			# Falta: um sinal para o HUD e as frases EXACTAS do site vivo (o Muse manda-as), incluindo a da
-			# REF_19, «…e perde um quarto da vida que tem agora.», só quando vem `perdeQuarto`.
-			pass  # entrada, desgraca, teste_morte, reacao, consumivel, revertido (o snapshot vem a seguir)
+			pass  # entrada, reacao, consumivel, revertido (o snapshot vem a seguir)
 
 	evento_aplicado.emit(msg)
 	if fase != fase_antes:

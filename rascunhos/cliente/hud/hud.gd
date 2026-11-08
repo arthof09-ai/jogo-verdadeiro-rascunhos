@@ -53,8 +53,9 @@ const FRASES_ATAQUE := {
 	"critico": "Crítico!",
 	"falha_critica": "Falha crítica!",
 }
-## TODO(FRASES-DESGRACA, I0004 08/11): aqui entram as frases das desgraças e do teste de morte, iguais
-## às do site vivo (o Muse manda a lista). Ver estado.gd, ramo `_` de aplicar o evento.
+## As frases das desgraças, do relógio de morte e do fim vêm prontas do Estado (`frase_batalha`),
+## iguais às do site vivo: ver hud/frases_batalha.gd.
+const SEGUNDOS_FRASE_BATALHA := 6.0
 const SHADER_TELA_VERMELHA := """
 shader_type canvas_item;
 uniform float intensidade : hint_range(0.0, 1.0) = 0.0;
@@ -130,6 +131,7 @@ func _ready() -> void:
 	Estado.pausa_mudou.connect(_ao_pausa)
 	Estado.dano_visto.connect(_ao_dano)
 	Estado.ataque_visto.connect(_ao_ataque)
+	Estado.frase_batalha.connect(_ao_frase_batalha)
 	Estado.fase_mudou.connect(_ao_fase)
 	_atualizar()
 
@@ -621,6 +623,11 @@ func _ao_ataque(dados: Dictionary) -> void:
 	if total is int or total is float:
 		frase += " Total %s." % _texto_numero(total)
 	_mostrar_aviso(frase)
+
+
+## Desgraça, relógio de morte e fim: a frase do site, um pouco mais tempo no ecrã.
+func _ao_frase_batalha(texto: String) -> void:
+	_mostrar_aviso(texto, SEGUNDOS_FRASE_BATALHA)
 
 
 func _texto_numero(v) -> String:
