@@ -1,0 +1,24 @@
+name: Sonda temporária — desgraça pendente no site e no VLAB (I0004; apagar a seguir)
+on: [push]
+permissions:
+  contents: read
+jobs:
+  sonda:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ler o jogo.js e o vlab-completo.js vivos
+        run: |
+          set +e
+          B=https://arthof09-ai.github.io/arena-das-bestas-prototipo-cm9/jogo-t1
+          curl -s -o jogo.js "$B/jogo.js"; curl -s -o vlab.js "$B/vlab-completo.js"
+          sha256sum jogo.js vlab.js | cut -c1-16
+          echo "=========== jogo.js: desgracaPendente / acertaSe / acertaAmigo / aliados"
+          grep -n -E "desgracaPendente|acertaSe|acertaAmigo|aliadosAoAlcance|aliadoAtingido" jogo.js | cut -c1-220 | head -40
+          for r in $(grep -n -E "desgracaPendente" jogo.js | head -4 | cut -d: -f1); do echo "----- jogo.js $r"; sed -n "$((r-6)),$((r+30))p" jogo.js | cut -c1-200; done
+          echo "=========== vlab.js linhas 996-1075"
+          sed -n 996,1075p vlab.js | cut -c1-220
+          echo "=========== vlab.js: aplicarDesgracaPendente / tecto"
+          grep -n -E "aplicarDesgracaPendente|resolverDesgracaPendente|tectoLetalidade|nuncaAbaixo|acertaSe" vlab.js | cut -c1-200 | head -30
+          echo "=========== jogo.js: distanciaEntre / alcance"
+          grep -n -E "function distanciaEntre|distanciaEntre\(|alcanceCasas|function alcance" jogo.js | cut -c1-200 | head -20
