@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MASTER_EXPORT.schema.json",
+  "title": "MASTER_EXPORT (servidor → Mestre)",
+  "description": "Resposta a MASTER_SUPERVISOR {op:'exportar'} (E-P13): só ao lugar do Mestre, nunca por URL servida. `conteudo` é o que journal.exportar() devolve (corpo canónico + assinatura); a forma interna é do journal e não se fixa aqui. Escrito pela conferência I0004 a partir de sala.js; NENHUM teste o gera ainda.",
+  "type": "object",
+  "required": [
+    "v",
+    "type",
+    "roomId",
+    "marca",
+    "conteudo"
+  ],
+  "properties": {
+    "v": {
+      "$ref": "comum.schema.json#/$defs/v"
+    },
+    "type": {
+      "const": "MASTER_EXPORT"
+    },
+    "roomId": {
+      "$ref": "comum.schema.json#/$defs/roomId"
+    },
+    "marca": {
+      "const": "MESTRE-ONLY"
+    },
+    "conteudo": {
+      "type": [
+        "object",
+        "string"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

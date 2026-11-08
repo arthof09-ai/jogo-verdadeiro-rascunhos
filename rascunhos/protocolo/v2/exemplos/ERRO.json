@@ -1,0 +1,26 @@
+[
+  {
+    "caso": "bloqueado",
+    "sentido": "servidor → cliente",
+    "papel": "intrusa",
+    "mensagem": {
+      "v": 2,
+      "type": "ERRO",
+      "roomId": "sala-teste",
+      "codigo": "bloqueado",
+      "texto": "Muitas tentativas. Espere um pouco."
+    }
+  },
+  {
+    "caso": "credenciais",
+    "sentido": "servidor → cliente",
+    "papel": "intrusa",
+    "mensagem": {
+      "v": 2,
+      "type": "ERRO",
+      "roomId": "sala-teste",
+      "codigo": "credenciais",
+      "texto": "Não foi possível entrar."
+    }
+  }
+]

@@ -1,0 +1,15 @@
+[
+  {
+    "caso": "MASTER_SEARCH",
+    "sentido": "cliente → servidor",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "MASTER_SEARCH",
+      "cmdId": "cmd-7",
+      "revision": 7,
+      "texto": "bandido"
+    }
+  }
+]

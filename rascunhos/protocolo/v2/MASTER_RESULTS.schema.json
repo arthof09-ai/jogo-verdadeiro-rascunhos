@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MASTER_RESULTS.schema.json",
+  "title": "MASTER_RESULTS (servidor → Mestre)",
+  "description": "Resposta a MASTER_SEARCH: até 50 fichas de criatura/NPC (nunca de jogadora). O `nome` verdadeiro só sai para o Mestre. Escrito pela conferência I0004 a partir de sala.js.",
+  "type": "object",
+  "required": [
+    "v",
+    "type",
+    "roomId",
+    "resultados"
+  ],
+  "properties": {
+    "v": {
+      "$ref": "comum.schema.json#/$defs/v"
+    },
+    "type": {
+      "const": "MASTER_RESULTS"
+    },
+    "roomId": {
+      "$ref": "comum.schema.json#/$defs/roomId"
+    },
+    "resultados": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "required": [
+          "fichaId",
+          "nome",
+          "nomePublico",
+          "papel",
+          "classificacao"
+        ],
+        "properties": {
+          "fichaId": {
+            "$ref": "comum.schema.json#/$defs/idOpaco"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "nomePublico": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "papel": {
+            "enum": [
+              "criatura",
+              "npc"
+            ]
+          },
+          "classificacao": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

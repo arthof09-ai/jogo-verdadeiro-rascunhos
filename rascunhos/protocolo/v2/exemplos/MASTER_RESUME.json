@@ -1,0 +1,14 @@
+[
+  {
+    "caso": "MASTER_RESUME",
+    "sentido": "cliente → servidor",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "MASTER_RESUME",
+      "cmdId": "cmd-5",
+      "revision": 6
+    }
+  }
+]

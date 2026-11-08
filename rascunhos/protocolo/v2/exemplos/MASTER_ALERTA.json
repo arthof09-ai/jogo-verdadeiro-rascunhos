@@ -1,0 +1,14 @@
+[
+  {
+    "caso": "MASTER_ALERTA",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "MASTER_ALERTA",
+      "roomId": "sala-teste",
+      "motivo": "bloqueio_join",
+      "alvo": "ip"
+    }
+  }
+]

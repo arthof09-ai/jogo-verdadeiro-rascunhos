@@ -1,0 +1,16 @@
+[
+  {
+    "caso": "voltar",
+    "sentido": "cliente → servidor",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "MASTER_SUPERVISOR",
+      "cmdId": "cmd-4",
+      "revision": 5,
+      "op": "voltar",
+      "ateSeq": 5
+    }
+  }
+]

@@ -1,0 +1,15 @@
+[
+  {
+    "caso": "MASTER_AMBIENTE",
+    "sentido": "cliente → servidor",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "MASTER_AMBIENTE",
+      "cmdId": "cmd-6",
+      "revision": 7,
+      "hora": "12:00"
+    }
+  }
+]

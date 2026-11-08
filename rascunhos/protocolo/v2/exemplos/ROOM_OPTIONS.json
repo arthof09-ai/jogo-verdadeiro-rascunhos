@@ -1,0 +1,290 @@
+[
+  {
+    "caso": "ROOM_OPTIONS",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_OPTIONS",
+      "roomId": "sala-teste",
+      "revision": 2,
+      "vezId": "fba2529d0fcfbedbf",
+      "orcamentoM": 9,
+      "mover": [
+        {
+          "x": 2,
+          "y": 1,
+          "custoM": 1.5
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "custoM": 1.5
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "custoM": 1.5
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "custoM": 1.5
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "custoM": 3
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "custoM": 3
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "custoM": 3
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "custoM": 3
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "custoM": 3
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "custoM": 3
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "custoM": 3
+        },
+        {
+          "x": 2,
+          "y": 4,
+          "custoM": 3
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "custoM": 4.5
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "custoM": 4.5
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "custoM": 4.5
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "custoM": 4.5
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "custoM": 4.5
+        },
+        {
+          "x": 0,
+          "y": 3,
+          "custoM": 4.5
+        },
+        {
+          "x": 4,
+          "y": 3,
+          "custoM": 4.5
+        },
+        {
+          "x": 1,
+          "y": 4,
+          "custoM": 4.5
+        },
+        {
+          "x": 3,
+          "y": 4,
+          "custoM": 4.5
+        },
+        {
+          "x": 2,
+          "y": 5,
+          "custoM": 4.5
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "custoM": 6
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "custoM": 6
+        },
+        {
+          "x": 5,
+          "y": 1,
+          "custoM": 6
+        },
+        {
+          "x": 6,
+          "y": 2,
+          "custoM": 6
+        },
+        {
+          "x": 5,
+          "y": 3,
+          "custoM": 6
+        },
+        {
+          "x": 0,
+          "y": 4,
+          "custoM": 6
+        },
+        {
+          "x": 4,
+          "y": 4,
+          "custoM": 6
+        },
+        {
+          "x": 1,
+          "y": 5,
+          "custoM": 6
+        },
+        {
+          "x": 3,
+          "y": 5,
+          "custoM": 6
+        },
+        {
+          "x": 2,
+          "y": 6,
+          "custoM": 6
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "custoM": 7.5
+        },
+        {
+          "x": 6,
+          "y": 1,
+          "custoM": 7.5
+        },
+        {
+          "x": 7,
+          "y": 2,
+          "custoM": 7.5
+        },
+        {
+          "x": 6,
+          "y": 3,
+          "custoM": 7.5
+        },
+        {
+          "x": 5,
+          "y": 4,
+          "custoM": 7.5
+        },
+        {
+          "x": 0,
+          "y": 5,
+          "custoM": 7.5
+        },
+        {
+          "x": 4,
+          "y": 5,
+          "custoM": 7.5
+        },
+        {
+          "x": 1,
+          "y": 6,
+          "custoM": 7.5
+        },
+        {
+          "x": 3,
+          "y": 6,
+          "custoM": 7.5
+        },
+        {
+          "x": 2,
+          "y": 7,
+          "custoM": 7.5
+        },
+        {
+          "x": 6,
+          "y": 0,
+          "custoM": 9
+        },
+        {
+          "x": 7,
+          "y": 1,
+          "custoM": 9
+        },
+        {
+          "x": 8,
+          "y": 2,
+          "custoM": 9
+        },
+        {
+          "x": 7,
+          "y": 3,
+          "custoM": 9
+        },
+        {
+          "x": 6,
+          "y": 4,
+          "custoM": 9
+        },
+        {
+          "x": 5,
+          "y": 5,
+          "custoM": 9
+        },
+        {
+          "x": 0,
+          "y": 6,
+          "custoM": 9
+        },
+        {
+          "x": 4,
+          "y": 6,
+          "custoM": 9
+        },
+        {
+          "x": 1,
+          "y": 7,
+          "custoM": 9
+        },
+        {
+          "x": 3,
+          "y": 7,
+          "custoM": 9
+        },
+        {
+          "x": 2,
+          "y": 8,
+          "custoM": 9
+        }
+      ],
+      "ataques": [],
+      "consumiveis": [],
+      "acoes": [
+        "encerrar",
+        "correr",
+        "defender"
+      ],
+      "reacoes": []
+    }
+  }
+]

@@ -1,0 +1,45 @@
+[
+  {
+    "caso": "desgraca",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "MASTER_CARD",
+      "roomId": "sala-teste",
+      "cartaoId": "c1",
+      "tipo": "desgraca",
+      "figuraId": "f0c1870b843e1465f",
+      "proposta": {
+        "tipo": "arma-cai",
+        "texto": "EXEMPLO-DESGRACA"
+      },
+      "razao": null,
+      "faces": null,
+      "intentIdOrigem": "37f92c3b-2225-4205-933a-10a4f67f87e7"
+    }
+  },
+  {
+    "caso": "ia",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "MASTER_CARD",
+      "roomId": "sala-teste",
+      "cartaoId": "c1",
+      "tipo": "ia",
+      "figuraId": "f0eca9c7df5e7493f",
+      "proposta": {
+        "tipo": "mover",
+        "destino": {
+          "x": 3,
+          "y": 2
+        }
+      },
+      "razao": "Aproxima-se da jogadora. [EXEMPLO-RAZAO-IA]",
+      "faces": null,
+      "intentIdOrigem": null
+    }
+  }
+]

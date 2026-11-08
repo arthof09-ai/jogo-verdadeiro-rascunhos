@@ -29,7 +29,8 @@ export const CAMPOS_PERMITIDOS = Object.freeze({
   // v0.2.1: o número do dano só a quem causou ou a quem recebeu (A-2: outra jogadora ✘).
   dano: Object.freeze({ todos: ['alvoId', 'autorId'], propria: ['valor', 'tipos'] }),
   estado: Object.freeze({ todos: ['figuraId', 'visivel'], propria: ['vidaActual', 'paLivre', 'estadoMorte'] }),
-  desgraca: Object.freeze({ todos: ['figuraId', 'efeito'], propria: [] }), // só a desgraça APLICADA
+  desgraca: Object.freeze({ todos: ['figuraId', 'efeito'], propria: ['perdeQuarto'] }), // só a desgraça APLICADA; REF_19
+  teste_morte: Object.freeze({ todos: ['figuraId'], propria: [] }), // só que houve teste; a CD e a saída ficam no soMestre
   reacao: Object.freeze({ todos: ['figuraId', 'reacao'], propria: [] }),
   consumivel: Object.freeze({ todos: ['figuraId', 'itemId', 'alvoId'], propria: [] }),
   ambiente: Object.freeze({ todos: ['efeito'], propria: [] }), // E-P12: só o efeito presente
@@ -43,6 +44,7 @@ const EH_PROPRIO = Object.freeze({
   ataque: (d, f) => d.atacanteId === f,
   dano: (d, f) => d.alvoId === f || d.autorId === f,
   estado: (d, f) => d.figuraId === f,
+  desgraca: (d, f) => d.figuraId === f,
 });
 
 // Climas que a Party pode ver como efeito. Texto livre do Mestre nunca sai.

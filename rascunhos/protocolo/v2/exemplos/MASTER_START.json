@@ -1,0 +1,14 @@
+[
+  {
+    "caso": "MASTER_START",
+    "sentido": "cliente → servidor",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "MASTER_START",
+      "cmdId": "cmd-2",
+      "revision": 2
+    }
+  }
+]

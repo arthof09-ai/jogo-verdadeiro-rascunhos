@@ -1,0 +1,65 @@
+[
+  {
+    "caso": "MASTER_VIEW",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "MASTER_VIEW",
+      "roomId": "sala-teste",
+      "journalSeq": 0,
+      "fase": "lobby",
+      "mapa": {
+        "largura": 20,
+        "altura": 20,
+        "casaM": 1.5
+      },
+      "figuras": [],
+      "iniciativa": [],
+      "vezId": null,
+      "rodada": 0,
+      "ambiente": {
+        "clima": null,
+        "luz": null
+      },
+      "mestre": {
+        "figuras": [
+          {
+            "id": "fba2529d0fcfbedbf",
+            "fichaId": "heroina-teste",
+            "lado": "jogadora",
+            "colocada": false,
+            "x": 2,
+            "y": 2,
+            "orientacao": "S",
+            "casaInicial": {
+              "x": 2,
+              "y": 2
+            },
+            "vidaActual": 5150,
+            "paGasto": 0,
+            "vivo": true,
+            "caido": false,
+            "estadoMorte": null,
+            "armaCaida": false,
+            "armaQuebrada": false,
+            "corpoPartido": false,
+            "transformada": false,
+            "reacaoDisponivel": true,
+            "defendendo": false,
+            "modo": null
+          }
+        ],
+        "lobby": null,
+        "vez": null,
+        "ambiente": {
+          "hora": null,
+          "clima": null,
+          "futuro": null
+        },
+        "cartoes": [],
+        "pausa": null
+      }
+    }
+  }
+]

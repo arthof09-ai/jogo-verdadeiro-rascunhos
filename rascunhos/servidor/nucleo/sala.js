@@ -108,7 +108,8 @@ const TIPOS_MESTRE = Object.freeze([
   'MASTER_CONFIRM_DICE', 'MASTER_AMBIENTE', 'MASTER_SUPERVISOR', 'MASTER_PAUSE', 'MASTER_RESUME',
 ]);
 const RE_ID = /^[A-Za-z0-9_-]{1,64}$/;
-const CHAVES_MUNDO = Object.freeze(['fase', 'mapa', 'lobby', 'figuras', 'ordem', 'vezIdx', 'rodada', 'vez', 'ambiente', 'desfecho']);
+// `cartoes` entra no checkpoint para o «voltar» repor os cartões do instante (rolagem por resolver incluída).
+const CHAVES_MUNDO = Object.freeze(['fase', 'mapa', 'lobby', 'figuras', 'ordem', 'vezIdx', 'rodada', 'vez', 'ambiente', 'desfecho', 'cartoes']);
 
 /** Recusa terminal de uma intenção (E-C5): fica gravada como recibo RECUSADA. */
 export class ErroRecusa extends Error {
@@ -1053,18 +1054,35 @@ export function criarSala({
     const tipo = idDesgraca(fc.desgraca ?? fc.desgracaAplicada);
     return tipo && tipo !== 'nenhuma' ? tipo : null;
   }
+  /**
+   * REF_19 (T-QUEBRAR25; palavra do Mestre, 07/11/2026 09:02): quem quebra uma parte do corpo perde NA HORA 25% da
+   * Vida ACTUAL — floor(vida/4), tecto vida−1, nunca negativa (com Vida 1–3 a perda é 0). A regra sozinha nunca mata.
+   * Vale para monstro ou heroína. Só se chama com a desgraça já APLICADA (modo 'sorte'/'escolha'): a proposta H10
+   * (requerConfirmacao) não cobra, porque cobraria antes da autorização do Mestre.
+   */
+  function perdaQuebrarCorpo(f) {
+    const v = typeof f.vidaActual === 'number' && Number.isFinite(f.vidaActual) ? f.vidaActual : 0;
+    return Math.max(0, Math.min(Math.floor(v / 4), v - 1));
+  }
+  /** Aplica o efeito da desgraça na figura; devolve a Vida perdida pela própria desgraça (0 se não houver). */
   function aplicarEfeitoDesgraca(f, tipo) {
     switch (tipo) {
       case 'cai': f.caido = true; break;
       case 'arma-cai': f.armaCaida = true; break;
       case 'arma-quebra': f.armaQuebrada = true; break;
-      case 'quebra-corpo': f.corpoPartido = true; break; // desvantagem 1 e metade do deslocamento até ao fim
+      case 'quebra-corpo': { // desvantagem 1 e metade do deslocamento até ao fim + REF_19 (um quarto da Vida actual)
+        f.corpoPartido = true;
+        const perda = perdaQuebrarCorpo(f);
+        f.vidaActual -= perda;
+        return perda;
+      }
       // VLAB real: `acerta-se` traz o dano em soDoMestre.atacanteDepois.vidaActual (já aplicado por aplicarDepois);
       // sem vida do atacante vem em `desgracaPendente`. `acerta-amigo` exige contexto.aliadosAoAlcance, que a sala
       // ainda não envia: por isso o motor exclui-o da tabela ("excluidas") e nunca o sorteia nem o aceita em 'escolha'.
       // TODO(R0): quem conta como "amigo ao alcance" (aliadosAoAlcance) e como se resolve o desgracaPendente.
       default: break;
     }
+    return 0;
   }
   function tiposDe(t) {
     if (Array.isArray(t.tipos)) return t.tipos.slice();
@@ -1110,8 +1128,13 @@ export function criarSala({
     }
     const des = desgracaAplicada(saida);
     if (des) {
-      aplicarEfeitoDesgraca(atacante, des);
-      tx.emitir('desgraca', { figuraId: atacante.id, efeito: DESGRACAS.includes(des) ? des : null }, { bruto: saida.falhaCritica });
+      // Uma vez por desgraça: aplicarSaida é o único ponto onde a desgraça aplicada entra (vez, oportunidade, pós-cartão).
+      const perdaVida = aplicarEfeitoDesgraca(atacante, des);
+      const dadosDesgraca = { figuraId: atacante.id, efeito: DESGRACAS.includes(des) ? des : null };
+      // REF_19: a frase «…e perde um quarto da vida que tem agora» só quando a perda acontece. Vai só à própria
+      // (campo `propria`); o número fica no soMestre e a Vida nova segue pelo evento `estado`.
+      if (perdaVida > 0) dadosDesgraca.perdeQuarto = true;
+      tx.emitir('desgraca', dadosDesgraca, { bruto: saida.falhaCritica, perdaVida });
     }
     const dano = danoTotalDe(saida);
     if (dano > 0) tx.emitir('dano', { alvoId: alvo.id, autorId: atacante.id, valor: dano, tipos: tiposDe(t) }, null);
@@ -1138,7 +1161,7 @@ export function criarSala({
       // §8.3 / H10: a jogadora nunca autoriza a própria desgraça. A rolagem já está gravada no cartão.
       abrirCartao(tx, {
         tipo: 'desgraca', figuraId: f.id, alvoId: alvo.id, tecnicaId: t.id, contexto: ctx,
-        proposta: saida.falhaCritica.desgracaProposta ?? saida.falhaCritica.proposta ?? null,
+        proposta: saida.falhaCritica.desgracaProposta ?? saida.falhaCritica.proposta ?? saida.falhaCritica.desgraca ?? null,
         razao: null, origem: origemCartao(origem),
       });
       return 'AGUARDANDO_MESTRE';
@@ -1694,7 +1717,7 @@ export function criarSala({
       const alvo = m.figuras[c.alvoId];
       const t = fichaEfetiva(f).tecnicas.find((x) => x.id === c.tecnicaId);
       let escolhida;
-      if (decisao === 'aprovar') escolhida = typeof c.proposta === 'string' ? c.proposta : c.proposta?.tipo ?? null;
+      if (decisao === 'aprovar') escolhida = typeof c.proposta === 'string' ? c.proposta : c.proposta?.tipo ?? c.proposta?.id ?? null;
       else if (decisao === 'editar') escolhida = msg.edicao?.desgraca;
       else escolhida = 'nenhuma'; // TODO(JV1.x R0): o que "recusar a desgraça" significa na regra
       if (typeof escolhida !== 'string') throw new ErroRecusa('acao_invalida');
@@ -1733,12 +1756,24 @@ export function criarSala({
   function voltar(tx, ateSeq) {
     const m = tx.estado;
     if (ateSeq >= journal.journalSeq || !checkpoints.has(ateSeq)) throw new ErroRecusa('acao_invalida');
+    const antes = m.cartoes;
     Object.assign(m, clonarJson(checkpoints.get(ateSeq)));
-    for (const c of m.cartoes) {
-      if (c.estado === 'aberto') {
-        c.estado = 'fechado';
-        c.decisao = 'revertido';
+    // Os cartões voltam ao instante ateSeq (delta REF_21/REF_24, I0004 08/11): o que estava por decidir nesse
+    // instante volta a estar por decidir, com a MESMA rolagem gravada no cartão. Antes, todos os cartões abertos
+    // fechavam como 'revertido': a rolagem por resolver ia fora sem custo (a jogadora atacava de novo, com rolagem
+    // nova) e o recibo dela ficava AGUARDANDO_MESTRE para sempre. Os cartões nascidos depois de ateSeq não existiam
+    // nesse instante: ficam na história, fechados 'revertido' (os recibos deles são marcados no laço abaixo).
+    const noInstante = new Set(m.cartoes.map((c) => c.cartaoId));
+    const abertosAntes = new Set(antes.filter((c) => c.estado === 'aberto').map((c) => c.cartaoId));
+    for (const c of antes) {
+      if (noInstante.has(c.cartaoId)) continue;
+      const historia = clonarJson(c);
+      if (historia.estado === 'aberto') {
+        historia.estado = 'fechado';
+        historia.decisao = 'revertido';
+        tx.emitir('cartao_fechado', { cartaoId: historia.cartaoId, decisao: 'revertido' }, null);
       }
+      m.cartoes.push(historia);
     }
     tx.emitir('revertido', {}, { ateSeq });
     for (const [chave, r] of journal.todosRecibos()) {
@@ -1750,6 +1785,13 @@ export function criarSala({
         }
         tx.recibos.push({ chave, recibo: novo, enviar: true });
       }
+    }
+    // Cartões reabertos (decididos depois de ateSeq): o Mestre volta a recebê-los e o recibo de origem volta a
+    // AGUARDANDO_MESTRE (este push vem depois do laço acima, por isso prevalece).
+    for (const c of m.cartoes) {
+      if (c.estado !== 'aberto' || abertosAntes.has(c.cartaoId)) continue;
+      tx.emitir('cartao', { cartaoId: c.cartaoId, tipo: c.tipo }, c);
+      atualizarReciboOrigem(tx, c.origem, 'AGUARDANDO_MESTRE');
     }
     tx.snapshotsTodos = true; // projetados no instante novo
     // TODO(JV1.x E-P12): replay "no instante histórico" para quem pedir o passado (hoje: fluxos gravados).

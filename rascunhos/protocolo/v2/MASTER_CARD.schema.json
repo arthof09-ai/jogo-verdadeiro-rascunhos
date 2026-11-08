@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MASTER_CARD.schema.json",
+  "title": "MASTER_CARD (servidor → Mestre)",
+  "description": "Cartão por decidir (H10, invariante 12, §8.3). Só o lugar do Mestre o recebe. Decide-se com MASTER_APPROVE {cartaoId, decisao}. O mesmo cartaoId pode chegar outra vez: depois de um «voltar» que o reabre (I0004, 08/11). Escrito pela conferência I0004 a partir de sala.js mensagemCartao().",
+  "type": "object",
+  "required": [
+    "v",
+    "type",
+    "roomId",
+    "cartaoId",
+    "tipo",
+    "figuraId",
+    "proposta",
+    "razao",
+    "faces",
+    "intentIdOrigem"
+  ],
+  "properties": {
+    "v": {
+      "$ref": "comum.schema.json#/$defs/v"
+    },
+    "type": {
+      "const": "MASTER_CARD"
+    },
+    "roomId": {
+      "$ref": "comum.schema.json#/$defs/roomId"
+    },
+    "cartaoId": {
+      "$ref": "comum.schema.json#/$defs/idOpaco"
+    },
+    "tipo": {
+      "enum": [
+        "desgraca",
+        "ia",
+        "progresso",
+        "dados"
+      ],
+      "description": "desgraca: falha crítica da jogadora (a rolagem está gravada no cartão); ia: proposta da criatura em semi; progresso: 2.ª recusa no turno; dados: confirmar dados físicos."
+    },
+    "figuraId": {
+      "$ref": "comum.schema.json#/$defs/idOuNull"
+    },
+    "proposta": {
+      "description": "desgraca: {id,nome,gravidade} do VLAB, {tipo,...} do motor falso, ou texto; ia: a acao proposta; progresso: {tipo:'encerrar'}.",
+      "type": [
+        "object",
+        "string",
+        "null"
+      ]
+    },
+    "razao": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Razão da IA ou do cartão. Só o Mestre a vê (canário CANARIO-RAZAO-IA)."
+    },
+    "faces": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+    "intentIdOrigem": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "A intenção da jogadora que abriu o cartão (o recibo dela fica AGUARDANDO_MESTRE)."
+    }
+  },
+  "additionalProperties": false
+}

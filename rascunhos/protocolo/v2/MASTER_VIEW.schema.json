@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MASTER_VIEW.schema.json",
+  "title": "MASTER_VIEW (Mestre ↔ servidor)",
+  "description": "O mesmo type nos dois sentidos. Pedido (Mestre → servidor): só o envelope. Resposta (servidor → Mestre): a vista inteira do Mestre, igual ao ROOM_SNAPSHOT do Mestre mas com `journalSeq` em vez de seq/revision/ts (fora do fluxo numerado). Escrito pela conferência I0004 a partir de sala.js mensagemVistaMestre().",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/pedido"
+    },
+    {
+      "$ref": "#/$defs/resposta"
+    }
+  ],
+  "$defs": {
+    "pedido": {
+      "type": "object",
+      "required": [
+        "v",
+        "type",
+        "roomId"
+      ],
+      "properties": {
+        "v": {
+          "$ref": "comum.schema.json#/$defs/v"
+        },
+        "type": {
+          "const": "MASTER_VIEW"
+        },
+        "roomId": {
+          "$ref": "comum.schema.json#/$defs/roomId"
+        },
+        "cmdId": {
+          "$ref": "comum.schema.json#/$defs/idOpaco"
+        },
+        "revision": {
+          "$ref": "comum.schema.json#/$defs/revision"
+        }
+      },
+      "additionalProperties": false
+    },
+    "resposta": {
+      "type": "object",
+      "required": [
+        "v",
+        "type",
+        "roomId",
+        "journalSeq",
+        "fase",
+        "mapa",
+        "figuras",
+        "iniciativa",
+        "vezId",
+        "rodada",
+        "ambiente",
+        "mestre"
+      ],
+      "properties": {
+        "v": {
+          "$ref": "comum.schema.json#/$defs/v"
+        },
+        "type": {
+          "const": "MASTER_VIEW"
+        },
+        "roomId": {
+          "$ref": "comum.schema.json#/$defs/roomId"
+        },
+        "journalSeq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fase": {
+          "$ref": "comum.schema.json#/$defs/fase"
+        },
+        "mapa": {
+          "$ref": "comum.schema.json#/$defs/mapa"
+        },
+        "figuras": {
+          "type": "array",
+          "items": {
+            "$ref": "comum.schema.json#/$defs/figuraPublica"
+          }
+        },
+        "iniciativa": {
+          "type": "array",
+          "items": {
+            "$ref": "comum.schema.json#/$defs/idOpaco"
+          }
+        },
+        "vezId": {
+          "$ref": "comum.schema.json#/$defs/idOuNull"
+        },
+        "rodada": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ambiente": {
+          "$ref": "comum.schema.json#/$defs/ambienteEfeito"
+        },
+        "mestre": {
+          "$ref": "ROOM_SNAPSHOT.schema.json#/$defs/mestre"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,16 @@
+[
+  {
+    "caso": "MASTER_MODE",
+    "sentido": "cliente → servidor",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "MASTER_MODE",
+      "cmdId": "cmd-4",
+      "revision": 4,
+      "figuraId": "f0eca9c7df5e7493f",
+      "modo": "semi"
+    }
+  }
+]

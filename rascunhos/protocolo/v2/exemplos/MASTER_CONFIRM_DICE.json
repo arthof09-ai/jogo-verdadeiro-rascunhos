@@ -1,0 +1,16 @@
+[
+  {
+    "caso": "o Mestre aceita os dados físicos da jogadora (escrito à mão)",
+    "sentido": "cliente → servidor",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "MASTER_CONFIRM_DICE",
+      "roomId": "sala-teste",
+      "cmdId": "cmd-41",
+      "revision": 12,
+      "intentId": "beade9c9-21ed-429b-9222-532d14cf5b70",
+      "aceitar": true
+    }
+  }
+]

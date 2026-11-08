@@ -1,0 +1,106 @@
+[
+  {
+    "caso": "fora_da_vez",
+    "sentido": "servidor → cliente",
+    "papel": "aliada",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_REJECT",
+      "roomId": "sala-teste",
+      "intentId": "5b0c2c1e-9d7e-4a43-8f2a-1c6f0e2b9a11",
+      "motivo": "fora_da_vez",
+      "texto": "Ainda não é a sua vez."
+    }
+  },
+  {
+    "caso": "aguardando_mestre",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_REJECT",
+      "roomId": "sala-teste",
+      "intentId": "8dedbb12-c111-4253-b8c5-d26f9210b546",
+      "motivo": "aguardando_mestre",
+      "texto": "O Mestre está decidindo."
+    }
+  },
+  {
+    "caso": "formato",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_REJECT",
+      "roomId": "sala-teste",
+      "intentId": "id-1",
+      "motivo": "formato",
+      "texto": "Mensagem mal formada."
+    }
+  },
+  {
+    "caso": "intent_conflito",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_REJECT",
+      "roomId": "sala-teste",
+      "intentId": "5b0c2c1e-9d7e-4a43-8f2a-1c6f0e2b9a11",
+      "motivo": "intent_conflito",
+      "texto": "Este pedido já foi usado com outra ação."
+    }
+  },
+  {
+    "caso": "revisao_antiga",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_REJECT",
+      "roomId": "sala-teste",
+      "intentId": "rev-velha-1",
+      "motivo": "revisao_antiga",
+      "texto": "O tabuleiro mudou. Escolha de novo."
+    }
+  },
+  {
+    "caso": "sala_pausada",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_REJECT",
+      "roomId": "sala-teste",
+      "intentId": "24565f69-a243-4450-ba38-fac627d14870",
+      "motivo": "sala_pausada",
+      "texto": "A mesa está em pausa."
+    }
+  },
+  {
+    "caso": "acao_invalida",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_REJECT",
+      "roomId": "sala-teste",
+      "cmdId": "cmd-8",
+      "motivo": "acao_invalida",
+      "texto": "Ação não disponível."
+    }
+  },
+  {
+    "caso": "cartao_aberto",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_REJECT",
+      "roomId": "sala-teste",
+      "cmdId": "cmd-6",
+      "motivo": "cartao_aberto",
+      "texto": "Há um cartão por decidir."
+    }
+  }
+]

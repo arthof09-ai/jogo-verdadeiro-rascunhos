@@ -152,6 +152,24 @@
       },
       "additionalProperties": false
     },
+    "dados_desgraca_propria": {
+      "type": "object",
+      "description": "REF_19 (I0004, 08/11): `perdeQuarto` só à PRÓPRIA e só quando quebrar o corpo lhe tirou Vida. Ausente = sem perda.",
+      "required": ["figuraId", "efeito"],
+      "properties": {
+        "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "efeito": { "enum": ["cai", "arma-cai", "arma-quebra", "acerta-se", "quebra-corpo", "acerta-amigo", null] },
+        "perdeQuarto": { "const": true }
+      },
+      "additionalProperties": false
+    },
+    "dados_teste_morte": {
+      "type": "object",
+      "description": "Remendo IBX-298: a Party sabe só QUE houve teste de morte; a CD e a saída ficam no soMestre.",
+      "required": ["figuraId"],
+      "properties": { "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" } },
+      "additionalProperties": false
+    },
     "dados_reacao": {
       "type": "object",
       "description": "A-4: o servidor ainda não emite este tipo. Campos de projecao.js; o tipo de `reacao` está por fixar (D-20).",
@@ -204,7 +222,7 @@
         "seq": { "type": "integer", "minimum": 1 },
         "revision": { "$ref": "comum.schema.json#/$defs/revision" },
         "ts": { "$ref": "comum.schema.json#/$defs/ts" },
-        "tipo": { "enum": ["entrada", "colocacao", "turno", "movimento", "ataque", "dano", "estado", "desgraca", "reacao", "consumivel", "ambiente", "revertido", "fim"] },
+        "tipo": { "enum": ["entrada", "colocacao", "turno", "movimento", "ataque", "dano", "estado", "desgraca", "teste_morte", "reacao", "consumivel", "ambiente", "revertido", "fim"] },
         "dados": { "type": "object" }
       },
       "additionalProperties": false
@@ -224,6 +242,7 @@
             { "properties": { "tipo": { "const": "dano" }, "dados": { "$ref": "#/$defs/dados_dano" } } },
             { "properties": { "tipo": { "const": "estado" }, "dados": { "$ref": "#/$defs/dados_estado" } } },
             { "properties": { "tipo": { "const": "desgraca" }, "dados": { "$ref": "#/$defs/dados_desgraca" } } },
+            { "properties": { "tipo": { "const": "teste_morte" }, "dados": { "$ref": "#/$defs/dados_teste_morte" } } },
             { "properties": { "tipo": { "const": "reacao" }, "dados": { "$ref": "#/$defs/dados_reacao" } } },
             { "properties": { "tipo": { "const": "consumivel" }, "dados": { "$ref": "#/$defs/dados_consumivel" } } },
             { "properties": { "tipo": { "const": "ambiente" }, "dados": { "$ref": "#/$defs/dados_ambiente" } } },
@@ -247,7 +266,8 @@
             { "properties": { "tipo": { "const": "ataque" }, "dados": { "$ref": "#/$defs/dados_ataque_propria" } } },
             { "properties": { "tipo": { "const": "dano" }, "dados": { "$ref": "#/$defs/dados_dano_propria" } } },
             { "properties": { "tipo": { "const": "estado" }, "dados": { "$ref": "#/$defs/dados_estado_propria" } } },
-            { "properties": { "tipo": { "const": "desgraca" }, "dados": { "$ref": "#/$defs/dados_desgraca" } } },
+            { "properties": { "tipo": { "const": "desgraca" }, "dados": { "$ref": "#/$defs/dados_desgraca_propria" } } },
+            { "properties": { "tipo": { "const": "teste_morte" }, "dados": { "$ref": "#/$defs/dados_teste_morte" } } },
             { "properties": { "tipo": { "const": "reacao" }, "dados": { "$ref": "#/$defs/dados_reacao" } } },
             { "properties": { "tipo": { "const": "consumivel" }, "dados": { "$ref": "#/$defs/dados_consumivel" } } },
             { "properties": { "tipo": { "const": "ambiente" }, "dados": { "$ref": "#/$defs/dados_ambiente" } } },

@@ -1,0 +1,1133 @@
+[
+  {
+    "caso": "ambiente · espectador",
+    "sentido": "servidor → cliente",
+    "papel": "espectador",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 8,
+      "revision": 5,
+      "ts": "2026-11-06T20:00:06.000Z",
+      "tipo": "ambiente",
+      "dados": {
+        "efeito": {
+          "clima": "tempestade",
+          "luz": "noite"
+        }
+      }
+    }
+  },
+  {
+    "caso": "ataque · espectador",
+    "sentido": "servidor → cliente",
+    "papel": "espectador",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 9,
+      "revision": 5,
+      "ts": "2026-11-06T20:00:06.750Z",
+      "tipo": "ataque",
+      "dados": {
+        "atacanteId": "f1a88a9eef918a8b4",
+        "alvoId": "f1c8fc87e558f2d7e",
+        "arma": "chicote-teste",
+        "resultado": "acerto",
+        "ataqueDeOportunidade": false
+      }
+    }
+  },
+  {
+    "caso": "colocacao · espectador",
+    "sentido": "servidor → cliente",
+    "papel": "espectador",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 3,
+      "revision": 2,
+      "ts": "2026-11-06T20:00:04.000Z",
+      "tipo": "colocacao",
+      "dados": {
+        "figuraId": "f1a88a9eef918a8b4",
+        "nomePublico": "Heroína Teste",
+        "lado": "jogadora",
+        "x": 2,
+        "y": 2,
+        "orientacao": "S",
+        "visivel": "de_pe"
+      }
+    }
+  },
+  {
+    "caso": "dano · espectador",
+    "sentido": "servidor → cliente",
+    "papel": "espectador",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 10,
+      "revision": 5,
+      "ts": "2026-11-06T20:00:06.750Z",
+      "tipo": "dano",
+      "dados": {
+        "alvoId": "f1c8fc87e558f2d7e",
+        "autorId": "f1a88a9eef918a8b4"
+      }
+    }
+  },
+  {
+    "caso": "desgraca · espectador",
+    "sentido": "servidor → cliente",
+    "papel": "espectador",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 13,
+      "revision": 6,
+      "ts": "2026-11-06T20:00:09.750Z",
+      "tipo": "desgraca",
+      "dados": {
+        "figuraId": "f0c1870b843e1465f",
+        "efeito": "arma-cai"
+      }
+    }
+  },
+  {
+    "caso": "entrada · espectador",
+    "sentido": "servidor → cliente",
+    "papel": "espectador",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 1,
+      "revision": 1,
+      "ts": "2026-11-06T20:00:01.250Z",
+      "tipo": "entrada",
+      "dados": {
+        "figuraId": "f1a88a9eef918a8b4",
+        "nomePublico": "Heroína Teste",
+        "lado": "jogadora"
+      }
+    }
+  },
+  {
+    "caso": "estado · espectador",
+    "sentido": "servidor → cliente",
+    "papel": "espectador",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 20,
+      "revision": 10,
+      "ts": "2026-11-06T20:00:12.250Z",
+      "tipo": "estado",
+      "dados": {
+        "figuraId": "f0c1870b843e1465f",
+        "visivel": "de_pe"
+      }
+    }
+  },
+  {
+    "caso": "movimento · espectador",
+    "sentido": "servidor → cliente",
+    "papel": "espectador",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 15,
+      "revision": 8,
+      "ts": "2026-11-06T20:00:11.000Z",
+      "tipo": "movimento",
+      "dados": {
+        "figuraId": "fb43618ae935f84df",
+        "de": {
+          "x": 12,
+          "y": 12
+        },
+        "para": {
+          "x": 12,
+          "y": 4
+        },
+        "caminho": [
+          {
+            "x": 12,
+            "y": 12
+          },
+          {
+            "x": 12,
+            "y": 11
+          },
+          {
+            "x": 12,
+            "y": 10
+          },
+          {
+            "x": 12,
+            "y": 9
+          },
+          {
+            "x": 12,
+            "y": 8
+          },
+          {
+            "x": 12,
+            "y": 7
+          },
+          {
+            "x": 12,
+            "y": 6
+          },
+          {
+            "x": 12,
+            "y": 5
+          },
+          {
+            "x": 12,
+            "y": 4
+          }
+        ]
+      }
+    }
+  },
+  {
+    "caso": "turno · espectador",
+    "sentido": "servidor → cliente",
+    "papel": "espectador",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 5,
+      "revision": 2,
+      "ts": "2026-11-06T20:00:04.000Z",
+      "tipo": "turno",
+      "dados": {
+        "figuraId": "f1a88a9eef918a8b4",
+        "rodada": 1,
+        "narra": false
+      }
+    }
+  },
+  {
+    "caso": "ambiente · jogadora",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 8,
+      "revision": 5,
+      "ts": "2026-11-06T20:00:06.000Z",
+      "tipo": "ambiente",
+      "dados": {
+        "efeito": {
+          "clima": "tempestade",
+          "luz": "noite"
+        }
+      }
+    }
+  },
+  {
+    "caso": "ataque · jogadora",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 7,
+      "revision": 6,
+      "ts": "2026-11-06T20:00:04.000Z",
+      "tipo": "ataque",
+      "dados": {
+        "atacanteId": "f0eca9c7df5e7493f",
+        "alvoId": "fba2529d0fcfbedbf",
+        "arma": "mordida-teste",
+        "resultado": "acerto",
+        "ataqueDeOportunidade": false
+      }
+    }
+  },
+  {
+    "caso": "colocacao · jogadora",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 2,
+      "revision": 2,
+      "ts": "2026-11-06T20:00:02.500Z",
+      "tipo": "colocacao",
+      "dados": {
+        "figuraId": "fba2529d0fcfbedbf",
+        "nomePublico": "Heroína Teste",
+        "lado": "jogadora",
+        "x": 2,
+        "y": 2,
+        "orientacao": "S",
+        "visivel": "de_pe"
+      }
+    }
+  },
+  {
+    "caso": "dano · jogadora",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 8,
+      "revision": 6,
+      "ts": "2026-11-06T20:00:04.000Z",
+      "tipo": "dano",
+      "dados": {
+        "alvoId": "fba2529d0fcfbedbf",
+        "autorId": "f0eca9c7df5e7493f",
+        "valor": 1176,
+        "tipos": [
+          "perfurante"
+        ]
+      }
+    }
+  },
+  {
+    "caso": "desgraca · jogadora",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 13,
+      "revision": 7,
+      "ts": "2026-11-06T20:00:09.750Z",
+      "tipo": "desgraca",
+      "dados": {
+        "figuraId": "f0c1870b843e1465f",
+        "efeito": "arma-cai"
+      }
+    }
+  },
+  {
+    "caso": "entrada · jogadora",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 2,
+      "revision": 1,
+      "ts": "2026-11-06T20:00:02.000Z",
+      "tipo": "entrada",
+      "dados": {
+        "figuraId": "f6dc588d3472f513c",
+        "nomePublico": "Aliada Teste",
+        "lado": "jogadora"
+      }
+    }
+  },
+  {
+    "caso": "estado · jogadora",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 9,
+      "revision": 6,
+      "ts": "2026-11-06T20:00:04.000Z",
+      "tipo": "estado",
+      "dados": {
+        "figuraId": "fba2529d0fcfbedbf",
+        "visivel": "de_pe",
+        "vidaActual": 3974,
+        "paLivre": 4040,
+        "estadoMorte": null
+      }
+    }
+  },
+  {
+    "caso": "fim · jogadora",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 12,
+      "revision": 6,
+      "ts": "2026-11-06T20:00:04.000Z",
+      "tipo": "fim",
+      "dados": {
+        "desfecho": "morte"
+      }
+    }
+  },
+  {
+    "caso": "movimento · jogadora",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 6,
+      "revision": 5,
+      "ts": "2026-11-06T20:00:03.750Z",
+      "tipo": "movimento",
+      "dados": {
+        "figuraId": "f0eca9c7df5e7493f",
+        "de": {
+          "x": 10,
+          "y": 2
+        },
+        "para": {
+          "x": 3,
+          "y": 2
+        },
+        "caminho": [
+          {
+            "x": 10,
+            "y": 2
+          },
+          {
+            "x": 9,
+            "y": 2
+          },
+          {
+            "x": 8,
+            "y": 2
+          },
+          {
+            "x": 7,
+            "y": 2
+          },
+          {
+            "x": 6,
+            "y": 2
+          },
+          {
+            "x": 5,
+            "y": 2
+          },
+          {
+            "x": 4,
+            "y": 2
+          },
+          {
+            "x": 3,
+            "y": 2
+          }
+        ]
+      }
+    }
+  },
+  {
+    "caso": "revertido · jogadora",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 7,
+      "revision": 5,
+      "ts": "2026-11-06T20:00:04.000Z",
+      "tipo": "revertido",
+      "dados": {}
+    }
+  },
+  {
+    "caso": "teste_morte · jogadora",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 10,
+      "revision": 6,
+      "ts": "2026-11-06T20:00:04.000Z",
+      "tipo": "teste_morte",
+      "dados": {
+        "figuraId": "fba2529d0fcfbedbf"
+      }
+    }
+  },
+  {
+    "caso": "turno · jogadora",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 3,
+      "revision": 2,
+      "ts": "2026-11-06T20:00:02.500Z",
+      "tipo": "turno",
+      "dados": {
+        "figuraId": "fba2529d0fcfbedbf",
+        "rodada": 1,
+        "narra": false
+      }
+    }
+  },
+  {
+    "caso": "acao · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 8,
+      "revision": 5,
+      "ts": "2026-11-06T20:00:04.500Z",
+      "tipo": "acao",
+      "dados": {
+        "figuraId": "fa8c5ee39b55a53b8",
+        "tipo": "defender",
+        "soMestre": null,
+        "journalSeq": 8
+      }
+    }
+  },
+  {
+    "caso": "ambiente · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 10,
+      "revision": 7,
+      "ts": "2026-11-06T20:00:06.000Z",
+      "tipo": "ambiente",
+      "dados": {
+        "efeito": {
+          "clima": "tempestade",
+          "luz": "noite"
+        },
+        "soMestre": {
+          "hora": "23:59",
+          "clima": "tempestade",
+          "futuro": "raio 23:59 EXEMPLO"
+        },
+        "journalSeq": 10
+      }
+    }
+  },
+  {
+    "caso": "ambiente_mestre · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 9,
+      "revision": 6,
+      "ts": "2026-11-06T20:00:04.750Z",
+      "tipo": "ambiente_mestre",
+      "dados": {
+        "soMestre": {
+          "hora": null,
+          "clima": null,
+          "futuro": "raio 23:59 EXEMPLO"
+        },
+        "journalSeq": 9
+      }
+    }
+  },
+  {
+    "caso": "ataque · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 10,
+      "revision": 7,
+      "ts": "2026-11-06T20:00:04.000Z",
+      "tipo": "ataque",
+      "dados": {
+        "atacanteId": "f0eca9c7df5e7493f",
+        "alvoId": "fba2529d0fcfbedbf",
+        "arma": "mordida-teste",
+        "resultado": "acerto",
+        "ataqueDeOportunidade": false,
+        "soMestre": {
+          "semente": 2228505791,
+          "verificacaoCritico": [
+            3,
+            3,
+            3
+          ],
+          "contexto": {
+            "semente": 2228505791,
+            "verificacaoCritico": [
+              3,
+              3,
+              3
+            ],
+            "modoDesgraca": "sorte",
+            "niveisVantagem": 0,
+            "niveisDesvantagem": 0,
+            "ataqueDeOportunidade": false,
+            "flanqueando": false,
+            "atacanteCaido": false,
+            "atacanteFraco": false
+          },
+          "total": 17,
+          "faces": [
+            12
+          ],
+          "recibo": {
+            "eventId": "pagina-1",
+            "total": 17,
+            "faces": [
+              12
+            ],
+            "defesa": 5551,
+            "ca": 5551,
+            "rd": {
+              "geral": 0,
+              "porTipo": {}
+            },
+            "bonusCD": null,
+            "paTotal": 4040,
+            "semente": 2228505791,
+            "vidaDepois": 3974,
+            "campoNovoDoMotor": 9137
+          },
+          "soDoMestre": {
+            "alvoDepois": {
+              "vidaActual": 3974
+            }
+          },
+          "totalEfectivo": 17,
+          "reacaoConsumida": null,
+          "desgracaPendente": null,
+          "contraAtaquePendente": null
+        },
+        "journalSeq": 10
+      }
+    }
+  },
+  {
+    "caso": "cartao · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 8,
+      "revision": 7,
+      "ts": "2026-11-06T20:00:04.250Z",
+      "tipo": "cartao",
+      "dados": {
+        "cartaoId": "c1",
+        "tipo": "ia",
+        "soMestre": {
+          "cartaoId": "c1",
+          "estado": "aberto",
+          "decisao": null,
+          "tipo": "ia",
+          "figuraId": "f0eca9c7df5e7493f",
+          "proposta": {
+            "tipo": "mover",
+            "destino": {
+              "x": 3,
+              "y": 2
+            }
+          },
+          "razao": "Aproxima-se da jogadora. [EXEMPLO-RAZAO-IA]",
+          "origem": null
+        },
+        "journalSeq": 8
+      }
+    }
+  },
+  {
+    "caso": "cartao_fechado · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 9,
+      "revision": 8,
+      "ts": "2026-11-06T20:00:05.500Z",
+      "tipo": "cartao_fechado",
+      "dados": {
+        "cartaoId": "c1",
+        "decisao": "aprovar",
+        "soMestre": null,
+        "journalSeq": 9
+      }
+    }
+  },
+  {
+    "caso": "colocacao · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 3,
+      "revision": 3,
+      "ts": "2026-11-06T20:00:02.500Z",
+      "tipo": "colocacao",
+      "dados": {
+        "figuraId": "fba2529d0fcfbedbf",
+        "nomePublico": "Heroína Teste",
+        "lado": "jogadora",
+        "x": 2,
+        "y": 2,
+        "orientacao": "S",
+        "visivel": "de_pe",
+        "soMestre": {
+          "fichaId": "heroina-teste"
+        },
+        "journalSeq": 3
+      }
+    }
+  },
+  {
+    "caso": "dano · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 11,
+      "revision": 7,
+      "ts": "2026-11-06T20:00:04.000Z",
+      "tipo": "dano",
+      "dados": {
+        "alvoId": "fba2529d0fcfbedbf",
+        "autorId": "f0eca9c7df5e7493f",
+        "valor": 1176,
+        "tipos": [
+          "perfurante"
+        ],
+        "soMestre": null,
+        "journalSeq": 11
+      }
+    }
+  },
+  {
+    "caso": "desgraca · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 17,
+      "revision": 11,
+      "ts": "2026-11-06T20:00:09.750Z",
+      "tipo": "desgraca",
+      "dados": {
+        "figuraId": "f0c1870b843e1465f",
+        "efeito": "arma-cai",
+        "soMestre": {
+          "bruto": {
+            "desgraca": "arma-cai"
+          },
+          "perdaVida": 0
+        },
+        "journalSeq": 17
+      }
+    }
+  },
+  {
+    "caso": "entrada · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 1,
+      "revision": 1,
+      "ts": "2026-11-06T20:00:01.250Z",
+      "tipo": "entrada",
+      "dados": {
+        "figuraId": "fba2529d0fcfbedbf",
+        "nomePublico": "Heroína Teste",
+        "lado": "jogadora",
+        "soMestre": null,
+        "journalSeq": 1
+      }
+    }
+  },
+  {
+    "caso": "estado · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 12,
+      "revision": 7,
+      "ts": "2026-11-06T20:00:04.000Z",
+      "tipo": "estado",
+      "dados": {
+        "figuraId": "fba2529d0fcfbedbf",
+        "visivel": "de_pe",
+        "vidaActual": 3974,
+        "paLivre": 4040,
+        "estadoMorte": null,
+        "armaCaida": false,
+        "armaQuebrada": false,
+        "corpoPartido": false,
+        "soMestre": null,
+        "journalSeq": 12
+      }
+    }
+  },
+  {
+    "caso": "fim · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 15,
+      "revision": 7,
+      "ts": "2026-11-06T20:00:04.000Z",
+      "tipo": "fim",
+      "dados": {
+        "desfecho": "morte",
+        "soMestre": null,
+        "journalSeq": 15
+      }
+    }
+  },
+  {
+    "caso": "ia · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 7,
+      "revision": 6,
+      "ts": "2026-11-06T20:00:03.750Z",
+      "tipo": "ia",
+      "dados": {
+        "figuraId": "f0eca9c7df5e7493f",
+        "soMestre": {
+          "intentId": "442546ce-8764-4344-a21c-d43b6af2b261",
+          "acao": {
+            "tipo": "mover",
+            "destino": {
+              "x": 3,
+              "y": 2
+            }
+          },
+          "razao": "Aproxima-se da jogadora. [EXEMPLO-RAZAO-IA]"
+        },
+        "journalSeq": 7
+      }
+    }
+  },
+  {
+    "caso": "lobby · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 2,
+      "revision": 2,
+      "ts": "2026-11-06T20:00:02.000Z",
+      "tipo": "lobby",
+      "dados": {
+        "soMestre": {
+          "mapaId": "arena-teste",
+          "criaturasDisponiveis": [
+            "orc-teste",
+            "lobo-teste"
+          ],
+          "npcsDisponiveis": [
+            "bandido-teste"
+          ]
+        },
+        "journalSeq": 2
+      }
+    }
+  },
+  {
+    "caso": "modo · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 6,
+      "revision": 5,
+      "ts": "2026-11-06T20:00:03.500Z",
+      "tipo": "modo",
+      "dados": {
+        "figuraId": "f0eca9c7df5e7493f",
+        "soMestre": {
+          "modo": "semi"
+        },
+        "journalSeq": 6
+      }
+    }
+  },
+  {
+    "caso": "movimento · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 8,
+      "revision": 6,
+      "ts": "2026-11-06T20:00:03.750Z",
+      "tipo": "movimento",
+      "dados": {
+        "figuraId": "f0eca9c7df5e7493f",
+        "de": {
+          "x": 10,
+          "y": 2
+        },
+        "para": {
+          "x": 3,
+          "y": 2
+        },
+        "caminho": [
+          {
+            "x": 10,
+            "y": 2
+          },
+          {
+            "x": 9,
+            "y": 2
+          },
+          {
+            "x": 8,
+            "y": 2
+          },
+          {
+            "x": 7,
+            "y": 2
+          },
+          {
+            "x": 6,
+            "y": 2
+          },
+          {
+            "x": 5,
+            "y": 2
+          },
+          {
+            "x": 4,
+            "y": 2
+          },
+          {
+            "x": 3,
+            "y": 2
+          }
+        ],
+        "custoM": 10.5,
+        "reservaM": 1.5,
+        "soMestre": null,
+        "journalSeq": 8
+      }
+    }
+  },
+  {
+    "caso": "pausa · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 6,
+      "revision": 5,
+      "ts": "2026-11-06T20:00:03.250Z",
+      "tipo": "pausa",
+      "dados": {
+        "motivo": "mestre_desconectado",
+        "soMestre": {
+          "origem": "desconexao"
+        },
+        "journalSeq": 6
+      }
+    }
+  },
+  {
+    "caso": "recusa · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 8,
+      "revision": 7,
+      "ts": "2026-11-06T20:00:04.500Z",
+      "tipo": "recusa",
+      "dados": {
+        "seatId": "ia",
+        "soMestre": {
+          "id": "ia-1",
+          "acao": {
+            "tipo": "atacar",
+            "alvoId": "fba2529d0fcfbedbf",
+            "arma": "mordida-teste"
+          },
+          "motivo": "acao_invalida",
+          "detalhe": "MOTOR:FALHA_FALSA"
+        },
+        "journalSeq": 8
+      }
+    }
+  },
+  {
+    "caso": "retomada · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 7,
+      "revision": 6,
+      "ts": "2026-11-06T20:00:05.000Z",
+      "tipo": "retomada",
+      "dados": {
+        "motivo": "mestre_desconectado",
+        "soMestre": null,
+        "journalSeq": 7
+      }
+    }
+  },
+  {
+    "caso": "revertido · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 8,
+      "revision": 6,
+      "ts": "2026-11-06T20:00:04.000Z",
+      "tipo": "revertido",
+      "dados": {
+        "soMestre": {
+          "ateSeq": 5
+        },
+        "journalSeq": 8
+      }
+    }
+  },
+  {
+    "caso": "teste_morte · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 13,
+      "revision": 7,
+      "ts": "2026-11-06T20:00:04.000Z",
+      "tipo": "teste_morte",
+      "dados": {
+        "figuraId": "fba2529d0fcfbedbf",
+        "soMestre": {
+          "semente": 3016292636,
+          "saida": {
+            "cd": 8642,
+            "cdEfectiva": 8642,
+            "sucesso": true,
+            "estadoMorte": {
+              "fase": "estabilizado",
+              "sucessos": 3,
+              "falhas": 0
+            },
+            "estabilizado": true,
+            "morteAdjudicada": false,
+            "morteVia": null,
+            "desfecho": "estabilizado",
+            "publico": {
+              "recibo": {
+                "texto": "estabilizou"
+              }
+            },
+            "soDoMestre": {
+              "cd": 8642,
+              "cdEfectiva": 8642,
+              "estadoMorte": {
+                "fase": "estabilizado",
+                "sucessos": 3,
+                "falhas": 0
+              }
+            }
+          }
+        },
+        "journalSeq": 13
+      }
+    }
+  },
+  {
+    "caso": "turno · mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_EVENT",
+      "roomId": "sala-teste",
+      "seq": 4,
+      "revision": 3,
+      "ts": "2026-11-06T20:00:02.500Z",
+      "tipo": "turno",
+      "dados": {
+        "figuraId": "fba2529d0fcfbedbf",
+        "rodada": 1,
+        "narra": false,
+        "soMestre": {
+          "modo": null
+        },
+        "journalSeq": 4
+      }
+    }
+  }
+]

@@ -1,0 +1,40 @@
+[
+  {
+    "caso": "espectador",
+    "sentido": "cliente → servidor",
+    "papel": "espectador",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_JOIN",
+      "roomId": "sala-teste",
+      "papel": "espectador",
+      "nome": "Visita",
+      "senha": "<senha-do-espectador>"
+    }
+  },
+  {
+    "caso": "jogadora",
+    "sentido": "cliente → servidor",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_JOIN",
+      "roomId": "sala-teste",
+      "papel": "jogadora",
+      "nome": "Heroína Teste",
+      "senha": "<senha-da-heroina>"
+    }
+  },
+  {
+    "caso": "mestre",
+    "sentido": "cliente → servidor",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_JOIN",
+      "roomId": "sala-teste",
+      "papel": "mestre",
+      "pin": "12345678"
+    }
+  }
+]

@@ -1,0 +1,13 @@
+[
+  {
+    "caso": "ROOM_RESYNC",
+    "sentido": "cliente → servidor",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "ROOM_RESYNC",
+      "lastSeq": 6
+    }
+  }
+]

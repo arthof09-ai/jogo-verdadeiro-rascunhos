@@ -1,0 +1,16 @@
+[
+  {
+    "caso": "MASTER_APPROVE",
+    "sentido": "cliente → servidor",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "MASTER_APPROVE",
+      "cmdId": "cmd-7",
+      "revision": 7,
+      "cartaoId": "c1",
+      "decisao": "aprovar"
+    }
+  }
+]

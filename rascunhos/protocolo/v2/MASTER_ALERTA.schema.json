@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MASTER_ALERTA.schema.json",
+  "title": "MASTER_ALERTA (servidor → Mestre)",
+  "description": "Aviso ao Mestre, fora do journal (E-P9). Motivos que o servidor emite hoje: bloqueio_join (5 entradas erradas: alvo 'ip' ou 'lugar') e segunda_ligacao (o mesmo lugar abriu outra ligação). Escrito pela conferência I0004 a partir de sala.js alertaMestre().",
+  "type": "object",
+  "required": [
+    "v",
+    "type",
+    "roomId",
+    "motivo"
+  ],
+  "properties": {
+    "v": {
+      "$ref": "comum.schema.json#/$defs/v"
+    },
+    "type": {
+      "const": "MASTER_ALERTA"
+    },
+    "roomId": {
+      "$ref": "comum.schema.json#/$defs/roomId"
+    },
+    "motivo": {
+      "enum": [
+        "bloqueio_join",
+        "segunda_ligacao"
+      ]
+    },
+    "alvo": {
+      "enum": [
+        "ip",
+        "lugar"
+      ]
+    },
+    "papel": {
+      "$ref": "comum.schema.json#/$defs/papel"
+    },
+    "nome": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

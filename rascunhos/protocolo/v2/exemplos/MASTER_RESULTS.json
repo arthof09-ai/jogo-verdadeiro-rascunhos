@@ -1,0 +1,21 @@
+[
+  {
+    "caso": "MASTER_RESULTS",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "MASTER_RESULTS",
+      "roomId": "sala-teste",
+      "resultados": [
+        {
+          "fichaId": "bandido-teste",
+          "nome": "Bandido EXEMPLO-FANTASMA",
+          "nomePublico": "Bandido EXEMPLO-FANTASMA",
+          "papel": "npc",
+          "classificacao": "bronze"
+        }
+      ]
+    }
+  }
+]

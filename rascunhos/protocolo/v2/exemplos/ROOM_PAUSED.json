@@ -1,0 +1,13 @@
+[
+  {
+    "caso": "ROOM_PAUSED",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_PAUSED",
+      "roomId": "sala-teste",
+      "motivo": "mestre_desconectado"
+    }
+  }
+]

@@ -54,3 +54,25 @@ jobs:
         env:
           MOTOR_MJS: ${{ runner.temp }}/motores.mjs
         run: node --test --test-reporter=spec "testes-motor-real/*.test.mjs"
+
+  protocolo:
+    # Conferência dos schemas do protocolo v2 contra o tráfego real dos testes do servidor (I0004, 08/11/2026).
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: rascunhos
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar o validador de JSON Schema
+        run: python3 -m pip install "jsonschema>=4.18"
+      - name: Recolher o tráfego dos testes do servidor
+        run: PROTOCOLO_DUMP="$RUNNER_TEMP/trafego.jsonl" node --test --test-isolation=none --test-timeout=30000 "servidor/testes/*.test.mjs"
+      - name: Conferir schemas, exemplos e tráfego
+        run: python3 protocolo/ferramentas/conferir-schemas.py "$RUNNER_TEMP/trafego.jsonl"

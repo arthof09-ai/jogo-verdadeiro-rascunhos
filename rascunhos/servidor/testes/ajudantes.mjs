@@ -1,13 +1,20 @@
 // Ajudantes dos testes: mesa determinista (rng e relógio fixos), clientes que guardam
 // tudo o que recebem, e o varrimento de canários.
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, appendFileSync } from 'node:fs';
 import { carregarFichas } from '../nucleo/carregar-fichas.js';
 import { criarSala } from '../nucleo/sala.js';
 import { criarMotorFalso } from './motor-falso.mjs';
 
 export const FIXTURE = JSON.parse(readFileSync(new URL('../dados-exemplo/fichas-ficticias.json', import.meta.url), 'utf8'));
 export const PIN = '90210777';
+
+// Recolha para a conferência dos schemas (protocolo/ferramentas/conferir-schemas.py): com PROTOCOLO_DUMP=<ficheiro>,
+// cada mensagem que entra no servidor ou sai dele é escrita como uma linha JSON. Sem a variável, não faz nada.
+const DUMP = process.env.PROTOCOLO_DUMP || null;
+export function despejar(sentido, papel, msg) {
+  if (DUMP) appendFileSync(DUMP, JSON.stringify({ sentido, papel, msg }) + '\n');
+}
 export const SENHAS = Object.freeze({ heroina: 'CANARIO-SENHA-H', aliada: 'CANARIO-SENHA-A', espectador: 'CANARIO-SENHA-E' });
 // Valores de iniciativa: só do Mestre (a Party vê só a ordem). Também são canários.
 export const INICIATIVA = Object.freeze({
@@ -67,6 +74,7 @@ export class Cliente {
   receber(msg) {
     // Cópia: o cliente guarda o que "chegou pelo fio".
     const m = JSON.parse(JSON.stringify(msg));
+    despejar('sai', this.nome, m);
     this.msgs.push(m);
     if (Number.isInteger(m.revision) && m.revision > this.revision) this.revision = m.revision;
     if (m.type === 'ROOM_OPTIONS') this.opcoes = m;
@@ -127,7 +135,9 @@ export function montarMesa({
 
   function entrar(chave, msgJoin, ip = '10.0.0.' + (Object.keys(clientes).length + 1)) {
     const c = clientes[chave] ?? new Cliente(chave);
-    const r = sala.entrar({ v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', ...msgJoin }, { ip });
+    const join = { v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', ...msgJoin };
+    despejar('entra', chave, join);
+    const r = sala.entrar(join, { ip });
     if (!r.ok) {
       for (const m of r.mensagens) c.receber(m);
       entregar(r.saidas);
@@ -149,7 +159,9 @@ export function montarMesa({
   /** Envia e entrega a todos; devolve só o que voltou para quem enviou. */
   function enviar(chave, msg) {
     const c = clientes[chave];
-    const saidas = sala.receber(c.seatId, { v: 2, roomId: 'sala-teste', ...msg });
+    const completa = { v: 2, roomId: 'sala-teste', ...msg };
+    despejar('entra', chave, completa);
+    const saidas = sala.receber(c.seatId, completa);
     entregar(saidas);
     return saidas.filter((s) => s.seatId === c.seatId).map((s) => JSON.parse(JSON.stringify(s.msg)));
   }

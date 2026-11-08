@@ -1,0 +1,15 @@
+[
+  {
+    "caso": "RECEIPT_QUERY",
+    "sentido": "cliente → servidor",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "RECEIPT_QUERY",
+      "intentIds": [
+        "5b0c2c1e-9d7e-4a43-8f2a-1c6f0e2b9a11"
+      ]
+    }
+  }
+]

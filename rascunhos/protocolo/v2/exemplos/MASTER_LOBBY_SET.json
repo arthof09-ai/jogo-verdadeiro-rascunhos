@@ -1,0 +1,22 @@
+[
+  {
+    "caso": "MASTER_LOBBY_SET",
+    "sentido": "cliente → servidor",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "MASTER_LOBBY_SET",
+      "cmdId": "cmd-1",
+      "revision": 1,
+      "mapaId": "arena-teste",
+      "criaturasDisponiveis": [
+        "orc-teste",
+        "lobo-teste"
+      ],
+      "npcsDisponiveis": [
+        "bandido-teste"
+      ]
+    }
+  }
+]

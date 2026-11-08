@@ -1,0 +1,19 @@
+[
+  {
+    "caso": "MASTER_PLACE",
+    "sentido": "cliente → servidor",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "MASTER_PLACE",
+      "cmdId": "cmd-3",
+      "revision": 3,
+      "fichaId": "lobo-teste",
+      "casa": {
+        "x": 10,
+        "y": 2
+      }
+    }
+  }
+]

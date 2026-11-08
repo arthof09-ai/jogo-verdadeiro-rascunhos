@@ -1,0 +1,98 @@
+[
+  {
+    "caso": "atacar",
+    "sentido": "cliente → servidor",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "ROOM_INTENT",
+      "intentId": "5b0c2c1e-9d7e-4a43-8f2a-1c6f0e2b9a11",
+      "revision": 3,
+      "acao": {
+        "tipo": "atacar",
+        "alvoId": "ff9563be1fb6a9a74",
+        "arma": "chicote-teste"
+      }
+    }
+  },
+  {
+    "caso": "correr",
+    "sentido": "cliente → servidor",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "ROOM_INTENT",
+      "intentId": "813c15e1-d3f5-41d2-b2f3-03b47b892769",
+      "revision": 4,
+      "acao": {
+        "tipo": "correr"
+      }
+    }
+  },
+  {
+    "caso": "defender",
+    "sentido": "cliente → servidor",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "ROOM_INTENT",
+      "intentId": "813c15e1-d3f5-41d2-b2f3-03b47b892769",
+      "revision": 4,
+      "acao": {
+        "tipo": "defender"
+      }
+    }
+  },
+  {
+    "caso": "desvincular",
+    "sentido": "cliente → servidor",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "ROOM_INTENT",
+      "intentId": "813c15e1-d3f5-41d2-b2f3-03b47b892769",
+      "revision": 4,
+      "acao": {
+        "tipo": "desvincular"
+      }
+    }
+  },
+  {
+    "caso": "encerrar",
+    "sentido": "cliente → servidor",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "ROOM_INTENT",
+      "intentId": "24565f69-a243-4450-ba38-fac627d14870",
+      "revision": 3,
+      "acao": {
+        "tipo": "encerrar"
+      }
+    }
+  },
+  {
+    "caso": "mover",
+    "sentido": "cliente → servidor",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "roomId": "sala-teste",
+      "type": "ROOM_INTENT",
+      "intentId": "5b0c2c1e-9d7e-4a43-8f2a-1c6f0e2b9a11",
+      "revision": 3,
+      "acao": {
+        "tipo": "mover",
+        "destino": {
+          "x": 3,
+          "y": 2
+        }
+      }
+    }
+  }
+]

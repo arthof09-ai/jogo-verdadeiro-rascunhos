@@ -1,0 +1,170 @@
+[
+  {
+    "caso": "espectador",
+    "sentido": "servidor → cliente",
+    "papel": "espectador",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_SNAPSHOT",
+      "roomId": "sala-teste",
+      "seq": 2,
+      "revision": 1,
+      "ts": "2026-11-06T20:00:03.000Z",
+      "fase": "lobby",
+      "mapa": {
+        "largura": 20,
+        "altura": 20,
+        "casaM": 1.5
+      },
+      "figuras": [],
+      "iniciativa": [],
+      "vezId": null,
+      "rodada": 0,
+      "ambiente": {
+        "clima": null,
+        "luz": null
+      }
+    }
+  },
+  {
+    "caso": "jogadora",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_SNAPSHOT",
+      "roomId": "sala-teste",
+      "seq": 1,
+      "revision": 1,
+      "ts": "2026-11-06T20:00:01.500Z",
+      "fase": "lobby",
+      "mapa": {
+        "largura": 20,
+        "altura": 20,
+        "casaM": 1.5
+      },
+      "figuras": [],
+      "iniciativa": [],
+      "vezId": null,
+      "rodada": 0,
+      "ambiente": {
+        "clima": null,
+        "luz": null
+      },
+      "propria": {
+        "figuraId": "fba2529d0fcfbedbf",
+        "vidaActual": 5150,
+        "vidaTotal": 5150,
+        "paLivre": 4040,
+        "paTotal": 4040,
+        "estadoMorte": null,
+        "armaCaida": false,
+        "armaQuebrada": false,
+        "corpoPartido": false,
+        "ficha": {
+          "id": "heroina-teste",
+          "nome": "Heroína Teste",
+          "nomePublico": "Heroína Teste",
+          "papel": "jogadora",
+          "classificacao": "prata",
+          "vidaTotal": 5150,
+          "paTotal": 4040,
+          "ca": 5551,
+          "rd": {
+            "geral": 0,
+            "porTipo": {}
+          },
+          "testes": {
+            "ataque": "1d20+3",
+            "fortitude": "1d20+2",
+            "percepcao": "1d20+8642"
+          },
+          "constituicao": 14,
+          "testesDeMorteDesignado": true,
+          "deslocamentoBase": 9,
+          "tecnicas": [
+            {
+              "id": "chicote-teste",
+              "nome": "Chicote de Teste",
+              "expressaoAtaque": "1d20+4",
+              "expressaoDano": "1d6+2",
+              "tipo": "cortante",
+              "custoPA": 2,
+              "alcanceM": 9,
+              "usaArma": true
+            }
+          ],
+          "fonte": {
+            "origem": "fixture fictícia JV1.1 (inventada para testes)",
+            "data": "2026-11-06"
+          }
+        }
+      }
+    }
+  },
+  {
+    "caso": "mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_SNAPSHOT",
+      "roomId": "sala-teste",
+      "seq": 0,
+      "revision": 1,
+      "ts": "2026-11-06T20:00:00.750Z",
+      "fase": "lobby",
+      "mapa": {
+        "largura": 20,
+        "altura": 20,
+        "casaM": 1.5
+      },
+      "figuras": [],
+      "iniciativa": [],
+      "vezId": null,
+      "rodada": 0,
+      "ambiente": {
+        "clima": null,
+        "luz": null
+      },
+      "mestre": {
+        "figuras": [
+          {
+            "id": "fba2529d0fcfbedbf",
+            "fichaId": "heroina-teste",
+            "lado": "jogadora",
+            "colocada": false,
+            "x": 2,
+            "y": 2,
+            "orientacao": "S",
+            "casaInicial": {
+              "x": 2,
+              "y": 2
+            },
+            "vidaActual": 5150,
+            "paGasto": 0,
+            "vivo": true,
+            "caido": false,
+            "estadoMorte": null,
+            "armaCaida": false,
+            "armaQuebrada": false,
+            "corpoPartido": false,
+            "transformada": false,
+            "reacaoDisponivel": true,
+            "defendendo": false,
+            "modo": null
+          }
+        ],
+        "lobby": null,
+        "vez": null,
+        "ambiente": {
+          "hora": null,
+          "clima": null,
+          "futuro": null
+        },
+        "cartoes": [],
+        "pausa": null
+      }
+    }
+  }
+]

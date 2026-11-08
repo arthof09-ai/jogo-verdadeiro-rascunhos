@@ -1,0 +1,17 @@
+[
+  {
+    "caso": "exportação do journal, só ao Mestre (escrito à mão; o conteúdo real é do journal)",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "MASTER_EXPORT",
+      "roomId": "sala-teste",
+      "marca": "MESTRE-ONLY",
+      "conteudo": {
+        "corpo": "<corpo canónico do journal>",
+        "assinatura": "<HMAC ou SHA-256>"
+      }
+    }
+  }
+]

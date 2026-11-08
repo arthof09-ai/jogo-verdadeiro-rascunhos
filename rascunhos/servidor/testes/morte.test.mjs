@@ -16,6 +16,10 @@ function motorDeMorte(desfecho) {
   motor.Vlab.resolverAtaque = (entrada) => {
     if (entrada.alvo?.id !== 'heroina-teste') return ataqueBase(entrada);
     const s = ataqueBase(entrada);
+    // Já fora de combate (a morrer ou estabilizada): este teste NÃO decide se um golpe a volta a pôr a morrer —
+    // é a pergunta de regra da JV1.1-b §9 («a jogadora a morrer continua a ser alvo?»), que vai à R0. O golpe
+    // aqui não mexe no estado; assim o teste mede só a máquina de turnos. TODO(R0): trocar pela palavra do Mestre.
+    if (entrada.alvo?.estadoMorte?.fase) return { ...s, resultado: 'acerto', danoAplicado: 0, soDoMestre: {} };
     return {
       ...s, resultado: 'acerto', danoAplicado: entrada.alvo.vidaActual,
       soDoMestre: { alvoDepois: { vidaActual: 0, estadoMorte: { fase: 'aMorrer', sucessos: 0, falhas: 0 } } },

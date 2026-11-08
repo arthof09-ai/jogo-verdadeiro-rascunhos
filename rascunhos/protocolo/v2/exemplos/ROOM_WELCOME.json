@@ -1,0 +1,59 @@
+[
+  {
+    "caso": "espectador",
+    "sentido": "servidor → cliente",
+    "papel": "espectador",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_WELCOME",
+      "roomId": "sala-teste",
+      "seatId": "s0e78ea8a761dc0de",
+      "seatToken": "bd58ba6be8a46341fd4255c748a7297a",
+      "papel": "espectador",
+      "protocolo": 2,
+      "motores": {
+        "vlabSha": "falso00000000000000000000000000000000000000000000000000000000000",
+        "dmgVersao": "falso-0",
+        "levelupSha": null
+      }
+    }
+  },
+  {
+    "caso": "jogadora",
+    "sentido": "servidor → cliente",
+    "papel": "heroina",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_WELCOME",
+      "roomId": "sala-teste",
+      "seatId": "se6336d1ff989d237",
+      "seatToken": "0c1870b843e1465f0e78ea8a761dc0de",
+      "papel": "jogadora",
+      "protocolo": 2,
+      "motores": {
+        "vlabSha": "falso00000000000000000000000000000000000000000000000000000000000",
+        "dmgVersao": "falso-0",
+        "levelupSha": null
+      }
+    }
+  },
+  {
+    "caso": "mestre",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ROOM_WELCOME",
+      "roomId": "sala-teste",
+      "seatId": "sa8c5ee39b55a53b8",
+      "seatToken": "1a88a9eef918a8b46dc588d3472f513c",
+      "papel": "mestre",
+      "protocolo": 2,
+      "motores": {
+        "vlabSha": "falso00000000000000000000000000000000000000000000000000000000000",
+        "dmgVersao": "falso-0",
+        "levelupSha": null
+      }
+    }
+  }
+]
