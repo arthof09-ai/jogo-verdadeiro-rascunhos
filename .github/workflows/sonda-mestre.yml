@@ -14,9 +14,8 @@ jobs:
           curl -s -o index.html "$B/"; grep -o -E 'src="[^"]+\.js[^"]*"' index.html | head -30
           for f in $(grep -o -E 'src="[^"]+\.js' index.html | sed 's/src="//' | grep -v -E '^https?:' | head -20); do curl -s -o "$(basename $f)" "$B/$f"; done
           ls -la *.js | awk '{print $5, $9}'
-          echo "=========== cena.js 1-130"
-          sed -n 1,130p cena.js | cut -c1-200
-          echo "=========== cena.js 200-330"
-          sed -n 200,330p cena.js | cut -c1-200
-          echo "=========== cena.js: ring( / cores"
-          grep -n -E "ring\(|COR_|cores|0x[0-9a-fA-F]{6}|escala|scale\.set|1\.25" cena.js | cut -c1-200 | head -60
+          echo "=========== jogo.js alturaMetros / modelo"
+          grep -n -E "alturaMetros|modelo:|marcador-lobo|'marcador'" jogo.js | cut -c1-220 | head -30
+          echo "=========== cena.js ring/contact posicionamento e selecção"
+          grep -n -E "u\.ring|u\.contact|selected|select\(" cena.js | cut -c1-200 | head -40
+          sed -n 540,575p cena.js | cut -c1-200
