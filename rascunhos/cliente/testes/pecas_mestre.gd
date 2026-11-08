@@ -115,7 +115,7 @@ func _correr() -> void:
 	c.aplicar_vista(vista)
 	await _quadros(1)
 	var botoes: Array = c._aba_agir.botoes_de_accao()
-	var esperados := 1 + opcoes["ataques"].size() + opcoes["acoes"].size()  # Mover + ataques + acções
+	var esperados: int = 1 + opcoes["ataques"].size() + opcoes["acoes"].size()  # Mover + ataques + acções
 	_ok(botoes.size() == esperados, "um botão por opção do servidor (%d)" % esperados)
 	c._aba_agir.escolher_modo("semi")
 	u = _ultimo()
