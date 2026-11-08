@@ -24,6 +24,11 @@ var _pedidos_vista := 0
 var _contador := 0
 
 
+## Os autoloads (Rede, Estado) não são identificadores num script -s: chegam pela árvore no 1.º quadro.
+var _rede: Node
+var _estado: Node
+
+
 func _init() -> void:
 	process_frame.connect(_correr, CONNECT_ONE_SHOT)
 
@@ -52,7 +57,7 @@ func _fixture() -> Dictionary:
 func _capturar(tipo: String, campos: Dictionary, revision) -> String:
 	_contador += 1
 	var id := "cmd-teste-%d" % _contador
-	_comandos.append(Rede.montar_comando_mestre(tipo, campos, revision if revision != null else 0, id))
+	_comandos.append(_rede.montar_comando_mestre(tipo, campos, revision if revision != null else 0, id))
 	return id
 
 
@@ -65,31 +70,33 @@ func _textos(no: Node, saida: Array) -> void:
 
 
 func _receber(msg: Dictionary) -> void:
-	Rede._ao_receber(JSON.stringify(msg))
+	_rede._ao_receber(JSON.stringify(msg))
 
 
 func _correr() -> void:
+	_rede = root.get_node("Rede")
+	_estado = root.get_node("Estado")
 	var fx := _fixture()
 	_ok(not fx.is_empty(), "a fixture do servidor lê-se")
 	if fx.is_empty():
 		_fim()
 		return
-	Rede.persistir = false
-	Rede._room_id = "sala-teste"
+	_rede.persistir = false
+	_rede._room_id = "sala-teste"
 	var ps := load(CENA) as PackedScene
 	_ok(ps != null, "a cena do Mestre carrega")
 
 	print("== recusa noutro papel ==")
-	Rede.papel = "jogadora"
+	_rede.papel = "jogadora"
 	var r = ps.instantiate()
 	root.add_child(r)
 	await _quadros(3)
 	_ok(not is_instance_valid(r), "com o papel jogadora a cena recusa e sai")
 
 	print("== Mestre ==")
-	Rede.papel = "mestre"
-	Rede.ultima_vista_mestre = {}
-	Rede.cartao_ativo = {}
+	_rede.papel = "mestre"
+	_rede.ultima_vista_mestre = {}
+	_rede.cartao_ativo = {}
 	var c = ps.instantiate()
 	c.enviar_fn = _capturar
 	c.pedir_vista_fn = func(): _pedidos_vista += 1

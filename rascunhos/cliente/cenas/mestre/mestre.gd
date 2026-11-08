@@ -141,7 +141,7 @@ func aplicar_vista(msg: Dictionary) -> void:
 
 
 func aplicar_cartao(msg: Dictionary) -> void:
-	var mesmo := not cartao.is_empty() and cartao.get("cartaoId") == msg.get("cartaoId")
+	var mesmo: bool = not cartao.is_empty() and cartao.get("cartaoId") == msg.get("cartaoId")
 	cartao = msg
 	if not mesmo:
 		_armado = ""
@@ -526,7 +526,7 @@ func _ao_redimensionar() -> void:
 	largura_folha = maxf(largura_folha, largura_col1 + margem * 2.0)
 	_folha.position = Vector2(area.x - largura_folha, 0.0)
 	_folha.size = Vector2(largura_folha, area.y)
-	_colunas.get_child(1).visible = not _encolhida
+	(_colunas.get_child(1) as Control).visible = not _encolhida
 	_encolher.text = "▸" if _encolhida else "◂"
 	_tabuleiro.position = Vector2.ZERO
 	_tabuleiro.size = Vector2(area.x - largura_folha, area.y)

@@ -21,6 +21,11 @@ var _total := 0
 var _falhas := 0
 
 
+## Os autoloads (Rede, Estado) não são identificadores num script -s: chegam pela árvore no 1.º quadro.
+var _rede: Node
+var _estado: Node
+
+
 func _init() -> void:
 	process_frame.connect(_correr, CONNECT_ONE_SHOT)
 
@@ -51,6 +56,8 @@ func _canarios_em(textos: Array, canarios: Array) -> Array:
 
 
 func _correr() -> void:
+	_rede = root.get_node("Rede")
+	_estado = root.get_node("Estado")
 	var p := ProjectSettings.globalize_path("res://").path_join("../servidor/dados-exemplo/mesa-mestre.json")
 	var fx = JSON.parse_string(FileAccess.get_file_as_string(p))
 	_ok(fx is Dictionary, "a fixture do servidor lê-se")
@@ -58,43 +65,43 @@ func _correr() -> void:
 		_fim()
 		return
 	var canarios: Array = fx["canarios"]
-	Rede.persistir = false
-	Rede.papel = "jogadora"
-	Rede.ultima_vista_mestre = {}
-	Rede.cartao_ativo = {}
+	_rede.persistir = false
+	_rede.papel = "jogadora"
+	_rede.ultima_vista_mestre = {}
+	_rede.cartao_ativo = {}
 	var hud = (load("res://hud/hud.tscn") as PackedScene).instantiate()
 	root.add_child(hud)
 	await process_frame
 
 	print("== 1. o tráfego real da jogadora ==")
 	for m in fx["jogadora"]["mensagens"]:
-		Rede._ao_receber(JSON.stringify(m))
+		_rede._ao_receber(JSON.stringify(m))
 	for i in 3:
 		await process_frame
-	_ok(Rede.papel == "jogadora", "o lugar continua a ser o da jogadora")
+	_ok(_rede.papel == "jogadora", "o lugar continua a ser o da jogadora")
 	var textos: Array = []
 	_textos(root, textos)
 	var achados := _canarios_em(textos, canarios)
 	_ok(achados.is_empty(), "nenhum canário no ecrã da jogadora %s" % [achados])
-	_ok(Estado.figuras.size() > 0, "a jogadora vê as figuras públicas (%d)" % Estado.figuras.size())
+	_ok(_estado.figuras.size() > 0, "a jogadora vê as figuras públicas (%d)" % _estado.figuras.size())
 
 	print("== 2. mensagens do Mestre a chegar ao aparelho da jogadora ==")
-	Rede._ao_receber(JSON.stringify(fx["mestre"]["vista"]))
+	_rede._ao_receber(JSON.stringify(fx["mestre"]["vista"]))
 	for k in fx["mestre"]["cartoes"]:
-		Rede._ao_receber(JSON.stringify(fx["mestre"]["cartoes"][k]))
+		_rede._ao_receber(JSON.stringify(fx["mestre"]["cartoes"][k]))
 	var snap: Dictionary = fx["mestre"]["snapshot"].duplicate(true)
 	snap["seq"] = 100000  # mais novo do que tudo, para o estado o aplicar
-	Rede._ao_receber(JSON.stringify(snap))
+	_rede._ao_receber(JSON.stringify(snap))
 	for i in 3:
 		await process_frame
-	_ok(Rede.ultima_vista_mestre.is_empty(), "a MASTER_VIEW não se guarda fora do lugar do Mestre")
-	_ok(Rede.cartao_ativo.is_empty(), "o MASTER_CARD não se guarda fora do lugar do Mestre")
-	_ok(Estado.mestre.is_empty(), "o bloco `mestre` do snapshot não se guarda fora do lugar do Mestre")
+	_ok(_rede.ultima_vista_mestre.is_empty(), "a MASTER_VIEW não se guarda fora do lugar do Mestre")
+	_ok(_rede.cartao_ativo.is_empty(), "o MASTER_CARD não se guarda fora do lugar do Mestre")
+	_ok(_estado.mestre.is_empty(), "o bloco `mestre` do snapshot não se guarda fora do lugar do Mestre")
 	textos.clear()
 	_textos(root, textos)
 	achados = _canarios_em(textos, canarios)
 	_ok(achados.is_empty(), "nenhum canário no ecrã da jogadora depois das mensagens do Mestre %s" % [achados])
-	var figs_texto := JSON.stringify(Estado.figuras)
+	var figs_texto := JSON.stringify(_estado.figuras)
 	_ok(_canarios_em([figs_texto], canarios).is_empty(), "nenhum canário nas figuras que o estado guarda")
 
 	print("== 3. quem lê o que é do Mestre ==")
