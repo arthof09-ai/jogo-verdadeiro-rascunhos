@@ -495,7 +495,8 @@
      "acerta-se",
      "quebra-corpo",
      "acerta-amigo"
-    ]
+    ],
+    "amigos": []
    },
    "ia": {
     "v": 2,
@@ -514,7 +515,8 @@
     "razao": "Aproxima-se da jogadora. [CANARIO-RAZAO-IA]",
     "faces": null,
     "intentIdOrigem": null,
-    "desgracas": null
+    "desgracas": null,
+    "amigos": null
    },
    "dados": {
     "v": 2,
@@ -529,7 +531,8 @@
      17
     ],
     "intentIdOrigem": "dados-1",
-    "desgracas": null
+    "desgracas": null,
+    "amigos": null
    }
   }
  },

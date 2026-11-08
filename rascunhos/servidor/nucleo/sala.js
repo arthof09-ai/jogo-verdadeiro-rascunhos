@@ -652,6 +652,10 @@ export function criarSala({
       intentIdOrigem: c.origem?.id ?? null,
       // L2: só o cartão de desgraça leva a lista do «Escolher outra»; os outros levam null.
       desgracas: c.tipo === 'desgraca' ? desgracasDoCartao(c) : null,
+      // Q12 (BANCADA-DESGRACA-JULGAMENTO.md; Musa 08/11 17:03): os amigos elegíveis para o «acerta-amigo», do
+      // mais perto para o mais longe. O Mestre declara qual é atingido (edicao.aliadoAtingidoId); sem declarar,
+      // vale o primeiro. Só no cartão de desgraça; [] quando o «acerta-amigo» não se pode escolher.
+      amigos: c.tipo === 'desgraca' ? amigosDoCartao(c) : null,
     };
   }
   /** Recibo → mensagem. Só campos da lista; nada do motor (E-P1). Determinista (mesmos bytes no reenvio). */
@@ -1913,6 +1917,12 @@ export function criarSala({
     return null;
   }
 
+  /** Q12: os amigos elegíveis do cartão (o contexto gravado na proposta), se o «acerta-amigo» se pode escolher. */
+  function amigosDoCartao(c) {
+    if (!desgracasDoCartao(c).includes('acerta-amigo')) return [];
+    const lista = Array.isArray(c.contexto?.aliadosAoAlcance) ? c.contexto.aliadosAoAlcance : [];
+    return lista.filter((a) => a && a.id && (a.posicao === 'adjacente' || a.posicao === 'naLinha')).map((a) => a.id);
+  }
   /** L2 + regra-mãe: as desgraças que o Mestre pode escolher neste cartão (sem as que o motor excluiu). */
   function desgracasDoCartao(c) {
     const excluidas = new Set((c.excluidas ?? []).map((e) => (typeof e === 'string' ? e : e?.id)));
@@ -1938,8 +1948,15 @@ export function criarSala({
         throw new ErroRecusa('acao_invalida');
       }
       if (typeof escolhida !== 'string') throw new ErroRecusa('acao_invalida');
+      // Q12: o Mestre pode declarar QUAL amigo é atingido — só no «acerta-amigo» e só um dos elegíveis do cartão
+      // (o VLAB recusaria os outros com ALIADO_ATINGIDO_NAO_ELEGIVEL; o servidor recusa antes, acao_invalida).
+      const aliadoAtingidoId = decisao === 'editar' ? msg.edicao?.aliadoAtingidoId : undefined;
+      if (aliadoAtingidoId !== undefined && aliadoAtingidoId !== null) {
+        if (escolhida !== 'acerta-amigo' || !amigosDoCartao(c).includes(aliadoAtingidoId)) throw new ErroRecusa('acao_invalida');
+      }
       // Resolve de novo com a MESMA semente e a escolha do Mestre (JV1.1-a §4).
       const ctx = { ...c.contexto, modoDesgraca: 'escolha', desgracaEscolhida: escolhida };
+      if (typeof aliadoAtingidoId === 'string') ctx.aliadoAtingidoId = aliadoAtingidoId;
       const saida = chamarMotorAtaque(f, alvo, t, ctx);
       if (saida.erro) throw new ErroRecusa('acao_invalida', 'MOTOR:' + saida.erro);
       fecharCartao(tx, c, decisao);

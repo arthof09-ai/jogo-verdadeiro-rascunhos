@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "MASTER_APPROVE.schema.json",
   "title": "MASTER_APPROVE (Mestre → servidor)",
-  "description": "§5 + E-C6: fecha o cartão ATIVO (FIFO). A decisão é idempotente por cartaoId: a primeira ganha. Nenhum timeout aprova. `edicao` (com decisao 'editar'): {desgraca} num cartão de desgraça, {acao} num cartão de IA (sala.js aprovarCartao).",
+  "description": "§5 + E-C6: fecha o cartão ATIVO (FIFO). A decisão é idempotente por cartaoId: a primeira ganha. Nenhum timeout aprova. `edicao` (com decisao 'editar'): {desgraca, aliadoAtingidoId?} num cartão de desgraça, {acao} num cartão de IA (sala.js aprovarCartao).",
   "type": "object",
   "required": ["v", "type", "roomId", "cmdId", "revision", "cartaoId", "decisao"],
   "properties": {
@@ -21,7 +21,8 @@
       "type": ["object", "null"],
       "properties": {
         "desgraca": { "$ref": "comum.schema.json#/$defs/desgracaEditavel", "description": "Tem de estar na lista `desgracas` do MASTER_CARD (o servidor recusa com acao_invalida)." },
-        "acao": { "$ref": "comum.schema.json#/$defs/acao" }
+        "acao": { "$ref": "comum.schema.json#/$defs/acao" },
+        "aliadoAtingidoId": { "$ref": "comum.schema.json#/$defs/idOpaco", "description": "Q12 (BANCADA-DESGRACA-JULGAMENTO.md; I0004 08/11): só com desgraca 'acerta-amigo' — qual dos `amigos` do MASTER_CARD é atingido. Fora da lista, ou com outra desgraça, o servidor recusa (acao_invalida). Sem ele, vale o primeiro da lista (o mais perto)." }
       },
       "additionalProperties": false
     }

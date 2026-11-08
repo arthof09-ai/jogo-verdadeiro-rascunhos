@@ -304,6 +304,15 @@ static func comando(cartao: Dictionary, acao: String, escolha: String = "") -> D
 			if not (lista is Array) or not lista.has(escolha):
 				return {}  # L2: só da lista que o servidor mandou
 			return {"tipo": "MASTER_APPROVE", "campos": {"cartaoId": id, "decisao": "editar", "edicao": {"desgraca": escolha}}}
+		"amigo":
+			# Q12: «acerta-amigo» com o amigo declarado — só um dos `amigos` do cartão, e só se o «acerta-amigo»
+			# está na lista (o servidor recusa o resto; o VLAB também: ALIADO_ATINGIDO_NAO_ELEGIVEL).
+			var lista_d = cartao.get("desgracas")
+			var amigos = cartao.get("amigos")
+			if not (lista_d is Array) or not lista_d.has("acerta-amigo") or not (amigos is Array) or not amigos.has(escolha):
+				return {}
+			return {"tipo": "MASTER_APPROVE", "campos": {"cartaoId": id, "decisao": "editar",
+				"edicao": {"desgraca": "acerta-amigo", "aliadoAtingidoId": escolha}}}
 		"aceitar_dados", "nao_aceitar":
 			return {"tipo": "MASTER_CONFIRM_DICE",
 				"campos": {"intentId": _texto(cartao.get("intentIdOrigem")), "aceitar": acao == "aceitar_dados"}}
@@ -328,6 +337,16 @@ static func texto_alerta(msg: Dictionary) -> String:
 
 static func _botao(rotulo: String, acao: String, duas_vezes: bool, ligado: bool = true) -> Dictionary:
 	return {"rotulo": rotulo, "acao": acao, "duas_vezes": duas_vezes, "ligado": ligado}
+
+
+## Q12: os amigos que o Mestre pode escolher no «acerta-amigo» — só quando há MAIS DE UM (com um só, ou
+## nenhum, não há o que escolher: vale o primeiro, o mais perto). Ordem do servidor (do mais perto).
+static func amigos_para_escolher(cartao: Dictionary) -> Array:
+	var amigos = cartao.get("amigos")
+	var lista_d = cartao.get("desgracas")
+	if not (amigos is Array) or amigos.size() < 2 or not (lista_d is Array) or not lista_d.has("acerta-amigo"):
+		return []
+	return amigos.duplicate()
 
 
 static func _texto(v) -> String:

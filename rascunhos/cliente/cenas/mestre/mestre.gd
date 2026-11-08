@@ -348,6 +348,9 @@ func mostrar_aba(aba: Control) -> void:
 func escolher(desgraca: String) -> void:
 	if cartao.is_empty() or not _em_voo.is_empty():
 		return
+	if desgraca == "acerta-amigo" and not Modelo.amigos_para_escolher(cartao).is_empty():
+		_abrir_escolha_amigo()  # Q12: mais de um amigo ao alcance — o Mestre declara qual
+		return
 	var cmd := Modelo.comando(cartao, "escolha", desgraca)
 	if cmd.is_empty():
 		return
@@ -450,6 +453,41 @@ func _abrir_escolha() -> void:
 	voltar.pressed.connect(_fechar_escolha)
 	_lista_escolha.add_child(voltar)
 	_escolha.visible = true
+
+
+## Q12: a segunda lista do «Escolher outra» → «Acerta um amigo»: os amigos elegíveis, do mais perto.
+func _abrir_escolha_amigo() -> void:
+	for n in _lista_escolha.get_children():
+		n.queue_free()
+	var titulo := Label.new()
+	titulo.text = Textos.ESCOLHER_AMIGO
+	_lista_escolha.add_child(titulo)
+	var nomes := {}
+	for f in Modelo.figuras(vista):
+		if f is Dictionary:
+			nomes[str(f.get("id", ""))] = Modelo.nome_mestre(f)
+	for a in Modelo.amigos_para_escolher(cartao):
+		var b := Button.new()
+		b.text = str(nomes.get(str(a), str(a)))
+		b.set_meta("amigo", str(a))
+		b.pressed.connect(escolher_amigo.bind(str(a)))
+		_lista_escolha.add_child(b)
+	var voltar := Button.new()
+	voltar.text = Textos.VOLTAR
+	voltar.pressed.connect(_abrir_escolha)
+	_lista_escolha.add_child(voltar)
+	_escolha.visible = true
+
+
+func escolher_amigo(aliado_id: String) -> void:
+	if cartao.is_empty() or not _em_voo.is_empty():
+		return
+	var cmd := Modelo.comando(cartao, "amigo", aliado_id)
+	if cmd.is_empty():
+		return
+	_fechar_escolha()
+	_enviar(cmd["tipo"], cmd["campos"])
+	_desenhar_cartao()
 
 
 func _fechar_escolha() -> void:

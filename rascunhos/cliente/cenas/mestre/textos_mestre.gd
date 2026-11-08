@@ -39,6 +39,8 @@ const RAZAO := "Razão: %s"
 const FACES := "Faces declaradas: %s"
 const ENCERRAR_PERGUNTA := "Encerrar a vez de %s?"
 const ESCOLHER_TITULO := "Escolher outra desgraça"
+## Q12 (BANCADA-DESGRACA-JULGAMENTO.md): com mais de um amigo ao alcance, o Mestre declara qual é atingido.
+const ESCOLHER_AMIGO := "Que amigo é atingido?"
 
 ## Nomes das desgraças no «Escolher outra» (os ids são do motor e não se traduzem).
 const NOME_DESGRACA := {

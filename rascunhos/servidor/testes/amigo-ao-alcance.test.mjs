@@ -173,3 +173,27 @@ test('Q8: a própria recebe logo o `estado` com a arma caída, e outra vez ao ap
     assert.ok(m.clientes[k].eventos('estado').every((e) => !('armaCaida' in e.dados)), `${k} não sabe da arma dela`);
   }
 });
+
+// Q12 — escolha do amigo no cartão (BANCADA-DESGRACA-JULGAMENTO.md; Musa 08/11 17:03): o cartão leva os amigos
+// elegíveis; o Mestre declara qual é atingido (edicao.aliadoAtingidoId); fora da lista, recusa.
+test('Q12: o cartão de desgraça leva os amigos elegíveis; os outros cartões levam null', () => {
+  const { cartao, heroinaId } = falhaDaAliada();
+  assert.deepEqual(cartao.amigos, [heroinaId]);
+});
+
+test('Q12: o Mestre declara o amigo atingido (aliadoAtingidoId) e o motor recebe-o', () => {
+  const { m, cartao, fig, heroinaId } = falhaDaAliada({ danoDerivado: 100 });
+  const antes = fig(heroinaId).vidaActual;
+  exigirAplicada(m.mestre('MASTER_APPROVE', { cartaoId: cartao.cartaoId, decisao: 'editar', edicao: { desgraca: 'acerta-amigo', aliadoAtingidoId: heroinaId } }));
+  assert.equal(m.motor.chamadas.at(-1).contexto.aliadoAtingidoId, heroinaId);
+  assert.equal(fig(heroinaId).vidaActual, antes - 50);
+});
+
+test('Q12: amigo fora da lista, ou com outra desgraça — recusado (acao_invalida) e o cartão continua aberto', () => {
+  const { m, cartao, orcId, heroinaId } = falhaDaAliada();
+  for (const edicao of [{ desgraca: 'acerta-amigo', aliadoAtingidoId: orcId }, { desgraca: 'cai', aliadoAtingidoId: heroinaId }]) {
+    const r = m.mestre('MASTER_APPROVE', { cartaoId: cartao.cartaoId, decisao: 'editar', edicao });
+    assert.equal(recibo(r).type, 'ROOM_REJECT', JSON.stringify(edicao));
+  }
+  exigirAplicada(m.mestre('MASTER_APPROVE', { cartaoId: cartao.cartaoId, decisao: 'aprovar' }));
+});

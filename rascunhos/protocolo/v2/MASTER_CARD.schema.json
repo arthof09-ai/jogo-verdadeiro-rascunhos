@@ -80,6 +80,12 @@
       "minItems": 1,
       "uniqueItems": true,
       "items": { "$ref": "comum.schema.json#/$defs/desgracaEditavel" }
+    },
+    "amigos": {
+      "description": "Q12 (BANCADA-DESGRACA-JULGAMENTO.md; I0004 08/11): só no cartão de desgraça — os ids dos amigos elegíveis para o «acerta-amigo» (adjacentes ao atacante ou na linha até ao alvo), do mais perto para o mais longe; [] se o «acerta-amigo» não se pode escolher. Os outros cartões levam null. O cliente só mostra a escolha com mais de um.",
+      "type": ["array", "null"],
+      "uniqueItems": true,
+      "items": { "$ref": "comum.schema.json#/$defs/idOpaco" }
     }
   },
   "allOf": [

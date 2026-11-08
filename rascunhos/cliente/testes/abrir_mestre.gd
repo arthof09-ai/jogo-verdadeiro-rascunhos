@@ -208,6 +208,41 @@ func _correr() -> void:
 	await _quadros(1)
 	_ok(c._titulo_cartao.text == Textos.SEM_CARTAO, "o cartão sai quando o servidor o fecha")
 
+	# Q12: a escolha do amigo no «acerta-amigo» (só com mais de um amigo elegível).
+	var ids: Array = []
+	for f in vista["mestre"]["figuras"]:
+		ids.append(f["id"])
+	var desg2: Dictionary = desg.duplicate(true)
+	desg2["cartaoId"] = "c-amigo"
+	desg2["amigos"] = [ids[1], ids[0]]
+	_ok((desg2["desgracas"] as Array).has("acerta-amigo"), "a lista do cartão tem o «acerta-amigo»")
+	_receber(desg2)
+	await _quadros(1)
+	var n_antes := _comandos.size()
+	c.tocar("escolher")
+	c.escolher("acerta-amigo")
+	var amigos_lista: Array = []
+	for n in c._lista_escolha.get_children():
+		if n is Button and n.has_meta("amigo") and not n.is_queued_for_deletion():
+			amigos_lista.append(n.get_meta("amigo"))
+	_ok(_comandos.size() == n_antes and amigos_lista == [ids[1], ids[0]], "com dois amigos, «Acerta um amigo» pergunta qual (do mais perto) %s" % [amigos_lista])
+	c.escolher_amigo("nao-e-amigo")
+	_ok(_comandos.size() == n_antes, "um amigo fora da lista do cartão não sai")
+	c.escolher_amigo(ids[0])
+	ult = _comandos.back()
+	_ok(ult.get("decisao") == "editar" and ult.get("edicao") == {"desgraca": "acerta-amigo", "aliadoAtingidoId": ids[0]},
+		"o amigo escolhido → MASTER_APPROVE editar {acerta-amigo, aliadoAtingidoId}")
+	c._ao_resposta(ult.get("cmdId", ""), {"type": "ROOM_RECEIPT", "estado": "APLICADA"})
+	var desg3: Dictionary = desg.duplicate(true)
+	desg3["cartaoId"] = "c-um-amigo"
+	desg3["amigos"] = [ids[0]]
+	_receber(desg3)
+	await _quadros(1)
+	c.escolher("acerta-amigo")
+	ult = _comandos.back()
+	_ok(ult.get("cartaoId") == "c-um-amigo" and ult.get("edicao") == {"desgraca": "acerta-amigo"}, "com um só amigo, não há pergunta (vale o mais perto)")
+	c._ao_resposta(ult.get("cmdId", ""), {"type": "ROOM_RECEIPT", "estado": "APLICADA"})
+
 	# Palavras (emenda 1).
 	var todos: Array = []
 	_textos(c, todos)
