@@ -10,9 +10,10 @@ extends SceneTree
 ##   1-ecra-do-mestre.png         o ecrã do Mestre inteiro, com o cartão de desgraça aberto;
 ##   2-arena-camara-fixa.png      a arena na câmara Fixa com zoom 1,5 (o protocolo de captura do Plano B §B3);
 ##   3-arena-de-perto.png         a mesma câmara Fixa, de perto, centrada nas figuras;
-##   4-demonstracao-estados.png   DEMONSTRAÇÃO (não é uma batalha): o lobo caído e a aliada morta, para se ver
-##                                que ambos ficam deitados (palavra do Muse, 08/11 17:03). A marcação é nossa.
-## Confere que cada foto não é uma cor só (render verdadeiro). Código de saída 0 se as 4 saem, 1 se não.
+##   4-demonstracao-aliada-morta.png e 5-demonstracao-lobo-caido.png   DEMONSTRAÇÃO (não é uma batalha): a aliada
+##                                morta e o lobo caído (vivo), para se ver que ambos ficam deitados (palavra do Muse,
+##                                08/11 17:03). A marcação é nossa — não é o jogo.
+## Confere que cada foto não é uma cor só (render verdadeiro). Código de saída 0 se as 5 saem, 1 se não.
 
 const CENA := "res://cenas/mestre/mestre.tscn"
 const ArenaMestre := preload("res://cenas/mestre/arena_mestre.gd")
@@ -114,11 +115,16 @@ func _correr() -> void:
 		elif f.get("fichaId") == "aliada-teste":
 			f["vivo"] = false
 	a.aplicar_vista(demo)
-	a.camera.focar(_centro_das_figuras(a, vista, []))  # todas, para se verem o lobo caído e a aliada morta
-	a.camera.definir_zoom(2.6)
+	a.camera.focar(_centro_das_figuras(a, vista, ["heroina-teste", "aliada-teste", "orc-teste"]))
+	a.camera.definir_zoom(3.0)
 	a.camera._saltar()
 	await _quadros(20)
-	await _gravar("4-demonstracao-estados.png")
+	await _gravar("4-demonstracao-aliada-morta.png")
+	a.camera.focar(_centro_das_figuras(a, vista, ["lobo-teste"]))
+	a.camera.definir_zoom(4.0)
+	a.camera._saltar()
+	await _quadros(20)
+	await _gravar("5-demonstracao-lobo-caido.png")
 	a.queue_free()
 	await _quadros(1)
 
