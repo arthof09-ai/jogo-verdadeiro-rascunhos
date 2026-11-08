@@ -108,12 +108,13 @@ func _correr() -> void:
 	var alvo := int(_m.vista["pontos"][1]["journalSeq"])
 	_m._aba_registo.escolher(alvo)
 	_ok(not _eventos.has("revertido"), "escolher o ponto ainda não voltou")
+	# A vista de antes do «voltar»: a de depois pode chegar logo a seguir ao evento (sem corrida de leitura).
+	var seq_voltar := int(_m.vista.get("journalSeq", 0))
 	_m._aba_registo.confirmar()
 	await _esperar(func(): return _eventos.has("revertido"), "«Voltar até aqui» → o servidor voltou (evento revertido)")
 
 	print("== terminar e recomeçar (N4) ==")
-	var seq_voltar := int(_m.vista.get("journalSeq", 0))
-	var vista_nova := func(): return int(_m.vista.get("journalSeq", 0)) > seq_voltar and _m._espera_vista < 0.0
+	var vista_nova := func(): return int(_m.vista.get("journalSeq", 0)) != seq_voltar and _m._espera_vista < 0.0
 	await _esperar(vista_nova, "a vista depois do «voltar» chegou")
 	print("  fase=", _m.vista.get("fase"), " revisao=", _estado.revisao, " alertas=", _m.alertas)
 	_m.pedir_terminar()

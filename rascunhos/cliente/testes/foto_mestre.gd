@@ -99,8 +99,8 @@ func _correr() -> void:
 	a.camera._saltar()
 	await _quadros(20)
 	await _gravar("2-arena-camara-fixa.png")
-	var centro := _centro_das_figuras(a, vista)
-	a.camera.focar(centro)  # a mesma câmara Fixa (o ângulo aprovado), mais perto
+	# A mesma câmara Fixa (o ângulo aprovado), mais perto, no grupo da heroína.
+	a.camera.focar(_centro_das_figuras(a, vista, ["heroina-teste", "aliada-teste", "orc-teste"]))
 	a.camera.definir_zoom(4.0)
 	a.camera._saltar()
 	await _quadros(20)
@@ -114,6 +114,8 @@ func _correr() -> void:
 		elif f.get("fichaId") == "aliada-teste":
 			f["vivo"] = false
 	a.aplicar_vista(demo)
+	a.camera.focar(_centro_das_figuras(a, vista, []))  # todas, para se verem o lobo caído e a aliada morta
+	a.camera.definir_zoom(2.6)
 	a.camera._saltar()
 	await _quadros(20)
 	await _gravar("4-demonstracao-estados.png")
@@ -124,11 +126,11 @@ func _correr() -> void:
 	quit(1 if _falhas > 0 else 0)
 
 
-func _centro_das_figuras(a, vista: Dictionary) -> Vector3:
+func _centro_das_figuras(a, vista: Dictionary, fichas: Array) -> Vector3:
 	var soma := Vector3.ZERO
 	var n := 0
 	for f in vista["mestre"]["figuras"]:
-		if f.get("colocada") == true:
+		if f.get("colocada") == true and (fichas.is_empty() or f.get("fichaId") in fichas):
 			soma += a.centro_da_casa(Vector2i(int(f.get("x", 0)), int(f.get("y", 0))))
 			n += 1
 	return soma / float(maxi(n, 1))
