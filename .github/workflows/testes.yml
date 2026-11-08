@@ -157,7 +157,8 @@ jobs:
   ponta-a-ponta:
     # Corrida de ponta a ponta do ecrã do Mestre (I0004, 08/11/2026): o servidor Node de verdade (WebSocket),
     # uma jogadora em Node e o cliente Godot sem janela a fazer de Mestre pela ligação real:
-    # lobby → colocar → combate → cartão de desgraça → Confirmar → Voltar até aqui. Motor falso, fichas fictícias.
+    # lobby → colocar → combate → cartão de desgraça → Confirmar → Voltar até aqui → Terminar → Recomeçar.
+    # Duas vezes: com o motor falso e com o VLAB vivo (os dados de crítico da heroína carregados a 1,1,1).
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -176,25 +177,39 @@ jobs:
       - name: Importar o projeto do cliente
         working-directory: rascunhos/cliente
         run: timeout 300 "$GODOT" --headless --path . --import 2>&1 | tail -20 || true
-      - name: Servidor + jogadora (Node) + Mestre (Godot), pela ligação de verdade
+      - name: Baixar e embrulhar o VLAB vivo (como o job motor-real)
+        working-directory: rascunhos/servidor
+        run: |
+          curl -fsSL --max-time 30 -o "$RUNNER_TEMP/vlab-completo.js" https://arthof09-ai.github.io/arena-das-bestas-prototipo-cm9/jogo-t1/vlab-completo.js && sha256sum "$RUNNER_TEMP/vlab-completo.js"
+          node motores/embrulhar.mjs "$RUNNER_TEMP/vlab-completo.js" "$RUNNER_TEMP/motores.mjs"
+      - name: Servidor + jogadora (Node) + Mestre (Godot), pela ligação de verdade — motor falso e VLAB real
         working-directory: rascunhos
         run: |
-          node servidor/e2e/servidor-e2e.mjs 8765 > "$RUNNER_TEMP/servidor.log" 2>&1 &
-          SRV=$!
-          for i in $(seq 1 50); do grep -q pronto-e2e "$RUNNER_TEMP/servidor.log" && break; sleep 0.2; done
-          node servidor/e2e/jogadora-e2e.mjs 8765 > "$RUNNER_TEMP/jogadora.log" 2>&1 &
-          JOG=$!
-          MESTRE=0
-          (cd cliente && timeout 180 "$GODOT" --headless --path . -s res://testes/e2e_mestre.gd -- --servidor=127.0.0.1:8765) > "$RUNNER_TEMP/mestre.log" 2>&1 || MESTRE=$?
-          JOGADORA=0
-          wait $JOG || JOGADORA=$?
-          kill $SRV || true
-          echo "== Mestre (Godot) =="; cat "$RUNNER_TEMP/mestre.log" | grep -vE "^\s*$" | tail -60
-          echo "== jogadora (Node) =="; cat "$RUNNER_TEMP/jogadora.log"
-          echo "== servidor =="; tail -20 "$RUNNER_TEMP/servidor.log"
-          if grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/mestre.log"; then exit 1; fi
-          echo "Mestre=$MESTRE jogadora=$JOGADORA"
-          test "$MESTRE" -eq 0 && test "$JOGADORA" -eq 0
+          correr() {  # $1 = rótulo, $2 = porta, $3 = MOTOR_MJS (vazio = motor falso)
+            L="$RUNNER_TEMP/$1"; mkdir -p "$L"
+            MOTOR_MJS="$3" node servidor/e2e/servidor-e2e.mjs "$2" > "$L/servidor.log" 2>&1 &
+            SRV=$!
+            for i in $(seq 1 50); do grep -q pronto-e2e "$L/servidor.log" && break; sleep 0.2; done
+            node servidor/e2e/jogadora-e2e.mjs "$2" > "$L/jogadora.log" 2>&1 &
+            JOG=$!
+            MESTRE=0
+            (cd cliente && timeout 180 "$GODOT" --headless --path . -s res://testes/e2e_mestre.gd -- --servidor=127.0.0.1:$2) > "$L/mestre.log" 2>&1 || MESTRE=$?
+            JOGADORA=0
+            wait $JOG || JOGADORA=$?
+            kill $SRV || true
+            echo "######## $1 ########"
+            echo "== Mestre (Godot) =="; grep -vE "^\s*$" "$L/mestre.log" | tail -60
+            echo "== jogadora (Node) =="; cat "$L/jogadora.log"
+            echo "== servidor =="; tail -30 "$L/servidor.log"
+            if grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$L/mestre.log"; then return 1; fi
+            echo "$1: Mestre=$MESTRE jogadora=$JOGADORA"
+            test "$MESTRE" -eq 0 && test "$JOGADORA" -eq 0
+          }
+          R1=0; correr motor-falso 8765 "" || R1=$?
+          R2=0; correr vlab-real 8766 "$RUNNER_TEMP/motores.mjs" || R2=$?
+          grep -q "motor REAL" "$RUNNER_TEMP/vlab-real/servidor.log" || { echo "o servidor do VLAB não carregou o motor real"; R2=1; }
+          echo "motor falso=$R1 · VLAB real=$R2"
+          test "$R1" -eq 0 && test "$R2" -eq 0
 
   retoma-pc:
     # Ensaio da receita do PC (I0004, 08/11/2026): num Windows, simula o original do PC no 9cbaca8,
