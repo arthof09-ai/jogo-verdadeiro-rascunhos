@@ -20,5 +20,7 @@ jobs:
           sed -n 1060,1110p vlab.js | cut -c1-400
           echo "=========== vlab.js elegiveis"
           for r in $(grep -n -E "elegiveis =|const elegiveis|let elegiveis" vlab.js | head -3 | cut -d: -f1); do echo "----- $r"; sed -n "$((r-4)),$((r+14))p" vlab.js | cut -c1-300; done
+          echo "=========== jogo.js 2340-2372"
+          sed -n 2340,2372p jogo.js | cut -c1-260
           echo "=========== jogo.js armaQuebrada / armaCaida / conserto"
           grep -n -E "armaQuebrada|armaCaida|consert|armaRecuperada" jogo.js | cut -c1-240 | head -40
