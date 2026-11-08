@@ -154,6 +154,48 @@ jobs:
           grep -q pronto "$RUNNER_TEMP/arranque.log"
           ! grep -E "SCRIPT ERROR|Parse Error" "$RUNNER_TEMP/arranque.log"
 
+  ponta-a-ponta:
+    # Corrida de ponta a ponta do ecrã do Mestre (I0004, 08/11/2026): o servidor Node de verdade (WebSocket),
+    # uma jogadora em Node e o cliente Godot sem janela a fazer de Mestre pela ligação real:
+    # lobby → colocar → combate → cartão de desgraça → Confirmar → Voltar até aqui. Motor falso, fichas fictícias.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Baixar o Godot 4.7 (linux, sem janela)
+        run: |
+          for v in 4.7.2-stable 4.7.1-stable 4.7-stable; do
+            url="https://github.com/godotengine/godot/releases/download/$v/Godot_v${v}_linux.x86_64.zip"
+            if curl -fsSL --max-time 180 -o "$RUNNER_TEMP/godot.zip" "$url"; then echo "Godot $v"; break; fi
+          done
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "GODOT=$(ls "$RUNNER_TEMP"/godot/Godot_v*)" >> "$GITHUB_ENV"
+      - name: Importar o projeto do cliente
+        working-directory: rascunhos/cliente
+        run: timeout 300 "$GODOT" --headless --path . --import 2>&1 | tail -20 || true
+      - name: Servidor + jogadora (Node) + Mestre (Godot), pela ligação de verdade
+        working-directory: rascunhos
+        run: |
+          node servidor/e2e/servidor-e2e.mjs 8765 > "$RUNNER_TEMP/servidor.log" 2>&1 &
+          SRV=$!
+          for i in $(seq 1 50); do grep -q pronto-e2e "$RUNNER_TEMP/servidor.log" && break; sleep 0.2; done
+          node servidor/e2e/jogadora-e2e.mjs 8765 > "$RUNNER_TEMP/jogadora.log" 2>&1 &
+          JOG=$!
+          MESTRE=0
+          (cd cliente && timeout 180 "$GODOT" --headless --path . -s res://testes/e2e_mestre.gd -- --servidor=127.0.0.1:8765) > "$RUNNER_TEMP/mestre.log" 2>&1 || MESTRE=$?
+          JOGADORA=0
+          wait $JOG || JOGADORA=$?
+          kill $SRV || true
+          echo "== Mestre (Godot) =="; cat "$RUNNER_TEMP/mestre.log" | grep -vE "^\s*$" | tail -60
+          echo "== jogadora (Node) =="; cat "$RUNNER_TEMP/jogadora.log"
+          echo "== servidor =="; tail -20 "$RUNNER_TEMP/servidor.log"
+          if grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/mestre.log"; then exit 1; fi
+          echo "Mestre=$MESTRE jogadora=$JOGADORA"
+          test "$MESTRE" -eq 0 && test "$JOGADORA" -eq 0
+
   retoma-pc:
     # Ensaio da receita do PC (I0004, 08/11/2026): num Windows, simula o original do PC no 9cbaca8,
     # corre retoma-i0004/aplicar-no-pc.ps1 em ensaio e a sério, e confirma que pára se o PC divergir.

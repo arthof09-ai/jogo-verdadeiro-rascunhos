@@ -61,3 +61,10 @@ O núcleo não importa `node:*`. Recebe por injeção os motores (`Dmg` e `Vlab`
 - Sem `chaveJournal`, o `sha256:` da exportação só apanha adulteração ingénua. Use HMAC.
 - Em produção, o `rng` tem de ser CSPRNG (`rngNode()`), porque também gera os `seatToken`.
 - O hash da vista é recalculado por lugar a cada commit. Medir o p99 (< 8 ms) na JV3.4.
+
+## Corrida de ponta a ponta do ecrã do Mestre (`e2e/`, I0004, 08/11/2026)
+
+- `e2e/servidor-e2e.mjs <porta>`: arranca o servidor de verdade (o WebSocket de `adaptadores/node/servidor-ws.js`) com o motor falso e as fichas fictícias dos testes. O motor dá sempre falha crítica, por isso o golpe da heroína abre um cartão de desgraça.
+- `e2e/jogadora-e2e.mjs <porta>`: a jogadora, em Node, pelo WebSocket. Entra, espera o orc que o Mestre coloca, ataca, vê o recibo passar de AGUARDANDO_MESTRE a APLICADA e vê o «voltar». Confere também que nenhum canário do Mestre lhe chega pelo fio.
+- O Mestre é o cliente Godot sem janela: `cliente/testes/e2e_mestre.gd`.
+- O job `ponta-a-ponta` do CI corre os três juntos.
