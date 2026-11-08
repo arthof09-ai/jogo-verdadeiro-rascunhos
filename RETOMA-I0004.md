@@ -23,7 +23,7 @@ Antes de tocar em qualquer coisa, o ritual da casa: **Central dos Claudes → IN
 | Cliente Godot | Corre no CI (Godot 4.7.2 oficial, sem janela): 15 scripts compilam, **73/73**, arena e lobby arrancam. Uma só tabela de perfis; frases do site na desgraça, morte e fim; «Atualiza a página» | `rascunhos/cliente/` (README) | Botão Recomeçar (e a cláusula guardada); resposta 7 do Mestre |
 | Comparação com o site (REF_8 → REF_25) | **Completa**; errata 0.2 da JV1.1-b | Notion, JV1.1-b | — |
 | Clareira de prova | Cena feita (`arte/cenas/clareira_prova.tscn`), abre no CI (**22/22**); pontilhado das copas desligado | `rascunhos/cliente/arte/` | Assets da V2.1; abrir num computador com GPU para ver os shaders |
-| Ecrã do Mestre | **Não existe** (o lobby aponta para `cenas/mestre/mestre.tscn`, que falta) | — | Desenho escrito no Notion para o Muse rever; depois código (JV3.1) |
+| Ecrã do Mestre | **Desenho escrito** (rascunho 0.1, à revisão do Muse); **código ainda não existe** (o lobby aponta para `cenas/mestre/mestre.tscn`, que falta) | Notion: «JV3.1 — Ecrã do Mestre no cliente: desenho para revisão», sob «Planos do Jogo Verdadeiro» | Esperar a revisão do Muse; só depois código (§12 do desenho) |
 | Perguntas ao Mestre | 13 perguntas na Central, com o que o jogo faz hoje | Notion, Central | Aplicar as respostas quando chegarem |
 
 ## 3. O passo do PC — receita completa
@@ -69,10 +69,7 @@ Objectivo: pôr o original do PC (`C:\Users\txcga\RPG_Local\jogo-verdadeiro\`) i
    ```
    Depois, ver o CI do `main` verde (`gh run list --branch main --limit 1`, ou a página Actions).
 6. **Drive (ponte):** subir para `RPG Assimilação/12 — Código/jogo-verdadeiro/` (pasta `1uouRMbs_CLzuTAizP9YUVDuE2f0DdScG`) os 59 ficheiros de `retoma-i0004/depois.txt` e o `MANIFESTO-SHA256.txt` novo, conferindo os SHA. É o passo de sempre da ponte, do Muse.
-7. **Apagar o ramo temporário** `i0004/sonda-frases` (só tem uma sonda que leu as frases do site; a sessão da nuvem não tinha permissão para o apagar):
-   ```powershell
-   git push origin --delete i0004/sonda-frases
-   ```
+7. ~~Apagar o ramo temporário `i0004/sonda-frases`~~ — **FEITO pelo Muse (CM-000009) a 08/11/2026**; o ramo já não existe. Não há nada a fazer neste passo.
 8. **Registar:** na Central, uma linha assinada com o ID completo e o formato `[AAAA-MM-DD HH:MM] [ID] texto` (o original do PC igual ao ramo, o commit no `main`, o CI); marcar a carta IBX-300 como CONCLUÍDA, com a evidência.
 
 ## 4. Regras em vigor (palavra do Mestre, passada pelo Muse)
@@ -87,6 +84,6 @@ Objectivo: pôr o original do PC (`C:\Users\txcga\RPG_Local\jogo-verdadeiro\`) i
 
 ## 5. Próximo passo nomeado
 
-Desenhar o **ecrã do Mestre** (JV3.1): o que ele vê (`MASTER_VIEW`, cartões, alertas) e o que faz (os `MASTER_*` já conferidos no protocolo). Primeiro como desenho escrito no Notion para o Muse rever; só depois em código.
+O desenho do **ecrã do Mestre** (JV3.1) está escrito no Notion (página «JV3.1 — Ecrã do Mestre no cliente: desenho para revisão (rascunho 0.1, 08/11/2026)», filha de «Planos do Jogo Verdadeiro», ligada da passagem). **Não escrever código do ecrã do Mestre antes da revisão do Muse.** Depois da revisão, a ordem de construção é a do §12 desse desenho (primeiro as lacunas L1 e L2 no servidor e nos schemas).
 
 — CM-000008-I0004
