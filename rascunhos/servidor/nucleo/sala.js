@@ -1347,7 +1347,7 @@ export function criarSala({
       // §8.3 / H10: a jogadora nunca autoriza a própria desgraça. A rolagem já está gravada no cartão.
       abrirCartao(tx, {
         tipo: 'desgraca', figuraId: f.id, alvoId: alvo.id, tecnicaId: t.id, contexto: ctx,
-        proposta: saida.falhaCritica.desgracaProposta ?? saida.falhaCritica.proposta ?? saida.falhaCritica.desgraca ?? null,
+        proposta: saida.falhaCritica.desgracaProposta ?? saida.falhaCritica.proposta ?? saida.falhaCritica.propostaOriginal ?? saida.falhaCritica.desgraca ?? null,
         excluidas: Array.isArray(saida.falhaCritica.excluidas) ? clonarJson(saida.falhaCritica.excluidas) : [],
         razao: null, origem: origemCartao(origem),
       });
