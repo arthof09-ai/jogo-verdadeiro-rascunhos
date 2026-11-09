@@ -44,6 +44,10 @@ var pesquisar_fn: Callable
 var vista: Dictionary = {}
 var cartao: Dictionary = {}
 var alertas: Array[String] = []
+## Ordem 12 (caída atingida): o estadoMorte que este ecrã já viu, por figura (vista + eventos entre vistas), para
+## comparar com o que o `ataque` traz; e o que já se narrou ao Mestre (frase + linha do registo).
+var mortes: Dictionary = {}
+var narracao: Array[String] = []
 var som_ligado := true
 
 ## O aviso da primeira entrada já foi visto nesta execução (vale também quando não se escreve em disco).
@@ -267,6 +271,7 @@ func _desenhar_fim() -> void:
 
 func aplicar_vista(msg: Dictionary) -> void:
 	vista = msg
+	mortes = Modelo.mortes_da_vista(msg)
 	_arena.aplicar_vista(msg)
 	_desenhar_figuras()
 	_desenhar_ambiente()
@@ -311,6 +316,7 @@ func _ao_mestre(msg: Dictionary) -> void:
 
 
 func _ao_evento(msg: Dictionary) -> void:
+	_narrar_caida(msg)
 	if str(msg.get("tipo", "")) == "cartao_fechado":
 		var d = msg.get("dados")
 		if d is Dictionary and not cartao.is_empty() and d.get("cartaoId") == cartao.get("cartaoId"):
@@ -320,6 +326,23 @@ func _ao_evento(msg: Dictionary) -> void:
 			_aba_agir.editar("")
 			_desenhar_cartao()
 	_pedir_vista_em_breve()
+
+
+## Ordem 12 (paridade com o site, REF_35): a heroína já caída levou um golpe e o motor subiu-lhe as falhas. O site
+## narra «ela, caída, piora visivelmente» e regista a falha por golpe; aqui o mesmo, SÓ neste ecrã (o lugar da jogadora
+## nunca carrega cenas/mestre/). Nada de regra: compara o estadoMorte de antes com o que o servidor mandou.
+func _narrar_caida(msg: Dictionary) -> void:
+	var r := Modelo.falha_por_golpe(msg, mortes, vista)
+	var novas := Modelo.mortes_do_evento(msg)
+	for k in novas:
+		mortes[k] = novas[k]  # o mesmo evento repetido já não volta a narrar (as falhas deixam de subir)
+	if r.is_empty():
+		return
+	var frase := Modelo.frase_caida_piora(vista, r)
+	var linha := Modelo.linha_registo_caida(vista, r)
+	narracao.append(frase + "\n" + linha)
+	_juntar_alerta(frase)
+	_aba_registo.narrar(frase, linha)
 
 
 func _ao_resposta(id: String, msg: Dictionary) -> void:

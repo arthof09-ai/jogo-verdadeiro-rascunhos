@@ -329,6 +329,7 @@ func _correr() -> void:
 	c._aba_mesa.parar()
 	_ok(c._aba_mesa.a_colocar == "", "«Parar de colocar»")
 
+	await _caida_atingida(c, fx["mestre"]["vista"])
 	await _camara_livre(c)
 
 	var todos: Array = []
@@ -460,6 +461,90 @@ func _camara_livre(c) -> void:
 			limpos = false
 			printerr("  a Party fala da câmara livre (ou não se leu): ", s)
 	_ok(limpos, "a vista da Party nem constrói a câmara livre")
+
+
+## Ordem 12 do CM-000009 (parte C; paridade REF_35 do site): a heroína já caída leva um golpe e o motor sobe-lhe as
+## falhas. O servidor só o diz no `ataque` (soMestre.soDoMestre.alvoDepois; não sai `estado` — contrato fixado em
+## servidor/testes/ordem12-caida-atingida.test.mjs). O ecrã do Mestre narra a frase do site e regista-a.
+func _ataque(seq: int, atac: String, alvo: String, em_depois: Dictionary, oportunidade := false, extra := {}) -> Dictionary:
+	var dep := {"vidaActual": 0, "estadoMorte": em_depois}
+	dep.merge(extra, true)
+	return {"type": "ROOM_EVENT", "seq": seq, "tipo": "ataque", "dados": {
+		"atacanteId": atac, "alvoId": alvo, "arma": "machado-teste", "resultado": "acerto",
+		"ataqueDeOportunidade": oportunidade, "soMestre": {"soDoMestre": {"alvoDepois": dep}}, "journalSeq": seq}}
+
+
+func _caida_atingida(c, vista_base: Dictionary) -> void:
+	print("== caída atingida: narração ao Mestre (ordem 12) ==")
+	var vista_antes: Dictionary = c.vista  # a câmara livre, a seguir, continua com a vista que tinha
+	var v: Dictionary = vista_base.duplicate(true)
+	var her := ""
+	var nome_her := ""
+	var orc := ""
+	var nome_orc := ""
+	for f in v["mestre"]["figuras"]:
+		if her == "" and f.get("lado") == "jogadora":
+			her = f["id"]
+			nome_her = str(f.get("nome"))
+			f["vidaActual"] = 0
+			f["caido"] = true
+			f["estadoMorte"] = {"fase": "aMorrer", "sucessos": 1, "falhas": 0}
+		elif f.get("fichaId") == "orc-teste":
+			orc = f["id"]
+			nome_orc = str(f.get("nome"))
+	_ok(her != "" and orc != "", "a fixture tem a heroína e o orc")
+	c.aplicar_vista(v)
+	await _quadros(1)
+	var n_alertas: int = c.alertas.size()
+	_ok(c.mortes.get(her) is Dictionary and int(c.mortes[her]["falhas"]) == 0, "o ecrã guarda o estadoMorte da vista")
+
+	# 1) Golpe da vez (não de oportunidade) nela já a morrer: falhas 0 → 1.
+	var golpe := _ataque(900, orc, her, {"fase": "aMorrer", "sucessos": 1, "falhas": 1})
+	c._ao_evento(golpe)
+	await _quadros(1)
+	var frase := Textos.CAIDA_PIORA % [nome_orc, nome_her]
+	_ok(c.narracao.size() == 1, "narra uma vez a caída atingida")
+	_ok(c.alertas.size() == n_alertas + 1 and c.alertas.back() == frase, "a frase do site chega ao Mestre: «%s»" % frase)
+	_ok(frase.ends_with("piora visivelmente."), "o núcleo do site: «piora visivelmente.»")
+	var reg: Array[String] = c._aba_registo.narracoes_mostradas()
+	_ok(reg.size() == 1 and reg[0].contains(frase) and reg[0].contains("sucessos 1, falhas 1"),
+		"fica no registo com os contadores %s" % [reg])
+	_ok(int(c.mortes[her]["falhas"]) == 1, "o espelho sobe para 1 falha (não há `estado` a seguir)")
+
+	# 2) O mesmo evento outra vez (repetido no fio): não narra de novo.
+	c._ao_evento(golpe)
+	_ok(c.narracao.size() == 1, "evento repetido não narra outra vez")
+
+	# 3) Golpe de oportunidade: falhas 1 → 2, frase própria do AoO; sem vista nova pelo meio (o espelho chega).
+	c._ao_evento(_ataque(901, orc, her, {"fase": "aMorrer", "sucessos": 1, "falhas": 2}, true))
+	var frase_aoo := Textos.CAIDA_PIORA_OPORTUNIDADE % [nome_orc, nome_her]
+	_ok(c.narracao.size() == 2 and c.alertas.back() == frase_aoo, "golpe de oportunidade: «%s»" % frase_aoo)
+	reg = c._aba_registo.narracoes_mostradas()
+	_ok(reg.size() == 2 and reg[0].contains("(de oportunidade)") and reg[0].contains("falhas 2"), "o mais novo fica no topo do registo")
+
+	# 4) O golpe que a mata (3.ª falha, morteAdjudicada): não é «piora» — a morte narra-se pelo fim.
+	c._ao_evento(_ataque(902, orc, her, {"fase": "aMorrer", "sucessos": 1, "falhas": 3}, false, {"morteAdjudicada": true}))
+	_ok(c.narracao.size() == 2, "o golpe que a mata não narra «piora»")
+
+	# 5) Queda nova (antes não estava a morrer): não é falha por golpe.
+	c.aplicar_vista(vista_base)
+	var outra := _ataque(903, orc, her, {"fase": "aMorrer", "sucessos": 0, "falhas": 0})
+	c._ao_evento(outra)
+	_ok(c.narracao.size() == 2, "a queda nova não é narrada como «piora»")
+
+	# 6) Falhas sobem por um `estado` (teste de morte), não por golpe: o espelho segue, sem narrar.
+	c._ao_evento({"type": "ROOM_EVENT", "seq": 904, "tipo": "estado", "dados": {
+		"figuraId": her, "visivel": "caida", "estadoMorte": {"fase": "aMorrer", "sucessos": 0, "falhas": 1}}})
+	_ok(c.narracao.size() == 2 and int(c.mortes[her]["falhas"]) == 1, "o `estado` actualiza o espelho e não narra")
+
+	# 7) Golpe num monstro nunca narra; nem um ataque sem soMestre (o que a Party receberia).
+	c._ao_evento(_ataque(905, her, orc, {"fase": "aMorrer", "sucessos": 0, "falhas": 9}))
+	var sem_so := _ataque(906, orc, her, {"fase": "aMorrer", "sucessos": 0, "falhas": 2})
+	sem_so["dados"].erase("soMestre")
+	c._ao_evento(sem_so)
+	_ok(c.narracao.size() == 2, "monstro atingido ou ataque sem soMestre: silêncio")
+	c.aplicar_vista(vista_antes)
+	await _quadros(1)
 
 
 func _textos(no: Node, saida: Array) -> void:

@@ -355,6 +355,118 @@ static func amigos_para_escolher(cartao: Dictionary) -> Array:
 	return amigos.duplicate()
 
 
+# ---------------------------------------------------------------- caída atingida (ordem 12)
+#
+# Paridade com o site (REF_35; jogo.js vlabAplicarAlvoDepois → 'falhaDeMorte'): quando um golpe acerta na heroína
+# que JÁ estava a morrer e o motor lhe sobe as falhas, o site narra «ela, caída, piora visivelmente» e regista a falha
+# por golpe. A regra é do motor e do servidor; aqui só se COMPARA o estadoMorte de antes com o que o servidor mandou.
+#
+# O servidor não emite `estado` neste caso (a Vida fica a 0 e o visível fica «caida»): a falha nova só chega ao Mestre
+# no próprio `ataque`, em soMestre.soDoMestre.alvoDepois.estadoMorte. O «antes» é o espelho que o ecrã guarda: a vista
+# (bloco mestre) e, entre vistas, o que os eventos trazem (mortes_do_evento).
+
+## id → estadoMorte (ou null) de cada figura da vista do Mestre.
+static func mortes_da_vista(v: Dictionary) -> Dictionary:
+	var r := {}
+	for f in figuras(v):
+		if f is Dictionary and _texto(f.get("id")) != "":
+			r[f["id"]] = f.get("estadoMorte")
+	return r
+
+
+## O estadoMorte novo que um ROOM_EVENT (como o Mestre o recebe) traz, por figura.
+static func mortes_do_evento(msg: Dictionary) -> Dictionary:
+	var r := {}
+	var d = msg.get("dados")
+	if not (d is Dictionary):
+		return r
+	var so = d.get("soMestre")
+	match _texto(msg.get("tipo")):
+		"estado":
+			var fid := _texto(d.get("figuraId"))
+			if fid == "":
+				return r
+			if d.has("estadoMorte"):
+				r[fid] = d["estadoMorte"]  # jogadora: vem nos dados
+			elif so is Dictionary and so.has("estadoMorte"):
+				r[fid] = so["estadoMorte"]  # monstro: vem no soMestre
+		"ataque":
+			var sdm = so.get("soDoMestre") if so is Dictionary else null
+			if sdm is Dictionary:
+				for par in [["alvoId", "alvoDepois"], ["atacanteId", "atacanteDepois"]]:
+					var fid := _texto(d.get(par[0]))
+					var dep = sdm.get(par[1])
+					if fid != "" and dep is Dictionary and dep.has("estadoMorte"):
+						r[fid] = dep["estadoMorte"]
+	return r
+
+
+## A falha de morte por golpe deste `ataque`, ou {} se não houve:
+## {alvoId, atacanteId, oportunidade, sucessos, falhas}.
+## Como no site: só a jogadora; só se ANTES já estava a morrer (a queda nova não é isto — narra-se como queda); só se as
+## falhas subiram; e não quando o golpe a matou (a morte narra-se pelo fim da batalha).
+static func falha_por_golpe(msg: Dictionary, mortes: Dictionary, v: Dictionary) -> Dictionary:
+	if _texto(msg.get("tipo")) != "ataque":
+		return {}
+	var d = msg.get("dados")
+	if not (d is Dictionary):
+		return {}
+	var alvo := _texto(d.get("alvoId"))
+	var f := figura(v, alvo)
+	if alvo == "" or (not f.is_empty() and _texto(f.get("lado")) != "jogadora"):
+		return {}
+	var so = d.get("soMestre")
+	var sdm = so.get("soDoMestre") if so is Dictionary else null
+	var dep = sdm.get("alvoDepois") if sdm is Dictionary else null
+	if not (dep is Dictionary):
+		return {}
+	var depois = dep.get("estadoMorte")
+	var antes = mortes.get(alvo)
+	if not (depois is Dictionary and antes is Dictionary):
+		return {}
+	if _texto(antes.get("fase")) != "aMorrer" or _texto(depois.get("fase")) != "aMorrer":
+		return {}
+	if _inteiro(depois.get("falhas")) <= _inteiro(antes.get("falhas")):
+		return {}
+	if dep.get("morteAdjudicada") == true or dep.get("vivo") == false:
+		return {}
+	var vida = dep.get("vidaActual")
+	if (vida is int or vida is float) and float(vida) > 0.0:
+		return {}
+	return {
+		"alvoId": alvo, "atacanteId": _texto(d.get("atacanteId")), "oportunidade": d.get("ataqueDeOportunidade") == true,
+		"sucessos": _inteiro(depois.get("sucessos")), "falhas": _inteiro(depois.get("falhas")),
+	}
+
+
+## A frase que o Mestre lê (a do site, com o nome dela).
+static func frase_caida_piora(v: Dictionary, r: Dictionary) -> String:
+	var molde: String = Textos.CAIDA_PIORA_OPORTUNIDADE if r.get("oportunidade") == true else Textos.CAIDA_PIORA
+	return molde % [_nome_curto(v, _texto(r.get("atacanteId"))), _nome_curto(v, _texto(r.get("alvoId")))]
+
+
+## A linha que fica no registo da narração, com os contadores (como o supRegistar do site).
+static func linha_registo_caida(v: Dictionary, r: Dictionary) -> String:
+	return Textos.REGISTO_CAIDA % [
+		_nome_curto(v, _texto(r.get("alvoId"))), _nome_curto(v, _texto(r.get("atacanteId"))),
+		Textos.REGISTO_CAIDA_OPORTUNIDADE if r.get("oportunidade") == true else "",
+		int(r.get("sucessos", 0)), int(r.get("falhas", 0)),
+	]
+
+
+## Nome dentro de uma frase: o verdadeiro (o Mestre vê-o), senão o público.
+static func _nome_curto(v: Dictionary, id: String) -> String:
+	var f := figura(v, id)
+	var nome := _texto(f.get("nome"))
+	if nome == "":
+		nome = _texto(f.get("nomePublico"))
+	return nome if nome != "" else Textos.ALGUEM
+
+
+static func _inteiro(x) -> int:
+	return int(x) if x is int or x is float else 0
+
+
 static func _texto(v) -> String:
 	return v if v is String else ""
 

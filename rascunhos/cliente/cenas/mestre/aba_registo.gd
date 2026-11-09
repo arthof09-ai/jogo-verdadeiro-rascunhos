@@ -16,6 +16,10 @@ var _confirmar: VBoxContainer
 var _pergunta: Label
 var _lista: VBoxContainer
 var _estat: VBoxContainer
+## Ordem 12: a narração ao Mestre (caída atingida), da mais nova para a mais antiga. Não se apaga com a vista nova.
+var _narracao: VBoxContainer
+var _sem_narracao: Label
+const MAX_NARRACAO := 100
 
 
 func montar(m) -> void:
@@ -51,6 +55,12 @@ func montar(m) -> void:
 	_estat = VBoxContainer.new()
 	_estat.name = "Estatisticas"
 	add_child(_estat)
+	add_child(HSeparator.new())
+	_rotulo(Textos.NARRACAO)
+	_sem_narracao = _rotulo(Textos.SEM_NARRACAO)
+	_narracao = VBoxContainer.new()
+	_narracao.name = "Narracao"
+	add_child(_narracao)
 
 
 func atualizar(vista: Dictionary) -> void:
@@ -81,6 +91,25 @@ func atualizar(vista: Dictionary) -> void:
 		_lista.add_child(b)
 	if not ainda_existe:
 		cancelar()
+
+
+## Ordem 12: uma entrada nova no topo (frase do site + linha do registo com os contadores).
+func narrar(frase: String, linha: String) -> void:
+	_sem_narracao.visible = false
+	var l := _rotulo_em(_narracao, frase + "\n" + linha)
+	_narracao.move_child(l, 0)
+	while _narracao.get_child_count() > MAX_NARRACAO:
+		var velho := _narracao.get_child(_narracao.get_child_count() - 1)
+		_narracao.remove_child(velho)
+		velho.queue_free()
+
+
+func narracoes_mostradas() -> Array[String]:
+	var r: Array[String] = []
+	for c in _narracao.get_children():
+		if c is Label:
+			r.append((c as Label).text)
+	return r
 
 
 func pontos_mostrados() -> int:

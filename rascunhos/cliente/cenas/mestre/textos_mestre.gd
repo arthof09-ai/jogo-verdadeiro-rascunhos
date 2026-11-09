@@ -130,6 +130,18 @@ const PONTO_INICIO := "Início da sala"
 const VOLTAR_PERGUNTA := "Voltar até aqui? Todos vão ver a batalha voltar a este ponto."
 const VOLTAR_ATE_AQUI := "Voltar até aqui"
 const SEM_PONTOS := "Ainda não há pontos para voltar."
+
+# ---------------------------------------------------------------- narração ao Mestre (ordem 12)
+## Caída atingida (site REF_35, jogo.js: ramo 'falhaDeMorte' da vez da IA e do golpe de oportunidade). O site partilha
+## só o núcleo «piora visivelmente.»; aqui a frase nomeia a heroína porque a mesa pode ter mais de uma.
+const CAIDA_PIORA := "%s acerta a %s caída — ela piora visivelmente."
+const CAIDA_PIORA_OPORTUNIDADE := "%s golpeia a %s de oportunidade — ela, caída, piora visivelmente."
+## A linha do registo (site: supRegistar 'falha-de-morte-por-golpe' com os contadores).
+const REGISTO_CAIDA := "Falha de morte por golpe: %s, por %s%s — sucessos %d, falhas %d."
+const REGISTO_CAIDA_OPORTUNIDADE := " (de oportunidade)"
+const NARRACAO := "Narração (só o Mestre)"
+const SEM_NARRACAO := "Ainda nada narrado."
+const ALGUEM := "Alguém"
 const NOME_EVENTO := {
 	"inicio": "início", "colocacao": "colocação", "turno": "vez nova", "movimento": "movimento",
 	"ataque": "ataque", "dano": "dano", "desgraca": "desgraça", "cartao": "cartão", "cartao_fechado": "cartão decidido",
