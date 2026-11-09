@@ -27,7 +27,7 @@ const VIZ4 = Object.freeze([[1, 0], [-1, 0], [0, 1], [0, -1]]); // sem diagonais
 // §3.1 + `correr` e `apanhar_arma` (ERRATA v0.2.2 do protocolo; REF_7 §2 e §4).
 export const TIPOS_ACAO = Object.freeze([
   'mover', 'atacar', 'consumivel', 'defender', 'desvincular', 'transformar', 'reacao', 'encerrar', 'correr',
-  'apanhar_arma',
+  'apanhar_arma', 'curar',
 ]);
 // P3: todo o laço de rejeição tem teto. Passar dele é rng avariado: lança (a transação desfaz tudo).
 export const MAX_TENTATIVAS_LACO = 1000;
@@ -150,6 +150,7 @@ export function acaoBemFormada(a) {
     atacar: ['tipo', 'alvoId', 'arma'],
     consumivel: ['tipo', 'itemId', 'alvoId'],
     reacao: ['tipo', 'reacaoId', 'aceitar'],
+    curar: ['tipo', 'alvoId', 'tecnica'],
   }[a.tipo] ?? ['tipo'];
   if (Object.keys(a).some((k) => !permitidas.includes(k))) return false;
   switch (a.tipo) {
@@ -164,6 +165,9 @@ export function acaoBemFormada(a) {
       return typeof a.itemId === 'string' && a.itemId.length <= 64 && (a.alvoId === undefined || typeof a.alvoId === 'string');
     case 'reacao':
       return typeof a.reacaoId === 'string' && a.reacaoId.length <= 64 && typeof a.aceitar === 'boolean';
+    case 'curar':
+      return typeof a.alvoId === 'string' && a.alvoId.length >= 1 && a.alvoId.length <= 64
+        && typeof a.tecnica === 'string' && a.tecnica.length >= 1 && a.tecnica.length <= 64;
     default:
       return true;
   }
@@ -187,6 +191,8 @@ function acaoNasOpcoes(ops, acao) {
       return ops.consumiveis.some((o) => o.itemId === acao.itemId && (acao.alvoId === undefined || (o.alvos ?? []).includes(acao.alvoId)));
     case 'reacao':
       return ops.reacoes.some((o) => o.reacaoId === acao.reacaoId);
+    case 'curar':
+      return (ops.curas ?? []).some((o) => o.alvoId === acao.alvoId && o.tecnica === acao.tecnica);
     default:
       return ops.acoes.includes(acao.tipo);
   }
@@ -470,6 +476,18 @@ export function criarSala({
     return f.lado === 'jogadora' && f.vivo && f.estadoMorte?.fase === 'estabilizado';
   }
 
+  /**
+   * Alvo que a cura do motor aceita (site REF_31, vlab-completo.js aplicarCura): a Vida 0 só o ESTABILIZADO
+   * (CURA_SOBRE_QUEM_ESTA_A_MORRER, CURA_NAO_RESSUSCITA); com a Vida cheia, não (CURA_ALVO_VIDA_CHEIA).
+   * A estabilizada da Q4 está a 1 de Vida: entra pela regra geral e a cura soma por cima do 1.
+   */
+  function curavel(alvo) {
+    const total = fichaEfetiva(alvo).vidaTotal;
+    if (!Number.isFinite(total) || !Number.isFinite(alvo.vidaActual)) return false;
+    if (alvo.vidaActual <= 0 && alvo.estadoMorte?.fase !== 'estabilizado') return false;
+    return alvo.vidaActual < total;
+  }
+
   /** Jogadora fora de combate: a morrer, estabilizada ou com Vida 0 (o VLAB marca `foraDeCombate`). */
   function jogadoraForaDeCombate(f) {
     if (f.lado !== 'jogadora') return false;
@@ -526,7 +544,7 @@ export function criarSala({
   }
 
   function opcoesVazias(m) {
-    return { vezId: m.vez?.figuraId ?? null, orcamentoM: 0, mover: [], ataques: [], consumiveis: [], acoes: [], reacoes: [] };
+    return { vezId: m.vez?.figuraId ?? null, orcamentoM: 0, mover: [], ataques: [], curas: [], consumiveis: [], acoes: [], reacoes: [] };
   }
 
   /**
@@ -576,6 +594,22 @@ export function criarSala({
       }
     }
 
+    // Ordem 7 (CM-000009): acção de CURA, pelas regras do site (REF_31: vlab-completo.js aplicarCura + jogo.js
+    // vlabAplicarCuraDepois). A cura é componente declarado (`expressaoCura`) de uma técnica da ficha; os alvos são os
+    // que o motor aceita (cura não ressuscita, não acorda quem está a morrer, não passa da Vida cheia).
+    const curas = [];
+    if (!v.atacou) {
+      for (const t of ficha.tecnicas) {
+        if (typeof t.expressaoCura !== 'string') continue;
+        if (f.lado === 'jogadora' && t.custoPA > paLivre(f)) continue; // o motor recusa PA_INSUFICIENTE; não forçamos
+        for (const alvo of colocadas(m)) {
+          if (!alvo.vivo || saoInimigos(f, alvo) || !curavel(alvo)) continue;
+          if (distanciaM(f, alvo) > t.alcanceM + EPS) continue;
+          curas.push({ alvoId: alvo.id, tecnica: t.id });
+        }
+      }
+    }
+
     const acoes = ['encerrar'];
     // Correr: substitui a reserva; só se ainda não andou nem atacou.
     // TODO(R0 §9.9): pode-se Correr depois de andar uma parte? Hoje não (REF_7).
@@ -591,7 +625,7 @@ export function criarSala({
       if (!v.atacou && tr && !f.transformada && custoTr <= paLivre(f)) acoes.push('transformar');
     }
     // TODO(JV1.x): consumíveis (REF_7 §9.10: ainda sem conteúdo) e reações (A-4: janela de reação).
-    return { vezId: figuraId, orcamentoM: arred(v.reservaM), mover, ataques, consumiveis: [], acoes, reacoes: [] };
+    return { vezId: figuraId, orcamentoM: arred(v.reservaM), mover, ataques, curas, consumiveis: [], acoes, reacoes: [] };
   }
 
   function destinatario(s) {
@@ -1161,6 +1195,36 @@ export function criarSala({
     return saida;
   }
 
+  /**
+   * Cura pelo motor (site REF_31, vlab-completo.js aplicarCura). VLAB real:
+   *   aplicarCura({origem:{nome}, quemCura:{paLivre}, alvo:{vidaTotal, vidaActual, estadoMorte, estado}, expressaoCura,
+   *   custoPA, magia, contexto:{semente|faces}}) → {curaRolada:null, publico:{recibo}, soDoMestre:{curaRolada,
+   *   curaEfectiva, excesso, pa:{custo, paLivreAntes, paLivreDepois, exaustaoEspiritual}, alvoDepois:{vidaActual,
+   *   estadosRemovidos, estadoMorte?}}, erro}. Nunca vai `forcarSemPA` (a opção só aparece com PA livre suficiente).
+   * Pontos onde o site é omisso NÃO entram aqui (ver README do servidor, «Ordem 7»): `curaBloqueada` da ferida-fonte.
+   */
+  function chamarMotorCura(quem, alvo, t, ctx) {
+    const fn = motores.Vlab.aplicarCura;
+    if (typeof fn !== 'function') return { erro: 'SEM_CURA_NO_MOTOR' };
+    let saida;
+    try {
+      saida = fn({
+        origem: { nome: t.nome || t.id, id: t.id },
+        quemCura: { paLivre: quem.lado === 'jogadora' ? paLivre(quem) : fichaEfetiva(quem).paTotal },
+        alvo: entidadeMotor(alvo),
+        expressaoCura: t.expressaoCura,
+        custoPA: Number.isInteger(t.custoPA) ? t.custoPA : 0,
+        magia: t.magia === true,
+        contexto: clonarJson(ctx),
+      });
+    } catch (e) {
+      return { erro: 'EXCECAO:' + (e?.message ?? String(e)) };
+    }
+    if (!saida || typeof saida !== 'object') return { erro: 'SAIDA_INVALIDA' };
+    if (saida.erro) return { erro: typeof saida.erro === 'string' ? saida.erro : String(saida.erro.codigo ?? 'ERRO') };
+    return saida;
+  }
+
   /** Copia do motor só os campos de estado conhecidos (o estado vivo atualiza-se no servidor). */
   function aplicarDepois(f, d) {
     if (!d || typeof d !== 'object') return;
@@ -1176,8 +1240,10 @@ export function criarSala({
     // falhaCritica.efeitoMecanico); aplica-se por aplicarEfeitoDesgraca.
     for (const k of ['armaCaida', 'armaQuebrada', 'corpoPartido']) if (typeof d[k] === 'boolean') f[k] = d[k];
     // Q4 (site REF_31, vlabAplicarCuraDepois): sobre a estabilizada, a cura soma por cima do 1; curou e ficou acima
-    // de 0 → a marca sai e ela levanta-se. TODO(R0): o servidor ainda não tem a acção de cura no protocolo; este é
-    // o ponto onde o recibo de cura entra (com `curou: true`) quando a tiver.
+    // de 0 → a marca sai e ela levanta-se. O recibo de cura entra aqui com `curou: true` (acção `curar`, ordem 7).
+    // Levantar-se pela cura NÃO gasta o movimento da vez seguinte: no site a queda a 0 é só da vista
+    // (entrarAMorrer → setVivo false) e a cura repõe a vista (setVivo true); o 'caido' que gasta a reserva é só o da
+    // desgraça (iniciarVez).
     if (d.curou === true && estabilizadaSemCura(f) && f.vidaActual > 0) {
       f.estadoMorte = null;
       f.caido = false;
@@ -1446,6 +1512,44 @@ export function criarSala({
     }
   }
 
+  /**
+   * Acção `curar` (ordem 7 do CM-000009). Regras do site REF_31:
+   *  - o motor rola a cura e devolve a Vida depois (teto = Vida máxima; o total fica só em soDoMestre);
+   *  - sobre a estabilizada (Q4, 1 de Vida, caída) a cura soma por cima do 1; a marca sai, ela levanta-se e a
+   *    rotação volta a dar-lhe a vez (avancarVez já não a salta sem a marca) — vlabAplicarCuraDepois;
+   *  - quem cura e não é a própria não vê expressão nem faces (vlabFiltrarReciboCura): fica a origem.
+   * PROVISÓRIO (site omisso, ver README «Ordem 7»): a cura gasta a acção padrão (`atacou`), como as outras técnicas.
+   */
+  function aplicarCuraAcao(tx, f, alvo, t) {
+    const m = tx.estado;
+    const ctx = { semente: sortearSemente() >>> 0 };
+    const saida = chamarMotorCura(f, alvo, t, ctx);
+    if (saida.erro) throw new ErroRecusa('acao_invalida', 'MOTOR:' + saida.erro);
+    const sm = saida.soDoMestre && typeof saida.soDoMestre === 'object' ? saida.soDoMestre : {};
+    const visAlvo = visivelDe(alvo);
+    const vidaAlvo = alvo.vidaActual;
+    const paAntes = f.lado === 'jogadora' ? paLivre(f) : null;
+    if (m.vez && m.vez.figuraId === f.id) m.vez.atacou = true;
+    if (f.lado === 'jogadora') f.paGasto += Number.isInteger(sm.pa?.custo) ? sm.pa.custo : (Number.isInteger(t.custoPA) ? t.custoPA : 0);
+    aplicarDepois(alvo, { ...(sm.alvoDepois && typeof sm.alvoDepois === 'object' ? sm.alvoDepois : {}), curou: true });
+    const faces = facesDoRecibo(saida.publico?.recibo);
+    const dados = { curadorId: f.id, alvoId: alvo.id, tecnica: t.id };
+    // Como no ataque (v0.2.1): só quem cura, se for jogadora, vê a expressão e as faces dela. O total é do Mestre.
+    if (f.lado === 'jogadora') Object.assign(dados, { faces, expressao: t.expressaoCura });
+    tx.emitir('cura', dados, { semente: ctx.semente, contexto: ctx, recibo: saida.publico?.recibo ?? null, soDoMestre: sm });
+    emitirEstado(tx, alvo, alvo.id === f.id, visAlvo, vidaAlvo);
+    if (alvo.id !== f.id && f.lado === 'jogadora' && paLivre(f) !== paAntes) emitirEstado(tx, f, true);
+    verificarFim(tx);
+  }
+
+  /** Faces do recibo público do VLAB real («cura 1d8+2 → [5] (origem: …)»), ou null. */
+  function facesDoRecibo(recibo) {
+    const r = typeof recibo === 'string' ? /→ \[([0-9,]*)\]/.exec(recibo) : null;
+    if (!r) return null;
+    const fs = r[1].split(',').filter(Boolean).map(Number);
+    return fs.length && fs.every((x) => Number.isInteger(x) && x >= 1 && x <= 100) ? fs : null;
+  }
+
   function origemCartao(origem) {
     return origem ? { seatId: origem.seatId, id: origem.id, idCampo: origem.idCampo, chave: origem.chave } : null;
   }
@@ -1520,6 +1624,12 @@ export function criarSala({
       case 'encerrar':
         avancarVez(tx);
         return 'APLICADA';
+      case 'curar': {
+        const alvo = m.figuras[acao.alvoId];
+        const t = fichaEfetiva(f).tecnicas.find((x) => x.id === acao.tecnica);
+        aplicarCuraAcao(tx, f, alvo, t);
+        return 'APLICADA';
+      }
       default:
         // TODO(JV1.x): consumivel e reacao (A-4).
         throw new ErroRecusa('acao_invalida');

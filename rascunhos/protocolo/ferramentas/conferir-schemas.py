@@ -54,6 +54,7 @@ DONO = {
     'dano': lambda d, f: f in (d.get('alvoId'), d.get('autorId')),
     'estado': lambda d, f: d.get('figuraId') == f,
     'desgraca': lambda d, f: d.get('figuraId') == f,
+    'cura': lambda d, f: d.get('curadorId') == f,
 }
 
 

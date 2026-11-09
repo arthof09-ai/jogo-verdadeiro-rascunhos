@@ -9,6 +9,7 @@ export function criarMotorFalso(opcoes = {}) {
   // cfg é mutável: os testes mudam cfg.resultado / cfg.erro entre passos.
   const cfg = { resultado: 'acerto', dano: 1176, erro: null, ...opcoes };
   const chamadas = [];
+  const chamadasCura = [];
 
   const Vlab = {
     resolverAtaque(entrada) {
@@ -71,8 +72,35 @@ export function criarMotorFalso(opcoes = {}) {
     resolverSalvaguarda() {
       return { erro: 'NAO_IMPLEMENTADO_NO_FALSO' };
     },
-    aplicarCura() {
-      return { erro: 'NAO_IMPLEMENTADO_NO_FALSO' };
+    // Ordem 7: a cura do falso segue as recusas e a forma de saída do VLAB real (site REF_31, aplicarCura), mas não rola:
+    // a face é cfg.faceCura e o total é cfg.cura. O total vai SÓ em soDoMestre (curaRolada:null no topo, como o real).
+    aplicarCura(entrada) {
+      chamadasCura.push(JSON.parse(JSON.stringify(entrada)));
+      const falha = (codigo) => ({ curaRolada: null, publico: null, soDoMestre: null, erro: { codigo } });
+      const { origem, quemCura, alvo, expressaoCura } = entrada || {};
+      if (!origem || !origem.nome) return falha('CURA_SEM_ORIGEM');
+      const fase = alvo?.estadoMorte?.fase;
+      if (alvo.vidaActual <= 0) {
+        if (fase === 'aMorrer') return falha('CURA_SOBRE_QUEM_ESTA_A_MORRER');
+        if (fase !== 'estabilizado') return falha('CURA_NAO_RESSUSCITA');
+      }
+      if (alvo.vidaActual >= alvo.vidaTotal) return falha('CURA_ALVO_VIDA_CHEIA');
+      const custo = Number.isInteger(entrada.custoPA) ? entrada.custoPA : 0;
+      if (!Number.isFinite(quemCura?.paLivre)) return falha('PA_EM_FALTA');
+      if (quemCura.paLivre < custo) return falha('PA_INSUFICIENTE');
+      const curaRolada = cfg.cura ?? 7;
+      const efectiva = Math.min(curaRolada, alvo.vidaTotal - alvo.vidaActual);
+      const eraEstabilizado = fase === 'estabilizado' && alvo.vidaActual <= 0;
+      return {
+        curaRolada: null,
+        publico: { recibo: `cura ${expressaoCura} → [${cfg.faceCura ?? 5}] (origem: ${origem.nome})` },
+        soDoMestre: {
+          curaRolada, curaEfectiva: efectiva, excesso: curaRolada - efectiva,
+          pa: { custo, paLivreAntes: quemCura.paLivre, paLivreDepois: quemCura.paLivre - custo, exaustaoEspiritual: false },
+          alvoDepois: { vidaActual: alvo.vidaActual + efectiva, estadosRemovidos: [], ...(eraEstabilizado ? { estadoMorte: null } : {}) },
+        },
+        erro: null,
+      };
     },
     validarForcarPassagem() {
       return { valido: false };
@@ -92,5 +120,5 @@ export function criarMotorFalso(opcoes = {}) {
     },
   };
 
-  return { Dmg, Vlab, MOTOR_SHA256: 'falso'.padEnd(64, '0'), DMG_VERSAO: 'falso-0', LEVELUP_SHA: null, chamadas, cfg };
+  return { Dmg, Vlab, MOTOR_SHA256: 'falso'.padEnd(64, '0'), DMG_VERSAO: 'falso-0', LEVELUP_SHA: null, chamadas, chamadasCura, cfg };
 }

@@ -120,6 +120,30 @@
       },
       "additionalProperties": false
     },
+    "dados_cura": {
+      "type": "object",
+      "description": "Ordem 7 do CM-000009 (errata proposta D-28; site REF_31, vlabFiltrarReciboCura): quem curou quem, com que técnica. O total da cura fica no soMestre.",
+      "required": ["curadorId", "alvoId", "tecnica"],
+      "properties": {
+        "curadorId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "alvoId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "tecnica": { "type": "string", "minLength": 1, "maxLength": 64 }
+      },
+      "additionalProperties": false
+    },
+    "dados_cura_propria": {
+      "type": "object",
+      "description": "Só quem cura (jogadora) vê a expressão e as faces dela; nunca o total.",
+      "required": ["curadorId", "alvoId", "tecnica"],
+      "properties": {
+        "curadorId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "alvoId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "tecnica": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "faces": { "type": ["array", "null"], "items": { "type": "integer", "minimum": 1, "maximum": 100 } },
+        "expressao": { "type": "string", "maxLength": 64 }
+      },
+      "additionalProperties": false
+    },
     "dados_estado": {
       "type": "object",
       "required": ["figuraId", "visivel"],
@@ -231,7 +255,7 @@
         "seq": { "type": "integer", "minimum": 1 },
         "revision": { "$ref": "comum.schema.json#/$defs/revision" },
         "ts": { "$ref": "comum.schema.json#/$defs/ts" },
-        "tipo": { "enum": ["entrada", "colocacao", "turno", "movimento", "ataque", "dano", "estado", "desgraca", "teste_morte", "reacao", "consumivel", "ambiente", "revertido", "recomeco", "fim"] },
+        "tipo": { "enum": ["entrada", "colocacao", "turno", "movimento", "ataque", "dano", "cura", "estado", "desgraca", "teste_morte", "reacao", "consumivel", "ambiente", "revertido", "recomeco", "fim"] },
         "dados": { "type": "object" }
       },
       "additionalProperties": false
@@ -249,6 +273,7 @@
             { "properties": { "tipo": { "const": "movimento" }, "dados": { "$ref": "#/$defs/dados_movimento" } } },
             { "properties": { "tipo": { "const": "ataque" }, "dados": { "$ref": "#/$defs/dados_ataque" } } },
             { "properties": { "tipo": { "const": "dano" }, "dados": { "$ref": "#/$defs/dados_dano" } } },
+            { "properties": { "tipo": { "const": "cura" }, "dados": { "$ref": "#/$defs/dados_cura" } } },
             { "properties": { "tipo": { "const": "estado" }, "dados": { "$ref": "#/$defs/dados_estado" } } },
             { "properties": { "tipo": { "const": "desgraca" }, "dados": { "$ref": "#/$defs/dados_desgraca" } } },
             { "properties": { "tipo": { "const": "teste_morte" }, "dados": { "$ref": "#/$defs/dados_teste_morte" } } },
@@ -275,6 +300,7 @@
             { "properties": { "tipo": { "const": "movimento" }, "dados": { "$ref": "#/$defs/dados_movimento_propria" } } },
             { "properties": { "tipo": { "const": "ataque" }, "dados": { "$ref": "#/$defs/dados_ataque_propria" } } },
             { "properties": { "tipo": { "const": "dano" }, "dados": { "$ref": "#/$defs/dados_dano_propria" } } },
+            { "properties": { "tipo": { "const": "cura" }, "dados": { "$ref": "#/$defs/dados_cura_propria" } } },
             { "properties": { "tipo": { "const": "estado" }, "dados": { "$ref": "#/$defs/dados_estado_propria" } } },
             { "properties": { "tipo": { "const": "desgraca" }, "dados": { "$ref": "#/$defs/dados_desgraca_propria" } } },
             { "properties": { "tipo": { "const": "teste_morte" }, "dados": { "$ref": "#/$defs/dados_teste_morte" } } },
@@ -302,7 +328,7 @@
         "ts": { "$ref": "comum.schema.json#/$defs/ts" },
         "tipo": {
           "enum": [
-            "entrada", "colocacao", "turno", "movimento", "ataque", "dano", "estado", "desgraca", "reacao", "consumivel", "ambiente", "revertido", "recomeco", "fim",
+            "entrada", "colocacao", "turno", "movimento", "ataque", "dano", "cura", "estado", "desgraca", "reacao", "consumivel", "ambiente", "revertido", "recomeco", "fim",
             "pausa", "retomada", "cartao", "cartao_fechado", "lobby", "modo", "ia", "recusa", "acao", "teste_morte", "erro_motor", "ambiente_mestre"
           ]
         },

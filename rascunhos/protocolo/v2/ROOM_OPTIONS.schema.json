@@ -37,6 +37,19 @@
         "additionalProperties": false
       }
     },
+    "curas": {
+      "type": "array",
+      "description": "Ordem 7 do CM-000009 (errata proposta D-28): alvos que a técnica de cura alcança e que o motor aceita (site REF_31, aplicarCura).",
+      "items": {
+        "type": "object",
+        "required": ["alvoId", "tecnica"],
+        "properties": {
+          "alvoId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+          "tecnica": { "type": "string", "minLength": 1, "maxLength": 64 }
+        },
+        "additionalProperties": false
+      }
+    },
     "consumiveis": {
       "type": "array",
       "items": {

@@ -28,6 +28,9 @@ export const CAMPOS_PERMITIDOS = Object.freeze({
   }),
   // v0.2.1: o número do dano só a quem causou ou a quem recebeu (A-2: outra jogadora ✘).
   dano: Object.freeze({ todos: ['alvoId', 'autorId'], propria: ['valor', 'tipos'] }),
+  // Ordem 7 (site REF_31, vlabFiltrarReciboCura): a Party vê quem curou quem e com que técnica; a expressão e as faces só
+  // quem cura (se é jogadora). O total da cura e a Vida do alvo não saem daqui (o `estado` da própria traz a Vida dela).
+  cura: Object.freeze({ todos: ['curadorId', 'alvoId', 'tecnica'], propria: ['faces', 'expressao'] }),
   // Q8: a arma e o corpo DELA (os mesmos campos do ROOM_SNAPSHOT.propria) também seguem no `estado` da própria.
   estado: Object.freeze({ todos: ['figuraId', 'visivel'], propria: ['vidaActual', 'paLivre', 'estadoMorte', 'armaCaida', 'armaQuebrada', 'corpoPartido'] }),
   desgraca: Object.freeze({ todos: ['figuraId', 'efeito'], propria: ['perdeQuarto'] }), // só a desgraça APLICADA; REF_19
@@ -45,6 +48,7 @@ export const CAMPOS_PERMITIDOS = Object.freeze({
 const EH_PROPRIO = Object.freeze({
   movimento: (d, f) => d.figuraId === f,
   ataque: (d, f) => d.atacanteId === f,
+  cura: (d, f) => d.curadorId === f,
   dano: (d, f) => d.alvoId === f || d.autorId === f,
   estado: (d, f) => d.figuraId === f,
   desgraca: (d, f) => d.figuraId === f,

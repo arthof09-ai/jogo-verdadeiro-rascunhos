@@ -70,7 +70,7 @@
       "description": "§4: frase simples, sem nenhum número do Mestre. Aqui: sem nenhum dígito."
     },
     "tipoAcao": {
-      "enum": ["mover", "atacar", "consumivel", "defender", "desvincular", "transformar", "reacao", "encerrar", "correr", "apanhar_arma"]
+      "enum": ["mover", "atacar", "consumivel", "defender", "desvincular", "transformar", "reacao", "encerrar", "correr", "apanhar_arma", "curar"]
     },
     "acaoSemParametros": { "enum": ["defender", "desvincular", "transformar", "encerrar", "correr", "apanhar_arma"] },
     "acao": {
@@ -99,6 +99,17 @@
             "tipo": { "const": "consumivel" },
             "itemId": { "type": "string", "minLength": 1, "maxLength": 64 },
             "alvoId": { "type": "string", "minLength": 1, "maxLength": 64 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Ordem 7 do CM-000009 (errata proposta D-28): cura com uma técnica que declara `expressaoCura` (site REF_31, aplicarCura).",
+          "required": ["tipo", "alvoId", "tecnica"],
+          "properties": {
+            "tipo": { "const": "curar" },
+            "alvoId": { "type": "string", "minLength": 1, "maxLength": 64 },
+            "tecnica": { "type": "string", "minLength": 1, "maxLength": 64 }
           },
           "additionalProperties": false
         },
