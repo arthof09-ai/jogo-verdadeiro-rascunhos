@@ -1,4 +1,4 @@
-# SHA-256 no 9cbaca8 (antes) dos 23 ficheiros que o ramo muda. Formato do MANIFESTO.
+# SHA-256 no 9cbaca8 (antes) dos 24 ficheiros que o ramo muda. Formato do MANIFESTO.
 6cfe2067be7e314d47c4177140463fb51612de93092818ed92a1a166f2e2d332  rascunhos/cliente/README.md
 32ccc3b31a161712a8ed3bb64388568ba98e107020f43443b6443e60e9a5316f  rascunhos/cliente/arte/cenas/clareira_prova.gd
 f3f4a28720733f5e39d286ce39be05725d513ef413673982f34e21da7319c77d  rascunhos/cliente/cenas/arena/arena.gd
@@ -11,6 +11,7 @@ ee489784f6a2e975845fe7f26b60b1b359fa44740bd7511a663bd7a3baade196  rascunhos/clie
 6afcd3f796d57f45dca1655d6cd971723a67fa5df829590feb9f50ea314a4b46  rascunhos/protocolo/v2/MASTER_APPROVE.schema.json
 513fe623bdbf749b0ee12b4788c782282f415c83c600b190b8234841ac05b0f0  rascunhos/protocolo/v2/MASTER_SUPERVISOR.schema.json
 b73d9b75e46383aecc3899bffbdfb49ebdfb1a951caff8364d1923d6f385e910  rascunhos/protocolo/v2/ROOM_EVENT.schema.json
+c17a38b5d0e8faa89d8d7715bf9dd4342b7b63a505aee3964a380bab18daa343  rascunhos/protocolo/v2/ROOM_OPTIONS.schema.json
 b3bdaa93ef5b03c58fe9d74ac5281911068ee79698b66413a90560517373a44f  rascunhos/protocolo/v2/ROOM_SNAPSHOT.schema.json
 aeef9b46281e0061f73dc6d81b08ee1b0fd6f62c778045b3d2bc261cc64a8d8a  rascunhos/protocolo/v2/comum.schema.json
 e591bfa2dfe79dcdb2853b80bfd41a6bd6c3bcc5398b6f81adbebc7e5d04ec0a  rascunhos/servidor/README.md

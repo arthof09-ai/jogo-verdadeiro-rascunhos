@@ -1060,6 +1060,7 @@
      "arma": "machado-teste"
     }
    ],
+   "curas": [],
    "consumiveis": [],
    "acoes": [
     "encerrar",
@@ -1483,6 +1484,7 @@
      }
     ],
     "ataques": [],
+    "curas": [],
     "consumiveis": [],
     "acoes": [
      "encerrar",
@@ -1769,6 +1771,7 @@
       "arma": "chicote-teste"
      }
     ],
+    "curas": [],
     "consumiveis": [],
     "acoes": [
      "encerrar",
@@ -2056,6 +2059,7 @@
       "arma": "chicote-teste"
      }
     ],
+    "curas": [],
     "consumiveis": [],
     "acoes": [
      "encerrar",
@@ -2340,6 +2344,7 @@
       "arma": "chicote-teste"
      }
     ],
+    "curas": [],
     "consumiveis": [],
     "acoes": [
      "encerrar",
