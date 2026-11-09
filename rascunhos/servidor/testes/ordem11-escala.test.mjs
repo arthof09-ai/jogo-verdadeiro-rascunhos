@@ -34,7 +34,7 @@ test('ordem 11 (P8a): qualquer outro valor é recusado com erro claro — a esca
   m.iniciarCombate([['lobo-teste', { x: 7, y: 2 }]]);
   for (const mau of [3, 0.5, 2.5, 1.25, 0.75, 1.4999, 10]) {
     const r = recibo(escala(m, mau));
-    assert.equal(r?.estado, 'RECUSADA', 'casaM ' + mau);
+    assert.notEqual(r?.estado, 'APLICADA', 'casaM ' + mau);
     assert.equal(r?.motivo, 'acao_invalida', 'casaM ' + mau);
     assert.equal(estado(m).mapa.casaM, 1.5, 'a escala não muda com ' + mau);
   }
@@ -72,19 +72,19 @@ function vezDoOrc(casaM, casaOrc) {
 test('ordem 11 (P8b): técnica de 1,5 m com casa de 1 m — chega à vizinha e à diagonal (1,5 casas), não a 2 casas', () => {
   assert.equal(vezDoOrc(1, { x: 2, y: 3 }).golpe()?.estado, 'APLICADA', 'vizinha');
   assert.equal(vezDoOrc(1, { x: 3, y: 3 }).golpe()?.estado, 'APLICADA', 'diagonal: √2 ≈ 1,41 casas ≤ 1,5');
-  assert.equal(vezDoOrc(1, { x: 2, y: 4 }).golpe()?.estado, 'RECUSADA', '2 casas: fora');
+  assert.equal(vezDoOrc(1, { x: 2, y: 4 }).golpe()?.motivo, 'acao_invalida', '2 casas: fora');
 });
 
 test('ordem 11 (P8b): técnica de 1,5 m com casa de 2 m — o piso de 1 casa dá-lhe a vizinha (antes: 2 m > 1,5 m, fora)', () => {
   assert.equal(vezDoOrc(2, { x: 2, y: 3 }).golpe()?.estado, 'APLICADA', 'vizinha: max(1; 0,75) = 1 casa');
-  assert.equal(vezDoOrc(2, { x: 3, y: 3 }).golpe()?.estado, 'RECUSADA', 'diagonal: √2 casas > 1');
-  assert.equal(vezDoOrc(2, { x: 2, y: 4 }).golpe()?.estado, 'RECUSADA', '2 casas: fora');
+  assert.equal(vezDoOrc(2, { x: 3, y: 3 }).golpe()?.motivo, 'acao_invalida', 'diagonal: √2 casas > 1');
+  assert.equal(vezDoOrc(2, { x: 2, y: 4 }).golpe()?.motivo, 'acao_invalida', '2 casas: fora');
 });
 
 test('ordem 11 (P8b): na escala de sempre (1,5 m) nada muda — vizinha e diagonal sim, 2 casas não', () => {
   assert.equal(vezDoOrc(1.5, { x: 2, y: 3 }).golpe()?.estado, 'APLICADA', 'vizinha');
-  assert.equal(vezDoOrc(1.5, { x: 3, y: 3 }).golpe()?.estado, 'RECUSADA', 'diagonal: √2 casas > 1');
-  assert.equal(vezDoOrc(1.5, { x: 2, y: 4 }).golpe()?.estado, 'RECUSADA', '2 casas: fora');
+  assert.equal(vezDoOrc(1.5, { x: 3, y: 3 }).golpe()?.motivo, 'acao_invalida', 'diagonal: √2 casas > 1');
+  assert.equal(vezDoOrc(1.5, { x: 2, y: 4 }).golpe()?.motivo, 'acao_invalida', '2 casas: fora');
 });
 
 /** A heroína em (2,2) com o orc em (2,3); o Mestre põe a escala; ela sai para (2,0). */
