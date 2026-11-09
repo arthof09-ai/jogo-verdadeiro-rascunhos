@@ -86,6 +86,16 @@ var _terminar: Button
 var _recomecar: Button
 ## N4: o botão de fim à espera do segundo toque ("terminar", "recomecar" ou "").
 var armado_fim := ""
+## Ordem 8 (item 8): a escala que o Mestre está a escolher (m por casa) e o segundo toque do «Mudar a escala».
+## Os passos de 0,5 m e o mínimo de 0,5 m são só do ecrã (o site não diz que escalas valem; o servidor aceita > 0).
+const ESCALA_PASSO := 0.5
+var escala_nova := 0.0
+var armado_escala := false
+var _escala_rotulo: Label
+var _escala_valor: Label
+var _escala_menos: Button
+var _escala_mais: Button
+var _escala_mudar: Button
 var _continuar: Button
 var _atualizar: Button
 var _som: Button
@@ -178,6 +188,57 @@ func pedir_recomecar() -> void:
 	_desenhar_fim()
 
 
+## Ordem 8 (item 8): a escala que vale agora (mapa.casaM da vista; 1,5 se ainda não veio).
+func escala_atual() -> float:
+	var mapa = vista.get("mapa")
+	if mapa is Dictionary:
+		var c = mapa.get("casaM")
+		if (c is float or c is int) and float(c) > 0.0:
+			return float(c)
+	return 1.5
+
+
+func ajustar_escala(passos: int) -> void:
+	escala_nova = maxf(ESCALA_PASSO, snappedf(escala_nova + ESCALA_PASSO * passos, ESCALA_PASSO))
+	armado_escala = false
+	_desenhar_escala()
+
+
+## Ordem 8 (item 8): «Mudar a escala» (lobby ou combate), com segundo toque. Sem custo; o servidor é dono da posição.
+func pedir_escala() -> void:
+	var fase := str(vista.get("fase", ""))
+	if fase != "lobby" and fase != "combate":
+		return
+	if is_equal_approx(escala_nova, escala_atual()):
+		return
+	if not armado_escala:
+		armado_escala = true
+		_desenhar_escala()
+		return
+	armado_escala = false
+	_enviar("MASTER_SUPERVISOR", {"op": "escala", "casaM": escala_nova})
+	_desenhar_escala()
+
+
+static func _metros(v: float) -> String:
+	return String.num(v, 2).replace(".", ",")
+
+
+func _desenhar_escala() -> void:
+	if _escala_rotulo == null:
+		return
+	if escala_nova <= 0.0:
+		escala_nova = escala_atual()
+	var fase := str(vista.get("fase", ""))
+	var pode := fase == "lobby" or fase == "combate"
+	_escala_rotulo.text = Textos.ESCALA_ATUAL % _metros(escala_atual())
+	_escala_valor.text = Textos.ESCALA_NOVA % _metros(escala_nova)
+	_escala_menos.disabled = not pode or escala_nova <= ESCALA_PASSO + 0.001
+	_escala_mais.disabled = not pode
+	_escala_mudar.disabled = not pode or is_equal_approx(escala_nova, escala_atual())
+	_escala_mudar.text = (Textos.SIM_MUDAR_ESCALA % _metros(escala_nova)) if armado_escala else Textos.MUDAR_ESCALA
+
+
 func _desenhar_fim() -> void:
 	if _terminar == null:
 		return
@@ -197,6 +258,9 @@ func aplicar_vista(msg: Dictionary) -> void:
 	_aba_mesa.atualizar(msg)
 	_aba_agir.atualizar(msg)
 	_desenhar_fim()
+	if not armado_escala:
+		escala_nova = escala_atual()  # a vista nova manda; uma escolha a meio (armada) fica até ao segundo toque
+	_desenhar_escala()
 	_desenhar_cartao()
 	if _aviso_primeira.visible and str(msg.get("fase", "")) == "combate":
 		_aviso_primeira.visible = false  # emenda 2: nunca por cima da batalha
@@ -362,6 +426,18 @@ func escolher(desgraca: String) -> void:
 	_desenhar_cartao()
 
 
+## Ordem 8 (item 5): «Não acontece nada» na lista do «Escolher outra» → MASTER_APPROVE recusar {semDesgraca}.
+func escolher_nada() -> void:
+	if cartao.is_empty() or not _em_voo.is_empty():
+		return
+	var cmd := Modelo.comando(cartao, "nada")
+	if cmd.is_empty():
+		return
+	_fechar_escolha()
+	_enviar(cmd["tipo"], cmd["campos"])
+	_desenhar_cartao()
+
+
 func exportar_registo() -> void:
 	# «exportar» é isento de revisão e não tem recibo: a resposta é o MASTER_EXPORT.
 	enviar_fn.call("MASTER_SUPERVISOR", {"op": "exportar"}, Estado.revisao)
@@ -451,6 +527,13 @@ func _abrir_escolha() -> void:
 			b.set_meta("desgraca", str(d))
 			b.pressed.connect(escolher.bind(str(d)))
 			_lista_escolha.add_child(b)
+	# Ordem 8 (item 5; REF_34): ao recusar a proposta, «Não acontece nada» — fora da tabela, só do Mestre.
+	var nada := Button.new()
+	nada.name = "NaoAconteceNada"
+	nada.text = Textos.NAO_ACONTECE_NADA
+	nada.set_meta("sem_desgraca", true)
+	nada.pressed.connect(escolher_nada)
+	_lista_escolha.add_child(nada)
 	var voltar := Button.new()
 	voltar.text = Textos.VOLTAR
 	voltar.pressed.connect(_fechar_escolha)
@@ -612,6 +695,17 @@ func _montar() -> void:
 	_continuar = _botao(sala, Textos.CONTINUAR, func(): _enviar("MASTER_RESUME", {}))
 	_atualizar = _botao(sala, Textos.ATUALIZAR, func(): pedir_vista_fn.call())
 	_som = _botao(sala, Textos.SOM_LIGADO, _alternar_som)
+	# Ordem 8 (item 8): mudar a escala a meio da batalha.
+	_escala_rotulo = _rotulo(sala, "EscalaAtual")
+	var linha_escala := HBoxContainer.new()
+	linha_escala.name = "LinhaEscala"
+	sala.add_child(linha_escala)
+	_escala_menos = _botao(linha_escala, Textos.ESCALA_MENOS, ajustar_escala.bind(-1))
+	_escala_valor = _rotulo(linha_escala, "EscalaNova")
+	_escala_valor.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_escala_valor.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_escala_mais = _botao(linha_escala, Textos.ESCALA_MAIS, ajustar_escala.bind(1))
+	_escala_mudar = _botao(sala, Textos.MUDAR_ESCALA, pedir_escala)
 
 	# «Escolher outra»: por cima da coluna 2, nunca empurra os botões da coluna 1.
 	_escolha = PanelContainer.new()

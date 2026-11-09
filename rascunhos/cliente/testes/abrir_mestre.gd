@@ -16,6 +16,7 @@ extends SceneTree
 
 const CENA := "res://cenas/mestre/mestre.tscn"
 const Textos := preload("res://cenas/mestre/textos_mestre.gd")
+const Modelo := preload("res://cenas/mestre/modelo_mestre.gd")
 
 var _total := 0
 var _falhas := 0
@@ -242,6 +243,53 @@ func _correr() -> void:
 	ult = _comandos.back()
 	_ok(ult.get("cartaoId") == "c-um-amigo" and ult.get("edicao") == {"desgraca": "acerta-amigo"}, "com um só amigo, não há pergunta (vale o mais perto)")
 	c._ao_resposta(ult.get("cmdId", ""), {"type": "ROOM_RECEIPT", "estado": "APLICADA"})
+
+	# Ordem 8 (item 5; site REF_34): ao recusar a proposta, «Não acontece nada» no fim da lista — só do Mestre.
+	var desg4: Dictionary = desg.duplicate(true)
+	desg4["cartaoId"] = "c-nada"
+	_receber(desg4)
+	await _quadros(1)
+	c.tocar("escolher")
+	var vivos: Array = []
+	for n in c._lista_escolha.get_children():
+		if n is Button and not n.is_queued_for_deletion():
+			vivos.append(n)
+	var nada_btn: Button = null
+	for b in vivos:
+		if b.has_meta("sem_desgraca"):
+			nada_btn = b
+	_ok(nada_btn != null and nada_btn.text == Textos.NAO_ACONTECE_NADA, "a lista do «Escolher outra» tem «Não acontece nada»")
+	_ok(vivos.size() >= 2 and vivos[vivos.size() - 2] == nada_btn and vivos.back().text == Textos.VOLTAR,
+		"«Não acontece nada» fica depois das desgraças da tabela e antes do «Voltar»")
+	_ok(nada_btn != null and not nada_btn.has_meta("desgraca"), "não é uma linha da tabela")
+	var n_nada := _comandos.size()
+	if nada_btn != null:
+		nada_btn.pressed.emit()
+	ult = _comandos.back()
+	_ok(_comandos.size() == n_nada + 1 and ult.get("type") == "MASTER_APPROVE" and ult.get("cartaoId") == "c-nada"
+		and ult.get("decisao") == "recusar" and ult.get("edicao") == {"semDesgraca": true},
+		"«Não acontece nada» → MASTER_APPROVE recusar {semDesgraca: true}")
+	_ok(not c._escolha.visible, "a lista fecha depois da escolha")
+	c._ao_resposta(ult.get("cmdId", ""), {"type": "ROOM_RECEIPT", "estado": "APLICADA"})
+	_ok(Modelo.comando(prog, "nada").is_empty(), "noutro cartão (progresso) o «nada» não manda nada")
+
+	# Ordem 8 (item 8): mudar a escala na aba Sala — só do Mestre, com segundo toque.
+	c.aplicar_vista(vista)
+	_ok(c._escala_rotulo.text == Textos.ESCALA_ATUAL % "1,5", "a aba Sala mostra a escala actual (%s)" % c._escala_rotulo.text)
+	_ok(c._escala_mudar.disabled, "com a mesma escala, «Mudar a escala» fica desligado")
+	var n_esc := _comandos.size()
+	c.ajustar_escala(3)
+	_ok(is_equal_approx(c.escala_nova, 3.0) and not c._escala_mudar.disabled, "+ três vezes: 3 m por casa")
+	c.pedir_escala()
+	_ok(_comandos.size() == n_esc and c._escala_mudar.text == Textos.SIM_MUDAR_ESCALA % "3", "primeiro toque: só pede confirmação")
+	c.pedir_escala()
+	ult = _comandos.back()
+	_ok(_comandos.size() == n_esc + 1 and ult.get("type") == "MASTER_SUPERVISOR" and ult.get("op") == "escala"
+		and is_equal_approx(float(ult.get("casaM", 0.0)), 3.0), "segundo toque → MASTER_SUPERVISOR escala {casaM: 3}")
+	c._ao_resposta(ult.get("cmdId", ""), {"type": "ROOM_RECEIPT", "estado": "APLICADA"})
+	for i in 10:
+		c.ajustar_escala(-1)
+	_ok(is_equal_approx(c.escala_nova, 0.5) and c._escala_menos.disabled, "a escala do ecrã não desce de 0,5")
 
 	# Palavras (emenda 1).
 	var todos: Array = []

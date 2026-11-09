@@ -237,6 +237,12 @@
       "properties": {},
       "additionalProperties": false
     },
+    "dados_escala": {
+      "type": "object",
+      "description": "Ordem 8 do CM-000009 (item 8, desempate do Mestre 09/11 08:18): o Mestre mudou a escala (metros por casa) a meio da batalha. Sem dados: a Party vê só o resultado (o snapshot que vem a seguir traz mapa.casaM; as opções da vez seguem pela revisão). As posições ficam em casas; o antes/depois fica no soMestre.",
+      "properties": {},
+      "additionalProperties": false
+    },
     "dados_fim": {
       "type": "object",
       "required": ["desfecho"],
@@ -255,7 +261,7 @@
         "seq": { "type": "integer", "minimum": 1 },
         "revision": { "$ref": "comum.schema.json#/$defs/revision" },
         "ts": { "$ref": "comum.schema.json#/$defs/ts" },
-        "tipo": { "enum": ["entrada", "colocacao", "turno", "movimento", "ataque", "dano", "cura", "estado", "desgraca", "teste_morte", "reacao", "consumivel", "ambiente", "revertido", "recomeco", "fim"] },
+        "tipo": { "enum": ["entrada", "colocacao", "turno", "movimento", "ataque", "dano", "cura", "estado", "desgraca", "teste_morte", "reacao", "consumivel", "ambiente", "revertido", "recomeco", "escala", "fim"] },
         "dados": { "type": "object" }
       },
       "additionalProperties": false
@@ -282,6 +288,7 @@
             { "properties": { "tipo": { "const": "ambiente" }, "dados": { "$ref": "#/$defs/dados_ambiente" } } },
             { "properties": { "tipo": { "const": "revertido" }, "dados": { "$ref": "#/$defs/dados_revertido" } } },
             { "properties": { "tipo": { "const": "recomeco" }, "dados": { "$ref": "#/$defs/dados_recomeco" } } },
+            { "properties": { "tipo": { "const": "escala" }, "dados": { "$ref": "#/$defs/dados_escala" } } },
             { "properties": { "tipo": { "const": "fim" }, "dados": { "$ref": "#/$defs/dados_fim" } } }
           ]
         }
@@ -309,6 +316,7 @@
             { "properties": { "tipo": { "const": "ambiente" }, "dados": { "$ref": "#/$defs/dados_ambiente" } } },
             { "properties": { "tipo": { "const": "revertido" }, "dados": { "$ref": "#/$defs/dados_revertido" } } },
             { "properties": { "tipo": { "const": "recomeco" }, "dados": { "$ref": "#/$defs/dados_recomeco" } } },
+            { "properties": { "tipo": { "const": "escala" }, "dados": { "$ref": "#/$defs/dados_escala" } } },
             { "properties": { "tipo": { "const": "fim" }, "dados": { "$ref": "#/$defs/dados_fim" } } }
           ]
         }
@@ -328,7 +336,7 @@
         "ts": { "$ref": "comum.schema.json#/$defs/ts" },
         "tipo": {
           "enum": [
-            "entrada", "colocacao", "turno", "movimento", "ataque", "dano", "cura", "estado", "desgraca", "reacao", "consumivel", "ambiente", "revertido", "recomeco", "fim",
+            "entrada", "colocacao", "turno", "movimento", "ataque", "dano", "cura", "estado", "desgraca", "reacao", "consumivel", "ambiente", "revertido", "recomeco", "escala", "fim",
             "pausa", "retomada", "cartao", "cartao_fechado", "lobby", "modo", "ia", "recusa", "acao", "teste_morte", "erro_motor", "ambiente_mestre"
           ]
         },

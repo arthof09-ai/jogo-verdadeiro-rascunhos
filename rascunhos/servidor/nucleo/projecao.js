@@ -42,6 +42,8 @@ export const CAMPOS_PERMITIDOS = Object.freeze({
   fim: Object.freeze({ todos: ['desfecho'], propria: [] }),
   // N4 (08/11): o Mestre recomeçou a batalha do zero; o snapshot vem a seguir.
   recomeco: Object.freeze({ todos: [], propria: [] }),
+  // Ordem 8 (item 8): o Mestre mudou a escala. Sem campos: o resultado chega no snapshot (mapa.casaM) e nas opções.
+  escala: Object.freeze({ todos: [], propria: [] }),
 });
 
 /** "Este evento é dela?" — decide se os campos `propria` entram. */
@@ -175,7 +177,9 @@ export function projetarSnapshot(mundo, fichas, dest) {
       lobby: clonarJson(mundo.lobby),
       vez: clonarJson(mundo.vez),
       ambiente: clonarJson(mundo.ambiente),
-      cartoes: clonarJson(mundo.cartoes.filter((c) => c.estado === 'aberto')),
+      // Ordem 8 (item 5): a `saidaProposta` (a saída do motor guardada para o «Não acontece nada») é trabalho interno do
+      // servidor: não vai na vista (o Mestre já tem a proposta, a lista e a rolagem no cartão).
+      cartoes: mundo.cartoes.filter((c) => c.estado === 'aberto').map(({ saidaProposta, ...c }) => clonarJson(c)),
       pausa: clonarJson(mundo.pausa),
       // L6: a rodada em que o Mestre deu «Continuar a rodada» às marchas puras (null: nenhuma).
       marchaLivreRodada: mundo.marchaLivre ?? null,

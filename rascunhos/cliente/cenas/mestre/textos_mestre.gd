@@ -184,3 +184,16 @@ const TERMINAR_BATALHA := "Terminar batalha"
 const SIM_TERMINAR := "Sim, terminar"
 const RECOMECAR := "Recomeçar"
 const SIM_RECOMECAR := "Sim, recomeçar"
+
+# ---------------------------------------------------------------- «Não acontece nada» (ordem 8, item 5; site REF_34)
+## No fim da lista do «Escolher outra»: escolha só do Mestre, fora da tabela (o texto é o do site).
+const NAO_ACONTECE_NADA := "Não acontece nada"
+
+# ---------------------------------------------------------------- mudar a escala (ordem 8, item 8)
+## Acção só do Mestre, sem custo: as posições ficam em casas; o já andado na volta conta em metros.
+const ESCALA_ATUAL := "Escala: %s m por casa"
+const ESCALA_NOVA := "Nova escala: %s m"
+const ESCALA_MENOS := "−"
+const ESCALA_MAIS := "+"
+const MUDAR_ESCALA := "Mudar a escala"
+const SIM_MUDAR_ESCALA := "Sim, mudar para %s m"

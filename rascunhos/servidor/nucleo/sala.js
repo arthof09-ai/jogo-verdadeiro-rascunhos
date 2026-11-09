@@ -16,6 +16,9 @@ import { criarJournal, restaurarJournal } from './journal.js';
 import { projetarEvento, projetarSnapshot, efeitoAmbiente, nomePublicoDe, visivelDe } from './projecao.js';
 
 export const PROTOCOLO = 2;
+/** A escala com que a sala nasce (Q5 do site, jogo.js: CASA_M = 1,5 m). Ordem 8 do CM-000009 (item 8, desempate do
+ *  Mestre 09/11 08:18): o Mestre pode mudar a escala a meio da batalha (MASTER_SUPERVISOR op 'escala'); a escala viva é
+ *  `mapa.casaM` do estado, e é essa que conta em todo o lado (casaDe). */
 export const CASA_M = 1.5;
 export const MAX_INTENCOES_TURNO = 20; // E-C12, invariante 12
 const MAX_CHECKPOINTS = 500;
@@ -409,8 +412,13 @@ export function criarSala({
   function adjacentes(a, b) {
     return Math.abs(a.x - b.x) + Math.abs(a.y - b.y) === 1;
   }
-  function distanciaM(a, b) {
-    return Math.hypot(a.x - b.x, a.y - b.y) * CASA_M;
+  /** Metros por casa NESTA sala (ordem 8: a escala muda a meio da batalha; as posições ficam em casas). */
+  function casaDe(m) {
+    const c = m?.mapa?.casaM;
+    return typeof c === 'number' && Number.isFinite(c) && c > 0 ? c : CASA_M;
+  }
+  function distanciaM(m, a, b) {
+    return Math.hypot(a.x - b.x, a.y - b.y) * casaDe(m);
   }
   function cartaoAtivo(m) {
     return m.cartoes.find((c) => c.estado === 'aberto') ?? null; // FIFO: o primeiro aberto
@@ -563,13 +571,14 @@ export function criarSala({
     }
 
     const mover = [];
-    const maxCasas = Math.floor(v.reservaM / CASA_M + EPS);
+    // Ordem 8: a reserva está em METROS; as casas que ela paga contam-se na escala viva (o já gasto não se reconverte).
+    const maxCasas = Math.floor(v.reservaM / casaDe(m) + EPS);
     if (maxCasas > 0) {
       const r = bfs(m, f, maxCasas, f.id);
       for (const [k, d] of r.dist) {
         if (d === 0 || r.ocupadas.has(k)) continue; // não se acaba em cima de ninguém (nem de cadáver)
         const c = r.casas.get(k);
-        mover.push({ x: c.x, y: c.y, custoM: arred(d * CASA_M) });
+        mover.push({ x: c.x, y: c.y, custoM: arred(d * casaDe(m)) });
       }
       mover.sort((a, b) => a.custoM - b.custoM || a.y - b.y || a.x - b.x);
     }
@@ -588,7 +597,7 @@ export function criarSala({
           if (alvo.id === f.id || !alvo.vivo || !saoInimigos(f, alvo)) continue;
           // B9 corrigido: métrica de grelha euclidiana × 1,5 m, e não o caminho a pé.
           // TODO(JV1.x C-42): linha de visão por supercover.
-          if (distanciaM(f, alvo) > t.alcanceM + EPS) continue;
+          if (distanciaM(m, f, alvo) > t.alcanceM + EPS) continue;
           ataques.push({ alvoId: alvo.id, arma: t.id });
         }
       }
@@ -604,7 +613,7 @@ export function criarSala({
         if (f.lado === 'jogadora' && t.custoPA > paLivre(f)) continue; // o motor recusa PA_INSUFICIENTE; não forçamos
         for (const alvo of colocadas(m)) {
           if (!alvo.vivo || saoInimigos(f, alvo) || !curavel(alvo)) continue;
-          if (distanciaM(f, alvo) > t.alcanceM + EPS) continue;
+          if (distanciaM(m, f, alvo) > t.alcanceM + EPS) continue;
           curas.push({ alvoId: alvo.id, tecnica: t.id });
         }
       }
@@ -1136,7 +1145,7 @@ export function criarSala({
       .filter((f) => f.id !== atacante.id && f.id !== alvo.id && f.vivo && !saoInimigos(atacante, f))
       .map((f) => ({ f, posicao: adjacentes(atacante, f) ? 'adjacente' : linha.has(chaveCasa(f.x, f.y)) ? 'naLinha' : null }))
       .filter((a) => a.posicao)
-      .sort((p, q) => distanciaM(atacante, p.f) - distanciaM(atacante, q.f) || (p.f.id < q.f.id ? -1 : p.f.id > q.f.id ? 1 : 0))
+      .sort((p, q) => distanciaM(m, atacante, p.f) - distanciaM(m, atacante, q.f) || (p.f.id < q.f.id ? -1 : p.f.id > q.f.id ? 1 : 0))
       .map((a) => ({ id: a.f.id, posicao: a.posicao }));
   }
 
@@ -1439,6 +1448,9 @@ export function criarSala({
         proposta: saida.falhaCritica.desgracaProposta ?? saida.falhaCritica.proposta ?? saida.falhaCritica.propostaOriginal ?? saida.falhaCritica.desgraca ?? null,
         excluidas: Array.isArray(saida.falhaCritica.excluidas) ? clonarJson(saida.falhaCritica.excluidas) : [],
         razao: null, origem: origemCartao(origem),
+        // Ordem 8 (item 5): a saída da proposta guarda-se no cartão (só Mestre) para o «Não acontece nada», que a
+        // aplica tal como está (sem desgraça aplicada) e NÃO faz a segunda chamada ao motor (REF_34).
+        saidaProposta: clonarJson(saida),
       });
       return 'AGUARDANDO_MESTRE';
     }
@@ -1446,14 +1458,14 @@ export function criarSala({
     return 'APLICADA';
   }
 
-  function tecnicaCorpoACorpo(f) {
+  function tecnicaCorpoACorpo(m, f) {
     const ts = fichaEfetiva(f).tecnicas;
-    return ts.find((t) => t.alcanceM <= CASA_M + EPS && !(t.usaArma && f.armaQuebrada)) ?? null;
+    return ts.find((t) => t.alcanceM <= casaDe(m) + EPS && !(t.usaArma && f.armaQuebrada)) ?? null;
   }
 
   /** Ataque de oportunidade de um monstro (na chegada, com vantagem 1, sem a reação defensiva dela). */
   function ataqueDeOportunidade(tx, mon, alvo) {
-    const t = tecnicaCorpoACorpo(mon);
+    const t = tecnicaCorpoACorpo(tx.estado, mon);
     if (!t) return;
     mon.reacaoDisponivel = false;
     // TODO(JV1.x A-4): em modo semi/manual, o AoO devia passar pelo Mestre? Hoje é automático.
@@ -1470,7 +1482,7 @@ export function criarSala({
   function aplicarMover(tx, f, destino) {
     const m = tx.estado;
     const v = m.vez;
-    const r = bfs(m, f, Math.floor(v.reservaM / CASA_M + EPS), f.id);
+    const r = bfs(m, f, Math.floor(v.reservaM / casaDe(m) + EPS), f.id);
     const k = chaveCasa(destino.x, destino.y);
     const d = r.dist.get(k);
     if (d === undefined || d === 0 || r.ocupadas.has(k)) throw new ErroRecusa('acao_invalida'); // defensivo
@@ -1496,7 +1508,7 @@ export function criarSala({
 
     f.x = destino.x;
     f.y = destino.y;
-    const custoM = arred(d * CASA_M); // débito no fim do movimento: casas × 1,5
+    const custoM = arred(d * casaDe(m)); // débito no fim do movimento: casas × a escala viva (1,5 ao nascer)
     v.reservaM = arred(Math.max(0, v.reservaM - custoM));
     v.andouM = arred(v.andouM + custoM);
     if (!ehJog) v.iaMoveu = true;
@@ -1655,7 +1667,7 @@ export function criarSala({
       // Alvo: a jogadora (REF_7: "sempre a Ong"); com várias, a mais perto.
       const a = ops.ataques
         .slice()
-        .sort((p, q) => distanciaM(f, m.figuras[p.alvoId]) - distanciaM(f, m.figuras[q.alvoId]))[0];
+        .sort((p, q) => distanciaM(m, f, m.figuras[p.alvoId]) - distanciaM(m, f, m.figuras[q.alvoId]))[0];
       return { acao: { tipo: 'atacar', alvoId: a.alvoId, arma: a.arma }, razao: 'Alvo ao alcance: ataca.' + sufixo };
     }
     if (!m.vez.iaMoveu && ops.mover.length && alvos.length) {
@@ -1895,7 +1907,10 @@ export function criarSala({
       case 'MASTER_AMBIENTE':
         return sn(msg.hora, 16) && sn(msg.clima, 64) && sn(msg.futuro, 500);
       case 'MASTER_SUPERVISOR':
-        if (msg.op === 'terminar' || msg.op === 'recomecar') return msg.ateSeq === undefined; // N4 (palavra do Mestre, 08/11)
+        if (msg.op === 'terminar' || msg.op === 'recomecar') return msg.ateSeq === undefined && msg.casaM === undefined; // N4 (palavra do Mestre, 08/11)
+        // Ordem 8 (item 8): a escala nova, em metros por casa. O site não diz que valores valem: só se exige um número > 0.
+        if (msg.op === 'escala') return msg.ateSeq === undefined && typeof msg.casaM === 'number' && Number.isFinite(msg.casaM) && msg.casaM > 0;
+        if (msg.casaM !== undefined) return false;
         return msg.op === 'voltar' && Number.isInteger(msg.ateSeq) && msg.ateSeq >= 0;
       default:
         return false;
@@ -2035,6 +2050,7 @@ export function criarSala({
       case 'MASTER_SUPERVISOR':
         if (msg.op === 'terminar') return terminarBatalha(tx);
         if (msg.op === 'recomecar') return recomecarBatalha(tx);
+        if (msg.op === 'escala') return mudarEscala(tx, msg.casaM);
         return voltar(tx, msg.ateSeq);
       case 'MASTER_PAUSE':
         if (!pausar(tx, 'manutencao', 'mestre')) throw new ErroRecusa('acao_invalida');
@@ -2070,6 +2086,10 @@ export function criarSala({
     const c = m.cartoes.find((x) => x.cartaoId === msg.cartaoId && x.estado === 'aberto');
     if (!c || c.tipo === 'dados') throw new ErroRecusa('acao_invalida'); // decisão idempotente: a primeira ganha
     const decisao = msg.decisao;
+    // Ordem 8 (item 5): o «Não acontece nada» só existe ao RECUSAR uma proposta de desgraça; noutro sítio é recusado.
+    if (msg.edicao?.semDesgraca !== undefined && (c.tipo !== 'desgraca' || decisao !== 'recusar' || msg.edicao.semDesgraca !== true)) {
+      throw new ErroRecusa('acao_invalida');
+    }
     if (c.tipo === 'desgraca') {
       const f = m.figuras[c.figuraId];
       const alvo = m.figuras[c.alvoId];
@@ -2079,8 +2099,25 @@ export function criarSala({
       else if (decisao === 'editar') {
         escolhida = msg.edicao?.desgraca;
         if (!desgracasDoCartao(c).includes(escolhida)) throw new ErroRecusa('acao_invalida'); // L2: só da lista do cartão
+      } else if (msg.edicao?.semDesgraca === true) {
+        // Ordem 8 do CM-000009, item 5 (desempate do Mestre 09/11 08:17; site REF_34, T-DESGRACA-NADA): ao recusar a
+        // proposta, «Não acontece nada» — escolha SÓ do Mestre (só o lugar do Mestre chega aqui), fora da tabela 1d100,
+        // sem peso: o acaso nunca a dá e a IA nunca a escolhe (nenhum caminho automático manda `semDesgraca`).
+        // Nenhum efeito de desgraça: a segunda chamada ao motor NÃO se faz — aplica-se a saída da proposta, que o
+        // motor devolveu sem nada aplicado (requerConfirmacao). Os custos da falha crítica pagam-se na mesma.
+        const prop = c.saidaProposta;
+        if (!prop || typeof prop !== 'object' || !prop.falhaCritica?.requerConfirmacao) throw new ErroRecusa('acao_invalida');
+        const saida = clonarJson(prop);
+        if (saida.soDoMestre && typeof saida.soDoMestre === 'object') delete saida.soDoMestre.atacanteDepois;
+        delete saida.desgracaPendente; // defensivo: a proposta não traz lado do atacante nem dano pendente
+        fecharCartao(tx, c, 'recusar');
+        finalizarAtaque(tx, f, alvo, t, c.contexto, saida);
+        tx.emitir('acao', { figuraId: f.id, tipo: 'sem_desgraca' }, { proposta: c.proposta ?? null, escolha: 'nada' });
+        atualizarReciboOrigem(tx, c.origem, 'APLICADA');
+        return 'APLICADA';
       } else {
-        // Regra-mãe (vale o site): recusar não deita a rolagem fora. O cartão fica por decidir, como no site.
+        // Regra-mãe (vale o site): recusar SEM escolher não deita a rolagem fora. O cartão fica por decidir, como o
+        // «← Voltar» do cartão do site (REF_34): só uma escolha da lista (ou «Não acontece nada») o resolve.
         throw new ErroRecusa('acao_invalida');
       }
       if (typeof escolhida !== 'string') throw new ErroRecusa('acao_invalida');
@@ -2182,6 +2219,32 @@ export function criarSala({
     tx.emitir('recomeco', {}, null);
     iniciarVez(tx, m.figuras[m.ordem[m.vezIdx]]);
     tx.snapshotsTodos = true;
+    return 'APLICADA';
+  }
+
+  /**
+   * Ordem 8 do CM-000009, item 8 (desempate do Mestre 09/11 08:18): MUDAR A ESCALA a meio da batalha.
+   *  - acção só do Mestre (MASTER_SUPERVISOR op 'escala'), SEM CUSTO: não toca na vez, na acção, no PA nem na reacção;
+   *  - as posições guardam-se em CASAS: nenhuma figura mexe (x, y ficam);
+   *  - o movimento já gasto na volta conta em METROS: a reserva (reservaM) e o andado (andouM) da vez ficam em metros
+   *    e as casas que a reserva ainda paga contam-se na escala nova (floor(reservaM / casaM)). Ex.: 9 m de base, andou
+   *    2 casas a 1,5 (3 m) → sobram 6 m; a 3 m por casa, sobram 2 casas;
+   *  - o servidor é dono da posição e da escala. A Party vê só o resultado (evento `escala` sem campos + snapshot
+   *    novo com mapa.casaM + as opções da vez); o antes/depois fica no soMestre.
+   * Em lobby ou em combate (não no fim nem em pausa; com um cartão aberto, o cartão decide-se primeiro).
+   */
+  function mudarEscala(tx, casaM) {
+    const m = tx.estado;
+    if (m.fase !== 'lobby' && m.fase !== 'combate') throw new ErroRecusa('acao_invalida');
+    const antes = casaDe(m);
+    if (Math.abs(antes - casaM) < EPS) throw new ErroRecusa('acao_invalida'); // nada a mudar
+    m.mapa.casaM = casaM;
+    tx.emitir('escala', {}, {
+      casaMAntes: antes, casaM,
+      vez: m.vez ? { figuraId: m.vez.figuraId, reservaM: m.vez.reservaM, andouM: m.vez.andouM,
+        casasQuePaga: Math.floor(m.vez.reservaM / casaM + EPS) } : null,
+    });
+    tx.snapshotsTodos = true; // mapa.casaM novo para todos; as opções seguem pela revisão
     return 'APLICADA';
   }
 

@@ -203,7 +203,8 @@ static func descrever_cartao(cartao: Dictionary, vista: Dictionary) -> Dictionar
 			var frase := frase_prevista(cartao, vista)
 			if frase != "":
 				linhas.append(Textos.A_PARTY_VAI_LER % frase)
-			# Regra-mãe (vale o site): a rolagem da falha crítica não se deita fora — sem «Sem desgraça».
+			# Regra-mãe (vale o site): a rolagem da falha crítica não se deita fora — sem «Sem desgraça» no cartão.
+			# Ordem 8 (item 5; REF_34): ao recusar a proposta, o «Não acontece nada» vem no fim da lista do «Escolher outra».
 			botoes = [
 				_botao(Textos.CONFIRMAR, "confirmar", false),
 				_botao(Textos.ESCOLHER_OUTRA, "escolher", false, cartao.get("desgracas") is Array),
@@ -304,6 +305,11 @@ static func comando(cartao: Dictionary, acao: String, escolha: String = "") -> D
 			if not (lista is Array) or not lista.has(escolha):
 				return {}  # L2: só da lista que o servidor mandou
 			return {"tipo": "MASTER_APPROVE", "campos": {"cartaoId": id, "decisao": "editar", "edicao": {"desgraca": escolha}}}
+		"nada":
+			# Ordem 8 (item 5; site REF_34): «Não acontece nada» — só num cartão de desgraça, só pela mão do Mestre.
+			if _texto(cartao.get("tipo")) != "desgraca":
+				return {}
+			return {"tipo": "MASTER_APPROVE", "campos": {"cartaoId": id, "decisao": "recusar", "edicao": {"semDesgraca": true}}}
 		"amigo":
 			# Q12: «acerta-amigo» com o amigo declarado — só um dos `amigos` do cartão, e só se o «acerta-amigo»
 			# está na lista (o servidor recusa o resto; o VLAB também: ALIADO_ATINGIDO_NAO_ELEGIVEL).
