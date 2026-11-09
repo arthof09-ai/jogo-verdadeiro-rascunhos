@@ -74,6 +74,16 @@ test('motor real: ataques da heroína ao orc resolvem sem erro de ponte, com dan
     }
     const fim = recibo(mesa.intencao('heroina', { tipo: 'encerrar' }));
     if (!fim) break;
+    // Decisão 1 do Mestre (ordem 6): a falha crítica do orc também abre cartão; o teste faz de Mestre e aprova.
+    for (let i = 0; i < 5; i++) {
+      const aberto = mesa.sala.depuracao.estado().cartoes.find((c) => c.estado === 'aberto');
+      if (!aberto) break;
+      const aprovado = recibo(mesa.mestre('MASTER_APPROVE', { cartaoId: aberto.cartaoId, decisao: 'aprovar' }));
+      desgracas.push({
+        tipo: aberto.tipo, proposta: aberto.proposta ?? null, doMonstro: true,
+        aprovacao: aprovado ? { type: aprovado.type, estado: aprovado.estado, motivo: aprovado.motivo } : null,
+      });
+    }
     if (h.eventos('fim').length) break;
   }
 

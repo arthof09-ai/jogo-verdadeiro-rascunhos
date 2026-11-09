@@ -50,7 +50,7 @@ function levarHeroinaAMorrer(desfecho) {
   return { m, h, testes };
 }
 
-test('morte: a heroína a 0 de Vida não sai da ordem, a vez dela é um teste de morte e estabilizar acaba a batalha (como no site)', () => {
+test('morte: a heroína a 0 de Vida não sai da ordem, a vez dela é um teste de morte e, estabilizada, fica na batalha caída com 1 de Vida (Q4, site REF_31)', () => {
   const { m, h, testes } = levarHeroinaAMorrer('estabilizado');
   const est = m.sala.depuracao.estado();
   const her = Object.values(est.figuras).find((f) => f.fichaId === 'heroina-teste' || f.id === h.figuraId);
@@ -62,15 +62,29 @@ test('morte: a heroína a 0 de Vida não sai da ordem, a vez dela é um teste de
   assert.equal(her.estadoMorte?.fase, 'estabilizado', 'a saída real (estadoMorte no topo) foi aplicada');
   assert.equal(her.vivo, true, 'estabilizada continua viva');
   assert.ok(h.eventos('teste_morte').length >= 1, 'a jogadora vê que houve teste de morte');
-  // Regra-mãe do Mestre (08/11): como no site, estabilizar ACABA a batalha (desfecho 'estabilizada').
-  assert.equal(est.fase, 'fim', 'estabilizada: a batalha acaba, como no site');
-  assert.equal(est.desfecho, 'estabilizada');
-  const fim = h.eventos('fim');
-  assert.equal(fim.length, 1, 'a jogadora recebe o fim uma vez');
-  assert.equal(fim[0].dados?.desfecho, 'estabilizada');
-  const r = recibo(m.intencao('heroina', { tipo: 'encerrar' }));
-  assert.equal(r?.type, 'ROOM_REJECT', 'depois do fim não há vez');
+  // Q4 (decisão 4 do Mestre, ordem 6; site REF_31): estabilizar NÃO acaba a batalha. Volta com 1 de Vida, caída.
+  assert.equal(est.fase, 'combate', 'estabilizada: a batalha continua');
+  assert.equal(est.desfecho, null);
+  assert.equal(her.vidaActual, 1, 'volta com 1 de Vida');
+  assert.equal(her.caido, true, 'continua caída');
+  assert.equal(h.eventos('fim').length, 0, 'não há fim');
+  assert.deepEqual(h.opcoes.acoes, ['encerrar'], 'na vez em que estabilizou, só pode encerrar (sem lutar)');
+  // O orc passa a ser do Mestre (manual), para a vez não andar sozinha; ela encerra.
+  const orc = h.idPorNome('Orc');
+  exigirAplicada(m.mestre('MASTER_MODE', { figuraId: orc, modo: 'manual' }));
+  exigirAplicada(m.intencao('heroina', { tipo: 'encerrar' }), 'encerrar 2');
+  const rodadaAntes = m.sala.depuracao.estado().rodada;
+  assert.equal(m.sala.depuracao.estado().vez?.figuraId, orc, 'a vez passou ao orc');
+  exigirAplicada(m.enviar('mestre', {
+    type: 'MASTER_ACT', intentId: 'act-q4', revision: m.clientes.mestre.revision, figuraId: orc, acao: { tipo: 'encerrar' },
+  }));
+  const depois = m.sala.depuracao.estado();
+  assert.equal(depois.vez?.figuraId, orc, 'a vez dela SALTA: volta logo ao orc (site: passarVez)');
+  assert.equal(depois.rodada, rodadaAntes + 1, 'deu a volta à ordem');
+  assert.ok(depois.ordem.includes(h.figuraId), 'ela não sai da ordem');
+  assert.equal(depois.fase, 'combate');
   assert.equal(testes.length, 1, 'estabilizada não volta a fazer teste de morte');
+  assert.equal(recibo(m.intencao('heroina', { tipo: 'encerrar' }))?.type, 'ROOM_REJECT', 'não é a vez dela');
 
   // Privacidade: a CD é só do Mestre.
   assert.deepEqual(procurarCanarios(h.msgs, { numeros: [CD_CANARIO], chaves: ['cd', 'cdEfectiva', 'soDoMestre'] }), [],

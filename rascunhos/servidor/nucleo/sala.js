@@ -465,6 +465,11 @@ export function criarSala({
     return lista.reverse();
   }
 
+  /** Q4: jogadora estabilizada (viva, caída com 1 de Vida, à espera de cura). */
+  function estabilizadaSemCura(f) {
+    return f.lado === 'jogadora' && f.vivo && f.estadoMorte?.fase === 'estabilizado';
+  }
+
   /** Jogadora fora de combate: a morrer, estabilizada ou com Vida 0 (o VLAB marca `foraDeCombate`). */
   function jogadoraForaDeCombate(f) {
     if (f.lado !== 'jogadora') return false;
@@ -535,7 +540,7 @@ export function criarSala({
     const ficha = fichaEfetiva(f);
     if (jogadoraForaDeCombate(f)) {
       // A morrer: a vez dela foi o teste de morte. Estabilizada ou com Vida 0: fora de combate.
-      // TODO(R0 §9.7): a estabilizada pode fazer alguma coisa na vez dela? "Estabilizada" é derrota?
+      // Q4 (decisão 4 do Mestre): a estabilizada não luta até uma cura; avancarVez já lhe salta a vez.
       return { ...opcoesVazias(m), vezId: figuraId, acoes: ['encerrar'] };
     }
 
@@ -936,6 +941,12 @@ export function criarSala({
     if (em && typeof em === 'object') depois.estadoMorte = em;
     if (saida.morteAdjudicada === true || saida.desfecho === 'morreu') depois.morteAdjudicada = true;
     aplicarDepois(f, depois);
+    if (f.vivo && f.estadoMorte?.fase === 'estabilizado') {
+      // Q4 (decisão 4 do Mestre; site REF_31, jogo.js «danoSofrido = total − 1»): estabilizar NÃO tira da batalha.
+      // Volta com 1 de Vida, caída e sem lutar até receber qualquer cura; a cura soma por cima do 1.
+      f.vidaActual = 1;
+      f.caido = true;
+    }
     tx.emitir('teste_morte', { figuraId: f.id }, { semente: ctx.semente, saida });
     emitirEstado(tx, f, true);
     verificarFim(tx);
@@ -948,12 +959,10 @@ export function criarSala({
     const jog = todas.filter((f) => f.lado === 'jogadora');
     const mon = todas.filter((f) => f.lado !== 'jogadora');
     let desfecho = null;
-    // Regra-mãe do Mestre (08/11: «todas as mecânicas do jogo do site têm que seguir no jogo do Godot»): no site,
-    // estabilizar ACABA a batalha (jogo.js: s.desfecho === 'estabilizado' → fimDeBatalha('estabilizada')). Com mais
-    // de uma jogadora, a batalha acaba quando nenhuma pode ainda agir nem morrer: todas mortas ou estabilizadas;
-    // se alguma estabilizou, o desfecho é 'estabilizada'.
-    const estabilizada = (f) => f.vivo && f.estadoMorte?.fase === 'estabilizado';
-    if (jog.length && jog.every((f) => !f.vivo || estabilizada(f))) desfecho = jog.some(estabilizada) ? 'estabilizada' : 'morte';
+    // Q4 (decisão 4 do Mestre, ordem 6; o site já o faz desde a REF_31): estabilizar JÁ NÃO acaba a batalha. A
+    // estabilizada fica na batalha, caída, com 1 de Vida, até uma cura a levantar. A derrota é só com todas mortas.
+    // (O desfecho 'estabilizada' fica no protocolo por compatibilidade, mas o servidor já não o emite.)
+    if (jog.length && jog.every((f) => !f.vivo)) desfecho = 'morte';
     // TODO(JV1.x): a vitória é automática quando todas as criaturas COLOCADAS caem; o Mestre pode querer pôr mais.
     else if (mon.length && mon.every((f) => !f.vivo)) desfecho = 'vitoria';
     if (!desfecho) return false;
@@ -976,6 +985,9 @@ export function criarSala({
       }
       const f = m.figuras[m.ordem[m.vezIdx]];
       if (!f || !f.colocada || !f.vivo) continue; // monstro morto sai da ordem; caído não sai
+      // Q4 (site REF_31, passarVez): a estabilizada não perde o lugar na ordem, mas a vez dela SALTA — sem agir e
+      // sem testes de morte — até uma cura a levantar.
+      if (estabilizadaSemCura(f)) continue;
       iniciarVez(tx, f);
       return;
     }
@@ -1098,7 +1110,10 @@ export function criarSala({
     const ctx = {
       semente: sortearSemente() >>> 0, // uma por resolução, gravada no evento
       verificacaoCritico: [d6(), d6(), d6()], // errata JV1.1-a §6: o servidor gera-a por CSPRNG
-      modoDesgraca: atacante.lado === 'jogadora' ? 'proposta' : 'sorte',
+      // Ordem 6 do CM-000009, decisão 1 do Mestre: os monstros também têm cartão de desgraça (proposta → o Mestre
+      // decide), como as heroínas. Só o ataque de oportunidade fica em 'sorte': resolve-se a meio do movimento dela,
+      // numa série que não pode parar à espera do Mestre (TODO JV3.1: cartão também no AoO?).
+      modoDesgraca: extra.ataqueDeOportunidade ? 'sorte' : 'proposta',
       niveisVantagem: extra.niveisVantagem ?? 0,
       niveisDesvantagem: atacante.corpoPartido ? 1 : 0,
       ataqueDeOportunidade: !!extra.ataqueDeOportunidade,
@@ -1160,6 +1175,13 @@ export function criarSala({
     // {estadosNovos:['caido']} | {vidaActual, estadosNovos} (acerta-se). O quebra-corpo NÃO vem aqui (vem em
     // falhaCritica.efeitoMecanico); aplica-se por aplicarEfeitoDesgraca.
     for (const k of ['armaCaida', 'armaQuebrada', 'corpoPartido']) if (typeof d[k] === 'boolean') f[k] = d[k];
+    // Q4 (site REF_31, vlabAplicarCuraDepois): sobre a estabilizada, a cura soma por cima do 1; curou e ficou acima
+    // de 0 → a marca sai e ela levanta-se. TODO(R0): o servidor ainda não tem a acção de cura no protocolo; este é
+    // o ponto onde o recibo de cura entra (com `curou: true`) quando a tiver.
+    if (d.curou === true && estabilizadaSemCura(f) && f.vidaActual > 0) {
+      f.estadoMorte = null;
+      f.caido = false;
+    }
     if (f.lado !== 'jogadora') {
       // VLAB real: Vida a 0 → estadosNovos 'foraDeCombate' e morteAdjudicada:false; o monstro sai da ordem (REF_7 §1).
       if (f.vidaActual <= 0 || d.vivo === false || d.morteAdjudicada === true) f.vivo = false;
@@ -1343,8 +1365,9 @@ export function criarSala({
     if (faces) ctx.faces = faces.slice(); // dados físicos confirmados pelo Mestre; o dano usa a semente se faltarem
     const saida = chamarMotorAtaque(f, alvo, t, ctx);
     if (saida.erro) throw new ErroRecusa('acao_invalida', 'MOTOR:' + saida.erro);
-    if (f.lado === 'jogadora' && saida.falhaCritica && saida.falhaCritica.requerConfirmacao) {
+    if (saida.falhaCritica && saida.falhaCritica.requerConfirmacao) {
       // §8.3 / H10: a jogadora nunca autoriza a própria desgraça. A rolagem já está gravada no cartão.
+      // Decisão 1 do Mestre (ordem 6): o monstro também — o cartão vai ao Mestre, com a mesma lista e a mesma rolagem.
       abrirCartao(tx, {
         tipo: 'desgraca', figuraId: f.id, alvoId: alvo.id, tecnicaId: t.id, contexto: ctx,
         proposta: saida.falhaCritica.desgracaProposta ?? saida.falhaCritica.proposta ?? saida.falhaCritica.propostaOriginal ?? saida.falhaCritica.desgraca ?? null,
@@ -1515,6 +1538,9 @@ export function criarSala({
     const nota = fichaDe(f).comportamentoIA?.nota;
     const sufixo = typeof nota === 'string' ? ` [${nota}]` : '';
     const alvos = colocadas(m).filter((x) => x.lado === 'jogadora' && x.vivo);
+    // REQUISITO (ordem 6 do CM-000009, decisão 6 do Mestre) — entrada de desenho da IA das criaturas, NÃO regra fixa:
+    // se a heroína caída é alvo depende do OBJECTIVO da criatura (sobrevivência ignora-a; caos ou fome ataca-a).
+    // Hoje a IA não distingue (ataca a mais perto, caída ou não). Fica para o desenho da IA das criaturas.
     if (ops.ataques.length) {
       // Alvo: a jogadora (REF_7: "sempre a Ong"); com várias, a mais perto.
       const a = ops.ataques
