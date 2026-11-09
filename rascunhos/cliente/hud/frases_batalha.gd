@@ -7,16 +7,16 @@ extends RefCounted
 ## (`desgraca` {figuraId, efeito, perdeQuarto?}, `teste_morte` {figuraId}, `estado` com o
 ## `estadoMorte` DELA, `fim` {desfecho}). Sem números de ninguém.
 ##
-## Tratamento: o site usa «tu» («Aperta»). A pergunta tu/você está com o Mestre; até lá as frases
-## ficam como no site.
+## Tratamento: «você» (decisão 9 do Mestre, ordem 6 do CM-000009; o site passou a «você» na REF_30: «Aperte»).
+## Estabilizada (decisão 4; site REF_31): já não é fim — volta com 1 de Vida e fica caída até uma cura.
 
 ## Cabeçalho que o site põe antes da frase da desgraça.
 const CABECALHO_DESGRACA := "Falha crítica · "
 
-## O site acaba as frases de fim com «Aperta Recomeçar para jogar outra vez.». Com a resposta N4 do Mestre
+## O site acaba as frases de fim com «Aperte Recomeçar para jogar outra vez.» (REF_30). Com a resposta N4 do Mestre
 ## (08/11: «Claro que quero») o jogo tem o «Recomeçar» (no ecrã do Mestre) e, pela regra-mãe (vale o site),
 ## a frase completa do site volta a valer.
-const CLAUSULA_RECOMECAR := " Aperta Recomeçar para jogar outra vez."
+const CLAUSULA_RECOMECAR := " Aperte Recomeçar para jogar outra vez."
 const HA_BOTAO_RECOMECAR := true
 
 
@@ -79,8 +79,14 @@ static func fim_vitoria(nome: String) -> String:
 	return "Os inimigos caíram todos — vitória%s nesta batalha.%s" % [de, CLAUSULA_RECOMECAR if HA_BOTAO_RECOMECAR else ""]
 
 
-static func fim_estabilizada(nome: String) -> String:
-	return "A %s caiu, mas estabilizou — fim desta batalha.%s" % [nome, CLAUSULA_RECOMECAR if HA_BOTAO_RECOMECAR else ""]
+## Q4 (site REF_31, jogo.js no teste de morte): estabilizar NÃO acaba a batalha. Frase do site, sem fim.
+static func estabilizou(nome: String) -> String:
+	return "A %s caiu, mas estabilizou — ela volta com 1 de Vida e fica caída, sem lutar, até receber uma cura. A cura soma por cima desse 1." % nome
+
+
+## Q4 (site REF_31, passarVez): a vez dela salta enquanto estiver estabilizada.
+static func continua_caida(nome: String) -> String:
+	return "A %s continua caída — estabilizou, mas só uma cura a levanta." % nome
 
 
 ## Fim declarado pelo Mestre («Terminar batalha», N4), com a frase do site (jogo.js terminarBatalha, M-014).

@@ -68,3 +68,10 @@ O núcleo não importa `node:*`. Recebe por injeção os motores (`Dmg` e `Vlab`
 - `e2e/jogadora-e2e.mjs <porta>`: a jogadora, em Node, pelo WebSocket. Entra, espera o orc que o Mestre coloca, ataca, vê o recibo passar de AGUARDANDO_MESTRE a APLICADA e vê o «voltar». Confere também que nenhum canário do Mestre lhe chega pelo fio.
 - O Mestre é o cliente Godot sem janela: `cliente/testes/e2e_mestre.gd`.
 - O job `ponta-a-ponta` do CI corre os três juntos.
+
+## Ordem 6 do CM-000009 — decisões do Mestre (09/11/2026)
+
+- **Decisão 1:** o monstro também tem cartão de desgraça. `montarContexto` manda `modoDesgraca: 'proposta'` a todos; só o ataque de oportunidade fica em `'sorte'` (resolve-se a meio do movimento dela, numa série que não pára à espera do Mestre — fica como pergunta para o desenho). O cartão é o mesmo das heroínas (Confirmar / Escolher outra, com a mesma lista e a mesma semente).
+- **Decisão 4 (Q4, site REF_31):** a estabilizada fica na batalha com 1 de Vida, caída; a vez dela salta (`avancarVez`) sem testes de morte; a derrota é só com todas mortas. A cura levanta-a (`aplicarDepois` com `curou: true`), mas o servidor ainda não tem a acção de cura no protocolo (TODO R0). O desfecho `estabilizada` fica no schema por compatibilidade e já não se emite.
+- **Decisão 6 (requisito, não regra):** heroína caída como alvo depende do objectivo da criatura (sobrevivência ignora; caos ou fome ataca). Registado em `proporIA`; a IA de hoje não distingue.
+- **Decisão 7:** monstro a 0 de Vida = morto (já era assim): sai da ordem, sem testes de morte nem levantar. Teste em `testes/ordem6-decisoes.test.mjs`.

@@ -295,7 +295,9 @@ func _frase_relogio_morte(antes, depois) -> void:
 		_teste_morte_pendente = false
 		var suc_antes := _int(antes.get("sucessos")) if antes is Dictionary else 0
 		var fal_antes := _int(antes.get("falhas")) if antes is Dictionary else 0
-		if _int(depois.get("sucessos")) > suc_antes:
+		if _texto(depois.get("fase")) == "estabilizado":
+			frase_batalha.emit(Frases.estabilizou(nome))  # Q4 (REF_31): estabilizou, a batalha continua
+		elif _int(depois.get("sucessos")) > suc_antes:
 			frase_batalha.emit(Frases.aguenta(nome))
 		elif _int(depois.get("falhas")) > fal_antes:
 			frase_batalha.emit(Frases.piora(nome))
@@ -303,7 +305,7 @@ func _frase_relogio_morte(antes, depois) -> void:
 		frase_batalha.emit(Frases.caiu(nome))
 
 
-## Frases de fim do site. A cláusula «Aperta Recomeçar…» só entra quando o botão existir.
+## Frases de fim do site. A cláusula «Aperte Recomeçar…» só entra quando o botão existir.
 func _frase_fim(d: String) -> void:
 	var nome := nome_de(minha_figura_id)
 	if d == "vitoria":
@@ -314,8 +316,7 @@ func _frase_fim(d: String) -> void:
 		return
 	elif d == "morte":
 		frase_batalha.emit(Frases.fim_morte(nome))
-	elif d == "estabilizada":
-		frase_batalha.emit(Frases.fim_estabilizada(nome))
+	# Q4 (decisão 4 do Mestre; site REF_31): o servidor já não manda o desfecho «estabilizada».
 
 
 ## Nome que a Party pode ver (o servidor já o projeta: "Criatura", "Personagem" ou o público).

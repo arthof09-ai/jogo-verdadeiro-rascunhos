@@ -16,6 +16,7 @@ extends Control
 const Textos := preload("res://cenas/mestre/textos_mestre.gd")
 const Modelo := preload("res://cenas/mestre/modelo_mestre.gd")
 const ArenaMestre := preload("res://cenas/mestre/arena_mestre.gd")
+const ControlosLivre := preload("res://cenas/mestre/controlos_camara_livre.gd")
 const AbaRegisto := preload("res://cenas/mestre/aba_registo.gd")
 const AbaMesa := preload("res://cenas/mestre/aba_mesa.gd")
 const AbaAgir := preload("res://cenas/mestre/aba_agir.gd")
@@ -59,6 +60,8 @@ var _repassar := false
 
 var _tabuleiro: SubViewportContainer
 var _arena: ArenaMestre
+## Decisão 10 (ordem 6; site REF_29): os controlos da câmara livre, por cima do tabuleiro. Só aqui.
+var _livre: ControlosLivre
 var _aba_registo: AbaRegisto
 var _aba_mesa: AbaMesa
 var _aba_agir: AbaAgir
@@ -537,6 +540,9 @@ func _montar() -> void:
 	_arena.name = "ArenaMestre"
 	sv.add_child(_arena)
 	_arena.casa_tocada.connect(casa_tocada)
+	_livre = ControlosLivre.new()
+	add_child(_livre)
+	_livre.montar(_arena)
 
 	_folha = PanelContainer.new()
 	_folha.name = "Folha"
@@ -701,6 +707,7 @@ func _ao_redimensionar() -> void:
 	_encolher.text = "▸" if _encolhida else "◂"
 	_tabuleiro.position = Vector2.ZERO
 	_tabuleiro.size = Vector2(area.x - largura_folha, area.y)
+	_livre.ajustar(Rect2(_tabuleiro.position, _tabuleiro.size), _escala)
 	_aviso_primeira.position = Vector2(margem * 2.0, margem * 2.0)
 	_aviso_primeira.custom_minimum_size = Vector2(minf(area.x - largura_folha - margem * 4.0, float(_fonte) * 18.0), 0.0)
 	_aviso_primeira.size = _aviso_primeira.custom_minimum_size

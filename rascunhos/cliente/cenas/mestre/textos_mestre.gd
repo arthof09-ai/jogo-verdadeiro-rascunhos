@@ -165,6 +165,14 @@ const ARMA_CAIDA := "arma caída"
 const ARMA_QUEBRADA := "arma quebrada"
 const CORPO := "corpo quebrado"
 
+# ---------------------------------------------------------------- câmara livre (decisão 10, ordem 6; site REF_29)
+# Os textos do site (jogo.js, na forma «você» da REF_30). Só no ecrã do Mestre.
+const CAMARA_LIVRE_ENTRAR := "Entrar na câmera livre"
+const CAMARA_LIVRE_SAIR := "⟲ Voltar à câmera do jogo"
+const CAMARA_LIVRE_DICA := "Arraste na tela para olhar · manípulo ou WASD para andar · ▲▼ para subir e descer"
+const CAMARA_LIVRE_SUBIR := "▲"
+const CAMARA_LIVRE_DESCER := "▼"
+
 # ---------------------------------------------------------------- aviso da primeira entrada (emenda 2)
 const AVISO_PRIMEIRA := "Este ecrã é só do Mestre."
 const ENTENDIDO := "Entendido"

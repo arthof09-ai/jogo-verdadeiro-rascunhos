@@ -112,6 +112,32 @@ func _medir(janela: Vector2i) -> void:
 	_verificar(_dentro(barra, visivel), "%s barra das abas inteira à vista" % [janela])
 	_verificar(m._fila.visible and m._fila.text != "", "%s contador da fila visível («%s»)" % [janela, m._fila.text])
 
+	# Decisões 2 e 10 do Mestre (ordem 6): a câmara livre com a mesma qualidade nas três janelas — os controlos
+	# cabem no tabuleiro, os de tocar têm 44 px reais ou mais e não se tapam uns aos outros.
+	var tab: Rect2 = m._tabuleiro.get_global_rect()
+	var ctl = m._livre
+	_verificar(_dentro(ctl.entrar_botao, tab), "%s «Entrar na câmera livre» dentro do tabuleiro" % [janela])
+	ctl.entrar()
+	m._ao_redimensionar()
+	for i in 3:
+		await process_frame
+	tab = m._tabuleiro.get_global_rect()
+	var de_tocar: Array = [ctl.manipulo, ctl.sobe_botao, ctl.desce_botao, ctl.sair_botao, ctl.vel_caixa]
+	for n in de_tocar + [ctl.dica]:
+		_verificar((n as Control).visible and _dentro(n, tab), "%s câmara livre: «%s» dentro do tabuleiro" % [janela, (n as Node).name])
+	for n in [ctl.manipulo, ctl.sobe_botao, ctl.desce_botao, ctl.sair_botao]:
+		var lado := minf((n as Control).size.x, (n as Control).size.y) * escala
+		_verificar(lado >= 44.0 - 0.5, "%s câmara livre: «%s» com %.0f px reais (≥ 44)" % [janela, (n as Node).name, lado])
+	var tapados := false
+	for i in de_tocar.size():
+		for j in range(i + 1, de_tocar.size()):
+			if (de_tocar[i] as Control).get_global_rect().intersects((de_tocar[j] as Control).get_global_rect()):
+				tapados = true
+				printerr("  %s tapa %s" % [(de_tocar[i] as Node).name, (de_tocar[j] as Node).name])
+	_verificar(not tapados, "%s câmara livre: nenhum controlo tapa outro" % [janela])
+	ctl.sair()
+	await process_frame
+
 	# Texto de cartão mais longo: os botões não mexem.
 	var longo: Dictionary = _fx["mestre"]["cartoes"]["ia"].duplicate(true)
 	longo["cartaoId"] = curto["cartaoId"]  # o mesmo sítio, outro conteúdo

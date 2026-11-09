@@ -18,6 +18,8 @@ signal casa_tocada(casa: Vector2i)
 const CameraMesa := preload("res://camera/camera_mesa.gd")
 const Modelo := preload("res://cenas/mestre/modelo_mestre.gd")
 const Marcador := preload("res://cenas/comum/marcador_figura.gd")
+## Decisão 10 do Mestre (ordem 6; site REF_29): a câmara livre só existe aqui, na arena do Mestre.
+const CamaraLivre := preload("res://cenas/mestre/camara_livre.gd")
 
 const COR_CHAO := Color(0.30, 0.42, 0.26)
 # Do site (cena.js): fundo 353b48, grelha c9c2a7, casas do «mover» cab577 a 50% com contorno f5d59b,
@@ -33,6 +35,7 @@ var largura := 0
 var altura := 0
 var casa_m := 1.5
 var camera: CameraMesa
+var camara_livre: CamaraLivre
 
 var _grelha: Node3D
 var _figuras: Node3D
@@ -65,6 +68,8 @@ func _ready() -> void:
 	add_child(camera)
 	camera.current = true
 	camera.toque.connect(_ao_toque)
+	camara_livre = CamaraLivre.new()
+	add_child(camara_livre)
 	_grelha = Node3D.new()
 	_grelha.name = "Grelha"
 	add_child(_grelha)
@@ -144,6 +149,30 @@ func aplicar_vista(vista: Dictionary) -> void:
 	_anel.visible = _nos.has(vez)
 	if _anel.visible:
 		_anel.position = (_nos[vez] as Node3D).position + Vector3(0.0, 0.045, 0.0)
+
+
+# ---------------------------------------------------------------- câmara livre (decisão 10; site REF_29)
+
+## Entra na câmara livre. A câmara da mesa fica congelada (sem processo nem gestos): sair é exacto.
+func entrar_camara_livre() -> void:
+	if camara_livre.ativa:
+		return
+	camera.set_process(false)
+	camera.set_process_unhandled_input(false)
+	var tam := Vector2(largura * casa_m, altura * casa_m)
+	camara_livre.entrar(Vector3(tam.x * 0.5, 0.0, tam.y * 0.5), tam)
+
+
+## Volta à câmara do jogo, tal como estava.
+func sair_camara_livre() -> void:
+	camara_livre.sair()
+	camera.current = true
+	camera.set_process(true)
+	camera.set_process_unhandled_input(true)
+
+
+func camara_livre_ativa() -> bool:
+	return camara_livre != null and camara_livre.ativa
 
 
 func figuras_desenhadas() -> int:

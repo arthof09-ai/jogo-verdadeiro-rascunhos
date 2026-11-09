@@ -282,10 +282,13 @@ func _teste_frases_do_site() -> void:
 	_ok(Frases.aguenta("Ong") == "A Ong, caída, aguenta-se — continua a respirar.", "teste ganho")
 	_ok(Frases.piora("Ong") == "A Ong, caída, piora visivelmente.", "teste perdido")
 	# Regra-mãe e N4 (08/11): a frase completa do site volta a valer (há «Recomeçar» no ecrã do Mestre).
-	_ok(Frases.fim_estabilizada("Ong") == "A Ong caiu, mas estabilizou — fim desta batalha. Aperta Recomeçar para jogar outra vez.", "fim estabilizada (frase completa do site)")
-	_ok(Frases.fim_morte("Ong") == "A Ong caiu — fim desta batalha. Aperta Recomeçar para jogar outra vez.", "fim por morte (frase completa do site)")
-	_ok(Frases.fim_vitoria("Ong") == "Os inimigos caíram todos — vitória da Ong nesta batalha. Aperta Recomeçar para jogar outra vez.", "vitória (frase completa do site)")
-	_ok(Frases.fim_terminada() == "A batalha terminou — a mesa fechou este encontro. Aperta Recomeçar para jogar outra vez.", "fim declarado pelo Mestre (terminarBatalha do site)")
+	# Decisão 9 do Mestre (ordem 6) e site REF_30: forma «você» («Aperte»).
+	# Decisão 4 (Q4) e site REF_31: estabilizar já não é fim — a frase diz a regra (1 de Vida, caída até à cura).
+	_ok(Frases.estabilizou("Ong") == "A Ong caiu, mas estabilizou — ela volta com 1 de Vida e fica caída, sem lutar, até receber uma cura. A cura soma por cima desse 1.", "estabilizou (frase do site REF_31, sem fim)")
+	_ok(Frases.continua_caida("Ong") == "A Ong continua caída — estabilizou, mas só uma cura a levanta.", "estabilizada continua caída (site REF_31)")
+	_ok(Frases.fim_morte("Ong") == "A Ong caiu — fim desta batalha. Aperte Recomeçar para jogar outra vez.", "fim por morte (frase completa do site)")
+	_ok(Frases.fim_vitoria("Ong") == "Os inimigos caíram todos — vitória da Ong nesta batalha. Aperte Recomeçar para jogar outra vez.", "vitória (frase completa do site)")
+	_ok(Frases.fim_terminada() == "A batalha terminou — a mesa fechou este encontro. Aperte Recomeçar para jogar outra vez.", "fim declarado pelo Mestre (terminarBatalha do site)")
 	_ok(Frases.HA_BOTAO_RECOMECAR, "a cláusula do Recomeçar está ligada (N4)")
 
 
@@ -331,7 +334,7 @@ func _teste_frases_no_estado() -> void:
 			"estadoMorte": {"fase": "aMorrer", "sucessos": 1, "falhas": 1}}))
 	_ok(frases.back() == "A Ong, caída, piora visivelmente.", "teste perdido")
 	est.receber_evento(_evento(14, -1, "fim", {"desfecho": "morte"}))
-	_ok(frases.back() == "A Ong caiu — fim desta batalha. Aperta Recomeçar para jogar outra vez.", "fim por morte (frase completa do site)")
+	_ok(frases.back() == "A Ong caiu — fim desta batalha. Aperte Recomeçar para jogar outra vez.", "fim por morte (frase completa do site)")
 	est.receber_evento(_evento(15, -1, "fim", {"desfecho": "terminada"}))
 	_ok(frases.back() == Frases.fim_terminada(), "fim declarado pelo Mestre → a frase do site")
 	var sem_numeros := true
@@ -340,3 +343,22 @@ func _teste_frases_no_estado() -> void:
 			sem_numeros = false
 	_ok(sem_numeros, "nenhuma frase leva números")
 	est.free()
+	# Q4 (decisão 4; site REF_31): o teste de morte que estabiliza dá a frase da regra, e não há fim.
+	var est2 = EstadoScript.new()
+	var frases2: Array = []
+	est2.frase_batalha.connect(func(t): frases2.append(t))
+	est2.aplicar_snapshot({
+		"v": 2, "type": "ROOM_SNAPSHOT", "roomId": "sala-teste", "seq": 1, "revision": 1, "fase": "combate",
+		"mapa": {"largura": 20, "altura": 20}, "iniciativa": ["fA", "fB"], "vezId": "fA", "rodada": 1, "ambiente": {},
+		"figuras": [
+			{"id": "fA", "nomePublico": "Ong", "lado": "jogadora", "x": 1, "y": 1},
+			{"id": "fB", "nomePublico": "Lobo", "lado": "criatura", "x": 2, "y": 1},
+		],
+		"propria": {"figuraId": "fA", "estadoMorte": {"fase": "aMorrer", "sucessos": 2, "falhas": 0}},
+	})
+	est2.receber_evento(_evento(2, -1, "teste_morte", {"figuraId": "fA"}))
+	est2.receber_evento(_evento(3, -1, "estado", {"figuraId": "fA", "visivel": "caida", "vidaActual": 1,
+			"estadoMorte": {"fase": "estabilizado", "sucessos": 3, "falhas": 0}}))
+	_ok(frases2.size() > 0 and frases2.back() == Frases.estabilizou("Ong"), "estabilizou: a frase da regra Q4")
+	_ok(est2.fase == "combate", "estabilizou: a batalha continua")
+	est2.free()

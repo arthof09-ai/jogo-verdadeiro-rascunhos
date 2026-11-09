@@ -329,6 +329,8 @@ func _correr() -> void:
 	c._aba_mesa.parar()
 	_ok(c._aba_mesa.a_colocar == "", "«Parar de colocar»")
 
+	await _camara_livre(c)
+
 	var todos: Array = []
 	_textos(c, todos)
 	var proibidas := todos.filter(func(t): return t.to_lower().contains("prime") or t.to_lower().contains("carreg"))
@@ -344,6 +346,120 @@ func _correr() -> void:
 	c.queue_free()
 	await _quadros(1)
 	_fim()
+
+
+## Decisão 10 do Mestre (ordem 6 do CM-000009; site REF_29): a câmara livre — primeira pessoa dentro da arena,
+## só no ecrã do Mestre (arrastar para olhar, manípulo ou WASD para andar, ▲▼ para voar). Na Party nem se constrói.
+func _camara_livre(c) -> void:
+	print("== câmara livre do Mestre (decisão 10; site REF_29) ==")
+	var a = c._arena
+	var cam = a.camara_livre
+	var ctl = c._livre
+	_ok(cam != null and ctl != null, "a câmara livre e os controlos existem no ecrã do Mestre")
+	if cam == null or ctl == null:
+		return
+	_ok(ctl.entrar_botao.visible and ctl.entrar_botao.text == Textos.CAMARA_LIVRE_ENTRAR, "«Entrar na câmera livre» à vista, com o texto do site")
+	_ok(not ctl.manipulo.visible and not ctl.sair_botao.visible, "fora da livre, o manípulo e o «Voltar» não aparecem")
+	var mesa_antes: Transform3D = a.camera.global_transform
+	ctl.entrar_botao.pressed.emit()
+	await _quadros(1)
+	_ok(a.camara_livre_ativa() and cam.current, "entrar: a câmara livre passa a ser a câmara da arena")
+	_ok(ctl.manipulo.visible and ctl.sair_botao.visible and ctl.sobe_botao.visible and ctl.desce_botao.visible and ctl.vel_caixa.visible,
+		"dentro: manípulo, ▲▼, 1×/2×/4× e «Voltar à câmera do jogo»")
+	_ok(is_equal_approx(cam.position.y, 1.6), "entra com os olhos a 1,6 do chão (site)")
+	var tam := Vector2(a.largura * a.casa_m, a.altura * a.casa_m)
+	_ok(is_equal_approx(cam.position.z, tam.y), "entra à beira sul da arena")
+	var frente: Vector3 = cam.direcao()
+	_ok(frente.z < 0.0, "entra a olhar para o centro")
+	# Andar em frente 1 s com o manípulo (joyY = −1): 4,2 u/s, em passos de 0,08 (o dt máximo do site).
+	cam.definir_tecla("shift", false)
+	var p0: Vector3 = cam.position
+	cam.definir_joy(Vector2(0.0, -1.0))
+	for i in 10:
+		cam.passo(0.1)  # preso a 0,08 → 10 × 0,08 × 4,2 = 3,36
+	cam.definir_joy(Vector2.ZERO)
+	var andou := Vector2(cam.position.x - p0.x, cam.position.z - p0.z)
+	_ok(absf(andou.length() - 3.36) < 0.01, "manípulo: 4,2 u/s com o dt preso a 0,08 (andou %.2f)" % andou.length())
+	_ok(Vector2(frente.x, frente.z).normalized().dot(andou.normalized()) > 0.99, "anda para onde olha")
+	# WASD: D anda para a direita (perpendicular), Shift ×2,2, velocidade 2×.
+	var p1: Vector3 = cam.position
+	cam.definir_vel(2)
+	cam.definir_tecla("d", true)
+	cam.definir_tecla("shift", true)
+	cam.passo(0.05)
+	cam.definir_tecla("d", false)
+	cam.definir_tecla("shift", false)
+	cam.definir_vel(1)
+	var lado := Vector2(cam.position.x - p1.x, cam.position.z - p1.z)
+	_ok(absf(lado.length() - 4.2 * 2.0 * 2.2 * 0.05) < 0.01, "WASD: D com Shift (×2,2) a 2× (andou %.3f)" % lado.length())
+	_ok(absf(Vector2(frente.x, frente.z).normalized().dot(lado.normalized())) < 0.01, "D anda de lado")
+	# Voar: ▲ sobe 3,0 u/s; a altura fica presa a [0,4 · 12].
+	var y0: float = cam.position.y
+	cam.definir_sobe(1)
+	cam.passo(0.05)
+	_ok(is_equal_approx(cam.position.y, y0 + 0.15), "▲ sobe 3,0 u/s")
+	for i in 100:
+		cam.passo(0.08)
+	_ok(is_equal_approx(cam.position.y, 12.0), "o tecto é 12")
+	cam.definir_sobe(-1)
+	for i in 100:
+		cam.passo(0.08)
+	cam.definir_sobe(0)
+	_ok(is_equal_approx(cam.position.y, 0.4), "o chão empurra: nunca abaixo de 0,4")
+	# Bordas: arena + 3.
+	cam.definir_joy(Vector2(0.0, -1.0))
+	for i in 400:
+		cam.passo(0.08)
+	cam.definir_joy(Vector2.ZERO)
+	_ok(cam.position.z >= -3.0 - 0.001 and cam.position.z <= tam.y + 3.0 + 0.001 and cam.position.x >= -3.0 - 0.001 \
+		and cam.position.x <= tam.x + 3.0 + 0.001, "presa às bordas da arena + 3")
+	# Olhar: 0,0045 rad por px real; o pitch fica em ±1,45.
+	cam.px_por_unidade = 1.0
+	var yaw0: float = cam.yaw
+	cam.olhar(100.0, 0.0)
+	_ok(is_equal_approx(cam.yaw, yaw0 - 0.45), "arrastar 100 px gira 0,45 rad")
+	cam.olhar(0.0, -100000.0)
+	_ok(is_equal_approx(cam.pitch, 1.45), "o pitch fica preso a 1,45")
+	# O manípulo no ecrã: tocar na ponta de cima anda para a frente; largar pára.
+	var raio: float = ctl.manipulo.size.x * 0.5
+	var toque := InputEventScreenTouch.new()
+	toque.index = 0
+	toque.pressed = true
+	toque.position = Vector2(raio, 0.0)
+	ctl._ao_manipulo(toque)
+	_ok(cam.joy.is_equal_approx(Vector2(0.0, -1.0)), "o manípulo do ecrã dá joy (0, −1) na ponta de cima")
+	toque.pressed = false
+	ctl._ao_manipulo(toque)
+	_ok(cam.joy == Vector2.ZERO, "largar o manípulo pára")
+	# Teclado pelo ecrã: W (keycode) só conta com a livre activa.
+	var w := InputEventKey.new()
+	w.keycode = KEY_W
+	w.pressed = true
+	ctl._input(w)
+	_ok(cam.teclas.has("w"), "a tecla W chega ao andar com a livre activa")
+	w.pressed = false
+	ctl._input(w)
+	_ok(not cam.teclas.has("w"), "largar W")
+	# Sair: volta à câmara do jogo, exactamente como estava.
+	ctl.sair_botao.pressed.emit()
+	_ok(a.camera.global_transform.is_equal_approx(mesa_antes), "a câmara do jogo ficou congelada e intacta")
+	await _quadros(1)
+	_ok(not a.camara_livre_ativa() and a.camera.current and not cam.current, "sair: volta à câmara do jogo")
+	_ok(ctl.entrar_botao.visible and not ctl.manipulo.visible, "fora outra vez: só o «Entrar»")
+	var w2 := InputEventKey.new()
+	w2.keycode = KEY_W
+	w2.pressed = true
+	ctl._input(w2)
+	_ok(not cam.teclas.has("w"), "fora da livre, o W não é do andar")
+	# Na vista da Party nem se constrói: nenhum script da Party fala da câmara livre.
+	var da_party := ["res://cenas/arena/arena.gd", "res://hud/hud.gd", "res://camera/camera_mesa.gd", "res://cenas/lobby/lobby.gd"]
+	var limpos := true
+	for s in da_party:
+		var codigo := FileAccess.get_file_as_string(s)
+		if codigo == "" or codigo.contains("camara_livre") or codigo.contains("CamaraLivre"):
+			limpos = false
+			printerr("  a Party fala da câmara livre (ou não se leu): ", s)
+	_ok(limpos, "a vista da Party nem constrói a câmara livre")
 
 
 func _textos(no: Node, saida: Array) -> void:

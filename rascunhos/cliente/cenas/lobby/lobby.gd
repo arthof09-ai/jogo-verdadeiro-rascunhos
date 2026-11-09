@@ -24,11 +24,11 @@ const OPACIDADE_PAINEL := 0.55
 ## Frases do próprio cliente (quando o servidor não manda `texto`).
 const FRASES := {
 	"senha": "O nome ou a senha não conferem.",
-	"token": "Entra de novo, por favor.",
+	"token": "Entre de novo, por favor.",
 	"outro_aparelho": "Esta personagem entrou em outro aparelho.",
-	"nome": "Escreve o nome da personagem.",
-	"pin": "Escreve o PIN do Mestre.",
-	"bloqueado": "Muitas tentativas. Espera um pouco.",
+	"nome": "Escreva o nome da personagem.",
+	"pin": "Escreva o PIN do Mestre.",
+	"bloqueado": "Muitas tentativas. Espere um pouco.",
 }
 
 var _tema := Theme.new()
@@ -212,9 +212,9 @@ func _atualizar() -> void:
 	elif na_mesa:
 		_estado.text = "A mesa está em pausa. O Mestre já volta." if Estado.pausada else "Esperando o Mestre começar..."
 	elif _modo_mestre:
-		_estado.text = "Entra com o PIN do Mestre."
+		_estado.text = "Entre com o PIN do Mestre."
 	else:
-		_estado.text = "Entra com o nome da tua personagem e a senha."
+		_estado.text = "Entre com o nome da sua personagem e a senha."
 
 
 func _verificar_fase() -> void:
@@ -272,7 +272,7 @@ func _ao_entrada_recusada(codigo: String, texto: String) -> void:
 
 func _ao_erro(codigo: String, _texto: String) -> void:
 	if codigo == "versao":
-		_aviso.text = "Há uma versão nova do jogo. Atualiza a página."
+		_aviso.text = "Há uma versão nova do jogo. Atualize a página."
 	# Os outros erros não aparecem: nada técnico na tela.
 
 

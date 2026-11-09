@@ -469,8 +469,8 @@ func _texto_faixa() -> String:
 	if Estado.e_minha_vez():
 		var orc: float = Estado.orcamento_m()
 		if _modo_atual == Arena.Modo.MOVER and orc >= 0.0:
-			return "A tua vez · podes andar até %s m" % _metros(orc)
-		return "A tua vez"
+			return "A sua vez · você pode andar até %s m" % _metros(orc)
+		return "A sua vez"
 	if Estado.vez_id != "":
 		var f = Estado.figuras.get(Estado.vez_id)
 		if Estado.e_jogadora(f) and Estado.nome_de(Estado.vez_id) != "":
@@ -581,7 +581,7 @@ func _ao_escolha(cb: Callable) -> void:
 
 func _pedir_encerrar() -> void:
 	_painel_config.visible = false
-	escolher("Encerrar a tua vez?", [["Sim, encerrar", _emitir_acao.bind({"tipo": "encerrar"})]])
+	escolher("Encerrar a sua vez?", [["Sim, encerrar", _emitir_acao.bind({"tipo": "encerrar"})]])
 
 
 func _pedir_sair() -> void:
@@ -701,8 +701,8 @@ func _custo_transformacao() -> int:
 func _ao_seguranca() -> void:
 	# Como no site: é uma declaração do modo Mover; liga e desliga sem gastar nada até ela partir.
 	sair_com_seguranca = not sair_com_seguranca
-	_mostrar_aviso("Ao sair de junto de um inimigo, afastas-te com segurança — protege-te de todos os inimigos ao lado (gasta a acção principal ao sair)."
-		if sair_com_seguranca else "Sair com segurança desligado — ao afastares-te de um inimigo, ficas exposta ao golpe de oportunidade dele.")
+	_mostrar_aviso("Ao sair de junto de um inimigo, você se afasta com segurança — isso protege você de todos os inimigos ao lado (gasta a acção principal ao sair)."
+		if sair_com_seguranca else "Sair com segurança desligado — ao se afastar de um inimigo, você fica exposta ao golpe de oportunidade dele.")
 	_atualizar()
 
 
@@ -718,7 +718,7 @@ func _ao_transformar() -> void:
 	var livre = Estado.propria.get("paLivre")
 	var texto := "Transformação"
 	if custo >= 0 and (livre is float or livre is int):
-		texto = "Transformação · custa %d PA dos %d livres — ficarias com %d de alma livre." % [custo, int(livre), int(livre) - custo]
+		texto = "Transformação · custa %d PA dos %d livres — você ficaria com %d de alma livre." % [custo, int(livre), int(livre) - custo]
 	escolher(texto, [["Confirmar", _emitir_acao.bind({"tipo": "transformar"})]])
 
 
@@ -738,7 +738,7 @@ func _ao_opcoes_novas() -> void:
 	if _avisar_corrida and Estado.e_minha_vez():
 		_avisar_corrida = false
 		# A frase do site (jogo.js, acao 'correr'), em «tu»; e continua no modo Mover, como no site.
-		_mostrar_aviso("Corres — podes andar até %s m nesta vez (gastaste a acção principal)." % _metros(maxf(0.0, Estado.orcamento_m())))
+		_mostrar_aviso("Você corre — pode andar até %s m nesta vez (gastou a acção principal)." % _metros(maxf(0.0, Estado.orcamento_m())))
 		modo_pedido.emit(Arena.Modo.MOVER, {})
 
 
@@ -850,19 +850,19 @@ func _ao_recibo(_intent_id: String, estado: String, msg: Dictionary) -> void:
 	if msg.get("revertidaEm") != null:
 		_mostrar_aviso("A jogada foi desfeita pelo Mestre.")
 	elif estado == "RECUSADA":
-		_mostrar_aviso("A ação não foi feita. Escolhe outra vez.")
+		_mostrar_aviso("A ação não foi feita. Escolha outra vez.")
 	_atualizar()
 
 
 func _ao_recusa(_intent_id: String, _motivo: String, texto: String) -> void:
 	# O servidor manda uma frase simples, sem números do Mestre (sala.js TEXTOS_RECUSA).
-	_mostrar_aviso(texto if texto != "" else "Não deu certo. Escolhe outra vez.")
+	_mostrar_aviso(texto if texto != "" else "Não deu certo. Escolha outra vez.")
 	_atualizar()
 
 
 func _ao_erro(codigo: String, _texto: String) -> void:
 	if codigo == "versao":
-		_mostrar_aviso("Há uma versão nova do jogo. Atualiza a página.", 3600.0)
+		_mostrar_aviso("Há uma versão nova do jogo. Atualize a página.", 3600.0)
 	# Outros erros não aparecem: nada técnico na tela da jogadora.
 
 

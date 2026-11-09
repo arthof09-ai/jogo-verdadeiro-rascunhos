@@ -184,3 +184,11 @@ O desenho foi aprovado com emendas pelo Muse (Notion: «JV3.1 — Ecrã do Mestr
 - Terminar ou recomeçar a batalha (N4).
 - Os marcadores 3D definitivos (Plano B).
 - Confirmar com o Muse a leitura da D4 (L6) e da C-28 (L9).
+
+## Ordem 6 do CM-000009 — decisões do Mestre ao ecrã do Mestre (JV3.1), 09/11/2026
+
+- **Decisão 9 — forma «você»:** todos os textos visíveis passam de «tu» a «você», como o site na REF_30 («Aperte», «A sua vez», «Escolha outra vez», «Atualize a página», «Entre com o nome da sua personagem…»). A nota «Tratamento: as frases usam «tu»» acima fica superada.
+- **Decisão 4 — estabilizada (Q4, site REF_31):** estabilizar já não é fim. A frase é a do site: «A Ong caiu, mas estabilizou — ela volta com 1 de Vida e fica caída, sem lutar, até receber uma cura. A cura soma por cima desse 1.» (`Frases.estabilizou`, sai no `estado` dela depois do `teste_morte`). `Frases.fim_estabilizada` saiu; a nota «Estabilizada como fim» acima fica superada.
+- **Decisão 1 — cartão de desgraça do monstro:** o cartão do ecrã do Mestre já era genérico (nome, género e frase a partir da figura do cartão); serve o monstro sem mudança.
+- **Decisão 10 — câmara livre do Mestre (site REF_29):** `cenas/mestre/camara_livre.gd` (a mecânica do museu, valor a valor: olhar 0,0045 rad/px, andar 4,2 u/s, vertical 3,0 u/s, Shift ×2,2, 1×/2×/4×, dt preso a 0,08, bordas da arena + 3, altura 0,4–12) e `cenas/mestre/controlos_camara_livre.gd` («Entrar na câmera livre», manípulo, ▲▼ de segurar, «⟲ Voltar à câmera do jogo», dica; WASD/setas, E/Q, PageUp/PageDown). Só o ecrã do Mestre a constrói; a câmara da mesa fica congelada enquanto a livre está activa. Testes em `pecas_mestre.gd`; a Party nem a constrói (conferido no mesmo teste).
+- **Decisão 2 — sem aparelho privilegiado:** os controlos da câmara livre usam os tamanhos do site em px REAIS e o `medir_mestre.gd` confere-os nas três janelas (dentro do tabuleiro, toque ≥ 44 px reais, nenhum tapa outro).
