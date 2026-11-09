@@ -1154,9 +1154,9 @@ export function criarSala({
       semente: sortearSemente() >>> 0, // uma por resolução, gravada no evento
       verificacaoCritico: [d6(), d6(), d6()], // errata JV1.1-a §6: o servidor gera-a por CSPRNG
       // Ordem 6 do CM-000009, decisão 1 do Mestre: os monstros também têm cartão de desgraça (proposta → o Mestre
-      // decide), como as heroínas. Só o ataque de oportunidade fica em 'sorte': resolve-se a meio do movimento dela,
-      // numa série que não pode parar à espera do Mestre (TODO JV3.1: cartão também no AoO?).
-      modoDesgraca: extra.ataqueDeOportunidade ? 'sorte' : 'proposta',
+      // decide), como as heroínas. Ordem 9 (decisão do Mestre 09/11 11:29, «Opção C — Sim, cartão também na
+      // oportunidade»; extensão M2 no site): o ataque de oportunidade também — já não há 'sorte' em lado nenhum.
+      modoDesgraca: 'proposta',
       niveisVantagem: extra.niveisVantagem ?? 0,
       niveisDesvantagem: atacante.corpoPartido ? 1 : 0,
       ataqueDeOportunidade: !!extra.ataqueDeOportunidade,
@@ -1463,20 +1463,60 @@ export function criarSala({
     return ts.find((t) => t.alcanceM <= casaDe(m) + EPS && !(t.usaArma && f.armaQuebrada)) ?? null;
   }
 
-  /** Ataque de oportunidade de um monstro (na chegada, com vantagem 1, sem a reação defensiva dela). */
-  function ataqueDeOportunidade(tx, mon, alvo) {
+  /**
+   * Ataque de oportunidade de um monstro (na chegada, com vantagem 1, sem a reação defensiva dela).
+   * Ordem 9 do CM-000009 (decisão do Mestre 09/11 11:29, «Opção C»): a falha crítica do AoO do MONSTRO passa pelo
+   * cartão do Mestre como as outras. O movimento dela já terminou (aplicarMover move e debita ANTES da série); a série
+   * pára aqui e o cartão guarda os monstros que faltam (`aooRestantes`), que atacam depois da decisão. A IA não
+   * decide: o cartão abre sempre, em auto, semi ou manual. Devolve true quando abriu o cartão (a série pára).
+   */
+  function ataqueDeOportunidade(tx, mon, alvo, restantes = []) {
     const t = tecnicaCorpoACorpo(tx.estado, mon);
-    if (!t) return;
+    if (!t) return false;
     mon.reacaoDisponivel = false;
-    // TODO(JV1.x A-4): em modo semi/manual, o AoO devia passar pelo Mestre? Hoje é automático.
     const ctx = montarContexto(tx.estado, mon, alvo, { ataqueDeOportunidade: true, niveisVantagem: 1, semReacaoDefensiva: true });
     const saida = chamarMotorAtaque(mon, alvo, t, ctx);
     if (saida.erro) {
       tx.emitir('erro_motor', { figuraId: mon.id }, { erro: String(saida.erro), contexto: ctx });
-      return;
+      return false;
+    }
+    if (saida.falhaCritica && saida.falhaCritica.requerConfirmacao) {
+      abrirCartao(tx, {
+        tipo: 'desgraca', figuraId: mon.id, alvoId: alvo.id, tecnicaId: t.id, contexto: ctx,
+        proposta: saida.falhaCritica.desgracaProposta ?? saida.falhaCritica.proposta ?? saida.falhaCritica.propostaOriginal ?? saida.falhaCritica.desgraca ?? null,
+        excluidas: Array.isArray(saida.falhaCritica.excluidas) ? clonarJson(saida.falhaCritica.excluidas) : [],
+        // Sem recibo de origem: o recibo do movimento dela já ficou APLICADA (ela chegou ao destino).
+        razao: null, origem: null,
+        saidaProposta: clonarJson(saida), // para o «Não acontece nada» (sem segunda chamada ao motor)
+        ataqueDeOportunidade: true,
+        aooRestantes: restantes.slice(),
+      });
+      return true;
     }
     if (mon.armaCaida) mon.armaCaida = false;
     aplicarSaida(tx, mon, alvo, t, ctx, saida, { ataqueDeOportunidade: true });
+    return false;
+  }
+
+  /** Corre (ou retoma, depois do cartão) a série de ataques de oportunidade contra `f`, pela ordem dada. */
+  function serieDeOportunidade(tx, f, ids) {
+    const m = tx.estado;
+    for (let i = 0; i < ids.length; i++) {
+      if (m.fase !== 'combate' || !f.vivo || f.estadoMorte?.fase === 'aMorrer') break; // morrer interrompe a série
+      const mon = m.figuras[ids[i]];
+      if (!mon || !mon.vivo || mon.caido || !mon.reacaoDisponivel) continue;
+      const parou = ataqueDeOportunidade(tx, mon, f, ids.slice(i + 1));
+      if (parou) return; // o cartão está aberto: o resto vem depois da decisão do Mestre
+      verificarFim(tx);
+    }
+  }
+
+  /** Fecho de um cartão de desgraça de ataque de oportunidade: aplica, e a série continua com os que faltam. */
+  function finalizarOportunidade(tx, mon, alvo, t, ctx, saida, c) {
+    if (mon.armaCaida) mon.armaCaida = false; // como no AoO sem cartão: recupera antes; a desgraça escolhida aplica-se depois
+    aplicarSaida(tx, mon, alvo, t, ctx, saida, { ataqueDeOportunidade: true });
+    verificarFim(tx);
+    serieDeOportunidade(tx, alvo, Array.isArray(c.aooRestantes) ? c.aooRestantes : []);
   }
 
   function aplicarMover(tx, f, destino) {
@@ -1514,14 +1554,10 @@ export function criarSala({
     if (!ehJog) v.iaMoveu = true;
     tx.emitir('movimento', { figuraId: f.id, de, para: { x: f.x, y: f.y }, caminho, custoM, reservaM: v.reservaM }, null);
 
-    // Resolvem-se só na CHEGADA, depois do débito, pela ordem de iniciativa.
+    // Resolvem-se só na CHEGADA, depois do débito, pela ordem de iniciativa. Ordem 9: uma falha crítica abre o
+    // cartão do Mestre e a série pára aí (o movimento já terminou); o recibo do movimento fica APLICADA.
     const atacantes = [...grupoA, ...grupoB].sort((a, b) => m.ordem.indexOf(a.id) - m.ordem.indexOf(b.id));
-    for (const mon of atacantes) {
-      if (m.fase !== 'combate' || !f.vivo || f.estadoMorte?.fase === 'aMorrer') break; // morrer interrompe a série
-      if (!mon.vivo || mon.caido || !mon.reacaoDisponivel) continue;
-      ataqueDeOportunidade(tx, mon, f);
-      verificarFim(tx);
-    }
+    serieDeOportunidade(tx, f, atacantes.map((x) => x.id));
   }
 
   /**
@@ -2111,8 +2147,14 @@ export function criarSala({
         if (saida.soDoMestre && typeof saida.soDoMestre === 'object') delete saida.soDoMestre.atacanteDepois;
         delete saida.desgracaPendente; // defensivo: a proposta não traz lado do atacante nem dano pendente
         fecharCartao(tx, c, 'recusar');
-        finalizarAtaque(tx, f, alvo, t, c.contexto, saida);
-        tx.emitir('acao', { figuraId: f.id, tipo: 'sem_desgraca' }, { proposta: c.proposta ?? null, escolha: 'nada' });
+        if (c.ataqueDeOportunidade) {
+          // Ordem 9: no AoO o registo vem antes, porque a série continua logo a seguir com os monstros que faltam.
+          tx.emitir('acao', { figuraId: f.id, tipo: 'sem_desgraca' }, { proposta: c.proposta ?? null, escolha: 'nada' });
+          finalizarOportunidade(tx, f, alvo, t, c.contexto, saida, c);
+        } else {
+          finalizarAtaque(tx, f, alvo, t, c.contexto, saida);
+          tx.emitir('acao', { figuraId: f.id, tipo: 'sem_desgraca' }, { proposta: c.proposta ?? null, escolha: 'nada' });
+        }
         atualizarReciboOrigem(tx, c.origem, 'APLICADA');
         return 'APLICADA';
       } else {
@@ -2133,7 +2175,8 @@ export function criarSala({
       const saida = chamarMotorAtaque(f, alvo, t, ctx);
       if (saida.erro) throw new ErroRecusa('acao_invalida', 'MOTOR:' + saida.erro);
       fecharCartao(tx, c, decisao);
-      finalizarAtaque(tx, f, alvo, t, ctx, saida);
+      if (c.ataqueDeOportunidade) finalizarOportunidade(tx, f, alvo, t, ctx, saida, c);
+      else finalizarAtaque(tx, f, alvo, t, ctx, saida);
       atualizarReciboOrigem(tx, c.origem, 'APLICADA');
       return 'APLICADA';
     }

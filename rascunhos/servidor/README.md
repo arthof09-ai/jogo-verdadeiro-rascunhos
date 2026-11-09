@@ -71,7 +71,7 @@ O núcleo não importa `node:*`. Recebe por injeção os motores (`Dmg` e `Vlab`
 
 ## Ordem 6 do CM-000009 — decisões do Mestre (09/11/2026)
 
-- **Decisão 1:** o monstro também tem cartão de desgraça. `montarContexto` manda `modoDesgraca: 'proposta'` a todos; só o ataque de oportunidade fica em `'sorte'` (resolve-se a meio do movimento dela, numa série que não pára à espera do Mestre — fica como pergunta para o desenho). O cartão é o mesmo das heroínas (Confirmar / Escolher outra, com a mesma lista e a mesma semente).
+- **Decisão 1:** o monstro também tem cartão de desgraça. `montarContexto` manda `modoDesgraca: 'proposta'` a todos; o ataque de oportunidade ficou em `'sorte'` até à ordem 9, que o passou também pelo cartão (abaixo). O cartão é o mesmo das heroínas (Confirmar / Escolher outra, com a mesma lista e a mesma semente).
 - **Decisão 4 (Q4, site REF_31):** a estabilizada fica na batalha com 1 de Vida, caída; a vez dela salta (`avancarVez`) sem testes de morte; a derrota é só com todas mortas. A cura levanta-a (`aplicarDepois` com `curou: true`), pela acção `curar` da ordem 7 (abaixo). O desfecho `estabilizada` fica no schema por compatibilidade e já não se emite.
 - **Decisão 6 (requisito, não regra):** heroína caída como alvo depende do objectivo da criatura (sobrevivência ignora; caos ou fome ataca). Registado em `proporIA`; a IA de hoje não distingue.
 - **Decisão 7:** monstro a 0 de Vida = morto (já era assim): sai da ordem, sem testes de morte nem levantar. Teste em `testes/ordem6-decisoes.test.mjs`.
@@ -98,7 +98,7 @@ Regras do site (REF_31): `vlab-completo.js` `aplicarCura` e `jogo.js` `vlabAplic
 
 ## Ordem 8 do CM-000009 — «Não acontece nada» e mudar a escala (09/11/2026)
 
-**Item 5 — «Não acontece nada»** (desempate do Mestre 09/11 08:17; site REF_34, `jogo.js` T-DESGRACA-NADA). Num cartão de desgraça (heroína ou monstro), o Mestre recusa a proposta com `MASTER_APPROVE {decisao:'recusar', edicao:{semDesgraca:true}}`. É escolha SÓ dele: não é linha da tabela 1d100 (a lista `desgracas` do cartão continua a ser só as 6), não tem peso, nunca vem do acaso (o ataque de oportunidade em 'sorte' nunca a dá) nem da IA (nenhum caminho automático manda `semDesgraca`). Escolhida: a segunda chamada ao motor NÃO se faz — aplica-se a saída da proposta guardada no cartão (`saidaProposta`, só Mestre), que o motor devolveu sem nada aplicado; zero efeitos de desgraça, a Party vê só o ataque em `falha_critica`; os custos da falha crítica (PA) pagam-se na mesma, como no site. Fica no registo do Mestre (evento interno `acao` `sem_desgraca`). `recusar` sem `semDesgraca` continua recusado (o cartão fica por decidir, como o «← Voltar» do site); `semDesgraca` com outra decisão ou noutro cartão é recusado.
+**Item 5 — «Não acontece nada»** (desempate do Mestre 09/11 08:17; site REF_34, `jogo.js` T-DESGRACA-NADA). Num cartão de desgraça (heroína ou monstro), o Mestre recusa a proposta com `MASTER_APPROVE {decisao:'recusar', edicao:{semDesgraca:true}}`. É escolha SÓ dele: não é linha da tabela 1d100 (a lista `desgracas` do cartão continua a ser só as 6), não tem peso, nunca vem do acaso (desde a ordem 9 já não há `'sorte'` em lado nenhum) nem da IA (nenhum caminho automático manda `semDesgraca`). Escolhida: a segunda chamada ao motor NÃO se faz — aplica-se a saída da proposta guardada no cartão (`saidaProposta`, só Mestre), que o motor devolveu sem nada aplicado; zero efeitos de desgraça, a Party vê só o ataque em `falha_critica`; os custos da falha crítica (PA) pagam-se na mesma, como no site. Fica no registo do Mestre (evento interno `acao` `sem_desgraca`). `recusar` sem `semDesgraca` continua recusado (o cartão fica por decidir, como o «← Voltar» do site); `semDesgraca` com outra decisão ou noutro cartão é recusado.
 
 **Item 8 — mudar a escala a meio da batalha** (desempate do Mestre 09/11 08:18). `MASTER_SUPERVISOR {op:'escala', casaM}`: acção só do Mestre, sem custo (não toca na vez, na acção, no PA, na reacção nem na Vida). A escala viva é `mapa.casaM` do estado (nasce 1,5, a Q5 do site); todas as contas em metros usam-na (`casaDe`): distâncias e alcance, casas que a reserva paga, custo do movimento, técnica corpo-a-corpo do ataque de oportunidade. As posições guardam-se em casas (ninguém mexe). A reserva e o andado da vez estão em metros e não se reconvertem: o já gasto conta em metros na escala nova (9 m de base, anda 2 casas a 1,5 = 3 m → sobram 6 m; a 3 m por casa pagam 2 casas). Em lobby ou combate; com um cartão aberto: `cartao_aberto`; a mesma escala: recusada. A Party recebe o evento `escala` SEM campos e o snapshot novo (com `mapa.casaM`), e as opções novas pela revisão; o antes/depois e a reserva da vez ficam no `soMestre`. O «voltar» repõe a escala do instante (o `mapa` está no checkpoint). Testes: `testes/ordem8-decisoes.test.mjs`.
 
@@ -109,3 +109,21 @@ Regras do site (REF_31): `vlab-completo.js` `aplicarCura` e `jogo.js` `vlabAplic
 3. **Correr já declarado.** A reserva do Correr também fica em metros (não se recalcula com a escala nova).
 4. **Mudar a escala com um cartão aberto ou em pausa.** Recusado (o cartão decide-se primeiro; a pausa bloqueia tudo) — nenhuma regra do site.
 5. **Save do site.** O validador de saves do site (reserva múltipla de 1,5) não conhece a escala variável; o journal do servidor guarda a escala viva.
+
+## Ordem 9 do CM-000009 — cartão também na oportunidade (09/11/2026)
+
+Decisão do Mestre 09/11 11:29, «Opção C — Sim, cartão também na oportunidade» (extensão M2 da frente das desgraças dos monstros, registada no site). A falha crítica do ataque de oportunidade do MONSTRO passa pelo cartão do Mestre como as outras: `montarContexto` manda `modoDesgraca: 'proposta'` sempre.
+
+- **O movimento termina primeiro.** `aplicarMover` move-a, debita a reserva e emite o `movimento`; só depois corre a série de AoO (`serieDeOportunidade`, pela ordem de iniciativa). O recibo do movimento fica `APLICADA` (ela já chegou ao destino).
+- **A série pára no cartão.** Uma falha crítica abre o cartão de desgraça (`ataqueDeOportunidade: true`, `origem: null`) e guarda os monstros que ainda faltam em `aooRestantes`. Com o cartão aberto ninguém age (`aguardando_mestre`; a IA não corre). Decidido o cartão, aplica-se e a série continua com os que faltam; outra falha crítica abre outro cartão (um de cada vez).
+- **As mesmas opções do cartão:** Confirmar, Escolher outra (segunda chamada com a mesma semente, `modoDesgraca: 'escolha'`, ainda como AoO) e recusar com «Não acontece nada» (`semDesgraca`), que aplica a `saidaProposta` guardada e NÃO chama o motor outra vez. A IA propõe; só o Mestre decide (o cartão abre em auto, semi e manual).
+- **Voltar:** o cartão (com `aooRestantes`) está no checkpoint; volta por decidir como os outros.
+- Testes: `testes/ordem9-oportunidade.test.mjs`.
+
+**Onde o site cala — registado, sem regra inventada:**
+
+1. **O código do site ainda está em `'sorte'`.** No gh-pages (6cd30ee), `vlabResolverSaidaAdjacencia` chama o motor sem `modoDesgraca` (= `'sorte'`) e aplica a desgraça sem cartão. A M2 é decisão do Mestre, ainda não código do site: o JV segue a decisão.
+2. **O resto da série enquanto o cartão está aberto.** O site não diz; aqui a série pára e retoma depois da decisão, pela mesma ordem de iniciativa (um monstro que entretanto caia ou morra já não ataca).
+3. **O que a Party vê à espera.** Nada novo: o golpe aparece quando o Mestre decide; as intenções dela entretanto são recusadas com `aguardando_mestre`. Sem frase do site para a espera.
+4. **O `MASTER_CARD` não diz que é de oportunidade.** O schema não mudou; o ecrã do Mestre mostra-o como o cartão de desgraça do monstro (o marcador fica só no cartão interno). Mostrar «de oportunidade» no ecrã precisa de palavra.
+5. **Reacção com erro do motor.** No site a reacção do monstro só se gasta com a resolução feita; aqui gasta-se antes da chamada (já era assim antes desta ordem). Não mudado.
