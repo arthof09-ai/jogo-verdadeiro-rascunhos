@@ -1,0 +1,7 @@
+Fotos da arena do Mestre (Plano B). Run 42574381503, commit 2383737ab2460c633cd681e0f7ce772d5acfa624.
+As fotos 4 e 5 são DEMONSTRAÇÃO dos estados: a marcação é nossa — não é o jogo.
+a02b80fca3c38746f49678cef7f51a96de28c70d0017077c55b801feefea3a46  1-ecra-do-mestre.png
+37fd32ee16517e9cd871e96d9ea1e776a088459fd48cf57e11682ce2e35e4d84  2-arena-camara-fixa.png
+7c00b11090518de8fe38b89a00af1438d4e58dc33ab09317f6f40a3b6ea8c33a  3-arena-de-perto.png
+b4353d08cc5708680eff0ac8c0b7812beed45e54e751b9b9ebb64a002c55fd6f  4-demonstracao-aliada-morta.png
+ffe83ddae7f7eada447bcfdb8c71cb82fd37142ec978d70ee8e3e9769d4c7f3c  5-demonstracao-lobo-caido.png
