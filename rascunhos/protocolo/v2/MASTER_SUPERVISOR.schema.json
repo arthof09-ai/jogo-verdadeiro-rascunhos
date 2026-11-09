@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "MASTER_SUPERVISOR.schema.json",
   "title": "MASTER_SUPERVISOR (Mestre → servidor)",
-  "description": "§5 + E-C2/E-C3/E-C6 + E-P13. 'voltar' cria um evento `revertido` com revisão nova (o journal nunca apaga história) e leva cmdId + revision; `ateSeq` é o journalSeq do Mestre (errata proposta D-23). 'exportar' é isento de revision e responde MASTER_EXPORT (só o lugar do Mestre, MESTRE-ONLY). N4 (palavra do Mestre, 08/11): 'terminar' (a batalha termina a meio, desfecho 'terminada'; só em combate) e 'recomecar' (a mesma batalha do zero; em combate ou no fim), como no site (terminarBatalha, M-014); levam cmdId + revision e são aceites com um cartão aberto (fecham-no). Ordem 8 do CM-000009 (item 8, desempate do Mestre 09/11 08:18): 'escala' muda a escala (metros por casa) a meio da batalha — só do Mestre, sem custo; leva cmdId + revision + casaM (> 0); as posições ficam em casas e a reserva da vez fica em metros (o já gasto conta em metros na escala nova). Em lobby ou combate; com um cartão aberto é recusada (cartao_aberto). O site não diz que escalas valem: o servidor só exige casaM > 0.",
+  "description": "§5 + E-C2/E-C3/E-C6 + E-P13. 'voltar' cria um evento `revertido` com revisão nova (o journal nunca apaga história) e leva cmdId + revision; `ateSeq` é o journalSeq do Mestre (errata proposta D-23). 'exportar' é isento de revision e responde MASTER_EXPORT (só o lugar do Mestre, MESTRE-ONLY). N4 (palavra do Mestre, 08/11): 'terminar' (a batalha termina a meio, desfecho 'terminada'; só em combate) e 'recomecar' (a mesma batalha do zero; em combate ou no fim), como no site (terminarBatalha, M-014); levam cmdId + revision e são aceites com um cartão aberto (fecham-no). Ordem 8 do CM-000009 (item 8, desempate do Mestre 09/11 08:18): 'escala' muda a escala (metros por casa) a meio da batalha — só do Mestre, sem custo; leva cmdId + revision + casaM (ordem 11, REF_36 do site: só 1, 1.5 ou 2; outro valor é recusado com acao_invalida e o detalhe ESCALA_INVALIDA no registo do Mestre); as posições ficam em casas e a reserva da vez fica em metros (o já gasto conta em metros na escala nova). Em lobby ou combate; com um cartão aberto é recusada (cartao_aberto). Ordem 11 (REF_36 Emenda 1): o alcance conta-se em casas com piso de 1 casa, max(1, alcanceM / casaM).",
   "type": "object",
   "required": [
     "v",
@@ -40,9 +40,8 @@
       "minimum": 0
     },
     "casaM": {
-      "type": "number",
-      "exclusiveMinimum": 0,
-      "description": "Só com op 'escala': a escala nova, em metros por casa (a sala nasce com 1,5, Q5 do site)."
+      "enum": [1, 1.5, 2],
+      "description": "Só com op 'escala': a escala nova, em metros por casa (a sala nasce com 1,5, Q5 do site). Ordem 11 (REF_36): só 1, 1.5 ou 2."
     }
   },
   "additionalProperties": false,

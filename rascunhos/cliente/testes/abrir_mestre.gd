@@ -279,17 +279,20 @@ func _correr() -> void:
 	_ok(c._escala_mudar.disabled, "com a mesma escala, «Mudar a escala» fica desligado")
 	var n_esc := _comandos.size()
 	c.ajustar_escala(3)
-	_ok(is_equal_approx(c.escala_nova, 3.0) and not c._escala_mudar.disabled, "+ três vezes: 3 m por casa")
+	_ok(is_equal_approx(c.escala_nova, 2.0) and not c._escala_mudar.disabled and c._escala_mais.disabled,
+		"+ três vezes: pára em 2 m por casa (ordem 11: só 1 / 1,5 / 2)")
 	c.pedir_escala()
-	_ok(_comandos.size() == n_esc and c._escala_mudar.text == Textos.SIM_MUDAR_ESCALA % "3", "primeiro toque: só pede confirmação («%s»)" % c._escala_mudar.text)
+	_ok(_comandos.size() == n_esc and c._escala_mudar.text == Textos.SIM_MUDAR_ESCALA % "2", "primeiro toque: só pede confirmação («%s»)" % c._escala_mudar.text)
 	c.pedir_escala()
 	ult = _comandos.back()
 	_ok(_comandos.size() == n_esc + 1 and ult.get("type") == "MASTER_SUPERVISOR" and ult.get("op") == "escala"
-		and is_equal_approx(float(ult.get("casaM", 0.0)), 3.0), "segundo toque → MASTER_SUPERVISOR escala {casaM: 3}")
+		and is_equal_approx(float(ult.get("casaM", 0.0)), 2.0), "segundo toque → MASTER_SUPERVISOR escala {casaM: 2}")
 	c._ao_resposta(ult.get("cmdId", ""), {"type": "ROOM_RECEIPT", "estado": "APLICADA"})
 	for i in 10:
 		c.ajustar_escala(-1)
-	_ok(is_equal_approx(c.escala_nova, 0.5) and c._escala_menos.disabled, "a escala do ecrã não desce de 0,5")
+	_ok(is_equal_approx(c.escala_nova, 1.0) and c._escala_menos.disabled, "a escala do ecrã não desce de 1 m (ordem 11)")
+	c.ajustar_escala(1)
+	_ok(is_equal_approx(c.escala_nova, 1.5), "− e + andam só pelos valores que valem: 1 → 1,5")
 
 	# Palavras (emenda 1).
 	var todos: Array = []

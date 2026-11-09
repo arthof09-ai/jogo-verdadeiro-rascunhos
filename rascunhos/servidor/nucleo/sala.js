@@ -20,6 +20,9 @@ export const PROTOCOLO = 2;
  *  Mestre 09/11 08:18): o Mestre pode mudar a escala a meio da batalha (MASTER_SUPERVISOR op 'escala'); a escala viva é
  *  `mapa.casaM` do estado, e é essa que conta em todo o lado (casaDe). */
 export const CASA_M = 1.5;
+/** Ordem 11 do CM-000009 (paridade P8a; site REF_36, ESCALAS_CASA_M em jogo.js): as ÚNICAS escalas que valem, em metros
+ *  por casa. Outro valor é recusado (acao_invalida, com o detalhe ESCALA_INVALIDA no registo do Mestre). */
+export const ESCALAS_CASA_M = Object.freeze([1, 1.5, 2]);
 export const MAX_INTENCOES_TURNO = 20; // E-C12, invariante 12
 const MAX_CHECKPOINTS = 500;
 /** L8: quantos pontos de «voltar» vão na MASTER_VIEW (os mais novos). */
@@ -420,6 +423,18 @@ export function criarSala({
   function distanciaM(m, a, b) {
     return Math.hypot(a.x - b.x, a.y - b.y) * casaDe(m);
   }
+  /**
+   * Ordem 11 do CM-000009 (paridade P8b; site REF_36 Emenda 1, jogo.js alcanceEmCasas): o alcance conta-se em CASAS na
+   * escala viva, com piso de 1 casa — alcanceEmCasas = max(1, metros / casaM). Toda a técnica chega pelo menos à casa
+   * vizinha, seja qual for a escala (ex.: 1,5 m com casa de 2 m chega à vizinha; com casa de 1 m chega a 1,5 casas).
+   * A métrica de distância continua a do JV (euclidiana em casas, «B9 corrigido»); só o piso é novo.
+   */
+  function alcanceEmCasas(m, metros) {
+    return Math.max(1, metros / casaDe(m));
+  }
+  function aoAlcance(m, a, b, metros) {
+    return Math.hypot(a.x - b.x, a.y - b.y) <= alcanceEmCasas(m, metros) + EPS;
+  }
   function cartaoAtivo(m) {
     return m.cartoes.find((c) => c.estado === 'aberto') ?? null; // FIFO: o primeiro aberto
   }
@@ -595,9 +610,9 @@ export function criarSala({
         if (f.lado === 'jogadora' && t.custoPA > paLivre(f)) continue; // os monstros não gastam PA
         for (const alvo of colocadas(m)) {
           if (alvo.id === f.id || !alvo.vivo || !saoInimigos(f, alvo)) continue;
-          // B9 corrigido: métrica de grelha euclidiana × 1,5 m, e não o caminho a pé.
+          // B9 corrigido: métrica de grelha euclidiana (em casas), e não o caminho a pé; ordem 11: piso de 1 casa.
           // TODO(JV1.x C-42): linha de visão por supercover.
-          if (distanciaM(m, f, alvo) > t.alcanceM + EPS) continue;
+          if (!aoAlcance(m, f, alvo, t.alcanceM)) continue;
           ataques.push({ alvoId: alvo.id, arma: t.id });
         }
       }
@@ -613,7 +628,7 @@ export function criarSala({
         if (f.lado === 'jogadora' && t.custoPA > paLivre(f)) continue; // o motor recusa PA_INSUFICIENTE; não forçamos
         for (const alvo of colocadas(m)) {
           if (!alvo.vivo || saoInimigos(f, alvo) || !curavel(alvo)) continue;
-          if (distanciaM(m, f, alvo) > t.alcanceM + EPS) continue;
+          if (!aoAlcance(m, f, alvo, t.alcanceM)) continue; // ordem 11: o mesmo piso de 1 casa
           curas.push({ alvoId: alvo.id, tecnica: t.id });
         }
       }
@@ -1458,9 +1473,15 @@ export function criarSala({
     return 'APLICADA';
   }
 
+  /**
+   * A técnica do ataque de oportunidade: a que chega à casa vizinha. Ordem 11 (Emenda 1 da REF_36): com o piso de 1 casa
+   * TODAS chegam à vizinha, em qualquer escala (antes exigia-se alcanceM <= casaM, e com casa de 1 m uma técnica de
+   * 1,5 m deixava de chegar). Entre as que servem, usa-se a de MENOR alcance (a mais «corpo-a-corpo»; empate: a ordem
+   * da ficha), para não trocar a arma curta do monstro por uma de longe.
+   */
   function tecnicaCorpoACorpo(m, f) {
-    const ts = fichaEfetiva(f).tecnicas;
-    return ts.find((t) => t.alcanceM <= casaDe(m) + EPS && !(t.usaArma && f.armaQuebrada)) ?? null;
+    const ts = fichaEfetiva(f).tecnicas.filter((t) => !(t.usaArma && f.armaQuebrada) && alcanceEmCasas(m, t.alcanceM) >= 1);
+    return ts.reduce((melhor, t) => (melhor === null || t.alcanceM < melhor.alcanceM - EPS ? t : melhor), null);
   }
 
   /**
@@ -1944,7 +1965,8 @@ export function criarSala({
         return sn(msg.hora, 16) && sn(msg.clima, 64) && sn(msg.futuro, 500);
       case 'MASTER_SUPERVISOR':
         if (msg.op === 'terminar' || msg.op === 'recomecar') return msg.ateSeq === undefined && msg.casaM === undefined; // N4 (palavra do Mestre, 08/11)
-        // Ordem 8 (item 8): a escala nova, em metros por casa. O site não diz que valores valem: só se exige um número > 0.
+        // Ordem 8 (item 8): a escala nova, em metros por casa. Aqui só a forma (número > 0); os valores que valem
+        // (1 / 1,5 / 2, ordem 11) confere-os mudarEscala, para a recusa levar o detalhe ESCALA_INVALIDA ao Mestre.
         if (msg.op === 'escala') return msg.ateSeq === undefined && typeof msg.casaM === 'number' && Number.isFinite(msg.casaM) && msg.casaM > 0;
         if (msg.casaM !== undefined) return false;
         return msg.op === 'voltar' && Number.isInteger(msg.ateSeq) && msg.ateSeq >= 0;
@@ -2279,6 +2301,11 @@ export function criarSala({
   function mudarEscala(tx, casaM) {
     const m = tx.estado;
     if (m.fase !== 'lobby' && m.fase !== 'combate') throw new ErroRecusa('acao_invalida');
+    // Ordem 11 (P8a, REF_36): só 1 / 1,5 / 2 m por casa. O texto da recusa é o fixo (E-P7, sem números); o detalhe vai
+    // só ao Mestre, no evento interno `recusa`.
+    if (!ESCALAS_CASA_M.includes(casaM)) {
+      throw new ErroRecusa('acao_invalida', 'ESCALA_INVALIDA: ' + casaM + ' m por casa; só valem ' + ESCALAS_CASA_M.join(' / ') + ' m');
+    }
     const antes = casaDe(m);
     if (Math.abs(antes - casaM) < EPS) throw new ErroRecusa('acao_invalida'); // nada a mudar
     m.mapa.casaM = casaM;

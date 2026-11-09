@@ -114,8 +114,9 @@ test('item 5: a IA nunca a escolhe — em auto, a falha crítica do monstro espe
 function mesaDaEscala() {
   const m = montarMesa({ comEspectador: true });
   m.entrarTodos();
-  // Heroína em (2,2); lobo a 4 casas em (6,2): 6 m a 1,5 (dentro do chicote de 9 m), 12 m a 3 (fora).
-  m.iniciarCombate([['lobo-teste', { x: 6, y: 2 }]]);
+  // Heroína em (2,2); lobo a 5 casas em (7,2): 7,5 m a 1,5 (dentro do chicote de 9 m), 10 m a 2 (fora).
+  // Ordem 11: só valem 1 / 1,5 / 2 m por casa (os testes usavam 3 m, que deixou de valer).
+  m.iniciarCombate([['lobo-teste', { x: 7, y: 2 }]]);
   return m;
 }
 const escala = (m, casaM, extra = {}) => m.mestre('MASTER_SUPERVISOR', { op: 'escala', casaM, ...extra });
@@ -127,16 +128,16 @@ test('item 8: o Mestre muda a escala — as posições ficam em casas, a reserva
   assert.equal(h.opcoes.ataques.length, 1, 'a 1,5 m o lobo está ao alcance');
   const antes = estado(m);
   const posicoes = Object.fromEntries(Object.values(antes.figuras).map((f) => [f.id, [f.x, f.y]]));
-  exigirAplicada(escala(m, 3), 'escala 3');
+  exigirAplicada(escala(m, 2), 'escala 2');
   const depois = estado(m);
-  assert.equal(depois.mapa.casaM, 3);
+  assert.equal(depois.mapa.casaM, 2);
   for (const f of Object.values(depois.figuras)) assert.deepEqual([f.x, f.y], posicoes[f.id], 'ninguém mexe: as posições são casas');
   assert.equal(h.opcoes.orcamentoM, 9, 'a reserva continua em metros');
   assert.ok(h.opcoes.mover.length > 0);
-  assert.ok(h.opcoes.mover.every((o) => o.custoM % 3 === 0 && o.custoM <= 9), 'cada casa custa 3 m: no máximo 3 casas');
-  assert.ok(h.opcoes.mover.some((o) => o.custoM === 9));
-  assert.equal(h.opcoes.ataques.length, 0, 'a 3 m por casa o lobo fica a 12 m: fora do chicote');
-  assert.equal(h.ultimo('ROOM_SNAPSHOT').mapa.casaM, 3, 'a Party recebe o resultado no snapshot');
+  assert.ok(h.opcoes.mover.every((o) => o.custoM % 2 === 0 && o.custoM <= 8), 'cada casa custa 2 m: no máximo 4 casas');
+  assert.ok(h.opcoes.mover.some((o) => o.custoM === 8));
+  assert.equal(h.opcoes.ataques.length, 0, 'a 2 m por casa o lobo fica a 10 m: fora do chicote');
+  assert.equal(h.ultimo('ROOM_SNAPSHOT').mapa.casaM, 2, 'a Party recebe o resultado no snapshot');
 });
 
 test('item 8: o movimento já gasto na volta conta em metros na escala nova', () => {
@@ -146,17 +147,17 @@ test('item 8: o movimento já gasto na volta conta em metros na escala nova', ()
   exigirAplicada(m.intencao('heroina', { tipo: 'mover', destino: { x: 2, y: 4 } }), 'mover 2 casas');
   assert.equal(estado(m).vez.reservaM, 6);
   assert.equal(estado(m).vez.andouM, 3);
-  // Muda para 3 m: os 3 m já andados contam como 3 m (não como 2 casas = 6 m); 6 m pagam 2 casas.
-  exigirAplicada(escala(m, 3), 'escala 3');
+  // Muda para 2 m: os 3 m já andados contam como 3 m (não como 2 casas = 4 m); 6 m pagam 3 casas.
+  exigirAplicada(escala(m, 2), 'escala 2');
   assert.equal(estado(m).vez.reservaM, 6, 'a reserva não se reconverte');
   assert.equal(estado(m).vez.andouM, 3, 'o andado fica em metros');
   assert.equal(h.opcoes.orcamentoM, 6);
-  assert.equal(Math.max(...h.opcoes.mover.map((o) => o.custoM)), 6, '2 casas de 3 m');
-  exigirAplicada(m.intencao('heroina', { tipo: 'mover', destino: { x: 2, y: 6 } }), 'mover 2 casas a 3 m');
+  assert.equal(Math.max(...h.opcoes.mover.map((o) => o.custoM)), 6, '3 casas de 2 m');
+  exigirAplicada(m.intencao('heroina', { tipo: 'mover', destino: { x: 2, y: 7 } }), 'mover 3 casas a 2 m');
   assert.equal(estado(m).vez.reservaM, 0);
-  assert.equal(estado(m).vez.andouM, 9, 'andou 9 m: 3 a 1,5 + 6 a 3');
+  assert.equal(estado(m).vez.andouM, 9, 'andou 9 m: 3 a 1,5 + 6 a 2');
   // Uma escala menor depois de gasta não devolve movimento.
-  exigirAplicada(escala(m, 1.5), 'escala 1,5');
+  exigirAplicada(escala(m, 1), 'escala 1');
   assert.equal(estado(m).vez.reservaM, 0);
   assert.equal(h.opcoes.mover.length, 0);
 });
@@ -182,10 +183,10 @@ test('item 8: sem custo — a vez, a acção, o PA e a reacção ficam como esta
 test('item 8: só o Mestre — a jogadora não muda a escala; valores inválidos, a mesma escala e cartão aberto são recusados', () => {
   const m = mesaDaEscala();
   const h = m.clientes.heroina;
-  const rj = m.enviar('heroina', { type: 'MASTER_SUPERVISOR', cmdId: 'h-esc', revision: h.revision, op: 'escala', casaM: 3 });
+  const rj = m.enviar('heroina', { type: 'MASTER_SUPERVISOR', cmdId: 'h-esc', revision: h.revision, op: 'escala', casaM: 2 });
   assert.notEqual(recibo(rj)?.estado, 'APLICADA', 'a jogadora não pode');
   assert.equal(estado(m).mapa.casaM, 1.5);
-  for (const mau of [0, -1.5, '3', null]) {
+  for (const mau of [0, -1.5, '2', null, 3, 0.5]) {
     assert.notEqual(recibo(escala(m, mau))?.estado, 'APLICADA', 'casaM ' + JSON.stringify(mau));
   }
   assert.notEqual(recibo(m.mestre('MASTER_SUPERVISOR', { op: 'escala' }))?.estado, 'APLICADA', 'sem casaM');
@@ -194,31 +195,31 @@ test('item 8: só o Mestre — a jogadora não muda a escala; valores inválidos
   assert.equal(estado(m).mapa.casaM, 1.5);
   // Com um cartão aberto, o cartão decide-se primeiro.
   const { m: m2, cartao } = cartaoDaHeroina();
-  assert.equal(recibo(escala(m2, 3))?.motivo, 'cartao_aberto');
+  assert.equal(recibo(escala(m2, 2))?.motivo, 'cartao_aberto');
   exigirAplicada(m2.mestre('MASTER_APPROVE', { cartaoId: cartao.cartaoId, decisao: 'aprovar' }));
-  exigirAplicada(escala(m2, 3), 'depois do cartão');
+  exigirAplicada(escala(m2, 2), 'depois do cartão');
 });
 
 test('item 8: a Party vê o resultado, nunca a mecânica — o evento `escala` vai vazio; o antes/depois é só do Mestre', () => {
   const m = mesaDaEscala();
-  exigirAplicada(escala(m, 3), 'escala 3');
+  exigirAplicada(escala(m, 2), 'escala 2');
   for (const chave of ['heroina', 'espectador']) {
     const evs = m.clientes[chave].eventos('escala');
     assert.equal(evs.length, 1, chave + ' recebe o evento');
     assert.deepEqual(evs[0].dados, {}, chave + ': sem campos');
     assert.equal(JSON.stringify(m.clientes[chave].msgs).includes('casaMAntes'), false, chave + ': sem o antes');
-    assert.equal(m.clientes[chave].ultimo('ROOM_SNAPSHOT').mapa.casaM, 3, chave + ': o resultado no snapshot');
+    assert.equal(m.clientes[chave].ultimo('ROOM_SNAPSHOT').mapa.casaM, 2, chave + ': o resultado no snapshot');
   }
   const [ev] = m.clientes.mestre.eventos('escala');
   assert.equal(ev.dados.soMestre.casaMAntes, 1.5);
-  assert.equal(ev.dados.soMestre.casaM, 3);
-  assert.equal(ev.dados.soMestre.vez.casasQuePaga, 3);
+  assert.equal(ev.dados.soMestre.casaM, 2);
+  assert.equal(ev.dados.soMestre.vez.casasQuePaga, 4);
 });
 
 test('item 8: o «voltar» a um ponto anterior repõe a escala desse instante', () => {
   const m = mesaDaEscala();
   const seq = m.sala.depuracao.journalSeq();
-  exigirAplicada(escala(m, 3), 'escala 3');
+  exigirAplicada(escala(m, 2), 'escala 2');
   exigirAplicada(m.mestre('MASTER_SUPERVISOR', { op: 'voltar', ateSeq: seq }), 'voltar');
   assert.equal(estado(m).mapa.casaM, 1.5);
   assert.equal(m.clientes.heroina.ultimo('ROOM_SNAPSHOT').mapa.casaM, 1.5);

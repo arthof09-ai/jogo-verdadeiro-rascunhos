@@ -87,8 +87,9 @@ var _recomecar: Button
 ## N4: o botão de fim à espera do segundo toque ("terminar", "recomecar" ou "").
 var armado_fim := ""
 ## Ordem 8 (item 8): a escala que o Mestre está a escolher (m por casa) e o segundo toque do «Mudar a escala».
-## Os passos de 0,5 m e o mínimo de 0,5 m são só do ecrã (o site não diz que escalas valem; o servidor aceita > 0).
-const ESCALA_PASSO := 0.5
+## Ordem 11 (paridade P8a, REF_36 do site): só valem 1 / 1,5 / 2 m por casa; os botões − e + andam nesta lista e
+## param nas pontas (o servidor recusa qualquer outro valor).
+const ESCALAS := [1.0, 1.5, 2.0]
 var escala_nova := 0.0
 var armado_escala := false
 var _escala_rotulo: Label
@@ -199,7 +200,7 @@ func escala_atual() -> float:
 
 
 func ajustar_escala(passos: int) -> void:
-	escala_nova = maxf(ESCALA_PASSO, snappedf(escala_nova + ESCALA_PASSO * passos, ESCALA_PASSO))
+	escala_nova = ESCALAS[clampi(_indice_escala(escala_nova) + passos, 0, ESCALAS.size() - 1)]
 	armado_escala = false
 	_desenhar_escala()
 
@@ -218,6 +219,15 @@ func pedir_escala() -> void:
 	armado_escala = false
 	_enviar("MASTER_SUPERVISOR", {"op": "escala", "casaM": escala_nova})
 	_desenhar_escala()
+
+
+## O índice, em ESCALAS, do valor que vale mais perto de `v` (um valor de fora cai no mais próximo).
+static func _indice_escala(v: float) -> int:
+	var melhor := 0
+	for i in ESCALAS.size():
+		if absf(float(ESCALAS[i]) - v) < absf(float(ESCALAS[melhor]) - v):
+			melhor = i
+	return melhor
 
 
 static func _metros(v: float) -> String:
@@ -239,8 +249,8 @@ func _desenhar_escala() -> void:
 	var pode := fase == "lobby" or fase == "combate"
 	_escala_rotulo.text = Textos.ESCALA_ATUAL % _metros(escala_atual())
 	_escala_valor.text = Textos.ESCALA_NOVA % _metros(escala_nova)
-	_escala_menos.disabled = not pode or escala_nova <= ESCALA_PASSO + 0.001
-	_escala_mais.disabled = not pode
+	_escala_menos.disabled = not pode or escala_nova <= float(ESCALAS[0]) + 0.001
+	_escala_mais.disabled = not pode or escala_nova >= float(ESCALAS.back()) - 0.001
 	_escala_mudar.disabled = not pode or is_equal_approx(escala_nova, escala_atual())
 	_escala_mudar.text = (Textos.SIM_MUDAR_ESCALA % _metros(escala_nova)) if armado_escala else Textos.MUDAR_ESCALA
 

@@ -104,8 +104,8 @@ Regras do site (REF_31): `vlab-completo.js` `aplicarCura` e `jogo.js` `vlabAplic
 
 **Onde o site cala — registado, sem regra inventada:**
 
-1. **Que escalas valem.** O site só tem a casa fixa de 1,5 m (`CASA_M`, Q5) e o validador de saves do site exige a reserva múltipla de 1,5. O servidor aceita qualquer `casaM > 0`; o ecrã do Mestre anda em passos de 0,5 m com mínimo de 0,5 m (só ecrã).
-2. **Alcance corpo-a-corpo numa casa maior.** Uma técnica de 1,5 m deixa de chegar à casa vizinha quando a casa passa de 1,5 m (o alcance é em metros). Não se mudou: precisa de palavra (o corpo-a-corpo é «a casa vizinha» ou «1,5 m»?). O mesmo para o ataque de oportunidade, que só usa técnicas com alcance ≤ uma casa.
+1. *(Respondido na ordem 11: só 1 / 1,5 / 2 m, REF_36.)* **Que escalas valem.** O site só tem a casa fixa de 1,5 m (`CASA_M`, Q5) e o validador de saves do site exige a reserva múltipla de 1,5. O servidor aceita qualquer `casaM > 0`; o ecrã do Mestre anda em passos de 0,5 m com mínimo de 0,5 m (só ecrã).
+2. *(Respondido na ordem 11: piso de 1 casa, REF_36 Emenda 1.)* **Alcance corpo-a-corpo numa casa maior.** Uma técnica de 1,5 m deixa de chegar à casa vizinha quando a casa passa de 1,5 m (o alcance é em metros). Não se mudou: precisa de palavra (o corpo-a-corpo é «a casa vizinha» ou «1,5 m»?). O mesmo para o ataque de oportunidade, que só usa técnicas com alcance ≤ uma casa.
 3. **Correr já declarado.** A reserva do Correr também fica em metros (não se recalcula com a escala nova).
 4. **Mudar a escala com um cartão aberto ou em pausa.** Recusado (o cartão decide-se primeiro; a pausa bloqueia tudo) — nenhuma regra do site.
 5. **Save do site.** O validador de saves do site (reserva múltipla de 1,5) não conhece a escala variável; o journal do servidor guarda a escala viva.
@@ -127,3 +127,13 @@ Decisão do Mestre 09/11 11:29, «Opção C — Sim, cartão também na oportuni
 3. **O que a Party vê à espera.** Nada novo: o golpe aparece quando o Mestre decide; as intenções dela entretanto são recusadas com `aguardando_mestre`. Sem frase do site para a espera.
 4. **O `MASTER_CARD` não diz que é de oportunidade.** O schema não mudou; o ecrã do Mestre mostra-o como o cartão de desgraça do monstro (o marcador fica só no cartão interno). Mostrar «de oportunidade» no ecrã precisa de palavra.
 5. **Reacção com erro do motor.** No site a reacção do monstro só se gasta com a resolução feita; aqui gasta-se antes da chamada (já era assim antes desta ordem). Não mudado.
+
+## Ordem 11 do CM-000009 — paridade da escala (09/11/2026)
+
+Itens P8a e P8b da auditoria da ordem 10: o JV alinha-se à regra do site (REF_36 + Emenda 1). A forma é do JV; a regra é a do site.
+
+- **P8a — só 1 / 1,5 / 2 m por casa** (site: `ESCALAS_CASA_M`). `ESCALAS_CASA_M` em `nucleo/sala.js`; `mudarEscala` recusa qualquer outro valor com `acao_invalida` (texto fixo, sem números, E-P7) e o detalhe `ESCALA_INVALIDA: <v> m por casa; só valem 1 / 1.5 / 2 m` no evento interno `recusa`, só do Mestre. A forma da mensagem continua a exigir um número > 0 (o valor confere-se depois, para a recusa levar o detalhe). Schema `MASTER_SUPERVISOR.casaM`: `enum [1, 1.5, 2]`. O ecrã do Mestre anda só por estes três valores e pára nas pontas (`ESCALAS` em `cliente/cenas/mestre/mestre.gd`). Isto responde ao omisso 1 da ordem 8.
+- **P8b — piso de 1 casa no alcance** (site: `alcanceEmCasas = max(1, metros / CASA_M)`). `alcanceEmCasas(m, metros)` e `aoAlcance` em `nucleo/sala.js`; usam-nos o ataque e a cura nas opções da vez. A métrica continua a do JV (euclidiana em casas, «B9 corrigido»): a diferença de métrica com o site (caminho de 4 vizinhos) fica como estava, à espera do coordenador. Com casa de 1 m uma técnica de 1,5 m chega à vizinha e à diagonal (√2 ≤ 1,5 casas); com casa de 2 m chega à vizinha (antes: 2 m > 1,5 m, fora). Na escala de 1,5 nada muda. Responde ao omisso 2 da ordem 8.
+- **Ataque de oportunidade.** Com o piso, toda a técnica chega à casa vizinha: `tecnicaCorpoACorpo` deixa de exigir `alcanceM <= casaM` e usa, entre as técnicas utilizáveis, a de menor alcance (empate: a ordem da ficha) — com as fichas de hoje (uma técnica de 1,5 m por monstro) é a mesma de antes. Consequência a saber: um monstro só com técnicas de longe passa a golpear de oportunidade (no site todos golpeiam com a sua arma; o piso dá-lhes a vizinha).
+- Testes: `testes/ordem11-escala.test.mjs` (valores aceites e recusados; 1,5 m com casa de 1 m, de 1,5 m e de 2 m, no golpe e no ataque de oportunidade); `testes/ordem8-decisoes.test.mjs` passou a usar 2 m (3 m deixou de valer); `cliente/testes/abrir_mestre.gd` (o ecrã pára em 1 e em 2).
+- **Fora desta ordem (como registado na auditoria):** a confirmação da escala (site muda na hora; o JV pede segundo toque), a guarda com cartão aberto, a métrica de distância e o resto da lista da ordem 10 esperam leitura do coordenador.
