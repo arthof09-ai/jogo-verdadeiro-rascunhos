@@ -281,7 +281,7 @@ func _correr() -> void:
 	c.ajustar_escala(3)
 	_ok(is_equal_approx(c.escala_nova, 3.0) and not c._escala_mudar.disabled, "+ três vezes: 3 m por casa")
 	c.pedir_escala()
-	_ok(_comandos.size() == n_esc and c._escala_mudar.text == Textos.SIM_MUDAR_ESCALA % "3", "primeiro toque: só pede confirmação")
+	_ok(_comandos.size() == n_esc and c._escala_mudar.text == Textos.SIM_MUDAR_ESCALA % "3", "primeiro toque: só pede confirmação («%s»)" % c._escala_mudar.text)
 	c.pedir_escala()
 	ult = _comandos.back()
 	_ok(_comandos.size() == n_esc + 1 and ult.get("type") == "MASTER_SUPERVISOR" and ult.get("op") == "escala"

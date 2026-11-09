@@ -221,7 +221,13 @@ func pedir_escala() -> void:
 
 
 static func _metros(v: float) -> String:
-	return String.num(v, 2).replace(".", ",")
+	# «3» e não «3.0»; «1,5» com vírgula (centésimos no máximo).
+	var cent := int(roundf(v * 100.0))
+	var txt := str(cent / 100)
+	var resto := cent % 100
+	if resto != 0:
+		txt += "," + (str(resto).pad_zeros(2).trim_suffix("0") if resto % 10 == 0 else str(resto).pad_zeros(2))
+	return txt
 
 
 func _desenhar_escala() -> void:
