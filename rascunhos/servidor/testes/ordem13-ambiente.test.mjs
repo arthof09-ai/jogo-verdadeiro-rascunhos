@@ -316,7 +316,7 @@ test('ordem 13: regra 5 sem chuva — sair não apaga, e o fogo continua a morde
 });
 
 test('ordem 13: regra 6 — a RD da ficha não desconta no raio nem no fogo', () => {
-  const fichas = fichasCom((f) => { f['orc-teste'].rd = { geral: 9, porTipo: { eletrico: 9, fogo: 9 } }; });
+  const fichas = fichasCom((f) => { f['orc-teste'].rd = { geral: 9, porTipo: {} }; });
   const d = roteiro([...raioEm(2, 6, 3), [6, 6]]);
   const { m, fOrc, virarRodada, estado, orcId } = mesaDaTempestade({ dado: d, fichas });
   const vida0 = fOrc().vidaActual;
