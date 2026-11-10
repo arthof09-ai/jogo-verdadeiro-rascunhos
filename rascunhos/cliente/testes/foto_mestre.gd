@@ -13,6 +13,7 @@ extends SceneTree
 ##   4-demonstracao-aliada-morta.png e 5-demonstracao-lobo-caido.png   DEMONSTRAÇÃO (não é uma batalha): a aliada
 ##                                morta e o lobo caído (vivo), para se ver que ambos ficam deitados (palavra do Muse,
 ##                                08/11 17:03). A marcação é nossa — não é o jogo.
+## Ordem 15 (parte F): nas fotos 1, 2 e 3 confere também que as caixas dos nomes no ecrã não se tocam (figuras juntas).
 ## Confere que cada foto não é uma cor só (render verdadeiro). Código de saída 0 se as 5 saem, 1 se não.
 
 const CENA := "res://cenas/mestre/mestre.tscn"
@@ -86,6 +87,7 @@ func _correr() -> void:
 	m.aplicar_cartao(_fx["mestre"]["cartoes"]["desgraca"])
 	m._ao_redimensionar()
 	await _quadros(30)
+	_nomes_separados(m._arena, "foto 1")
 	await _gravar("1-ecra-do-mestre.png")
 	m.queue_free()
 	await _quadros(2)
@@ -99,12 +101,14 @@ func _correr() -> void:
 	a.camera.repor_zoom()
 	a.camera._saltar()
 	await _quadros(20)
+	_nomes_separados(a, "foto 2")
 	await _gravar("2-arena-camara-fixa.png")
 	# A mesma câmara Fixa (o ângulo aprovado), mais perto, no grupo da heroína.
 	a.camera.focar(_centro_das_figuras(a, vista, ["heroina-teste", "aliada-teste", "orc-teste"]))
 	a.camera.definir_zoom(4.0)
 	a.camera._saltar()
 	await _quadros(20)
+	_nomes_separados(a, "foto 3")
 	await _gravar("3-arena-de-perto.png")
 
 	# 4. Demonstração dos estados (cópia da vista; não é uma batalha).
@@ -130,6 +134,21 @@ func _correr() -> void:
 
 	print("fotos: %d falha(s)" % _falhas)
 	quit(1 if _falhas > 0 else 0)
+
+
+## Ordem 15 (parte F): as caixas dos nomes no ecrã (já arrumadas) não se tocam duas a duas.
+func _nomes_separados(arena, foto: String) -> void:
+	var caixas: Array[Rect2] = arena.arrumar_nomes()
+	var tocam := 0
+	for i in caixas.size():
+		for j in range(i + 1, caixas.size()):
+			if caixas[i].intersects(caixas[j]):
+				tocam += 1
+	if caixas.size() < 2 or tocam > 0:
+		printerr("  FALHA ", foto, ": ", caixas.size(), " nomes, ", tocam, " pares sobrepostos")
+		_falhas += 1
+	else:
+		print("  ok    ", foto, ": ", caixas.size(), " nomes, nenhum por cima de outro")
 
 
 func _centro_das_figuras(a, vista: Dictionary, fichas: Array) -> Vector3:

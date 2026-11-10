@@ -106,12 +106,15 @@ var _titulo_escolha: Label
 # Gavetas do site (jogo.js renderAcoes, lido no site vivo a 08/11/2026): a barra de baixo continua só com
 # Ataque, Mover, Consumível (e Encerrar) — regra do Mestre. As outras acções vivem onde o site as tem:
 # - no modo Mover: «Sair c/ segurança» (Desvincular: uma intenção que se gasta na partida) e «Correr»;
+#   ordem 15: e «Apagar o fogo» (a arder, sem chuva: gasta a Acção de Movimento). No site é um botão da faixa base;
+#   aqui fica na gaveta do Mover, porque a barra continua só com as quatro (regra do Mestre) e é o movimento que paga;
 # - na gaveta do Ataque: «Transformação · N PA», com Confirmar;
 # - na ficha (o chip «FICHA ▸»), secção Reacção: «Declarar Defender».
 var _gaveta: HBoxContainer
 var _g_seguranca: Button
 var _g_correr: Button
 var _g_transformar: Button
+var _g_apagar: Button
 var _gaveta_de: int = 0  # Arena.Modo.NENHUM; o modo cuja gaveta está aberta
 var sair_com_seguranca := false  # a intenção do Desvincular, que a arena gasta na partida
 var _a_correr := false
@@ -365,7 +368,7 @@ func _ao_redimensionar() -> void:
 		(b as Button).custom_minimum_size = Vector2(_fonte * 7.5, _fonte * 2.8)
 	_painel_config.custom_minimum_size = Vector2(_fonte * 17.0, 0.0)
 	_painel_escolha.custom_minimum_size = Vector2(_fonte * 12.0, 0.0)
-	for b in [_g_seguranca, _g_correr, _g_transformar]:
+	for b in [_g_seguranca, _g_correr, _g_apagar, _g_transformar]:
 		(b as Button).custom_minimum_size = Vector2(_fonte * 9.0, _fonte * 2.8)
 	_b_ficha.custom_minimum_size = Vector2(_fonte * 6.0, _fonte * 2.4)
 	_painel_ficha.custom_minimum_size = Vector2(_fonte * 17.0, 0.0)
@@ -439,7 +442,8 @@ func _atualizar() -> void:
 	# Q8 / site: com a arma no chão, o botão de ataque apanha-a (gasta o movimento desta vez).
 	_b_ataque.disabled = not livre or (Estado.lista_opcao("ataques").is_empty() and not Estado.tem_acao("apanhar_arma")
 		and not Estado.tem_acao("transformar"))
-	_b_mover.disabled = not livre or Estado.lista_opcao("mover").is_empty()
+	# Ordem 15: a arder sem chuva, o Mover abre mesmo sem casas (a gaveta tem «Apagar o fogo»).
+	_b_mover.disabled = not livre or (Estado.lista_opcao("mover").is_empty() and not Estado.tem_acao("apagar_fogo"))
 	_b_consumivel.disabled = not livre or Estado.lista_opcao("consumiveis").is_empty()
 	# Encerrar só aparece quando a vez é dela e o servidor o pôs em `acoes`.
 	_b_encerrar.visible = Estado.e_minha_vez() and Estado.tem_acao("encerrar")
@@ -611,7 +615,11 @@ func _montar_gaveta() -> void:
 	_g_transformar = Button.new()
 	_g_transformar.name = "Transformacao"
 	_g_transformar.pressed.connect(_ao_transformar)
-	for b in [_g_seguranca, _g_correr, _g_transformar]:
+	_g_apagar = Button.new()
+	_g_apagar.name = "ApagarFogo"
+	_g_apagar.text = "Apagar o fogo"  # o rótulo do site
+	_g_apagar.pressed.connect(_emitir_acao.bind({"tipo": "apagar_fogo"}))
+	for b in [_g_seguranca, _g_correr, _g_apagar, _g_transformar]:
 		_gaveta.add_child(b)
 	_gaveta.visible = false
 
@@ -670,11 +678,14 @@ func _atualizar_gaveta(livre: bool) -> void:
 	_g_correr.visible = no_mover and (Estado.tem_acao("correr") or _a_correr)
 	_g_correr.text = "» A correr ✓" if _a_correr else "» Correr"
 	_g_correr.disabled = not livre or _a_correr or not Estado.tem_acao("correr")
+	# Ordem 15 (site rfPodeApagarFogo): só quando o servidor o oferece (a arder, fora do fogo, sem chuva).
+	_g_apagar.visible = no_mover and Estado.tem_acao("apagar_fogo")
+	_g_apagar.disabled = not livre
 	var custo := _custo_transformacao()
 	_g_transformar.visible = no_ataque and Estado.tem_acao("transformar")
 	_g_transformar.text = "✦ Transformação · %d PA" % custo if custo >= 0 else "✦ Transformação"
 	_g_transformar.disabled = not livre
-	_gaveta.visible = minha and (_g_seguranca.visible or _g_correr.visible or _g_transformar.visible)
+	_gaveta.visible = minha and (_g_seguranca.visible or _g_correr.visible or _g_apagar.visible or _g_transformar.visible)
 
 
 func _atualizar_ficha(livre: bool) -> void:

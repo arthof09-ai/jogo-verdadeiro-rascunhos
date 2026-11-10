@@ -81,7 +81,7 @@ Objectivo: pôr o original do PC (`C:\Users\txcga\RPG_Local\jogo-verdadeiro\`) i
 - **IBX-216 e IBX-222 continuam NOVA** (sem ACK na base).
 - **Pontilhado das copas das árvores DESLIGADO** até à palavra do Mestre (`USAR_PONTILHADO_COPAS = false` em `clareira_prova.gd`).
 - **Regra-mãe do Mestre (08/11): «Todas as mecânicas do jogo do site foram aprovadas e têm que seguir no jogo do Godot.»** Onde o rascunho divergir do site, vale o site, e nada se inventa. A língua é «tu», como no site.
-- **Decisões registadas da casa continuam** (só caem com palavra do Mestre): B6, B7 e B9 da JV1.1-b §8. Hoje só o B9 difere do site (o site mede o alcance pelo caminho a pé); o B6 e o B7 o site já faz igual (REF_11, REF_13).
+- **Decisões registadas da casa continuam** (só caem com palavra do Mestre): B6 e B7 da JV1.1-b §8 (o site já faz igual, REF_11 e REF_13). **O B9 CAIU** (palavra do Mestre, 2026-11-10, ordem 15): o alcance mede-se pelo caminho das casas, com as figuras a bloquear, como no site.
 - **Q12 e Q8 (julgamento da casa de 2026-11-03, `BANCADA-DESGRACA-JULGAMENTO.md`, pelo Muse; um `aliadoAtingidoId` fora dos elegíveis dá `ALIADO_ATINGIDO_NAO_ELEGIVEL` no motor; o servidor não o manda):** «amigo ao alcance» = adjacente ou na linha; dano = metade com piso, RD de quem recebe, nunca abaixo de 1 de Vida, sem testes de morte. Arma quebrada: inutilizável; não há conserto em combate (o site diz «até ser consertada»). Apanhar a arma caída = a Acção de Movimento.
 - As regras da casa da sucessão de 08/11 continuam: ritual Central → INBOX → passagem; uma peça, um dono; NAC-OV-06 (um jogo só); NAC-OV-05; nada preso só ao Claude ou ao PC; toda a mudança no jogo avisada por carta em 5 pontos; perguntas ao Mestre pelo Muse com a marca PERGUNTA PARA O MESTRE; motores não se traduzem; só fichas fictícias; privacidade Mestre/Party absoluta.
 
@@ -118,8 +118,8 @@ O Claude do PC só tem de os trazer para o PC com a receita do §3.
 
 **Pendentes pequenos, registados:**
 - o GLB de cada figura só entra pela V3.1;
-- a linha de visão por supercover do B9 (C-42) ainda não bloqueia o alcance;
-- os nomes das figuras vizinhas sobrepõem-se na câmara Fixa;
+- ~~a linha de visão por supercover do B9 (C-42) ainda não bloqueia o alcance~~ — cai com o B9 (ordem 15): o alcance é o caminho das casas;
+- ~~os nomes das figuras vizinhas sobrepõem-se na câmara Fixa~~ — resolvido na ordem 15 (parte F);
 - o Defender não mostra o valor da Defesa (o servidor tira-o da configuração da sala, TODO R0);
 - a escolha do amigo não tem teste com dois amigos no servidor (a fixture só tem duas jogadoras).
 

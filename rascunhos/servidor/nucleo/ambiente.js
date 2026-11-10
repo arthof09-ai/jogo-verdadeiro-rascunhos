@@ -254,6 +254,25 @@ export function tickInicioDaVez(m, f, dado, antes) {
 }
 
 /**
+ * Ordem 15 do CM-000009 (palavra do Mestre, 2026-11-10): apagar-se SEM chuva, como no site (jogo-t1/jogo.js
+ * rfPodeApagarFogo, RF_FIM_SECO = 'acao-movimento'): quem está a arder FORA de uma casa a arder, sem chuva nenhuma,
+ * pode gastar a Acção de Movimento da vez a apagar-se. As outras condições (é a vez dela, é jogadora, não está a
+ * morrer) confere-as a sala. Com chuva, apagar-se continua automático (tickInicioDaVez e depoisDoMovimento).
+ */
+export function podeApagarSeco(m, f) {
+  const fogo = lerFogo(m);
+  if (!f || !fogo.aArder.includes(f.id)) return false;
+  if (chuvaDe(m.ambiente) !== 0) return false;
+  return !casaDoFogo(fogo, f.x, f.y);
+}
+/** Apaga-a (fim seco). Devolve {tipo:'apagado', figuraId, porque:'seco'} ou null se não pode. */
+export function apagarSeco(m, f) {
+  if (!podeApagarSeco(m, f)) return null;
+  apagarPessoa(fogoDe(m), f.id);
+  return { tipo: 'apagado', figuraId: f.id, porque: 'seco' };
+}
+
+/**
  * Acabou um movimento (regra 5): a arder, fora de qualquer casa a arder e com chuva → apaga-se. Sem chuva continua.
  * Devolve {tipo:'apagado', figuraId, porque:'saiu'} ou null.
  */

@@ -3,7 +3,8 @@ extends SceneTree
 ## - a barra de baixo continua Ataque · Mover · Consumível (e Encerrar) — regra do Mestre;
 ## - no modo Mover: «Sair c/ segurança» (a intenção do Desvincular, que se gasta na partida) e «Correr»;
 ## - na gaveta do Ataque: «Transformação · N PA», com Confirmar;
-## - no chip «FICHA ▸», secção Reacção: «Declarar Defender».
+## - no chip «FICHA ▸», secção Reacção: «Declarar Defender»;
+## - ordem 15: na gaveta do Mover, «Apagar o fogo» (a arder sem chuva; o servidor oferece `apagar_fogo`).
 ##
 ##   godot --headless --path cliente -s res://testes/hud_acoes.gd
 ##
@@ -92,6 +93,26 @@ func _correr() -> void:
 	await _quadros(1)
 	_ok(hud._a_correr and hud._g_correr.text.ends_with("A correr ✓") and hud._g_correr.disabled, "depois de correr: «A correr ✓», como no site")
 	_ok(modos.back() == Modo.MOVER, "e volta ao modo Mover com o orçamento novo")
+
+	print("== ordem 15: «Apagar o fogo» na gaveta do Mover ==")
+	_ok(not hud._g_apagar.visible, "sem a acção do servidor, não há «Apagar o fogo»")
+	_estado.receber_opcoes({"v": 2, "type": "ROOM_OPTIONS", "revision": 61, "vezId": "fA", "orcamentoM": 9.0,
+		"mover": [], "ataques": [], "consumiveis": [], "acoes": ["encerrar", "apagar_fogo"], "reacoes": []})
+	hud.fechar_gaveta()
+	hud.ao_modo_mudou(Modo.NENHUM)
+	await _quadros(1)
+	_ok(not hud._b_mover.disabled, "o Mover abre mesmo sem casas, quando ela pode apagar o fogo")
+	hud._ao_botao(Modo.MOVER)
+	await _quadros(1)
+	_ok(hud._gaveta.visible and hud._g_apagar.visible and hud._g_apagar.text == "Apagar o fogo" and not hud._g_apagar.disabled,
+		"a gaveta do Mover tem «Apagar o fogo»")
+	hud._g_apagar.pressed.emit()
+	_ok(_pedidas.back() == {"tipo": "apagar_fogo"} and not hud._gaveta.visible, "«Apagar o fogo» manda apagar_fogo e a gaveta fecha")
+	nomes = []
+	for b in hud._barra.get_children():
+		nomes.append(str(b.name))
+	_ok(nomes == ["BotaoAtaque", "BotaoMover", "BotaoConsumivel", "BotaoEncerrar"], "a barra continua com as quatro")
+	hud._ao_recibo("x", "APLICADA", {})
 
 	print("== gaveta do Ataque: Transformação ==")
 	_opcoes(["encerrar", "transformar"], 7)

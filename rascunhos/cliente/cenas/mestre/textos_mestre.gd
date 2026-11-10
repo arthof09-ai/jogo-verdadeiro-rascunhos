@@ -31,6 +31,9 @@ const TITULO := {
 	"progresso": "Duas recusas nesta vez",
 	"dados": "Dados físicos por confirmar",
 }
+## Ordem 15 (palavra do Mestre, 2026-11-10): o cartão da falha crítica de um ataque de oportunidade diz-o no título,
+## para o Mestre saber sempre que golpe está a confirmar. Só apresentação; a mecânica é a mesma.
+const TITULO_OPORTUNIDADE := "Ataque de oportunidade · falha crítica"
 const SEM_CARTAO := "Nada por decidir."
 const FILA := "+%d por decidir"
 const A_PARTY_VAI_LER := "A Party vai ler: «%s»"
@@ -102,7 +105,7 @@ const REGISTO_FOGO_PEGOU := "; pegou fogo ao começar a vez na casa a arder"
 const REGISTO_APAGADO := "Fogo apagado: %s (%s)."
 const REGISTO_EXTINTA := "A casa (%d,%d) deixou de arder (%s)."
 const ORIGEM_RAIO := {"pedido": "pedido pelo Mestre", "automatico": "da tempestade"}
-const PORQUE_APAGADO := {"chuva-casa": "a chuva apagou a casa", "chuva": "a chuva, fora do fogo", "saiu": "saiu do fogo para a chuva"}
+const PORQUE_APAGADO := {"chuva-casa": "a chuva apagou a casa", "chuva": "a chuva, fora do fogo", "saiu": "saiu do fogo para a chuva", "seco": "sem chuva, gastou o movimento a apagar-se"}
 const PORQUE_EXTINTA := {"chuva": "a chuva", "combustivel": "acabou o combustível"}
 const SEM_VALOR := "—"
 const JOURNAL := "Ponto actual do registo: %d"
@@ -126,6 +129,7 @@ const NOME_ACAO := {
 	"desvincular": "Sair com segurança",
 	"transformar": "Transformação",
 	"apanhar_arma": "Apanhar a arma",
+	"apagar_fogo": "Apagar o fogo",
 }
 
 # ---------------------------------------------------------------- aba Mesa (Lobby/Colocar)

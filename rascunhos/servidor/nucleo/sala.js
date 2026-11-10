@@ -34,7 +34,7 @@ const VIZ4 = Object.freeze([[1, 0], [-1, 0], [0, 1], [0, -1]]); // sem diagonais
 // §3.1 + `correr` e `apanhar_arma` (ERRATA v0.2.2 do protocolo; REF_7 §2 e §4).
 export const TIPOS_ACAO = Object.freeze([
   'mover', 'atacar', 'consumivel', 'defender', 'desvincular', 'transformar', 'reacao', 'encerrar', 'correr',
-  'apanhar_arma', 'curar',
+  'apanhar_arma', 'curar', 'apagar_fogo',
 ]);
 // P3: todo o laço de rejeição tem teto. Passar dele é rng avariado: lança (a transação desfaz tudo).
 export const MAX_TENTATIVAS_LACO = 1000;
@@ -444,13 +444,44 @@ export function criarSala({
    * Ordem 11 do CM-000009 (paridade P8b; site REF_36 Emenda 1, jogo.js alcanceEmCasas): o alcance conta-se em CASAS na
    * escala viva, com piso de 1 casa — alcanceEmCasas = max(1, metros / casaM). Toda a técnica chega pelo menos à casa
    * vizinha, seja qual for a escala (ex.: 1,5 m com casa de 2 m chega à vizinha; com casa de 1 m chega a 1,5 casas).
-   * A métrica de distância continua a do JV (euclidiana em casas, «B9 corrigido»); só o piso é novo.
    */
   function alcanceEmCasas(m, metros) {
     return Math.max(1, metros / casaDe(m));
   }
+  /**
+   * Ordem 15 do CM-000009 (palavra do Mestre, 2026-11-10; CAI a decisão B9 do JV, a régua a direito): o alcance mede-se
+   * pelo CAMINHO DAS CASAS, como no site (jogo.js distanciaEntre): BFS de 4 vizinhos dentro do mapa, com as OUTRAS
+   * figuras vivas a bloquear a passagem (quem mede e o alvo não contam; o cadáver não bloqueia, T-J12J13) e a casa do
+   * alvo a contar como destino. Devolve os passos, ou Infinity se não houver caminho.
+   */
+  function distanciaCasas(m, a, b) {
+    if (a.x === b.x && a.y === b.y) return 0;
+    const bloqueia = new Set();
+    for (const f of colocadas(m)) {
+      if (f.id === a.id || f.id === b.id || !f.vivo) continue;
+      bloqueia.add(chaveCasa(f.x, f.y));
+    }
+    const destino = chaveCasa(b.x, b.y);
+    const vistos = new Set([chaveCasa(a.x, a.y)]);
+    const filaBfs = [{ x: a.x, y: a.y, passos: 0 }];
+    for (let i = 0; i < filaBfs.length; i++) {
+      const c = filaBfs[i];
+      for (const [dx, dy] of VIZ4) {
+        const x = c.x + dx;
+        const y = c.y + dy;
+        if (!dentro(m, x, y)) continue;
+        const k = chaveCasa(x, y);
+        if (k === destino) return c.passos + 1;
+        if (vistos.has(k) || bloqueia.has(k)) continue;
+        vistos.add(k);
+        filaBfs.push({ x, y, passos: c.passos + 1 });
+      }
+    }
+    return Infinity;
+  }
+  /** O alvo está ao alcance da técnica: passos pelo caminho das casas ≤ alcanceEmCasas (com o piso de 1 casa). */
   function aoAlcance(m, a, b, metros) {
-    return Math.hypot(a.x - b.x, a.y - b.y) <= alcanceEmCasas(m, metros) + EPS;
+    return distanciaCasas(m, a, b) <= alcanceEmCasas(m, metros) + EPS;
   }
   function cartaoAtivo(m) {
     return m.cartoes.find((c) => c.estado === 'aberto') ?? null; // FIFO: o primeiro aberto
@@ -627,8 +658,7 @@ export function criarSala({
         if (f.lado === 'jogadora' && t.custoPA > paLivre(f)) continue; // os monstros não gastam PA
         for (const alvo of colocadas(m)) {
           if (alvo.id === f.id || !alvo.vivo || !saoInimigos(f, alvo)) continue;
-          // B9 corrigido: métrica de grelha euclidiana (em casas), e não o caminho a pé; ordem 11: piso de 1 casa.
-          // TODO(JV1.x C-42): linha de visão por supercover.
+          // Ordem 15: o caminho das casas, com as figuras a bloquear (site distanciaEntre; cai o B9); ordem 11: piso de 1 casa.
           if (!aoAlcance(m, f, alvo, t.alcanceM)) continue;
           ataques.push({ alvoId: alvo.id, arma: t.id });
         }
@@ -645,7 +675,7 @@ export function criarSala({
         if (f.lado === 'jogadora' && t.custoPA > paLivre(f)) continue; // o motor recusa PA_INSUFICIENTE; não forçamos
         for (const alvo of colocadas(m)) {
           if (!alvo.vivo || saoInimigos(f, alvo) || !curavel(alvo)) continue;
-          if (!aoAlcance(m, f, alvo, t.alcanceM)) continue; // ordem 11: o mesmo piso de 1 casa
+          if (!aoAlcance(m, f, alvo, t.alcanceM)) continue; // ordens 11 e 15: a mesma régua do ataque
           curas.push({ alvoId: alvo.id, tecnica: t.id });
         }
       }
@@ -659,6 +689,9 @@ export function criarSala({
       // Errata v0.2.2: `apanhar_arma` só com a arma caída; gasta a reserva toda (sem reserva, não há com que pagar).
       // TODO(R0): apanhar a arma com a reserva já a zero (ex.: na vez em que se levantou) é permitido?
       if (f.armaCaida && v.reservaM > EPS) acoes.push('apanhar_arma');
+      // Ordem 15 (site rfPodeApagarFogo): a arder fora do fogo e sem chuva, apagar-se gasta a Acção de Movimento.
+      // O site não pede reserva por gastar (zera-a, como ao levantar-se do Caído); aqui também não.
+      if (Amb.podeApagarSeco(m, f)) acoes.push('apagar_fogo');
       if (f.reacaoDisponivel && !f.defendendo) acoes.push('defender');
       if (!v.atacou && !v.desvinculou && monstrosAdjacentes(m, f, f).length > 0) acoes.push('desvincular');
       const tr = fichaDe(f).transformacao;
@@ -1785,6 +1818,17 @@ export function criarSala({
         v.reservaM = 0;
         tx.emitir('acao', { figuraId: f.id, tipo: 'apanhar_arma' }, null);
         emitirEstado(tx, f, true, vis, vida); // a própria sabe já que tem a arma na mão
+        return 'APLICADA';
+      }
+      case 'apagar_fogo': {
+        // Ordem 15 (palavra do Mestre, 2026-11-10; site jogo.js acao 'apagar-fogo'): sem chuva, quem arde fora do fogo
+        // pára e apaga o fogo do corpo — gasta a Acção de Movimento (a reserva zera); o ataque continua livre.
+        if (f.lado !== 'jogadora' || !Amb.podeApagarSeco(m, f)) throw new ErroRecusa('acao_invalida');
+        const pubAntes = jsonCanonico(Amb.fogoPublico(m));
+        const r = Amb.apagarSeco(m, f);
+        v.reservaM = 0;
+        tx.emitir('acao', { figuraId: f.id, tipo: 'apagar_fogo' }, null);
+        emitirAmbiente(tx, [r], pubAntes);
         return 'APLICADA';
       }
       case 'defender':

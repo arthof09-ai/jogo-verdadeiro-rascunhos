@@ -34,6 +34,8 @@ const COR_MORTA := Color(0.35, 0.35, 0.35)
 const COR_FOGO := Color(1.0, 0.45, 0.10, 0.55)
 
 const CameraMesa := preload("res://camera/camera_mesa.gd")
+## Ordem 15 (parte F): os nomes das figuras juntas não se sobrepõem no ecrã.
+const NomesSemSobrepor := preload("res://cenas/comum/nomes_sem_sobrepor.gd")
 
 @onready var camera: CameraMesa = $Camera
 @onready var hud = $HUD  # hud.gd (sem tipo para não criar preload circular)
@@ -60,6 +62,15 @@ var _nos: Dictionary = {}  # figuraId -> Node3D
 var _focou := false
 var _saindo := false
 var _mover_depois: Dictionary = {}  # o movimento que segue o «Sair c/ segurança» aceite
+
+
+## Ordem 15 (parte F): a cada quadro, os nomes arrumam-se para a câmara.
+func _process(_delta: float) -> void:
+	var rotulos: Array = []
+	for no in _nos.values():
+		if is_instance_valid(no) and (no as Node).has_node("Nome"):
+			rotulos.append((no as Node).get_node("Nome"))
+	NomesSemSobrepor.arrumar(rotulos, camera)
 
 
 func _ready() -> void:

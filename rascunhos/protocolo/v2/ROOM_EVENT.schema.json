@@ -262,14 +262,14 @@
     },
     "dados_fogo": {
       "type": "object",
-      "description": "Ordem 13: o fogo que a mesa vê, sempre que muda (casas a arder, figuras a arder) e quem se apagou nesta mudança: 'chuva-casa' (a chuva apagou a casa e a pessoa), 'chuva' (fora do fogo, no início da vez), 'saiu' (saiu do fogo para a chuva).",
+      "description": "Ordem 13: o fogo que a mesa vê, sempre que muda (casas a arder, figuras a arder) e quem se apagou nesta mudança: 'chuva-casa' (a chuva apagou a casa e a pessoa), 'chuva' (fora do fogo, no início da vez), 'saiu' (saiu do fogo para a chuva); ordem 15: 'seco' (sem chuva, ela gastou a Acção de Movimento a apagar-se — acção `apagar_fogo`).",
       "required": ["casas", "aArder"],
       "properties": {
         "casas": { "type": "array", "items": { "$ref": "#/$defs/xy" } },
         "aArder": { "type": "array", "items": { "$ref": "comum.schema.json#/$defs/idOpaco" } },
         "apagados": { "type": "array", "items": {
           "type": "object", "required": ["figuraId", "porque"],
-          "properties": { "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" }, "porque": { "enum": ["chuva-casa", "chuva", "saiu"] } },
+          "properties": { "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" }, "porque": { "enum": ["chuva-casa", "chuva", "saiu", "seco"] } },
           "additionalProperties": false } }
       },
       "additionalProperties": false

@@ -371,7 +371,16 @@ static func descrever_cartao(cartao: Dictionary, vista: Dictionary) -> Dictionar
 			botoes = [_botao(Textos.CONFIRMAR, "aceitar_dados", false), _botao(Textos.NAO_ACEITAR, "nao_aceitar", true)]
 		_:
 			linhas.append(tipo)
-	return {"titulo": str(Textos.TITULO.get(tipo, tipo)), "linhas": linhas, "botoes": botoes}
+	return {"titulo": titulo_cartao(cartao, vista), "linhas": linhas, "botoes": botoes}
+
+
+## O título do cartão. Ordem 15: o cartão de desgraça de um ataque de oportunidade diz «Ataque de oportunidade» (o
+## marcador vem do cartão interno da vista do Mestre; o MASTER_CARD não muda).
+static func titulo_cartao(cartao: Dictionary, vista: Dictionary) -> String:
+	var tipo := _texto(cartao.get("tipo"))
+	if tipo == "desgraca" and cartao_interno(vista, _texto(cartao.get("cartaoId"))).get("ataqueDeOportunidade") == true:
+		return Textos.TITULO_OPORTUNIDADE
+	return str(Textos.TITULO.get(tipo, tipo))
 
 
 static func descrever_acao(acao, vista: Dictionary) -> String:

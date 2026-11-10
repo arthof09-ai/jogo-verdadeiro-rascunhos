@@ -141,9 +141,12 @@ static func fogo_morde(nome: String, e_jogadora: bool, desfecho: String) -> Stri
 
 
 ## Quem se apagou. `porque`: "chuva-casa" (a chuva apagou a casa), "chuva" (fora do fogo, no início da vez),
-## "saiu" (saiu da casa em chamas para a chuva).
+## "saiu" (saiu da casa em chamas para a chuva); ordem 15: "seco" (sem chuva, gastou o movimento a apagar-se).
 static func fogo_apagado(nome: String, e_jogadora: bool, porque: String) -> String:
 	match porque:
+		"seco":
+			# A frase do site (jogo.js, acção 'apagar-fogo').
+			return "%s pára e apaga o fogo do corpo — isso gasta o movimento desta vez." % _maiuscula(nome_em_frase(nome, e_jogadora))
 		"chuva-casa":
 			return "A chuva apaga a casa — e o fogo %s." % _de(nome, e_jogadora)
 		"saiu":

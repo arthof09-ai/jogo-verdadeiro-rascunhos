@@ -4,7 +4,7 @@
 //    vai só ao Mestre (o texto da recusa é o fixo, sem números — E-P7);
 //  - P8b: o alcance conta-se em casas com piso de 1 casa, alcanceEmCasas = max(1, metros / casaM) (site: jogo.js
 //    alcanceEmCasas). Toda a técnica chega pelo menos à casa vizinha, em qualquer escala — também no ataque de
-//    oportunidade. A métrica continua a do JV (euclidiana em casas); só o piso é novo.
+//    oportunidade. Desde a ordem 15 a distância é o caminho das casas (site distanciaEntre): a diagonal fica a 2 passos.
 // Fichas de teste: o orc tem só o machado de 1,5 m.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -69,21 +69,21 @@ function vezDoOrc(casaM, casaOrc) {
   return { m, h, orc, golpe };
 }
 
-test('ordem 11 (P8b): técnica de 1,5 m com casa de 1 m — chega à vizinha e à diagonal (1,5 casas), não a 2 casas', () => {
+test('ordem 11 (P8b): técnica de 1,5 m com casa de 1 m — chega à vizinha (1,5 casas); a diagonal e 2 casas não (ordem 15)', () => {
   assert.equal(vezDoOrc(1, { x: 2, y: 3 }).golpe()?.estado, 'APLICADA', 'vizinha');
-  assert.equal(vezDoOrc(1, { x: 3, y: 3 }).golpe()?.estado, 'APLICADA', 'diagonal: √2 ≈ 1,41 casas ≤ 1,5');
+  assert.equal(vezDoOrc(1, { x: 3, y: 3 }).golpe()?.motivo, 'acao_invalida', 'diagonal: 2 passos > 1,5 casas (ordem 15)');
   assert.equal(vezDoOrc(1, { x: 2, y: 4 }).golpe()?.motivo, 'acao_invalida', '2 casas: fora');
 });
 
 test('ordem 11 (P8b): técnica de 1,5 m com casa de 2 m — o piso de 1 casa dá-lhe a vizinha (antes: 2 m > 1,5 m, fora)', () => {
   assert.equal(vezDoOrc(2, { x: 2, y: 3 }).golpe()?.estado, 'APLICADA', 'vizinha: max(1; 0,75) = 1 casa');
-  assert.equal(vezDoOrc(2, { x: 3, y: 3 }).golpe()?.motivo, 'acao_invalida', 'diagonal: √2 casas > 1');
+  assert.equal(vezDoOrc(2, { x: 3, y: 3 }).golpe()?.motivo, 'acao_invalida', 'diagonal: 2 passos > 1');
   assert.equal(vezDoOrc(2, { x: 2, y: 4 }).golpe()?.motivo, 'acao_invalida', '2 casas: fora');
 });
 
 test('ordem 11 (P8b): na escala de sempre (1,5 m) nada muda — vizinha e diagonal sim, 2 casas não', () => {
   assert.equal(vezDoOrc(1.5, { x: 2, y: 3 }).golpe()?.estado, 'APLICADA', 'vizinha');
-  assert.equal(vezDoOrc(1.5, { x: 3, y: 3 }).golpe()?.motivo, 'acao_invalida', 'diagonal: √2 casas > 1');
+  assert.equal(vezDoOrc(1.5, { x: 3, y: 3 }).golpe()?.motivo, 'acao_invalida', 'diagonal: 2 passos > 1');
   assert.equal(vezDoOrc(1.5, { x: 2, y: 4 }).golpe()?.motivo, 'acao_invalida', '2 casas: fora');
 });
 

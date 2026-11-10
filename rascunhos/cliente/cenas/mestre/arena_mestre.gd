@@ -20,6 +20,8 @@ const Modelo := preload("res://cenas/mestre/modelo_mestre.gd")
 const Marcador := preload("res://cenas/comum/marcador_figura.gd")
 ## Decisão 10 do Mestre (ordem 6; site REF_29): a câmara livre só existe aqui, na arena do Mestre.
 const CamaraLivre := preload("res://cenas/mestre/camara_livre.gd")
+## Ordem 15 (parte F): os nomes das figuras juntas não se sobrepõem no ecrã.
+const NomesSemSobrepor := preload("res://cenas/comum/nomes_sem_sobrepor.gd")
 
 const COR_CHAO := Color(0.30, 0.42, 0.26)
 # Do site (cena.js): fundo 353b48, grelha c9c2a7, casas do «mover» cab577 a 50% com contorno f5d59b,
@@ -95,6 +97,20 @@ func _ready() -> void:
 	_anel.visible = false
 	add_child(_anel)
 	construir_grelha(20, 20, 1.5)
+
+
+## Ordem 15 (parte F): a cada quadro, os nomes arrumam-se para a câmara activa (a da mesa ou a livre).
+func _process(_delta: float) -> void:
+	arrumar_nomes()
+
+
+## Arruma os nomes das figuras no ecrã (sobe os de trás que tocavam noutro). Devolve as caixas no ecrã.
+func arrumar_nomes() -> Array[Rect2]:
+	var rotulos: Array = []
+	for no in _nos.values():
+		if is_instance_valid(no) and (no as Node).has_node("Rotulo"):
+			rotulos.append((no as Node).get_node("Rotulo"))
+	return NomesSemSobrepor.arrumar(rotulos, get_viewport().get_camera_3d() if is_inside_tree() else null)
 
 
 func construir_grelha(w: int, h: int, c: float) -> void:

@@ -140,3 +140,9 @@ Pedidas pela revisão do Muse (CM-000009) ao desenho JV3.1 (Notion: «JV3.1 — 
 - `MASTER_AMBIENTE`: `raios` (booleano) e `raioAgora` (`true`). Errata proposta D-30.
 - `ROOM_EVENT`: tipos novos `raio` {x, y, alvoId?, desfecho?}, `dano_ambiente` {alvoId, origem, desfecho} (+ `valor`, `tipos` só a quem o sofreu; `conferir-schemas.py` sabe de quem é) e `fogo` {casas, aArder, apagados?}. Errata proposta D-31.
 - `ROOM_SNAPSHOT` / `MASTER_VIEW`: `fogo` (`comum.schema.json#/$defs/fogoPublico`, sem combustível); no bloco `mestre`, `fogo` com o combustível de cada casa; em `figuraMestre`, `verbos` (parte C). Errata proposta D-32.
+
+## Ordem 15 do CM-000009: apagar-se sem chuva (10/11/2026)
+
+- `comum.schema.json`: o tipo de acção `apagar_fogo` (em `acao.tipo` e em `acaoSemParametros`, por isso também em `ROOM_OPTIONS.acoes`). Errata proposta D-33.
+- `ROOM_EVENT` `fogo`: `apagados[].porque` aceita `seco` (sem chuva, ela gastou a Acção de Movimento a apagar-se). Errata proposta D-33.
+- O alcance pelo caminho das casas (parte B) e o título «Ataque de oportunidade» do cartão do Mestre (parte C) não mudam o protocolo: o título lê o `ataqueDeOportunidade` do cartão interno do bloco `mestre` da vista, que já existia.

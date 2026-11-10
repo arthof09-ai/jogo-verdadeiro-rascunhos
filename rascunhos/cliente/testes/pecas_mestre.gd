@@ -334,6 +334,7 @@ func _correr() -> void:
 	await _ambiente(c, fx["mestre"]["vista"])
 	await _falha_monstro(c, fx["mestre"]["vista"])
 	_exportar(c)
+	await _nomes_juntos(c, fx["mestre"]["vista"])
 	await _camara_livre(c)
 
 	var todos: Array = []
@@ -808,7 +809,18 @@ func _falha_monstro(c, vista_base: Dictionary) -> void:
 	card_her["figuraId"] = her
 	d = Modelo.descrever_cartao(card_her, vc)
 	_ok(d["linhas"][0] == Modelo.nome_mestre(Modelo.figura(vc, her)), "o cartão da heroína não ganha frase de falha (o site não a enquadra)")
+	# Ordem 15 (parte C): o título do cartão do golpe de oportunidade nomeia-o; os outros ficam como eram.
+	_ok(Modelo.descrever_cartao(card_aoo, vc)["titulo"] == "Ataque de oportunidade · falha crítica",
+		"título do cartão de oportunidade: «%s»" % Modelo.descrever_cartao(card_aoo, vc)["titulo"])
+	_ok(Modelo.descrever_cartao(card, vc)["titulo"] == Textos.TITULO["desgraca"], "o cartão da vez do orc mantém o título")
+	_ok(Modelo.descrever_cartao(card_her, vc)["titulo"] == Textos.TITULO["desgraca"], "o cartão da heroína mantém o título")
 	c.aplicar_vista(vc)
+	c.aplicar_cartao(card_aoo)
+	await _quadros(1)
+	_ok(c._titulo_cartao.text.begins_with("Ataque de oportunidade"), "o ecrã do Mestre mostra «%s» no título" % c._titulo_cartao.text)
+	_ok(c._titulo_cartao.get_line_count() <= c.LINHAS_TITULO, "o título cabe nas linhas medidas do cartão")
+	c.cartao = {}
+	c._desenhar_cartao()
 	c.aplicar_cartao(card)
 	await _quadros(1)
 	_ok(c._texto_cartao.text.begins_with("%s tentou desferir o machado a %s e falhou." % [nome_orc, nome_her])
@@ -817,6 +829,34 @@ func _falha_monstro(c, vista_base: Dictionary) -> void:
 	c._desenhar_cartao()
 	c.aplicar_vista(vista_base)
 	await _quadros(1)
+
+
+## Ordem 15 (parte F): com as figuras juntas (a heroína, a aliada e o orc da fixture estão em casas vizinhas), os
+## nomes arrumam-se no ecrã: nenhuma caixa toca outra, e pelo menos um subiu da altura de base. A figura não mexe.
+func _nomes_juntos(c, vista: Dictionary) -> void:
+	print("== nomes das figuras juntas (ordem 15, parte F) ==")
+	var a = c._arena
+	a.aplicar_vista(vista)
+	a.camera.definir_modo(a.camera.Modo.FIXA)
+	a.camera.focar(Vector3(2.5 * a.casa_m, 0.0, 3.5 * a.casa_m))
+	a.camera.definir_zoom(4.0)
+	a.camera._saltar()
+	await _quadros(3)
+	var caixas: Array[Rect2] = a.arrumar_nomes()
+	var tocam := 0
+	for i in caixas.size():
+		for j in range(i + 1, caixas.size()):
+			if caixas[i].intersects(caixas[j]):
+				tocam += 1
+	_ok(caixas.size() >= 3 and tocam == 0, "%d nomes no ecrã, %d pares sobrepostos" % [caixas.size(), tocam])
+	var subiram := 0
+	var posicoes_ok := true
+	for no in a._nos.values():
+		var r: Label3D = no.get_node("Rotulo")
+		if r.position.y > float(r.get_meta("nome_base_y")) + 0.001:
+			subiram += 1
+		posicoes_ok = posicoes_ok and is_equal_approx(no.position.y, 0.0)
+	_ok(subiram >= 1 and posicoes_ok, "subiu o nome de %d figura(s); as figuras ficam na casa" % subiram)
 
 
 ## Ordem 13 (parte D): o «Exportar registo» leva o registo do servidor INTACTO e a secção de narração.
