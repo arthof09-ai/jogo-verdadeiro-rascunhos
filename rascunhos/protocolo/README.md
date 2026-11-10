@@ -134,3 +134,9 @@ Pedidas pela revisão do Muse (CM-000009) ao desenho JV3.1 (Notion: «JV3.1 — 
 - **Regra-mãe do Mestre** («todas as mecânicas do jogo do site têm que seguir no jogo do Godot»): estabilizar ACABA a batalha, como no site, com o desfecho `estabilizada`.
   - Com mais de uma jogadora, a batalha acaba quando todas estão mortas ou estabilizadas; se alguma estabilizou, o desfecho é `estabilizada`.
 - O `ROOM_EVENT` `fim` aceita agora `vitoria`, `morte`, `estabilizada` e `terminada`; o tipo novo é `recomeco`.
+
+## Ordem 13 do CM-000009: raio e fogo, verbos (10/11/2026, CM-000008-I0004)
+
+- `MASTER_AMBIENTE`: `raios` (booleano) e `raioAgora` (`true`). Errata proposta D-30.
+- `ROOM_EVENT`: tipos novos `raio` {x, y, alvoId?, desfecho?}, `dano_ambiente` {alvoId, origem, desfecho} (+ `valor`, `tipos` só a quem o sofreu; `conferir-schemas.py` sabe de quem é) e `fogo` {casas, aArder, apagados?}. Errata proposta D-31.
+- `ROOM_SNAPSHOT` / `MASTER_VIEW`: `fogo` (`comum.schema.json#/$defs/fogoPublico`, sem combustível); no bloco `mestre`, `fogo` com o combustível de cada casa; em `figuraMestre`, `verbos` (parte C). Errata proposta D-32.

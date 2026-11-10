@@ -30,6 +30,8 @@ const COR_PROPRIA := Color(0.35, 0.60, 1.0)
 const COR_JOGADORA := Color(0.40, 0.85, 0.50)
 const COR_CRIATURA := Color(0.85, 0.35, 0.30)
 const COR_MORTA := Color(0.35, 0.35, 0.35)
+## Ordem 13: casa a arder (o fogo do ambiente; as casas vêm do servidor, em Estado.fogo).
+const COR_FOGO := Color(1.0, 0.45, 0.10, 0.55)
 
 const CameraMesa := preload("res://camera/camera_mesa.gd")
 
@@ -51,6 +53,7 @@ var _casas: Dictionary = {}  # Vector2i -> custoM (como veio do servidor)
 var _alvos: Dictionary = {}  # figuraId -> Array de opções de ataque, ou true
 var _cursor := Vector2i(-1, -1)
 var _destaques: MultiMeshInstance3D
+var _fogo: MultiMeshInstance3D
 var _marcador: MeshInstance3D
 var _rotulo_custo: Label3D
 var _nos: Dictionary = {}  # figuraId -> Node3D
@@ -135,6 +138,20 @@ func _construir_grelha(w: int, h: int, c: float) -> void:
 	_destaques.multimesh = mm
 	_grelha.add_child(_destaques)
 
+	# Ordem 13: as casas a arder, por baixo dos destaques.
+	var mf := MultiMesh.new()
+	mf.transform_format = MultiMesh.TRANSFORM_3D
+	var qf := PlaneMesh.new()
+	qf.size = Vector2(casa_m * 0.96, casa_m * 0.96)
+	qf.material = _material_sem_luz(COR_FOGO)
+	mf.mesh = qf
+	mf.instance_count = largura * altura
+	mf.visible_instance_count = 0
+	_fogo = MultiMeshInstance3D.new()
+	_fogo.name = "Fogo"
+	_fogo.multimesh = mf
+	_grelha.add_child(_fogo)
+
 	_marcador = MeshInstance3D.new()
 	var q2 := PlaneMesh.new()
 	q2.size = Vector2(casa_m * 0.98, casa_m * 0.98)
@@ -154,6 +171,7 @@ func _construir_grelha(w: int, h: int, c: float) -> void:
 
 	camera.configurar_arena(Vector3(tam.x * 0.5, 0.0, tam.y * 0.5), tam)
 	_mostrar_destaques()
+	mostrar_fogo()
 
 
 func _material_sem_luz(cor: Color) -> StandardMaterial3D:
@@ -401,6 +419,24 @@ func _mostrar_destaques() -> void:
 	mm.visible_instance_count = n
 
 
+## Ordem 13: desenha as casas a arder que o servidor mandou (Estado.fogo.casas). Devolve quantas desenhou.
+func mostrar_fogo() -> int:
+	if _fogo == null:
+		return 0
+	var mm := _fogo.multimesh
+	var n := 0
+	var casas = Estado.fogo.get("casas") if Estado.fogo.get("casas") is Array else []
+	for k in casas:
+		if not (k is Dictionary):
+			continue
+		var c := Vector2i(int(k.get("x", -1)), int(k.get("y", -1)))
+		if dentro(c) and n < mm.instance_count:
+			mm.set_instance_transform(n, Transform3D(Basis(), centro_casa(c) + Vector3(0.0, 0.025, 0.0)))
+			n += 1
+	mm.visible_instance_count = n
+	return n
+
+
 func _atualizar_cursor() -> void:
 	if _marcador == null:
 		return
@@ -508,6 +544,7 @@ func _ao_snapshot() -> void:
 		_nos.clear()
 		_construir_grelha(w, h, casa)
 	_sincronizar_figuras()
+	mostrar_fogo()
 	if not _focou and Estado.minha_figura_id != "":
 		var minha: Vector2i = Estado.casa_de(Estado.figuras.get(Estado.minha_figura_id))
 		if dentro(minha):
@@ -519,6 +556,7 @@ func _ao_snapshot() -> void:
 func _ao_evento(_evento: Dictionary) -> void:
 	_sincronizar_figuras()
 	_mostrar_destaques()
+	mostrar_fogo()
 
 
 ## As opções mudaram (ou deixaram de valer): refaz o destaque, sem enviar nada.

@@ -71,6 +71,10 @@
     "clima": "nevoeiro",
     "luz": "noite"
    },
+   "fogo": {
+    "casas": [],
+    "aArder": []
+   },
    "mestre": {
     "figuras": [
      {
@@ -107,7 +111,8 @@
       "vidaTotal": 5150,
       "paTotal": 4040,
       "alturaM": 2.625,
-      "marcador": "marcador"
+      "marcador": "marcador",
+      "verbos": null
      },
      {
       "id": "f0c1870b843e1465f",
@@ -143,7 +148,8 @@
       "vidaTotal": 3579,
       "paTotal": 1357,
       "alturaM": 2.625,
-      "marcador": "marcador"
+      "marcador": "marcador",
+      "verbos": null
      },
      {
       "id": "f1c8fc87e558f2d7e",
@@ -176,7 +182,11 @@
       "vidaTotal": 7777,
       "paTotal": 313,
       "alturaM": 3.6,
-      "marcador": "marcador"
+      "marcador": "marcador",
+      "verbos": {
+       "acerto": "desferiu o machado",
+       "falha": "tentou desferir o machado"
+      }
      },
      {
       "id": "fb43618ae935f84df",
@@ -209,7 +219,11 @@
       "vidaTotal": 4848,
       "paTotal": 0,
       "alturaM": 1.35,
-      "marcador": "marcador-lobo"
+      "marcador": "marcador-lobo",
+      "verbos": {
+       "acerto": "deu uma patada",
+       "falha": "tentou dar uma patada"
+      }
      }
     ],
     "lobby": {
@@ -238,7 +252,14 @@
     "ambiente": {
      "hora": "03:33",
      "clima": "nevoeiro",
-     "futuro": "CANARIO-FUTURO"
+     "futuro": "CANARIO-FUTURO",
+     "raios": false,
+     "raioPendente": false,
+     "raioPedidoRodada": 0
+    },
+    "fogo": {
+     "casas": [],
+     "aArder": []
     },
     "cartoes": [
      {
@@ -396,6 +417,10 @@
     "clima": null,
     "luz": null
    },
+   "fogo": {
+    "casas": [],
+    "aArder": []
+   },
    "mestre": {
     "figuras": [
      {
@@ -427,7 +452,8 @@
       "vidaTotal": 5150,
       "paTotal": 4040,
       "alturaM": 2.625,
-      "marcador": "marcador"
+      "marcador": "marcador",
+      "verbos": null
      },
      {
       "id": "f0c1870b843e1465f",
@@ -458,7 +484,8 @@
       "vidaTotal": 3579,
       "paTotal": 1357,
       "alturaM": 2.625,
-      "marcador": "marcador"
+      "marcador": "marcador",
+      "verbos": null
      }
     ],
     "lobby": null,
@@ -466,7 +493,14 @@
     "ambiente": {
      "hora": null,
      "clima": null,
-     "futuro": null
+     "futuro": null,
+     "raios": false,
+     "raioPendente": false,
+     "raioPedidoRodada": 0
+    },
+    "fogo": {
+     "casas": [],
+     "aArder": []
     },
     "cartoes": [],
     "pausa": null,
@@ -556,6 +590,10 @@
     "clima": null,
     "luz": null
    },
+   "fogo": {
+    "casas": [],
+    "aArder": []
+   },
    "mestre": {
     "figuras": [
      {
@@ -587,7 +625,8 @@
       "vidaTotal": 5150,
       "paTotal": 4040,
       "alturaM": 2.625,
-      "marcador": "marcador"
+      "marcador": "marcador",
+      "verbos": null
      }
     ],
     "lobby": {
@@ -604,7 +643,14 @@
     "ambiente": {
      "hora": null,
      "clima": null,
-     "futuro": null
+     "futuro": null,
+     "raios": false,
+     "raioPendente": false,
+     "raioPedidoRodada": 0
+    },
+    "fogo": {
+     "casas": [],
+     "aArder": []
     },
     "cartoes": [],
     "pausa": null,
@@ -713,6 +759,10 @@
     "clima": null,
     "luz": null
    },
+   "fogo": {
+    "casas": [],
+    "aArder": []
+   },
    "mestre": {
     "figuras": [
      {
@@ -749,7 +799,8 @@
       "vidaTotal": 5150,
       "paTotal": 4040,
       "alturaM": 2.625,
-      "marcador": "marcador"
+      "marcador": "marcador",
+      "verbos": null
      },
      {
       "id": "f0eca9c7df5e7493f",
@@ -782,7 +833,11 @@
       "vidaTotal": 7777,
       "paTotal": 313,
       "alturaM": 3.6,
-      "marcador": "marcador"
+      "marcador": "marcador",
+      "verbos": {
+       "acerto": "desferiu o machado",
+       "falha": "tentou desferir o machado"
+      }
      }
     ],
     "lobby": {
@@ -811,7 +866,14 @@
     "ambiente": {
      "hora": null,
      "clima": null,
-     "futuro": null
+     "futuro": null,
+     "raios": false,
+     "raioPendente": false,
+     "raioPedidoRodada": 0
+    },
+    "fogo": {
+     "casas": [],
+     "aArder": []
     },
     "cartoes": [],
     "pausa": null,
@@ -1105,6 +1167,10 @@
     "ambiente": {
      "clima": null,
      "luz": null
+    },
+    "fogo": {
+     "casas": [],
+     "aArder": []
     },
     "propria": {
      "figuraId": "f1a88a9eef918a8b4",

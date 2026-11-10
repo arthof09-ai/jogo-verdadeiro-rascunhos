@@ -44,6 +44,8 @@ var mapa: Dictionary = {}
 var figuras: Dictionary = {}  # id -> {id, nomePublico, lado, x, y, orientacao, visivel}
 var iniciativa: Array = []  # só a ORDEM (a Party nunca vê os valores)
 var ambiente: Dictionary = {}  # só o efeito presente {clima, luz} (E-P12)
+## Ordem 13: o fogo que a mesa vê — {casas: [{x,y}], aArder: [ids]} (sem combustível: esse é só do Mestre).
+var fogo: Dictionary = {}
 var vez_id := ""
 var opcoes: Dictionary = {}
 var seat_id := ""
@@ -118,6 +120,7 @@ func aplicar_snapshot(msg: Dictionary) -> void:
 	iniciativa = ini.duplicate() if ini is Array else []
 	vez_id = _texto(msg.get("vezId"))
 	ambiente = _dict(msg.get("ambiente")).duplicate(true)
+	fogo = _dict(msg.get("fogo")).duplicate(true)
 	propria = _dict(msg.get("propria")).duplicate(true)
 	var mf = propria.get("figuraId")
 	if mf is String and mf != "":
@@ -196,6 +199,7 @@ func limpar() -> void:
 	figuras = {}
 	iniciativa = []
 	ambiente = {}
+	fogo = {}
 	vez_id = ""
 	opcoes = {}
 	seat_id = ""
@@ -421,6 +425,26 @@ func _aplicar_evento(msg: Dictionary) -> void:
 			ataque_visto.emit(dados)
 		"dano":
 			_emitir_dano(dados)
+		"raio":
+			# Ordem 13: {x, y, alvoId?, desfecho?}. A queda dela a morrer narra-se pelo `estado` (frase da queda).
+			var alvo_raio := _texto(dados.get("alvoId"))
+			if alvo_raio == "":
+				frase_batalha.emit(Frases.raio_na_arena())
+			elif _texto(dados.get("desfecho")) != "aMorrer":
+				frase_batalha.emit(Frases.raio_atinge(nome_de(alvo_raio), e_jogadora(figuras.get(alvo_raio)), _texto(dados.get("desfecho"))))
+		"dano_ambiente":
+			# {alvoId, origem, desfecho} (+ valor e tipos só a quem o sofreu): o número sai como o de qualquer dano.
+			_emitir_dano(dados)
+			var quem_amb := _texto(dados.get("alvoId"))
+			if _texto(dados.get("origem")) == "fogo" and _texto(dados.get("desfecho")) != "aMorrer":
+				frase_batalha.emit(Frases.fogo_morde(nome_de(quem_amb), e_jogadora(figuras.get(quem_amb)), _texto(dados.get("desfecho"))))
+		"fogo":
+			# {casas, aArder, apagados?}: o fogo novo, por inteiro.
+			fogo = {"casas": _lista(dados.get("casas")), "aArder": _lista(dados.get("aArder"))}
+			for apagado in _lista(dados.get("apagados")):
+				if apagado is Dictionary:
+					var fa := _texto(apagado.get("figuraId"))
+					frase_batalha.emit(Frases.fogo_apagado(nome_de(fa), e_jogadora(figuras.get(fa)), _texto(apagado.get("porque"))))
 		"ambiente":
 			var efeito = dados.get("efeito")
 			if efeito is Dictionary:
@@ -525,6 +549,10 @@ static func _num(v):
 
 static func _texto(v) -> String:
 	return v if v is String else ""
+
+
+static func _lista(v) -> Array:
+	return (v as Array).duplicate(true) if v is Array else []
 
 
 static func _dict(v) -> Dictionary:

@@ -122,9 +122,139 @@ static func linhas_ambiente(vista: Dictionary) -> Array[String]:
 	var saida: Array[String] = []
 	saida.append(Textos.HORA % _ou_traco(a.get("hora")))
 	saida.append(Textos.CLIMA % _ou_traco(a.get("clima")))
+	# Ordem 13: a chuva (do clima), os raios, o raio pedido e o fogo com o combustível — só neste ecrã.
+	var chuva := nivel_chuva(_texto(a.get("clima")))
+	saida.append(Textos.CHUVA % Textos.CHUVA_NIVEL[chuva])
+	var raios := Textos.RAIOS_DESLIGADOS
+	if a.get("raios") == true:
+		raios = Textos.RAIOS_LIGADOS if chuva > 0 else Textos.RAIOS_SEM_CHUVA
+	saida.append(Textos.RAIOS % raios)
+	if a.get("raioPendente") == true:
+		saida.append(Textos.RAIO_PENDENTE)
+	var fogo: Dictionary = m.get("fogo") if m is Dictionary and m.get("fogo") is Dictionary else {}
+	var casas: Array[String] = []
+	for k in (fogo.get("casas") if fogo.get("casas") is Array else []):
+		if k is Dictionary:
+			casas.append(Textos.CASA_COMBUSTIVEL % [_inteiro(k.get("x")), _inteiro(k.get("y")), _inteiro(k.get("combustivel"))])
+	saida.append(Textos.CASAS_A_ARDER % (", ".join(PackedStringArray(casas)) if not casas.is_empty() else Textos.NINGUEM))
+	var ardem: Array[String] = []
+	for id in (fogo.get("aArder") if fogo.get("aArder") is Array else []):
+		ardem.append(_nome_curto(vista, str(id)))
+	saida.append(Textos.A_ARDER % (", ".join(PackedStringArray(ardem)) if not ardem.is_empty() else Textos.NINGUEM))
 	saida.append(Textos.FUTURO % _ou_traco(a.get("futuro")))
 	saida.append(Textos.PARTY_VE % (", ".join(PackedStringArray(publico)) if not publico.is_empty() else Textos.SEM_VALOR))
 	return saida
+
+
+# ---------------------------------------------------------------- ambiente: raio e fogo (ordem 13, dívida E1)
+#
+# As regras são do servidor (nucleo/ambiente.js). Aqui: o nível da chuva para mostrar, os comandos do painel e a
+# narração ao Mestre (a frase do site com o nome verdadeiro + a linha do registo com os números do soMestre).
+
+## 0 sem chuva, 1 pouca, 2 forte — a mesma leitura do servidor (clima «chuva» / «tempestade»).
+static func nivel_chuva(clima: String) -> int:
+	return 2 if clima == "tempestade" else (1 if clima == "chuva" else 0)
+
+
+## O painel do ambiente que está na vista (bloco do Mestre).
+static func painel_ambiente(vista: Dictionary) -> Dictionary:
+	var m = vista.get("mestre")
+	return m.get("ambiente") if m is Dictionary and m.get("ambiente") is Dictionary else {}
+
+
+## Campos do MASTER_AMBIENTE para mudar a hora `passo` horas (a hora do painel é «HH:MM»; sem hora, parte das 12:00).
+static func hora_mais(vista: Dictionary, passo: int) -> Dictionary:
+	var h := 12
+	var mi := 0
+	var t := _texto(painel_ambiente(vista).get("hora"))
+	var partes := t.split(":")
+	if partes.size() == 2 and partes[0].is_valid_int() and partes[1].is_valid_int():
+		h = int(partes[0])
+		mi = int(partes[1])
+	h = posmod(h + passo, 24)
+	return {"hora": "%02d:%02d" % [h, mi]}
+
+
+## Campos do MASTER_AMBIENTE para ligar/desligar os raios.
+static func alternar_raios(vista: Dictionary) -> Dictionary:
+	return {"raios": painel_ambiente(vista).get("raios") != true}
+
+
+## O «⚡ Raio agora» pode ir? (o servidor confere tudo; isto só acende/apaga o botão.)
+static func raio_agora_possivel(vista: Dictionary) -> bool:
+	var a := painel_ambiente(vista)
+	return _texto(vista.get("fase")) == "combate" and a.get("raios") == true \
+		and nivel_chuva(_texto(a.get("clima"))) > 0 and a.get("raioPendente") != true \
+		and int(a.get("raioPedidoRodada", 0)) != int(vista.get("rodada", 0))
+
+
+## A narração ao Mestre de um ROOM_EVENT do ambiente (como o Mestre o recebe, com soMestre): lista de
+## {frase, linha}. Vazia se o evento não é do ambiente. A frase é a do site com o nome verdadeiro; a linha leva
+## os números (origem, dano, combustível, faces) que só o Mestre vê.
+static func narrar_ambiente(msg: Dictionary, v: Dictionary) -> Array:
+	var r: Array = []
+	var d = msg.get("dados")
+	if not (d is Dictionary):
+		return r
+	var so = d.get("soMestre") if d.get("soMestre") is Dictionary else {}
+	match _texto(msg.get("tipo")):
+		"raio":
+			var alvo := _texto(d.get("alvoId"))
+			var cruz: Array = so.get("cruz") if so.get("cruz") is Array else []
+			var linha: String = Textos.REGISTO_RAIO % [str(Textos.ORIGEM_RAIO.get(_texto(so.get("origem")), _texto(so.get("origem")))),
+				_inteiro(d.get("x")), _inteiro(d.get("y")), _inteiro(so.get("combustivel")), cruz.size()]
+			var frase := Frases.raio_na_arena()
+			if alvo != "":
+				var f := figura(v, alvo)
+				frase = Frases.raio_atinge(_nome_curto(v, alvo), _texto(f.get("lado")) == "jogadora", _texto(d.get("desfecho")))
+				linha += Textos.REGISTO_RAIO_DANO % [_nome_curto(v, alvo), _inteiro(so.get("dano"))]
+			r.append({"frase": frase, "linha": linha})
+		"dano_ambiente":
+			if _texto(d.get("origem")) != "fogo":
+				return r  # o do raio já foi narrado com o `raio`
+			var quem := _texto(d.get("alvoId"))
+			var f := figura(v, quem)
+			var faces: Array = so.get("faces") if so.get("faces") is Array else []
+			r.append({
+				"frase": Frases.fogo_morde(_nome_curto(v, quem), _texto(f.get("lado")) == "jogadora", _texto(d.get("desfecho"))),
+				"linha": Textos.REGISTO_FOGO % [_nome_curto(v, quem), _inteiro(so.get("dano")),
+					_inteiro(faces[0]) if not faces.is_empty() else 0, Textos.REGISTO_FOGO_PEGOU if so.get("pegouFogo") == true else ""],
+			})
+		"fogo":
+			for a in (d.get("apagados") if d.get("apagados") is Array else []):
+				if a is Dictionary:
+					var fid := _texto(a.get("figuraId"))
+					var f := figura(v, fid)
+					var porque := _texto(a.get("porque"))
+					r.append({
+						"frase": Frases.fogo_apagado(_nome_curto(v, fid), _texto(f.get("lado")) == "jogadora", porque),
+						"linha": Textos.REGISTO_APAGADO % [_nome_curto(v, fid), str(Textos.PORQUE_APAGADO.get(porque, porque))],
+					})
+			_extintas(so, r)
+		"ambiente_mestre", "ambiente":
+			if so.get("raioCancelado") == true:
+				r.append({"frase": "", "linha": Textos.RAIO_CANCELADO})
+			_extintas(so, r)
+	return r
+
+
+static func _extintas(so: Dictionary, r: Array) -> void:
+	for e in (so.get("extintas") if so.get("extintas") is Array else []):
+		if e is Dictionary:
+			var porque := _texto(e.get("porque"))
+			r.append({"frase": "", "linha": Textos.REGISTO_EXTINTA % [_inteiro(e.get("x")), _inteiro(e.get("y")),
+				str(Textos.PORQUE_EXTINTA.get(porque, porque))]})
+
+
+# ---------------------------------------------------------------- «Exportar registo» (ordem 13, parte D)
+
+## O que o ficheiro do «Exportar registo» leva: o registo do servidor (MASTER_EXPORT.conteudo, INTACTO — é texto
+## assinado, e o «restaurar» precisa dos mesmos bytes) e a narração deste ecrã, da mais antiga para a mais nova.
+static func conteudo_export(conteudo, narracao: Array) -> Dictionary:
+	var n: Array[String] = []
+	for t in narracao:
+		n.append(str(t))
+	return {"formato": "registo-mestre/1", "marca": "MESTRE-ONLY", "registo": conteudo, "narracao": n}
 
 
 ## Cartões abertos que a vista conhece (para o contador da fila).
@@ -441,8 +571,19 @@ static func falha_por_golpe(msg: Dictionary, mortes: Dictionary, v: Dictionary) 
 
 ## A frase que o Mestre lê (a do site, com o nome dela).
 static func frase_caida_piora(v: Dictionary, r: Dictionary) -> String:
-	var molde: String = Textos.CAIDA_PIORA_OPORTUNIDADE if r.get("oportunidade") == true else Textos.CAIDA_PIORA
-	return molde % [_nome_curto(v, _texto(r.get("atacanteId"))), _nome_curto(v, _texto(r.get("alvoId")))]
+	var atac := _texto(r.get("atacanteId"))
+	if r.get("oportunidade") == true:
+		return Textos.CAIDA_PIORA_OPORTUNIDADE % [_nome_curto(v, atac), _nome_curto(v, _texto(r.get("alvoId")))]
+	return Textos.CAIDA_PIORA % [_nome_curto(v, atac), verbo_acerto(v, atac), _nome_curto(v, _texto(r.get("alvoId")))]
+
+
+## Ordem 13 (parte C; site jogo.js FRASES_IA → verbos.acerto): o verbo do golpe que vem na ficha do monstro (a vista
+## do Mestre traz `verbos`); sem ele, «acerta». Só texto: a mecânica não muda.
+static func verbo_acerto(v: Dictionary, id: String) -> String:
+	var verbos = figura(v, id).get("verbos")
+	if verbos is Dictionary and _texto(verbos.get("acerto")) != "":
+		return _texto(verbos["acerto"])
+	return Textos.VERBO_ACERTO_PADRAO
 
 
 ## A linha que fica no registo da narração, com os contadores (como o supRegistar do site).

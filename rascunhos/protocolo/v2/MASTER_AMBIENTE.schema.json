@@ -13,7 +13,9 @@
     "revision": { "$ref": "comum.schema.json#/$defs/revision" },
     "hora": { "type": ["string", "null"], "maxLength": 16, "description": "HH:MM. A Party vê só dia/noite." },
     "clima": { "type": ["string", "null"], "maxLength": 64 },
-    "futuro": { "type": ["string", "null"], "maxLength": 500 }
+    "futuro": { "type": ["string", "null"], "maxLength": 500 },
+    "raios": { "type": "boolean", "description": "Ordem 13 (dívida E1): liga/desliga os raios. Só caem com chuva (clima 'chuva' = pouca, 'tempestade' = forte). Só do Mestre: a Party não recebe evento." },
+    "raioAgora": { "const": true, "description": "Ordem 13: pede UM raio, que cai ao acaso no momento de ambiente do início da rodada seguinte (o «⚡ Raio agora» do site). Só em combate, com tempestade, um pendente e um pedido por rodada; senão ROOM_REJECT acao_invalida (o detalhe vai ao Mestre)." }
   },
   "additionalProperties": false
 }

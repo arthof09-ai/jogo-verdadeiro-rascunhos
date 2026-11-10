@@ -225,6 +225,55 @@
       "properties": { "efeito": { "$ref": "comum.schema.json#/$defs/ambienteEfeito" } },
       "additionalProperties": false
     },
+    "dados_raio": {
+      "type": "object",
+      "description": "Ordem 13 (dívida E1; site rfResolverImpacto): onde o raio caiu (a casa e a cruz das 4 vizinhas pegam fogo) e, se havia alguém na casa, quem e o desfecho: 'arde' (pegou fogo), 'caiu' (monstro morto) ou 'aMorrer' (a heroína caiu). O combustível, a origem (pedido/automático) e o dano ficam no soMestre.",
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "integer", "minimum": 0 },
+        "y": { "type": "integer", "minimum": 0 },
+        "alvoId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "desfecho": { "enum": ["arde", "caiu", "aMorrer"] }
+      },
+      "additionalProperties": false
+    },
+    "dados_dano_ambiente": {
+      "type": "object",
+      "description": "Ordem 13: dano do ambiente (raio 15 fixo PROVISÓRIO, fogo 1d8), sem RD (palavra do Mestre 09/11 14:04). A Party vê quem e de onde; o número só quem o sofreu.",
+      "required": ["alvoId", "origem", "desfecho"],
+      "properties": {
+        "alvoId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "origem": { "enum": ["raio", "fogo"] },
+        "desfecho": { "enum": ["arde", "caiu", "aMorrer"] }
+      },
+      "additionalProperties": false
+    },
+    "dados_dano_ambiente_propria": {
+      "type": "object",
+      "required": ["alvoId", "origem", "desfecho"],
+      "properties": {
+        "alvoId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "origem": { "enum": ["raio", "fogo"] },
+        "desfecho": { "enum": ["arde", "caiu", "aMorrer"] },
+        "valor": { "type": "number", "minimum": 0 },
+        "tipos": { "type": "array", "items": { "type": "string", "minLength": 1, "maxLength": 32 } }
+      },
+      "additionalProperties": false
+    },
+    "dados_fogo": {
+      "type": "object",
+      "description": "Ordem 13: o fogo que a mesa vê, sempre que muda (casas a arder, figuras a arder) e quem se apagou nesta mudança: 'chuva-casa' (a chuva apagou a casa e a pessoa), 'chuva' (fora do fogo, no início da vez), 'saiu' (saiu do fogo para a chuva).",
+      "required": ["casas", "aArder"],
+      "properties": {
+        "casas": { "type": "array", "items": { "$ref": "#/$defs/xy" } },
+        "aArder": { "type": "array", "items": { "$ref": "comum.schema.json#/$defs/idOpaco" } },
+        "apagados": { "type": "array", "items": {
+          "type": "object", "required": ["figuraId", "porque"],
+          "properties": { "figuraId": { "$ref": "comum.schema.json#/$defs/idOpaco" }, "porque": { "enum": ["chuva-casa", "chuva", "saiu"] } },
+          "additionalProperties": false } }
+      },
+      "additionalProperties": false
+    },
     "dados_revertido": {
       "type": "object",
       "description": "Nada de journalSeq nem ateSeq para a Party.",
@@ -261,7 +310,7 @@
         "seq": { "type": "integer", "minimum": 1 },
         "revision": { "$ref": "comum.schema.json#/$defs/revision" },
         "ts": { "$ref": "comum.schema.json#/$defs/ts" },
-        "tipo": { "enum": ["entrada", "colocacao", "turno", "movimento", "ataque", "dano", "cura", "estado", "desgraca", "teste_morte", "reacao", "consumivel", "ambiente", "revertido", "recomeco", "escala", "fim"] },
+        "tipo": { "enum": ["entrada", "colocacao", "turno", "movimento", "ataque", "dano", "cura", "estado", "desgraca", "teste_morte", "reacao", "consumivel", "ambiente", "revertido", "recomeco", "escala", "fim", "raio", "dano_ambiente", "fogo"] },
         "dados": { "type": "object" }
       },
       "additionalProperties": false
@@ -289,7 +338,10 @@
             { "properties": { "tipo": { "const": "revertido" }, "dados": { "$ref": "#/$defs/dados_revertido" } } },
             { "properties": { "tipo": { "const": "recomeco" }, "dados": { "$ref": "#/$defs/dados_recomeco" } } },
             { "properties": { "tipo": { "const": "escala" }, "dados": { "$ref": "#/$defs/dados_escala" } } },
-            { "properties": { "tipo": { "const": "fim" }, "dados": { "$ref": "#/$defs/dados_fim" } } }
+            { "properties": { "tipo": { "const": "fim" }, "dados": { "$ref": "#/$defs/dados_fim" } } },
+            { "properties": { "tipo": { "const": "raio" }, "dados": { "$ref": "#/$defs/dados_raio" } } },
+            { "properties": { "tipo": { "const": "dano_ambiente" }, "dados": { "$ref": "#/$defs/dados_dano_ambiente" } } },
+            { "properties": { "tipo": { "const": "fogo" }, "dados": { "$ref": "#/$defs/dados_fogo" } } }
           ]
         }
       ]
@@ -317,7 +369,10 @@
             { "properties": { "tipo": { "const": "revertido" }, "dados": { "$ref": "#/$defs/dados_revertido" } } },
             { "properties": { "tipo": { "const": "recomeco" }, "dados": { "$ref": "#/$defs/dados_recomeco" } } },
             { "properties": { "tipo": { "const": "escala" }, "dados": { "$ref": "#/$defs/dados_escala" } } },
-            { "properties": { "tipo": { "const": "fim" }, "dados": { "$ref": "#/$defs/dados_fim" } } }
+            { "properties": { "tipo": { "const": "fim" }, "dados": { "$ref": "#/$defs/dados_fim" } } },
+            { "properties": { "tipo": { "const": "raio" }, "dados": { "$ref": "#/$defs/dados_raio" } } },
+            { "properties": { "tipo": { "const": "dano_ambiente" }, "dados": { "$ref": "#/$defs/dados_dano_ambiente_propria" } } },
+            { "properties": { "tipo": { "const": "fogo" }, "dados": { "$ref": "#/$defs/dados_fogo" } } }
           ]
         }
       ]
@@ -336,7 +391,7 @@
         "ts": { "$ref": "comum.schema.json#/$defs/ts" },
         "tipo": {
           "enum": [
-            "entrada", "colocacao", "turno", "movimento", "ataque", "dano", "cura", "estado", "desgraca", "reacao", "consumivel", "ambiente", "revertido", "recomeco", "escala", "fim",
+            "entrada", "colocacao", "turno", "movimento", "ataque", "dano", "cura", "estado", "desgraca", "reacao", "consumivel", "ambiente", "revertido", "recomeco", "escala", "fim", "raio", "dano_ambiente", "fogo",
             "pausa", "retomada", "cartao", "cartao_fechado", "lobby", "modo", "ia", "recusa", "acao", "teste_morte", "erro_motor", "ambiente_mestre"
           ]
         },

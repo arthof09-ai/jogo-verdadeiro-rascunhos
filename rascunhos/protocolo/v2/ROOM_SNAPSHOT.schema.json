@@ -48,7 +48,13 @@
         "nome": { "type": ["string", "null"] },
         "nomePublico": { "type": "string" },
         "alturaM": { "type": ["number", "null"], "description": "Plano B (08/11): altura do marcador em metros, da ficha (visual.alturaM). null = o cliente usa 2,25 m (humano 1,80 × 1,25)." },
-        "marcador": { "enum": ["marcador", "marcador-lobo", null], "description": "Plano B (08/11): a forma do marcador do site (cena.js addMarker), da ficha (visual.marcador). null = 'marcador'." }
+        "marcador": { "enum": ["marcador", "marcador-lobo", null], "description": "Plano B (08/11): a forma do marcador do site (cena.js addMarker), da ficha (visual.marcador). null = 'marcador'." },
+        "verbos": {
+          "type": ["object", "null"],
+          "description": "Ordem 13 (parte C; site jogo.js FRASES_IA): os verbos do golpe do monstro, da ficha, para a narração do Mestre. null = «acerta».",
+          "properties": { "acerto": { "type": "string", "minLength": 1 }, "falha": { "type": "string", "minLength": 1 } },
+          "additionalProperties": false
+        }
       }
     },
     "mestre": {
@@ -59,7 +65,20 @@
         "figuras": { "type": "array", "items": { "$ref": "#/$defs/figuraMestre" } },
         "lobby": { "type": ["object", "null"] },
         "vez": { "type": ["object", "null"] },
-        "ambiente": { "type": "object" },
+        "ambiente": { "type": "object", "description": "O painel: hora, clima, futuro e (ordem 13) raios, raioPendente, raioPedidoRodada." },
+        "fogo": {
+          "type": "object",
+          "description": "Ordem 13: o fogo com o combustível de cada casa (rodadas que ainda arde). Só o Mestre.",
+          "required": ["casas", "aArder"],
+          "properties": {
+            "casas": { "type": "array", "items": {
+              "type": "object", "required": ["x", "y", "combustivel"],
+              "properties": { "x": { "type": "integer", "minimum": 0 }, "y": { "type": "integer", "minimum": 0 }, "combustivel": { "type": "integer", "minimum": 1 } },
+              "additionalProperties": false } },
+            "aArder": { "type": "array", "items": { "$ref": "comum.schema.json#/$defs/idOpaco" } }
+          },
+          "additionalProperties": false
+        },
         "cartoes": { "type": "array", "items": { "type": "object" } },
         "pausa": { "type": ["object", "null"] },
         "marchaLivreRodada": { "type": ["integer", "null"], "description": "L6: a rodada em que o Mestre deu «Continuar a rodada» às marchas puras (null: nenhuma)." }
@@ -82,7 +101,8 @@
         "iniciativa": { "type": "array", "items": { "$ref": "comum.schema.json#/$defs/idOpaco" } },
         "vezId": { "$ref": "comum.schema.json#/$defs/idOuNull" },
         "rodada": { "type": "integer", "minimum": 0 },
-        "ambiente": { "$ref": "comum.schema.json#/$defs/ambienteEfeito" }
+        "ambiente": { "$ref": "comum.schema.json#/$defs/ambienteEfeito" },
+        "fogo": { "$ref": "comum.schema.json#/$defs/fogoPublico" }
       },
       "additionalProperties": false
     },
@@ -103,6 +123,7 @@
         "vezId": { "$ref": "comum.schema.json#/$defs/idOuNull" },
         "rodada": { "type": "integer", "minimum": 0 },
         "ambiente": { "$ref": "comum.schema.json#/$defs/ambienteEfeito" },
+        "fogo": { "$ref": "comum.schema.json#/$defs/fogoPublico" },
         "propria": { "$ref": "#/$defs/propria" }
       },
       "additionalProperties": false
@@ -124,6 +145,7 @@
         "vezId": { "$ref": "comum.schema.json#/$defs/idOuNull" },
         "rodada": { "type": "integer", "minimum": 0 },
         "ambiente": { "$ref": "comum.schema.json#/$defs/ambienteEfeito" },
+        "fogo": { "$ref": "comum.schema.json#/$defs/fogoPublico" },
         "mestre": { "$ref": "#/$defs/mestre" }
       },
       "additionalProperties": false

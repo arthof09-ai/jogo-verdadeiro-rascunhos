@@ -96,3 +96,59 @@ static func fim_terminada() -> String:
 
 static func fim_morte(nome: String) -> String:
 	return "A %s caiu — fim desta batalha.%s" % [nome, CLAUSULA_RECOMECAR if HA_BOTAO_RECOMECAR else ""]
+
+
+# ---------------------------------------------------------------- raio e fogo (ordem 13; site jogo.js «RAIO E FOGO»)
+# As frases do site (rfResolverImpacto, ambTickInicioTurno, ambienteMomentoRodada, moveend). O servidor diz o que
+# aconteceu (eventos `raio`, `dano_ambiente`, `fogo`); aqui só se escolhe a frase. Sem números.
+
+## Primeira letra em maiúscula (o site escreve «A Ong …» no começo da frase).
+static func _maiuscula(t: String) -> String:
+	return t.substr(0, 1).to_upper() + t.substr(1) if t != "" else t
+
+
+## Do/da: «o fogo da Ong» (jogadora) / «o fogo de Lobo» (criatura).
+static func _de(nome: String, e_jogadora: bool) -> String:
+	return ("da " + nome) if e_jogadora else ("de " + nome)
+
+
+## O raio que não atinge ninguém.
+static func raio_na_arena() -> String:
+	return "Um raio cai na arena — uma cruz de casas fica a arder."
+
+
+## O raio que atinge alguém. `desfecho`: "arde", "caiu" (monstro morto), "aMorrer" (a heroína caiu: a frase da queda).
+static func raio_atinge(nome: String, e_jogadora: bool, desfecho: String) -> String:
+	var n := nome_em_frase(nome, e_jogadora)
+	match desfecho:
+		"caiu":
+			return "Um raio atinge %s em cheio — e ele cai." % n
+		"aMorrer":
+			return caiu(nome)
+		_:
+			return ("Um raio atinge %s em cheio — ela fica a arder." if e_jogadora else "Um raio atinge %s em cheio — fica a arder.") % n
+
+
+## O tick do fogo no início da vez.
+static func fogo_morde(nome: String, e_jogadora: bool, desfecho: String) -> String:
+	match desfecho:
+		"caiu":
+			return "%s cai, a arder." % _maiuscula(nome_em_frase(nome, e_jogadora))
+		"aMorrer":
+			return caiu(nome)
+		_:
+			return "%s está a arder — o fogo morde." % _maiuscula(nome_em_frase(nome, e_jogadora))
+
+
+## Quem se apagou. `porque`: "chuva-casa" (a chuva apagou a casa), "chuva" (fora do fogo, no início da vez),
+## "saiu" (saiu da casa em chamas para a chuva).
+static func fogo_apagado(nome: String, e_jogadora: bool, porque: String) -> String:
+	match porque:
+		"chuva-casa":
+			return "A chuva apaga a casa — e o fogo %s." % _de(nome, e_jogadora)
+		"saiu":
+			if e_jogadora:
+				return "%s sai da casa em chamas — a chuva apaga o fogo dela." % _maiuscula(nome_em_frase(nome, true))
+			return "%s sai da casa em chamas — a chuva apaga o fogo." % nome
+		_:
+			return "A chuva apaga o fogo %s." % _de(nome, e_jogadora)

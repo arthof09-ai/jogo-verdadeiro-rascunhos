@@ -35,6 +35,7 @@ func _initialize() -> void:
 	_teste_uma_tabela_de_perfis()
 	_teste_frases_do_site()
 	_teste_frases_no_estado()
+	_teste_ambiente_na_party()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -362,3 +363,50 @@ func _teste_frases_no_estado() -> void:
 	_ok(frases2.size() > 0 and frases2.back() == Frases.estabilizou("Ong"), "estabilizou: a frase da regra Q4")
 	_ok(est2.fase == "combate", "estabilizou: a batalha continua")
 	est2.free()
+
+
+## Ordem 13 (dívida E1): o raio, o fogo e o dano do ambiente na Party — as frases do site, o fogo guardado e o
+## número só a quem o sofreu (o servidor já não o manda a mais ninguém; aqui confere-se que o cliente o mostra).
+func _teste_ambiente_na_party() -> void:
+	print("Raio e fogo na Party (ordem 13):")
+	var est = EstadoScript.new()
+	var frases: Array = []
+	var danos: Array = []
+	est.frase_batalha.connect(func(t): frases.append(t))
+	est.dano_visto.connect(func(a, v, t, eu): danos.append([a, v, t, eu]))
+	est.aplicar_snapshot({
+		"v": 2, "type": "ROOM_SNAPSHOT", "roomId": "sala-teste", "seq": 1, "revision": 1, "fase": "combate",
+		"mapa": {"largura": 20, "altura": 20}, "iniciativa": ["fA", "fB"], "vezId": "fA", "rodada": 2, "ambiente": {},
+		"fogo": {"casas": [{"x": 5, "y": 5}], "aArder": []},
+		"figuras": [
+			{"id": "fA", "nomePublico": "Ong", "lado": "jogadora", "x": 1, "y": 1},
+			{"id": "fB", "nomePublico": "Lobo", "lado": "criatura", "x": 2, "y": 1},
+		],
+		"propria": {"figuraId": "fA", "estadoMorte": null},
+	})
+	_ok(est.fogo.get("casas", []).size() == 1, "o snapshot traz as casas a arder")
+	est.receber_evento(_evento(2, -1, "raio", {"x": 1, "y": 1, "alvoId": "fA", "desfecho": "arde"}))
+	_ok(frases.back() == "Um raio atinge a Ong em cheio — ela fica a arder.", "raio nela (frase do site)")
+	est.receber_evento(_evento(3, -1, "dano_ambiente", {"alvoId": "fA", "origem": "raio", "desfecho": "arde", "valor": 15, "tipos": ["eletrico"]}))
+	_ok(danos.size() == 1 and danos[0][1] == 15 and danos[0][3] == true, "o número do raio sai como o de qualquer dano, nela")
+	_ok(frases.size() == 1, "o dano do raio não repete a frase")
+	est.receber_evento(_evento(4, -1, "fogo", {"casas": [{"x": 1, "y": 1}, {"x": 1, "y": 2}], "aArder": ["fA"]}))
+	_ok(est.fogo["casas"].size() == 2 and est.fogo["aArder"] == ["fA"], "o evento `fogo` substitui o fogo inteiro")
+	est.receber_evento(_evento(5, -1, "dano_ambiente", {"alvoId": "fB", "origem": "fogo", "desfecho": "arde"}))
+	_ok(frases.back() == "Lobo está a arder — o fogo morde." and danos.size() == 1, "tick no lobo: a frase, sem número (não é dela)")
+	est.receber_evento(_evento(6, -1, "dano_ambiente", {"alvoId": "fA", "origem": "fogo", "desfecho": "arde", "valor": 5, "tipos": ["fogo"]}))
+	_ok(frases.back() == "A Ong está a arder — o fogo morde." and danos.back()[1] == 5, "tick nela: a frase e o número dela")
+	est.receber_evento(_evento(7, -1, "fogo", {"casas": [], "aArder": [], "apagados": [{"figuraId": "fA", "porque": "saiu"}]}))
+	_ok(frases.back() == "A Ong sai da casa em chamas — a chuva apaga o fogo dela." and est.fogo["casas"].is_empty(), "sair para a chuva")
+	est.receber_evento(_evento(8, -1, "fogo", {"casas": [], "aArder": [], "apagados": [{"figuraId": "fB", "porque": "chuva-casa"}]}))
+	_ok(frases.back() == "A chuva apaga a casa — e o fogo de Lobo.", "a chuva apaga a casa do lobo")
+	est.receber_evento(_evento(9, -1, "raio", {"x": 9, "y": 9}))
+	_ok(frases.back() == "Um raio cai na arena — uma cruz de casas fica a arder.", "raio sem ninguém")
+	est.receber_evento(_evento(10, -1, "raio", {"x": 2, "y": 1, "alvoId": "fB", "desfecho": "caiu"}))
+	_ok(frases.back() == "Um raio atinge Lobo em cheio — e ele cai.", "raio que mata o lobo")
+	var n := frases.size()
+	est.receber_evento(_evento(11, -1, "raio", {"x": 1, "y": 1, "alvoId": "fA", "desfecho": "aMorrer"}))
+	_ok(frases.size() == n, "raio que a deita: a frase da queda vem pelo `estado` dela, não aqui")
+	_ok(Frases.fogo_apagado("Ong", true, "chuva") == "A chuva apaga o fogo da Ong.", "a chuva apaga quem arde fora do fogo")
+	_ok(Frases.fogo_morde("Lobo", false, "caiu") == "Lobo cai, a arder.", "o fogo deita o monstro")
+	est.free()

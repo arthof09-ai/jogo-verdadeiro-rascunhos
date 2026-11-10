@@ -330,6 +330,9 @@ func _correr() -> void:
 	_ok(c._aba_mesa.a_colocar == "", "«Parar de colocar»")
 
 	await _caida_atingida(c, fx["mestre"]["vista"])
+	_verbo_padrao(fx["mestre"]["vista"])
+	await _ambiente(c, fx["mestre"]["vista"])
+	_exportar(c)
 	await _camara_livre(c)
 
 	var todos: Array = []
@@ -502,8 +505,10 @@ func _caida_atingida(c, vista_base: Dictionary) -> void:
 	var golpe := _ataque(900, orc, her, {"fase": "aMorrer", "sucessos": 1, "falhas": 1})
 	c._ao_evento(golpe)
 	await _quadros(1)
-	var frase := Textos.CAIDA_PIORA % [nome_orc, nome_her]
+	# Ordem 13 (parte C): o verbo é o da ficha do orc (fixture: «desferiu o machado», o do site para o Orc).
+	var frase := Textos.CAIDA_PIORA % [nome_orc, "desferiu o machado", nome_her]
 	_ok(c.narracao.size() == 1, "narra uma vez a caída atingida")
+	_ok(frase.begins_with(nome_orc + " desferiu o machado a "), "o verbo do golpe vem da ficha do monstro: «%s»" % frase)
 	_ok(c.alertas.size() == n_alertas + 1 and c.alertas.back() == frase, "a frase do site chega ao Mestre: «%s»" % frase)
 	_ok(frase.ends_with("piora visivelmente."), "o núcleo do site: «piora visivelmente.»")
 	var reg: Array[String] = c._aba_registo.narracoes_mostradas()
@@ -545,6 +550,152 @@ func _caida_atingida(c, vista_base: Dictionary) -> void:
 	_ok(c.narracao.size() == 2, "monstro atingido ou ataque sem soMestre: silêncio")
 	c.aplicar_vista(vista_antes)
 	await _quadros(1)
+
+
+## Ordem 13 (parte C): sem `verbos` na ficha, a frase diz «acerta» (o JV de antes); o verbo nunca muda mecânica.
+func _verbo_padrao(vista_base: Dictionary) -> void:
+	print("== verbo do golpe por monstro (ordem 13, parte C) ==")
+	var Modelo = load("res://cenas/mestre/modelo_mestre.gd")
+	var v: Dictionary = vista_base.duplicate(true)
+	var her := ""
+	var orc := ""
+	var lobo := ""
+	for f in v["mestre"]["figuras"]:
+		if her == "" and f.get("lado") == "jogadora":
+			her = f["id"]
+		elif f.get("fichaId") == "orc-teste":
+			orc = f["id"]
+		elif f.get("fichaId") == "lobo-teste":
+			lobo = f["id"]
+	_ok(Modelo.verbo_acerto(v, orc) == "desferiu o machado" and Modelo.verbo_acerto(v, lobo) == "deu uma patada",
+		"cada monstro com o seu verbo (orc: «desferiu o machado»; lobo: «deu uma patada»)")
+	var r := {"alvoId": her, "atacanteId": lobo, "oportunidade": false}
+	_ok(Modelo.frase_caida_piora(v, r).contains(" deu uma patada a "), "a frase da caída usa o verbo do lobo: «%s»" % Modelo.frase_caida_piora(v, r))
+	for f in v["mestre"]["figuras"]:
+		if f["id"] == lobo:
+			f["verbos"] = null
+	_ok(Modelo.verbo_acerto(v, lobo) == Textos.VERBO_ACERTO_PADRAO and Modelo.frase_caida_piora(v, r).contains(" acerta a "),
+		"sem verbos na ficha: «acerta»")
+	r["oportunidade"] = true
+	_ok(Modelo.frase_caida_piora(v, r).contains("golpeia a ") and Modelo.frase_caida_piora(v, r).contains("de oportunidade"),
+		"o golpe de oportunidade guarda a frase própria do site")
+
+
+## Ordem 13 (parte B, dívida E1): o painel Ambiente (só o Mestre), o fogo na arena e a narração do raio e do fogo.
+func _ambiente(c, vista_base: Dictionary) -> void:
+	print("== ambiente: raio e fogo (ordem 13) ==")
+	var Modelo = load("res://cenas/mestre/modelo_mestre.gd")
+	var v: Dictionary = vista_base.duplicate(true)
+	var her := ""
+	var orc := ""
+	var nome_her := ""
+	var nome_orc := ""
+	for f in v["mestre"]["figuras"]:
+		if her == "" and f.get("lado") == "jogadora":
+			her = f["id"]
+			nome_her = str(f.get("nome"))
+		elif f.get("fichaId") == "orc-teste":
+			orc = f["id"]
+			nome_orc = str(f.get("nome"))
+	v["fase"] = "combate"
+	v["rodada"] = 2
+	v["mestre"]["ambiente"] = {"hora": "03:33", "clima": "tempestade", "futuro": null, "raios": true, "raioPendente": false, "raioPedidoRodada": 1}
+	v["mestre"]["fogo"] = {"casas": [{"x": 2, "y": 2, "combustivel": 4}, {"x": 2, "y": 3, "combustivel": 1}], "aArder": [her]}
+	c.aplicar_vista(v)
+	await _quadros(1)
+	var linhas: Array = Modelo.linhas_ambiente(v)
+	var juntas := "\n".join(PackedStringArray(linhas))
+	_ok(juntas.contains(Textos.CHUVA % "forte") and juntas.contains(Textos.RAIOS % Textos.RAIOS_LIGADOS),
+		"o painel diz a chuva e os raios %s" % [linhas])
+	_ok(juntas.contains("(2,2) mais 4") and juntas.contains("(2,3) mais 1"), "o combustível de cada casa, só no ecrã do Mestre")
+	_ok(juntas.contains(Textos.A_ARDER % nome_her), "quem arde, com o nome verdadeiro")
+	_ok(c._arena.casas_a_arder().size() == 2, "a arena do Mestre pinta as 2 casas a arder")
+	_ok(not c._raio_agora.disabled and c._raios.text == Textos.DESLIGAR_RAIOS, "«⚡ Raio agora» aceso; o botão dos raios diz «Desligar»")
+
+	c.pedir_raio()
+	var u := _ultimo()
+	_ok(u.get("type") == "MASTER_AMBIENTE" and u.get("raioAgora") == true, "«⚡ Raio agora» → MASTER_AMBIENTE {raioAgora: true}")
+	_ok(c.alertas.back() == Textos.RAIO_PEDIDO, "a frase do site ao pedir: «%s»" % Textos.RAIO_PEDIDO)
+	_responder(c, u)
+	c.alternar_raios()
+	u = _ultimo()
+	_ok(u.get("type") == "MASTER_AMBIENTE" and u.get("raios") == false, "«Desligar os raios» → MASTER_AMBIENTE {raios: false}")
+	_responder(c, u)
+	c.mudar_clima("chuva")
+	u = _ultimo()
+	_ok(u.get("type") == "MASTER_AMBIENTE" and u.get("clima") == "chuva", "clima → MASTER_AMBIENTE {clima}")
+	_responder(c, u)
+	c.mudar_hora(1)
+	u = _ultimo()
+	_ok(u.get("hora") == "04:33", "+1 h: 03:33 → 04:33")
+	_responder(c, u)
+	_ok(Modelo.hora_mais({"mestre": {"ambiente": {"hora": "23:10"}}}, 1).get("hora") == "00:10", "a hora dá a volta às 24")
+
+	# Com o raio já pedido (ou nesta rodada), o botão apaga-se e nada sai.
+	var antes := _comandos.size()
+	v["mestre"]["ambiente"]["raioPendente"] = true
+	c.aplicar_vista(v)
+	c.pedir_raio()
+	_ok(_comandos.size() == antes and c._raio_agora.disabled, "com um raio à espera, «⚡ Raio agora» apagado e nada sai")
+	_ok("\n".join(PackedStringArray(Modelo.linhas_ambiente(v))).contains(Textos.RAIO_PENDENTE), "o painel diz que há um raio à espera")
+	v["mestre"]["ambiente"]["raioPendente"] = false
+	v["mestre"]["ambiente"]["clima"] = "limpo"
+	_ok(not Modelo.raio_agora_possivel(v), "sem chuva não há «⚡ Raio agora»")
+
+	# Narração: o que o servidor manda ao Mestre (com soMestre).
+	var n0: int = c.narracao.size()
+	var raio := {"type": "ROOM_EVENT", "seq": 950, "tipo": "raio", "dados": {"x": 2, "y": 2, "alvoId": her, "desfecho": "arde",
+		"soMestre": {"origem": "pedido", "combustivel": 4, "cruz": [{"x": 2, "y": 1}, {"x": 2, "y": 3}, {"x": 1, "y": 2}, {"x": 3, "y": 2}],
+			"tipo": "eletrico", "bruto": 15, "rd": 0, "dano": 15}, "journalSeq": 950}}
+	c._ao_evento(raio)
+	var frase_raio := "Um raio atinge a %s em cheio — ela fica a arder." % nome_her
+	_ok(c.narracao.size() == n0 + 1 and c.alertas.back() == frase_raio, "o raio narrado com a frase do site: «%s»" % frase_raio)
+	_ok(c.narracao.back().contains("pedido pelo Mestre") and c.narracao.back().contains("leva 15 (raio, fixo, sem RD)")
+		and c.narracao.back().contains("arde por 4 rodadas") and c.narracao.back().contains("acende 4 vizinhas"),
+		"a linha do registo leva a origem, o dano sem RD e o combustível: %s" % c.narracao.back())
+	c._ao_evento(raio)
+	_ok(c.narracao.size() == n0 + 1, "o mesmo evento repetido não narra outra vez")
+	c._ao_evento({"type": "ROOM_EVENT", "seq": 951, "tipo": "dano_ambiente", "dados": {"alvoId": her, "origem": "raio", "desfecho": "arde",
+		"valor": 15, "soMestre": {"dano": 15}, "journalSeq": 951}})
+	_ok(c.narracao.size() == n0 + 1, "o dano do raio não se narra duas vezes (já veio com o raio)")
+	c._ao_evento({"type": "ROOM_EVENT", "seq": 952, "tipo": "dano_ambiente", "dados": {"alvoId": orc, "origem": "fogo", "desfecho": "arde",
+		"valor": 6, "soMestre": {"faces": [6], "dano": 6, "pegouFogo": true}, "journalSeq": 952}})
+	_ok(c.alertas.back() == "%s está a arder — o fogo morde." % nome_orc, "o tick: «%s»" % c.alertas.back())
+	_ok(c.narracao.back().contains("leva 6 (1d8 = 6, sem RD)") and c.narracao.back().contains("pegou fogo"), "a linha do tick com o dado")
+	c._ao_evento({"type": "ROOM_EVENT", "seq": 953, "tipo": "fogo", "dados": {"casas": [], "aArder": [],
+		"apagados": [{"figuraId": her, "porque": "saiu"}],
+		"soMestre": {"fogo": {"casas": [], "aArder": []}, "extintas": [{"x": 2, "y": 3, "porque": "combustivel"}]}, "journalSeq": 953}})
+	var frase_saiu := "A %s sai da casa em chamas — a chuva apaga o fogo dela." % nome_her
+	_ok(c.alertas.back() == frase_saiu, "sair para a chuva: «%s»" % frase_saiu)
+	_ok(c.narracao.back() == Textos.REGISTO_EXTINTA % [2, 3, "acabou o combustível"], "a casa que se apaga entra só no registo")
+	c._ao_evento({"type": "ROOM_EVENT", "seq": 954, "tipo": "raio", "dados": {"x": 9, "y": 9,
+		"soMestre": {"origem": "automatico", "combustivel": 2, "cruz": []}, "journalSeq": 954}})
+	_ok(c.alertas.back() == "Um raio cai na arena — uma cruz de casas fica a arder.", "o raio que não atinge ninguém")
+	var reg: Array[String] = c._aba_registo.narracoes_mostradas()
+	_ok(reg.size() >= 5 and reg[0].contains("da tempestade"), "tudo fica na narração do registo (o mais novo no topo)")
+	c.aplicar_vista(vista_base)
+	await _quadros(1)
+
+
+## Ordem 13 (parte D): o «Exportar registo» leva o registo do servidor INTACTO e a secção de narração.
+func _exportar(c) -> void:
+	print("== «Exportar registo» com a narração (ordem 13, parte D) ==")
+	var Modelo = load("res://cenas/mestre/modelo_mestre.gd")
+	var registo := "{\"formato\":\"journal/1\",\"marca\":\"MESTRE-ONLY\"}\nsha256:abc\n"
+	var x: Dictionary = Modelo.conteudo_export(registo, c.narracao)
+	_ok(x.get("registo") == registo and x.get("marca") == "MESTRE-ONLY", "o registo do servidor vai intacto (é texto assinado)")
+	_ok(x.get("narracao") == c.narracao and c.narracao.size() > 0, "a narração vai inteira (%d entradas)" % c.narracao.size())
+	var caminho: String = c._guardar_export({"conteudo": registo})
+	var lido = JSON.parse_string(FileAccess.get_file_as_string(caminho))
+	_ok(lido is Dictionary and lido.get("registo") == registo, "o ficheiro tem o registo, byte a byte")
+	var narr: Array = lido.get("narracao", []) if lido is Dictionary else []
+	var tem_caida := false
+	var tem_raio := false
+	for t in narr:
+		tem_caida = tem_caida or str(t).contains("piora visivelmente")
+		tem_raio = tem_raio or str(t).contains("Um raio atinge")
+	_ok(narr.size() == c.narracao.size() and tem_caida and tem_raio, "o ficheiro leva a narração: a caída (ordem 12) e o raio (ordem 13)")
+	DirAccess.remove_absolute(caminho)
 
 
 func _textos(no: Node, saida: Array) -> void:

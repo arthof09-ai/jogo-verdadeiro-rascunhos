@@ -14,6 +14,7 @@ import { jsonCanonico, clonarJson, hex8, iguaisTempoConstante } from './util.js'
 import { sha256Hex } from './sha256.js';
 import { criarJournal, restaurarJournal } from './journal.js';
 import { projetarEvento, projetarSnapshot, efeitoAmbiente, nomePublicoDe, visivelDe } from './projecao.js';
+import * as Amb from './ambiente.js';
 
 export const PROTOCOLO = 2;
 /** A escala com que a sala nasce (Q5 do site, jogo.js: CASA_M = 1,5 m). Ordem 8 do CM-000009 (item 8, desempate do
@@ -126,7 +127,8 @@ const TIPOS_MESTRE = Object.freeze([
 ]);
 const RE_ID = /^[A-Za-z0-9_-]{1,64}$/;
 // `cartoes` entra no checkpoint para o «voltar» repor os cartões do instante (rolagem por resolver incluída).
-const CHAVES_MUNDO = Object.freeze(['fase', 'mapa', 'lobby', 'figuras', 'ordem', 'vezIdx', 'rodada', 'vez', 'ambiente', 'desfecho', 'cartoes', 'marchaLivre']);
+// Ordem 13: `fogo` (casas a arder, quem arde) também volta com o «voltar».
+const CHAVES_MUNDO = Object.freeze(['fase', 'mapa', 'lobby', 'figuras', 'ordem', 'vezIdx', 'rodada', 'vez', 'ambiente', 'desfecho', 'cartoes', 'marchaLivre', 'fogo']);
 /**
  * L6 (D4 do Plano A, desenho JV3.1; I0004 08/11): «marcha pura» = proposta da IA sem efeito de regra sobre ninguém
  * (andar ou encerrar a vez). Com o «Continuar a rodada» do Mestre (MASTER_APPROVE {rodada:true}), as marchas puras
@@ -215,11 +217,13 @@ function acaoNasOpcoes(ops, acao) {
  * @param {() => number} p.agora  relógio do servidor, em ms
  * @param {(s:string|Uint8Array) => string} [p.hash]  SHA-256 hex (por omissão, o JS puro)
  * @param {Object} p.config  {roomId?, mapa?:{largura,altura}, lugares:[...], iniciativa:{fichaId:n}, modoPadrao?, reacaoDefender?, depurar?}
+ * @param {(faces:number) => number} [p.dadoAmbiente]  dado do raio e do fogo (ordem 13): 1..faces. Por omissão, sai do rng.
  * @param {string} [p.restaurarDe]  exportação do journal (restaura em vez de criar)
  * @param {string} [p.chaveJournal]  chave HMAC da exportação
  */
 export function criarSala({
   motores, fichas, rng, rngSemente, agora, hash = sha256Hex, config = {}, restaurarDe = null, chaveJournal = null,
+  dadoAmbiente = null,
 } = {}) {
   // ------------------------------------------------------------------ verificações de entrada
   if (!motores || !motores.Vlab || typeof motores.Vlab.resolverAtaque !== 'function') {
@@ -310,14 +314,24 @@ export function criarSala({
   function novoToken() {
     return hex8(u32()) + hex8(u32()) + hex8(u32()) + hex8(u32()); // 128 bits
   }
-  function d6() {
-    const limite = Math.floor(0x100000000 / 6) * 6; // rejeição: sem viés de módulo
-    // P3: a rejeição acontece com probabilidade 4/2^32; 1000 seguidas = rng avariado.
+  function dN(faces) {
+    const limite = Math.floor(0x100000000 / faces) * faces; // rejeição: sem viés de módulo
+    // P3: a rejeição é rara (< faces/2^32); 1000 seguidas = rng avariado.
     for (let i = 0; i < MAX_TENTATIVAS_LACO; i++) {
       const x = u32();
-      if (x < limite) return 1 + (x % 6);
+      if (x < limite) return 1 + (x % faces);
     }
-    throw new Error('d6: ' + MAX_TENTATIVAS_LACO + ' rejeições seguidas (rng avariado)');
+    throw new Error('d' + faces + ': ' + MAX_TENTATIVAS_LACO + ' rejeições seguidas (rng avariado)');
+  }
+  function d6() {
+    return dN(6);
+  }
+  /** Ordem 13: o dado do ambiente (raio e fogo). Um dado injetado que saia de 1..faces é avaria: lança. */
+  function dadoAmb(faces) {
+    if (typeof dadoAmbiente !== 'function') return dN(faces);
+    const v = dadoAmbiente(faces);
+    if (!Number.isInteger(v) || v < 1 || v > faces) throw new Error('dadoAmbiente: ' + v + ' fora de 1..' + faces);
+    return v;
   }
   function isoAgora() {
     return new Date(agora()).toISOString();
@@ -362,7 +376,10 @@ export function criarSala({
       formato: 'sala/1', roomId, fase: 'lobby', pausa: null,
       mapa: { largura, altura, casaM: CASA_M },
       lobby: null, figuras, ordem: [], vezIdx: -1, rodada: 0, vez: null,
-      ambiente: { hora: null, clima: null, futuro: null },
+      // Ordem 13: `raios` (o interruptor do painel), `raioPendente` («Raio agora» à espera do momento de ambiente) e
+      // `raioPedidoRodada` (um pedido por rodada, como o site). Tudo só do Mestre.
+      ambiente: { hora: null, clima: null, futuro: null, raios: false, raioPendente: false, raioPedidoRodada: 0 },
+      fogo: Amb.fogoVazio(),
       cartoes: [], contadores: { cartao: 0, ia: 0 }, lugares, motores: { ...motoresInfo }, desfecho: null,
     };
     atualizarRevisoes(estado);
@@ -867,6 +884,7 @@ export function criarSala({
         somar(e.danoCausado, ev.dados?.autorId, ev.dados?.valor ?? 0);
         somar(e.danoSofrido, ev.dados?.alvoId, ev.dados?.valor ?? 0);
       }
+      if (ev.tipo === 'dano_ambiente') somar(e.danoSofrido, ev.dados?.alvoId, ev.dados?.valor ?? 0); // ordem 13
       if (ev.tipo === 'cartao_fechado') somar(e.cartoes, ev.dados?.decisao, 1);
     }
     return e;
@@ -932,8 +950,103 @@ export function criarSala({
     tx.emitir('estado', dados, ehJog ? null : { vidaActual: f.vidaActual, estadoMorte: f.estadoMorte });
   }
 
+  // =================================================================== raio e fogo (ordem 13, dívida E1)
+  // As regras vivem em ambiente.js (sem estado próprio, com o dado injetado); aqui só se emitem os eventos.
+  //  - `raio` {x, y, alvoId?, desfecho?}: onde caiu e quem atingiu (a Party vê-o, como no site);
+  //  - `dano_ambiente` {alvoId, origem 'raio'|'fogo', desfecho} + `valor` só a quem o sofreu;
+  //  - `fogo` {casas, aArder, apagados?}: o fogo que a Party vê, sempre que muda;
+  //  - o combustível, os dados, o raio pendente e o cancelado ficam no soMestre (e no `ambiente_mestre`).
+  function antesDe(f) {
+    return { vis: visivelDe(f), vida: f.vidaActual };
+  }
+  function desfechoPublico(d) {
+    return d === 'caiu' || d === 'aMorrer' ? d : 'arde';
+  }
+  /**
+   * Emite os registos do ambiente pela ordem em que aconteceram. `pubAntes` = jsonCanonico do fogo público antes.
+   * Devolve true se alguém morreu ou caiu a morrer.
+   */
+  function emitirAmbiente(tx, regs, pubAntes) {
+    const m = tx.estado;
+    if (!regs.length) return false;
+    let mudouVida = false;
+    const apagados = [];
+    const extintas = [];
+    for (const r of regs) {
+      if (r.tipo === 'raio') {
+        const dados = { x: r.x, y: r.y };
+        if (r.alvoId) Object.assign(dados, { alvoId: r.alvoId, desfecho: desfechoPublico(r.desfecho) });
+        tx.emitir('raio', dados, {
+          origem: r.origem, combustivel: r.combustivel, cruz: r.cruz,
+          ...(r.alvoId ? { tipo: Amb.TIPO_RAIO, bruto: Amb.DANO_RAIO, rd: 0, dano: r.aplicado } : {}),
+        });
+        if (r.alvoId) {
+          const f = m.figuras[r.alvoId];
+          tx.emitir('dano_ambiente', {
+            alvoId: r.alvoId, origem: 'raio', desfecho: desfechoPublico(r.desfecho), valor: r.aplicado, tipos: [Amb.TIPO_RAIO],
+          }, { tipo: Amb.TIPO_RAIO, bruto: Amb.DANO_RAIO, rd: 0, dano: r.aplicado, vidaDepois: f.vidaActual });
+          emitirEstado(tx, f, false, r.visAntes, r.vidaAntes);
+          mudouVida = mudouVida || !!r.desfecho;
+        }
+      } else if (r.tipo === 'tick') {
+        const f = m.figuras[r.alvoId];
+        tx.emitir('dano_ambiente', {
+          alvoId: r.alvoId, origem: 'fogo', desfecho: desfechoPublico(r.desfecho), valor: r.aplicado, tipos: [Amb.TIPO_FOGO],
+        }, { tipo: Amb.TIPO_FOGO, expressao: '1d' + Amb.FACES_FOGO, faces: r.faces, bruto: r.faces[0], rd: 0, dano: r.aplicado, pegouFogo: r.pegouFogo, vidaDepois: f.vidaActual });
+        emitirEstado(tx, f, false, r.visAntes, r.vidaAntes);
+        mudouVida = mudouVida || !!r.desfecho;
+      } else if (r.tipo === 'extincao') {
+        extintas.push({ x: r.x, y: r.y, porque: r.porque });
+        if (r.apagouId) apagados.push({ figuraId: r.apagouId, porque: 'chuva-casa' });
+      } else if (r.tipo === 'apagado') {
+        apagados.push({ figuraId: r.figuraId, porque: r.porque });
+      } else if (r.tipo === 'raio_cancelado') {
+        tx.emitir('ambiente_mestre', {}, { ...clonarJson(m.ambiente), raioCancelado: true });
+      }
+    }
+    const pub = Amb.fogoPublico(m);
+    const mestreFogo = { fogo: Amb.fogoDoMestre(m), extintas };
+    if (jsonCanonico(pub) !== pubAntes || apagados.length) {
+      tx.emitir('fogo', { ...pub, ...(apagados.length ? { apagados } : {}) }, mestreFogo);
+    } else if (extintas.length || regs.some((r) => r.tipo === 'raio')) {
+      tx.emitir('ambiente_mestre', {}, { ...clonarJson(m.ambiente), ...mestreFogo });
+    }
+    return mudouVida;
+  }
+  /** Momento de ambiente: início da rodada, antes da primeira vez (da 2.ª rodada em diante). */
+  function momentoAmbiente(tx) {
+    const m = tx.estado;
+    const pubAntes = jsonCanonico(Amb.fogoPublico(m));
+    // Sem registos, só o combustível pode ter descido (nada público): o Mestre vê-o no MASTER_VIEW seguinte.
+    const regs = Amb.momentoDaRodada(m, dadoAmb, antesDe);
+    if (!regs.length) return;
+    emitirAmbiente(tx, regs, pubAntes);
+    verificarFim(tx);
+  }
+  /** Tick do fogo no início da vez. Devolve 'caiu' se o fogo deitou a figura (a vez não acontece). */
+  function tickAmbiente(tx, f) {
+    const m = tx.estado;
+    const pubAntes = jsonCanonico(Amb.fogoPublico(m));
+    const r = Amb.tickInicioDaVez(m, f, dadoAmb, antesDe);
+    if (r) emitirAmbiente(tx, [r], pubAntes);
+    return r?.tipo === 'tick' ? (r.desfecho ?? 'aplicado') : null;
+  }
+  /** Acabou um movimento: com chuva, quem arde e saiu do fogo apaga-se (regra 5). */
+  function aposMovimentoAmbiente(tx, f) {
+    const m = tx.estado;
+    const pubAntes = jsonCanonico(Amb.fogoPublico(m));
+    const r = Amb.depoisDoMovimento(m, f);
+    if (r) emitirAmbiente(tx, [r], pubAntes);
+  }
+
   function iniciarVez(tx, f) {
     const m = tx.estado;
+    // Ordem 13: o tick do fogo corre na abertura da vez, antes de tudo (site: ambTickInicioTurno). Se deitar um
+    // monstro, a vez não acontece; se deitar a heroína a morrer, a vez dela é o teste de morte (ramo abaixo).
+    if (tickAmbiente(tx, f) === 'caiu') {
+      avancarVez(tx);
+      return;
+    }
     f.reacaoDisponivel = true; // uma reação por ronda
     f.defendendo = false; // a declaração de Defender anterior expira
     m.vez = {
@@ -1040,6 +1153,9 @@ export function criarSala({
       if (m.vezIdx >= n) {
         m.vezIdx = 0;
         m.rodada += 1; // a rodada sobe ao dar a volta
+        // Ordem 13: o momento de ambiente abre a rodada, antes da primeira vez (raios, extinção, combustível).
+        momentoAmbiente(tx);
+        if (m.fase !== 'combate') return; // o raio acabou a batalha (verificarFim já emitiu o `fim`)
       }
       const f = m.figuras[m.ordem[m.vezIdx]];
       if (!f || !f.colocada || !f.vivo) continue; // monstro morto sai da ordem; caído não sai
@@ -1574,6 +1690,7 @@ export function criarSala({
     v.andouM = arred(v.andouM + custoM);
     if (!ehJog) v.iaMoveu = true;
     tx.emitir('movimento', { figuraId: f.id, de, para: { x: f.x, y: f.y }, caminho, custoM, reservaM: v.reservaM }, null);
+    aposMovimentoAmbiente(tx, f); // ordem 13: sair do fogo para a chuva apaga-a (no fim do movimento, como o site)
 
     // Resolvem-se só na CHEGADA, depois do débito, pela ordem de iniciativa. Ordem 9: uma falha crítica abre o
     // cartão do Mestre e a série pára aí (o movimento já terminou); o recibo do movimento fica APLICADA.
@@ -1962,7 +2079,10 @@ export function criarSala({
       case 'MASTER_CONFIRM_DICE':
         return typeof msg.intentId === 'string' && RE_ID.test(msg.intentId) && typeof msg.aceitar === 'boolean';
       case 'MASTER_AMBIENTE':
-        return sn(msg.hora, 16) && sn(msg.clima, 64) && sn(msg.futuro, 500);
+        // Ordem 13: `raios` (interruptor) e `raioAgora` (pedido de um raio para o próximo momento de ambiente).
+        return sn(msg.hora, 16) && sn(msg.clima, 64) && sn(msg.futuro, 500)
+          && (msg.raios === undefined || typeof msg.raios === 'boolean')
+          && (msg.raioAgora === undefined || msg.raioAgora === true);
       case 'MASTER_SUPERVISOR':
         if (msg.op === 'terminar' || msg.op === 'recomecar') return msg.ateSeq === undefined && msg.casaM === undefined; // N4 (palavra do Mestre, 08/11)
         // Ordem 8 (item 8): a escala nova, em metros por casa. Aqui só a forma (número > 0); os valores que valem
@@ -2091,20 +2211,8 @@ export function criarSala({
         if (r === 'APLICADA') atualizarReciboOrigem(tx, c.origem, 'APLICADA');
         return 'APLICADA';
       }
-      case 'MASTER_AMBIENTE': {
-        const antes = efeitoAmbiente(m.ambiente);
-        m.ambiente = {
-          hora: msg.hora !== undefined ? msg.hora : m.ambiente.hora,
-          clima: msg.clima !== undefined ? msg.clima : m.ambiente.clima,
-          futuro: msg.futuro !== undefined ? msg.futuro : m.ambiente.futuro,
-        };
-        const depois = efeitoAmbiente(m.ambiente);
-        // A Party só recebe evento se o EFEITO presente mudou (senão o seq dela denunciaria o painel).
-        if (jsonCanonico(antes) !== jsonCanonico(depois)) tx.emitir('ambiente', { efeito: depois }, m.ambiente);
-        else tx.emitir('ambiente_mestre', {}, m.ambiente);
-        // TODO(JV1.x): raio e fogo com dano (valores do ambiente.json do pacote).
-        return 'APLICADA';
-      }
+      case 'MASTER_AMBIENTE':
+        return mudarAmbiente(tx, msg);
       case 'MASTER_SUPERVISOR':
         if (msg.op === 'terminar') return terminarBatalha(tx);
         if (msg.op === 'recomecar') return recomecarBatalha(tx);
@@ -2120,6 +2228,49 @@ export function criarSala({
       default:
         throw new ErroRecusa('acao_invalida');
     }
+  }
+
+  /**
+   * MASTER_AMBIENTE (o painel Ambiente, só do Mestre). Ordem 13 (dívida E1): além da hora, do clima e do futuro,
+   *  - `raios` liga/desliga os raios (só caem com chuva: clima 'chuva' = pouca, 'tempestade' = forte);
+   *  - `raioAgora` pede UM raio, que cai ao acaso no momento de ambiente do início da rodada seguinte (como o
+   *    «⚡ Raio agora» do site): só em combate, com tempestade, um pendente de cada vez e um pedido por rodada.
+   *    A recusa leva o texto fixo (E-P7) e o detalhe só ao Mestre.
+   * Desligar a chuva ou os raios com um pedido pendente cancela-o. A Party só recebe evento se o EFEITO presente
+   * (clima, dia/noite) mudou: os raios e o pedido nunca lhe chegam (o raio que cai, sim — evento `raio`).
+   */
+  function mudarAmbiente(tx, msg) {
+    const m = tx.estado;
+    const antes = efeitoAmbiente(m.ambiente);
+    const a = m.ambiente ?? {};
+    m.ambiente = {
+      hora: msg.hora !== undefined ? msg.hora : a.hora ?? null,
+      clima: msg.clima !== undefined ? msg.clima : a.clima ?? null,
+      futuro: msg.futuro !== undefined ? msg.futuro : a.futuro ?? null,
+      raios: msg.raios !== undefined ? msg.raios : a.raios === true,
+      raioPendente: a.raioPendente === true,
+      raioPedidoRodada: Number.isInteger(a.raioPedidoRodada) ? a.raioPedidoRodada : 0,
+    };
+    let cancelado = false;
+    if (msg.raioAgora === true) {
+      if (m.fase !== 'combate') throw new ErroRecusa('acao_invalida', 'RAIO_FORA_DO_COMBATE');
+      if (!Amb.haTempestade(m.ambiente)) {
+        throw new ErroRecusa('acao_invalida', 'RAIO_SEM_TEMPESTADE: o raio pede chuva (clima chuva ou tempestade) e os raios ligados');
+      }
+      if (m.ambiente.raioPendente) throw new ErroRecusa('acao_invalida', 'RAIO_JA_PENDENTE: já há um raio à espera da rodada seguinte');
+      if (m.ambiente.raioPedidoRodada === m.rodada) throw new ErroRecusa('acao_invalida', 'RAIO_UM_POR_RODADA: já se pediu um raio nesta rodada');
+      m.ambiente.raioPendente = true;
+      m.ambiente.raioPedidoRodada = m.rodada;
+    } else if (m.ambiente.raioPendente && !Amb.haTempestade(m.ambiente)) {
+      m.ambiente.raioPendente = false; // sem chuva ou sem raios, o pedido cancela-se
+      cancelado = true;
+    }
+    const depois = efeitoAmbiente(m.ambiente);
+    const so = { ...clonarJson(m.ambiente), ...(cancelado ? { raioCancelado: true } : {}) };
+    // A Party só recebe evento se o EFEITO presente mudou (senão o seq dela denunciaria o painel).
+    if (jsonCanonico(antes) !== jsonCanonico(depois)) tx.emitir('ambiente', { efeito: depois }, so);
+    else tx.emitir('ambiente_mestre', {}, so);
+    return 'APLICADA';
   }
 
   function primeiraCasaLivre(m) {
@@ -2278,6 +2429,9 @@ export function criarSala({
     m.fase = 'combate';
     m.desfecho = null;
     m.marchaLivre = null;
+    // Ordem 13: a batalha do zero começa sem fogo e sem raio pendente; o painel (hora, clima, raios) fica o do Mestre.
+    m.fogo = Amb.fogoVazio();
+    m.ambiente = { ...m.ambiente, raioPendente: false, raioPedidoRodada: 0 };
     m.rodada = 1;
     m.ordem = ordenarPorIniciativa(colocadas(m).map((f) => f.id), m);
     m.vezIdx = m.ordem.findIndex((id) => m.figuras[id].lado === 'jogadora');

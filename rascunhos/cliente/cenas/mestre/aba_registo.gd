@@ -93,10 +93,11 @@ func atualizar(vista: Dictionary) -> void:
 		cancelar()
 
 
-## Ordem 12: uma entrada nova no topo (frase do site + linha do registo com os contadores).
+## Ordem 12: uma entrada nova no topo (frase do site + linha do registo com os contadores). Ordem 13: o raio e o
+## fogo também entram aqui; sem frase (combustível acabado, raio cancelado), só a linha.
 func narrar(frase: String, linha: String) -> void:
 	_sem_narracao.visible = false
-	var l := _rotulo_em(_narracao, frase + "\n" + linha)
+	var l := _rotulo_em(_narracao, linha if frase == "" else frase + "\n" + linha)
 	_narracao.move_child(l, 0)
 	while _narracao.get_child_count() > MAX_NARRACAO:
 		var velho := _narracao.get_child(_narracao.get_child_count() - 1)

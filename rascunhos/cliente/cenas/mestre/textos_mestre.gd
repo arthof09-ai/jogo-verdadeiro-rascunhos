@@ -69,6 +69,41 @@ const PARTY_VE := "A Party vê: %s"
 const HORA := "Hora: %s"
 const CLIMA := "Clima: %s"
 const FUTURO := "A seguir: %s"
+
+# ---------------------------------------------------------------- ambiente: raio e fogo (ordem 13, dívida E1)
+## O painel do site (jogo.js, «Ambiente»): a chuva e os raios são do Mestre; a Party só vê o efeito e o fogo.
+const CHUVA := "Chuva: %s"
+const CHUVA_NIVEL := ["sem chuva", "pouca", "forte"]
+const RAIOS := "Raios: %s"
+const RAIOS_LIGADOS := "ligados"
+const RAIOS_DESLIGADOS := "desligados"
+const RAIOS_SEM_CHUVA := "ligados, mas sem chuva não caem"
+const RAIO_PENDENTE := "⚡ Raio à espera: cai no começo da rodada seguinte."
+const CASAS_A_ARDER := "Casas a arder: %s"
+const CASA_COMBUSTIVEL := "(%d,%d) mais %d"
+const A_ARDER := "A arder: %s"
+const NINGUEM := "ninguém"
+const CLIMA_BOTOES := ["limpo", "nublado", "chuva", "tempestade", "nevoeiro", "neve"]
+const NOME_CLIMA := {"limpo": "Limpo", "nublado": "Nublado", "chuva": "Chuva (pouca)", "tempestade": "Tempestade (chuva forte)",
+	"nevoeiro": "Nevoeiro", "neve": "Neve"}
+const HORA_MENOS := "−1 h"
+const HORA_MAIS := "+1 h"
+const LIGAR_RAIOS := "Ligar os raios"
+const DESLIGAR_RAIOS := "Desligar os raios"
+const RAIO_AGORA := "⚡ Raio agora"
+## A frase do site ao pedir o raio (ambPedirRaioManual): só no ecrã do Mestre.
+const RAIO_PEDIDO := "A tempestade junta-se — o raio cai no começo da rodada seguinte."
+const RAIO_CANCELADO := "Sem chuva ou sem raios: o raio pedido já não cai."
+## As linhas do registo (o supRegistar do site: origem, dano, rd 0, combustível).
+const REGISTO_RAIO := "Raio (%s) na casa (%d,%d): a casa arde por %d rodadas e a cruz acende %d vizinhas."
+const REGISTO_RAIO_DANO := " %s leva %d (raio, fixo, sem RD)."
+const REGISTO_FOGO := "Fogo: %s leva %d (1d8 = %d, sem RD)%s."
+const REGISTO_FOGO_PEGOU := "; pegou fogo ao começar a vez na casa a arder"
+const REGISTO_APAGADO := "Fogo apagado: %s (%s)."
+const REGISTO_EXTINTA := "A casa (%d,%d) deixou de arder (%s)."
+const ORIGEM_RAIO := {"pedido": "pedido pelo Mestre", "automatico": "da tempestade"}
+const PORQUE_APAGADO := {"chuva-casa": "a chuva apagou a casa", "chuva": "a chuva, fora do fogo", "saiu": "saiu do fogo para a chuva"}
+const PORQUE_EXTINTA := {"chuva": "a chuva", "combustivel": "acabou o combustível"}
 const SEM_VALOR := "—"
 const JOURNAL := "Ponto actual do registo: %d"
 
@@ -134,7 +169,9 @@ const SEM_PONTOS := "Ainda não há pontos para voltar."
 # ---------------------------------------------------------------- narração ao Mestre (ordem 12)
 ## Caída atingida (site REF_35, jogo.js: ramo 'falhaDeMorte' da vez da IA e do golpe de oportunidade). O site partilha
 ## só o núcleo «piora visivelmente.»; aqui a frase nomeia a heroína porque a mesa pode ter mais de uma.
-const CAIDA_PIORA := "%s acerta a %s caída — ela piora visivelmente."
+## Ordem 13 (parte C; site jogo.js FRASES_IA): o verbo é o da ficha do monstro (verbos.acerto); sem ele, «acerta».
+const CAIDA_PIORA := "%s %s a %s caída — ela piora visivelmente."
+const VERBO_ACERTO_PADRAO := "acerta"
 const CAIDA_PIORA_OPORTUNIDADE := "%s golpeia a %s de oportunidade — ela, caída, piora visivelmente."
 ## A linha do registo (site: supRegistar 'falha-de-morte-por-golpe' com os contadores).
 const REGISTO_CAIDA := "Falha de morte por golpe: %s, por %s%s — sucessos %d, falhas %d."
@@ -148,6 +185,7 @@ const NOME_EVENTO := {
 	"ambiente": "ambiente", "ambiente_mestre": "ambiente", "estado": "estado", "entrada": "entrada",
 	"revertido": "voltar", "modo": "modo", "lobby": "mesa", "fim": "fim", "teste_morte": "teste de morte",
 	"recusa": "recusa", "reacao": "reacção", "consumivel": "consumível", "pausa": "pausa", "retomada": "continuar",
+	"raio": "raio", "dano_ambiente": "dano do ambiente", "fogo": "fogo",
 }
 
 # ---------------------------------------------------------------- estado da sala e alertas

@@ -55,6 +55,7 @@ DONO = {
     'estado': lambda d, f: d.get('figuraId') == f,
     'desgraca': lambda d, f: d.get('figuraId') == f,
     'cura': lambda d, f: d.get('curadorId') == f,
+    'dano_ambiente': lambda d, f: d.get('alvoId') == f,  # ordem 13
 }
 
 

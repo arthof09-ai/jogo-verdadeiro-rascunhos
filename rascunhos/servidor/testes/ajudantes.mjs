@@ -110,7 +110,7 @@ export class Cliente {
  */
 export function montarMesa({
   motor = criarMotorFalso(), comAliada = false, comEspectador = false, rngSemente, modoPadrao = 'auto',
-  mapa = { largura: 20, altura: 20 }, casas = {}, fichas: fichasProprias = null, teste = false,
+  mapa = { largura: 20, altura: 20 }, casas = {}, fichas: fichasProprias = null, teste = false, dadoAmbiente = null,
 } = {}) {
   const fichas = fichasProprias ?? fichasDeTeste({ comAliada });
   const lugares = [
@@ -122,7 +122,7 @@ export function montarMesa({
   if (comEspectador) lugares.push({ papel: 'espectador', nome: 'Visita', senha: SENHAS.espectador });
   lugares.push({ papel: 'mestre', nome: 'Mestre', pin: PIN });
   const config = { roomId: 'sala-teste', mapa, lugares, iniciativa: INICIATIVA, modoPadrao, depurar: true, ...(teste ? { teste: true } : {}) };
-  const sala = criarSala({ motores: motor, fichas, rng: rngDeterministico(), rngSemente, agora: relogio(), config });
+  const sala = criarSala({ motores: motor, fichas, rng: rngDeterministico(), rngSemente, agora: relogio(), config, dadoAmbiente });
 
   const clientes = {};
   const porSeat = new Map();

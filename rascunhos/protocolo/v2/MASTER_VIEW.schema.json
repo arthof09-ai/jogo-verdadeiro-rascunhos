@@ -99,6 +99,9 @@
         "ambiente": {
           "$ref": "comum.schema.json#/$defs/ambienteEfeito"
         },
+        "fogo": {
+          "$ref": "comum.schema.json#/$defs/fogoPublico"
+        },
         "mestre": {
           "$ref": "ROOM_SNAPSHOT.schema.json#/$defs/mestre"
         },

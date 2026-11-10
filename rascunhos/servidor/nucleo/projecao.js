@@ -8,6 +8,7 @@
 // só é guardado em `soMestre` pelo núcleo, e aqui só se copiam campos da lista.
 
 import { clonarJson } from './util.js';
+import { fogoPublico, fogoDoMestre } from './ambiente.js';
 
 /**
  * Campos permitidos por tipo de ROOM_EVENT.
@@ -44,6 +45,12 @@ export const CAMPOS_PERMITIDOS = Object.freeze({
   recomeco: Object.freeze({ todos: [], propria: [] }),
   // Ordem 8 (item 8): o Mestre mudou a escala. Sem campos: o resultado chega no snapshot (mapa.casaM) e nas opções.
   escala: Object.freeze({ todos: [], propria: [] }),
+  // Ordem 13 (dívida E1; site «RAIO E FOGO», REF_39): o raio que cai, o fogo e o dano do ambiente vêem-se na mesa
+  // (o site desenha-os a todos). O número do dano só a quem o sofreu; o combustível, os dados, o raio pendente e o
+  // painel ficam no soMestre.
+  raio: Object.freeze({ todos: ['x', 'y', 'alvoId', 'desfecho'], propria: [] }),
+  dano_ambiente: Object.freeze({ todos: ['alvoId', 'origem', 'desfecho'], propria: ['valor', 'tipos'] }),
+  fogo: Object.freeze({ todos: ['casas', 'aArder', 'apagados'], propria: [] }),
 });
 
 /** "Este evento é dela?" — decide se os campos `propria` entram. */
@@ -54,6 +61,7 @@ const EH_PROPRIO = Object.freeze({
   dano: (d, f) => d.alvoId === f || d.autorId === f,
   estado: (d, f) => d.figuraId === f,
   desgraca: (d, f) => d.figuraId === f,
+  dano_ambiente: (d, f) => d.alvoId === f,
 });
 
 // Climas que a Party pode ver como efeito. Texto livre do Mestre nunca sai.
@@ -147,6 +155,8 @@ export function figuraDoMestre(fig, fichas) {
     // Plano B: o desenho da figura na arena do Mestre (marcador do site; sem ficha visual, o cliente usa o padrão).
     alturaM: Number.isFinite(ficha?.visual?.alturaM) ? ficha.visual.alturaM : null,
     marcador: ficha?.visual?.marcador ?? null,
+    // Ordem 13 (parte C; site FRASES_IA): os verbos do golpe de cada monstro, da ficha. null = o cliente diz «acerta».
+    verbos: ficha?.verbos ? clonarJson(ficha.verbos) : null,
   };
 }
 
@@ -167,6 +177,8 @@ export function projetarSnapshot(mundo, fichas, dest) {
     vezId: mundo.vez?.figuraId ?? null,
     rodada: mundo.rodada,
     ambiente: efeitoAmbiente(mundo.ambiente),
+    // Ordem 13: as casas a arder e quem arde (sem combustível). A Party vê o fogo, como no site.
+    fogo: fogoPublico(mundo),
   };
 
   if (dest.papel === 'mestre') {
@@ -177,6 +189,8 @@ export function projetarSnapshot(mundo, fichas, dest) {
       lobby: clonarJson(mundo.lobby),
       vez: clonarJson(mundo.vez),
       ambiente: clonarJson(mundo.ambiente),
+      // Ordem 13: o fogo com o combustível de cada casa (só o Mestre).
+      fogo: fogoDoMestre(mundo),
       // Ordem 8 (item 5): a `saidaProposta` (a saída do motor guardada para o «Não acontece nada») é trabalho interno do
       // servidor: não vai na vista (o Mestre já tem a proposta, a lista e a rolagem no cartão).
       cartoes: mundo.cartoes.filter((c) => c.estado === 'aberto').map(({ saidaProposta, ...c }) => clonarJson(c)),

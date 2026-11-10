@@ -30,6 +30,8 @@ const COR_DESTAQUE := Color(0.792, 0.710, 0.467, 0.5)  # cab577 a 50%
 const COR_CONTORNO_DESTAQUE := Color("f5d59b")
 const COR_SOL := Color("ffb16b")
 const COR_ANEL := Color("ffd28b")
+## Ordem 13: casa a arder (o fogo do ambiente; as casas vêm do servidor, na vista do Mestre).
+const COR_FOGO := Color(1.0, 0.45, 0.10, 0.55)
 
 var largura := 0
 var altura := 0
@@ -40,6 +42,8 @@ var camara_livre: CamaraLivre
 var _grelha: Node3D
 var _figuras: Node3D
 var _destaques: MultiMeshInstance3D
+var _fogo: MultiMeshInstance3D
+var _casas_fogo: Array[Vector2i] = []
 var _contornos: MeshInstance3D
 var _anel: MeshInstance3D
 var _nos: Dictionary = {}  # figuraId -> Node3D
@@ -82,6 +86,9 @@ func _ready() -> void:
 	_contornos = MeshInstance3D.new()
 	_contornos.name = "ContornosDestaques"
 	add_child(_contornos)
+	_fogo = MultiMeshInstance3D.new()
+	_fogo.name = "Fogo"
+	add_child(_fogo)
 	_anel = MeshInstance3D.new()
 	_anel.name = "AnelDaVez"
 	_anel.mesh = Marcador.anel_plano(0.65, COR_ANEL)  # o anel de destino do site (0,65, ffd28b)
@@ -145,6 +152,7 @@ func aplicar_vista(vista: Dictionary) -> void:
 		if not vistos.has(id):
 			(_nos[id] as Node).queue_free()
 			_nos.erase(id)
+	desenhar_fogo(vista)
 	var vez := str(vista.get("vezId", "")) if vista.get("vezId") is String else ""
 	_anel.visible = _nos.has(vez)
 	if _anel.visible:
@@ -225,6 +233,37 @@ func destacar(casas: Array[Vector2i]) -> void:
 
 func casas_destacadas() -> Array[Vector2i]:
 	return _casas_destacadas
+
+
+## Ordem 13: as casas a arder da vista (o combustível de cada uma está na aba Ambiente).
+func desenhar_fogo(vista: Dictionary) -> void:
+	_casas_fogo.clear()
+	var m = vista.get("mestre")
+	var fogo = m.get("fogo") if m is Dictionary else null
+	if fogo is Dictionary and fogo.get("casas") is Array:
+		for k in fogo["casas"]:
+			if k is Dictionary:
+				var c := Vector2i(int(k.get("x", -1)), int(k.get("y", -1)))
+				if dentro(c):
+					_casas_fogo.append(c)
+	if _casas_fogo.is_empty():
+		_fogo.multimesh = null
+		return
+	var quad := QuadMesh.new()
+	quad.size = Vector2(casa_m * 0.96, casa_m * 0.96)
+	quad.orientation = PlaneMesh.FACE_Y
+	quad.material = _material(COR_FOGO, true)
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = quad
+	mm.instance_count = _casas_fogo.size()
+	for i in _casas_fogo.size():
+		mm.set_instance_transform(i, Transform3D(Basis(), centro_da_casa(_casas_fogo[i]) + Vector3(0.0, 0.03, 0.0)))
+	_fogo.multimesh = mm
+
+
+func casas_a_arder() -> Array[Vector2i]:
+	return _casas_fogo
 
 
 func _ao_toque(posicao: Vector2) -> void:

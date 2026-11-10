@@ -125,6 +125,16 @@ export const SCHEMA_FICHAS_1 = Object.freeze({
         marcador: { enum: ['marcador', 'marcador-lobo'] },
       },
     },
+    // Ordem 13 (parte C; site jogo.js FRASES_IA, «verbos.acerto»): o verbo próprio do golpe de cada monstro, para a
+    // narração («O Lobo deu uma patada a …»). Só texto: não muda mecânica nenhuma. Sem ele, a narração diz «acerta».
+    verbos: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        acerto: { type: 'string', minLength: 1 },
+        falha: { type: 'string', minLength: 1 },
+      },
+    },
     fonte: {
       type: 'object',
       required: ['origem', 'data'],

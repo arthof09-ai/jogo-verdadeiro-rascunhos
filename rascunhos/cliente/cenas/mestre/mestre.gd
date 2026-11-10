@@ -12,6 +12,10 @@ extends Control
 ##   MASTER_SUPERVISOR terminar/recomecar.
 ## - §12 do desenho: arena 3D, aba Mesa (lobby e colocar), «Voltar até aqui» (L8) e aba Agir (jogar a
 ##   criatura à mão). «Escolher outra» no cartão de IA fica desligado (ver aba_agir.gd).
+## - Ordem 13 (dívida E1): a aba Ambiente manda no clima (a chuva), na hora e nos raios, e tem o «⚡ Raio agora»
+##   (MASTER_AMBIENTE). O raio e o fogo narram-se aqui, com os números, e ficam no registo; a Party vê o fogo
+##   e o raio, nunca o painel, o combustível nem os dados.
+## - Ordem 13 (parte D): o «Exportar registo» leva também a narração deste ecrã (Modelo.conteudo_export).
 
 const Textos := preload("res://cenas/mestre/textos_mestre.gd")
 const Modelo := preload("res://cenas/mestre/modelo_mestre.gd")
@@ -85,6 +89,12 @@ var _encolher: Button
 var _abas: TabContainer
 var _lista_figuras: VBoxContainer
 var _lista_ambiente: VBoxContainer
+## Ordem 13: os controlos do painel Ambiente.
+var _botoes_clima: Dictionary = {}  # clima -> Button
+var _raios: Button
+var _raio_agora: Button
+## Os eventos do ambiente já narrados (seq), para o mesmo evento repetido no fio não narrar duas vezes.
+var _amb_narrados := {}
 var _pausar: Button
 var _terminar: Button
 var _recomecar: Button
@@ -317,6 +327,7 @@ func _ao_mestre(msg: Dictionary) -> void:
 
 func _ao_evento(msg: Dictionary) -> void:
 	_narrar_caida(msg)
+	_narrar_ambiente(msg)
 	if str(msg.get("tipo", "")) == "cartao_fechado":
 		var d = msg.get("dados")
 		if d is Dictionary and not cartao.is_empty() and d.get("cartaoId") == cartao.get("cartaoId"):
@@ -343,6 +354,47 @@ func _narrar_caida(msg: Dictionary) -> void:
 	narracao.append(frase + "\n" + linha)
 	_juntar_alerta(frase)
 	_aba_registo.narrar(frase, linha)
+
+
+## Ordem 13 (dívida E1): o raio, o fogo e quem se apagou, narrados ao Mestre (frase do site + linha com os números).
+func _narrar_ambiente(msg: Dictionary) -> void:
+	var lista := Modelo.narrar_ambiente(msg, vista)
+	if lista.is_empty():
+		return
+	var chave := str(msg.get("seq", ""))
+	if chave != "" and _amb_narrados.has(chave):
+		return
+	if chave != "":
+		_amb_narrados[chave] = true
+	for n in lista:
+		var frase: String = n["frase"]
+		var linha: String = n["linha"]
+		narracao.append(linha if frase == "" else frase + "\n" + linha)
+		if frase != "":
+			_juntar_alerta(frase)
+		_aba_registo.narrar(frase, linha)
+
+
+# ---------------------------------------------------------------- painel Ambiente (ordem 13)
+
+func mudar_clima(clima: String) -> void:
+	_enviar("MASTER_AMBIENTE", {"clima": clima})
+
+
+func mudar_hora(passo: int) -> void:
+	_enviar("MASTER_AMBIENTE", Modelo.hora_mais(vista, passo))
+
+
+func alternar_raios() -> void:
+	_enviar("MASTER_AMBIENTE", Modelo.alternar_raios(vista))
+
+
+## «⚡ Raio agora»: um raio ao acaso no começo da rodada seguinte (o servidor confere e sorteia).
+func pedir_raio() -> void:
+	if not Modelo.raio_agora_possivel(vista):
+		return
+	if _enviar("MASTER_AMBIENTE", {"raioAgora": true}) != "":
+		_juntar_alerta(Textos.RAIO_PEDIDO)
 
 
 func _ao_resposta(id: String, msg: Dictionary) -> void:
@@ -482,13 +534,15 @@ func exportar_registo() -> void:
 	enviar_fn.call("MASTER_SUPERVISOR", {"op": "exportar"}, Estado.revisao)
 
 
-func _guardar_export(msg: Dictionary) -> void:
+func _guardar_export(msg: Dictionary) -> String:
 	var nome := "user://registo-MESTRE-ONLY-%s.json" % Time.get_datetime_string_from_system().replace(":", "-")
 	var f := FileAccess.open(nome, FileAccess.WRITE)
 	if f != null:
-		f.store_string(JSON.stringify(msg.get("conteudo", {})))
+		# Ordem 13 (parte D): o registo do servidor, intacto, e a narração deste ecrã.
+		f.store_string(JSON.stringify(Modelo.conteudo_export(msg.get("conteudo", {}), narracao)))
 		f.close()
 	_aba_registo.mostrar_export(nome.get_file())
+	return nome
 
 
 # ---------------------------------------------------------------- desenho
@@ -537,6 +591,13 @@ func _desenhar_ambiente() -> void:
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		l.text = linha
 		_lista_ambiente.add_child(l)
+	if _raios == null:
+		return
+	var a := Modelo.painel_ambiente(vista)
+	_raios.text = Textos.DESLIGAR_RAIOS if a.get("raios") == true else Textos.LIGAR_RAIOS
+	_raio_agora.disabled = not Modelo.raio_agora_possivel(vista)
+	for c in _botoes_clima:
+		(_botoes_clima[c] as Button).disabled = str(a.get("clima", "")) == c
 
 
 func _juntar_alerta(texto: String) -> void:
@@ -724,7 +785,7 @@ func _montar() -> void:
 	_aba_agir.montar(self)
 	_aba_mesa = _aba_com(Textos.ABA_MESA, AbaMesa.new()) as AbaMesa
 	_aba_mesa.montar(self)
-	_lista_ambiente = _aba(Textos.ABA_AMBIENTE)
+	_montar_ambiente(_aba(Textos.ABA_AMBIENTE))
 	_aba_registo = _aba_com(Textos.ABA_REGISTO_CURTA, AbaRegisto.new()) as AbaRegisto
 	_aba_registo.montar(self)
 	var sala := _aba(Textos.ABA_SALA)
@@ -768,6 +829,30 @@ func _montar() -> void:
 	_rotulo(caixa, "AvisoTexto").text = Textos.AVISO_PRIMEIRA
 	_botao(caixa, Textos.ENTENDIDO, _aviso_entendido)
 	_desenhar_cartao()
+
+
+## Ordem 13: a aba Ambiente — as linhas do painel e, por baixo, os controlos (clima, hora, raios, «⚡ Raio agora»).
+func _montar_ambiente(aba: VBoxContainer) -> void:
+	_lista_ambiente = VBoxContainer.new()
+	_lista_ambiente.name = "LinhasAmbiente"
+	aba.add_child(_lista_ambiente)
+	var climas := HFlowContainer.new()
+	climas.name = "Climas"
+	aba.add_child(climas)
+	for c in Textos.CLIMA_BOTOES:
+		var b := _botao(climas, str(Textos.NOME_CLIMA.get(c, c)), mudar_clima.bind(c))
+		b.name = "Clima_" + c
+		_botoes_clima[c] = b
+	var horas := HBoxContainer.new()
+	horas.name = "Horas"
+	aba.add_child(horas)
+	_botao(horas, Textos.HORA_MENOS, mudar_hora.bind(-1)).name = "HoraMenos"
+	_botao(horas, Textos.HORA_MAIS, mudar_hora.bind(1)).name = "HoraMais"
+	_raios = _botao(aba, Textos.LIGAR_RAIOS, alternar_raios)
+	_raios.name = "Raios"
+	_raio_agora = _botao(aba, Textos.RAIO_AGORA, pedir_raio)
+	_raio_agora.name = "RaioAgora"
+	_raio_agora.disabled = true
 
 
 func _aba(titulo: String) -> VBoxContainer:
