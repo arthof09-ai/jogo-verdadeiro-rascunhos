@@ -332,6 +332,7 @@ func _correr() -> void:
 	await _caida_atingida(c, fx["mestre"]["vista"])
 	_verbo_padrao(fx["mestre"]["vista"])
 	await _ambiente(c, fx["mestre"]["vista"])
+	await _falha_monstro(c, fx["mestre"]["vista"])
 	_exportar(c)
 	await _camara_livre(c)
 
@@ -677,6 +678,147 @@ func _ambiente(c, vista_base: Dictionary) -> void:
 	await _quadros(1)
 
 
+## Ordem 14 (parte B; paridade com o site, jogo.js atacarIA, série de oportunidade e cartão em modo «monstro»): o
+## monstro falha o golpe e a narração diz a falha com o verbo da ficha (verbos.falha). Mecânica nenhuma muda.
+func _falha(seq: int, atac: String, alvo: String, resultado: String, oportunidade := false) -> Dictionary:
+	return {"type": "ROOM_EVENT", "seq": seq, "tipo": "ataque", "dados": {
+		"atacanteId": atac, "alvoId": alvo, "arma": "machado-teste", "resultado": resultado,
+		"ataqueDeOportunidade": oportunidade, "soMestre": {"soDoMestre": {}}, "journalSeq": seq}}
+
+
+func _falha_monstro(c, vista_base: Dictionary) -> void:
+	print("== falha do monstro com o verbo da ficha (ordem 14) ==")
+	var Modelo = load("res://cenas/mestre/modelo_mestre.gd")
+	var v: Dictionary = vista_base.duplicate(true)
+	var her := ""
+	var orc := ""
+	var lobo := ""
+	var nome_her := ""
+	var nome_orc := ""
+	var nome_lobo := ""
+	for f in v["mestre"]["figuras"]:
+		if her == "" and f.get("lado") == "jogadora":
+			her = f["id"]
+			nome_her = str(f.get("nome"))
+		elif f.get("fichaId") == "orc-teste":
+			orc = f["id"]
+			nome_orc = str(f.get("nome"))
+		elif f.get("fichaId") == "lobo-teste":
+			lobo = f["id"]
+			nome_lobo = str(f.get("nome"))
+	_ok(her != "" and orc != "" and lobo != "", "a fixture tem a heroína, o orc e o lobo")
+
+	# 1) O verbo da falha vem da ficha (os do site para o Orc e o Lobo); sem verbos, o do site: «tentou atacar».
+	_ok(Modelo.verbo_falha(v, orc) == "tentou desferir o machado" and Modelo.verbo_falha(v, lobo) == "tentou dar uma patada",
+		"cada monstro com o seu verbo de falha (orc: «tentou desferir o machado»; lobo: «tentou dar uma patada»)")
+	var sem_verbos: Dictionary = v.duplicate(true)
+	for f in sem_verbos["mestre"]["figuras"]:
+		if f["id"] == lobo:
+			f["verbos"] = null
+	_ok(Modelo.verbo_falha(sem_verbos, lobo) == Textos.VERBO_FALHA_PADRAO and Textos.VERBO_FALHA_PADRAO == "tentou atacar",
+		"sem verbos na ficha: «tentou atacar» (o do site)")
+
+	c.aplicar_vista(v)
+	await _quadros(1)
+	var n: int = c.narracao.size()
+	var n_alertas: int = c.alertas.size()
+
+	# 2) A vez do monstro: golpe falhado («erra»). Frase do site, com o verbo do orc; registo com a linha.
+	var golpe := _falha(950, orc, her, "erro")
+	c._ao_evento(golpe)
+	var frase := "%s tentou desferir o machado a %s e falhou." % [nome_orc, nome_her]
+	_ok(c.narracao.size() == n + 1 and c.alertas.size() == n_alertas + 1 and c.alertas.back() == frase,
+		"golpe falhado do orc: «%s»" % frase)
+	var reg: Array[String] = c._aba_registo.narracoes_mostradas()
+	_ok(reg[0].contains(frase) and reg[0].contains("Ataque falhado: %s contra %s." % [nome_orc, nome_her]),
+		"fica no registo com a linha do ataque %s" % [reg[0]])
+	c._ao_evento(golpe)
+	_ok(c.narracao.size() == n + 1, "o mesmo evento repetido não narra outra vez")
+
+	# 3) O lobo também, com o verbo dele; e sem verbos na ficha, «tentou atacar».
+	c._ao_evento(_falha(951, lobo, her, "erro"))
+	_ok(c.alertas.back() == "%s tentou dar uma patada a %s e falhou." % [nome_lobo, nome_her], "o lobo com o verbo dele: «%s»" % c.alertas.back())
+	c.aplicar_vista(sem_verbos)
+	c._ao_evento(_falha(952, lobo, her, "erro"))
+	_ok(c.alertas.back() == "%s tentou atacar a %s e falhou." % [nome_lobo, nome_her], "sem verbos: «%s»" % c.alertas.back())
+	c.aplicar_vista(v)
+
+	# 4) Golpe de oportunidade falhado: a frase própria do site.
+	c._ao_evento(_falha(953, lobo, her, "erro", true))
+	_ok(c.alertas.back() == "%s tenta golpeá-la de oportunidade e falha." % nome_lobo, "oportunidade: «%s»" % c.alertas.back())
+	_ok(c._aba_registo.narracoes_mostradas()[0].contains("(de oportunidade)"), "o registo marca o golpe de oportunidade")
+	n = c.narracao.size()
+
+	# 5) Falha crítica com desgraça aplicada: espera pela `desgraca` (journalSeq + 1) e junta a frase dela, numa só.
+	c._ao_evento(_falha(960, orc, her, "falha_critica"))
+	_ok(c.narracao.size() == n, "a falha crítica espera pelo evento seguinte")
+	c._ao_evento({"type": "ROOM_EVENT", "seq": 961, "tipo": "desgraca", "dados": {
+		"figuraId": orc, "efeito": "arma-cai", "soMestre": {}, "journalSeq": 961}})
+	frase = "%s tentou desferir o machado a %s e falhou. A arma (machado teste) caiu-lhe da mão." % [nome_orc, nome_her]
+	_ok(c.narracao.size() == n + 1 and c.alertas.back() == frase, "falha crítica + desgraça numa frase: «%s»" % c.alertas.back())
+	_ok(c._aba_registo.narracoes_mostradas()[0].contains("falha crítica: " + Textos.NOME_DESGRACA["arma-cai"]),
+		"o registo diz a desgraça aplicada")
+
+	# 6) Falha crítica sem desgraça («Não acontece nada»): o evento seguinte é outro → «O golpe correu mal.».
+	c._ao_evento(_falha(962, orc, her, "falha_critica"))
+	c._ao_evento({"type": "ROOM_EVENT", "seq": 963, "tipo": "cartao_fechado", "dados": {"cartaoId": "c-x", "journalSeq": 963}})
+	frase = "%s tentou desferir o machado a %s e falhou. O golpe correu mal." % [nome_orc, nome_her]
+	_ok(c.narracao.size() == n + 2 and c.alertas.back() == frase, "sem desgraça: «%s»" % c.alertas.back())
+	_ok(c._aba_registo.narracoes_mostradas()[0].contains(Textos.REGISTO_FALHA_SEM_DESGRACA), "o registo diz que não houve desgraça")
+
+	# 7) A `desgraca` de OUTRA figura não fecha esta falha; a vista nova fecha-a (fim da transacção).
+	c._ao_evento(_falha(964, lobo, her, "falha_critica", true))
+	_ok(Modelo.desgraca_da_falha({"tipo": "desgraca", "dados": {"figuraId": orc, "efeito": "cai", "journalSeq": 965}},
+		c._falha_pendente).is_empty(), "a desgraça de outro não é a desta falha")
+	_ok(Modelo.desgraca_da_falha({"tipo": "desgraca", "dados": {"figuraId": lobo, "efeito": "cai", "journalSeq": 970}},
+		c._falha_pendente).is_empty(), "nem a do mesmo, longe no journal")
+	c.aplicar_vista(v)
+	frase = "%s tenta golpeá-la de oportunidade e falha. O golpe correu mal." % nome_lobo
+	_ok(c.narracao.size() == n + 3 and c.alertas.back() == frase and c._falha_pendente.is_empty(),
+		"a vista fecha a falha pendente: «%s»" % c.alertas.back())
+
+	# 8) Silêncio: o golpe falhado DELA (frases dela no HUD), o acerto do monstro, e uma figura que a vista não conhece.
+	c._ao_evento(_falha(970, her, orc, "erro"))
+	c._ao_evento(_falha(971, orc, her, "acerto"))
+	c._ao_evento(_falha(972, "f-desconhecida", her, "erro"))
+	_ok(c.narracao.size() == n + 3, "a falha dela, o acerto e uma figura desconhecida não narram falha de monstro")
+
+	# 9) O cartão de desgraça de um MONSTRO abre com a frase da falha (site, modo «monstro»); o dela fica como era.
+	var vc: Dictionary = v.duplicate(true)
+	var interno := {"cartaoId": "c-orc", "estado": "aberto", "tipo": "desgraca", "figuraId": orc, "alvoId": her,
+		"tecnicaId": "machado-teste", "proposta": {"tipo": "arma-cai"}, "excluidas": []}
+	var interno_aoo: Dictionary = interno.duplicate(true)
+	interno_aoo["cartaoId"] = "c-lobo"
+	interno_aoo["figuraId"] = lobo
+	interno_aoo["ataqueDeOportunidade"] = true
+	vc["mestre"]["cartoes"] = [interno, interno_aoo] + vc["mestre"]["cartoes"]
+	var card := {"type": "MASTER_CARD", "cartaoId": "c-orc", "tipo": "desgraca", "figuraId": orc,
+		"proposta": {"tipo": "arma-cai"}, "desgracas": ["cai", "arma-cai"], "amigos": []}
+	var d: Dictionary = Modelo.descrever_cartao(card, vc)
+	_ok(d["linhas"][0] == "%s tentou desferir o machado a %s e falhou." % [nome_orc, nome_her],
+		"cartão do orc: «%s»" % d["linhas"][0])
+	var card_aoo: Dictionary = card.duplicate(true)
+	card_aoo["cartaoId"] = "c-lobo"
+	card_aoo["figuraId"] = lobo
+	d = Modelo.descrever_cartao(card_aoo, vc)
+	_ok(d["linhas"][0] == "%s tentou golpeá-la de oportunidade ao sair e falhou." % nome_lobo,
+		"cartão do golpe de oportunidade: «%s»" % d["linhas"][0])
+	var card_her: Dictionary = card.duplicate(true)
+	card_her["cartaoId"] = "c1"
+	card_her["figuraId"] = her
+	d = Modelo.descrever_cartao(card_her, vc)
+	_ok(d["linhas"][0] == Modelo.nome_mestre(Modelo.figura(vc, her)), "o cartão da heroína não ganha frase de falha (o site não a enquadra)")
+	c.aplicar_vista(vc)
+	c.aplicar_cartao(card)
+	await _quadros(1)
+	_ok(c._texto_cartao.text.begins_with("%s tentou desferir o machado a %s e falhou." % [nome_orc, nome_her])
+		and c._texto_cartao.text.contains("A Party vai ler: «Falha crítica · "), "o ecrã mostra-o no cartão, com a frase da Party por baixo")
+	c.cartao = {}
+	c._desenhar_cartao()
+	c.aplicar_vista(vista_base)
+	await _quadros(1)
+
+
 ## Ordem 13 (parte D): o «Exportar registo» leva o registo do servidor INTACTO e a secção de narração.
 func _exportar(c) -> void:
 	print("== «Exportar registo» com a narração (ordem 13, parte D) ==")
@@ -691,10 +833,13 @@ func _exportar(c) -> void:
 	var narr: Array = lido.get("narracao", []) if lido is Dictionary else []
 	var tem_caida := false
 	var tem_raio := false
+	var tem_falha := false
 	for t in narr:
 		tem_caida = tem_caida or str(t).contains("piora visivelmente")
 		tem_raio = tem_raio or str(t).contains("Um raio atinge")
-	_ok(narr.size() == c.narracao.size() and tem_caida and tem_raio, "o ficheiro leva a narração: a caída (ordem 12) e o raio (ordem 13)")
+		tem_falha = tem_falha or str(t).contains("tentou desferir o machado a ")
+	_ok(narr.size() == c.narracao.size() and tem_caida and tem_raio and tem_falha,
+		"o ficheiro leva a narração: a caída (ordem 12), o raio (ordem 13) e a falha do monstro (ordem 14)")
 	DirAccess.remove_absolute(caminho)
 
 

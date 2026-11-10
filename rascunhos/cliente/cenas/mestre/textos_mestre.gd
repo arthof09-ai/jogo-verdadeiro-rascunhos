@@ -176,6 +176,20 @@ const CAIDA_PIORA_OPORTUNIDADE := "%s golpeia a %s de oportunidade — ela, caí
 ## A linha do registo (site: supRegistar 'falha-de-morte-por-golpe' com os contadores).
 const REGISTO_CAIDA := "Falha de morte por golpe: %s, por %s%s — sucessos %d, falhas %d."
 const REGISTO_CAIDA_OPORTUNIDADE := " (de oportunidade)"
+
+# ---------------------------------------------------------------- falha do monstro (ordem 14)
+## Site jogo.js: a vez da IA (atacarIA, ramos 'erra' e 'falhaCritica') diz «<Lobo> tentou dar uma patada a Ong e
+## falhou.» (+ a frase da desgraça na falha crítica); o golpe de oportunidade diz «… tenta golpeá-la de oportunidade e
+## falha.»; o cartão de desgraça do monstro abre com «… tentou golpeá-la de oportunidade ao sair e falhou.» ou com a
+## frase da vez. O verbo é o da ficha (verbos.falha); sem ele, o do site para quem não tem verbos: «tentou atacar».
+const FALHA_MONSTRO := "%s %s a %s e falhou."
+const VERBO_FALHA_PADRAO := "tentou atacar"
+const FALHA_OPORTUNIDADE := "%s tenta golpeá-la de oportunidade e falha."
+const CARTAO_FALHA_OPORTUNIDADE := "%s tentou golpeá-la de oportunidade ao sair e falhou."
+## A linha do registo (site: supRegistar 'accao' {acao:'ataque', acerto:false, oportunidade?, falhaCritica}).
+const REGISTO_FALHA := "Ataque falhado: %s contra %s%s%s."
+const REGISTO_FALHA_CRITICA := " — falha crítica: %s"
+const REGISTO_FALHA_SEM_DESGRACA := "nenhuma desgraça"
 const NARRACAO := "Narração (só o Mestre)"
 const SEM_NARRACAO := "Ainda nada narrado."
 const ALGUEM := "Alguém"

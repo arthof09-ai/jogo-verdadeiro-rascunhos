@@ -328,7 +328,9 @@ static func descrever_cartao(cartao: Dictionary, vista: Dictionary) -> Dictionar
 	match tipo:
 		"desgraca":
 			var efeito := efeito_proposto(cartao.get("proposta"))
-			linhas.append(quem)
+			# Ordem 14: no cartão de um monstro, a primeira linha é a da falha, como no site; o nome continua lá.
+			var falha := frase_cartao_falha(cartao, vista)
+			linhas.append(falha if falha != "" else quem)
 			linhas.append(Textos.PROPOSTA % str(Textos.NOME_DESGRACA.get(efeito, efeito)))
 			var frase := frase_prevista(cartao, vista)
 			if frase != "":
@@ -584,6 +586,115 @@ static func verbo_acerto(v: Dictionary, id: String) -> String:
 	if verbos is Dictionary and _texto(verbos.get("acerto")) != "":
 		return _texto(verbos["acerto"])
 	return Textos.VERBO_ACERTO_PADRAO
+
+
+# ---------------------------------------------------------------- falha do monstro (ordem 14)
+#
+# Paridade com o site (jogo.js atacarIA, ramos 'erra' e 'falhaCritica'; série de oportunidade; cartão de desgraça em
+# modo «monstro»): quando o monstro falha o golpe, a narração diz a falha com o verbo próprio dele (verbos.falha da
+# ficha). Só texto, a partir do que o servidor já manda ao Mestre: a mecânica não muda.
+#
+# Na falha crítica o site junta numa frase só a falha e a desgraça («… e falhou. A arma (machado) caiu-lhe da mão.»;
+# sem desgraça aplicada, «O golpe correu mal.»). O servidor emite o `ataque` e, logo a seguir (journalSeq + 1), a
+# `desgraca` quando há uma aplicada; por isso a falha crítica espera pelo evento seguinte para se fechar.
+
+## O verbo da falha da ficha do monstro; sem ele, o do site para quem não tem verbos («tentou atacar»).
+static func verbo_falha(v: Dictionary, id: String) -> String:
+	var verbos = figura(v, id).get("verbos")
+	if verbos is Dictionary and _texto(verbos.get("falha")) != "":
+		return _texto(verbos["falha"])
+	return Textos.VERBO_FALHA_PADRAO
+
+
+## A falha de um monstro neste `ataque`, ou {} se não é isso:
+## {atacanteId, alvoId, oportunidade, critica, arma, journalSeq}. Só criaturas (o golpe falhado da heroína tem as frases
+## dela no HUD) e só figuras que a vista conhece.
+static func falha_do_monstro(msg: Dictionary, v: Dictionary) -> Dictionary:
+	if _texto(msg.get("tipo")) != "ataque":
+		return {}
+	var d = msg.get("dados")
+	if not (d is Dictionary):
+		return {}
+	var res := _texto(d.get("resultado"))
+	if res != "erro" and res != "falha_critica":
+		return {}
+	var atac := _texto(d.get("atacanteId"))
+	var f := figura(v, atac)
+	if atac == "" or f.is_empty() or _texto(f.get("lado")) == "jogadora":
+		return {}
+	var js = d.get("journalSeq")
+	return {
+		"atacanteId": atac, "alvoId": _texto(d.get("alvoId")), "oportunidade": d.get("ataqueDeOportunidade") == true,
+		"critica": res == "falha_critica", "arma": _texto(d.get("arma")),
+		"journalSeq": int(js) if js is int or js is float else -1,
+	}
+
+
+## A desgraça aplicada que fecha esta falha crítica ({efeito, perdeQuarto}), ou {} se `msg` não é ela: tem de ser a
+## `desgraca` do mesmo atacante e, quando o fio traz o journalSeq, o evento logo a seguir ao `ataque`.
+static func desgraca_da_falha(msg: Dictionary, r: Dictionary) -> Dictionary:
+	if _texto(msg.get("tipo")) != "desgraca" or r.is_empty():
+		return {}
+	var d = msg.get("dados")
+	if not (d is Dictionary) or _texto(d.get("figuraId")) != _texto(r.get("atacanteId")):
+		return {}
+	var js = d.get("journalSeq")
+	if (js is int or js is float) and int(r.get("journalSeq", -1)) >= 0 and int(js) != int(r["journalSeq"]) + 1:
+		return {}
+	return {"efeito": _texto(d.get("efeito")), "perdeQuarto": d.get("perdeQuarto") == true}
+
+
+## A frase do site para a falha do monstro. `desg` é a desgraça que a fechou ({} = nenhuma aplicada).
+static func frase_falha_monstro(v: Dictionary, r: Dictionary, desg: Dictionary = {}) -> String:
+	var atac := _texto(r.get("atacanteId"))
+	var nome := _nome_curto(v, atac)
+	var frase: String
+	if r.get("oportunidade") == true:
+		frase = Textos.FALHA_OPORTUNIDADE % nome
+	else:
+		frase = Textos.FALHA_MONSTRO % [nome, verbo_falha(v, atac), _nome_curto(v, _texto(r.get("alvoId")))]
+	if r.get("critica") == true:
+		# Sem desgraça aplicada (o Mestre escolheu «Não acontece nada»), o site diz «O golpe correu mal.».
+		frase += " " + Frases.desgraca(_texto(desg.get("efeito")), nome, false, _arma_legivel(_texto(r.get("arma"))),
+			desg.get("perdeQuarto") == true)
+	return frase
+
+
+## A linha que fica no registo da narração (o supRegistar do site: quem, contra quem, oportunidade, falha crítica).
+static func linha_registo_falha(v: Dictionary, r: Dictionary, desg: Dictionary = {}) -> String:
+	var critica := ""
+	if r.get("critica") == true:
+		var ef := _texto(desg.get("efeito"))
+		critica = Textos.REGISTO_FALHA_CRITICA % (str(Textos.NOME_DESGRACA.get(ef, ef)) if ef != "" else Textos.REGISTO_FALHA_SEM_DESGRACA)
+	return Textos.REGISTO_FALHA % [
+		_nome_curto(v, _texto(r.get("atacanteId"))), _nome_curto(v, _texto(r.get("alvoId"))),
+		Textos.REGISTO_CAIDA_OPORTUNIDADE if r.get("oportunidade") == true else "", critica,
+	]
+
+
+## A linha de abertura do cartão de desgraça de um MONSTRO (site: modo «monstro» do cartão): «Orc tentou desferir o
+## machado a Ong e falhou.» ou, no golpe de oportunidade, «Orc tentou golpeá-la de oportunidade ao sair e falhou.».
+## "" quando o cartão não é de desgraça ou a desgraça é da heroína (o site não enquadra esse).
+static func frase_cartao_falha(cartao: Dictionary, vista: Dictionary) -> String:
+	if _texto(cartao.get("tipo")) != "desgraca":
+		return ""
+	var atac := _texto(cartao.get("figuraId"))
+	var f := figura(vista, atac)
+	if f.is_empty() or _texto(f.get("lado")) == "jogadora":
+		return ""
+	var interno := cartao_interno(vista, _texto(cartao.get("cartaoId")))
+	var nome := _nome_curto(vista, atac)
+	if interno.get("ataqueDeOportunidade") == true:
+		return Textos.CARTAO_FALHA_OPORTUNIDADE % nome
+	var alvo := _texto(interno.get("alvoId"))
+	if alvo == "":
+		return ""
+	return Textos.FALHA_MONSTRO % [nome, verbo_falha(vista, atac), _nome_curto(vista, alvo)]
+
+
+## O nome legível da arma (o id da técnica, como na frase prevista do cartão).
+static func _arma_legivel(id: String) -> String:
+	return id.replace("-", " ").replace("_", " ").strip_edges()
 
 
 ## A linha que fica no registo da narração, com os contadores (como o supRegistar do site).

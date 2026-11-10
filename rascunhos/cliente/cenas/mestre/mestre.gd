@@ -95,6 +95,10 @@ var _raios: Button
 var _raio_agora: Button
 ## Os eventos do ambiente já narrados (seq), para o mesmo evento repetido no fio não narrar duas vezes.
 var _amb_narrados := {}
+## Ordem 14: a falha crítica de um monstro à espera do evento seguinte (a `desgraca` que a fecha, ou nenhuma).
+var _falha_pendente: Dictionary = {}
+## Os `ataque` falhados já narrados (seq), para o mesmo evento repetido no fio não narrar duas vezes.
+var _falhas_narradas := {}
 var _pausar: Button
 var _terminar: Button
 var _recomecar: Button
@@ -280,6 +284,7 @@ func _desenhar_fim() -> void:
 
 
 func aplicar_vista(msg: Dictionary) -> void:
+	_fechar_falha({})  # a vista chega depois dos eventos da transacção: uma falha crítica sem `desgraca` fecha-se aqui
 	vista = msg
 	mortes = Modelo.mortes_da_vista(msg)
 	_arena.aplicar_vista(msg)
@@ -326,6 +331,7 @@ func _ao_mestre(msg: Dictionary) -> void:
 
 
 func _ao_evento(msg: Dictionary) -> void:
+	_narrar_falha(msg)
 	_narrar_caida(msg)
 	_narrar_ambiente(msg)
 	if str(msg.get("tipo", "")) == "cartao_fechado":
@@ -351,6 +357,45 @@ func _narrar_caida(msg: Dictionary) -> void:
 		return
 	var frase := Modelo.frase_caida_piora(vista, r)
 	var linha := Modelo.linha_registo_caida(vista, r)
+	narracao.append(frase + "\n" + linha)
+	_juntar_alerta(frase)
+	_aba_registo.narrar(frase, linha)
+
+
+## Ordem 14 (paridade com o site, jogo.js atacarIA e série de oportunidade): o monstro falhou o golpe. A frase do site
+## com o verbo da ficha (verbos.falha), ao Mestre (alerta + registo). Na falha crítica espera-se o evento seguinte: a
+## `desgraca` do mesmo atacante junta a frase dela; qualquer outro evento (ou a vista) fecha com «O golpe correu mal.».
+func _narrar_falha(msg: Dictionary) -> void:
+	if not _falha_pendente.is_empty():
+		var desg := Modelo.desgraca_da_falha(msg, _falha_pendente)
+		_fechar_falha(desg)
+		if not desg.is_empty():
+			return
+	var r := Modelo.falha_do_monstro(msg, vista)
+	if r.is_empty():
+		return
+	var chave := str(msg.get("seq", ""))  # como no ambiente: o mesmo evento repetido no fio traz o mesmo seq
+	if chave != "" and _falhas_narradas.has(chave):
+		return
+	if chave != "":
+		_falhas_narradas[chave] = true
+	if r.get("critica") == true:
+		_falha_pendente = r
+		return
+	_escrever_falha(r, {})
+
+
+func _fechar_falha(desg: Dictionary) -> void:
+	if _falha_pendente.is_empty():
+		return
+	var r := _falha_pendente
+	_falha_pendente = {}
+	_escrever_falha(r, desg)
+
+
+func _escrever_falha(r: Dictionary, desg: Dictionary) -> void:
+	var frase := Modelo.frase_falha_monstro(vista, r, desg)
+	var linha := Modelo.linha_registo_falha(vista, r, desg)
 	narracao.append(frase + "\n" + linha)
 	_juntar_alerta(frase)
 	_aba_registo.narrar(frase, linha)
