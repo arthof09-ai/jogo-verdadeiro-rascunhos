@@ -2235,7 +2235,9 @@ export function criarSala({
       case 'MASTER_RESUME':
         return true;
       case 'MASTER_PLACE':
-        return s(msg.fichaId) && !!msg.casa && Number.isInteger(msg.casa.x) && Number.isInteger(msg.casa.y) && sn(msg.orientacao, 8);
+        // Ordem 22 (V13): a orientação, se vier em texto, tem de ter 1..8 caracteres (comum.schema.json); vazia ia à Party.
+        return s(msg.fichaId) && !!msg.casa && Number.isInteger(msg.casa.x) && Number.isInteger(msg.casa.y)
+          && (msg.orientacao === undefined || msg.orientacao === null || s(msg.orientacao, 8));
       case 'MASTER_MODE':
         return s(msg.figuraId) && MODOS.includes(msg.modo);
       case 'MASTER_ACT':

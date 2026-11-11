@@ -72,7 +72,8 @@ export function efeitoAmbiente(ambiente) {
   const clima = CLIMAS_VISIVEIS.includes(ambiente?.clima) ? ambiente.clima : null;
   let luz = null;
   const m = /^(\d{1,2}):(\d{2})$/.exec(typeof ambiente?.hora === 'string' ? ambiente.hora : '');
-  if (m) {
+  // Ordem 22 (V14): só uma hora do relógio (00:00..23:59) diz dia ou noite; "25:70" dava «noite».
+  if (m && Number(m[1]) <= 23 && Number(m[2]) <= 59) {
     const h = Number(m[1]);
     luz = h >= 6 && h < 18 ? 'dia' : 'noite';
   }

@@ -303,3 +303,13 @@ Testes: `testes/ordem22-decisoes.test.mjs` (8; em 276e573 falhavam 6 — 17-2 a,
 
 - **E-22-1 — a guarda de versão compara só o `vlabSha`.** `recomecarBatalha` (e o restauro, e agora o `avisoMotor`) comparam `estado.motores.vlabSha` com o do motor injectado; `null === null` passa: duas salas sem sha registado (motor sem `MOTOR_SHA256`) não se distinguem, mesmo que o motor tenha mudado (o `dmgVersao` e o `levelupSha` não entram na conta). Dívida menor; a correcção, quando vier, é na guarda (não por bloqueio por estado).
 
+
+**Varredura (o espírito das V1-V12; `testes/ordem22-varredura.test.mjs`, cada teste de correcção falhava em 7e36ede):**
+
+- **V13 — `MASTER_PLACE` com `orientacao: ""`.** O servidor só limitava o comprimento máximo da orientação; a vazia era aceite, a figura ficava com orientação `""` e o evento `colocacao` e o snapshot que saíam para a Party violavam o próprio schema (`comum.schema.json` `orientacao`: `minLength 1`). O schema de entrada `MASTER_PLACE` já a recusava; agora o servidor também (`ROOM_REJECT` `formato`, nada gravado). Sem orientação, ou `null`, continua a dar `'S'`.
+- **V14 — hora do painel fora do relógio.** `efeitoAmbiente` só olhava para a hora ≥ 18: `"25:70"` ou `"99:00"` davam `luz: 'noite'` à Party. Uma hora que não existe não diz se é dia ou noite: `luz: null`, como sem hora. As horas válidas (00:00..23:59) não mudam.
+- Lidos de novo sem achados: o restauro do journal, a sincronização (RESYNC/JOIN com `lastSeq`), as validações dos comandos do Mestre e das intenções, e os caminhos novos da sala de espera (eventos, opções, pausa/retomada e recusas não chegam a quem espera; o fluxo grava-se).
+
+**Registado, sem regra inventada (N22-):**
+
+1. **N22-1 — a sala de espera só existe depois de um restauro.** A palavra do Mestre («uma batalha não pode acontecer sem mim») foi implementada para o caso pedido: sala restaurada a meio da batalha, antes de o Mestre entrar. Numa sala que não foi restaurada, ou depois de o Mestre ter entrado uma vez, a queda do Mestre continua a ser a E-C4 de sempre: a mesa pausa e quem entra (ou volta) nessa altura vê a batalha em pausa, não o lobby. Levar quem entra durante a ausência do Mestre também para o lobby nesses casos muda o que a Party vê numa queda normal: precisa da palavra do Mestre.
