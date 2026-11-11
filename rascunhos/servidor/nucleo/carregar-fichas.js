@@ -18,11 +18,24 @@ export const POSICAO_FIP = Object.freeze(['Entrada', 'Baixa', 'Media', 'Alta', '
 // Schema (subconjunto pequeno de JSON Schema, interpretado pelo validador abaixo)
 // ---------------------------------------------------------------------------
 
+// Ordem 25 (N24-1): limites de comprimento que o PRÓPRIO protocolo (protocolo/v2) já escreve para o que sai da ficha.
+// Só estes; o que o protocolo não limita continua sem limite. Contam-se caracteres (pontos de código), como o maxLength.
+export const LIMITES_DO_PROTOCOLO = Object.freeze({
+  fichaId: 64, // fichaId: MASTER_PLACE, ROOM_SNAPSHOT (bloco do Mestre), MASTER_LOBBY_SET
+  nomePublico: 80, // comum.nomePublico: entrada, colocacao, snapshot da Party
+  tecnicaId: 64, // arma / tecnica: ROOM_OPTIONS, comum.acao, eventos ataque e cura
+  itemId: 64, // itemId: ROOM_OPTIONS.consumiveis, comum.acao, evento consumivel
+  tipoDano: 32, // tipos: eventos dano / dano_ambiente
+  expressao: 64, // expressao: eventos ataque/cura próprios da jogadora
+});
+const L = LIMITES_DO_PROTOCOLO;
+const TIPO_DANO = { type: 'string', minLength: 1, maxLength: L.tipoDano };
+
 const SCHEMA_TECNICA = {
   type: 'object',
   required: ['id', 'nome', 'expressaoAtaque', 'custoPA', 'alcanceM'],
   properties: {
-    id: { type: 'string', minLength: 1 },
+    id: { type: 'string', minLength: 1, maxLength: L.tecnicaId },
     nome: { type: 'string' },
     expressaoAtaque: { type: 'string', minLength: 1 },
     expressaoDano: { type: 'string', minLength: 1 },
@@ -31,11 +44,11 @@ const SCHEMA_TECNICA = {
       items: {
         type: 'object',
         required: ['tipo', 'expressao'],
-        properties: { tipo: { type: 'string', minLength: 1 }, expressao: { type: 'string', minLength: 1 } },
+        properties: { tipo: TIPO_DANO, expressao: { type: 'string', minLength: 1 } },
       },
     },
-    tipos: { type: 'array', items: { type: 'string', minLength: 1 } },
-    tipo: { type: 'string', minLength: 1 },
+    tipos: { type: 'array', items: TIPO_DANO },
+    tipo: TIPO_DANO,
     reparticao: { type: 'array', items: { type: 'string', minLength: 1 } }, // E3
     classificacao: { enum: CLASSIFICACAO_TECNICA }, // E2
     posicaoFIP: { enum: POSICAO_FIP }, // E2
@@ -65,9 +78,9 @@ export const SCHEMA_FICHAS_1 = Object.freeze({
     'testes', 'constituicao', 'deslocamentoBase', 'tecnicas', 'fonte',
   ],
   properties: {
-    id: { type: 'string', pattern: '^[a-z0-9-]+$' },
+    id: { type: 'string', pattern: '^[a-z0-9-]+$', maxLength: L.fichaId },
     nome: { type: 'string', minLength: 1 },
-    nomePublico: { type: 'string', minLength: 1 },
+    nomePublico: { type: 'string', minLength: 1, maxLength: L.nomePublico },
     papel: { enum: ['criatura', 'npc', 'jogadora'] },
     classificacao: { enum: CLASSIFICACAO_FICHA },
     vidaTotal: { type: 'integer', minimum: 1 },
@@ -110,7 +123,7 @@ export const SCHEMA_FICHAS_1 = Object.freeze({
       items: {
         type: 'object',
         required: ['itemId', 'quantidade'],
-        properties: { itemId: { type: 'string', minLength: 1 }, quantidade: { type: 'integer', minimum: 0 } },
+        properties: { itemId: { type: 'string', minLength: 1, maxLength: L.itemId }, quantidade: { type: 'integer', minimum: 0 } },
       },
     },
     transformacao: { type: ['object', 'null'] },
@@ -169,6 +182,13 @@ function junta(caminho, chave) {
   return caminho ? `${caminho}.${chave}` : chave;
 }
 
+/** Comprimento em caracteres (pontos de código), como o maxLength do JSON Schema. */
+function comprimento(texto) {
+  let n = 0;
+  for (const _ of texto) n += 1;
+  return n;
+}
+
 function emFalta(obj, chave) {
   return !Object.prototype.hasOwnProperty.call(obj, chave) || obj[chave] === undefined;
 }
@@ -176,7 +196,7 @@ function emFalta(obj, chave) {
 /**
  * Valida `valor` contra `schema`. Empurra {campo, motivo} para `erros`
  * e {campo, motivo} para `avisos`. Suporta: type, enum, pattern, minLength,
- * minimum, exclusiveMinimum, maximum, minItems, items, required, properties, additionalProperties, anyOf(required).
+ * maxLength, minimum, exclusiveMinimum, maximum, minItems, items, required, properties, additionalProperties, anyOf(required).
  */
 export function validarSchema(schema, valor, caminho, erros, avisos = []) {
   const campo = caminho || '(raiz)';
@@ -191,6 +211,9 @@ export function validarSchema(schema, valor, caminho, erros, avisos = []) {
   }
   if (typeof valor === 'string') {
     if (schema.minLength !== undefined && valor.length < schema.minLength) erros.push({ campo, motivo: 'texto vazio' });
+    if (schema.maxLength !== undefined && comprimento(valor) > schema.maxLength) {
+      erros.push({ campo, motivo: `mais de ${schema.maxLength} caracteres (limite do protocolo)` });
+    }
     if (schema.pattern && !new RegExp(schema.pattern).test(valor)) erros.push({ campo, motivo: `não casa com ${schema.pattern}` });
   }
   if (typeof valor === 'number') {
@@ -323,6 +346,22 @@ function regrasExtraDaFicha(f, erros, avisos, verificarExpressao) {
       erros.push({ campo: `${base}.componentes`, motivo: 'vazio e sem expressaoDano: a técnica não dá dano' });
     }
   });
+
+  // Ordem 25 (N24-1): o que só sai à Party por ser da jogadora. O nome dela é o nome público quando não há nomePublico
+  // (projecao.js nomePublicoDe); as expressões de ataque e de cura das técnicas dela saem no `expressao` dos eventos
+  // próprios. As de quem não é jogadora (e as de dano e dos testes) não saem: sem limite escrito, sem limite aqui.
+  if (f.papel === 'jogadora') {
+    if (emFalta(f, 'nomePublico') && typeof f.nome === 'string' && comprimento(f.nome) > L.nomePublico) {
+      erros.push({ campo: 'nome', motivo: `mais de ${L.nomePublico} caracteres sem nomePublico (é o nome público; limite do protocolo)` });
+    }
+    tecnicas.forEach((t, i) => {
+      for (const c of ['expressaoAtaque', 'expressaoCura']) {
+        if (typeof t[c] === 'string' && comprimento(t[c]) > L.expressao) {
+          erros.push({ campo: `tecnicas[${i}].${c}`, motivo: `mais de ${L.expressao} caracteres (limite do protocolo)` });
+        }
+      }
+    });
+  }
 
   // E6: RD geral > 0 junto com porTipo[t] > 0 → RD_EMPILHAMENTO_SEM_DECISAO no motor.
   if (f.rd && typeof f.rd === 'object' && Number.isInteger(f.rd.geral) && f.rd.porTipo && typeof f.rd.porTipo === 'object') {
