@@ -369,28 +369,34 @@ func _ao_abrir() -> void:
 
 
 func _enviar_join() -> void:
-	# sala.js entrar(): papel + (seatToken) ou (nome+senha) ou (pin); lastSeq opcional.
-	# O roomId não é exigido no JOIN; só vai se já o conhecemos de um WELCOME anterior.
+	var msg := montar_join()
+	if msg.is_empty():
+		_fechar_socket()
+		_mudar_estado(Ligacao.DESLIGADA)
+		_pedir_entrada("")
+		return
+	_entrou_com_token = msg.has("seatToken")
+	_enviar_dict(msg)
+
+
+## Monta o ROOM_JOIN (sala.js entrar): papel + (seatToken) ou (nome+senha) ou (pin); lastSeq opcional.
+## Ordem 21 (N19-2, errata do schema ROOM_JOIN): o roomId não é exigido; só vai se já o conhecemos de um
+## ROOM_WELCOME anterior. Vazio = não há com que entrar (pede-se a entrada outra vez).
+func montar_join() -> Dictionary:
 	var msg := _com_sala({"v": PROTOCOLO, "type": "ROOM_JOIN", "papel": papel, "cliente": VERSAO_CLIENTE})
 	if _seat_token != "":
 		msg["seatToken"] = _seat_token  # dentro da mensagem, nunca na URL (E-P9)
-		_entrou_com_token = true
 		var est = _estado_no()
 		if est != null and est.tem_snapshot:
 			msg["lastSeq"] = est.ultimo_seq  # o mesmo lugar: o fluxo é o mesmo
 	elif papel == "mestre" and _pin != "":
 		msg["pin"] = _pin
-		_entrou_com_token = false
 	elif papel != "mestre" and _nome != "":
 		msg["nome"] = _nome
 		msg["senha"] = _senha
-		_entrou_com_token = false
 	else:
-		_fechar_socket()
-		_mudar_estado(Ligacao.DESLIGADA)
-		_pedir_entrada("")
-		return
-	_enviar_dict(msg)
+		return {}
+	return msg
 
 
 func _ao_fechar(codigo: int) -> void:

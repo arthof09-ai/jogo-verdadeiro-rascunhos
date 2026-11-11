@@ -84,7 +84,7 @@ Tráfego: 5.082 mensagens dos 57 testes do servidor (com os patches da 4.ª corr
 1. `ROOM_EVENT` e `comum` citam `../validar.mjs` (`conferirPropria()`) e `../DIVERGENCIAS.md`, que **não estão no repositório**. Se existirem no PC, falta a ponte; se não, a conferência acima faz o papel do `conferirPropria()`.
 2. O schema exige `intentId` UUID v4 (§3); o servidor aceita qualquer id opaco (`RE_ID`). O cliente tem de gerar UUID v4; o servidor fica tolerante.
 3. O bloco `mestre` do snapshot: `figuras` já está fixado (`#/$defs/figuraMestre`, ver abaixo); `vez`, `lobby` e `cartoes` ainda só dizem «objeto».
-4. `MASTER_CONFIRM_DICE` e `MASTER_EXPORT` não aparecem em nenhum teste: os schemas não foram conferidos contra tráfego real.
+4. `MASTER_CONFIRM_DICE` não aparece em nenhum teste: o schema não foi conferido contra tráfego real. (O `MASTER_EXPORT` entrou no tráfego na ordem 21.)
 5. Em `comum.schema.json`, os `$defs` `desgraca` e `tipoAcao` não são usados por nenhum schema.
 6. As erratas propostas D-xx não foram conferidas, uma a uma, contra a página JV0.4 nesta sessão.
 
@@ -146,3 +146,9 @@ Pedidas pela revisão do Muse (CM-000009) ao desenho JV3.1 (Notion: «JV3.1 — 
 - `comum.schema.json`: o tipo de acção `apagar_fogo` (em `acao.tipo` e em `acaoSemParametros`, por isso também em `ROOM_OPTIONS.acoes`). Errata proposta D-33.
 - `ROOM_EVENT` `fogo`: `apagados[].porque` aceita `seco` (sem chuva, ela gastou a Acção de Movimento a apagar-se). Errata proposta D-33.
 - O alcance pelo caminho das casas (parte B) e o título «Ataque de oportunidade» do cartão do Mestre (parte C) não mudam o protocolo: o título lê o `ataqueDeOportunidade` do cartão interno do bloco `mestre` da vista, que já existia.
+
+## Ordem 21 do CM-000009: decisões sobre os omissos N19-1, N19-2 e N18-2 (11/11/2026, CM-000008-I0004)
+
+- **Errata D-34 (N19-2; palavra do Mestre, 11/11/2026): `ROOM_JOIN` sem `roomId` obrigatório.** O `required` passa a `["v", "type", "papel"]`; o `roomId` continua permitido. O servidor nunca o exigiu no JOIN, e o cliente só o aprende no `ROOM_WELCOME` (é sorteado a cada arranque sem journal): na primeira entrada não o manda, depois manda-o. Conferido no CI com os JOIN que o cliente monta (`cliente/testes/pecas_mestre.gd` → `validar-mensagens.py`).
+- **Errata D-35 (N18-2; palavra do Mestre, 11/11/2026): `ROOM_EVENT` tipo `aviso_motor`, só no ramo `paraMestre`.** Nasce no journal quando a sala é restaurada no fim com um motor de outra versão (o «Recomeçar» vai ser recusado, 17-3). `dados` vazios; o porquê no `soMestre` (`codigo: 'MOTOR_DIFERENTE'`, `recomecar: 'recusado'`, `motorGravado`, `motorAgora`). Nunca sai para a Party.
+- **N19-1 (decisão do coordenador): o exemplo do `MASTER_EXPORT`.** `v2/exemplos/MASTER_EXPORT.json` tem agora `conteudo` em texto, a forma de `journal.exportar()` (`<corpo>\n<assinatura>\n`), como o servidor manda. O schema não muda (continua a aceitar objecto ou texto).

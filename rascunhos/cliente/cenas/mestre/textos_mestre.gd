@@ -203,7 +203,7 @@ const NOME_EVENTO := {
 	"ambiente": "ambiente", "ambiente_mestre": "ambiente", "estado": "estado", "entrada": "entrada",
 	"revertido": "voltar", "modo": "modo", "lobby": "mesa", "fim": "fim", "teste_morte": "teste de morte",
 	"recusa": "recusa", "reacao": "reacção", "consumivel": "consumível", "pausa": "pausa", "retomada": "continuar",
-	"raio": "raio", "dano_ambiente": "dano do ambiente", "fogo": "fogo",
+	"raio": "raio", "dano_ambiente": "dano do ambiente", "fogo": "fogo", "aviso_motor": "aviso do motor",
 }
 
 # ---------------------------------------------------------------- estado da sala e alertas
@@ -218,6 +218,8 @@ const ALERTA := {
 	"pausa": "Sala em pausa.",
 	"recusa": "O servidor não aceitou: %s",
 	"sem_envio": "Sem ligação: o comando não saiu.",
+	# Ordem 21 (N18-2): servidor restaurado no fim com um motor de outra versão.
+	"aviso_motor": "Sala restaurada com outra versão do motor: «Recomeçar» não vai funcionar.",
 }
 
 # ---------------------------------------------------------------- figuras

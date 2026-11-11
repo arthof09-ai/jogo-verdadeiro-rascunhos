@@ -379,7 +379,7 @@
     },
 
     "paraMestre": {
-      "description": "O Mestre vê tudo: os dados do tipo, o `soMestre` e o `journalSeq` interno (E-P4). Inclui os tipos internos que nunca saem para a Party (errata proposta D-16).",
+      "description": "O Mestre vê tudo: os dados do tipo, o `soMestre` e o `journalSeq` interno (E-P4). Inclui os tipos internos que nunca saem para a Party (errata proposta D-16). `aviso_motor` (errata D-35, N18-2, palavra do Mestre 11/11/2026): a sala acordou no fim com um motor de outra versão e o «Recomeçar» vai ser recusado; `dados` vazios, o porquê no `soMestre`.",
       "type": "object",
       "required": ["v", "type", "roomId", "seq", "revision", "ts", "tipo", "dados"],
       "properties": {
@@ -392,7 +392,7 @@
         "tipo": {
           "enum": [
             "entrada", "colocacao", "turno", "movimento", "ataque", "dano", "cura", "estado", "desgraca", "reacao", "consumivel", "ambiente", "revertido", "recomeco", "escala", "fim", "raio", "dano_ambiente", "fogo",
-            "pausa", "retomada", "cartao", "cartao_fechado", "lobby", "modo", "ia", "recusa", "acao", "teste_morte", "erro_motor", "ambiente_mestre"
+            "pausa", "retomada", "cartao", "cartao_fechado", "lobby", "modo", "ia", "recusa", "acao", "teste_morte", "erro_motor", "ambiente_mestre", "aviso_motor"
           ]
         },
         "dados": {

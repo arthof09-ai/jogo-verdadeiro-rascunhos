@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "MASTER_EXPORT.schema.json",
   "title": "MASTER_EXPORT (servidor → Mestre)",
-  "description": "Resposta a MASTER_SUPERVISOR {op:'exportar'} (E-P13): só ao lugar do Mestre, nunca por URL servida. `conteudo` é o que journal.exportar() devolve (corpo canónico + assinatura); a forma interna é do journal e não se fixa aqui. Escrito pela conferência I0004 a partir de sala.js; NENHUM teste o gera ainda.",
+  "description": "Resposta a MASTER_SUPERVISOR {op:'exportar'} (E-P13): só ao lugar do Mestre, nunca por URL servida. `conteudo` é o que journal.exportar() devolve (corpo canónico + assinatura); a forma interna é do journal e não se fixa aqui. Escrito pela conferência I0004 a partir de sala.js. O servidor manda o texto (`<corpo>\\n<assinatura>\\n`); ordem 21 (N19-1): o exemplo passou a ter essa forma e o teste servidor/testes/ordem21-decisoes.test.mjs gera-o pelo protocolo.",
   "type": "object",
   "required": [
     "v",

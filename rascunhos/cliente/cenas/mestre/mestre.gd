@@ -334,6 +334,7 @@ func _ao_evento(msg: Dictionary) -> void:
 	_narrar_falha(msg)
 	_narrar_caida(msg)
 	_narrar_ambiente(msg)
+	_avisar_motor(msg)
 	if str(msg.get("tipo", "")) == "cartao_fechado":
 		var d = msg.get("dados")
 		if d is Dictionary and not cartao.is_empty() and d.get("cartaoId") == cartao.get("cartaoId"):
@@ -343,6 +344,18 @@ func _ao_evento(msg: Dictionary) -> void:
 			_aba_agir.editar("")
 			_desenhar_cartao()
 	_pedir_vista_em_breve()
+
+
+## Ordem 21 (N18-2, decisão do Mestre): o servidor restaurou a sala no fim com um motor de outra versão; o «Recomeçar»
+## vai ser recusado (17-3). O journal traz o evento `aviso_motor` (só ao Mestre): vai aos alertas, uma vez por seq.
+func _avisar_motor(msg: Dictionary) -> void:
+	if str(msg.get("tipo", "")) != "aviso_motor":
+		return
+	var chave := "motor:" + str(msg.get("seq", ""))
+	if _amb_narrados.has(chave):
+		return
+	_amb_narrados[chave] = true
+	_juntar_alerta(Textos.ALERTA["aviso_motor"])
 
 
 ## Ordem 12 (paridade com o site, REF_35): a heroína já caída levou um golpe e o motor subiu-lhe as falhas. O site

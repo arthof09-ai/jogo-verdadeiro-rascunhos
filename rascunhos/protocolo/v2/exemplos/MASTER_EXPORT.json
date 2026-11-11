@@ -8,10 +8,7 @@
       "type": "MASTER_EXPORT",
       "roomId": "sala-teste",
       "marca": "MESTRE-ONLY",
-      "conteudo": {
-        "corpo": "<corpo canónico do journal>",
-        "assinatura": "<HMAC ou SHA-256>"
-      }
+      "conteudo": "<corpo canónico do journal>\n<sha256:… ou hmac-sha256:…>\n"
     }
   }
 ]

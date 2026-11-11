@@ -329,6 +329,16 @@ export function criarSala({
     // TODO(JV3.x): procedimento de migração de versão do motor (o Mestre decide).
     transacao((tx) => {
       if (pausar(tx, 'manutencao', 'motor')) return;
+      // Ordem 21 (N18-2, palavra do Mestre: «sim, avisar»): no fim não há pausa, e o «Recomeçar» vai ser recusado
+      // (17-3). O Mestre é avisado já, na hora do restauro, com um evento do journal só dele (`aviso_motor`, dados
+      // vazios: a Party não o recebe). Chega-lhe pelo fluxo quando se volta a ligar.
+      if (tx.estado.fase === 'fim') {
+        tx.emitir('aviso_motor', {}, {
+          codigo: 'MOTOR_DIFERENTE', recomecar: 'recusado',
+          motorGravado: tx.estado.motores?.vlabSha ?? null, motorAgora: motoresInfo.vlabSha ?? null,
+        });
+        return;
+      }
       // Ordem 17 (V1): a sala já vinha em pausa (ex.: o Mestre tinha caído). Antes ficava a pausa antiga, e a volta do
       // Mestre (RESYNC, origem 'desconexao') ou o MASTER_RESUME retomavam a mesa com o motor novo, furando a E-C11.
       // A pausa passa a ser do motor. Só no registo do Mestre: o evento `pausa` não está na lista da Party, não há

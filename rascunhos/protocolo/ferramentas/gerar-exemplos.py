@@ -103,7 +103,8 @@ def main(caminho):
     casos[('MASTER_EXPORT',)] = {'caso': 'exportação do journal, só ao Mestre (escrito à mão; o conteúdo real é do journal)',
         'sentido': 'servidor → cliente', 'papel': 'mestre',
         'mensagem': {'v': 2, 'type': 'MASTER_EXPORT', 'roomId': 'sala-teste', 'marca': 'MESTRE-ONLY',
-                     'conteudo': {'corpo': '<corpo canónico do journal>', 'assinatura': '<HMAC ou SHA-256>'}}}
+                     # Ordem 21 (N19-1): o texto de journal.exportar(), como o servidor o manda (corpo, assinatura).
+                     'conteudo': '<corpo canónico do journal>\n<sha256:… ou hmac-sha256:…>\n'}}
 
     por_tipo = {}
     for k, c in casos.items():

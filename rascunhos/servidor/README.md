@@ -237,9 +237,13 @@ O contrato não muda: nenhum tipo de mensagem, campo, schema ou código de erro 
 **Registado, sem regra inventada (N18-):**
 
 1. **N18-1 — o que se perde ao podar o travão.** A entrada podada leva a contagem das falhas recentes e o `nivel` da escada de espera de quem já não está bloqueado: esse IP volta a começar do nível 0. O tecto (4096) e a ordem da poda são escolha de implementação; outra política (agrupar IPv6 por /64, guardar o `nivel` mais tempo) precisa da palavra do Mestre.
+   **DECIDIDO — SEM MUDANÇA (palavra do Mestre, 11/11/2026, ordem 21):** a limpeza do registo recomeça a escada de espera do IP limpo do nível 0; a política simples fica.
 2. **N18-2 — 17-3 só recusa.** O Mestre não é avisado ao restaurar (isso seria um evento novo no journal restaurado); sabe-o ao tentar «Recomeçar». Avisar à entrada precisa da palavra.
+   **DECIDIDO — SIM, avisar (palavra do Mestre, 11/11/2026): IMPLEMENTADO na ordem 21** (evento `aviso_motor`, ver abaixo).
 3. **N18-3 — 17-2 e o lobby.** Uma sala restaurada no lobby não pausa quando a jogadora entra sem o Mestre (no lobby ela não pode agir). Se o Mestre quiser a pausa também aí, precisa da palavra.
+   **DECIDIDO — SEM MUDANÇA (palavra do Mestre, 11/11/2026, ordem 21):** no lobby ela não pode agir; a sala restaurada no lobby não pausa.
 4. **N18-4 — o `ROOM_JOIN` com outra versão do protocolo** (`ERRO` `versao`) continua sem contar para fechar a ligação: é um cliente legítimo de outra versão, não formato mal feito. O mesmo para as mensagens bem formadas antes de entrar (`ERRO` `sem_lugar`). Pôr-lhes limite precisa da palavra (não são rejeições de formato do §2).
+   **DECIDIDO — SEM MUDANÇA (palavra do Mestre, 11/11/2026, ordem 21):** os erros de versão e as mensagens pré-JOIN bem formadas não contam para fechar a ligação.
 
 ## Ordem 19 do CM-000009 — varredura crítica alargada: servidor, cliente e protocolo (11/11/2026)
 
@@ -254,3 +258,25 @@ O contrato não muda: nenhum tipo de mensagem, campo, schema ou código de erro 
 
 1. **N19-1 — o exemplo do `MASTER_EXPORT` não tem a forma real.** `protocolo/v2/exemplos/MASTER_EXPORT.json` (escrito à mão em `gerar-exemplos.py`) mostra `conteudo` como objecto `{corpo, assinatura}`; o servidor manda o texto de `journal.exportar()` (`<corpo>\n<assinatura>\n`). O schema aceita os dois (`["object", "string"]`), por isso nada falha. O `MASTER_EXPORT` está na lista do que não se mexe: acertar o exemplo (e, se se quiser, estreitar o schema para `string`) precisa da palavra do coordenador. Nenhum teste do servidor pede o `exportar` pelo protocolo; o «NENHUM teste o gera ainda» do schema continua verdadeiro.
 2. **N19-2 — o `ROOM_JOIN` do cliente não leva `roomId` na primeira entrada.** O schema `ROOM_JOIN` exige `roomId`; o servidor não o exige no JOIN (`sala.entrar` nem o olha) e o cliente só o manda depois de o conhecer de um `ROOM_WELCOME` (o `roomId` é sorteado a cada arranque sem journal). As mensagens do cliente à jogadora não passam pelo `validar-mensagens.py` (só as do Mestre), por isso nada falha. Tornar o `roomId` opcional no schema (ou dá-lo ao cliente antes do JOIN) muda o contrato: precisa de errata.
+
+*(Ordem 21: N19-1 corrigido por decisão do coordenador; N19-2 corrigido com errata, por decisão do Mestre — ver abaixo.)*
+
+## Ordem 21 do CM-000009 — as decisões sobre os omissos N18/N19 (11/11/2026)
+
+O Mestre aprovou, a 11/11/2026, as cinco recomendações do coordenador; o coordenador decidiu o N19-1. Cada mudança tem um teste que falhava em 92c0983 (`testes/ordem21-decisoes.test.mjs`, 4 de correcção + 4 de controlo; `cliente/testes/pecas_mestre.gd`, 7 verificações novas).
+
+**Implementado:**
+
+- **N18-2 — SIM, avisar.** Sala restaurada **no fim** com um motor de outra versão (o caso 17-3, em que o «Recomeçar» vai ser recusado): na transacção do restauro nasce o evento `aviso_motor` no journal, só do Mestre (`dados: {}`; `soMestre: {codigo: 'MOTOR_DIFERENTE', recomecar: 'recusado', motorGravado, motorAgora}`). A Party não o recebe (não está na lista de tipos dela; o `seq` dela não mexe). O Mestre recebe-o pelo seu fluxo ao voltar (JOIN com o token e o `lastSeq`, ou RESYNC); o ecrã do Mestre põe-no nos alertas, uma vez por `seq` («Sala restaurada com outra versão do motor: «Recomeçar» não vai funcionar.»), e o registo chama-lhe «aviso do motor». O aviso fica no journal: restaurar outra vez com o motor certo não o apaga nem cria outro. Com o mesmo motor, restaurar continua a não escrever nada; em combate continua a pausa de manutenção (E-C11), sem `aviso_motor`. Schema: `ROOM_EVENT` `paraMestre` ganha o tipo `aviso_motor` (errata D-35).
+- **N19-2 — SIM, errata de contrato.** O schema `ROOM_JOIN` deixa de exigir `roomId` (errata D-34, no schema e no `protocolo/README.md`). O servidor já se comportava assim (o JOIN entra com ou sem `roomId`). No cliente, o JOIN passou a ser montado por `rede.gd` `montar_join()` (sem mudar o que manda): sem `roomId` na primeira entrada, com ele depois do `ROOM_WELCOME`. O `pecas_mestre.gd` escreve esses JOIN no ficheiro dos comandos e o job `cliente` confere-os com o schema (`validar-mensagens.py`); com o schema antigo, os dois primeiros eram recusados.
+- **N19-1 — decisão do coordenador.** O exemplo `protocolo/v2/exemplos/MASTER_EXPORT.json` (e o `gerar-exemplos.py` que o escreve) tem `conteudo` como o texto que o servidor manda (`journal.exportar()`: corpo, nova linha, assinatura, nova linha). Valida contra o schema (o job `protocolo` confere os exemplos). O schema continua a aceitar `["object", "string"]` (não foi pedido estreitá-lo); a descrição já não diz «NENHUM teste o gera»: o teste novo pede o `exportar` pelo protocolo e o `MASTER_EXPORT` entra no tráfego conferido.
+
+**Decidido — sem mudança (palavra do Mestre, 11/11/2026; não voltar a perguntar):**
+
+- **N18-1:** a limpeza do registo do travão recomeça a escada de espera do IP limpo do nível 0. A política simples fica.
+- **N18-3:** a sala restaurada no LOBBY não pausa quando entra a jogadora sem o Mestre (no lobby ela não pode agir). Fica.
+- **N18-4:** o `ERRO` `versao` e as mensagens pré-JOIN bem formadas (`ERRO` `sem_lugar`) não contam para fechar a ligação. Fica.
+
+**Registado, sem regra inventada (N21-):**
+
+1. **N21-1 — o Mestre que entra sem `lastSeq` não recebe o evento.** O `aviso_motor` chega pelo fluxo: um aparelho do Mestre que se religa com o token e o `lastSeq` (o caso normal quando o servidor reinicia com o ecrã aberto) recebe-o; um aparelho que entra de novo sem `lastSeq` (PIN num aparelho novo, ou a app reaberta) recebe o snapshot, que não traz eventos, e só sabe ao tentar o «Recomeçar» (recusa com `MOTOR_DIFERENTE`, como na ordem 18) ou ao ler o journal exportado. Pôr o aviso também na vista do Mestre (ex.: um campo na `MASTER_VIEW`, ou um `MASTER_ALERTA` com motivo novo a cada entrada do Mestre) muda o contrato: precisa da palavra.
