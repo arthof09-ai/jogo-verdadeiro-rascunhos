@@ -334,6 +334,8 @@ func _correr() -> void:
 	await _ambiente(c, fx["mestre"]["vista"])
 	await _falha_monstro(c, fx["mestre"]["vista"])
 	_exportar(c)
+	_join_sem_sala()
+	await _aviso_motor(c)
 	await _nomes_juntos(c, fx["mestre"]["vista"])
 	await _camara_livre(c)
 
@@ -881,6 +883,64 @@ func _exportar(c) -> void:
 	_ok(narr.size() == c.narracao.size() and tem_caida and tem_raio and tem_falha,
 		"o ficheiro leva a narração: a caída (ordem 12), o raio (ordem 13) e a falha do monstro (ordem 14)")
 	DirAccess.remove_absolute(caminho)
+
+
+## Ordem 21 (N19-2, errata do Mestre): o primeiro ROOM_JOIN não leva roomId (o aparelho só o aprende no ROOM_WELCOME);
+## depois de o conhecer, leva-o. Os três JOIN vão para o ficheiro dos comandos, que o CI confere com o schema ROOM_JOIN.
+func _join_sem_sala() -> void:
+	print("== ROOM_JOIN sem roomId na primeira entrada (ordem 21, N19-2) ==")
+	_ok(_rede.has_method("montar_join"), "a Rede monta o ROOM_JOIN numa função à parte (montar_join)")
+	if not _rede.has_method("montar_join"):
+		return
+	var guardado := [_rede.papel, _rede._room_id, _rede._seat_token, _rede._pin, _rede._nome, _rede._senha]
+	_rede._seat_token = ""
+	_rede._room_id = ""
+	_rede.papel = "mestre"
+	_rede._pin = "12345678"
+	var j1: Dictionary = _rede.montar_join()
+	_ok(j1.get("type") == "ROOM_JOIN" and not j1.has("roomId") and j1.get("pin") == "12345678" and j1.get("papel") == "mestre",
+		"o primeiro JOIN do Mestre leva o PIN e não leva roomId")
+	_rede.papel = "jogadora"
+	_rede._pin = ""
+	_rede._nome = "Heroína Teste"
+	_rede._senha = "<senha-da-heroina>"
+	var j2: Dictionary = _rede.montar_join()
+	_ok(not j2.has("roomId") and j2.get("nome") == "Heroína Teste" and j2.has("senha"), "o primeiro JOIN da jogadora também não")
+	_rede._room_id = "sala-teste"
+	_rede._seat_token = "0123456789abcdef0123456789abcdef"
+	var j3: Dictionary = _rede.montar_join()
+	_ok(j3.get("roomId") == "sala-teste" and j3.get("seatToken") == "0123456789abcdef0123456789abcdef" and not j3.has("senha"),
+		"depois do WELCOME, a reentrada leva o roomId e o token")
+	_comandos.append_array([j1, j2, j3])
+	_rede.papel = guardado[0]
+	_rede._room_id = guardado[1]
+	_rede._seat_token = guardado[2]
+	_rede._pin = guardado[3]
+	_rede._nome = guardado[4]
+	_rede._senha = guardado[5]
+
+
+## Ordem 21 (N18-2, decisão do Mestre): servidor restaurado no fim com um motor de outra versão → o journal ganha o
+## evento `aviso_motor` (só ao Mestre). O ecrã do Mestre põe-no nos alertas, uma vez (o mesmo seq repetido no fio não
+## repete o alerta), e o registo tem nome para ele.
+func _aviso_motor(c) -> void:
+	print("== Aviso do motor de outra versão ao restaurar (ordem 21, N18-2) ==")
+	# Um evento neutro primeiro: fecha a falha do monstro que a secção anterior possa ter deixado à espera.
+	c._ao_evento({"v": 2, "type": "ROOM_EVENT", "roomId": "sala-teste", "seq": 990, "revision": 9, "ts": "2026-11-11T12:00:00.000Z",
+		"tipo": "lobby", "dados": {"journalSeq": 76, "soMestre": null}})
+	await _quadros(1)
+	var n: int = c.alertas.size()
+	var ev := {"v": 2, "type": "ROOM_EVENT", "roomId": "sala-teste", "seq": 991, "revision": 9, "ts": "2026-11-11T12:00:00.000Z",
+		"tipo": "aviso_motor", "dados": {"journalSeq": 77, "soMestre": {"codigo": "MOTOR_DIFERENTE", "recomecar": "recusado",
+		"motorGravado": "a".repeat(64), "motorAgora": "e".repeat(64)}}}
+	c._ao_evento(ev)
+	await _quadros(1)
+	_ok(c.alertas.size() == n + 1 and c.alertas.back() == Textos.ALERTA.get("aviso_motor", "<sem texto>"),
+		"o aviso vai aos alertas do Mestre: «%s»" % [c.alertas.back() if c.alertas.size() > 0 else ""])
+	c._ao_evento(ev.duplicate(true))
+	await _quadros(1)
+	_ok(c.alertas.size() == n + 1, "o mesmo evento repetido no fio não repete o alerta")
+	_ok(Textos.NOME_EVENTO.get("aviso_motor", "") != "", "o registo tem nome para o aviso_motor")
 
 
 func _textos(no: Node, saida: Array) -> void:
