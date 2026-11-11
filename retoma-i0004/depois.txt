@@ -1,4 +1,4 @@
-# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 109 ficheiros mudados ou novos em rascunhos/.
+# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 111 ficheiros mudados ou novos em rascunhos/.
 832410f8238e5e22bfae1883af94fbc66e6709f1f764d3279624a77584a6e308  rascunhos/cliente/README.md
 788d62ee94b08834bce8822fb93052183fb766194e885995cd261a3a07afe312  rascunhos/cliente/arte/cenas/clareira_prova.gd
 dd55941279825704fba76ae427b0bd13e08267471f23a8a1efc2f90b71d759cb  rascunhos/cliente/arte/cenas/clareira_prova.tscn
@@ -78,7 +78,8 @@ da1621aae01d89309f743facc04682c851821e24551f4ce1a6a42b3010182aca  rascunhos/prot
 f3c7268b2165ce8f818abef15d60a8732b993d297755a244a7fa28a47d1728a8  rascunhos/protocolo/v2/exemplos/ROOM_RESYNC.json
 cf36a9ee81bbb165a0edc72a51bd14d31b5ebf7a4d58010076b41df676a7848e  rascunhos/protocolo/v2/exemplos/ROOM_SNAPSHOT.json
 c0b6764ab83158fd0a10b03b0a4ae111ee0d799d68267420d01186dc83409a0c  rascunhos/protocolo/v2/exemplos/ROOM_WELCOME.json
-e0ed5d8b0481d0aa56d8c36553bbd2f52825c5c6fa0595ec38672bed4d7f79b7  rascunhos/servidor/README.md
+3f530fe2cb00840e4bf9f3b3310bde8778a7571fe00f3585ef41c6f8fdc37afb  rascunhos/servidor/README.md
+bcdc9786597a2e1fbadc213c74bf7c9ed9d9a3d0c3998e90c5033de99570f2e0  rascunhos/servidor/adaptadores/node/servidor-ws.js
 8fff7de3424b84226497af60fecfbecc9f13061e8cc7a0cc20b1b0d57071a82e  rascunhos/servidor/dados-exemplo/fichas-ficticias.json
 24538333e57fedf74077175e5e9dcdf69d9bac0140fca2a303cbc8ba4c4574b2  rascunhos/servidor/dados-exemplo/mesa-mestre.json
 19724b563807a9406f8f17610c07a9e5302c258711dd082dd098639094a4ff0e  rascunhos/servidor/e2e/jogadora-e2e.mjs
@@ -102,6 +103,7 @@ d0fda20b1f8217e686d4f8900a3e21f95a072cfd6b9d83359a9f65aa83e05978  rascunhos/serv
 a0cbe15f0610f83129d9c63b93c1fc3a61a0698f17d144a6ebd0464e830d233e  rascunhos/servidor/testes/ordem13-ambiente.test.mjs
 d3ac9df3048c2726216b00712c1139c4126f515d36eb9f3eaf2b640afeda8f71  rascunhos/servidor/testes/ordem15-alcance-caminho.test.mjs
 121611a85f8b765646ab3c55aaeda145b2fde99fc2062231898dd4156f6ea87f  rascunhos/servidor/testes/ordem15-apagar-fogo.test.mjs
+8e239d0e025df3f7c393667db4bd3ad92a4f09a922ffc3533ccb3f003bbb996f  rascunhos/servidor/testes/ordem16-journal-disco.test.mjs
 6be4847d342d4436a4044b79297107ff1769ea58cd7822608fbf9eec31d2a409  rascunhos/servidor/testes/ordem6-decisoes.test.mjs
 8149ff0bd5e00fd4c18d469728912863e1d312e29b67909a1b77d18ffc4bc138  rascunhos/servidor/testes/ordem8-decisoes.test.mjs
 4ac675eaa3587ea1db7e1d3785c138dc5850cef60f0f22e2d990723aaaf3468e  rascunhos/servidor/testes/ordem9-oportunidade.test.mjs
