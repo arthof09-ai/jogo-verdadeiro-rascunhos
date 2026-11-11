@@ -316,8 +316,18 @@ Testes: `testes/ordem22-decisoes.test.mjs` (8; em 276e573 falhavam 6 — 17-2 a,
 
 ## Ordem 23 do CM-000009 — a dívida E-22-1 e varredura (11/11/2026)
 
-Testes: `testes/ordem23-vlabsha.test.mjs` (4; em 6697f37 falhava 1 — sha `null` dos dois lados — e passavam os 3 de controlo).
+Testes: `testes/ordem23-vlabsha.test.mjs` (4; em 6697f37 falhava 1 — sha `null` dos dois lados — e passavam os 3 de controlo); `testes/ordem23-varredura.test.mjs` (5; em 2ae92d1 falhavam os 3 de correcção e passavam os 2 de controlo).
 
 **Corrigido:**
 
 - **E-22-1 — sha em falta não prova o mesmo motor** (regra da ordem 23, na linha da sentença 17-3 «FICA A RECUSA»). A guarda de versão em `recomecarBatalha` recusa o «Recomeçar» quando o `vlabSha` gravado na sala (`estado.motores.vlabSha`) **ou** o do motor injectado (`MOTOR_SHA256`) falta, além de quando são diferentes: `acao_invalida` com o texto fixo de sempre, o porquê (`MOTOR_DIFERENTE: …`) só ao Mestre no evento interno `recusa`, a Party não recebe nada. Antes, `null === null` passava. Sha presente e igual dos dois lados: nada muda. A guarda continua a ser a mesma guarda (não há bloqueio por estado); vale para qualquer sala, restaurada ou não (uma sala nova com um motor sem sha também já não recomeça — todos os motores do repositório, o falso e o real embrulhado, trazem sha). A migração de motor continua TODO(JV3.x) (E-C11).
+
+**Varredura (o espírito das V1-V14; `testes/ordem23-varredura.test.mjs`, cada teste de correcção falhava em 2ae92d1):**
+
+- **V15 — «Continuar a rodada» fora do cartão de IA.** `MASTER_APPROVE` com `rodada: true` num cartão de desgraça ou de progresso era aceite: o `rodada` ficava ignorado em silêncio e a decisão aplicava-se. O schema diz o contrário («Só com decisao 'aprovar' num cartão de IA cuja proposta é uma marcha pura […]. Noutro caso o servidor recusa (acao_invalida).»). Agora recusa (`acao_invalida`) e o cartão fica aberto, como já era no cartão de IA (L6). Sem `rodada`, ou `rodada: false`: nada muda.
+- **V16 — `editar` no cartão de progresso.** O cartão «Duas recusas nesta vez» não tem edição (o schema só a define nos cartões de desgraça e de IA; o cliente nunca a manda), mas `decisao: 'editar'` encerrava a vez como o `aprovar` e o registo dizia «trocado». Agora recusa (`acao_invalida`) e o cartão fica aberto — como o `editar` sem edição válida nos outros cartões. `aprovar` (encerrar) e `recusar` (o Mestre joga à mão) iguais.
+- Lidos de novo sem achados: as validações de forma dos comandos do Mestre (`mestreBemFormado`) e das intenções (`acaoBemFormada`/`acaoNasOpcoes`) contra os schemas de entrada e de saída, o painel do ambiente, o «voltar» (checkpoints só com o mundo; os cartões e recibos), a mudança de escala.
+
+**Registado, sem regra inventada (N23-):**
+
+1. **N23-1 — o sha em falta só conta no «Recomeçar».** A regra da ordem 23 foi posta onde a ordem a pôs: na guarda do `recomecarBatalha`. O restauro (pausa de manutenção E-C11 em combate; evento `aviso_motor` no fim) e o `avisoMotor` da `MASTER_VIEW` continuam a comparar `vlabSha` com `null === null` como igual: uma sala gravada e restaurada sem sha acorda em combate sem a pausa do motor, e no fim o Mestre não recebe aviso — mas o «Recomeçar» é recusado (sabe-o pelo `MOTOR_DIFERENTE` da recusa). Pôr a mesma regra no restauro muda o que a Party vê (pausa a meio da batalha); pô-la só no aviso é contrato do Mestre (o `motorGravado`/`motorAgora` passam a poder ser `null`). O `dmgVersao` e o `levelupSha` continuam fora da conta (parte restante da E-22-1). Precisa da palavra do Mestre. Hoje todos os motores do repositório trazem sha, por isso nenhuma sala real cai aqui.

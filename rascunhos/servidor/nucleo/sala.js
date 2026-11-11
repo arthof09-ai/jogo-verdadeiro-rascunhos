@@ -2465,6 +2465,9 @@ export function criarSala({
     const c = m.cartoes.find((x) => x.cartaoId === msg.cartaoId && x.estado === 'aberto');
     if (!c || c.tipo === 'dados') throw new ErroRecusa('acao_invalida'); // decisão idempotente: a primeira ganha
     const decisao = msg.decisao;
+    // Ordem 23 (V15): «Continuar a rodada» só existe no cartão de IA (MASTER_APPROVE.rodada: «noutro caso o servidor
+    // recusa»); num cartão de desgraça ou de progresso era ignorado em silêncio e a decisão aplicava-se.
+    if (msg.rodada === true && c.tipo !== 'ia') throw new ErroRecusa('acao_invalida');
     // Ordem 8 (item 5): o «Não acontece nada» só existe ao RECUSAR uma proposta de desgraça; noutro sítio é recusado.
     if (msg.edicao?.semDesgraca !== undefined && (c.tipo !== 'desgraca' || decisao !== 'recusar' || msg.edicao.semDesgraca !== true)) {
       throw new ErroRecusa('acao_invalida');
@@ -2540,6 +2543,9 @@ export function criarSala({
       return 'APLICADA';
     }
     if (c.tipo === 'progresso') {
+      // Ordem 23 (V16): o cartão de progresso não tem edição (o schema só a define na desgraça e na IA); «editar»
+      // encerrava a vez como o «aprovar» e o registo dizia «trocado». Recusa-se e o cartão fica aberto.
+      if (decisao === 'editar') throw new ErroRecusa('acao_invalida');
       fecharCartao(tx, c, decisao);
       if (decisao === 'recusar') {
         m.vez.recusas = 0;
