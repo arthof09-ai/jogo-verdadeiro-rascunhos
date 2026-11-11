@@ -36,6 +36,7 @@ func _initialize() -> void:
 	_teste_frases_do_site()
 	_teste_frases_no_estado()
 	_teste_ambiente_na_party()
+	_teste_reentrada_servidor_restaurado()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -409,4 +410,28 @@ func _teste_ambiente_na_party() -> void:
 	_ok(frases.size() == n, "raio que a deita: a frase da queda vem pelo `estado` dela, não aqui")
 	_ok(Frases.fogo_apagado("Ong", true, "chuva") == "A chuva apaga o fogo da Ong.", "a chuva apaga quem arde fora do fogo")
 	_ok(Frases.fogo_morde("Lobo", false, "caiu") == "Lobo cai, a arder.", "o fogo deita o monstro")
+	est.free()
+
+
+## Ordem 19 (V12): o servidor restaurado de um journal a que faltava o fim (a gravação em disco falhou) volta com o
+## seq e a revisão DESTE lugar mais baixos do que o aparelho viu. Ao ROOM_JOIN com lastSeq acima do seq dele, o servidor
+## responde com um ROOM_SNAPSHOT (sala.js mensagensDeSincronizacao). Antes o cliente deitava-o fora (mais velho do que
+## o que tinha) e ficava preso: os eventos novos pareciam repetidos e as opções nunca valiam (revisão só a subir).
+func _teste_reentrada_servidor_restaurado() -> void:
+	print("Reentrada num servidor restaurado (ordem 19, V12):")
+	var est = EstadoScript.new()
+	est.aplicar_snapshot(_snapshot(20, 9))
+	est.receber_evento(_evento(21, 10, "movimento", {"figuraId": "fA", "para": {"x": 5, "y": 5}}))
+	_ok(est.ultimo_seq == 21 and est.revisao == 10, "antes da queda: seq 21, revisão 10")
+	est._ao_boas_vindas({"type": "ROOM_WELCOME", "seatId": "s1"})
+	est.aplicar_snapshot(_snapshot(15, 6))
+	_ok(est.ultimo_seq == 15, "o snapshot da reentrada manda, mesmo com seq mais baixo")
+	_ok(est.revisao == 6, "a revisão passa a ser a do servidor")
+	_ok(est.casa_de(est.figuras["fA"]) == Vector2i(1, 1), "a figura volta à casa que o servidor tem")
+	est.receber_evento(_evento(16, 7))
+	_ok(est.ultimo_seq == 16, "o evento seguinte do servidor aplica (não é tomado por repetido)")
+	est.receber_opcoes({"type": "ROOM_OPTIONS", "revision": 7, "mover": [{"x": 2, "y": 1, "custoM": 1.5}]})
+	_ok(est.lista_opcao("mover").size() == 1, "as opções da revisão do servidor valem")
+	est.aplicar_snapshot(_snapshot(12, 5))
+	_ok(est.ultimo_seq == 16, "fora da reentrada, um snapshot mais velho continua ignorado")
 	est.free()
