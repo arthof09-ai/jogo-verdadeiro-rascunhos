@@ -54,7 +54,10 @@ function eLobbyDeEspera(snap) {
   assert.deepEqual(snap.iniciativa, [], 'nem a ordem');
   assert.equal(snap.vezId, null, 'nem de quem é a vez');
   assert.equal(snap.rodada, 0, 'nem a rodada');
-  assert.equal(snap.propria, undefined, 'nem a vida dela a meio da batalha');
+  // A ficha dela vem, como no lobby de sempre (é dela; o schema da jogadora exige-a), mas a figura não está no mapa.
+  assert.ok(snap.propria?.ficha, 'a ficha dela, como no lobby');
+  assert.equal(snap.ambiente.clima, null, 'nem o tempo da batalha');
+  assert.deepEqual(snap.fogo?.casas ?? [], [], 'nem o fogo');
 }
 
 // ------------------------------------------------------------------ 17-2 (a): a jogadora antes do Mestre → lobby

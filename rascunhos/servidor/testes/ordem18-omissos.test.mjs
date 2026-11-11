@@ -5,7 +5,8 @@
 //  17-1  o travão do ROOM_JOIN guardava uma entrada por IP sem tecto de memória → tecto MAX_TRAVAO, podando primeiro
 //        as entradas por bloquear (um IP bloqueado continua bloqueado durante a enxurrada).
 //  17-2  sala restaurada em combate sem o Mestre ligado não ficava em pausa → a primeira entrada de outro lugar pausa-a
-//        (E-C4); a volta do Mestre retoma-a; o Mestre a entrar primeiro não muda nada.
+//        (E-C4); a volta do Mestre retoma-a; o Mestre a entrar primeiro não muda nada. SUBSTITUÍDO na ordem 22: quem
+//        entra antes do Mestre fica no lobby (ordem22-decisoes.test.mjs).
 //  17-3  o «Recomeçar» numa sala restaurada no fim corria com o motor novo → recusado, com o porquê só ao Mestre.
 //  17-4  ROOM_RESYNC e RECEIPT_QUERY sem ritmo → 10/s por lugar (o número do §2), num balde próprio; fora do ritmo,
 //        a recusa do excesso de comandos que já existia (ROOM_REJECT formato, id null).
@@ -109,30 +110,14 @@ test('ordem 18 (17-1): só bloqueados acima do tecto — sai primeiro o que acab
 
 // ------------------------------------------------------------------ 17-2: restaurada em combate sem o Mestre
 
-test('ordem 18 (17-2): sala restaurada em combate — a jogadora entra antes do Mestre e a mesa fica em pausa até ele voltar', () => {
+// SUBSTITUÍDO na ordem 22 (palavra do Mestre, 11/11/2026 14:27): quem entra antes do Mestre já não pausa a mesa;
+// fica no lobby (sala de espera) e a batalha retoma com o Mestre dentro. Ver testes/ordem22-decisoes.test.mjs.
+test('ordem 18 (17-2, depois da ordem 22): a jogadora antes do Mestre já não pausa a mesa', () => {
   const m = sessao();
-  const exportado = m.sala.exportar();
-  const sala2 = criarDe(exportado);
-  assert.equal(sala2.depuracao.estado().fase, 'combate');
-  assert.equal(sala2.exportar(), exportado, 'restaurar, só por si, não escreve nada');
-
-  const rh = ligar(sala2, JOIN_HEROINA, '10.0.1.1');
-  const est = sala2.depuracao.estado();
-  assert.equal(est.fase, 'pausa', 'sem o Mestre ligado, a mesa congela (E-C4)');
-  assert.equal(est.pausa.origem, 'desconexao');
-  assert.equal(est.pausa.motivo, 'mestre_desconectado');
-  const snap = rh.mensagens.find((x) => x.type === 'ROOM_SNAPSHOT');
-  assert.ok(snap, 'a jogadora recebe o snapshot');
-
-  const rev = lugarDe(sala2, 'jogadora').revision;
-  const resp = respostaA(sala2.receber(rh.seatId, { v: 2, type: 'ROOM_INTENT', intentId: 'it-o18-1', revision: rev, acao: { tipo: 'encerrar' } }), rh.seatId);
-  assert.equal(reciboDe(resp)?.motivo, 'sala_pausada', 'a jogadora não age sem o Mestre');
-
-  // O Mestre volta: JOIN + RESYNC → ROOM_RESUMED (como depois de uma queda).
-  const rm = ligar(sala2, JOIN_MESTRE, '10.0.1.2');
-  const saidas = sala2.receber(rm.seatId, { v: 2, type: 'ROOM_RESYNC', lastSeq: 0 });
-  assert.ok(respostaA(saidas, rh.seatId).some((x) => x.type === 'ROOM_RESUMED'), 'a jogadora recebe o ROOM_RESUMED');
-  assert.notEqual(sala2.depuracao.estado().fase, 'pausa');
+  const sala2 = criarDe(m.sala.exportar());
+  ligar(sala2, JOIN_HEROINA, '10.0.1.1');
+  assert.equal(sala2.depuracao.estado().fase, 'combate', 'sem pausa: a jogadora está no lobby, à espera do Mestre');
+  assert.ok(!sala2.depuracao.eventos().some((e) => e.tipo === 'pausa'));
 });
 
 test('ordem 18 (17-2, controlo): o Mestre entra primeiro — nada de pausa, nenhum evento novo de pausa', () => {

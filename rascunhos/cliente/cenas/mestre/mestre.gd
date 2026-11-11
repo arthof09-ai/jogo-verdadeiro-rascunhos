@@ -294,6 +294,7 @@ func aplicar_vista(msg: Dictionary) -> void:
 	_aba_mesa.atualizar(msg)
 	_aba_agir.atualizar(msg)
 	_desenhar_fim()
+	_avisar_motor_da_vista(msg)  # ordem 22 (N21-1)
 	if not armado_escala:
 		escala_nova = escala_atual()  # a vista nova manda; uma escolha a meio (armada) fica até ao segundo toque
 	_desenhar_escala()
@@ -347,11 +348,28 @@ func _ao_evento(msg: Dictionary) -> void:
 
 
 ## Ordem 21 (N18-2, decisão do Mestre): o servidor restaurou a sala no fim com um motor de outra versão; o «Recomeçar»
-## vai ser recusado (17-3). O journal traz o evento `aviso_motor` (só ao Mestre): vai aos alertas, uma vez por seq.
+## vai ser recusado (17-3). O journal traz o evento `aviso_motor` (só ao Mestre): vai aos alertas.
+## Ordem 22 (N21-1, decisão do Mestre): o mesmo aviso vem também na MASTER_VIEW (`avisoMotor`), para o Mestre que entra
+## de fresco (sem lastSeq não recebe eventos). Um alerta por par de versões (gravada → agora), venha pelo fluxo ou pela
+## vista: a vista repete-se a cada pedido e o evento pode chegar depois dela.
 func _avisar_motor(msg: Dictionary) -> void:
 	if str(msg.get("tipo", "")) != "aviso_motor":
 		return
-	var chave := "motor:" + str(msg.get("seq", ""))
+	var d = msg.get("dados")
+	var so = d.get("soMestre") if d is Dictionary else null
+	_alertar_motor(so if so is Dictionary else {}, str(msg.get("seq", "")))
+
+
+func _avisar_motor_da_vista(msg: Dictionary) -> void:
+	var a = msg.get("avisoMotor")
+	if a is Dictionary:
+		_alertar_motor(a, "")
+
+
+func _alertar_motor(aviso: Dictionary, seq_reserva: String) -> void:
+	var chave := "motor:%s>%s" % [str(aviso.get("motorGravado", "")), str(aviso.get("motorAgora", ""))]
+	if not aviso.has("motorGravado") and not aviso.has("motorAgora"):
+		chave = "motor:seq:" + seq_reserva  # evento sem soMestre (não devia acontecer): como na ordem 21, por seq
 	if _amb_narrados.has(chave):
 		return
 	_amb_narrados[chave] = true

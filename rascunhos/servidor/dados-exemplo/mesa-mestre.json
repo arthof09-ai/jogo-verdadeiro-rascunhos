@@ -386,6 +386,7 @@
      ]
     }
    ],
+   "avisoMotor": null,
    "selo": null,
    "estatisticas": {
     "eventos": 10,
@@ -678,6 +679,7 @@
      ]
     }
    ],
+   "avisoMotor": null,
    "selo": null,
    "estatisticas": {
     "eventos": 2,
@@ -932,6 +934,7 @@
      ]
     }
    ],
+   "avisoMotor": null,
    "selo": null,
    "estatisticas": {
     "eventos": 6,

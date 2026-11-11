@@ -115,7 +115,24 @@
           "description": "L9 (C-28; I0004 08/11): 'TESTE' numa sala de teste (config.teste), senão null. Só o Mestre o vê.",
           "enum": ["TESTE", null]
         },
-        "estatisticas": { "$ref": "#/$defs/estatisticas" }
+        "estatisticas": { "$ref": "#/$defs/estatisticas" },
+        "avisoMotor": {
+          "description": "Errata D-36 (N21-1; palavra do Mestre, 11/11/2026): o aviso do motor (o mesmo do evento aviso_motor, D-35) também na vista, para o Mestre que entra sem lastSeq (só recebe o snapshot, sem eventos). Os campos do soMestre do evento, enquanto a sala estiver no fim gravada com outro motor (o «Recomeçar» é recusado, 17-3); senão null. O servidor manda-o sempre a partir da ordem 22; fica fora do `required` para as vistas de antes. Só o Mestre.",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "required": ["codigo", "recomecar", "motorGravado", "motorAgora"],
+              "properties": {
+                "codigo": { "const": "MOTOR_DIFERENTE" },
+                "recomecar": { "const": "recusado" },
+                "motorGravado": { "type": ["string", "null"] },
+                "motorAgora": { "type": ["string", "null"] }
+              },
+              "additionalProperties": false
+            }
+          ]
+        }
       },
       "additionalProperties": false
     },

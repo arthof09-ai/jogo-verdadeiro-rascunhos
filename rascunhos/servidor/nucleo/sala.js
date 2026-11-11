@@ -301,9 +301,14 @@ export function criarSala({
   // Ordem 18 (omisso 17-4): o RESYNC e a RECEIPT_QUERY têm o seu próprio balde, com o mesmo número do §2 (10/s), para
   // não gastarem o ritmo dos comandos (um cliente que volta a ligar-se pede-os em rajada) nem ficarem sem limite.
   const ritmoSinc = new Map(); // seatId → carimbos
-  // Ordem 18 (omisso 17-2): a sala restaurada acorda sem ninguém ligado. Enquanto o Mestre não voltar, a primeira
-  // entrada de outro lugar em combate pausa a mesa (E-C4), como se o Mestre tivesse caído.
-  let vigiarMestreAusente = !!restaurarDe;
+  // Ordem 22 (17-2, palavra do Mestre 11/11/2026 14:27: «Uma batalha não pode acontecer sem mim; se entrar antes de
+  // mim, fica no lobby que criamos.»): a sala restaurada a meio de uma batalha (em combate, ou em pausa vinda do
+  // combate) acorda em ESPERA DO MESTRE. Até o Mestre entrar, quem entra fica no lobby (sala de espera): o snapshot
+  // é um lobby vazio — sem figuras, ordem, vez, nem a ficha dela a meio da batalha; não recebe eventos, opções, nem
+  // pausa/retomada; a intenção é recusada como no lobby (fora_da_vez). Nada se escreve no journal por isso (o fluxo
+  // dela continua a gravar-se). Quando o Mestre entra (ROOM_JOIN dele), cada lugar ligado recebe o snapshot da
+  // batalha e as opções. Substitui a pausa da ordem 18 (a 1.ª entrada de outro lugar pausava a mesa). Só em memória.
+  let esperaMestre = false;
   const checkpoints = new Map(); // journalSeq → mundo (para MASTER_SUPERVISOR voltar)
   // L8 do desenho JV3.1 (I0004, 08/11): o resumo de cada ponto guardado, para o Mestre saber a que pontos
   // pode voltar. Vai SÓ na MASTER_VIEW (o lugar do Mestre), em `pontos`.
@@ -324,6 +329,7 @@ export function criarSala({
     journal = criarJournal({ estadoInicial: construirEstadoInicial(), hash });
   }
   guardarCheckpoint();
+  if (restaurarDe && batalhaEmCurso(journal.estado)) esperaMestre = true;
   if (restaurarDe && (journal.estado.motores?.vlabSha ?? null) !== motoresInfo.vlabSha) {
     // E-C11: versão de motor diferente ao acordar → ROOM_PAUSED {manutencao}.
     // TODO(JV3.x): procedimento de migração de versão do motor (o Mestre decide).
@@ -352,6 +358,28 @@ export function criarSala({
   }
 
   // =================================================================== utilitários
+  /** Ordem 22 (17-2): a meio de uma batalha = em combate, ou em pausa vinda do combate. O fim não é batalha a decorrer. */
+  function batalhaEmCurso(m) {
+    return m.fase === 'combate' || (m.fase === 'pausa' && m.pausa?.faseAnterior === 'combate');
+  }
+  /** Ordem 22 (17-2): este lugar está na sala de espera (sala restaurada a meio da batalha, o Mestre ainda fora). */
+  function naEspera(s) {
+    return esperaMestre && s.papel !== 'mestre';
+  }
+  /**
+   * Ordem 22 (N21-1, palavra do Mestre 11/11/2026 16:13: sim): o aviso do motor também na vista do Mestre, para quem
+   * entra de fresco (sem lastSeq só recebe o snapshot, que não traz o evento `aviso_motor`). Os mesmos campos do
+   * soMestre do evento, enquanto a condição do aviso dura (sala no fim gravada com outro motor; o «Recomeçar» é
+   * recusado, 17-3). Em combate a sala está na pausa de manutenção (E-C11), sem aviso: null. Só lê; a guarda do
+   * recomecarBatalha fica a mesma.
+   */
+  function avisoMotorDaVista() {
+    const m = journal.estado;
+    const gravado = m.motores?.vlabSha ?? null;
+    const agoraSha = motoresInfo.vlabSha ?? null;
+    if (m.fase !== 'fim' || gravado === agoraSha) return null;
+    return { codigo: 'MOTOR_DIFERENTE', recomecar: 'recusado', motorGravado: gravado, motorAgora: agoraSha };
+  }
   function u32() {
     return rng() >>> 0;
   }
@@ -794,7 +822,22 @@ export function criarSala({
 
   // =================================================================== mensagens
   function mensagemSnapshot(m, s, ts) {
-    return { v: PROTOCOLO, type: 'ROOM_SNAPSHOT', roomId, seq: s.seq, revision: s.revision, ts, ...projetarSnapshot(m, fichas, destinatario(s)) };
+    const mundo = naEspera(s) ? mundoDeEspera(m, s) : m;
+    return { v: PROTOCOLO, type: 'ROOM_SNAPSHOT', roomId, seq: s.seq, revision: s.revision, ts, ...projetarSnapshot(mundo, fichas, destinatario(s)) };
+  }
+  /**
+   * Ordem 22 (17-2): o lobby da sala de espera — o mapa da sala e a ficha DELA (`propria`, como no lobby de sempre; é
+   * dela e o schema da jogadora exige-a), e nada da batalha: nenhuma figura no mapa (a dela vai como não colocada),
+   * sem ordem, vez, rodada, ambiente nem fogo.
+   */
+  function mundoDeEspera(m, s) {
+    const figuras = {};
+    const f = s.figuraId ? m.figuras[s.figuraId] : null;
+    if (f) figuras[f.id] = { ...f, colocada: false };
+    return {
+      fase: 'lobby', mapa: m.mapa, figuras, ordem: [], vez: null, rodada: 0,
+      ambiente: { hora: null, clima: null }, fogo: Amb.fogoVazio(),
+    };
   }
   function mensagemOpcoes(s, o) {
     return { v: PROTOCOLO, type: 'ROOM_OPTIONS', roomId, revision: s.revision, ...o };
@@ -805,6 +848,8 @@ export function criarSala({
     return {
       v: PROTOCOLO, type: 'MASTER_VIEW', roomId, journalSeq: journal.journalSeq, ...projetarSnapshot(m, fichas, destinatario(s)),
       pontos: pontosParaVoltar(),
+      // Ordem 22 (N21-1; errata D-36): o aviso do motor também aqui (null quando não há).
+      avisoMotor: avisoMotorDaVista(),
       // L9 (C-28; I0004 08/11): o selo TESTE e as estatísticas só existem no papel Mestre.
       selo: seloTeste,
       estatisticas: estatisticas(),
@@ -900,7 +945,8 @@ export function criarSala({
         s.seq += 1;
         const msg = { v: PROTOCOLO, type: 'ROOM_EVENT', roomId, seq: s.seq, revision: s.revision, ts: ev.ts, tipo: ev.tipo, dados };
         (tx.fluxos[s.seatId] ??= []).push(msg);
-        tx.saidas.push({ seatId: s.seatId, msg });
+        // Ordem 22 (17-2): à sala de espera não chega nada da batalha (o fluxo grava-se; o snapshot vem com o Mestre).
+        if (!naEspera(s)) tx.saidas.push({ seatId: s.seatId, msg });
       }
     }
     // 2) snapshots (depois de um "voltar")
@@ -916,6 +962,7 @@ export function criarSala({
     // 4) opções novas (revisão mudou, ou recusa por revisao_antiga)
     for (const s of lugares) {
       if (!mudaram.has(s.seatId) && !tx.opcoesForcadas.has(s.seatId)) continue;
+      if (naEspera(s)) continue; // ordem 22 (17-2)
       const o = opcoesDoLugar(m, s);
       if (o) tx.saidas.push({ seatId: s.seatId, msg: mensagemOpcoes(s, o) });
     }
@@ -927,6 +974,7 @@ export function criarSala({
     // 6) pausa / retomada (não são ROOM_EVENT: não gastam seq)
     if (tx.anuncio) {
       for (const s of lugares) {
+        if (naEspera(s)) continue; // ordem 22 (17-2): no lobby não há pausa nem retomada da batalha
         tx.saidas.push({ seatId: s.seatId, msg: { v: PROTOCOLO, type: tx.anuncio.type, roomId, motivo: tx.anuncio.motivo } });
       }
     }
@@ -2104,6 +2152,7 @@ export function criarSala({
     return executarComRecibo(meta, (tx) => {
       const m = tx.estado;
       const s = m.lugares[seat.seatId];
+      if (naEspera(s)) throw new ErroRecusa('fora_da_vez'); // ordem 22 (17-2): no lobby não há vez
       if (m.fase === 'pausa') throw new ErroRecusa('sala_pausada');
       if (cartaoAtivo(m)) throw new ErroRecusa('aguardando_mestre');
       if (revision !== s.revision) throw new ErroRecusa('revisao_antiga'); // invariante 5
@@ -2146,6 +2195,7 @@ export function criarSala({
     const s = m.lugares[seatId];
     const fluxo = journal.fluxo(seatId);
     const out = [];
+    if (naEspera(s)) return [{ seatId, msg: mensagemSnapshot(m, s, isoAgora()) }]; // ordem 22 (17-2): só o lobby
     if (Number.isInteger(lastSeq) && lastSeq >= 0 && lastSeq <= s.seq && fluxo.length === s.seq) {
       for (let i = lastSeq; i < fluxo.length; i++) out.push({ seatId, msg: fluxo[i] });
     } else {
@@ -2818,13 +2868,10 @@ export function criarSala({
     tentativas.delete('lugar:' + seat.seatId);
 
     const token = novoToken(); // roda a cada JOIN; vinculado ao seatId; só o hash fica no estado
+    // Ordem 22 (17-2): o Mestre entra → acaba a sala de espera; quem lá estava ligado recebe a batalha (abaixo).
+    const fimDaEspera = esperaMestre && seat.papel === 'mestre';
+    if (fimDaEspera) esperaMestre = false;
     const { saidas } = transacao((tx) => {
-      // Ordem 18 (omisso 17-2): sala restaurada em combate e o Mestre ainda não voltou → a mesa congela antes de
-      // esta ligação poder agir (E-C4; a IA em auto também pára). A volta do Mestre (JOIN + RESYNC) retoma-a, como
-      // depois de uma queda. Restaurar e o Mestre entrar primeiro não muda nada no journal.
-      if (vigiarMestreAusente && seat.papel !== 'mestre' && tx.estado.fase === 'combate' && !mestreLigado()) {
-        pausar(tx, 'mestre_desconectado', 'desconexao');
-      }
       const s = tx.estado.lugares[seat.seatId];
       s.tokenHash = hash('token\u0000' + token);
       s.epoch += 1;
@@ -2834,6 +2881,15 @@ export function criarSala({
       }
     });
     const outros = saidas.filter((x) => x.seatId !== seat.seatId); // a própria recebe o snapshot
+    if (fimDaEspera) {
+      const ts = isoAgora();
+      for (const s of Object.values(journal.estado.lugares)) {
+        if (s.papel === 'mestre' || (conexoes.get(s.seatId) ?? 0) === 0) continue;
+        outros.push({ seatId: s.seatId, msg: mensagemSnapshot(journal.estado, s, ts) });
+        const o = opcoesDoLugar(journal.estado, s);
+        if (o) outros.push({ seatId: s.seatId, msg: mensagemOpcoes(s, o) });
+      }
+    }
     const welcome = {
       v: PROTOCOLO, type: 'ROOM_WELCOME', roomId, seatId: seat.seatId, seatToken: token, papel: seat.papel,
       protocolo: PROTOCOLO, motores: { ...motoresInfo },
@@ -2869,15 +2925,10 @@ export function criarSala({
     return saidas;
   }
 
-  function mestreLigado() {
-    return Object.values(journal.estado.lugares).some((s) => s.papel === 'mestre' && (conexoes.get(s.seatId) ?? 0) > 0);
-  }
-
   function conexaoAberta(seatId) {
     const s = journal.estado.lugares[seatId];
     if (!s) return [];
     conexoes.set(seatId, (conexoes.get(seatId) ?? 0) + 1);
-    if (s.papel === 'mestre') vigiarMestreAusente = false; // daqui em diante vale a E-C4 de sempre (queda → pausa)
     return [];
   }
 
