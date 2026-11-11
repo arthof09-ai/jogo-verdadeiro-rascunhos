@@ -12,7 +12,7 @@
 
 import { jsonCanonico, clonarJson, hex8, iguaisTempoConstante } from './util.js';
 import { sha256Hex } from './sha256.js';
-import { criarJournal, restaurarJournal } from './journal.js';
+import { criarJournal, restaurarJournal, ErroJournal } from './journal.js';
 import { projetarEvento, projetarSnapshot, efeitoAmbiente, nomePublicoDe, visivelDe } from './projecao.js';
 import * as Amb from './ambiente.js';
 
@@ -26,6 +26,9 @@ export const CASA_M = 1.5;
 export const ESCALAS_CASA_M = Object.freeze([1, 1.5, 2]);
 export const MAX_INTENCOES_TURNO = 20; // E-C12, invariante 12
 const MAX_CHECKPOINTS = 500;
+// Ordem 18 (omisso 17-1): tecto do travão do ROOM_JOIN (entradas 'ip:'); poda-se até 90 % para não podar a cada falha.
+export const MAX_TRAVAO = 4096;
+const MAX_TRAVAO_PODA = Math.floor(MAX_TRAVAO * 0.9);
 /** L8: quantos pontos de «voltar» vão na MASTER_VIEW (os mais novos). */
 const MAX_PONTOS_VISTA = 50;
 const EPS = 1e-9;
@@ -206,6 +209,27 @@ function acaoNasOpcoes(ops, acao) {
   }
 }
 
+const FASES_SALA = Object.freeze(['lobby', 'combate', 'pausa', 'fim']);
+const ehObj = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
+/**
+ * Ordem 18 (V10): o estado restaurado tem de ter a forma da sala (`sala/1`). O restaurarJournal confere a assinatura e o
+ * corpo do journal, não o estado da sala; sem chave, um `sha256:` recalcula-se. Um estado sem lugares (ou com eles
+ * estragados) dava TypeError — que o adaptador não trata como «journal recusado» — ou abria uma sala que rebentava no
+ * primeiro ROOM_JOIN. Só a forma que o próprio servidor sempre escreveu; nenhuma regra de jogo.
+ */
+function conferirFormaDoEstado(e) {
+  const lugares = ehObj(e?.lugares) ? Object.entries(e.lugares) : null;
+  const ok = ehObj(e) && e.formato === 'sala/1' && typeof e.roomId === 'string' && FASES_SALA.includes(e.fase)
+    && lugares !== null
+    && lugares.every(([k, s]) => ehObj(s) && s.seatId === k && ['jogadora', 'espectador', 'mestre'].includes(s.papel)
+      && Number.isInteger(s.seq) && Number.isInteger(s.revision))
+    && lugares.filter(([, s]) => s.papel === 'mestre').length === 1
+    && ehObj(e.figuras) && Object.values(e.figuras).every(ehObj)
+    && ehObj(e.mapa) && Array.isArray(e.ordem) && Array.isArray(e.cartoes) && ehObj(e.contadores)
+    && (e.fase !== 'pausa' || (ehObj(e.pausa) && FASES_SALA.includes(e.pausa.faseAnterior)));
+  if (!ok) throw new ErroJournal('estado da sala com forma inválida');
+}
+
 /**
  * Cria uma sala.
  * @param {Object} p
@@ -272,8 +296,14 @@ export function criarSala({
     }
   });
   const conexoes = new Map(); // seatId → nº de ligações vivas
-  const tentativas = new Map(); // travão do ROOM_JOIN (E-P9)
+  const tentativas = new Map(); // travão do ROOM_JOIN (E-P9); com tecto (ordem 18, omisso 17-1): ver registrarFalha
   const ritmo = new Map(); // seatId → carimbos (10 intenções/s)
+  // Ordem 18 (omisso 17-4): o RESYNC e a RECEIPT_QUERY têm o seu próprio balde, com o mesmo número do §2 (10/s), para
+  // não gastarem o ritmo dos comandos (um cliente que volta a ligar-se pede-os em rajada) nem ficarem sem limite.
+  const ritmoSinc = new Map(); // seatId → carimbos
+  // Ordem 18 (omisso 17-2): a sala restaurada acorda sem ninguém ligado. Enquanto o Mestre não voltar, a primeira
+  // entrada de outro lugar em combate pausa a mesa (E-C4), como se o Mestre tivesse caído.
+  let vigiarMestreAusente = !!restaurarDe;
   const checkpoints = new Map(); // journalSeq → mundo (para MASTER_SUPERVISOR voltar)
   // L8 do desenho JV3.1 (I0004, 08/11): o resumo de cada ponto guardado, para o Mestre saber a que pontos
   // pode voltar. Vai SÓ na MASTER_VIEW (o lugar do Mestre), em `pontos`.
@@ -288,6 +318,7 @@ export function criarSala({
   let journal;
   if (restaurarDe) {
     journal = restaurarJournal(restaurarDe, { chave: chaveJournal ?? undefined, hash });
+    conferirFormaDoEstado(journal.estado);
     roomId = journal.estado.roomId;
   } else {
     journal = criarJournal({ estadoInicial: construirEstadoInicial(), hash });
@@ -2036,15 +2067,15 @@ export function criarSala({
   }
 
   // =================================================================== mensagens do cliente
-  function dentroDoRitmo(seatId) {
+  function dentroDoRitmo(seatId, balde = ritmo) {
     const t = agora();
-    const lista = (ritmo.get(seatId) ?? []).filter((x) => t - x < 1000);
+    const lista = (balde.get(seatId) ?? []).filter((x) => t - x < 1000);
     if (lista.length >= 10) {
-      ritmo.set(seatId, lista);
+      balde.set(seatId, lista);
       return false;
     }
     lista.push(t);
-    ritmo.set(seatId, lista);
+    balde.set(seatId, lista);
     return true;
   }
 
@@ -2491,6 +2522,12 @@ export function criarSala({
   function recomecarBatalha(tx) {
     const m = tx.estado;
     if (m.fase !== 'combate' && m.fase !== 'fim') throw new ErroRecusa('acao_invalida');
+    // Ordem 18 (omisso 17-3): a sala restaurada no fim com um motor de outra versão não fica em pausa (o `pausar` não
+    // pausa o fim), e o «Recomeçar» começava a batalha com o motor novo, furando a E-C11. Recusa-se; o porquê vai só
+    // ao Mestre (evento interno `recusa`), a Party não vê nada. A migração de motor continua TODO(JV3.x).
+    if ((m.motores?.vlabSha ?? null) !== motoresInfo.vlabSha) {
+      throw new ErroRecusa('acao_invalida', 'MOTOR_DIFERENTE: a sala foi gravada com outro motor (E-C11); recomeçar precisa da migração de versão');
+    }
     fecharCartoesAbertos(tx);
     for (const f of colocadas(m)) {
       const novo = novaFigura(f.id, fichas[f.fichaId], null);
@@ -2642,6 +2679,12 @@ export function criarSala({
       const id = typeof msg[idCampo] === 'string' && RE_ID.test(msg[idCampo]) ? msg[idCampo] : null;
       return [{ seatId, msg: rejeicaoNaoGravada(idCampo, id, 'formato') }];
     }
+    // Ordem 18 (omisso 17-4): cada RESYNC devolve o fluxo inteiro e cada consulta até 50 recibos. Fora do ritmo, a mesma
+    // recusa do excesso de comandos (ROOM_REJECT formato, id null): nenhuma mensagem nova, e o adaptador fecha a
+    // ligação se o excesso se repetir (§2), como já fazia com os comandos.
+    if ((msg.type === 'ROOM_RESYNC' || msg.type === 'RECEIPT_QUERY') && !dentroDoRitmo(seatId, ritmoSinc)) {
+      return [{ seatId, msg: rejeicaoNaoGravada('intentId', null, 'formato') }];
+    }
     switch (msg.type) {
       case 'ROOM_INTENT':
         if (seat.papel !== 'jogadora') return [{ seatId, msg: msgErro('proibido', 'Este papel não envia intenções.') }];
@@ -2676,8 +2719,40 @@ export function criarSala({
       r.falhas = [];
       novo = true;
     }
+    tentativas.delete(chave); // reinsere no fim: o Map fica pela ordem da última falha (a mais velha à frente)
     tentativas.set(chave, r);
+    if (tentativas.size > MAX_TRAVAO) podarTravao(t);
     return novo;
+  }
+  /**
+   * Ordem 18 (omisso 17-1): o travão guardava uma entrada por IP que falhou, sem tecto (muitos IPs, IPv6 → memória
+   * sem limite). Acima de MAX_TRAVAO entradas poda-se até MAX_TRAVAO_PODA: primeiro as que NÃO estão bloqueadas, da
+   * falha mais velha para a mais nova; só se não chegar, as bloqueadas cujo bloqueio acaba primeiro. As entradas
+   * 'lugar:' (poucas, uma por lugar configurado) nunca saem. Um IP bloqueado continua bloqueado enquanto houver
+   * entradas por bloquear para podar; o que se perde ao podar é a contagem das falhas recentes e o `nivel` da
+   * escada de quem já não está bloqueado (ver N18-1 no README).
+   */
+  function podarTravao(t) {
+    const podaveis = (bloqueadas) => {
+      const out = [];
+      for (const [k, r] of tentativas) {
+        if (!k.startsWith('ip:')) continue;
+        if ((r.bloqueadoAte > t) === bloqueadas) out.push(k);
+      }
+      return out;
+    };
+    let excesso = tentativas.size - MAX_TRAVAO_PODA;
+    for (const k of podaveis(false)) {
+      if (excesso <= 0) return;
+      tentativas.delete(k);
+      excesso -= 1;
+    }
+    const bloqueadas = podaveis(true).sort((a, b) => tentativas.get(a).bloqueadoAte - tentativas.get(b).bloqueadoAte);
+    for (const k of bloqueadas) {
+      if (excesso <= 0) return;
+      tentativas.delete(k);
+      excesso -= 1;
+    }
   }
   function confereSegredo(indice, valor) {
     const c = credenciais.get(indice);
@@ -2731,6 +2806,12 @@ export function criarSala({
 
     const token = novoToken(); // roda a cada JOIN; vinculado ao seatId; só o hash fica no estado
     const { saidas } = transacao((tx) => {
+      // Ordem 18 (omisso 17-2): sala restaurada em combate e o Mestre ainda não voltou → a mesa congela antes de
+      // esta ligação poder agir (E-C4; a IA em auto também pára). A volta do Mestre (JOIN + RESYNC) retoma-a, como
+      // depois de uma queda. Restaurar e o Mestre entrar primeiro não muda nada no journal.
+      if (vigiarMestreAusente && seat.papel !== 'mestre' && tx.estado.fase === 'combate' && !mestreLigado()) {
+        pausar(tx, 'mestre_desconectado', 'desconexao');
+      }
       const s = tx.estado.lugares[seat.seatId];
       s.tokenHash = hash('token\u0000' + token);
       s.epoch += 1;
@@ -2775,9 +2856,15 @@ export function criarSala({
     return saidas;
   }
 
+  function mestreLigado() {
+    return Object.values(journal.estado.lugares).some((s) => s.papel === 'mestre' && (conexoes.get(s.seatId) ?? 0) > 0);
+  }
+
   function conexaoAberta(seatId) {
-    if (!journal.estado.lugares[seatId]) return [];
+    const s = journal.estado.lugares[seatId];
+    if (!s) return [];
     conexoes.set(seatId, (conexoes.get(seatId) ?? 0) + 1);
+    if (s.papel === 'mestre') vigiarMestreAusente = false; // daqui em diante vale a E-C4 de sempre (queda → pausa)
     return [];
   }
 
@@ -2809,6 +2896,7 @@ export function criarSala({
       hashEstado: () => journal.hashEstado(),
       opcoes: (figuraId) => calcularOpcoes(journal.estado, figuraId),
       recibo: (seatId, id) => clonarJson(journal.recibo(chaveRecibo(seatId, id))),
+      travao: () => tentativas.size, // ordem 18 (17-1): nº de entradas do travão do ROOM_JOIN
     }),
   });
 }

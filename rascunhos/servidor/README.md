@@ -214,3 +214,29 @@ Tudo MESTRE-ONLY. O contrato não muda (nenhum schema, tipo de mensagem ou campo
 2. **Sala restaurada em combate sem o Mestre ligado não fica em pausa.** Depois de restaurar, ninguém está ligado mas a mesa não está pausada (E-C4 fala de o Mestre cair, não de acordar sem ele): a jogadora pode entrar e agir, e a IA em auto joga, antes de o Mestre voltar. Pausar ao acordar mudaria o que a Party vê (`ROOM_PAUSED`) e o journal restaurado (um evento novo): precisa da palavra do Mestre.
 3. **Motor de outra versão numa sala restaurada no fim.** `pausar` não pausa o fim, por isso o «Recomeçar» do Mestre começa a batalha com o motor novo. Pausar no fim seria visível à Party: precisa da palavra (junto com o TODO da migração de motor, E-C11).
 4. **`ROOM_RESYNC` e `RECEIPT_QUERY` fora do ritmo.** O limite de 10/s (§2) só conta comandos; um lugar autenticado pode pedir RESYNC com `lastSeq: 0` sem limite, e cada um devolve o fluxo inteiro. Pôr-lhes ritmo mudaria o contrato (recusas novas): precisa de errata.
+
+*(Ordem 18: os quatro fechados por ordem do coordenador — ver abaixo.)*
+
+## Ordem 18 do CM-000009 — os omissos 17-1..17-4 e varredura nova (11/11/2026)
+
+O contrato não muda: nenhum tipo de mensagem, campo, schema ou código de erro novo; o texto do journal (`journal-sala/1`), o `MASTER_EXPORT`, o `restaurarJournal` e o envelope `registo-mestre/1` ficam iguais. Testes: `testes/ordem18-omissos.test.mjs` (cada teste de correcção falhava com o código de 9314401; os de controlo passam nos dois).
+
+**Parte B — os quatro omissos da ordem 17:**
+
+- **17-1 — tecto do travão do `ROOM_JOIN`.** `MAX_TRAVAO = 4096` entradas. Acima disso poda-se até 90 %: primeiro as entradas `ip:` que **não** estão bloqueadas, da falha mais velha para a mais nova; só se não chegar, as bloqueadas cujo bloqueio acaba primeiro. As entradas `lugar:` (uma por lugar configurado) nunca saem. Um IP bloqueado continua bloqueado durante uma enxurrada de IPs novos (testado). A espera que dobra (E-P9) fica igual.
+- **17-2 — sala restaurada em combate sem o Mestre.** Depois de restaurar, enquanto o Mestre não se ligar, a primeira entrada de outro lugar com a sala em combate pausa a mesa como uma queda do Mestre (`mestre_desconectado`, origem `desconexao`, E-C4): a jogadora entra e vê a pausa, as intenções são recusadas (`sala_pausada`) e a IA não corre. A volta do Mestre (JOIN + RESYNC) retoma-a, como sempre. Se o Mestre entra primeiro, nada muda (nenhum evento novo; restaurar, só por si, continua a não escrever nada no journal). Uma sala nova não é afectada.
+- **17-3 — «Recomeçar» com motor de outra versão.** Recusado (`acao_invalida`, o texto fixo de sempre) quando o motor do journal (`estado.motores.vlabSha`) não é o motor injectado; o porquê (`MOTOR_DIFERENTE: …`) vai só ao Mestre no evento interno `recusa`. A Party não recebe nada. A migração de motor continua TODO(JV3.x) (E-C11).
+- **17-4 — ritmo do `ROOM_RESYNC` e da `RECEIPT_QUERY`.** 10 por segundo por lugar (o número do §2), num balde próprio, separado do dos comandos (quem volta a ligar-se pede-os em rajada). Fora do ritmo: a mesma recusa que o excesso de comandos já tinha (`ROOM_REJECT` `formato`, `intentId: null`, já válida no schema), sem o fluxo; o adaptador fecha a ligação se o excesso se repetir (§2).
+
+**Parte C — varredura (achados corrigidos):**
+
+- **V8 — o `ERRO` `formato` não contava para fechar a ligação.** Só o `ROOM_REJECT` `formato` contava; o JSON inválido (no adaptador), o tipo desconhecido ou a sala errada (no núcleo, `ERRO` `formato`) e o `ROOM_JOIN` sem `v` (que não passa pelo travão de credenciais) não, e um cliente mandava lixo sem fim. Agora contam todos para as 5 rejeições seguidas que fecham com 1008. Qualquer outra resposta repõe a contagem, como antes.
+- **V9 — UTF-8 inválido.** O texto do WebSocket era descodificado com substituição (U+FFFD) e seguia para o núcleo; a RFC 6455 §8.1 manda fechar. Agora fecha com 1007 e nada chega ao núcleo. O BOM continua como estava.
+- **V10 — estado restaurado sem a forma da sala.** O `restaurarJournal` confere a assinatura e o corpo do journal, não o estado; sem chave, o `sha256:` recalcula-se. Um estado sem `lugares` (ou com lugares estragados, sem Mestre, fase desconhecida…) dava `TypeError` — que o adaptador deixa escapar em vez de «journal recusado» — ou abria uma sala que rebentava no primeiro `ROOM_JOIN`. Agora o `criarSala` confere a forma que o próprio servidor escreve (`sala/1`) e lança `ErroJournal`. Só forma, nenhuma regra de jogo; os journals válidos não mudam.
+
+**Registado, sem regra inventada (N18-):**
+
+1. **N18-1 — o que se perde ao podar o travão.** A entrada podada leva a contagem das falhas recentes e o `nivel` da escada de espera de quem já não está bloqueado: esse IP volta a começar do nível 0. O tecto (4096) e a ordem da poda são escolha de implementação; outra política (agrupar IPv6 por /64, guardar o `nivel` mais tempo) precisa da palavra do Mestre.
+2. **N18-2 — 17-3 só recusa.** O Mestre não é avisado ao restaurar (isso seria um evento novo no journal restaurado); sabe-o ao tentar «Recomeçar». Avisar à entrada precisa da palavra.
+3. **N18-3 — 17-2 e o lobby.** Uma sala restaurada no lobby não pausa quando a jogadora entra sem o Mestre (no lobby ela não pode agir). Se o Mestre quiser a pausa também aí, precisa da palavra.
+4. **N18-4 — o `ROOM_JOIN` com outra versão do protocolo** (`ERRO` `versao`) continua sem contar para fechar a ligação: é um cliente legítimo de outra versão, não formato mal feito. O mesmo para as mensagens bem formadas antes de entrar (`ERRO` `sem_lugar`). Pôr-lhes limite precisa da palavra (não são rejeições de formato do §2).

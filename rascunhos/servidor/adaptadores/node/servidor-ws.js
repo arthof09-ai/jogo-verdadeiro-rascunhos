@@ -21,6 +21,7 @@ export const LIMITE_MENSAGEM = 16 * 1024;
 const PING_MS = 20_000;
 const MORTO_MS = 45_000;
 const MAX_REJEICOES_FORMATO = 5; // repetidas → fecha a ligação (§2)
+const UTF8_ESTRITO = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
 
 const TIPOS_MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -124,8 +125,16 @@ class Ligacao {
       const { opcode: op, partes } = this.fragmentos;
       this.fragmentos = null;
       if (op !== 0x1) return this.fechar(1003, 'so texto');
+      // Ordem 18 (V9; RFC 6455 §8.1): texto que não é UTF-8 válido fecha com 1007. Antes, o toString trocava os bytes
+      // maus por U+FFFD e a mensagem seguia para o núcleo. O BOM fica como estava (ignoreBOM: o JSON.parse recusa-o).
+      let texto;
+      try {
+        texto = UTF8_ESTRITO.decode(Buffer.concat(partes));
+      } catch {
+        return this.fechar(1007, 'utf-8');
+      }
       this.ultimoPong = Date.now(); // qualquer tráfego conta como vivo
-      this.aoMensagem(this, Buffer.concat(partes).toString('utf8'));
+      this.aoMensagem(this, texto);
       return undefined;
     }
     return this.fechar(1002, 'opcode');
@@ -419,12 +428,23 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
     entregar(sala.conexaoFechada(seatId));
   }
 
+  /**
+   * Ordem 18 (V8): conta as rejeições de formato seguidas desta ligação e fecha-a (1008) ao chegar ao máximo (§2).
+   * Antes só contava o ROOM_REJECT formato; o ERRO formato (JSON inválido aqui; tipo desconhecido ou sala errada no
+   * núcleo) não contava, e um cliente podia mandar lixo sem fim. Qualquer outra resposta repõe a contagem, como antes.
+   */
+  function contarFormato(lig, formatoMal) {
+    lig.rejeicoesFormato = formatoMal ? lig.rejeicoesFormato + 1 : 0;
+    if (lig.rejeicoesFormato >= MAX_REJEICOES_FORMATO) lig.fechar(1008, 'formato');
+  }
+
   function aoMensagem(lig, texto) {
     let msg;
     try {
       msg = JSON.parse(texto);
     } catch {
       lig.enviarJson({ v: 2, type: 'ERRO', codigo: 'formato', texto: 'JSON inválido.' });
+      contarFormato(lig, true);
       return;
     }
     if (msg && msg.type === 'ROOM_JOIN') {
@@ -434,8 +454,11 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
       if (!r.ok) {
         for (const m of r.mensagens) lig.enviarJson(m);
         entregar(r.saidas);
+        // Ordem 18 (V8): o JOIN mal formado não passa pelo travão do núcleo (não é tentativa de credenciais): conta aqui.
+        contarFormato(lig, r.mensagens.some((m) => m?.type === 'ERRO' && m.codigo === 'formato'));
         return;
       }
+      lig.rejeicoesFormato = 0;
       if (lig.seatId && lig.seatId !== r.seatId) aoFecharLugar(lig);
       if (r.fecharAnteriores) {
         for (const outra of [...(porLugar.get(r.seatId) ?? [])]) if (outra !== lig) outra.fechar(4002, 'outra ligacao');
@@ -454,10 +477,10 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
     }
     const saidas = sala.receber(lig.seatId, msg);
     // Rejeições de formato repetidas (inclui o excesso de ritmo) fecham a ligação.
-    const formatoMal = saidas.some((s) => s.seatId === lig.seatId && s.msg?.type === 'ROOM_REJECT' && s.msg.motivo === 'formato');
-    lig.rejeicoesFormato = formatoMal ? lig.rejeicoesFormato + 1 : 0;
+    const formatoMal = saidas.some((s) => s.seatId === lig.seatId && (
+      (s.msg?.type === 'ROOM_REJECT' && s.msg.motivo === 'formato') || (s.msg?.type === 'ERRO' && s.msg.codigo === 'formato')));
     entregar(saidas);
-    if (lig.rejeicoesFormato >= MAX_REJEICOES_FORMATO) lig.fechar(1008, 'formato');
+    contarFormato(lig, formatoMal);
   }
 
   function aoFecharLugar(lig) {
