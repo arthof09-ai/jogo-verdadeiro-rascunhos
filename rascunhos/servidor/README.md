@@ -301,7 +301,7 @@ Testes: `testes/ordem22-decisoes.test.mjs` (8; em 276e573 falhavam 6 — 17-2 a,
 
 **Errata futura, sem pressa (registada, NÃO corrigida nesta ordem):**
 
-- **E-22-1 — a guarda de versão compara só o `vlabSha`.** `recomecarBatalha` (e o restauro, e agora o `avisoMotor`) comparam `estado.motores.vlabSha` com o do motor injectado; `null === null` passa: duas salas sem sha registado (motor sem `MOTOR_SHA256`) não se distinguem, mesmo que o motor tenha mudado (o `dmgVersao` e o `levelupSha` não entram na conta). Dívida menor; a correcção, quando vier, é na guarda (não por bloqueio por estado).
+- **E-22-1 — a guarda de versão compara só o `vlabSha`.** `recomecarBatalha` (e o restauro, e agora o `avisoMotor`) comparam `estado.motores.vlabSha` com o do motor injectado; `null === null` passa: duas salas sem sha registado (motor sem `MOTOR_SHA256`) não se distinguem, mesmo que o motor tenha mudado (o `dmgVersao` e o `levelupSha` não entram na conta). Dívida menor; a correcção, quando vier, é na guarda (não por bloqueio por estado). **→ CORRIGIDA NA ORDEM 23 (11/11/2026), na guarda:** sha em falta de qualquer um dos lados = motor não provado igual = o «Recomeçar» é recusado como na versão diferente (ver «Ordem 23» abaixo). O `dmgVersao`/`levelupSha`, o restauro e o `avisoMotor` ficam como estavam (N23-1).
 
 
 **Varredura (o espírito das V1-V12; `testes/ordem22-varredura.test.mjs`, cada teste de correcção falhava em 7e36ede):**
@@ -313,3 +313,11 @@ Testes: `testes/ordem22-decisoes.test.mjs` (8; em 276e573 falhavam 6 — 17-2 a,
 **Registado, sem regra inventada (N22-):**
 
 1. **N22-1 — a sala de espera só existe depois de um restauro.** A palavra do Mestre («uma batalha não pode acontecer sem mim») foi implementada para o caso pedido: sala restaurada a meio da batalha, antes de o Mestre entrar. Numa sala que não foi restaurada, ou depois de o Mestre ter entrado uma vez, a queda do Mestre continua a ser a E-C4 de sempre: a mesa pausa e quem entra (ou volta) nessa altura vê a batalha em pausa, não o lobby. Levar quem entra durante a ausência do Mestre também para o lobby nesses casos muda o que a Party vê numa queda normal: precisa da palavra do Mestre.
+
+## Ordem 23 do CM-000009 — a dívida E-22-1 e varredura (11/11/2026)
+
+Testes: `testes/ordem23-vlabsha.test.mjs` (4; em 6697f37 falhava 1 — sha `null` dos dois lados — e passavam os 3 de controlo).
+
+**Corrigido:**
+
+- **E-22-1 — sha em falta não prova o mesmo motor** (regra da ordem 23, na linha da sentença 17-3 «FICA A RECUSA»). A guarda de versão em `recomecarBatalha` recusa o «Recomeçar» quando o `vlabSha` gravado na sala (`estado.motores.vlabSha`) **ou** o do motor injectado (`MOTOR_SHA256`) falta, além de quando são diferentes: `acao_invalida` com o texto fixo de sempre, o porquê (`MOTOR_DIFERENTE: …`) só ao Mestre no evento interno `recusa`, a Party não recebe nada. Antes, `null === null` passava. Sha presente e igual dos dois lados: nada muda. A guarda continua a ser a mesma guarda (não há bloqueio por estado); vale para qualquer sala, restaurada ou não (uma sala nova com um motor sem sha também já não recomeça — todos os motores do repositório, o falso e o real embrulhado, trazem sha). A migração de motor continua TODO(JV3.x) (E-C11).

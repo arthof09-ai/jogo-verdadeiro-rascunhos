@@ -2590,7 +2590,10 @@ export function criarSala({
     // Ordem 18 (omisso 17-3): a sala restaurada no fim com um motor de outra versão não fica em pausa (o `pausar` não
     // pausa o fim), e o «Recomeçar» começava a batalha com o motor novo, furando a E-C11. Recusa-se; o porquê vai só
     // ao Mestre (evento interno `recusa`), a Party não vê nada. A migração de motor continua TODO(JV3.x).
-    if ((m.motores?.vlabSha ?? null) !== motoresInfo.vlabSha) {
+    // Ordem 23 (E-22-1): sha em falta de qualquer um dos lados não prova que o motor é o mesmo (null === null passava);
+    // recusa-se como na versão diferente.
+    const shaGravado = m.motores?.vlabSha ?? null;
+    if (shaGravado === null || motoresInfo.vlabSha === null || shaGravado !== motoresInfo.vlabSha) {
       throw new ErroRecusa('acao_invalida', 'MOTOR_DIFERENTE: a sala foi gravada com outro motor (E-C11); recomeçar precisa da migração de versão');
     }
     fecharCartoesAbertos(tx);
