@@ -10,8 +10,8 @@
 
 import http from 'node:http';
 import { createHash, webcrypto } from 'node:crypto';
-import { readFile, stat } from 'node:fs/promises';
-import { readFileSync, writeFileSync, renameSync } from 'node:fs';
+import { readFile, stat, realpath } from 'node:fs/promises';
+import { readFileSync, writeFileSync, renameSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { ErroJournal } from '../../nucleo/journal.js';
@@ -90,6 +90,8 @@ class Ligacao {
         off = 10;
       }
       if (!mascarado) return this.fechar(1002, 'sem mascara'); // o cliente TEM de mascarar
+      // Ordem 17 (V7; RFC 6455 §5.5): os quadros de controlo nunca vêm fragmentados e têm no máximo 125 bytes.
+      if (opcode >= 0x8 && (!fin || len > 125)) return this.fechar(1002, 'controlo');
       if (len > LIMITE_MENSAGEM) return this.fechar(1009, 'grande');
       if (this.buf.length < off + 4 + len) return;
       const mascara = this.buf.subarray(off, off + 4);
@@ -223,14 +225,25 @@ export function abrirFicheiroJournal(conteudoFicheiro) {
   return texto;
 }
 
-/** O nome do ficheiro tem de dizer MESTRE-ONLY e o ficheiro nunca pode cair na pasta estática (E-P13). */
-export function conferirCaminhoJournal(caminho, pastaEstatica = null) {
+/**
+ * `alvo` está dentro de `raiz` (ou é ela)? Pelo path.relative da plataforma: no Windows compara sem olhar a maiúsculas,
+ * como o disco (ordem 17, V4: o startsWith antigo deixava «c:\mesa\CLIENTE\...» fora de «C:\Mesa\cliente»).
+ */
+export function dentroDaPasta(raiz, alvo, p = path) {
+  const rel = p.relative(raiz, alvo);
+  return rel === '' || (rel !== '..' && !rel.startsWith('..' + p.sep) && !p.isAbsolute(rel));
+}
+
+/**
+ * O nome do ficheiro tem de dizer MESTRE-ONLY e o ficheiro nunca pode cair na pasta estática (E-P13).
+ * `p`: o módulo path (por omissão o da plataforma; os testes passam path.win32 / path.posix).
+ */
+export function conferirCaminhoJournal(caminho, pastaEstatica = null, p = path) {
   if (typeof caminho !== 'string' || !caminho) throw new ErroJournal('caminho do journal em falta');
-  const alvo = path.resolve(caminho);
-  if (!path.basename(alvo).includes(MARCA_MESTRE)) throw new ErroJournal('o nome do ficheiro do journal tem de dizer MESTRE-ONLY');
-  if (pastaEstatica) {
-    const raiz = path.resolve(pastaEstatica);
-    if (alvo === raiz || alvo.startsWith(raiz + path.sep)) throw new ErroJournal('o journal não pode ficar na pasta estática (E-P13)');
+  const alvo = p.resolve(caminho);
+  if (!p.basename(alvo).includes(MARCA_MESTRE)) throw new ErroJournal('o nome do ficheiro do journal tem de dizer MESTRE-ONLY');
+  if (pastaEstatica && dentroDaPasta(p.resolve(pastaEstatica), alvo, p)) {
+    throw new ErroJournal('o journal não pode ficar na pasta estática (E-P13)');
   }
   return alvo;
 }
@@ -250,8 +263,18 @@ export function lerJournalDoDisco(caminho) {
 /** Grava o envelope de uma vez: escreve ao lado e troca o nome (o ficheiro antigo nunca fica a meio). */
 export function gravarJournalEmDisco(caminho, texto) {
   const temporario = caminho + '.a-gravar';
-  writeFileSync(temporario, envelopeJournal(texto), { encoding: 'utf8', mode: 0o600 });
-  renameSync(temporario, caminho);
+  try {
+    writeFileSync(temporario, envelopeJournal(texto), { encoding: 'utf8', mode: 0o600 });
+    renameSync(temporario, caminho);
+  } catch (e) {
+    // Ordem 17 (B1): a falha não deixa o «.a-gravar» (talvez a meio) ao lado do journal do Mestre.
+    try {
+      rmSync(temporario, { force: true });
+    } catch {
+      /* fica para a próxima tentativa, que o reescreve */
+    }
+    throw e;
+  }
 }
 
 /**
@@ -274,22 +297,35 @@ export function abrirSalaComJournal({ caminho, criar }) {
   }
 }
 
-/** Gravador ligado a uma sala: grava o journal sempre que a exportação muda (depois de cada commit). */
+/**
+ * Gravador ligado a uma sala: grava o journal sempre que a exportação muda (depois de cada commit).
+ * Ordem 17 (B1; a parte do omisso 16-2 que não precisa da palavra do Mestre): a gravação que falhou fica `pendente()`
+ * e o relógio do adaptador volta a tentá-la, mesmo que a mesa fique parada sem commits. A mesa continua como antes.
+ */
 export function criarGravadorJournal({ sala, caminho, registo = () => {} }) {
   let ultimo = null;
+  let pendente = false;
   return {
     gravar() {
       const texto = sala.exportar();
-      if (texto === ultimo) return false;
+      if (texto === ultimo) {
+        pendente = false;
+        return false;
+      }
       try {
         gravarJournalEmDisco(caminho, texto);
         ultimo = texto;
+        if (pendente) registo('journal: gravação em disco reposta');
+        pendente = false;
         return true;
       } catch (e) {
-        registo('journal: falhou a gravação em disco (' + (e?.code ?? e?.message ?? 'erro') + ')');
+        if (!pendente) registo('journal: falhou a gravação em disco (' + (e?.code ?? e?.message ?? 'erro') + ')');
+        pendente = true;
         return false;
       }
     },
+    /** Há uma exportação que ainda não chegou ao disco? */
+    pendente: () => pendente,
   };
 }
 
@@ -315,8 +351,10 @@ async function servirEstatico(req, res, pasta) {
     res.writeHead(400, cabecalhosBase).end();
     return;
   }
-  if (caminho.includes('\0') || caminho.split('/').some((p) => p.startsWith('.') && p.length > 0)) {
-    res.writeHead(404, cabecalhosBase).end(); // nada de dotfiles nem ".."
+  // Nada de dotfiles nem "..". Ordem 17 (V5): os pedaços cortam-se também no «\», que o Windows lê como separador
+  // («/sub%5C.segredo» servia sub\.segredo).
+  if (caminho.includes('\0') || caminho.split(/[\\/]/).some((p) => p.startsWith('.') && p.length > 0)) {
+    res.writeHead(404, cabecalhosBase).end();
     return;
   }
   if (caminho.endsWith('/')) caminho += 'index.html';
@@ -329,6 +367,13 @@ async function servirEstatico(req, res, pasta) {
   try {
     const st = await stat(alvo);
     if (!st.isFile()) throw new Error('não é arquivo');
+    // Ordem 17 (V5): o caminho de verdade no disco também não pode ter dotfiles nem sair da pasta. No Windows o nome
+    // curto 8.3 («SEGRED~1») abre «.segredo»; o realpath devolve o nome longo. Também apanha ligações para fora.
+    const raizReal = await realpath(raiz);
+    const real = await realpath(alvo);
+    if (!dentroDaPasta(raizReal, real) || path.relative(raizReal, real).split(path.sep).some((p) => p.startsWith('.'))) {
+      throw new Error('fora da pasta ou dotfile');
+    }
     const corpo = await readFile(alvo);
     const tipo = TIPOS_MIME[path.extname(alvo).toLowerCase()] ?? 'application/octet-stream';
     res.writeHead(200, { ...cabecalhosBase, 'Content-Type': tipo, 'Content-Length': corpo.length });
@@ -384,7 +429,7 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
     }
     if (msg && msg.type === 'ROOM_JOIN') {
       // O seatToken vem na mensagem, nunca na URL (E-P9). Nunca o registar.
-      const r = sala.entrar(msg, { ip: lig.ip });
+      const r = sala.entrar(msg, { ip: lig.ip, seatIdDaLigacao: lig.seatId });
       if (journal) journal.gravar(); // antes de qualquer resposta (também a de recusa)
       if (!r.ok) {
         for (const m of r.mensagens) lig.enviarJson(m);
@@ -475,6 +520,8 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
 
   // Ping da camada WebSocket (não é pulso de aplicação).
   const relogio = setInterval(() => {
+    // Ordem 17 (B1): a gravação do journal que falhou volta a tentar-se aqui, sem esperar por um commit novo.
+    if (journal && typeof journal.pendente === 'function' && journal.pendente()) journal.gravar();
     const t = Date.now();
     for (const lig of todas) {
       if (t - lig.ultimoPong > MORTO_MS) lig.fechar(1001, 'sem pong');

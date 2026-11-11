@@ -296,7 +296,18 @@ export function criarSala({
   if (restaurarDe && (journal.estado.motores?.vlabSha ?? null) !== motoresInfo.vlabSha) {
     // E-C11: versão de motor diferente ao acordar → ROOM_PAUSED {manutencao}.
     // TODO(JV3.x): procedimento de migração de versão do motor (o Mestre decide).
-    transacao((tx) => pausar(tx, 'manutencao', 'motor'));
+    transacao((tx) => {
+      if (pausar(tx, 'manutencao', 'motor')) return;
+      // Ordem 17 (V1): a sala já vinha em pausa (ex.: o Mestre tinha caído). Antes ficava a pausa antiga, e a volta do
+      // Mestre (RESYNC, origem 'desconexao') ou o MASTER_RESUME retomavam a mesa com o motor novo, furando a E-C11.
+      // A pausa passa a ser do motor. Só no registo do Mestre: o evento `pausa` não está na lista da Party, não há
+      // anúncio novo e o motivo que a Party já viu fica o mesmo. (Sala no fim: ver omisso 17-3 no README.)
+      const p = tx.estado.pausa;
+      if (tx.estado.fase !== 'pausa' || !p || p.origem === 'motor') return;
+      const origemAnterior = p.origem;
+      p.origem = 'motor';
+      tx.emitir('pausa', { motivo: p.motivo }, { origem: 'motor', origemAnterior });
+    });
   }
 
   // =================================================================== utilitários
@@ -1773,13 +1784,32 @@ export function criarSala({
     return origem ? { seatId: origem.seatId, id: origem.id, idCampo: origem.idCampo, chave: origem.chave } : null;
   }
 
+  /**
+   * Ordem 17 (B2; omisso 15-6, o lado do Mestre): o porquê de um atacar/curar recusado por ALCANCE, para o evento interno
+   * `recusa` (só o Mestre, como o ESCALA_INVALIDA). É diagnóstico, não regra: a régua é a mesma das opções (aoAlcance).
+   * A Party continua a ver a recusa fixa de sempre; mostrar o porquê na HUD dela precisa da palavra do Mestre.
+   * Devolve null quando o alcance não é o problema (ou não se sabe a técnica ou o alvo).
+   */
+  function detalheDeAlcance(m, f, acao) {
+    if (!f || (acao?.tipo !== 'atacar' && acao?.tipo !== 'curar')) return null;
+    const alvo = m.figuras[acao.alvoId];
+    const t = fichaEfetiva(f).tecnicas.find((x) => x.id === (acao.tipo === 'atacar' ? acao.arma : acao.tecnica));
+    if (!alvo || !alvo.colocada || alvo.id === f.id || !t || !f.colocada) return null;
+    if (acao.tipo === 'curar' && typeof t.expressaoCura !== 'string') return null;
+    if (aoAlcance(m, f, alvo, t.alcanceM)) return null;
+    const passos = distanciaCasas(m, f, alvo);
+    const alcance = arred(alcanceEmCasas(m, t.alcanceM));
+    if (!Number.isFinite(passos)) return `CAMINHO_TAPADO: não há caminho pelas casas livres até ao alvo; a técnica chega a ${alcance} casas`;
+    return `ALVO_FORA_DO_ALCANCE: ${passos} passos pelo caminho das casas; a técnica chega a ${alcance} casas`;
+  }
+
   /** Valida a ação contra as opções correntes e aplica-a. Devolve o estado do recibo. */
   function aplicarIntencao(tx, figuraId, acao, origem) {
     const m = tx.estado;
     const f = m.figuras[figuraId];
     const v = m.vez;
     const ops = calcularOpcoes(m, figuraId);
-    if (!f || !acaoNasOpcoes(ops, acao)) throw new ErroRecusa('acao_invalida');
+    if (!f || !acaoNasOpcoes(ops, acao)) throw new ErroRecusa('acao_invalida', detalheDeAlcance(m, f, acao));
     if (origem.dadosFisicos && acao.tipo !== 'atacar') throw new ErroRecusa('acao_invalida');
     v.intencoes += 1;
     switch (acao.tipo) {
@@ -2660,8 +2690,9 @@ export function criarSala({
    *  - `mensagens` a ESTA ligação (WELCOME com o seatToken, sincronização, opções);
    *  - `saidas` aos outros lugares;
    *  - se `fecharAnteriores`, fecha as outras ligações deste lugar (código 4002).
+   * `seatIdDaLigacao`: o lugar a que ESTA ligação já está associada (o adaptador sabe-o), ou null.
    */
-  function entrar(msg, { ip = 'desconhecido' } = {}) {
+  function entrar(msg, { ip = 'desconhecido', seatIdDaLigacao = null } = {}) {
     const t = agora();
     const falha = (mensagens, saidas = []) => ({ ok: false, mensagens, saidas, fecharAnteriores: false });
     const bloqueio = () => falha([msgErro('bloqueado', 'Muitas tentativas. Espere um pouco.')]);
@@ -2714,7 +2745,9 @@ export function criarSala({
       protocolo: PROTOCOLO, motores: { ...motoresInfo },
     };
     const sinc = mensagensDeSincronizacao(seat.seatId, msg.lastSeq).map((x) => x.msg);
-    const fecharAnteriores = seat.papel !== 'mestre' && (conexoes.get(seat.seatId) ?? 0) > 0;
+    // Ordem 17 (V6): a ligação que repete o JOIN no lugar onde já está conta-se a si mesma em `conexoes`; não é segunda.
+    const propria = seatIdDaLigacao !== null && seatIdDaLigacao === seat.seatId ? 1 : 0;
+    const fecharAnteriores = seat.papel !== 'mestre' && (conexoes.get(seat.seatId) ?? 0) - propria > 0;
     if (fecharAnteriores) outros.push(...alertaMestre('segunda_ligacao', { papel: seat.papel, nome: seat.nome }));
     return { ok: true, seatId: seat.seatId, mensagens: [welcome, ...sinc], saidas: outros, fecharAnteriores };
   }

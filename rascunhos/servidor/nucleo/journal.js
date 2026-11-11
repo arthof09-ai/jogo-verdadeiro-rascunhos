@@ -9,7 +9,13 @@
 // (quem altera pode recalcular o hash). Com `chave` (HMAC), só quem tem a chave assina.
 
 import { sha256Hex, hmacSha256Hex } from './sha256.js';
-import { jsonCanonico, clonarJson, iguaisTempoConstante } from './util.js';
+import { jsonCanonico, clonarJson, congelarProfundo, iguaisTempoConstante } from './util.js';
+
+// Ordem 17 (V3): o journal guarda CÓPIAS congeladas dos eventos, das mensagens dos fluxos e dos recibos. Antes guardava
+// as referências que lhe passavam: quem mexesse numa saída entregue (a mesma mensagem vai ao fluxo e à mesa) ou no que o
+// journal devolve mudava o registo exportado, e um evento mexido partia a cadeia do restauro.
+const copiaFixa = (v) => congelarProfundo(clonarJson(v));
+const ehObjecto = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 
 export const FORMATO_JOURNAL = 'journal-sala/1';
 const CADEIA_ZERO = '0'.repeat(64);
@@ -34,9 +40,9 @@ export function criarJournal({ estadoInicial, restaurado, hash = sha256Hex } = {
 
   if (restaurado) {
     estado = clonarJson(restaurado.estado);
-    for (const ev of restaurado.eventos) eventos.push(ev);
-    for (const [k, r] of restaurado.recibos) recibos.set(k, r);
-    for (const [s, f] of Object.entries(restaurado.fluxos)) fluxos.set(s, f.slice());
+    for (const ev of restaurado.eventos) eventos.push(copiaFixa(ev));
+    for (const [k, r] of restaurado.recibos) recibos.set(k, copiaFixa(r));
+    for (const [s, f] of Object.entries(restaurado.fluxos)) fluxos.set(s, f.map(copiaFixa));
     hashCadeia = restaurado.hashCadeia;
   } else {
     estado = clonarJson(estadoInicial ?? {});
@@ -60,14 +66,16 @@ export function criarJournal({ estadoInicial, restaurado, hash = sha256Hex } = {
     eventos() {
       return clonarJson(eventos);
     },
+    /** O recibo gravado (congelado: para mudar, faz-se uma cópia e grava-se num commit). */
     recibo(chave) {
       return recibos.get(chave) ?? null;
     },
     *todosRecibos() {
       yield* recibos.entries();
     },
+    /** As mensagens gravadas do lugar (congeladas), numa lista nova: mexer na lista não muda o fluxo. */
     fluxo(seatId) {
-      return fluxos.get(seatId) ?? [];
+      return (fluxos.get(seatId) ?? []).slice();
     },
 
     /**
@@ -78,7 +86,7 @@ export function criarJournal({ estadoInicial, restaurado, hash = sha256Hex } = {
     commit(tx) {
       // 1) validar (pode lançar; nada mudou ainda)
       if (!tx || typeof tx.estado !== 'object' || tx.estado === null) throw new ErroJournal('commit sem estado');
-      const novos = tx.eventos ?? [];
+      const novos = (tx.eventos ?? []).map(copiaFixa); // o que se grava (e se encadeia) é a cópia
       novos.forEach((ev, i) => {
         if (ev.journalSeq !== eventos.length + 1 + i) throw new ErroJournal('journalSeq com buraco');
       });
@@ -86,8 +94,8 @@ export function criarJournal({ estadoInicial, restaurado, hash = sha256Hex } = {
       for (const ev of novos) cadeia = proximaCadeia(cadeia, ev);
       const textoEstado = JSON.stringify(tx.estado); // garante JSON puro antes de gravar
       const novoEstado = JSON.parse(textoEstado);
-      const novosRecibos = (tx.recibos ?? []).map(([k, r]) => [k, clonarJson(r)]);
-      const novosFluxos = Object.entries(tx.fluxos ?? {});
+      const novosRecibos = (tx.recibos ?? []).map(([k, r]) => [k, copiaFixa(r)]);
+      const novosFluxos = Object.entries(tx.fluxos ?? {}).map(([s, msgs]) => [s, msgs.map(copiaFixa)]);
       for (const [s, msgs] of novosFluxos) {
         const atual = fluxos.get(s) ?? [];
         msgs.forEach((m, i) => {
@@ -159,8 +167,15 @@ export function restaurarJournal(exportado, { chave, hash = sha256Hex } = {}) {
   }
   if (!corpo || corpo.formato !== FORMATO_JOURNAL || corpo.marca !== 'MESTRE-ONLY') throw new ErroJournal('formato desconhecido');
   if (jsonCanonico(corpo) !== texto) throw new ErroJournal('texto não está na forma canónica');
-  if (!Array.isArray(corpo.eventos) || !Array.isArray(corpo.recibos) || typeof corpo.fluxos !== 'object' || !corpo.estado) {
+  if (!Array.isArray(corpo.eventos) || !Array.isArray(corpo.recibos) || !ehObjecto(corpo.fluxos) || !ehObjecto(corpo.estado)) {
     throw new ErroJournal('corpo incompleto');
+  }
+  // Ordem 17 (V2): a forma de cada parte confere-se aqui. Sem chave, o "sha256:" recalcula-se; um corpo bem assinado com
+  // a estrutura errada dava TypeError (que o adaptador não trata como «journal recusado»), não ErroJournal.
+  if (typeof corpo.hashCadeia !== 'string') throw new ErroJournal('cadeia de eventos não confere');
+  if (!corpo.eventos.every(ehObjecto)) throw new ErroJournal('evento inválido');
+  if (!corpo.recibos.every((p) => Array.isArray(p) && p.length === 2 && typeof p[0] === 'string' && ehObjecto(p[1]))) {
+    throw new ErroJournal('recibo inválido');
   }
   // Cadeia de eventos: o replay tem de dar o mesmo hash.
   let cadeia = CADEIA_ZERO;
@@ -172,6 +187,7 @@ export function restaurarJournal(exportado, { chave, hash = sha256Hex } = {}) {
   for (const [s, f] of Object.entries(corpo.fluxos)) {
     if (!Array.isArray(f)) throw new ErroJournal('fluxo inválido');
     f.forEach((m, i) => {
+      if (!ehObjecto(m)) throw new ErroJournal('fluxo inválido');
       if (m.seq !== i + 1) throw new ErroJournal(`seq com buraco no lugar ${s}`);
     });
   }
