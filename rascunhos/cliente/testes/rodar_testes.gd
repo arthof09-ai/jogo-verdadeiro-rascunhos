@@ -38,6 +38,7 @@ func _initialize() -> void:
 	_teste_ambiente_na_party()
 	_teste_reentrada_servidor_restaurado()
 	_teste_sala_de_espera()
+	_teste_aguardando_mestre_desconhecida()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -459,3 +460,35 @@ func _teste_sala_de_espera() -> void:
 	_ok(est.fase == "combate", "com o Mestre dentro: o snapshot da batalha (mesmo seq) tira-a do lobby")
 	_ok(est.figuras.has("fA") and est.ultimo_seq == 5, "e traz as figuras")
 	est.free()
+
+
+## Ordem 24 (varredura do cliente, V19): a intenção estava AGUARDANDO_MESTRE (cartão aberto) e o servidor foi restaurado
+## de um journal a que falta o fim (ordem 17, B1; o caso da V12): ao religar, o RECEIPT_QUERY responde DESCONHECIDA.
+## Antes, a fila ignorava a resposta: a intenção ficava AGUARDANDO_MESTRE para sempre e a barra da HUD trancada (nem
+## reabrir a app resolvia). O servidor diz que nunca a viu: reenvia-se o MESMO texto, como numa DESCONHECIDA (E-C1).
+func _teste_aguardando_mestre_desconhecida() -> void:
+	print("AGUARDANDO_MESTRE que o servidor restaurado não conhece (ordem 24, V19):")
+	var fila = FilaIntencoes.new()
+	fila.registar("i-7", "{\"intentId\":\"i-7\"}")
+	fila.aplicar_recibo(_recibo("i-7", "AGUARDANDO_MESTRE"))
+	_ok(fila.ids_para_consulta() == ["i-7"], "a que espera o Mestre entra no RECEIPT_QUERY")
+	_ok(fila.aplicar_recibo(_recibo("i-7", "DESCONHECIDA")) == FilaIntencoes.Resultado.REENVIAR, "servidor não a viu: reenviar")
+	_ok(fila.texto_de("i-7") == "{\"intentId\":\"i-7\"}", "o MESMO texto (mesmo intentId)")
+	_ok(not fila.aguardando_mestre(), "já não tranca a barra à espera do Mestre")
+	_ok(fila.aplicar_recibo(_recibo("i-7", "DESCONHECIDA")) == FilaIntencoes.Resultado.IGNORADO, "resposta repetida não reenvia duas vezes")
+	# A mensagem inteira pela Rede: o mesmo, e sem sinal à tela (o recibo real vem do reenvio).
+	var rede = RedeScript.new()
+	rede.persistir = false
+	var sinais: Array = []
+	rede.recibo_recebido.connect(func(id, e, _m): sinais.append([id, e]))
+	rede.fila.registar("i-8", "{}")
+	rede.fila.aplicar_recibo(_recibo("i-8", "AGUARDANDO_MESTRE"))
+	rede._ao_receber(JSON.stringify(_recibo("i-8", "DESCONHECIDA")))
+	_ok(not rede.aguardando_mestre() and rede.fila.estado_de("i-8") == "ENVIADA", "Rede: volta a ENVIADA, a barra destranca")
+	_ok(sinais.is_empty(), "Rede: nenhum recibo mostrado à jogadora")
+	rede.free()
+	# Controlo: um AGUARDANDO_MESTRE com resposta real continua como antes.
+	var f2 = FilaIntencoes.new()
+	f2.registar("i-9", "{}")
+	f2.aplicar_recibo(_recibo("i-9", "AGUARDANDO_MESTRE"))
+	_ok(f2.aplicar_recibo(_recibo("i-9", "AGUARDANDO_MESTRE")) == FilaIntencoes.Resultado.IGNORADO and f2.aguardando_mestre(), "controlo: AGUARDANDO_MESTRE repetido continua à espera")
