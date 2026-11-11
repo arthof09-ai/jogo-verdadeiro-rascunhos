@@ -52,7 +52,7 @@ O núcleo não importa `node:*`. Recebe por injeção os motores (`Dmg` e `Vlab`
   - raio e fogo.
 - **Iniciativa:** ainda não é campo da ficha. Hoje vem da config do Mestre e precisa de errata à JV0.6a.
 - **Acesso:** convite de espectador emitido pelo Mestre, e autenticação C-17.
-- **Persistência:** journal em disco no adaptador; checkpoints do "voltar" só em memória.
+- **Persistência:** o journal já vai a disco no adaptador (ordem 16, abaixo); os checkpoints do "voltar" continuam só em memória.
 - **Protocolo:** `correr` tem de entrar na tabela §3.1 por errata.
 
 ## Riscos
@@ -167,3 +167,22 @@ Dívida E1 da auditoria da ordem 10 (o site tem o painel Ambiente do Mestre desd
 4. **A IA continua com as réguas dela.** A ordem do alvo «mais perto» (`distanciaM`) e a aproximação (`distMinima`) não são alcance e não mudaram. O site também tem duas réguas (o mapa de pontuação da IA atravessa corpos).
 5. **A Q12 «amigo ao alcance»** (adjacente ou na linha, supercover) é julgamento da casa sobre a desgraça, não o alcance do ataque, e fica como estava. O TODO C-42 (linha de visão por supercover no alcance) cai com o B9: o site não tem linha de visão, tem o caminho.
 6. **A frase da recusa por caminho tapado** (site M-019: «O caminho até ele está tapado por outras figuras…»). No JV o alvo fora do alcance não chega a aparecer nas opções, por isso não há recusa a explicar. Mostrar o porquê na HUD é outra peça e precisa da palavra do Mestre.
+
+## Ordem 16 do CM-000009 — o journal vai a disco (10/11/2026)
+
+**O TODO JV1.x do adaptador fecha-se** com a recomendação do estudo da ordem 14. Tudo em `adaptadores/node/servidor-ws.js`; o núcleo, o protocolo e os schemas não mudam (`MASTER_EXPORT`, o texto do journal e o `restaurarJournal` ficam iguais).
+
+- **Configuração** (o `config.json` do Mestre, fora do repositório): `"journal": "<caminho>"` e, opcional, `"chaveJournal"` (HMAC, já existente no `criarSala`). O nome do ficheiro **tem de dizer `MESTRE-ONLY`** e o ficheiro **não pode ficar na pasta estática** (E-P13); senão a sala não abre (`conferirCaminhoJournal`).
+- **Gravar:** o ficheiro é o envelope do «Exportar registo» do ecrã do Mestre, sem a narração (o servidor não a tem): `{"formato":"registo-mestre/1","marca":"MESTRE-ONLY","registo":"<sala.exportar() intacto>"}`. Grava-se depois de cada commit e **antes** de as saídas irem à mesa (no `entregar` e logo a seguir ao `sala.entrar`); só quando a exportação mudou. Escreve-se `<ficheiro>.a-gravar` e troca-se o nome, para o ficheiro nunca ficar a meio (`criarGravadorJournal`, `gravarJournalEmDisco`).
+- **Ler e restaurar ao arrancar** (`abrirSalaComJournal`, `lerJournalDoDisco`, `abrirFicheiroJournal`): `JSON.parse`; se der **string**, é a forma antiga (antes da ordem 13) e é o próprio texto; se der o **envelope** com `formato` `registo-mestre/1`, `marca` `MESTRE-ONLY` e `registo` texto, passa-se **só o `registo`** ao `criarSala({restaurarDe})` → `restaurarJournal`. A `narracao` (se vier, do ecrã do Mestre) nunca é lida: não entra no estado nem serve de prova. Sem ficheiro: sala nova.
+- **Falha fechada:** qualquer outra forma (texto cru, JSON inválido, outro formato ou marca, `registo` que não é texto ou vazio, lista, número, `null`, ficheiro vazio) ou um `registo` que o `restaurarJournal` recuse (assinatura, moldura, cadeia) → `journal recusado`, código de saída 1, **a sala não abre e nada é escrito por cima do ficheiro**. O `registo` vazio é recusado à parte porque o `criarSala` trataria `''` como «sem restauro».
+- **Testes:** `testes/ordem16-journal-disco.test.mjs`. Sem disco (correm sempre): o envelope leva o registo byte a byte; as duas formas abrem e restauram o mesmo estado (hash, `journalSeq`, eventos, estado e a exportação byte a byte); o envelope do Mestre com narração-canário restaura sem a narração no estado; as formas inválidas lançam `ErroJournal`; o registo adulterado no envelope certo é recusado; nome e pasta. Com disco (numa pasta temporária nova; o passo «só leitura» do job `servidor` não pode escrever e salta-os; no CI correm no job `protocolo`, que corre todos os testes do servidor sem o modelo de permissões; o workflow não mudou): ponta-a-ponta exportar → gravar → ler → restaurar (e a heroína volta com o `seatToken`; outro commit e o restauro acompanha); as duas formas em disco; as inválidas deixam o ficheiro intacto e nenhuma sala; sem ficheiro, sala nova; o `criarServidor` com uma ligação simulada (sem rede) grava o journal antes de a resposta ao `ROOM_JOIN` sair. Os testes antigos (`journal.test.mjs`, com `sala.exportar()` directo) não mudaram.
+
+**Onde o estudo da ordem 14 não chega — registado, sem regra inventada:**
+
+1. **«Append» a cada commit.** O TODO dizia «append»; o formato exportado é um texto assinado inteiro (corpo canónico + assinatura), por isso o adaptador regrava o ficheiro inteiro a cada commit. Um journal em append pedia um formato novo, que nenhuma ordem definiu. Custo: a exportação inteira (e o SHA-256 em JS puro) a cada commit; medir com a sessão longa (ver «Riscos», p99).
+2. **Falha ao gravar a meio da sessão** (disco cheio, permissões). O adaptador regista o erro e a mesa continua; o próximo commit volta a tentar. Parar a mesa nesse caso precisa da palavra do Mestre.
+3. **Ficheiro recusado ao arrancar.** Interpretado como «a sala não abre» (como as fichas recusadas), para não escrever uma sala nova por cima do ficheiro do Mestre. Se o Mestre quiser outra coisa (abrir uma sala nova com outro nome, guardar o ficheiro de lado), precisa da palavra dele.
+4. **O servidor não escreve a narração.** A narração vive no ecrã do Mestre; o ficheiro do servidor leva só `formato`, `marca` e `registo`. O leitor aceita os dois (com e sem narração).
+5. **Mudar a chave entre sessões.** O adaptador restaura com a `chaveJournal` da config de agora. Um ficheiro assinado com outra chave (ou com `sha256:` quando agora há chave, ou o inverso) é recusado pelo `restaurarJournal` e a sala não abre (falha fechada). Migrar de chave não está previsto.
+6. **O ecrã do Mestre ainda não envia ficheiros ao servidor.** Restaurar a partir de um «Exportar registo» do Godot faz-se copiando esse ficheiro para o caminho de `journal` antes de arrancar; não há mensagem de protocolo para isso (e esta ordem não a pede).

@@ -11,8 +11,10 @@
 import http from 'node:http';
 import { createHash, webcrypto } from 'node:crypto';
 import { readFile, stat } from 'node:fs/promises';
+import { readFileSync, writeFileSync, renameSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { ErroJournal } from '../../nucleo/journal.js';
 
 const GUID_WS = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
 export const LIMITE_MENSAGEM = 16 * 1024;
@@ -178,6 +180,119 @@ class Ligacao {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Journal em disco (Ordem 16 do CM-000009; TODO JV1.x; recomendação do estudo da ordem 14).
+// O ficheiro é MESTRE-ONLY no nome e na marca. Tem a forma do «Exportar registo» do ecrã do Mestre:
+//   {"formato":"registo-mestre/1","marca":"MESTRE-ONLY","registo":"<journal.exportar() intacto>"}
+// (o ecrã do Mestre junta-lhe a "narracao"; o servidor não a tem e não a escreve).
+// Quem lê abre o envelope e entrega SÓ o "registo" ao restaurarJournal (via criarSala({restaurarDe})).
+// Aceita também a forma antiga (antes da ordem 13): o ficheiro é só a string JSON do texto.
+// Qualquer outra forma falha FECHADO: não restaura nada. A "narracao" nunca é lida para o estado.
+// ---------------------------------------------------------------------------
+export const FORMATO_FICHEIRO_JOURNAL = 'registo-mestre/1';
+export const MARCA_MESTRE = 'MESTRE-ONLY';
+
+/** O envelope que o adaptador grava (texto JSON). O "registo" vai byte a byte como o servidor o exportou. */
+export function envelopeJournal(texto) {
+  if (typeof texto !== 'string') throw new ErroJournal('exportação tem de ser texto');
+  return JSON.stringify({ formato: FORMATO_FICHEIRO_JOURNAL, marca: MARCA_MESTRE, registo: texto });
+}
+
+/**
+ * Abre o ficheiro (o seu texto) e devolve o texto do journal para o restaurarJournal.
+ * Lança ErroJournal se a forma não for uma das duas conhecidas. Não lê nem devolve a "narracao".
+ */
+export function abrirFicheiroJournal(conteudoFicheiro) {
+  if (typeof conteudoFicheiro !== 'string') throw new ErroJournal('ficheiro do journal ilegível');
+  let dado;
+  try {
+    dado = JSON.parse(conteudoFicheiro);
+  } catch {
+    throw new ErroJournal('ficheiro do journal: formato desconhecido');
+  }
+  let texto = null;
+  if (typeof dado === 'string') texto = dado; // forma antiga: a string JSON é o próprio texto
+  else if (
+    dado && typeof dado === 'object' && !Array.isArray(dado)
+    && dado.formato === FORMATO_FICHEIRO_JOURNAL && dado.marca === MARCA_MESTRE && typeof dado.registo === 'string'
+  ) {
+    texto = dado.registo; // só o registo; a narração fica de fora
+  }
+  // Texto vazio também falha fechado: o criarSala trataria '' como «sem restauro» e abriria uma sala nova.
+  if (!texto) throw new ErroJournal('ficheiro do journal: formato desconhecido');
+  return texto;
+}
+
+/** O nome do ficheiro tem de dizer MESTRE-ONLY e o ficheiro nunca pode cair na pasta estática (E-P13). */
+export function conferirCaminhoJournal(caminho, pastaEstatica = null) {
+  if (typeof caminho !== 'string' || !caminho) throw new ErroJournal('caminho do journal em falta');
+  const alvo = path.resolve(caminho);
+  if (!path.basename(alvo).includes(MARCA_MESTRE)) throw new ErroJournal('o nome do ficheiro do journal tem de dizer MESTRE-ONLY');
+  if (pastaEstatica) {
+    const raiz = path.resolve(pastaEstatica);
+    if (alvo === raiz || alvo.startsWith(raiz + path.sep)) throw new ErroJournal('o journal não pode ficar na pasta estática (E-P13)');
+  }
+  return alvo;
+}
+
+/** Lê o ficheiro do disco. Devolve null se não existir; lança ErroJournal se existir com forma desconhecida. */
+export function lerJournalDoDisco(caminho) {
+  let conteudo;
+  try {
+    conteudo = readFileSync(caminho, 'utf8');
+  } catch (e) {
+    if (e && e.code === 'ENOENT') return null;
+    throw e;
+  }
+  return abrirFicheiroJournal(conteudo);
+}
+
+/** Grava o envelope de uma vez: escreve ao lado e troca o nome (o ficheiro antigo nunca fica a meio). */
+export function gravarJournalEmDisco(caminho, texto) {
+  const temporario = caminho + '.a-gravar';
+  writeFileSync(temporario, envelopeJournal(texto), { encoding: 'utf8', mode: 0o600 });
+  renameSync(temporario, caminho);
+}
+
+/**
+ * Arranque: com ficheiro, restaura a partir dele; sem ficheiro, sala nova. Forma desconhecida ou journal
+ * adulterado → {ok:false} e a sala NÃO abre (o ficheiro fica como estava, nada é escrito por cima).
+ * @param {{caminho:string, criar:(restaurarDe:string|null)=>Object}} p
+ */
+export function abrirSalaComJournal({ caminho, criar }) {
+  let texto;
+  try {
+    texto = lerJournalDoDisco(caminho);
+  } catch (e) {
+    return { ok: false, erro: e };
+  }
+  try {
+    return { ok: true, sala: criar(texto), restaurada: texto !== null };
+  } catch (e) {
+    if (e instanceof ErroJournal) return { ok: false, erro: e };
+    throw e;
+  }
+}
+
+/** Gravador ligado a uma sala: grava o journal sempre que a exportação muda (depois de cada commit). */
+export function criarGravadorJournal({ sala, caminho, registo = () => {} }) {
+  let ultimo = null;
+  return {
+    gravar() {
+      const texto = sala.exportar();
+      if (texto === ultimo) return false;
+      try {
+        gravarJournalEmDisco(caminho, texto);
+        ultimo = texto;
+        return true;
+      } catch (e) {
+        registo('journal: falhou a gravação em disco (' + (e?.code ?? e?.message ?? 'erro') + ')');
+        return false;
+      }
+    },
+  };
+}
+
 function ipDe(req) {
   // TODO(JV1.x): atrás de um proxy, ler X-Forwarded-For só de proxies de confiança.
   return req.socket.remoteAddress ?? 'desconhecido';
@@ -225,10 +340,12 @@ async function servirEstatico(req, res, pasta) {
 
 /**
  * Cria o servidor HTTP+WS para uma sala.
- * @param {{sala:Object, pastaEstatica?:string, caminhoWs?:string, registo?:(t:string)=>void}} p
+ * @param {{sala:Object, pastaEstatica?:string, caminhoWs?:string, registo?:(t:string)=>void,
+ *   journal?:{gravar:()=>boolean}}} p
  * IMPORTANTE: a pasta estática é só o cliente. Nunca lá ponha exportações do journal (E-P13).
+ * `journal` (ordem 16): o gravador de criarGravadorJournal; grava ANTES de entregar as saídas.
  */
-export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', registo = () => {} }) {
+export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', registo = () => {}, journal = null }) {
   const porLugar = new Map(); // seatId → Set<Ligacao>
   const todas = new Set();
 
@@ -239,6 +356,7 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
   }
 
   function entregar(saidas) {
+    if (journal) journal.gravar(); // o que a mesa vê já está em disco
     for (const { seatId, msg } of saidas) {
       for (const l of porLugar.get(seatId) ?? []) {
         if (!l.enviarJson(msg)) l.fechar(4001, 'envio falhou'); // E-C7
@@ -267,6 +385,7 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
     if (msg && msg.type === 'ROOM_JOIN') {
       // O seatToken vem na mensagem, nunca na URL (E-P9). Nunca o registar.
       const r = sala.entrar(msg, { ip: lig.ip });
+      if (journal) journal.gravar(); // antes de qualquer resposta (também a de recusa)
       if (!r.ok) {
         for (const m of r.mensagens) lig.enviarJson(m);
         entregar(r.saidas);
@@ -375,8 +494,10 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
 // config.json (Mestre-only, FORA do repositório):
 //   {"porta":8080, "host":"0.0.0.0", "pastaEstatica":"../cliente",
 //    "motores":"../motores/gerado/motores.mjs", "fichas":"../dados-exemplo/fichas-ficticias.json",
-//    "sala":{ ...config de criarSala: lugares, iniciativa, mapa... }}
-// TODO(JV1.x): gravar o journal em disco (append) a cada commit, e restaurar ao arrancar.
+//    "sala":{ ...config de criarSala: lugares, iniciativa, mapa... },
+//    "journal":"../privado/registo-MESTRE-ONLY-sala.json", "chaveJournal":"<opcional, HMAC>"}
+// Ordem 16: com "journal", o adaptador grava o journal nesse ficheiro a cada commit (o ficheiro inteiro,
+// trocado de uma vez) e, ao arrancar, restaura a partir dele. Forma desconhecida → a sala não abre.
 // TODO(JV1.x): carregar o pacote privado do Mestre (carregarPacote) em vez de um JSON solto.
 // ---------------------------------------------------------------------------
 async function principal(argv) {
@@ -397,11 +518,33 @@ async function principal(argv) {
     process.exitCode = 1;
     return; // a sala não abre
   }
-  const sala = criarSala({ motores, fichas: r.fichas, rng: rngNode(), agora: () => Date.now(), config: cfg.sala });
+  const pastaEstatica = cfg.pastaEstatica ? path.resolve(base, cfg.pastaEstatica) : null;
+  const criar = (restaurarDe) => criarSala({
+    motores, fichas: r.fichas, rng: rngNode(), agora: () => Date.now(), config: cfg.sala,
+    chaveJournal: cfg.chaveJournal ?? null, restaurarDe,
+  });
+  let sala;
+  let journal = null;
+  if (cfg.journal) {
+    const caminhoJournal = conferirCaminhoJournal(path.resolve(base, cfg.journal), pastaEstatica);
+    const aberta = abrirSalaComJournal({ caminho: caminhoJournal, criar });
+    if (!aberta.ok) {
+      console.error('journal recusado: ' + (aberta.erro?.motivo ?? aberta.erro?.message ?? aberta.erro));
+      process.exitCode = 1;
+      return; // falha fechada: não restaura nada e não escreve por cima do ficheiro
+    }
+    sala = aberta.sala;
+    console.log(aberta.restaurada ? 'sala restaurada do journal em disco' : 'sala nova (sem journal em disco)');
+    journal = criarGravadorJournal({ sala, caminho: caminhoJournal, registo: (t) => console.error(t) });
+    journal.gravar();
+  } else {
+    sala = criar(null);
+  }
   const servidor = criarServidor({
     sala,
-    pastaEstatica: cfg.pastaEstatica ? path.resolve(base, cfg.pastaEstatica) : null,
+    pastaEstatica,
     registo: (t) => console.log(t),
+    journal,
   });
   servidor.listen(cfg.porta ?? 8080, cfg.host ?? '0.0.0.0');
 }
