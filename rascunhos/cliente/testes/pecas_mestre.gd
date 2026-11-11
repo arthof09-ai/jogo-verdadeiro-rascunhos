@@ -941,6 +941,28 @@ func _aviso_motor(c) -> void:
 	await _quadros(1)
 	_ok(c.alertas.size() == n + 1, "o mesmo evento repetido no fio não repete o alerta")
 	_ok(Textos.NOME_EVENTO.get("aviso_motor", "") != "", "o registo tem nome para o aviso_motor")
+	# Ordem 22 (N21-1, decisão do Mestre): o Mestre que entra de fresco (sem lastSeq) não recebe o evento; o aviso vem na
+	# MASTER_VIEW (`avisoMotor`). Vai aos alertas uma vez; a vista repetida, ou o evento das mesmas versões, não o repetem.
+	var n2: int = c.alertas.size()
+	var vista: Dictionary = c.vista.duplicate(true) if c.vista is Dictionary and not c.vista.is_empty() else {"type": "MASTER_VIEW", "fase": "fim"}
+	vista["avisoMotor"] = {"codigo": "MOTOR_DIFERENTE", "recomecar": "recusado", "motorGravado": "b".repeat(64), "motorAgora": "f".repeat(64)}
+	c.aplicar_vista(vista)
+	await _quadros(1)
+	_ok(c.alertas.size() == n2 + 1 and c.alertas.back() == Textos.ALERTA.get("aviso_motor", "<sem texto>"),
+		"Mestre de fresco: o avisoMotor da vista vai aos alertas")
+	c.aplicar_vista(vista.duplicate(true))
+	await _quadros(1)
+	_ok(c.alertas.size() == n2 + 1, "a vista seguinte com o mesmo aviso não o repete")
+	var ev2 := {"v": 2, "type": "ROOM_EVENT", "roomId": "sala-teste", "seq": 995, "revision": 9, "ts": "2026-11-11T12:00:00.000Z",
+		"tipo": "aviso_motor", "dados": {"journalSeq": 78, "soMestre": vista["avisoMotor"].duplicate(true)}}
+	c._ao_evento(ev2)
+	await _quadros(1)
+	_ok(c.alertas.size() == n2 + 1, "o evento do mesmo aviso (pelo fluxo) também não o repete")
+	var sem: Dictionary = vista.duplicate(true)
+	sem["avisoMotor"] = null
+	c.aplicar_vista(sem)
+	await _quadros(1)
+	_ok(c.alertas.size() == n2 + 1, "avisoMotor null: nada")
 
 
 func _textos(no: Node, saida: Array) -> void:

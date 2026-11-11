@@ -37,6 +37,7 @@ func _initialize() -> void:
 	_teste_frases_no_estado()
 	_teste_ambiente_na_party()
 	_teste_reentrada_servidor_restaurado()
+	_teste_sala_de_espera()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -434,4 +435,27 @@ func _teste_reentrada_servidor_restaurado() -> void:
 	_ok(est.lista_opcao("mover").size() == 1, "as opções da revisão do servidor valem")
 	est.aplicar_snapshot(_snapshot(12, 5))
 	_ok(est.ultimo_seq == 16, "fora da reentrada, um snapshot mais velho continua ignorado")
+	est.free()
+
+
+## Ordem 22 (17-2, decisão do Mestre): sala restaurada a meio da batalha, a jogadora entra antes do Mestre → o servidor
+## manda-lhe um snapshot de LOBBY (sem figuras, sem vez). Quando o Mestre entra, manda o snapshot da batalha com o MESMO
+## seq (nada lhe foi entregue entretanto). O cliente tem de o aceitar e sair do lobby para a batalha.
+func _teste_sala_de_espera() -> void:
+	print("Sala de espera antes do Mestre (ordem 22, 17-2):")
+	var est = EstadoScript.new()
+	est._ao_boas_vindas({"type": "ROOM_WELCOME", "seatId": "s1"})
+	var lobby := _snapshot(5, 4)
+	lobby["fase"] = "lobby"
+	lobby["figuras"] = []
+	lobby["iniciativa"] = []
+	lobby["vezId"] = null
+	lobby["rodada"] = 0
+	est.aplicar_snapshot(lobby)
+	_ok(est.fase == "lobby" and est.figuras.is_empty(), "antes do Mestre: no lobby, sem figuras")
+	var batalha := _snapshot(5, 4)
+	batalha["rodada"] = 1
+	est.aplicar_snapshot(batalha)
+	_ok(est.fase == "combate", "com o Mestre dentro: o snapshot da batalha (mesmo seq) tira-a do lobby")
+	_ok(est.figuras.has("fA") and est.ultimo_seq == 5, "e traz as figuras")
 	est.free()
