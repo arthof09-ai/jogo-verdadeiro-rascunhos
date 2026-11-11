@@ -176,7 +176,7 @@ function emFalta(obj, chave) {
 /**
  * Valida `valor` contra `schema`. Empurra {campo, motivo} para `erros`
  * e {campo, motivo} para `avisos`. Suporta: type, enum, pattern, minLength,
- * minimum, minItems, items, required, properties, additionalProperties, anyOf(required).
+ * minimum, exclusiveMinimum, maximum, minItems, items, required, properties, additionalProperties, anyOf(required).
  */
 export function validarSchema(schema, valor, caminho, erros, avisos = []) {
   const campo = caminho || '(raiz)';
@@ -196,6 +196,10 @@ export function validarSchema(schema, valor, caminho, erros, avisos = []) {
   if (typeof valor === 'number') {
     if (!Number.isFinite(valor)) erros.push({ campo, motivo: 'número não finito' });
     else if (schema.minimum !== undefined && valor < schema.minimum) erros.push({ campo, motivo: `abaixo do mínimo ${schema.minimum}` });
+    // Ordem 24 (V17): o schema já declarava `exclusiveMinimum`/`maximum` (visual.alturaM) e o validador ignorava-os.
+    else if (schema.exclusiveMinimum !== undefined && valor <= schema.exclusiveMinimum) {
+      erros.push({ campo, motivo: `tem de ser maior do que ${schema.exclusiveMinimum}` });
+    } else if (schema.maximum !== undefined && valor > schema.maximum) erros.push({ campo, motivo: `acima do máximo ${schema.maximum}` });
   }
   if (Array.isArray(valor)) {
     if (schema.minItems !== undefined && valor.length < schema.minItems) {
@@ -452,9 +456,17 @@ export function carregarPacote({ pacote, arquivos, hashHex = sha256Hex, verifica
     return { ok: false, erros: [{ arquivo: 'PACOTE.json', campo: 'sha256', motivo: 'em falta' }], avisos: [] };
   }
   const presentes = arquivos && typeof arquivos === 'object' ? arquivos : {};
+  // Ordem 24 (V18): só as chaves próprias contam (o `in` via o protótipo: «toString» passava por presente), e um
+  // conteúdo que não é texto nem bytes é erro do pacote, não uma excepção do sha256.
+  const tem = (obj, k) => Object.prototype.hasOwnProperty.call(obj, k);
+  const ehConteudo = (v) => typeof v === 'string' || v instanceof Uint8Array || v instanceof ArrayBuffer;
   for (const [caminho, esperado] of Object.entries(listados)) {
-    if (!(caminho in presentes)) {
+    if (!tem(presentes, caminho)) {
       erros.push({ arquivo: caminho, campo: '(arquivo)', motivo: 'em falta no pacote' });
+      continue;
+    }
+    if (!ehConteudo(presentes[caminho])) {
+      erros.push({ arquivo: caminho, campo: '(arquivo)', motivo: 'conteúdo não é texto nem bytes' });
       continue;
     }
     if (typeof esperado !== 'string' || hashHex(presentes[caminho]) !== esperado.toLowerCase()) {
@@ -462,7 +474,7 @@ export function carregarPacote({ pacote, arquivos, hashHex = sha256Hex, verifica
     }
   }
   for (const caminho of Object.keys(presentes)) {
-    if (!(caminho in listados)) erros.push({ arquivo: caminho, campo: '(arquivo)', motivo: 'não listado no PACOTE.json' });
+    if (!tem(listados, caminho)) erros.push({ arquivo: caminho, campo: '(arquivo)', motivo: 'não listado no PACOTE.json' });
   }
   if (erros.length) return { ok: false, erros, avisos: [] };
 
