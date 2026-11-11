@@ -1,4 +1,4 @@
-# SHA-256 no 9cbaca8 (antes) dos 26 ficheiros que o ramo muda. Formato do MANIFESTO.
+# SHA-256 no 9cbaca8 (antes) dos 27 ficheiros que o ramo muda. Formato do MANIFESTO.
 6cfe2067be7e314d47c4177140463fb51612de93092818ed92a1a166f2e2d332  rascunhos/cliente/README.md
 32ccc3b31a161712a8ed3bb64388568ba98e107020f43443b6443e60e9a5316f  rascunhos/cliente/arte/cenas/clareira_prova.gd
 f3f4a28720733f5e39d286ce39be05725d513ef413673982f34e21da7319c77d  rascunhos/cliente/cenas/arena/arena.gd
@@ -19,6 +19,7 @@ e591bfa2dfe79dcdb2853b80bfd41a6bd6c3bcc5398b6f81adbebc7e5d04ec0a  rascunhos/serv
 8e2fefa7fca277c716e2d6c26e316b6034519f1c6168335903d23940f07d54b0  rascunhos/servidor/adaptadores/node/servidor-ws.js
 1d110fc1020f189df1212e4a687a01d713ee307f8a6592632aebaed2acec6c27  rascunhos/servidor/dados-exemplo/fichas-ficticias.json
 af3798f5b462da21b9f2546041aba35e2c0bbccad858119902d7acb99266b292  rascunhos/servidor/nucleo/carregar-fichas.js
+80283d4c286cb18b56f0587d125625527b89bc29029f062fcb74c915c8c29d5b  rascunhos/servidor/nucleo/journal.js
 ae0efdd89174a0c5f65305d29a424f23cf1f3a7cfc8d69284196e1a9d6f67ac1  rascunhos/servidor/nucleo/projecao.js
 6303ae899d934f792872fbbc70632298ccb2f0203f9277a42dc6a1bb6ee33ebf  rascunhos/servidor/nucleo/sala.js
 5f1662491f630ca0921641b55e177eb946598319330a0c374707165d4801efda  rascunhos/servidor/testes-motor-real/integracao.test.mjs
