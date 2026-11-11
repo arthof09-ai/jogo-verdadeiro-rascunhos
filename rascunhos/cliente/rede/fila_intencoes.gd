@@ -5,6 +5,7 @@ extends RefCounted
 ##      │
 ##      └─caiu a ligação─▶ DESCONHECIDA ─RECEIPT_QUERY─▶ recibo real
 ##                                        └─ servidor diz DESCONHECIDA → reenviar o MESMO texto
+##   AGUARDANDO_MESTRE ─RECEIPT_QUERY─▶ DESCONHECIDA (servidor restaurado sem o fim) → reenviar o MESMO texto
 ##
 ## Recibos duplicados, recibos de ids que não são nossos e recusas repetidas
 ## são IGNORADOS (não voltam a ser sinalizados à tela).
@@ -68,7 +69,9 @@ func aplicar_recibo(recibo: Dictionary) -> int:
 
 	if novo == DESCONHECIDA:
 		# O servidor nunca viu: reenviar o MESMO intentId é seguro (dedupe no servidor).
-		if atual == DESCONHECIDA:
+		# Ordem 24 (V19): também a que esperava o Mestre — o servidor restaurado de um journal sem o fim já não a
+		# conhece; ignorar deixava-a AGUARDANDO_MESTRE para sempre e a barra trancada.
+		if atual == DESCONHECIDA or atual == AGUARDANDO_MESTRE:
 			item["estado"] = ENVIADA
 			item["criada_ms"] = Time.get_ticks_msec()
 			return Resultado.REENVIAR
