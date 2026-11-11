@@ -1,4 +1,4 @@
-# SHA-256 no 9cbaca8 (antes) dos 28 ficheiros que o ramo muda. Formato do MANIFESTO.
+# SHA-256 no 9cbaca8 (antes) dos 29 ficheiros que o ramo muda. Formato do MANIFESTO.
 6cfe2067be7e314d47c4177140463fb51612de93092818ed92a1a166f2e2d332  rascunhos/cliente/README.md
 32ccc3b31a161712a8ed3bb64388568ba98e107020f43443b6443e60e9a5316f  rascunhos/cliente/arte/cenas/clareira_prova.gd
 f3f4a28720733f5e39d286ce39be05725d513ef413673982f34e21da7319c77d  rascunhos/cliente/cenas/arena/arena.gd
@@ -6,6 +6,7 @@ f3f4a28720733f5e39d286ce39be05725d513ef413673982f34e21da7319c77d  rascunhos/clie
 d37764d8a52a47aabb062526c9331e429644bef3bc7332b9792cda5762da5ed3  rascunhos/cliente/cenas/lobby/lobby.gd
 2e63bbd837a54cf28cc71b1b5045bd2f34d83da25cf3606f346244d739a5d4d3  rascunhos/cliente/estado/estado.gd
 6de0a4dcf6dd414e5cab4b5ea0c500450f56ca92c5d530d78267d8abbb56ec51  rascunhos/cliente/hud/hud.gd
+d804b33951f70776550ae1a6ea0fd1b9cc452f86d0c5c9eef154aa0a02ee2127  rascunhos/cliente/rede/fila_intencoes.gd
 ee489784f6a2e975845fe7f26b60b1b359fa44740bd7511a663bd7a3baade196  rascunhos/cliente/rede/rede.gd
 01f6c24e8510ad7bcb838e21c0cbfb80f7643471fcf7d19c0541d3a4eebbf447  rascunhos/cliente/testes/rodar_testes.gd
 51a816d08faf5c7c030246e065186e91a0d7bf6392b4d798a75c5926417dacfc  rascunhos/protocolo/v2/MASTER_AMBIENTE.schema.json
