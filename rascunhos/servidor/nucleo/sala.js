@@ -2114,7 +2114,10 @@ export function criarSala({
         }
       }
       if (!r) {
-        return { seatId: seat.seatId, msg: { v: PROTOCOLO, type: 'ROOM_RECEIPT', roomId, intentId: typeof id === 'string' ? id : null, estado: 'DESCONHECIDA' } };
+        // Ordem 19 (V11): só um id válido volta; o resto (65+ caracteres, fora do RE_ID) volta null, como o que não é
+        // texto. Antes ecoava o texto recebido e o ROOM_RECEIPT saía fora do schema (intentId: maxLength 64).
+        const eco = typeof id === 'string' && RE_ID.test(id) ? id : null;
+        return { seatId: seat.seatId, msg: { v: PROTOCOLO, type: 'ROOM_RECEIPT', roomId, intentId: eco, estado: 'DESCONHECIDA' } };
       }
       const base = mensagemDoRecibo(r);
       if (base.type === 'ROOM_REJECT') {

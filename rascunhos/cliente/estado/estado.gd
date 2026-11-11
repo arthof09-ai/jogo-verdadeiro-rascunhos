@@ -61,6 +61,8 @@ var _resync_pendente := false
 var _tempo_resync := 0.0
 var _arma_de: Dictionary = {}  # figuraId -> id da técnica do último `ataque` (para a frase da desgraça)
 var _teste_morte_pendente := false  # houve `teste_morte` DELA: o `estado` seguinte diz se aguentou
+## Ordem 19 (V12): entre o ROOM_WELCOME e a primeira sincronização, o snapshot que vier manda (mesmo com seq mais baixo).
+var _reentrada := false
 
 
 func _ready() -> void:
@@ -90,11 +92,18 @@ func _process(delta: float) -> void:
 
 func aplicar_snapshot(msg: Dictionary) -> void:
 	var s := _int(msg.get("seq"))
-	if tem_snapshot and s < ultimo_seq:
+	var reentrada := _reentrada
+	if tem_snapshot and s < ultimo_seq and not reentrada:
 		return  # snapshot mais velho do que o que já temos
+	_reentrada = false
 	var fase_antes := fase
 	tem_snapshot = true
 	ultimo_seq = s
+	if reentrada:
+		# Ordem 19 (V12): a resposta ao ROOM_JOIN é a verdade do servidor, mesmo abaixo do que o aparelho viu
+		# (servidor restaurado de um journal sem o fim). O seq e a revisão recomeçam dela; a espera velha não serve.
+		_espera.clear()
+		revisao = null
 	if msg.has("revision"):
 		_subir_revisao(msg["revision"])
 	rodada = _int(msg.get("rodada"))
@@ -160,6 +169,7 @@ func receber_evento(msg: Dictionary) -> void:
 	if not tem_snapshot:
 		_guardar(s, msg)  # o JOIN traz o snapshot; até lá, espera
 		return
+	_reentrada = false  # o servidor respondeu ao JOIN com eventos: o fluxo continua do lastSeq que mandámos
 	if s <= ultimo_seq or _espera.has(s):
 		return  # repetido
 	if s == ultimo_seq + 1:
@@ -208,6 +218,7 @@ func limpar() -> void:
 	mestre = {}
 	_arma_de.clear()
 	_teste_morte_pendente = false
+	_reentrada = false
 	_espera.clear()
 	_resync_pendente = false
 	_definir_pausa(false)
@@ -510,6 +521,7 @@ func _subir_revisao(r) -> bool:
 
 func _ao_boas_vindas(msg: Dictionary) -> void:
 	seat_id = _texto(msg.get("seatId"))
+	_reentrada = true
 
 
 func _ao_pausar(_motivo: String) -> void:
