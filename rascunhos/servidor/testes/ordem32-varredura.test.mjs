@@ -288,3 +288,57 @@ test('V30 controlo: sem pausa nem retomada no intervalo, a volta continua por ev
   assert.ok(r.mensagens.some((x) => x.type === 'ROOM_EVENT' && x.tipo === 'colocacao'));
   assert.equal(pausadaDepois(false, r.mensagens), false);
 });
+
+// ------------------------------------------------------------------ V31
+//  V31  Ordem 22 (17-2): na sala restaurada, quem entra antes do Mestre recebe o lobby de espera — um ROOM_SNAPSHOT
+//       com o seq VERDADEIRO do lugar e sem nada da batalha. Quando o Mestre entra, a batalha (snapshot) vai só a quem
+//       está ligado nesse instante. Quem recebeu o lobby, caiu, e volta depois do Mestre com esse lastSeq recebia os
+//       eventos desde lá (nenhum) e ficava no lobby vazio com a batalha a correr — sem figuras, sem vez, sem a ficha
+//       a meio da batalha.
+
+test('V31: recebeu o lobby de espera, caiu, o Mestre entrou — ao voltar pelo lastSeq recebe a batalha', () => {
+  const m = sessao();
+  const config = {
+    roomId: 'sala-teste', mapa: { largura: 20, altura: 20 }, iniciativa: INICIATIVA, modoPadrao: 'auto', depurar: true,
+    lugares: [
+      { papel: 'jogadora', nome: 'Heroína Teste', senha: SENHAS.heroina, fichaId: 'heroina-teste', casa: { x: 2, y: 2 } },
+      { papel: 'mestre', nome: 'Mestre', pin: PIN },
+    ],
+  };
+  const sala = criarSala({ motores: criarMotorFalso(), fichas: fichasDeTeste(), rng: rngDeterministico(5), agora: relogio(), config, restaurarDe: m.sala.exportar() });
+  const h = m.clientes.heroina;
+  const r1 = sala.entrar({ v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', papel: 'jogadora', seatToken: h.token, lastSeq: h.ultimoSeq }, { ip: '10.0.0.2' });
+  assert.equal(r1.ok, true);
+  sala.conexaoAberta(r1.seatId);
+  const e = espelhoDe(r1.mensagens);
+  assert.equal(e.fase, 'lobby', 'sala de espera');
+  sala.conexaoFechada(r1.seatId); // caiu
+  const rm = sala.entrar({ v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', papel: 'mestre', pin: PIN, seatToken: m.clientes.mestre.token, lastSeq: m.clientes.mestre.ultimoSeq }, { ip: '10.0.0.9' });
+  sala.conexaoAberta(rm.seatId);
+  const tokenNovo = r1.mensagens.find((x) => x.type === 'ROOM_WELCOME').seatToken;
+  const r2 = sala.entrar({ v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', papel: 'jogadora', seatToken: tokenNovo, lastSeq: e.seq }, { ip: '10.0.0.2' });
+  assert.equal(r2.ok, true);
+  for (const msg of r2.mensagens) aplicar(e, msg);
+  assert.equal(e.fase, 'combate', r2.mensagens.map((x) => x.type).join(','));
+  assert.deepEqual(semSeq(e), semSeq(verdade(sala, 'jogadora', { nome: 'Heroína Teste', senha: SENHAS.heroina })));
+});
+
+test('V31 controlo: ligada quando o Mestre entra — recebe a batalha logo (ordem 22) e depois segue por eventos', () => {
+  const m = sessao();
+  const config = {
+    roomId: 'sala-teste', mapa: { largura: 20, altura: 20 }, iniciativa: INICIATIVA, modoPadrao: 'auto', depurar: true,
+    lugares: [
+      { papel: 'jogadora', nome: 'Heroína Teste', senha: SENHAS.heroina, fichaId: 'heroina-teste', casa: { x: 2, y: 2 } },
+      { papel: 'mestre', nome: 'Mestre', pin: PIN },
+    ],
+  };
+  const sala = criarSala({ motores: criarMotorFalso(), fichas: fichasDeTeste(), rng: rngDeterministico(5), agora: relogio(), config, restaurarDe: m.sala.exportar() });
+  const h = m.clientes.heroina;
+  const r1 = sala.entrar({ v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', papel: 'jogadora', seatToken: h.token, lastSeq: h.ultimoSeq }, { ip: '10.0.0.2' });
+  sala.conexaoAberta(r1.seatId);
+  const rm = sala.entrar({ v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', papel: 'mestre', pin: PIN, seatToken: m.clientes.mestre.token, lastSeq: m.clientes.mestre.ultimoSeq }, { ip: '10.0.0.9' });
+  sala.conexaoAberta(rm.seatId);
+  const e = espelhoDe([...r1.mensagens, ...rm.saidas.filter((x) => x.seatId === r1.seatId).map((x) => x.msg)]);
+  assert.equal(e.fase, 'combate');
+  assert.deepEqual(semSeq(e), semSeq(verdade(sala, 'jogadora', { nome: 'Heroína Teste', senha: SENHAS.heroina })));
+});
