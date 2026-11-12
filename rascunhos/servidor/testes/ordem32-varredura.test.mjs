@@ -342,3 +342,28 @@ test('V31 controlo: ligada quando o Mestre entra — recebe a batalha logo (orde
   assert.equal(e.fase, 'combate');
   assert.deepEqual(semSeq(e), semSeq(verdade(sala, 'jogadora', { nome: 'Heroína Teste', senha: SENHAS.heroina })));
 });
+
+// ------------------------------------------------------------------ V32 (achado pelo fuzz diferencial desta ordem)
+//  V32  O ataque da jogadora debita o PA da técnica (finalizarAtaque, `paGasto += custoPA`), mas o `estado` do atacante
+//       só saía se a Vida, o visível ou as bandeiras (arma/corpo) mudassem. A própria ficava com o `paLivre` de antes
+//       (estado.gd `propria`, que o HUD mostra, p. ex. «custa N PA dos M livres» na Transformação) até ao próximo
+//       snapshot. A cura (aplicarCuraAcao) já emite o `estado` de quem cura quando o PA muda; o ataque não.
+
+test('V32: o ataque que custa PA diz à própria o PA livre novo', () => {
+  const m = montarMesa();
+  m.entrarTodos();
+  m.iniciarCombate([['orc-teste', { x: 2, y: 3 }]]);
+  const h = m.clientes.heroina;
+  const ataque = h.opcoes.ataques.find((a) => a.alvoId === h.idPorNome('Orc'));
+  assert.ok(ataque, 'o orc está ao alcance');
+  const custo = m.fichas['heroina-teste'].tecnicas.find((t) => t.id === ataque.arma).custoPA;
+  assert.ok(custo > 0, 'a técnica custa PA');
+  const antes = h.ultimo('ROOM_SNAPSHOT').propria.paLivre;
+  const n = h.msgs.length;
+  exigirAplicada(m.intencao('heroina', { tipo: 'atacar', alvoId: ataque.alvoId, arma: ataque.arma }), 'atacar');
+  const real = m.sala.depuracao.estado().figuras[h.figuraId];
+  const paReal = m.fichas['heroina-teste'].paTotal - real.paGasto;
+  assert.equal(paReal, antes - custo, 'o servidor debitou');
+  const visto = h.msgs.slice(n).filter((x) => x.type === 'ROOM_EVENT' && x.tipo === 'estado' && x.dados.figuraId === h.figuraId && 'paLivre' in x.dados).pop();
+  assert.equal(visto?.dados.paLivre, paReal, 'a própria recebe o PA livre novo');
+});
