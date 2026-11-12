@@ -2255,6 +2255,7 @@ export function criarSala({
     // Ordem 32 (V30): em pausa, o snapshot (fase `pausa`) — os eventos não dizem a pausa à Party. Cobre também os
     // journals de antes da ordem 32, que não guardam o seq do ROOM_PAUSED.
     if (journal.estado.fase === 'pausa') return true;
+    if (Number.isInteger(s.seqEspera) && lastSeq === s.seqEspera) return true; // V31: o cliente tem o lobby de espera
     const corte = corteDoSnapshot(s, fluxo);
     return corte > 0 && lastSeq <= corte;
   }
@@ -2956,6 +2957,10 @@ export function criarSala({
       const s = tx.estado.lugares[seat.seatId];
       s.tokenHash = hash('token\u0000' + token);
       s.epoch += 1;
+      // Ordem 32 (V31): o lobby de espera saiu com o seq verdadeiro de cada lugar; a batalha (snapshot) só vai a quem
+      // está ligado agora. Quem volta depois com esse lastSeq (o do lobby) recebe o snapshot da batalha. Um lastSeq
+      // mais baixo não veio do lobby: os eventos desde lá chegam (ordem 22, 17-2 b).
+      if (fimDaEspera) for (const l of Object.values(tx.estado.lugares)) if (l.papel !== 'mestre') l.seqEspera = l.seq;
       if (s.epoch === 1 && s.papel === 'jogadora') {
         const f = tx.estado.figuras[s.figuraId];
         tx.emitir('entrada', { figuraId: f.id, nomePublico: nomePublicoDe(fichaDe(f)), lado: f.lado }, null);
