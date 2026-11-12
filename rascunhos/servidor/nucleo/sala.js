@@ -233,6 +233,35 @@ function conferirFormaDoEstado(e) {
   if (!ok) throw new ErroJournal('estado da sala com forma inválida', 'estado');
 }
 
+const PAPEIS_JOIN = Object.freeze(['jogadora', 'espectador', 'mestre']);
+/** Texto com `min` a `max` caracteres (contam-se caracteres — pontos de código —, não bytes nem unidades UTF-16). */
+function textoEntre(v, min, max) {
+  if (typeof v !== 'string' || v.length < min) return false;
+  if (v.length <= max) return true;
+  if (v.length > max * 2) return false;
+  let n = 0;
+  for (const _ of v) n += 1; // eslint-disable-line no-unused-vars
+  return n <= max;
+}
+/**
+ * Ordem 34 (N26-2): a forma do ROOM_JOIN, pelo schema (protocolo/v2/ROOM_JOIN.schema.json): nome 1-64 caracteres,
+ * senha 1-128, PIN ^[0-9]{6,32}$, seatToken 32-128 de [A-Za-z0-9_-], e uma das três formas — (A) seatToken;
+ * (B) jogadora/espectador com nome e senha; (C) Mestre com PIN. Só a forma destes campos: campos a mais não se
+ * conferem aqui (como antes), e o lastSeq continua a ser lido com tolerância pela sincronização.
+ */
+function joinBemFormado(msg) {
+  if (!PAPEIS_JOIN.includes(msg.papel)) return false;
+  const tem = (k) => msg[k] !== undefined;
+  if (tem('nome') && !textoEntre(msg.nome, 1, 64)) return false;
+  if (tem('senha') && !textoEntre(msg.senha, 1, 128)) return false;
+  if (tem('pin') && !(typeof msg.pin === 'string' && /^[0-9]{6,32}$/.test(msg.pin))) return false;
+  if (tem('seatToken') && !(typeof msg.seatToken === 'string' && /^[A-Za-z0-9_-]{32,128}$/.test(msg.seatToken))) return false;
+  // Tem de trazer pelo menos uma forma completa para o papel. A exclusividade das formas (o `oneOf` do schema) não se
+  // exige aqui: quem volta com o seatToken e ainda traz o PIN ou a senha entra pelo token, como sempre entrou.
+  if (tem('seatToken')) return true;
+  return msg.papel === 'mestre' ? tem('pin') : tem('nome') && tem('senha');
+}
+
 /**
  * Cria uma sala.
  * @param {Object} p
@@ -2940,6 +2969,10 @@ export function criarSala({
     if (!msg || typeof msg !== 'object' || msg.v !== PROTOCOLO || msg.type !== 'ROOM_JOIN') {
       return falha([msgErro(msg?.v !== undefined && msg?.v !== PROTOCOLO ? 'versao' : 'formato', TEXTOS_RECUSA.formato)]);
     }
+    // Ordem 34 (N26-2, sentença da bancada de 2026-11-12): o ROOM_JOIN mal formado é formato (o adaptador conta-o para
+    // o fecho 1008), NUNCA uma tentativa de credenciais: não gasta o travão do IP nem do lugar e não alerta o Mestre.
+    // Antes respondia «credenciais» e 5 nomes compridos ou senhas vazias bloqueavam o IP e o lugar de quem os mandava.
+    if (!joinBemFormado(msg)) return falha([msgErro('formato', TEXTOS_RECUSA.formato)]);
     if (estaBloqueado('ip:' + ip, t)) return bloqueio();
     const m = journal.estado;
     const lugares = Object.values(m.lugares);

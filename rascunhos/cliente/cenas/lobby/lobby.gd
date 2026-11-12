@@ -21,6 +21,9 @@ const ALTURA_BASE := 1080.0
 const FONTE_BASE := 22
 const FONTE_MIN_PX_REAIS := 13.0  # acima dos 12 px pedidos
 const OPACIDADE_PAINEL := 0.55
+## Ordem 34 (N26-2): a validação do ROOM_JOIN no aparelho (limites e dicas).
+const ValidarEntrada := preload("res://rede/validar_entrada.gd")
+const COR_FORA := Color(1.0, 0.55, 0.45)
 ## Frases do próprio cliente (quando o servidor não manda `texto`).
 const FRASES := {
 	"senha": "O nome ou a senha não conferem.",
@@ -45,6 +48,12 @@ var _campo_nome: LineEdit
 var _campo_senha: LineEdit
 var _campo_pin: LineEdit
 var _campo_host: LineEdit = null
+var _b_entrar: Button
+var _b_mestre: Button
+var _dica_nome: Label
+var _dica_senha: Label
+var _dica_pin: Label
+var _sb_fora: StyleBoxFlat
 var _modo_mestre := false
 var _saindo := false
 
@@ -114,16 +123,22 @@ func _montar() -> void:
 	caixa.add_child(_caixa_jogadora)
 	_campo_nome = LineEdit.new()
 	_campo_nome.placeholder_text = "Nome da personagem"
+	_campo_nome.text_changed.connect(_ao_campo_mudou)
 	_caixa_jogadora.add_child(_campo_nome)
+	_dica_nome = _rotulo_dica()
+	_caixa_jogadora.add_child(_dica_nome)
 	_campo_senha = LineEdit.new()
 	_campo_senha.placeholder_text = "Senha"
 	_campo_senha.secret = true
 	_campo_senha.text_submitted.connect(_ao_enviar_senha)
+	_campo_senha.text_changed.connect(_ao_campo_mudou)
 	_caixa_jogadora.add_child(_campo_senha)
-	var b_entrar := Button.new()
-	b_entrar.text = "Entrar"
-	b_entrar.pressed.connect(_ao_entrar)
-	_caixa_jogadora.add_child(b_entrar)
+	_dica_senha = _rotulo_dica()
+	_caixa_jogadora.add_child(_dica_senha)
+	_b_entrar = Button.new()
+	_b_entrar.text = "Entrar"
+	_b_entrar.pressed.connect(_ao_entrar)
+	_caixa_jogadora.add_child(_b_entrar)
 	var b_sou_mestre := Button.new()
 	b_sou_mestre.text = "Sou o Mestre"
 	b_sou_mestre.flat = true
@@ -138,11 +153,14 @@ func _montar() -> void:
 	_campo_pin.placeholder_text = "PIN do Mestre"
 	_campo_pin.secret = true
 	_campo_pin.text_submitted.connect(_ao_enviar_pin)
+	_campo_pin.text_changed.connect(_ao_campo_mudou)
 	_caixa_mestre.add_child(_campo_pin)
-	var b_mestre := Button.new()
-	b_mestre.text = "Entrar como Mestre"
-	b_mestre.pressed.connect(_ao_entrar_mestre)
-	_caixa_mestre.add_child(b_mestre)
+	_dica_pin = _rotulo_dica()
+	_caixa_mestre.add_child(_dica_pin)
+	_b_mestre = Button.new()
+	_b_mestre.text = "Entrar como Mestre"
+	_b_mestre.pressed.connect(_ao_entrar_mestre)
+	_caixa_mestre.add_child(_b_mestre)
 	var b_voltar := Button.new()
 	b_voltar.text = "Voltar"
 	b_voltar.flat = true
@@ -175,6 +193,50 @@ func _montar() -> void:
 		b_usar.text = "Usar"
 		b_usar.pressed.connect(_ao_usar_servidor)
 		_caixa_servidor.add_child(b_usar)
+
+
+## A dica curta debaixo de um campo (ordem 34, N26-2): só aparece enquanto o campo está fora.
+func _rotulo_dica() -> Label:
+	var l := Label.new()
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.add_theme_color_override("font_color", COR_FORA)
+	l.visible = false
+	return l
+
+
+## Ordem 34 (N26-2): enquanto um campo estiver fora, o botão de entrar fica inactivo, o campo fica marcado e a dica
+## aparece debaixo dele, enquanto ela escreve. Campo fora = 0 mensagens de rede, 0 tentativas gastas.
+func _validar_campos() -> void:
+	var d_nome := ValidarEntrada.dica_nome(_campo_nome.text)
+	var d_senha := ValidarEntrada.dica_senha(_campo_senha.text)
+	var d_pin := ValidarEntrada.dica_pin(_campo_pin.text)
+	_marcar(_campo_nome, _dica_nome, d_nome)
+	_marcar(_campo_senha, _dica_senha, d_senha)
+	_marcar(_campo_pin, _dica_pin, d_pin)
+	_b_entrar.disabled = d_nome != "" or d_senha != ""
+	_b_mestre.disabled = d_pin != ""
+
+
+func _marcar(campo: LineEdit, dica: Label, texto: String) -> void:
+	dica.text = texto
+	dica.visible = texto != ""
+	if texto != "":
+		if _sb_fora == null:
+			_sb_fora = StyleBoxFlat.new()
+			_sb_fora.bg_color = Color(0.20, 0.09, 0.08, 0.9)
+			_sb_fora.border_color = COR_FORA
+			_sb_fora.set_border_width_all(2)
+			_sb_fora.set_corner_radius_all(4)
+			_sb_fora.set_content_margin_all(6)
+		campo.add_theme_stylebox_override("normal", _sb_fora)
+		campo.add_theme_stylebox_override("focus", _sb_fora)
+	else:
+		campo.remove_theme_stylebox_override("normal")
+		campo.remove_theme_stylebox_override("focus")
+
+
+func _ao_campo_mudou(_t: String) -> void:
+	_validar_campos()
 
 
 func _rotulo_quebrado() -> Label:
@@ -215,6 +277,7 @@ func _atualizar() -> void:
 		_estado.text = "Entre com o PIN do Mestre."
 	else:
 		_estado.text = "Entre com o nome da sua personagem e a senha."
+	_validar_campos()
 
 
 func _verificar_fase() -> void:
@@ -291,6 +354,9 @@ func _ao_enviar_pin(_t: String) -> void:
 
 
 func _ao_entrar() -> void:
+	_validar_campos()
+	if _b_entrar.disabled:
+		return  # ordem 34 (N26-2): campo fora não sai do aparelho (o Enter não fura o botão inactivo)
 	_aviso.text = ""
 	Rede.entrar(_campo_nome.text, _campo_senha.text)
 	_campo_senha.text = ""
@@ -298,6 +364,9 @@ func _ao_entrar() -> void:
 
 
 func _ao_entrar_mestre() -> void:
+	_validar_campos()
+	if _b_mestre.disabled:
+		return  # ordem 34 (N26-2)
 	_aviso.text = ""
 	Rede.entrar_mestre(_campo_pin.text)
 	_campo_pin.text = ""  # o PIN nunca fica na tela nem no disco

@@ -35,6 +35,7 @@ signal comando_respondido(id: String, msg: Dictionary)
 
 const FilaIntencoes := preload("res://rede/fila_intencoes.gd")
 const Uuid := preload("res://rede/uuid.gd")
+const ValidarEntrada := preload("res://rede/validar_entrada.gd")
 
 enum Ligacao { DESLIGADA, A_LIGAR, A_ENTRAR, NA_MESA, A_ESPERAR, PARADA }
 
@@ -106,24 +107,26 @@ func iniciar() -> void:
 
 
 ## Entrada da jogadora com o nome da personagem e a senha simples.
+## Ordem 34 (N26-2): com um campo fora (nome 1-64, senha 1-128) nada se liga nem se envia — volta a pedir a entrada.
 func entrar(nome: String, senha: String) -> void:
+	if not ValidarEntrada.jogadora_valida(nome, senha):
+		_pedir_entrada("nome" if nome.strip_edges() == "" else "campos")
+		return
 	_nome = nome.strip_edges()
 	_senha = senha
 	_pin = ""
-	if _nome == "":
-		_pedir_entrada("nome")
-		return
 	_comecar_entrada("jogadora")
 
 
 ## Entrada do Mestre com o PIN (E-P9: 6 dígitos ou mais; quem confere é o servidor).
+## Ordem 34 (N26-2): o PIN que não casa ^[0-9]{6,32}$ não sai do aparelho (0 mensagens, 0 tentativas gastas).
 func entrar_mestre(pin: String) -> void:
-	_pin = pin.strip_edges()
+	if not ValidarEntrada.mestre_valido(pin):
+		_pedir_entrada("pin" if pin.strip_edges() == "" else "campos")
+		return
+	_pin = pin
 	_nome = ""
 	_senha = ""
-	if _pin == "":
-		_pedir_entrada("pin")
-		return
 	_comecar_entrada("mestre")
 
 
