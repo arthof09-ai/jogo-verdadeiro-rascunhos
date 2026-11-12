@@ -330,7 +330,7 @@ export function criarSala({
   }
   guardarCheckpoint();
   if (restaurarDe && batalhaEmCurso(journal.estado)) esperaMestre = true;
-  if (restaurarDe && (journal.estado.motores?.vlabSha ?? null) !== motoresInfo.vlabSha) {
+  if (restaurarDe && !motorProvadoIgual(journal.estado.motores)) {
     // E-C11: versão de motor diferente ao acordar → ROOM_PAUSED {manutencao}.
     // TODO(JV3.x): procedimento de migração de versão do motor (o Mestre decide).
     transacao((tx) => {
@@ -367,6 +367,23 @@ export function criarSala({
     return esperaMestre && s.papel !== 'mestre';
   }
   /**
+   * Ordem 27 (N23-1, palavra do Mestre 11/11/2026: sim): a guarda do motor, a mesma no restauro (pausa de manutenção
+   * E-C11 em combate; `aviso_motor` no fim), no `avisoMotor` da vista e no «Recomeçar». O motor gravado na sala só
+   * está PROVADO igual ao injectado quando:
+   *  - o `vlabSha` existe dos dois lados e é igual (sha em falta de qualquer lado = não provado; E-22-1);
+   *  - o `dmgVersao` e o `levelupSha` são iguais dos dois lados (presente só de um lado, ou diferente = não provado).
+   * Os dois últimos com `null` dos dois lados contam como iguais: nenhum motor do repositório traz `LEVELUP_SHA` (o
+   * servidor não injecta motor de level-up); exigi-los presentes recusaria todas as salas (omisso N27-1 no README).
+   */
+  function motorProvadoIgual(gravados) {
+    const g = gravados ?? {};
+    const shaG = g.vlabSha ?? null;
+    if (shaG === null || motoresInfo.vlabSha === null || shaG !== motoresInfo.vlabSha) return false;
+    if ((g.dmgVersao ?? null) !== motoresInfo.dmgVersao) return false;
+    if ((g.levelupSha ?? null) !== motoresInfo.levelupSha) return false;
+    return true;
+  }
+  /**
    * Ordem 22 (N21-1, palavra do Mestre 11/11/2026 16:13: sim): o aviso do motor também na vista do Mestre, para quem
    * entra de fresco (sem lastSeq só recebe o snapshot, que não traz o evento `aviso_motor`). Os mesmos campos do
    * soMestre do evento, enquanto a condição do aviso dura (sala no fim gravada com outro motor; o «Recomeçar» é
@@ -377,7 +394,7 @@ export function criarSala({
     const m = journal.estado;
     const gravado = m.motores?.vlabSha ?? null;
     const agoraSha = motoresInfo.vlabSha ?? null;
-    if (m.fase !== 'fim' || gravado === agoraSha) return null;
+    if (m.fase !== 'fim' || motorProvadoIgual(m.motores)) return null;
     return { codigo: 'MOTOR_DIFERENTE', recomecar: 'recusado', motorGravado: gravado, motorAgora: agoraSha };
   }
   function u32() {
@@ -2600,8 +2617,8 @@ export function criarSala({
     // ao Mestre (evento interno `recusa`), a Party não vê nada. A migração de motor continua TODO(JV3.x).
     // Ordem 23 (E-22-1): sha em falta de qualquer um dos lados não prova que o motor é o mesmo (null === null passava);
     // recusa-se como na versão diferente.
-    const shaGravado = m.motores?.vlabSha ?? null;
-    if (shaGravado === null || motoresInfo.vlabSha === null || shaGravado !== motoresInfo.vlabSha) {
+    // Ordem 27 (N23-1): a mesma guarda do restauro e da vista (motorProvadoIgual), com o dmgVersao e o levelupSha.
+    if (!motorProvadoIgual(m.motores)) {
       throw new ErroRecusa('acao_invalida', 'MOTOR_DIFERENTE: a sala foi gravada com outro motor (E-C11); recomeçar precisa da migração de versão');
     }
     fecharCartoesAbertos(tx);

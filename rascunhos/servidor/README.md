@@ -330,7 +330,7 @@ Testes: `testes/ordem23-vlabsha.test.mjs` (4; em 6697f37 falhava 1 — sha `null
 
 **Registado, sem regra inventada (N23-):**
 
-1. **N23-1 — o sha em falta só conta no «Recomeçar».** A regra da ordem 23 foi posta onde a ordem a pôs: na guarda do `recomecarBatalha`. O restauro (pausa de manutenção E-C11 em combate; evento `aviso_motor` no fim) e o `avisoMotor` da `MASTER_VIEW` continuam a comparar `vlabSha` com `null === null` como igual: uma sala gravada e restaurada sem sha acorda em combate sem a pausa do motor, e no fim o Mestre não recebe aviso — mas o «Recomeçar» é recusado (sabe-o pelo `MOTOR_DIFERENTE` da recusa). Pôr a mesma regra no restauro muda o que a Party vê (pausa a meio da batalha); pô-la só no aviso é contrato do Mestre (o `motorGravado`/`motorAgora` passam a poder ser `null`). O `dmgVersao` e o `levelupSha` continuam fora da conta (parte restante da E-22-1). Precisa da palavra do Mestre. Hoje todos os motores do repositório trazem sha, por isso nenhuma sala real cai aqui.
+1. **N23-1 — o sha em falta só conta no «Recomeçar».** A regra da ordem 23 foi posta onde a ordem a pôs: na guarda do `recomecarBatalha`. O restauro (pausa de manutenção E-C11 em combate; evento `aviso_motor` no fim) e o `avisoMotor` da `MASTER_VIEW` continuam a comparar `vlabSha` com `null === null` como igual: uma sala gravada e restaurada sem sha acorda em combate sem a pausa do motor, e no fim o Mestre não recebe aviso — mas o «Recomeçar» é recusado (sabe-o pelo `MOTOR_DIFERENTE` da recusa). Pôr a mesma regra no restauro muda o que a Party vê (pausa a meio da batalha); pô-la só no aviso é contrato do Mestre (o `motorGravado`/`motorAgora` passam a poder ser `null`). O `dmgVersao` e o `levelupSha` continuam fora da conta (parte restante da E-22-1). Precisa da palavra do Mestre. Hoje todos os motores do repositório trazem sha, por isso nenhuma sala real cai aqui. **→ DECIDIDO (Mestre, 11/11/2026: SIM) E CORRIGIDO NA ORDEM 27** (ver «Ordem 27» abaixo).
 
 ## Ordem 24 do CM-000009 — varredura do servidor pelas áreas por ler e primeira varredura do cliente (11/11/2026)
 
@@ -399,3 +399,12 @@ Testes: `testes/ordem26-varredura.test.mjs` (3; em 801a614 falhavam os 2 de corr
 - Lidos sem achados: os nomes, as câmaras e a arte não mandam nem lêem mensagens do protocolo (só o ecrã); o arnês ponta-a-ponta manda um `ROOM_JOIN` (forma B, com `cliente`) e um `ROOM_INTENT` dentro dos schemas; as mensagens falsas dos testes do cliente são parciais de propósito (alimentam um handler de cada vez) e as reais vêm da fixture do servidor (`mesa-mestre.json`) e da corrida ponta-a-ponta do CI. Nada novo chega à Party.
 
 N22-1, N23-1, N25-1 e N25-2 continuam à espera da palavra do Mestre (não implementados).
+
+## Ordem 27 do CM-000009 — três decisões do Mestre (N23-1, N25-1, N25-2) e varredura (11/11/2026)
+
+**N23-1 — a guarda do motor fecha-se** (palavra do Mestre, 11/11/2026: sim). Uma só guarda, `motorProvadoIgual` em `nucleo/sala.js`, serve agora os três caminhos: o restauro (pausa de manutenção E-C11 em combate; evento `aviso_motor` no fim), o `avisoMotor` da `MASTER_VIEW` e o «Recomeçar». O motor gravado na sala (`estado.motores`) só está provado igual ao injectado quando:
+- o `vlabSha` existe dos dois lados e é igual — sha em falta de qualquer um dos lados (ou dos dois) = **não provado igual** (a regra da E-22-1, que antes só valia no «Recomeçar»);
+- o `dmgVersao` e o `levelupSha` são iguais dos dois lados — diferentes, ou presentes só de um lado = não provado igual.
+
+Comportamento visível: o mesmo de sempre para a versão diferente. No fim: um `aviso_motor` só do Mestre no journal, `avisoMotor` na vista (`motorGravado`/`motorAgora` continuam a ser o `vlabSha`, que já podia ser `null` no schema; quando a diferença está só no `dmgVersao`/`levelupSha` os dois mostram o mesmo sha), «Recomeçar» recusado (`acao_invalida`, `MOTOR_DIFERENTE` só ao Mestre). Em combate: a pausa de manutenção do motor, como na versão diferente. Nenhum tipo de mensagem novo; nenhum schema tocado. Testes: `testes/ordem27-n23-1.test.mjs` (8: 6 falhavam em 9c66c2a, 2 de controlo passavam).
+
