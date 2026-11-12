@@ -66,6 +66,14 @@ class Ligacao {
     this.errosSemLugar = 0; // ordem 27 (N25-1)
     socket.setNoDelay(true);
     socket.on('data', (d) => this.receberBytes(d));
+    // Ordem 30 (V26; RFC 6455 §7.1.4): o FIN do cliente fecha a ligação. O http do Node abre o servidor com allowHalfOpen
+    // e, no upgrade, tira o seu ouvinte de 'end': sem isto a ligação meio fechada contava como viva até um envio levar o
+    // RST (o ping de 20 s; ~40 s medidos), e o Mestre caído não pausava a mesa (E-C4). Nada mais pode chegar dela.
+    socket.on('end', () => {
+      this.fechada = true;
+      this.socket.end();
+      this.terminar();
+    });
     socket.on('close', () => this.terminar());
     socket.on('error', () => this.terminar());
   }
