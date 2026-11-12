@@ -12,6 +12,8 @@ extends VBoxContainer
 ##   Se o servidor recusar uma, o esquema pára e o resto fica na lista. Não há mensagem de lote nova.
 
 const Textos := preload("res://cenas/mestre/textos_mestre.gd")
+## Ordem 26 (V22): MASTER_SEARCH.texto tem maxLength 64 (caracteres). O servidor já pesquisava só os primeiros 64.
+const MAX_PROCURA := 64
 
 ## O ecrã do Mestre (mestre.gd): enviar(tipo, campos) e pesquisar(texto).
 var mestre
@@ -101,7 +103,7 @@ func montar(m) -> void:
 
 
 func procurar() -> void:
-	mestre.pesquisar(_procura.text.strip_edges())
+	mestre.pesquisar(_procura.text.strip_edges().left(MAX_PROCURA))
 
 
 func receber_resultados(msg: Dictionary) -> void:
