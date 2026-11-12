@@ -129,7 +129,9 @@ class Ligacao {
         this.fragmentos = { opcode, partes: [dados], total: dados.length };
       } else {
         if (!this.fragmentos) return this.fechar(1002, 'continuacao');
-        this.fragmentos.partes.push(dados);
+        // Ordem 30 (V27): o pedaço vazio não se guarda. Antes, cada quadro de continuação vazio (6 bytes no fio) entrava na
+        // lista e o limite de 16 KB, que só soma bytes, nunca disparava: 12 MB no fio guardavam ~400 MB, sem fim.
+        if (dados.length) this.fragmentos.partes.push(dados);
         this.fragmentos.total += dados.length;
       }
       if (this.fragmentos.total > LIMITE_MENSAGEM) return this.fechar(1009, 'grande');

@@ -8,7 +8,7 @@
 //
 // V27: quadros de continuação VAZIOS (sem fin) entravam um a um na lista de partes da mensagem fragmentada; o limite de
 // 16 KB só soma bytes, por isso nunca disparava. 6 bytes no fio por quadro: 12 MB guardavam ~400 MB numa só ligação
-// (medido), sem limite. Agora o pedaço vazio não se guarda (não muda nada à mensagem). O 4.º teste falhava em 5f73c34;
+// (medido), sem limite. Agora o pedaço vazio não se guarda (não muda nada à mensagem). O 4.º teste falhava em 578272a;
 // o 5.º é controlo e passava.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
