@@ -217,3 +217,74 @@ test('V29 controlo: um movimento perdido chega por evento (sem snapshot)', () =>
   assert.ok(!resposta.some((x) => x.type === 'ROOM_SNAPSHOT'));
   assert.equal(e.fase, 'combate');
 });
+
+// ------------------------------------------------------------------ V30
+//  V30  A pausa e a retomada vão à Party em ROOM_PAUSED / ROOM_RESUMED (o `anuncio` do finalizar), que não são
+//       ROOM_EVENT nem ficam no fluxo; o evento `pausa` é interno (só o Mestre). Quem estava em baixo quando a mesa
+//       pausou ou retomou, e volta pelo lastSeq, recebia só os eventos (muitas vezes nenhum) e nada da pausa: ficava
+//       a ver a mesa a correr com ela parada, ou — pior — presa no ecrã da pausa com a batalha já retomada (o
+//       estado.gd só sai da pausa com um ROOM_RESUMED ou com um snapshot sem fase `pausa`).
+
+/** O que o estado.gd faz com a pausa: o snapshot diz-a pela fase; os anúncios mudam-na. */
+function pausadaDepois(antes, msgs) {
+  let p = antes;
+  for (const x of msgs) {
+    if (x.type === 'ROOM_SNAPSHOT') p = x.fase === 'pausa';
+    if (x.type === 'ROOM_PAUSED') p = true;
+    if (x.type === 'ROOM_RESUMED') p = false;
+  }
+  return p;
+}
+
+test('V30: a mesa pausou enquanto ela estava em baixo — ao voltar pelo lastSeq, sabe que está em pausa', () => {
+  const m = sessao();
+  const h = m.clientes.heroina;
+  const lastSeq = espelhoDe(h.msgs).seq;
+  m.sair('heroina');
+  exigirAplicada(m.mestre('MASTER_PAUSE'), 'pausa');
+  const r = m.sala.entrar({ v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', papel: 'jogadora', seatToken: h.token, lastSeq }, { ip: '10.0.0.2' });
+  assert.equal(r.ok, true);
+  assert.equal(pausadaDepois(false, r.mensagens), true, r.mensagens.map((x) => x.type).join(','));
+});
+
+test('V30: a mesa retomou enquanto ela estava em baixo — ao voltar pelo lastSeq, sai da pausa', () => {
+  const m = sessao();
+  exigirAplicada(m.mestre('MASTER_PAUSE'), 'pausa');
+  const h = m.clientes.heroina;
+  assert.equal(pausadaDepois(false, h.msgs), true, 'ela viu a pausa, ligada');
+  const lastSeq = espelhoDe(h.msgs).seq;
+  m.sair('heroina');
+  exigirAplicada(m.mestre('MASTER_RESUME'), 'retomar');
+  const r = m.sala.entrar({ v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', papel: 'jogadora', seatToken: h.token, lastSeq }, { ip: '10.0.0.2' });
+  assert.equal(r.ok, true);
+  assert.equal(pausadaDepois(true, r.mensagens), false, r.mensagens.map((x) => x.type).join(','));
+});
+
+test('V30: a queda do Mestre pausou e a volta dele retomou, tudo com ela em baixo — fica a saber que a mesa corre', () => {
+  const m = sessao();
+  const h = m.clientes.heroina;
+  const lastSeq = espelhoDe(h.msgs).seq;
+  m.sair('heroina');
+  m.sair('mestre'); // E-C4
+  assert.equal(m.sala.depuracao.estado().fase, 'pausa');
+  m.entrar('mestre', { papel: 'mestre', pin: PIN, seatToken: m.clientes.mestre.token, lastSeq: m.clientes.mestre.ultimoSeq });
+  m.enviar('mestre', { type: 'ROOM_RESYNC', lastSeq: m.clientes.mestre.ultimoSeq }); // E-C4: a retomada sai do RESYNC dele
+  assert.equal(m.sala.depuracao.estado().fase, 'combate');
+  // Ela tinha visto a pausa? Não: caiu antes. O cliente dela diz «não pausada» e a mesa corre: tem de continuar assim.
+  const r = m.sala.entrar({ v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', papel: 'jogadora', seatToken: h.token, lastSeq }, { ip: '10.0.0.2' });
+  assert.equal(pausadaDepois(false, r.mensagens), false);
+  // E se tivesse ficado com a pausa (caiu logo a seguir ao ROOM_PAUSED): sai dela.
+  assert.equal(pausadaDepois(true, r.mensagens), false, r.mensagens.map((x) => x.type).join(','));
+});
+
+test('V30 controlo: sem pausa nem retomada no intervalo, a volta continua por eventos', () => {
+  const m = sessao();
+  const h = m.clientes.heroina;
+  const lastSeq = espelhoDe(h.msgs).seq;
+  m.sair('heroina');
+  exigirAplicada(m.mestre('MASTER_PLACE', { fichaId: 'bandido-teste', casa: { x: 15, y: 15 } }), 'colocar');
+  const r = m.sala.entrar({ v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', papel: 'jogadora', seatToken: h.token, lastSeq }, { ip: '10.0.0.2' });
+  assert.ok(!r.mensagens.some((x) => x.type === 'ROOM_SNAPSHOT'));
+  assert.ok(r.mensagens.some((x) => x.type === 'ROOM_EVENT' && x.tipo === 'colocacao'));
+  assert.equal(pausadaDepois(false, r.mensagens), false);
+});
