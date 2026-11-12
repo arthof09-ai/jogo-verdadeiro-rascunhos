@@ -1726,17 +1726,20 @@ export function criarSala({
     }
     const dano = danoTotalDe(saida);
     if (dano > 0) tx.emitir('dano', { alvoId: alvo.id, autorId: atacante.id, valor: dano, tipos: tiposDe(t) }, null);
-    emitirEstado(tx, alvo, false, visAlvo, vidaAlvo);
+    // Ordem 32 (V32): o PA que o Confirmar debitou (finalizarAtaque) também se diz à própria, como na cura.
+    const paMudou = ehJog && Number.isFinite(extra?.paAntes) && paLivre(atacante) !== extra.paAntes;
+    emitirEstado(tx, alvo, atacante.id === alvo.id && paMudou, visAlvo, vidaAlvo);
     // A própria sabe logo da arma caída/quebrada e do corpo partido (o `estado` só saía com a Vida a mudar).
-    if (atacante.id !== alvo.id) emitirEstado(tx, atacante, atacante.lado === 'jogadora' && bandeiras(atacante) !== bandAtac, visAtac, vidaAtac);
+    if (atacante.id !== alvo.id) emitirEstado(tx, atacante, ehJog && (bandeiras(atacante) !== bandAtac || paMudou), visAtac, vidaAtac);
   }
 
   function finalizarAtaque(tx, f, alvo, t, ctx, saida) {
     const m = tx.estado;
     if (m.vez && m.vez.figuraId === f.id) m.vez.atacou = true; // o Confirmar marca `atacou`
+    const paAntes = f.lado === 'jogadora' ? paLivre(f) : null;
     if (f.lado === 'jogadora') f.paGasto += t.custoPA; // debita-se só no Confirmar
     else if (f.armaCaida) f.armaCaida = false; // o monstro recupera a arma de graça ao atacar
-    aplicarSaida(tx, f, alvo, t, ctx, saida, {});
+    aplicarSaida(tx, f, alvo, t, ctx, saida, { paAntes });
     verificarFim(tx);
   }
 

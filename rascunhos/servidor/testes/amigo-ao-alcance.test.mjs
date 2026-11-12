@@ -70,7 +70,8 @@ test('Q12: «acerta-amigo» aprovado — metade com piso, sem RD, Vida da amiga 
   assert.equal(danoH.dados.valor, 150);
   const danoE = m.clientes.espectador.eventos('dano').at(-1);
   assert.ok(!('valor' in danoE.dados));
-  assert.equal(m.clientes.heroina.eventos('estado').at(-1).dados.vidaActual, antes - 150);
+  // Ordem 32 (V32): o `estado` da aliada (o PA que ela gastou) também sai agora; conta o da heroína.
+  assert.equal(m.clientes.heroina.eventos('estado').filter((x) => x.dados.figuraId === heroinaId).at(-1).dados.vidaActual, antes - 150);
 });
 
 test('Q12: tecto de letalidade — nunca abaixo de 1 de Vida, nunca abre testes de morte', () => {
