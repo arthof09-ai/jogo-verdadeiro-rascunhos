@@ -160,6 +160,37 @@ jobs:
           grep -q pronto "$RUNNER_TEMP/arranque.log"
           ! grep -E "SCRIPT ERROR|Parse Error" "$RUNNER_TEMP/arranque.log"
 
+  godot-cliente:
+    # Ordem 21 do CM-000009 (proposta (b) da IBX-340): a mesma corrida headless do cliente que o PC faz (ordem 20),
+    # com o Godot 4.7.2 fixo (sem cair para outra versão): --import e res://testes/rodar_testes.gd. 5 minutos no total.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: rascunhos/cliente
+    steps:
+      - uses: actions/checkout@v4
+      - name: Baixar o Godot 4.7.2 (linux, sem janela)
+        run: |
+          url="https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          curl -fsSL --retry 3 --max-time 120 -o "$RUNNER_TEMP/godot.zip" "$url"
+          sha256sum "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "GODOT=$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" >> "$GITHUB_ENV"
+              - name: Versão
+        run: '"$GODOT" --headless --version'
+      - name: Importar o projeto (--headless --import)
+        run: |
+          set -o pipefail
+          timeout 150 "$GODOT" --headless --path . --import 2>&1 | tail -20
+      - name: Testes do cliente (--headless --script res://testes/rodar_testes.gd)
+        run: |
+          set -o pipefail
+          timeout 90 "$GODOT" --headless --path . --script res://testes/rodar_testes.gd 2>&1 | tee "$RUNNER_TEMP/rodar_testes.log"
+          # Um script que não compila não pode passar calado.
+          ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/rodar_testes.log"
+          grep -E "^[0-9]+ de [0-9]+ verificações passaram\.$" "$RUNNER_TEMP/rodar_testes.log"
+
   ponta-a-ponta:
     # Corrida de ponta a ponta do ecrã do Mestre (I0004, 08/11/2026): o servidor Node de verdade (WebSocket),
     # uma jogadora em Node e o cliente Godot sem janela a fazer de Mestre pela ligação real:
