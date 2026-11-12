@@ -138,6 +138,8 @@ const CHAVES_MUNDO = Object.freeze(['fase', 'mapa', 'lobby', 'figuras', 'ordem',
  * das criaturas em semi seguem sem cartão até ao fim dessa rodada. Ataques e o resto continuam a pedir cartão.
  */
 const MARCHA_PURA = Object.freeze(new Set(['mover', 'encerrar']));
+// Ordem 32 (V29): os eventos das transacções que mudam o mundo por snapshot (finalizar, `snapshotsTodos`).
+const EVENTOS_COM_SNAPSHOT = Object.freeze(['revertido', 'recomeco', 'escala']);
 
 /** Recusa terminal de uma intenção (E-C5): fica gravada como recibo RECUSADA. */
 export class ErroRecusa extends Error {
@@ -979,8 +981,15 @@ export function criarSala({
         if (!naEspera(s)) tx.saidas.push({ seatId: s.seatId, msg });
       }
     }
-    // 2) snapshots (depois de um "voltar")
-    if (tx.snapshotsTodos) for (const s of lugares) tx.saidas.push({ seatId: s.seatId, msg: mensagemSnapshot(m, s, tx.ts) });
+    // 2) snapshots (depois de um "voltar", do "recomeçar" e da escala)
+    // Ordem 32 (V29): o snapshot não fica no fluxo; o lugar guarda o seq dele (`seqSnapshot`), e quem voltar com um
+    // lastSeq que não passa daqui recebe o snapshot outra vez em vez de só os eventos (mensagensDeSincronizacao).
+    if (tx.snapshotsTodos) {
+      for (const s of lugares) {
+        s.seqSnapshot = s.seq;
+        tx.saidas.push({ seatId: s.seatId, msg: mensagemSnapshot(m, s, tx.ts) });
+      }
+    }
     // 3) recibos (E-C7: por socket, primeiro os eventos, depois o recibo)
     for (const r of tx.recibos) {
       const s = m.lugares[r.recibo.seatId];
@@ -2221,6 +2230,29 @@ export function criarSala({
     });
   }
 
+  /**
+   * Ordem 32 (V29): o maior seq deste lugar que só um ROOM_SNAPSHOT leva ao cliente. «Voltar», «Recomeçar» e «Mudar a
+   * escala» mudam o mundo por snapshot (finalizar, `snapshotsTodos`); os eventos que ficam no fluxo (`revertido`,
+   * `recomeco`, `escala`) não levam o mundo novo à Party. Quem volta com um lastSeq até aqui (inclusive: a ligação pode
+   * ter caído entre o último evento da transacção e o snapshot) recebe o snapshot (ROOM_RESYNC.schema: «os eventos …
+   * OU um ROOM_SNAPSHOT»). Journals de antes da ordem 32 não têm `seqSnapshot`: conta o último desses eventos no fluxo.
+   */
+  function corteDoSnapshot(s, fluxo) {
+    let corte = Number.isInteger(s.seqSnapshot) ? s.seqSnapshot : 0;
+    for (let i = fluxo.length - 1; i >= corte; i--) {
+      if (EVENTOS_COM_SNAPSHOT.includes(fluxo[i]?.tipo)) {
+        corte = Math.max(corte, fluxo[i].seq);
+        break;
+      }
+    }
+    return corte;
+  }
+  /** O intervalo (lastSeq, s.seq] atravessa (ou começa em) um ponto que só o snapshot leva? */
+  function precisaDoSnapshot(s, fluxo, lastSeq) {
+    const corte = corteDoSnapshot(s, fluxo);
+    return corte > 0 && lastSeq <= corte;
+  }
+
   /** Eventos que faltam desde lastSeq (do fluxo DESTE lugar) ou um snapshot. Sem await (E-C8). */
   function mensagensDeSincronizacao(seatId, lastSeq) {
     const m = journal.estado;
@@ -2228,7 +2260,7 @@ export function criarSala({
     const fluxo = journal.fluxo(seatId);
     const out = [];
     if (naEspera(s)) return [{ seatId, msg: mensagemSnapshot(m, s, isoAgora()) }]; // ordem 22 (17-2): só o lobby
-    if (Number.isInteger(lastSeq) && lastSeq >= 0 && lastSeq <= s.seq && fluxo.length === s.seq) {
+    if (Number.isInteger(lastSeq) && lastSeq >= 0 && lastSeq <= s.seq && !precisaDoSnapshot(s, fluxo, lastSeq) && fluxo.length === s.seq) {
       for (let i = lastSeq; i < fluxo.length; i++) out.push({ seatId, msg: fluxo[i] });
     } else {
       out.push({ seatId, msg: mensagemSnapshot(m, s, isoAgora()) });
