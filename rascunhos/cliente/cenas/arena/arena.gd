@@ -62,6 +62,8 @@ var _nos: Dictionary = {}  # figuraId -> Node3D
 var _focou := false
 var _saindo := false
 var _mover_depois: Dictionary = {}  # o movimento que segue o «Sair c/ segurança» aceite
+var _id_seguranca := ""  # o intentId do Desvincular desse movimento (ordem 33: só o recibo DELE o solta)
+var _ultimo_id := ""  # o intentId da última intenção que saiu
 
 
 ## Ordem 15 (parte F): a cada quadro, os nomes arrumam-se para a câmara.
@@ -87,6 +89,7 @@ func _ready() -> void:
 	hud.aplicar_preferencias_iniciais()
 	Rede.precisa_entrar.connect(_ao_precisa_entrar)
 	Rede.recibo_recebido.connect(_ao_recibo_seguranca)
+	Rede.recusa_recebida.connect(_ao_recusa_seguranca)
 	Rede.iniciar()  # não faz nada se o lobby já ligou
 	# O snapshot pode ter chegado antes de a cena abrir (veio do lobby): desenha já.
 	if Estado.tem_snapshot:
@@ -279,6 +282,7 @@ func enviar_acao(acao: Dictionary) -> bool:
 	var id: String = Rede.enviar_intencao(acao, Estado.revisao)
 	if id == "":
 		return false
+	_ultimo_id = id
 	modo = Modo.NENHUM
 	_casas.clear()
 	_alvos.clear()
@@ -307,6 +311,7 @@ func _escolher_casa(c: Vector2i) -> void:
 					# o Desvincular e, aceite esse, o movimento (uma intenção de cada vez).
 					_mover_depois = destino
 					if enviar_acao({"tipo": "desvincular"}):
+						_id_seguranca = _ultimo_id
 						hud.consumir_seguranca()
 					else:
 						_mover_depois = {}
@@ -334,13 +339,24 @@ func _escolher_casa(c: Vector2i) -> void:
 
 
 ## O recibo do Desvincular: aceite, segue o movimento (com a revisão nova); recusado, o movimento não sai.
-func _ao_recibo_seguranca(_intent_id: String, estado: String, _msg: Dictionary) -> void:
-	if _mover_depois.is_empty():
+## Ordem 33 (V33): só o recibo DESTE Desvincular conta. Antes, qualquer recibo novo soltava o movimento — e a
+## recusa do servidor chega como ROOM_REJECT (`_ao_recusa_seguranca`), não como recibo: o movimento ficava guardado
+## e saía com o recibo da acção seguinte que ela fizesse (andava sozinha para a casa de antes).
+func _ao_recibo_seguranca(intent_id: String, estado: String, _msg: Dictionary) -> void:
+	if _mover_depois.is_empty() or intent_id != _id_seguranca:
 		return
 	var m := _mover_depois
 	_mover_depois = {}
+	_id_seguranca = ""
 	if estado == "APLICADA":
 		(func(): enviar_acao(m)).call_deferred()
+
+
+## Ordem 33 (V33): o Desvincular recusado (ROOM_REJECT) — o movimento não sai.
+func _ao_recusa_seguranca(intent_id: String, _motivo: String, _texto: String) -> void:
+	if intent_id != "" and intent_id == _id_seguranca:
+		_mover_depois = {}
+		_id_seguranca = ""
 
 
 func _enviar_ataque(o: Dictionary) -> void:
