@@ -21,6 +21,9 @@ export const LIMITE_MENSAGEM = 16 * 1024;
 const PING_MS = 20_000;
 const MORTO_MS = 45_000;
 const MAX_REJEICOES_FORMATO = 5; // repetidas → fecha a ligação (§2)
+// Ordem 27 (N25-1, palavra do Mestre 11/11/2026: sim; o número é escolha desta ordem, da família do de cima): a
+// ligação sem lugar que recebe 5 ERRO sem_lugar seguidos fecha (1008). Só o sem_lugar conta; só a entrada na sala zera.
+const MAX_SEM_LUGAR = 5;
 const UTF8_ESTRITO = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
 
 const TIPOS_MIME = {
@@ -60,6 +63,7 @@ class Ligacao {
     this.avisada = false;
     this.seatId = null;
     this.rejeicoesFormato = 0;
+    this.errosSemLugar = 0; // ordem 27 (N25-1)
     socket.setNoDelay(true);
     socket.on('data', (d) => this.receberBytes(d));
     socket.on('close', () => this.terminar());
@@ -410,6 +414,7 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
 
   function associar(lig, seatId) {
     lig.seatId = seatId;
+    lig.errosSemLugar = 0; // ordem 27 (N25-1): entrou na sala, a série acaba
     if (!porLugar.has(seatId)) porLugar.set(seatId, new Set());
     porLugar.get(seatId).add(lig);
   }
@@ -478,6 +483,10 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
     }
     if (!lig.seatId) {
       lig.enviarJson({ v: 2, type: 'ERRO', codigo: 'sem_lugar', texto: 'Entre na sala primeiro.' });
+      // Ordem 27 (N25-1): antes, sem fim. Os outros erros (formato, credenciais) não contam nem desfazem a série
+      // (senão um JOIN errado pelo meio deixava-a recomeçar sem fim); só a entrada na sala a zera (associar).
+      lig.errosSemLugar += 1;
+      if (lig.errosSemLugar >= MAX_SEM_LUGAR) lig.fechar(1008, 'sem lugar');
       return;
     }
     const saidas = sala.receber(lig.seatId, msg);
