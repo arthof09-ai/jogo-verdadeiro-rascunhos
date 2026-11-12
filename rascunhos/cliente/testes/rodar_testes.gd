@@ -39,6 +39,8 @@ func _initialize() -> void:
 	_teste_reentrada_servidor_restaurado()
 	_teste_sala_de_espera()
 	_teste_aguardando_mestre_desconhecida()
+	_teste_validacao_da_entrada()
+	_teste_lobby_valida_antes_de_enviar()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -492,3 +494,100 @@ func _teste_aguardando_mestre_desconhecida() -> void:
 	f2.registar("i-9", "{}")
 	f2.aplicar_recibo(_recibo("i-9", "AGUARDANDO_MESTRE"))
 	_ok(f2.aplicar_recibo(_recibo("i-9", "AGUARDANDO_MESTRE")) == FilaIntencoes.Resultado.IGNORADO and f2.aguardando_mestre(), "controlo: AGUARDANDO_MESTRE repetido continua à espera")
+
+
+## Ordem 34 (N26-2, sentença da bancada de 2026-11-12): o ROOM_JOIN valida-se no aparelho, antes de enviar.
+## Nome 1-64 caracteres (caracteres, não bytes), senha 1-128, PIN a casar exactamente ^[0-9]{6,32}$.
+## Antes: o lobby mandava tudo ao servidor (senha vazia, PIN com letras…) e cada envio gastava uma tentativa do travão.
+func _teste_validacao_da_entrada() -> void:
+	print("Validação da entrada no aparelho (ordem 34, N26-2):")
+	var caminho := "res://rede/validar_entrada.gd"
+	_ok(ResourceLoader.exists(caminho), "existe o validador da entrada (rede/validar_entrada.gd)")
+	if not ResourceLoader.exists(caminho):
+		return
+	var V = load(caminho)
+	_ok(V.dica_nome("Ong") == "" and V.dica_nome("a".repeat(64)) == "", "nome de 1 a 64 letras: sem dica")
+	_ok(V.dica_nome("ã".repeat(64)) == "", "64 letras com acento valem 64 (caracteres, não bytes)")
+	_ok(V.dica_nome("a".repeat(65)) == "Nome: até 64 letras", "65 letras: «Nome: até 64 letras»")
+	_ok(V.dica_nome("") != "" and V.dica_nome("   ") != "", "nome vazio (ou só espaços): fora")
+	_ok(V.dica_senha("") == "Falta a senha", "senha vazia: «Falta a senha»")
+	_ok(V.dica_senha("s") == "" and V.dica_senha("s".repeat(128)) == "", "senha de 1 a 128: sem dica")
+	_ok(V.dica_senha("s".repeat(129)) == "Senha: até 128 letras", "129: «Senha: até 128 letras»")
+	var dica_pin := "PIN: só números, 6 a 32"
+	_ok(V.dica_pin("123456") == "" and V.dica_pin("1".repeat(32)) == "", "PIN de 6 a 32 algarismos: sem dica")
+	var maus := ["", "12345", "1".repeat(33), "12345a", " 123456", "123456 ", "123456
+", "12 3456", "١٢٣٤٥٦", "１２３４５６", "-123456", "1234.5"]
+	var todos := true
+	for pin in maus:
+		if V.dica_pin(pin) != dica_pin:
+			todos = false
+			printerr("    PIN aceite ou com outra dica: ", JSON.stringify(pin))
+	_ok(todos, "PIN fora de ^[0-9]{6,32}$ (curto, comprido, letras, espaços, algarismos de outra escrita): «%s»" % dica_pin)
+	_ok(V.jogadora_valida("Ong", "s") and not V.jogadora_valida("Ong", "") and not V.jogadora_valida("", "s"), "a entrada da jogadora só vale com os dois campos dentro")
+
+	# A Rede é a última porta do aparelho: campo fora = nada se liga, nada se envia, nada se gasta.
+	var rede = RedeScript.new()
+	var pedidos: Array = []
+	rede.precisa_entrar.connect(func(m: String): pedidos.append(m))
+	rede.entrar("a".repeat(65), "senha")
+	rede.entrar("Ong", "")
+	rede.entrar("Ong", "s".repeat(129))
+	rede.entrar_mestre("12345")
+	rede.entrar_mestre("abcdef")
+	rede.entrar_mestre(" 123456")
+	_ok(rede._ws == null and not rede._ativo, "Rede: com um campo fora, 0 ligações e 0 mensagens (nem o socket se abre)")
+	_ok(pedidos.size() == 6, "Rede: cada tentativa com um campo fora volta a pedir a entrada (%d de 6)" % pedidos.size())
+	rede.free()
+
+
+func _teste_lobby_valida_antes_de_enviar() -> void:
+	print("Lobby: botão inactivo, campo marcado e dica debaixo do campo (ordem 34, N26-2):")
+	var rede = root.get_node_or_null("Rede")
+	_ok(rede != null, "a Rede (autoload) existe")
+	if rede == null:
+		return
+	# Fora da árvore: o _ready (que chama Rede.iniciar()) não corre; monta-se o formulário à mão.
+	var lobby = load("res://cenas/lobby/lobby.tscn").instantiate()
+	if lobby.has_method("_validar_campos"):
+		lobby._montar()
+		lobby._validar_campos()
+	var tem: bool = lobby.get("_b_entrar") != null and lobby.get("_dica_nome") != null and lobby.get("_dica_pin") != null
+	_ok(tem, "o lobby tem os botões e as dicas por campo")
+	if tem:
+		_ok(lobby._b_entrar.disabled and lobby._b_mestre.disabled, "campos vazios: os dois botões de entrar inactivos")
+		lobby._campo_nome.text = "Ong"
+		lobby._campo_senha.text = ""
+		lobby._validar_campos()
+		_ok(lobby._b_entrar.disabled and lobby._dica_senha.text == "Falta a senha" and lobby._dica_senha.visible, "sem senha: botão inactivo e «Falta a senha» debaixo da senha")
+		_ok(lobby._dica_nome.text == "" and not lobby._dica_nome.visible, "o nome está dentro: sem dica nesse campo")
+		_ok(lobby._campo_senha.has_theme_stylebox_override("normal") and not lobby._campo_nome.has_theme_stylebox_override("normal"), "o campo fora fica marcado; o que está dentro não")
+		lobby._campo_senha.text = "segredo"
+		lobby._campo_nome.text = "a".repeat(65)
+		lobby._validar_campos()
+		_ok(lobby._b_entrar.disabled and lobby._dica_nome.text == "Nome: até 64 letras" and lobby._dica_nome.visible, "nome com 65: botão inactivo e «Nome: até 64 letras»")
+		lobby._campo_nome.text = "ã".repeat(64)
+		lobby._validar_campos()
+		_ok(not lobby._b_entrar.disabled and not lobby._dica_nome.visible and not lobby._dica_senha.visible, "tudo dentro (64 letras com acento): botão activo, sem dicas")
+		lobby._campo_senha.text = "s".repeat(129)
+		lobby._validar_campos()
+		_ok(lobby._b_entrar.disabled and lobby._dica_senha.text == "Senha: até 128 letras", "senha com 129: «Senha: até 128 letras»")
+		lobby._campo_pin.text = "12345a"
+		lobby._validar_campos()
+		_ok(lobby._b_mestre.disabled and lobby._dica_pin.text == "PIN: só números, 6 a 32" and lobby._dica_pin.visible, "PIN com letra: botão inactivo e «PIN: só números, 6 a 32»")
+		lobby._campo_pin.text = "123456"
+		lobby._validar_campos()
+		_ok(not lobby._b_mestre.disabled and not lobby._dica_pin.visible, "PIN dentro: botão activo, sem dica")
+		# Enter no campo (ou o toque que escape ao botão inactivo) com um campo fora: nada sai do aparelho.
+		var socket_antes = rede._ws
+		var estado_antes: int = rede.estado_ligacao
+		lobby._campo_pin.text = "12345"
+		lobby._ao_enviar_pin("12345")
+		lobby._campo_nome.text = "Ong"
+		lobby._campo_senha.text = ""
+		lobby._ao_enviar_senha("")
+		lobby._ao_entrar()
+		lobby._ao_entrar_mestre()
+		_ok(rede._ws == socket_antes and rede.estado_ligacao == estado_antes, "Enter com um campo fora: 0 ligações, 0 mensagens")
+		_ok(lobby._campo_pin.text == "12345", "e o que ela escreveu fica no campo, para corrigir")
+	lobby.free()
+
