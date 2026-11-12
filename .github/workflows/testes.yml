@@ -177,7 +177,7 @@ jobs:
           sha256sum "$RUNNER_TEMP/godot.zip"
           unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
           echo "GODOT=$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" >> "$GITHUB_ENV"
-              - name: Versão
+      - name: Versão
         run: '"$GODOT" --headless --version'
       - name: Importar o projeto (--headless --import)
         run: |
