@@ -1013,6 +1013,9 @@ export function criarSala({
     // 6) pausa / retomada (não são ROOM_EVENT: não gastam seq)
     if (tx.anuncio) {
       for (const s of lugares) {
+        // Ordem 32 (V30): o anúncio não fica no fluxo; quem voltar com um lastSeq até aqui recebe o snapshot (que diz a
+        // pausa pela fase), como depois de um «voltar» (V29).
+        s.seqSnapshot = s.seq;
         if (naEspera(s)) continue; // ordem 22 (17-2): no lobby não há pausa nem retomada da batalha
         tx.saidas.push({ seatId: s.seatId, msg: { v: PROTOCOLO, type: tx.anuncio.type, roomId, motivo: tx.anuncio.motivo } });
       }
@@ -2247,8 +2250,11 @@ export function criarSala({
     }
     return corte;
   }
-  /** O intervalo (lastSeq, s.seq] atravessa (ou começa em) um ponto que só o snapshot leva? */
+  /** O intervalo (lastSeq, s.seq] atravessa (ou começa em) um ponto que só o snapshot leva (V29, V30)? */
   function precisaDoSnapshot(s, fluxo, lastSeq) {
+    // Ordem 32 (V30): em pausa, o snapshot (fase `pausa`) — os eventos não dizem a pausa à Party. Cobre também os
+    // journals de antes da ordem 32, que não guardam o seq do ROOM_PAUSED.
+    if (journal.estado.fase === 'pausa') return true;
     const corte = corteDoSnapshot(s, fluxo);
     return corte > 0 && lastSeq <= corte;
   }
