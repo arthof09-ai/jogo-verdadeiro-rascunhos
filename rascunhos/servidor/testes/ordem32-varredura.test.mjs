@@ -368,22 +368,45 @@ test('V32: o ataque que custa PA diz à própria o PA livre novo', () => {
   assert.equal(visto?.dados.paLivre, paReal, 'a própria recebe o PA livre novo');
 });
 
-// ------------------------------------------------------------------ V29/V30: a narração do intervalo não se perde
-// A primeira versão das correcções acima respondia SÓ com o snapshot quando o intervalo atravessava um destes pontos:
-// o mundo ficava certo, mas os eventos do intervalo deixavam de chegar — o registo do Mestre (mestre.gd `_ao_evento`,
-// pela Rede) e as frases da Party (desgraça, queda, fim). Agora os eventos seguem como antes e o snapshot vem DEPOIS
-// deles, com o mesmo seq do último (como na própria transacção ao vivo: eventos, depois o snapshot).
+// ------------------------------------------------------------------ V29/V30: o Mestre não perde o registo
+// A primeira versão das correcções acima respondia SÓ com o snapshot a TODOS os lugares quando o intervalo atravessava
+// um destes pontos: o Mestre deixava de receber os eventos do intervalo, que são o registo dele (mestre.gd `_ao_evento`,
+// pela Rede — p. ex. a `pausa` da E-C4 quando ele cai). O mundo do Mestre vem da MASTER_VIEW, que segue sempre na
+// sincronização dele: o Mestre continua a receber os eventos, como antes. Uma segunda versão mandava a todos os eventos
+// e DEPOIS o snapshot — mas, se a ligação cair entre o último evento e esse snapshot, o cliente da Party fica com o seq
+// para lá do corte e o mundo errado para sempre (o fuzz diferencial apanhou-o; teste abaixo). A Party recebe só o
+// snapshot quando o intervalo atravessa um corte.
 
-test('V29: ao voltar depois de um «voltar», os eventos do intervalo chegam e o snapshot vem a seguir', () => {
+test('V29: o Mestre que volta depois de um «voltar» recebe os eventos do intervalo (o registo dele)', () => {
   const m = sessao();
   const ponto = m.sala.depuracao.journalSeq();
   andarHeroina(m);
-  const { e, resposta } = quedaEVolta(m, (mm) => exigirAplicada(mm.mestre('MASTER_SUPERVISOR', { op: 'voltar', ateSeq: ponto }), 'voltar'));
-  const iRev = resposta.findIndex((x) => x.type === 'ROOM_EVENT' && x.tipo === 'revertido');
-  const iSnap = resposta.findIndex((x) => x.type === 'ROOM_SNAPSHOT');
-  assert.ok(iRev >= 0, 'o evento revertido chega: ' + resposta.map((x) => x.type + ':' + (x.tipo ?? '')).join(','));
-  assert.ok(iSnap > iRev, 'o snapshot vem depois dos eventos');
-  assert.equal(resposta[iSnap].seq, resposta.filter((x) => x.type === 'ROOM_EVENT').at(-1).seq, 'com o seq do último evento');
+  const antes = m.clientes.mestre.ultimoSeq; // o que o aparelho dele aplicou
+  // O «voltar» sai e a ligação cai antes de o aparelho o aplicar (com o Mestre em baixo a mesa pausa e não volta).
+  exigirAplicada(m.mestre('MASTER_SUPERVISOR', { op: 'voltar', ateSeq: ponto }), 'voltar');
+  m.sair('mestre');
+  const r = m.sala.entrar({ v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', papel: 'mestre', pin: PIN, seatToken: m.clientes.mestre.token, lastSeq: antes }, { ip: '10.0.0.9' });
+  assert.equal(r.ok, true);
+  assert.ok(r.mensagens.some((x) => x.type === 'ROOM_EVENT' && x.tipo === 'revertido'), r.mensagens.map((x) => x.type + ':' + (x.tipo ?? '')).join(','));
+  assert.ok(r.mensagens.some((x) => x.type === 'MASTER_VIEW'), 'o mundo dele vem na vista');
+});
+
+test('V29: a Party que perde o snapshot da resposta (a ligação cai a meio dela) volta outra vez e recebe-o', () => {
+  const m = sessao();
+  const ponto = m.sala.depuracao.journalSeq();
+  andarHeroina(m);
+  const h = m.clientes.heroina;
+  const e = espelhoDe(h.msgs);
+  m.sair('heroina');
+  exigirAplicada(m.mestre('MASTER_SUPERVISOR', { op: 'voltar', ateSeq: ponto }), 'voltar');
+  exigirAplicada(m.mestre('MASTER_PLACE', { fichaId: 'bandido-teste', casa: { x: 15, y: 15 } }), 'colocar'); // um evento depois do corte
+  const r1 = m.sala.entrar({ v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', papel: 'jogadora', seatToken: h.token, lastSeq: e.seq }, { ip: '10.0.0.2' });
+  const iSnap = r1.mensagens.findIndex((x) => x.type === 'ROOM_SNAPSHOT');
+  assert.ok(iSnap >= 0);
+  for (const msg of r1.mensagens.slice(0, iSnap)) aplicar(e, msg); // o que chegou antes de a ligação cair
+  const tok = r1.mensagens.find((x) => x.type === 'ROOM_WELCOME').seatToken;
+  const r2 = m.sala.entrar({ v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', papel: 'jogadora', seatToken: tok, lastSeq: e.seq }, { ip: '10.0.0.2' });
+  for (const msg of r2.mensagens) aplicar(e, msg);
   assert.deepEqual(semSeq(e), semSeq(verdade(m.sala, 'jogadora', { nome: 'Heroína Teste', senha: SENHAS.heroina })));
 });
 
