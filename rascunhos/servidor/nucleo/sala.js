@@ -2240,8 +2240,10 @@ export function criarSala({
    * Ordem 32 (V29): o maior seq deste lugar que só um ROOM_SNAPSHOT leva ao cliente. «Voltar», «Recomeçar» e «Mudar a
    * escala» mudam o mundo por snapshot (finalizar, `snapshotsTodos`); os eventos que ficam no fluxo (`revertido`,
    * `recomeco`, `escala`) não levam o mundo novo à Party. Quem volta com um lastSeq até aqui (inclusive: a ligação pode
-   * ter caído entre o último evento da transacção e o snapshot) recebe o snapshot (ROOM_RESYNC.schema: «os eventos …
-   * OU um ROOM_SNAPSHOT»). Journals de antes da ordem 32 não têm `seqSnapshot`: conta o último desses eventos no fluxo.
+   * ter caído entre o último evento da transacção e o snapshot) recebe o snapshot DEPOIS dos eventos do intervalo, com
+   * o seq do último (como a própria transacção ao vivo: eventos, depois o snapshot; E-C8: o snapshot substitui tudo até
+   * ao seu seq). Os eventos continuam a chegar: são o registo do Mestre e as frases da Party. Journals de antes da
+   * ordem 32 não têm `seqSnapshot`: conta o último desses eventos no fluxo.
    */
   function corteDoSnapshot(s, fluxo) {
     let corte = Number.isInteger(s.seqSnapshot) ? s.seqSnapshot : 0;
@@ -2263,15 +2265,19 @@ export function criarSala({
     return corte > 0 && lastSeq <= corte;
   }
 
-  /** Eventos que faltam desde lastSeq (do fluxo DESTE lugar) ou um snapshot. Sem await (E-C8). */
+  /**
+   * Eventos que faltam desde lastSeq (do fluxo DESTE lugar) ou um snapshot. Sem await (E-C8).
+   * Ordem 32 (V29-V31): se o intervalo atravessa um ponto que só o snapshot leva, os eventos e DEPOIS o snapshot.
+   */
   function mensagensDeSincronizacao(seatId, lastSeq) {
     const m = journal.estado;
     const s = m.lugares[seatId];
     const fluxo = journal.fluxo(seatId);
     const out = [];
     if (naEspera(s)) return [{ seatId, msg: mensagemSnapshot(m, s, isoAgora()) }]; // ordem 22 (17-2): só o lobby
-    if (Number.isInteger(lastSeq) && lastSeq >= 0 && lastSeq <= s.seq && !precisaDoSnapshot(s, fluxo, lastSeq) && fluxo.length === s.seq) {
+    if (Number.isInteger(lastSeq) && lastSeq >= 0 && lastSeq <= s.seq && fluxo.length === s.seq) {
       for (let i = lastSeq; i < fluxo.length; i++) out.push({ seatId, msg: fluxo[i] });
+      if (precisaDoSnapshot(s, fluxo, lastSeq)) out.push({ seatId, msg: mensagemSnapshot(m, s, isoAgora()) });
     } else {
       out.push({ seatId, msg: mensagemSnapshot(m, s, isoAgora()) });
     }
