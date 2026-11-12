@@ -866,6 +866,10 @@ func _ao_recibo(_intent_id: String, estado: String, msg: Dictionary) -> void:
 
 
 func _ao_recusa(_intent_id: String, _motivo: String, texto: String) -> void:
+	# Ordem 33 (V34): a recusa do Correr chega aqui (ROOM_REJECT), não ao `_ao_recibo`. Sem isto o pedido ficava
+	# pendurado e o recibo da acção seguinte marcava «A correr ✓» e dizia «Você corre…». Só há uma intenção em voo
+	# de cada vez (o botão só liga sem nenhuma), por isso a recusa que chega é a dele.
+	_correr_pedido = false
 	# O servidor manda uma frase simples, sem números do Mestre (sala.js TEXTOS_RECUSA).
 	_mostrar_aviso(texto if texto != "" else "Não deu certo. Escolha outra vez.")
 	_atualizar()
