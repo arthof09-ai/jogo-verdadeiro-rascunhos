@@ -24,6 +24,19 @@ const MAX_REJEICOES_FORMATO = 5; // repetidas → fecha a ligação (§2)
 // Ordem 27 (N25-1, palavra do Mestre 11/11/2026: sim; o número é escolha desta ordem, da família do de cima): a
 // ligação sem lugar que recebe 5 ERRO sem_lugar seguidos fecha (1008). Só o sem_lugar conta; só a entrada na sala zera.
 const MAX_SEM_LUGAR = 5;
+// Ordem 34 (N30-1, sentença da bancada de 2026-11-12): um conjunto de valores, sem alternativas.
+// Prazo de entrada: 300 s absolutos, da abertura da ligação até a um ROOM_JOIN aceite com lugar (o ping/pong não o
+// prolonga); aos 300 s sem entrada, fecho 1008. Só pré-entrada: depois do ROOM_JOIN aceite nunca mais se aplica.
+export const PRAZO_ENTRADA_MS = 300_000;
+// Tectos de ligações simultâneas. Ao bater qualquer um, recusa-se só a ligação nova (fecho 1013); ninguém é despejado
+// e não há fila: a nova tenta outra vez quando houver vaga.
+export const MAX_LIGACOES_POR_IP = 12;
+export const MAX_LIGACOES_SEM_LUGAR = 32;
+export const MAX_LIGACOES = 64;
+const FECHO_CHEIO = 1013;
+// O ritmo do §2 (10 mensagens por segundo), aqui para a ligação sem lugar (com lugar, conta-o o núcleo).
+const RITMO_MAX = 10;
+const RITMO_JANELA_MS = 1000;
 const UTF8_ESTRITO = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
 
 const TIPOS_MIME = {
@@ -64,6 +77,9 @@ class Ligacao {
     this.seatId = null;
     this.rejeicoesFormato = 0;
     this.errosSemLugar = 0; // ordem 27 (N25-1)
+    this.entrou = false; // ordem 34 (N30-1): já teve um ROOM_JOIN aceite (o prazo de entrada acabou para sempre)
+    this.prazoEntrada = null;
+    this.recentes = []; // ordem 34 (N30-1): carimbos das mensagens sem lugar (ritmo)
     socket.setNoDelay(true);
     socket.on('data', (d) => this.receberBytes(d));
     // Ordem 30 (V26; RFC 6455 §7.1.4): o FIN do cliente fecha a ligação. O http do Node abre o servidor com allowHalfOpen
@@ -474,6 +490,10 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
 
   function associar(lig, seatId) {
     lig.seatId = seatId;
+    // Ordem 34 (N30-1): ROOM_JOIN aceite com lugar — o prazo de entrada nunca mais se aplica a esta ligação.
+    lig.entrou = true;
+    if (lig.prazoEntrada) clearTimeout(lig.prazoEntrada);
+    lig.prazoEntrada = null;
     lig.errosSemLugar = 0; // ordem 27 (N25-1): entrou na sala, a série acaba
     if (!porLugar.has(seatId)) porLugar.set(seatId, new Set());
     porLugar.get(seatId).add(lig);
@@ -498,6 +518,8 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
 
   function aoFechar(lig) {
     todas.delete(lig);
+    if (lig.prazoEntrada) clearTimeout(lig.prazoEntrada);
+    lig.prazoEntrada = null;
     if (!lig.seatId) return;
     const conjunto = porLugar.get(lig.seatId);
     if (conjunto) conjunto.delete(lig);
@@ -539,6 +561,19 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
       contarFormato(lig, true);
       return;
     }
+    // Ordem 34 (N30-1): o ritmo de 10 mensagens/s aplica-se também à ligação sem lugar (com lugar, conta-o o núcleo).
+    // A mensagem fora do ritmo não chega à sala (um ROOM_JOIN a mais não é tentativa de entrada) e conta para a
+    // família de formato, como o excesso de ritmo de quem tem lugar.
+    if (!lig.seatId) {
+      const t = Date.now();
+      lig.recentes = lig.recentes.filter((x) => t - x < RITMO_JANELA_MS && t >= x);
+      if (lig.recentes.length >= RITMO_MAX) {
+        lig.enviarJson({ v: 2, type: 'ERRO', codigo: 'formato', texto: 'Muitas mensagens seguidas. Espere um pouco.' });
+        contarFormato(lig, true);
+        return undefined;
+      }
+      lig.recentes.push(t);
+    }
     if (msg && msg.type === 'ROOM_JOIN') {
       // O seatToken vem na mensagem, nunca na URL (E-P9). Nunca o registar.
       let r;
@@ -576,6 +611,9 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
       // (senão um JOIN errado pelo meio deixava-a recomeçar sem fim); só a entrada na sala a zera (associar).
       lig.errosSemLugar += 1;
       if (lig.errosSemLugar >= MAX_SEM_LUGAR) lig.fechar(1008, 'sem lugar');
+      // Ordem 34 (N30-1): antes da entrada, qualquer mensagem que não seja ROOM_JOIN conta também para a família de
+      // formato (5 → fecho 1008): soma-se ao JSON inválido e ao ROOM_JOIN mal formado da mesma ligação.
+      else contarFormato(lig, true);
       return;
     }
     const saidas = sala.receber(lig.seatId, msg);
@@ -653,8 +691,39 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
       + 'Connection: Upgrade\r\n'
       + `Sec-WebSocket-Accept: ${aceite}\r\n\r\n`,
     );
-    const lig = new Ligacao(socket, ipDe(req), aoMensagem, aoFechar);
+    // Ordem 34 (N30-1): os tectos. Recusa-se só esta ligação, a que chega (fecho 1013, depois do handshake, para o
+    // cliente ler o código); não entra em `todas`, não conta e não fica em fila. Quem já cá está não é tocado.
+    const ip = ipDe(req);
+    let doIp = 0;
+    let semLugar = 0;
+    for (const l of todas) {
+      if (l.ip === ip) doIp += 1;
+      if (!l.seatId) semLugar += 1;
+    }
+    const tecto = todas.size >= MAX_LIGACOES ? 'geral'
+      : semLugar >= MAX_LIGACOES_SEM_LUGAR ? 'sem lugar'
+        : doIp >= MAX_LIGACOES_POR_IP ? 'por IP' : null;
+    if (tecto) {
+      registo('ligação nova recusada (1013): tecto ' + tecto);
+      socket.on('error', () => {});
+      const motivo = Buffer.from('cheio', 'utf8');
+      const quadro = Buffer.alloc(4 + motivo.length);
+      quadro[0] = 0x88;
+      quadro[1] = 2 + motivo.length;
+      quadro.writeUInt16BE(FECHO_CHEIO, 2);
+      motivo.copy(quadro, 4);
+      socket.end(quadro);
+      setTimeout(() => socket.destroy(), 2000).unref();
+      return;
+    }
+    const lig = new Ligacao(socket, ip, aoMensagem, aoFechar);
     todas.add(lig);
+    // Ordem 34 (N30-1): o prazo de entrada, absoluto (nada o prolonga); o `associar` desarma-o.
+    lig.prazoEntrada = setTimeout(() => {
+      lig.prazoEntrada = null;
+      if (!lig.entrou) lig.fechar(1008, 'prazo de entrada');
+    }, PRAZO_ENTRADA_MS);
+    lig.prazoEntrada.unref?.();
     if (head && head.length) lig.receberBytes(head);
   }));
 

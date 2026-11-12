@@ -97,14 +97,17 @@ test('ordem 27 (N25-1, controlo): 4 seguidas não fecham', () => {
   servidor.close();
 });
 
-test('ordem 27 (N25-1, falhava antes): erros que não são sem_lugar não contam — JSON inválido e credenciais erradas pelo meio', () => {
+// Ordem 34 (N30-1, sentença da bancada de 2026-11-12): antes da entrada, a mensagem que não é ROOM_JOIN passou a
+// contar TAMBÉM para a família de formato (soma-se ao JSON inválido). Este teste tinha 4 sem_lugar + 1 JSON inválido e
+// esperava a ligação aberta; agora isso são 5 da família e fecha (ver ordem34-n30-1.test.mjs). Fica aqui o que a N25-1
+// continua a garantir: as credenciais erradas pelo meio não contam nem desfazem a série do sem_lugar.
+test('ordem 27 (N25-1, falhava antes): erros que não são sem_lugar não desfazem a série — credenciais erradas pelo meio', () => {
   const servidor = criarServidor({ sala: novaSala() });
   const a = ligarWs(servidor, '10.0.27.3');
   for (let i = 0; i < 4; i++) a.json(RESYNC);
-  a.texto('{não é json'); // ERRO formato: não conta para este travão (conta para o de formato, 1 de 5)
   a.json({ ...JOIN_HEROINA, senha: 'errada-errada' }); // ERRO credenciais: não conta
   assert.equal(fecho(a.socket), null, 'só 4 sem_lugar até aqui');
-  a.json(RESYNC); // 5.º sem_lugar da série: os outros erros não a desfizeram
+  a.json(RESYNC); // 5.º sem_lugar da série: o outro erro não a desfez
   assert.equal(semLugar(a.socket), 5);
   assert.deepEqual(fecho(a.socket), { codigo: 1008, motivo: 'sem lugar' });
   servidor.close();
