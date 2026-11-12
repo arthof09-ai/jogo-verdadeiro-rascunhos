@@ -1729,7 +1729,9 @@ export function criarSala({
    * da ficha), para não trocar a arma curta do monstro por uma de longe.
    */
   function tecnicaCorpoACorpo(m, f) {
-    const ts = fichaEfetiva(f).tecnicas.filter((t) => !(t.usaArma && f.armaQuebrada) && alcanceEmCasas(m, t.alcanceM) >= 1);
+    // Ordem 26 (V21): a mesma regra das opções (usaArmaDe: sem `usaArma`, USA arma). Antes lia `t.usaArma`, e a técnica
+    // sem o campo ia ao motor com a arma quebrada (o VLAB real recusa: ARMA_QUEBRADA → erro_motor, reacção gasta).
+    const ts = fichaEfetiva(f).tecnicas.filter((t) => !(usaArmaDe(t) && f.armaQuebrada) && alcanceEmCasas(m, t.alcanceM) >= 1);
     return ts.reduce((melhor, t) => (melhor === null || t.alcanceM < melhor.alcanceM - EPS ? t : melhor), null);
   }
 
