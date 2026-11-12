@@ -153,6 +153,28 @@ func _correr() -> void:
 	hud._ao_botao(Modo.MOVER)
 	await _quadros(1)
 	_ok(not hud._gaveta.visible, "fora da vez dela, nenhuma gaveta")
+
+	print("== ordem 33: «Correr» recusado não fica pendurado ==")
+	_estado.vez_id = "fA"
+	_opcoes(["encerrar", "correr", "defender"], 12)
+	hud.fechar_gaveta()
+	hud.ao_modo_mudou(Modo.NENHUM)
+	await _quadros(1)
+	hud._a_correr = false
+	hud._ao_botao(Modo.MOVER)
+	await _quadros(1)
+	hud._g_correr.pressed.emit()
+	_ok(_pedidas.back() == {"tipo": "correr"}, "«Correr» manda a intenção correr")
+	hud._ao_recusa("c-1", "revisao_antiga", "O tabuleiro mudou. Escolha de novo.")
+	_opcoes(["encerrar", "correr", "defender"], 13)
+	await _quadros(1)
+	# Ela escolhe outra coisa (Declarar Defender) e o servidor aceita.
+	hud._ao_recibo("d-1", "APLICADA", {})
+	_opcoes(["encerrar", "correr"], 14)
+	await _quadros(1)
+	_ok(not hud._a_correr and not hud._g_correr.text.ends_with("A correr ✓"),
+		"o recibo da acção seguinte não marca «A correr ✓» depois do Correr recusado")
+	_ok(not hud._aviso.visible or not hud._aviso.text.begins_with("Você corre"), "e não diz «Você corre…»")
 	hud.queue_free()
 	await _quadros(1)
 	await _teste_seguranca_na_arena()
