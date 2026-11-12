@@ -820,13 +820,26 @@ export function criarSala({
   }
 
   /**
+   * Ordem 31 (V28): para o hash da vista, as listas de figuras vão por id. A ordem delas é a das chaves de
+   * `estado.figuras`, e o restauro do journal (JSON canónico, chaves por ordem) devolve-as noutra ordem: o hash mudava
+   * sem a vista mudar e a primeira transacção depois do restauro subia a revisão de todos sem mensagem que a levasse
+   * (o Mestre ficava preso em `revisao_antiga`). Só o hash; o snapshot que sai não muda.
+   */
+  function snapshotParaRevisao(snap) {
+    const porId = (a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+    const r = { ...snap, figuras: [...snap.figuras].sort(porId) };
+    if (snap.mestre && Array.isArray(snap.mestre.figuras)) r.mestre = { ...snap.mestre, figuras: [...snap.mestre.figuras].sort(porId) };
+    return r;
+  }
+
+  /**
    * E-P5: revision por lugar = contador que só sobe quando muda o hash da VISTA desse lugar
    * (snapshot projetado + opções). Mudança oculta (ex.: MASTER_MODE) não mexe na Party.
    */
   function atualizarRevisoes(m) {
     const mudaram = new Set();
     for (const s of Object.values(m.lugares)) {
-      const vista = { snap: projetarSnapshot(m, fichas, destinatario(s)), opcoes: opcoesDoLugar(m, s) };
+      const vista = { snap: snapshotParaRevisao(projetarSnapshot(m, fichas, destinatario(s))), opcoes: opcoesDoLugar(m, s) };
       const h = hash(jsonCanonico(vista));
       if (h !== s.revisaoHash) {
         s.revision += 1;
