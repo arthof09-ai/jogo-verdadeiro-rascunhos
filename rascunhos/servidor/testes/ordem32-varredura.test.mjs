@@ -13,6 +13,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { criarSala } from '../nucleo/sala.js';
+import { jsonCanonico } from '../nucleo/util.js';
+import { sha256Hex } from '../nucleo/sha256.js';
 import { montarMesa, exigirAplicada, rngDeterministico, relogio, fichasDeTeste, INICIATIVA, PIN, SENHAS } from './ajudantes.mjs';
 import { criarMotorFalso } from './motor-falso.mjs';
 
@@ -163,6 +165,38 @@ test('V29: o corte sobrevive ao restauro do journal (o servidor morreu depois do
   assert.deepEqual(semSeq(espelhoAntes), semSeq(verdade(sala, 'jogadora', { nome: 'Heroína Teste', senha: SENHAS.heroina })));
 });
 
+test('V29: journal gravado antes da ordem 32 (sem seqSnapshot) — o corte vem do evento no fluxo', () => {
+  const m = sessao();
+  const ponto = m.sala.depuracao.journalSeq();
+  andarHeroina(m);
+  const h = m.clientes.heroina;
+  const espelhoAntes = espelhoDe(h.msgs);
+  m.sair('heroina');
+  exigirAplicada(m.mestre('MASTER_SUPERVISOR', { op: 'voltar', ateSeq: ponto }), 'voltar');
+  // A exportação como a escrevia o servidor de antes: os lugares sem `seqSnapshot` (sha256 sem chave, recalculado).
+  const texto = m.sala.exportar().split(String.fromCharCode(10))[0];
+  const corpo = JSON.parse(texto);
+  for (const l of Object.values(corpo.estado.lugares)) delete l.seqSnapshot;
+  const novoTexto = jsonCanonico(corpo);
+  const antigo = `${novoTexto}${String.fromCharCode(10)}sha256:${sha256Hex(novoTexto)}${String.fromCharCode(10)}`;
+  const config = {
+    roomId: 'sala-teste', mapa: { largura: 20, altura: 20 }, iniciativa: INICIATIVA, modoPadrao: 'auto', depurar: true,
+    lugares: [
+      { papel: 'jogadora', nome: 'Heroína Teste', senha: SENHAS.heroina, fichaId: 'heroina-teste', casa: { x: 2, y: 2 } },
+      { papel: 'mestre', nome: 'Mestre', pin: PIN },
+    ],
+  };
+  const sala = criarSala({ motores: criarMotorFalso(), fichas: fichasDeTeste(), rng: rngDeterministico(3), agora: relogio(), config, restaurarDe: antigo });
+  assert.ok(Object.values(sala.depuracao.estado().lugares).every((l) => l.seqSnapshot === undefined), 'sem o campo');
+  const rm = sala.entrar({ v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', papel: 'mestre', pin: PIN, seatToken: m.clientes.mestre.token, lastSeq: m.clientes.mestre.ultimoSeq }, { ip: '10.0.0.9' });
+  sala.conexaoAberta(rm.seatId);
+  const r = sala.entrar({ v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', papel: 'jogadora', seatToken: h.token, lastSeq: espelhoAntes.seq }, { ip: '10.0.0.2' });
+  assert.equal(r.ok, true);
+  for (const msg of r.mensagens) aplicar(espelhoAntes, msg);
+  assert.ok(r.mensagens.some((x) => x.type === 'ROOM_SNAPSHOT'));
+  assert.deepEqual(semSeq(espelhoAntes), semSeq(verdade(sala, 'jogadora', { nome: 'Heroína Teste', senha: SENHAS.heroina })));
+});
+
 // ------------------------------------------------------------------ controlos (passavam antes)
 
 test('V29 controlo: volta pelo lastSeq sem nenhum destes pontos no intervalo — continua a receber os EVENTOS (a narração)', () => {
@@ -170,6 +204,7 @@ test('V29 controlo: volta pelo lastSeq sem nenhum destes pontos no intervalo —
   const ponto = m.sala.depuracao.journalSeq();
   andarHeroina(m);
   exigirAplicada(m.mestre('MASTER_SUPERVISOR', { op: 'voltar', ateSeq: ponto }), 'voltar'); // ela viu tudo, ligada
+  andarHeroina(m); // e o fluxo dela passou do snapshot (com o lastSeq = seq do snapshot, recebe-o outra vez: teste acima)
   const { e, resposta } = quedaEVolta(m, (mm) => exigirAplicada(mm.mestre('MASTER_PLACE', { fichaId: 'bandido-teste', casa: { x: 15, y: 15 } }), 'colocar'));
   assert.ok(!resposta.some((x) => x.type === 'ROOM_SNAPSHOT'), 'sem snapshot: os eventos chegam');
   assert.ok(resposta.some((x) => x.type === 'ROOM_EVENT'), 'eventos do fluxo');
