@@ -269,6 +269,16 @@ func _correr() -> void:
 	_ok(c._terminar.disabled and c._recomecar.disabled, "no lobby, «Terminar batalha» e «Recomeçar» estão desligados")
 	c._aba_mesa.procurar()
 	_ok(_pesquisas.size() == 1, "«Procurar» pede a pesquisa ao servidor")
+	# Ordem 26 (V22): MASTER_SEARCH.texto tem maxLength 64 (caracteres). Antes ia o que estivesse no campo, sem limite.
+	c._aba_mesa._procura.text = "  " + "a".repeat(70) + "ç".repeat(30) + "  "
+	c._aba_mesa.procurar()
+	var longa := str(_pesquisas.back())
+	_ok(longa.length() <= 64, "V22: a pesquisa longa sai com 64 caracteres no máximo (saiu com %d)" % longa.length())
+	_ok(longa == "a".repeat(64), "V22: corta pelos primeiros 64, depois de tirar os espaços (o que o servidor já pesquisava)")
+	c._aba_mesa._procura.text = " orc "
+	c._aba_mesa.procurar()
+	_ok(str(_pesquisas.back()) == "orc", "a pesquisa curta sai igual, sem os espaços")
+	_ok(_pesquisas.size() == 3, "cada «Procurar» pede uma pesquisa")
 	_rede._ao_receber(JSON.stringify(fx["lobby"]["resultados"]))
 	await _quadros(1)
 	var caixas: Array = []
