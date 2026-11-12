@@ -361,6 +361,7 @@ func _correr() -> void:
 	_exportar(c)
 	_join_sem_sala()
 	await _aviso_motor(c)
+	await _recibo_perdido(c, fx["mestre"]["cartoes"]["ia"])
 	await _nomes_juntos(c, fx["mestre"]["vista"])
 	await _camara_livre(c)
 
@@ -988,6 +989,76 @@ func _aviso_motor(c) -> void:
 	c.aplicar_vista(sem)
 	await _quadros(1)
 	_ok(c.alertas.size() == n2 + 1, "avisoMotor null: nada")
+
+
+## Ordem 29 (V25): a ligação cai com um comando do Mestre em voo e o recibo perde-se. Antes, `_em_voo` só se esvaziava
+## com o recibo: os botões do cartão ficavam em «A enviar…» e desligados até ao fim da sessão, e o esquema de colocação
+## parado. O contrato já tem a resposta (como na V19 da jogadora): ao voltar à mesa, RECEIPT_QUERY com os ids em voo
+## (o servidor responde aos cmdId/intentId do Mestre); o recibo destranca; DESCONHECIDA (não aplicado) também, e no
+## esquema conta como não aplicada (pára; a colocação fica na lista).
+func _recibo_perdido(c, card_ia: Dictionary) -> void:
+	print("== V25: recibo do Mestre perdido na queda da ligação ==")
+	var consultas: Array = []
+	var tem: bool = "consultar_fn" in c
+	_ok(tem, "o ecrã do Mestre tem por onde consultar recibos (consultar_fn)")
+	if tem:
+		c.consultar_fn = func(ids): consultas.append(ids.duplicate())
+	var estado_antes: int = _rede.estado_ligacao
+	var cair_e_voltar := func():
+		_rede.estado_ligacao = _rede.Ligacao.A_ESPERAR
+		_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+		_rede.estado_ligacao = _rede.Ligacao.NA_MESA
+		_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	var card := card_ia.duplicate(true)
+	card["cartaoId"] = "c-o29"
+	_rede._ao_receber(JSON.stringify(card))
+	await _quadros(1)
+	var acao: String = str(c._botoes[0].get_meta("acao", ""))
+	c.tocar(acao)
+	if c._botoes[0].text.begins_with(Textos.DE_NOVO_PARA.split("%")[0]) and Textos.DE_NOVO_PARA.split("%")[0] != "":
+		c.tocar(acao)  # acção de dois toques
+	var u := _ultimo()
+	var id := str(u.get("cmdId", u.get("intentId", "")))
+	_ok(c._botoes[0].disabled, "com o comando em voo, os botões do cartão ficam desligados")
+	cair_e_voltar.call()
+	_ok(consultas.size() == 1 and consultas[0] is Array and (consultas[0] as Array).has(id),
+		"ao voltar à mesa, pergunta pelo recibo do comando em voo (%s)" % [consultas])
+	var n_alertas: int = c.alertas.size()
+	_rede._ao_receber(JSON.stringify({"v": 2, "type": "ROOM_RECEIPT", "roomId": "sala-teste", "intentId": id, "estado": "DESCONHECIDA"}))
+	await _quadros(1)
+	_ok(not c._botoes[0].disabled, "DESCONHECIDA (o servidor não o tem): os botões do cartão voltam")
+	_ok(c.alertas.size() == n_alertas, "DESCONHECIDA não é recusa: nenhum alerta")
+	_rede._ao_receber(JSON.stringify({"v": 2, "type": "ROOM_EVENT", "roomId": "sala-teste", "seq": 9990, "revision": 990,
+		"ts": "2026-11-12T00:00:00Z", "tipo": "cartao_fechado", "dados": {"cartaoId": "c-o29", "decisao": "aprovar"}}))
+	await _quadros(1)
+
+	# Esquema de colocação: o recibo APLICADA que chega pela consulta segue o esquema; DESCONHECIDA pára-o.
+	c._aba_mesa.escolher_colocar("orc-teste")
+	c._aba_mesa.ligar_esquema(true)
+	c.casa_tocada(Vector2i(11, 7))
+	c.casa_tocada(Vector2i(12, 7))
+	c.casa_tocada(Vector2i(13, 7))
+	c._aba_mesa.colocar_esquema()
+	u = _ultimo()
+	var antes := _comandos.size()
+	cair_e_voltar.call()
+	_ok(consultas.size() == 2 and (consultas[1] as Array).has(str(u.get("cmdId", ""))), "esquema: pergunta pelo recibo da colocação em voo")
+	_rede._ao_receber(JSON.stringify({"v": 2, "type": "ROOM_RECEIPT", "roomId": "sala-teste", "cmdId": str(u.get("cmdId", "")),
+		"estado": "APLICADA", "seq": 9991, "revision": 991}))
+	await _quadros(1)
+	u = _ultimo()
+	_ok(_comandos.size() == antes + 1 and int(u.get("casa", {}).get("x", -1)) == 12, "o recibo da consulta manda a colocação seguinte")
+	cair_e_voltar.call()
+	_rede._ao_receber(JSON.stringify({"v": 2, "type": "ROOM_RECEIPT", "roomId": "sala-teste", "intentId": str(u.get("cmdId", "")), "estado": "DESCONHECIDA"}))
+	await _quadros(1)
+	_ok(not c._aba_mesa.em_serie() and c._aba_mesa.esquema.size() == 2 and c._aba_mesa._estado.text == Textos.ESQUEMA_PAROU,
+		"DESCONHECIDA pára o esquema e a colocação não feita fica na lista (como numa recusa)")
+	cair_e_voltar.call()
+	_ok(consultas.size() == 3, "sem nada em voo, não pergunta por nada (%d consultas)" % consultas.size())
+	c._aba_mesa.limpar_esquema()
+	c._aba_mesa.ligar_esquema(false)
+	c._aba_mesa.parar()
+	_rede.estado_ligacao = estado_antes
 
 
 func _textos(no: Node, saida: Array) -> void:
