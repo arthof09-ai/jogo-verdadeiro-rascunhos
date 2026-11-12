@@ -13,6 +13,7 @@
 import { jsonCanonico, clonarJson, hex8, iguaisTempoConstante } from './util.js';
 import { sha256Hex } from './sha256.js';
 import { criarJournal, restaurarJournal, ErroJournal } from './journal.js';
+import { conferirEstadoProfundo, conferirRegistoProfundo } from './conferir-estado.js';
 import { projetarEvento, projetarSnapshot, efeitoAmbiente, nomePublicoDe, visivelDe } from './projecao.js';
 import * as Amb from './ambiente.js';
 
@@ -229,7 +230,7 @@ function conferirFormaDoEstado(e) {
     && ehObj(e.figuras) && Object.values(e.figuras).every(ehObj)
     && ehObj(e.mapa) && Array.isArray(e.ordem) && Array.isArray(e.cartoes) && ehObj(e.contadores)
     && (e.fase !== 'pausa' || (ehObj(e.pausa) && FASES_SALA.includes(e.pausa.faseAnterior)));
-  if (!ok) throw new ErroJournal('estado da sala com forma inválida');
+  if (!ok) throw new ErroJournal('estado da sala com forma inválida', 'estado');
 }
 
 /**
@@ -324,8 +325,17 @@ export function criarSala({
   let roomId = typeof config.roomId === 'string' ? config.roomId : 'sala-' + hex8(rng());
   let journal;
   if (restaurarDe) {
-    journal = restaurarJournal(restaurarDe, { chave: chaveJournal ?? undefined, hash });
-    conferirFormaDoEstado(journal.estado);
+    // Ordem 34 (N31-1): a conferência completa (esquema em profundidade + referências) corre ANTES de o journal existir.
+    // Um campo inválido = ErroJournal com o caminho do campo: a sala não abre e nada é reparado.
+    journal = restaurarJournal(restaurarDe, {
+      chave: chaveJournal ?? undefined,
+      hash,
+      conferir: (corpo) => {
+        conferirEstadoProfundo(corpo.estado, fichas, corpo.fluxos);
+        conferirFormaDoEstado(corpo.estado);
+        conferirRegistoProfundo(corpo, corpo.estado);
+      },
+    });
     roomId = journal.estado.roomId;
   } else {
     journal = criarJournal({ estadoInicial: construirEstadoInicial(), hash });

@@ -300,24 +300,74 @@ export function gravarJournalEmDisco(caminho, texto) {
   }
 }
 
+/** Salas marcadas inválidas pelo conteúdo do ficheiro (ordem 34, N31-1): sha256 dos bytes → a recusa. Só em memória. */
+const INVALIDAS_DO_PROCESSO = new Map();
+
+/** O roomId gravado no journal, só para o registo do Mestre (melhor esforço: null se não se conseguir ler). */
+function salaDoJournal(texto) {
+  try {
+    const corte = texto.indexOf('\n');
+    const id = JSON.parse(corte < 0 ? texto : texto.slice(0, corte))?.estado?.roomId;
+    return typeof id === 'string' && id ? id : null;
+  } catch {
+    return null;
+  }
+}
+
 /**
- * Arranque: com ficheiro, restaura a partir dele; sem ficheiro, sala nova. Forma desconhecida ou journal
- * adulterado → {ok:false} e a sala NÃO abre (o ficheiro fica como estava, nada é escrito por cima).
- * @param {{caminho:string, criar:(restaurarDe:string|null)=>Object}} p
+ * Arranque: com ficheiro, restaura a partir dele; sem ficheiro, sala nova. Forma desconhecida, journal adulterado ou
+ * com um campo inválido → {ok:false} e a sala NÃO abre (o ficheiro fica como estava, nada é escrito por cima).
+ * Ordem 34 (N31-1, sentença da bancada de 2026-11-12):
+ *  - rede final: QUALQUER excepção na restauração vira recusa desta sala (antes, só o ErroJournal; o resto subia e
+ *    derrubava o processo);
+ *  - a recusa leva a sala (`salaId`) e o caminho do campo que falhou (`campo`, ex.: `figuras.<id>.fichaId`);
+ *  - a sala fica marcada inválida pelo conteúdo: reabrir os mesmos bytes devolve a mesma recusa na hora (`repetida`),
+ *    sem voltar a tentar; outros bytes (conserto manual) voltam a ser conferidos;
+ *  - nada é reparado: o ficheiro nunca é escrito aqui.
+ * @param {{caminho:string, criar:(restaurarDe:string|null)=>Object, invalidas?:Map<string,Object>,
+ *   ler?:(caminho:string)=>string}} p  `ler`: por omissão, o disco (os testes sem disco passam um leitor em memória)
  */
-export function abrirSalaComJournal({ caminho, criar }) {
-  let texto;
+export function abrirSalaComJournal({ caminho, criar, invalidas = INVALIDAS_DO_PROCESSO, ler = (c) => readFileSync(c, 'utf8') }) {
+  let conteudo = null;
   try {
-    texto = lerJournalDoDisco(caminho);
+    conteudo = ler(caminho);
   } catch (e) {
-    return { ok: false, erro: e };
+    if (!(e && e.code === 'ENOENT')) return { ok: false, erro: e, campo: null, salaId: null, caminho, repetida: false };
   }
+  if (conteudo === null) {
+    // Sem ficheiro: sala nova. A excepção aqui não é do journal, mas também não sobe (a sala não abre).
+    try {
+      return { ok: true, sala: criar(null), restaurada: false };
+    } catch (e) {
+      return { ok: false, erro: e, campo: null, salaId: null, caminho, repetida: false };
+    }
+  }
+  const marca = createHash('sha256').update(conteudo, 'utf8').digest('hex');
+  const antes = invalidas.get(marca);
+  if (antes) return { ...antes, repetida: true };
+  let texto = null;
   try {
-    return { ok: true, sala: criar(texto), restaurada: texto !== null };
+    texto = abrirFicheiroJournal(conteudo);
+    return { ok: true, sala: criar(texto), restaurada: true };
   } catch (e) {
-    if (e instanceof ErroJournal) return { ok: false, erro: e };
-    throw e;
+    const recusa = {
+      ok: false, erro: e, campo: e instanceof ErroJournal ? (e.caminho ?? null) : null,
+      salaId: texto === null ? null : salaDoJournal(texto), caminho, repetida: false,
+    };
+    invalidas.set(marca, recusa);
+    return recusa;
   }
+}
+
+/** O texto da recusa do journal para o registo (só do Mestre): a sala, o caminho do campo e o motivo. */
+export function textoRecusaJournal(recusa) {
+  const e = recusa?.erro;
+  const motivo = e instanceof ErroJournal ? e.motivo : `${e?.name ?? 'erro'}: ${e?.message ?? e}`;
+  return 'journal recusado: sala ' + (recusa?.salaId ?? '(desconhecida)')
+    + (recusa?.campo ? ': campo ' + recusa.campo : '')
+    + ': ' + motivo
+    + (recusa?.caminho ? ' [ficheiro intacto: ' + path.basename(recusa.caminho) + ']' : '')
+    + (recusa?.repetida ? ' (mesmos bytes: recusa repetida, sem nova tentativa)' : '');
 }
 
 /**
@@ -438,6 +488,14 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
     }
   }
 
+  /**
+   * Ordem 34 (N31-1, camada 3 — a rede final): nenhuma excepção da sala sobe ao processo. Regista-se (só do Mestre: a
+   * sala e onde foi) e a ligação que a causou recebe um ERRO interno sem pormenores; as outras ligações seguem.
+   */
+  function excepcao(onde, e) {
+    registo(`sala ${sala.roomId}: excepção em ${onde} (${e?.name ?? 'erro'}: ${e?.message ?? e})`);
+  }
+
   function aoFechar(lig) {
     todas.delete(lig);
     if (!lig.seatId) return;
@@ -445,7 +503,11 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
     if (conjunto) conjunto.delete(lig);
     const seatId = lig.seatId;
     lig.seatId = null;
-    entregar(sala.conexaoFechada(seatId));
+    try {
+      entregar(sala.conexaoFechada(seatId));
+    } catch (e) {
+      excepcao('fecho de ligação', e);
+    }
   }
 
   /**
@@ -459,6 +521,16 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
   }
 
   function aoMensagem(lig, texto) {
+    let tipo = 'mensagem';
+    try {
+      tipo = tratarMensagem(lig, texto) ?? tipo;
+    } catch (e) {
+      excepcao(e?.ondeFoi ?? tipo, e);
+      lig.enviarJson({ v: 2, type: 'ERRO', codigo: 'interno', texto: 'Erro interno do servidor.' });
+    }
+  }
+
+  function tratarMensagem(lig, texto) {
     let msg;
     try {
       msg = JSON.parse(texto);
@@ -469,7 +541,14 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
     }
     if (msg && msg.type === 'ROOM_JOIN') {
       // O seatToken vem na mensagem, nunca na URL (E-P9). Nunca o registar.
-      const r = sala.entrar(msg, { ip: lig.ip, seatIdDaLigacao: lig.seatId });
+      let r;
+      try {
+        r = sala.entrar(msg, { ip: lig.ip, seatIdDaLigacao: lig.seatId });
+      } catch (e) {
+        // Ordem 34 (N31-1): a excepção no ROOM_JOIN vira recusa DESTA entrada (0 snapshots); ver aoMensagem.
+        if (e && typeof e === 'object') e.ondeFoi = 'ROOM_JOIN';
+        throw e;
+      }
       if (journal) journal.gravar(); // antes de qualquer resposta (também a de recusa)
       if (!r.ok) {
         for (const m of r.mensagens) lig.enviarJson(m);
@@ -515,13 +594,23 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
     entregar(sala.conexaoFechada(antigo));
   }
 
+  // Ordem 34 (N31-1, camada 3): o erro de um socket ou de um pedido nunca derruba o processo.
+  const semCair = (onde, f) => (...args) => {
+    try {
+      return f(...args);
+    } catch (e) {
+      excepcao(onde, e);
+      return undefined;
+    }
+  };
+
   const servidor = http.createServer((req, res) => {
     servirEstatico(req, res, pastaEstatica).catch(() => {
       if (!res.headersSent) res.writeHead(500).end();
     });
   });
 
-  servidor.on('upgrade', (req, socket, head) => {
+  servidor.on('upgrade', semCair('upgrade', (req, socket, head) => {
     let url;
     try {
       url = new URL(req.url, 'http://local');
@@ -567,10 +656,10 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
     const lig = new Ligacao(socket, ipDe(req), aoMensagem, aoFechar);
     todas.add(lig);
     if (head && head.length) lig.receberBytes(head);
-  });
+  }));
 
   // Ping da camada WebSocket (não é pulso de aplicação).
-  const relogio = setInterval(() => {
+  const relogio = setInterval(semCair('relógio', () => {
     // Ordem 17 (B1): a gravação do journal que falhou volta a tentar-se aqui, sem esperar por um commit novo.
     if (journal && typeof journal.pendente === 'function' && journal.pendente()) journal.gravar();
     const t = Date.now();
@@ -578,7 +667,7 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
       if (t - lig.ultimoPong > MORTO_MS) lig.fechar(1001, 'sem pong');
       else lig.enviarQuadro(0x9, Buffer.alloc(0));
     }
-  }, PING_MS);
+  }), PING_MS);
   relogio.unref();
   servidor.on('close', () => clearInterval(relogio));
 
@@ -627,9 +716,10 @@ async function principal(argv) {
     const caminhoJournal = conferirCaminhoJournal(path.resolve(base, cfg.journal), pastaEstatica);
     const aberta = abrirSalaComJournal({ caminho: caminhoJournal, criar });
     if (!aberta.ok) {
-      console.error('journal recusado: ' + (aberta.erro?.motivo ?? aberta.erro?.message ?? aberta.erro));
+      // Ordem 34 (N31-1): registo só do Mestre (a consola do servidor), com a sala e o caminho do campo que falhou.
+      console.error(textoRecusaJournal(aberta));
       process.exitCode = 1;
-      return; // falha fechada: não restaura nada e não escreve por cima do ficheiro
+      return; // falha fechada: não restaura nada, não repara e não escreve por cima do ficheiro
     }
     sala = aberta.sala;
     console.log(aberta.restaurada ? 'sala restaurada do journal em disco' : 'sala nova (sem journal em disco)');

@@ -43,6 +43,34 @@ function assinado(corpo) {
 }
 const corpoDe = (exportado) => JSON.parse(exportado.split('\n')[0]);
 
+// O CI corre os testes do servidor com --permission e só leitura: aí o «disco» é um ficheiro em memória, entregue ao
+// adaptador pelo `ler` (o mesmo caminho de código, sem node:fs). No PC, é o disco de verdade.
+const PASTA_DISCO = tmpdir();
+const PODE_ESCREVER = !process.permission || process.permission.has('fs.write', PASTA_DISCO);
+function discoDeTeste() {
+  if (PODE_ESCREVER) {
+    const pasta = mkdtempSync(path.join(PASTA_DISCO, 'o34-n31-'));
+    const caminho = path.join(pasta, 'registo-MESTRE-ONLY-sala.json');
+    return {
+      caminho, ler: undefined,
+      escrever: (t) => writeFileSync(caminho, t, 'utf8'),
+      conteudo: () => readFileSync(caminho, 'utf8'),
+      limpar: () => rmSync(pasta, { recursive: true, force: true }),
+    };
+  }
+  let bytes = null;
+  return {
+    caminho: 'registo-MESTRE-ONLY-sala.json',
+    ler: () => {
+      if (bytes === null) throw Object.assign(new Error('ENOENT'), { code: 'ENOENT' });
+      return bytes;
+    },
+    escrever: (t) => { bytes = t; },
+    conteudo: () => bytes,
+    limpar: () => {},
+  };
+}
+
 /** Journals verdadeiros em fases diferentes (o que o servidor escreve de facto). */
 function sessoes() {
   const lista = {};
@@ -181,66 +209,67 @@ test('ordem 34 (N31-1, falhava antes): camada 2 — fichaId que não existe nas 
 // ------------------------------------------------------------------ sem reparação; ficheiro intacto; a mesma recusa na hora
 
 test('ordem 34 (N31-1, falhava antes): a sala não abre, o ficheiro fica intacto e os mesmos bytes dão a mesma recusa na hora', () => {
-  const pasta = mkdtempSync(path.join(tmpdir(), 'o34-n31-'));
+  const disco = discoDeTeste();
   try {
     const c = corpoDe(sessoes().combate);
     const id = Object.keys(c.estado.figuras)[0];
     c.estado.figuras[id].paGasto = 'muito';
-    const caminho = path.join(pasta, 'registo-MESTRE-ONLY-sala.json');
+    const { caminho, ler } = disco;
     const bytes = envelopeJournal(assinado(c));
-    writeFileSync(caminho, bytes, 'utf8');
+    disco.escrever(bytes);
     let criadas = 0;
     const criar = (restaurarDe) => {
       criadas += 1;
       return criarDe(restaurarDe);
     };
     const invalidas = new Map();
-    const a = abrirSalaComJournal({ caminho, criar, invalidas });
+    const a = abrirSalaComJournal({ caminho, criar, invalidas, ler });
     assert.equal(a.ok, false);
     assert.equal(a.sala, undefined, 'nenhuma sala, nenhum snapshot');
     assert.equal(a.campo, `figuras.${id}.paGasto`, 'o caminho do campo que falhou');
     assert.equal(a.repetida, false);
-    assert.equal(readFileSync(caminho, 'utf8'), bytes, 'o ficheiro fica como estava (nada é reparado nem reescrito)');
+    assert.equal(disco.conteudo(), bytes, 'o ficheiro fica como estava (nada é reparado nem reescrito)');
     assert.equal(criadas, 1);
     // Reabrir os mesmos bytes: a mesma recusa, na hora (marcada inválida pelo conteúdo; nem se volta a tentar).
-    const b = abrirSalaComJournal({ caminho, criar, invalidas });
+    const b = abrirSalaComJournal({ caminho, criar, invalidas, ler });
     assert.equal(b.ok, false);
     assert.equal(b.repetida, true);
     assert.equal(b.campo, a.campo);
     assert.equal(b.erro, a.erro, 'a mesma recusa');
     assert.equal(criadas, 1, 'os mesmos bytes não voltam a ser restaurados');
-    assert.equal(readFileSync(caminho, 'utf8'), bytes);
+    assert.equal(disco.conteudo(), bytes);
     // O texto do registo (só do Mestre) diz a sala e o caminho do campo.
     const texto = Adaptador.textoRecusaJournal(a);
     assert.match(texto, /sala-teste/);
     assert.ok(texto.includes(`figuras.${id}.paGasto`), texto);
     // Conserto manual (outros bytes): volta a abrir.
     c.estado.figuras[id].paGasto = 0;
-    writeFileSync(caminho, envelopeJournal(assinado(c)), 'utf8');
-    const d = abrirSalaComJournal({ caminho, criar, invalidas });
+    disco.escrever(envelopeJournal(assinado(c)));
+    const d = abrirSalaComJournal({ caminho, criar, invalidas, ler });
     assert.equal(d.ok, true);
     assert.equal(d.restaurada, true);
   } finally {
-    rmSync(pasta, { recursive: true, force: true });
+    disco.limpar();
   }
 });
 
 // ------------------------------------------------------------------ camada 3: a rede final do adaptador
 
 test('ordem 34 (N31-1, falhava antes): camada 3 — qualquer excepção na restauração vira recusa da sala (o adaptador não a deixa subir)', () => {
-  const pasta = mkdtempSync(path.join(tmpdir(), 'o34-n31-'));
+  const disco = discoDeTeste();
   try {
-    const caminho = path.join(pasta, 'registo-MESTRE-ONLY-sala.json');
-    writeFileSync(caminho, envelopeJournal(sessoes().combate), 'utf8');
+    const { caminho, ler } = disco;
+    disco.escrever(envelopeJournal(sessoes().combate));
     let a;
     assert.doesNotThrow(() => {
-      a = abrirSalaComJournal({ caminho, invalidas: new Map(), criar: () => { throw new TypeError('rebentou lá dentro'); } });
+      a = abrirSalaComJournal({ caminho, ler, invalidas: new Map(), criar: () => { throw new TypeError('rebentou lá dentro'); } });
     });
     assert.equal(a.ok, false);
     assert.equal(a.sala, undefined);
     assert.match(Adaptador.textoRecusaJournal(a), /rebentou lá dentro/);
+    assert.match(Adaptador.textoRecusaJournal(a), /sala-teste/);
   } finally {
-    rmSync(pasta, { recursive: true, force: true });
+    disco.limpar();
   }
 });
 

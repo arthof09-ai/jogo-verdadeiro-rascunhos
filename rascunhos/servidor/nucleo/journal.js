@@ -21,10 +21,12 @@ export const FORMATO_JOURNAL = 'journal-sala/1';
 const CADEIA_ZERO = '0'.repeat(64);
 
 export class ErroJournal extends Error {
-  constructor(motivo) {
+  /** `caminho` (ordem 34, N31-1): o campo do estado que falhou (ex.: `figuras.<id>.fichaId`); null se não for de um campo. */
+  constructor(motivo, caminho = null) {
     super(motivo);
     this.name = 'ErroJournal';
     this.motivo = motivo;
+    this.caminho = caminho;
   }
 }
 
@@ -143,9 +145,11 @@ export function criarJournal({ estadoInicial, restaurado, hash = sha256Hex } = {
 /**
  * Restaura um journal exportado. Lança ErroJournal se 1 byte que seja estiver adulterado.
  * @param {string} exportado
- * @param {{chave?:string, hash?:(s:string)=>string}} [opcoes]
+ * @param {{chave?:string, hash?:(s:string)=>string, conferir?:(corpo:Object)=>void}} [opcoes]
+ *   `conferir` (ordem 34, N31-1): chamado com o corpo já conferido na moldura, na cadeia e na numeração, ANTES de o
+ *   journal existir; se lançar, nada se restaura.
  */
-export function restaurarJournal(exportado, { chave, hash = sha256Hex } = {}) {
+export function restaurarJournal(exportado, { chave, hash = sha256Hex, conferir = null } = {}) {
   if (typeof exportado !== 'string') throw new ErroJournal('exportação tem de ser texto');
   if (!exportado.endsWith('\n')) throw new ErroJournal('moldura inválida');
   const semFim = exportado.slice(0, -1);
@@ -191,5 +195,6 @@ export function restaurarJournal(exportado, { chave, hash = sha256Hex } = {}) {
       if (m.seq !== i + 1) throw new ErroJournal(`seq com buraco no lugar ${s}`);
     });
   }
+  if (conferir) conferir(corpo);
   return criarJournal({ restaurado: corpo, hash });
 }
