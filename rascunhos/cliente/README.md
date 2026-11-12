@@ -230,3 +230,7 @@ Paridade da auditoria da ordem 10 (REF_35 do site). A mecânica não muda: golpe
 ## Ordem 24 do CM-000009 — primeira varredura do cliente (11/11/2026)
 
 - **V19 — a intenção à espera do Mestre que o servidor restaurado já não conhece.** `rede/fila_intencoes.gd`: o `RECEIPT_QUERY` que responde `DESCONHECIDA` a uma intenção `AGUARDANDO_MESTRE` (servidor restaurado de um journal sem o fim) reenvia o MESMO texto, como numa `DESCONHECIDA`; antes a fila ignorava-a e a barra ficava trancada para sempre. Prova: `testes/rodar_testes.gd`, «AGUARDANDO_MESTRE que o servidor restaurado não conhece» (falhava antes: 109 de 112). O resto da varredura e o que foi lido sem achados estão no README do servidor, secção «Ordem 24».
+
+## Ordem 25 do CM-000009 — segunda tranche da varredura do cliente (11/11/2026)
+
+Lidos contra os schemas e o contrato: `hud/hud.gd`, `hud/frases_batalha.gd`, `cenas/arena/arena.gd`, `cenas/mestre/arena_mestre.gd`, `cenas/mestre/textos_mestre.gd`, `cenas/comum/marcador_figura.gd`, `rede/uuid.gd`. **Nenhum achado para corrigir**; nenhum código do cliente mudou nesta ordem. Registado, sem correcção: **N25-2** — os tipos `cura`, `acao`, `ia`, `erro_motor`, `escala` e `recomeco` não têm nome no `NOME_EVENTO` (`textos_mestre.gd`) e aparecem crus na lista dos pontos de «voltar» do Mestre; dar-lhes nome é texto do ecrã, fica para quem o escreve. O detalhe está no README do servidor, secção «Ordem 25».
