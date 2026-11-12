@@ -155,6 +155,132 @@ func _correr() -> void:
 	_ok(not hud._gaveta.visible, "fora da vez dela, nenhuma gaveta")
 	hud.queue_free()
 	await _quadros(1)
+	await _teste_seguranca_na_arena()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
+
+
+# ---------------------------------------------------------------- ordem 33: o movimento do «Sair c/ segurança»
+## A arena manda primeiro o Desvincular e guarda o movimento (`_mover_depois`) para quando o recibo dele vier
+## APLICADA. A recusa do servidor chega como ROOM_REJECT (Rede.recusa_recebida), não como recibo: o movimento
+## tem de cair aí — e só o recibo DO Desvincular o pode soltar. Com um servidor WebSocket local (loopback), para se
+## ver o que sai mesmo pelo fio.
+
+var _srv: TCPServer
+var _par: WebSocketPeer
+
+
+func _ligar_loopback() -> bool:
+	_srv = TCPServer.new()
+	if _srv.listen(0, "127.0.0.1") != OK:
+		return false
+	var ws := WebSocketPeer.new()
+	if ws.connect_to_url("ws://127.0.0.1:%d" % _srv.get_local_port()) != OK:
+		return false
+	_rede._ws = ws
+	_rede.set_process(true)
+	for i in 300:
+		await process_frame
+		if _par == null and _srv.is_connection_available():
+			_par = WebSocketPeer.new()
+			_par.accept_stream(_srv.take_connection())
+		if _par != null:
+			_par.poll()
+			if _par.get_ready_state() == WebSocketPeer.STATE_OPEN and ws.get_ready_state() == WebSocketPeer.STATE_OPEN:
+				return true
+	return false
+
+
+## O que chegou ao «servidor» (ROOM_INTENT), depois de alguns quadros.
+func _recebidas(quadros: int = 6) -> Array:
+	var r: Array = []
+	for i in quadros:
+		await process_frame
+		_par.poll()
+		while _par.get_available_packet_count() > 0:
+			var d = JSON.parse_string(_par.get_packet().get_string_from_utf8())
+			if d is Dictionary and d.get("type") == "ROOM_INTENT":
+				r.append(d)
+	return r
+
+
+func _e_mover_2_3(a) -> bool:
+	return a is Dictionary and a.get("tipo") == "mover" and a.get("destino") is Dictionary 		and int(a["destino"].get("x", -1)) == 2 and int(a["destino"].get("y", -1)) == 3
+
+
+func _servidor_manda(msg: Dictionary) -> void:
+	_par.send_text(JSON.stringify(msg))
+	for i in 4:
+		_par.poll()
+		await process_frame
+
+
+func _opcoes_seguranca(rev: int) -> void:
+	_estado.receber_opcoes({"v": 2, "type": "ROOM_OPTIONS", "revision": rev, "vezId": "fA", "orcamentoM": 9.0,
+		"mover": [{"x": 2, "y": 3, "custoM": 1.5}], "ataques": [], "consumiveis": [],
+		"acoes": ["encerrar", "defender", "desvincular"], "reacoes": []})
+
+
+func _sair_com_seguranca_para_2_3(arena) -> void:
+	arena.hud.sair_com_seguranca = true
+	arena.definir_modo(Modo.MOVER)
+	arena._escolher_casa(Vector2i(2, 3))
+
+
+func _teste_seguranca_na_arena() -> void:
+	print("== ordem 33: o movimento do «Sair c/ segurança» só segue o recibo DO Desvincular ==")
+	_estado.vez_id = "fA"
+	_rede._ativo = true  # a arena chama Rede.iniciar(); com isto não vai ao lobby
+	var arena = (load("res://cenas/arena/arena.tscn") as PackedScene).instantiate()
+	root.add_child(arena)
+	await _quadros(2)
+	var ligou: bool = await _ligar_loopback()
+	_ok(ligou, "servidor WebSocket local ligado à Rede")
+	if not ligou:
+		return
+	var rev := 20
+
+	# Controlo: Desvincular aceite → o movimento segue, com a revisão nova.
+	_opcoes_seguranca(rev)
+	_sair_com_seguranca_para_2_3(arena)
+	var r: Array = await _recebidas()
+	_ok(r.size() == 1 and r[0]["acao"] == {"tipo": "desvincular"}, "controlo: sai primeiro o Desvincular %s" % [r])
+	if r.size() == 1:
+		await _servidor_manda({"v": 2, "type": "ROOM_RECEIPT", "roomId": "sala-teste", "intentId": r[0]["intentId"],
+			"estado": "APLICADA", "seq": 30, "revision": rev + 1})
+	r = await _recebidas()
+	_ok(r.size() == 1 and _e_mover_2_3(r[0]["acao"]) and int(r[0]["revision"]) == rev + 1,
+		"controlo: aceite o Desvincular, segue o movimento com a revisão nova %s" % [r])
+	if r.size() == 1:
+		await _servidor_manda({"v": 2, "type": "ROOM_RECEIPT", "roomId": "sala-teste", "intentId": r[0]["intentId"],
+			"estado": "APLICADA", "seq": 31, "revision": rev + 2})
+	rev += 2
+
+	# O defeito: Desvincular recusado (ROOM_REJECT) → o movimento não pode sair, nem agora nem depois.
+	_opcoes_seguranca(rev)
+	_sair_com_seguranca_para_2_3(arena)
+	r = await _recebidas()
+	_ok(r.size() == 1 and r[0]["acao"] == {"tipo": "desvincular"}, "sai o Desvincular %s" % [r])
+	if r.size() == 1:
+		await _servidor_manda({"v": 2, "type": "ROOM_REJECT", "roomId": "sala-teste", "intentId": r[0]["intentId"],
+			"motivo": "revisao_antiga", "texto": "O tabuleiro mudou. Escolha de novo."})
+	r = await _recebidas()
+	_ok(r.is_empty(), "recusado o Desvincular, nada mais sai %s" % [r])
+	# Ela escolhe outra coisa (Defender) e o servidor aceita: só o Defender sai — o movimento de antes não.
+	_opcoes_seguranca(rev + 1)
+	arena.enviar_acao({"tipo": "defender"})
+	r = await _recebidas()
+	_ok(r.size() == 1 and r[0]["acao"] == {"tipo": "defender"}, "a acção seguinte sai sozinha %s" % [r])
+	if r.size() == 1:
+		await _servidor_manda({"v": 2, "type": "ROOM_RECEIPT", "roomId": "sala-teste", "intentId": r[0]["intentId"],
+			"estado": "APLICADA", "seq": 32, "revision": rev + 2})
+	r = await _recebidas()
+	_ok(r.is_empty(), "o recibo do Defender não solta o movimento do Desvincular recusado %s" % [r])
+
+	_rede.set_process(false)
+	_rede._ws = null
+	_par.close()
+	_srv.stop()
+	arena.queue_free()
+	await _quadros(2)
