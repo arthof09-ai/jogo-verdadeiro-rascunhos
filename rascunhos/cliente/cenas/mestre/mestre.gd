@@ -44,6 +44,8 @@ var enviar_fn: Callable
 var pedir_vista_fn: Callable
 ## Pesquisa de fichas, MASTER_SEARCH (os testes trocam-no).
 var pesquisar_fn: Callable
+## Ordem 29 (V25): RECEIPT_QUERY com os ids dos comandos em voo, ao voltar à mesa (os testes trocam-no).
+var consultar_fn: Callable
 
 var vista: Dictionary = {}
 var cartao: Dictionary = {}
@@ -133,6 +135,8 @@ func _ready() -> void:
 		pedir_vista_fn = Callable(Rede, "pedir_vista_mestre")
 	if not pesquisar_fn.is_valid():
 		pesquisar_fn = Callable(Rede, "pesquisar_fichas")
+	if not consultar_fn.is_valid():
+		consultar_fn = Callable(Rede, "consultar_recibos")
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	theme = _tema
 	_montar()
@@ -478,10 +482,13 @@ func _ao_resposta(id: String, msg: Dictionary) -> void:
 		return
 	_em_voo.erase(id)
 	var recusada := str(msg.get("type", "")) == "ROOM_REJECT" or str(msg.get("estado", "")) == "RECUSADA"
+	# Ordem 29 (V25): DESCONHECIDA (resposta à consulta depois de a ligação cair) = o servidor não o aplicou. Não é
+	# recusa (nenhum alerta): destranca o cartão; no esquema conta como não feita (pára e a colocação fica na lista).
+	var desconhecida := str(msg.get("estado", "")) == "DESCONHECIDA"
 	if recusada:
 		var texto := str(msg.get("texto", "")) if msg.get("texto") is String else str(msg.get("motivo", ""))
 		_juntar_alerta(Textos.ALERTA["recusa"] % texto)
-	_aba_mesa.resposta(id, recusada)  # L5: o esquema de colocação segue (ou pára) com cada recibo
+	_aba_mesa.resposta(id, recusada or desconhecida)  # L5: o esquema de colocação segue (ou pára) com cada recibo
 	_desenhar_cartao()
 	_pedir_vista_em_breve()
 
@@ -499,7 +506,17 @@ func _ao_ligacao(_e: int) -> void:
 	if not Rede.na_mesa():
 		_juntar_alerta(Textos.ALERTA["ligacao"])
 	else:
+		_consultar_em_voo()
 		_pedir_vista_em_breve()
+
+
+## Ordem 29 (V25): a ligação caiu com comandos em voo e os recibos deles podem ter-se perdido. Sem eles o `_em_voo`
+## nunca se esvaziava (botões do cartão desligados até ao fim da sessão, esquema parado). Ao voltar à mesa pergunta-se
+## por eles (RECEIPT_QUERY, que o servidor responde aos cmdId/intentId do Mestre); a resposta chega por `_ao_resposta`.
+func _consultar_em_voo() -> void:
+	if _em_voo.is_empty():
+		return
+	consultar_fn.call(_em_voo.keys())
 
 
 func _ao_precisa_entrar(_motivo: String) -> void:
