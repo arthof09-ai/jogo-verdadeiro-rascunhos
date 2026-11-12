@@ -367,3 +367,33 @@ test('V32: o ataque que custa PA diz à própria o PA livre novo', () => {
   const visto = h.msgs.slice(n).filter((x) => x.type === 'ROOM_EVENT' && x.tipo === 'estado' && x.dados.figuraId === h.figuraId && 'paLivre' in x.dados).pop();
   assert.equal(visto?.dados.paLivre, paReal, 'a própria recebe o PA livre novo');
 });
+
+// ------------------------------------------------------------------ V29/V30: a narração do intervalo não se perde
+// A primeira versão das correcções acima respondia SÓ com o snapshot quando o intervalo atravessava um destes pontos:
+// o mundo ficava certo, mas os eventos do intervalo deixavam de chegar — o registo do Mestre (mestre.gd `_ao_evento`,
+// pela Rede) e as frases da Party (desgraça, queda, fim). Agora os eventos seguem como antes e o snapshot vem DEPOIS
+// deles, com o mesmo seq do último (como na própria transacção ao vivo: eventos, depois o snapshot).
+
+test('V29: ao voltar depois de um «voltar», os eventos do intervalo chegam e o snapshot vem a seguir', () => {
+  const m = sessao();
+  const ponto = m.sala.depuracao.journalSeq();
+  andarHeroina(m);
+  const { e, resposta } = quedaEVolta(m, (mm) => exigirAplicada(mm.mestre('MASTER_SUPERVISOR', { op: 'voltar', ateSeq: ponto }), 'voltar'));
+  const iRev = resposta.findIndex((x) => x.type === 'ROOM_EVENT' && x.tipo === 'revertido');
+  const iSnap = resposta.findIndex((x) => x.type === 'ROOM_SNAPSHOT');
+  assert.ok(iRev >= 0, 'o evento revertido chega: ' + resposta.map((x) => x.type + ':' + (x.tipo ?? '')).join(','));
+  assert.ok(iSnap > iRev, 'o snapshot vem depois dos eventos');
+  assert.equal(resposta[iSnap].seq, resposta.filter((x) => x.type === 'ROOM_EVENT').at(-1).seq, 'com o seq do último evento');
+  assert.deepEqual(semSeq(e), semSeq(verdade(m.sala, 'jogadora', { nome: 'Heroína Teste', senha: SENHAS.heroina })));
+});
+
+test('V30: o Mestre que volta à sala pausada pela queda dele recebe o evento `pausa` (o registo dele)', () => {
+  const m = sessao();
+  const c = m.clientes.mestre;
+  const lastSeq = c.ultimoSeq;
+  m.sair('mestre'); // E-C4: pausa mestre_desconectado — o evento `pausa` (interno) vai ao fluxo do Mestre
+  assert.equal(m.sala.depuracao.estado().fase, 'pausa');
+  const r = m.sala.entrar({ v: 2, type: 'ROOM_JOIN', roomId: 'sala-teste', papel: 'mestre', pin: PIN, seatToken: c.token, lastSeq }, { ip: '10.0.0.9' });
+  assert.equal(r.ok, true);
+  assert.ok(r.mensagens.some((x) => x.type === 'ROOM_EVENT' && x.tipo === 'pausa'), r.mensagens.map((x) => x.type + ':' + (x.tipo ?? '')).join(','));
+});
