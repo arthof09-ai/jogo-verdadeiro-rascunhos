@@ -84,6 +84,21 @@ func _correr() -> void:
 	await _quadros(3)
 	c._aviso_entendido()
 
+	print("== nomes dos tipos de evento no «voltar» (ordem 27, N25-2) ==")
+	# Palavra do Mestre (11/11/2026): os seis tipos que apareciam crus passam a ter nome. Conferidos por ponto de código
+	# (ç = U+00E7, ã = U+00E3), escritos aqui com escapes para não depender da codificação deste ficheiro.
+	var ModeloN = load("res://cenas/mestre/modelo_mestre.gd")
+	var nomes_n25_2 := {"cura": "Cura", "acao": "Ação", "ia": "Ação do monstro",
+		"erro_motor": "Erro do motor", "escala": "Escalada", "recomeco": "Recomeço"}
+	for t in nomes_n25_2:
+		_ok(Textos.NOME_EVENTO.get(t, "<sem nome>") == nomes_n25_2[t], "o tipo «%s» chama-se «%s» (está «%s»)" % [t, nomes_n25_2[t], Textos.NOME_EVENTO.get(t, "<sem nome>")])
+	var acao_n: String = Textos.NOME_EVENTO.get("acao", "")
+	_ok(acao_n.length() == 4 and acao_n.unicode_at(1) == 0x00E7 and acao_n.unicode_at(2) == 0x00E3, "«Ação» com ç U+00E7 e ã U+00E3")
+	var linha_n: String = ModeloN.linha_ponto({}, {"rodada": 2, "vezId": "", "tipos": ["cura", "acao", "ia", "erro_motor", "escala", "recomeco"]})
+	_ok(linha_n.ends_with(" · Cura, Ação, Ação do monstro, Erro do motor, Escalada, Recomeço"), "a linha do ponto usa os nomes: «%s»" % linha_n)
+	var linha_d: String = ModeloN.linha_ponto({}, {"rodada": 1, "vezId": "", "tipos": ["tipo_que_nao_existe", "ataque"]})
+	_ok(linha_d.ends_with(" · tipo_que_nao_existe, ataque"), "tipo desconhecido continua cru, os outros como antes: «%s»" % linha_d)
+
 	print("== arena 3D ==")
 	var vista: Dictionary = fx["agir"]["vista"]
 	c.aplicar_vista(vista)
