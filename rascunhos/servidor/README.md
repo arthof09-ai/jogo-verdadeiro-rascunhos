@@ -353,7 +353,7 @@ Testes: `testes/ordem24-varredura.test.mjs` (5; em 444ebef falhavam os 3 de corr
 
 ## Ordem 25 do CM-000009 — N24-1, varredura do servidor (V20+) e segunda tranche do cliente (11/11/2026)
 
-Testes: `testes/ordem25-n24-1.test.mjs` (14; em 603e19e falhavam os 7 de correcção e passavam os 7 de controlo).
+Testes: `testes/ordem25-n24-1.test.mjs` (14; em 603e19e falhavam os 7 de correcção e passavam os 7 de controlo); `testes/ordem25-varredura.test.mjs` (4; em aa56f97 falhavam os 3 de correcção e passava o de controlo).
 
 **N24-1 — o carregador das fichas cumpre os limites de comprimento que o protocolo já escreve.** A ficha que passa um destes limites é recusada ao carregar (a sala não abre), como qualquer campo fora do schema; contam-se caracteres (pontos de código), como o `maxLength` do JSON Schema. Os limites estão em `LIMITES_DO_PROTOCOLO` (`carregar-fichas.js`), cada um com o sítio do protocolo de onde vem:
 
@@ -365,3 +365,12 @@ Testes: `testes/ordem25-n24-1.test.mjs` (14; em 603e19e falhavam os 7 de correc�
 - `expressaoAtaque` e `expressaoCura` das técnicas **da jogadora** ≤ 64 (`expressao` dos eventos `ataque`/`cura` próprios).
 
 Não se inventou limite nenhum: o nome verdadeiro (de quem tem `nomePublico`, ou da criatura/NPC) só vai ao Mestre, as expressões de quem não é jogadora e as de dano e dos testes não saem em campo limitado, e por isso ficam sem limite. As fichas do repositório não mudam (todas cabem).
+
+**Varredura do servidor (o espírito das V1-V19), pela superfície que faltava ler: o adaptador Node inteiro (handshake, enquadramento, HTTP estático, journal em disco e arranque), `journal.js` e `ambiente.js`:**
+
+- **V20 — o handshake aceitava pedidos que a RFC 6455 manda recusar.** A §4.2.1 exige um `GET` em HTTP/1.1 ou acima e um `Sec-WebSocket-Key` que, descodificado, tem 16 bytes; senão «the server MUST stop processing the client's handshake and return […] 400». O adaptador só conferia o `Upgrade` e a versão 13: um `POST`/`PUT` com `Upgrade: websocket`, um `GET` em HTTP/1.0 e a chave `x` (ou vazia) recebiam `101` e abriam ligação. Agora `400` e nenhuma ligação nasce. O pedido certo (o do Godot e o do `WebSocket` do Node) continua a dar `101`. Os pedidos falsos dos testes das ordens 16-18 passaram a trazer o método e a versão, como um pedido real.
+- Lidos sem achados: o enquadramento (máscara, tamanhos, controlo ≤ 125, fragmentos, 1009/1002/1003/1007), o `Origin` (mesma origem), o HTTP estático (dotfiles, `..`, `\`, `realpath`), o journal em disco (envelope, troca de nome, falha fechada no arranque, regravação pendente), `journal.js` (commit atómico, cadeia, exportação/restauro com e sem chave) e `ambiente.js` (raio, cruz, extinção, tick, fim seco; `batalhaAcabou` faz a mesma conta do `verificarFim`).
+
+**Registado, sem regra inventada (N25-):**
+
+1. **N25-1 — a ligação sem lugar não tem travão.** Antes do `ROOM_JOIN`, cada mensagem JSON válida que não é `ROOM_JOIN` recebe um `ERRO` `sem_lugar` e a ligação continua aberta, sem fim: o `sem_lugar` não conta para as 5 rejeições de formato que fecham com 1008 (§2 só fala de formato) e o ritmo é do núcleo, por lugar, que esta ligação ainda não tem. Contar o `sem_lugar` como formato, fechar a ligação ou pôr-lhe um ritmo é regra nova (§2): precisa da palavra.

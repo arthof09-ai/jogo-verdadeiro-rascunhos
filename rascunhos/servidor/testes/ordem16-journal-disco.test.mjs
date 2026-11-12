@@ -287,6 +287,7 @@ test('ordem 16 (disco): o criarServidor grava o journal a cada commit, antes de 
   const servidor = criarServidor({ sala, journal });
   const req = {
     url: '/ws',
+    method: 'GET', httpVersionMajor: 1, httpVersionMinor: 1, // ordem 25 (V20): o que um pedido real traz
     headers: { 'sec-websocket-key': 'dGhlIHNhbXBsZSBub25jZQ==', 'sec-websocket-version': '13', upgrade: 'websocket', host: 'local' },
     socket: { remoteAddress: '10.0.0.1' },
   };

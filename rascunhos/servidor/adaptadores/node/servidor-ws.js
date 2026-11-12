@@ -338,6 +338,11 @@ export function criarGravadorJournal({ sala, caminho, registo = () => {} }) {
   };
 }
 
+/** Sec-WebSocket-Key: base64 de exactamente 16 bytes (RFC 6455 §4.1 e §4.2.1) = 22 caracteres + «==». */
+export function chaveWsValida(chave) {
+  return typeof chave === 'string' && /^[A-Za-z0-9+/]{21}[AQgw]==$/.test(chave);
+}
+
 function ipDe(req) {
   // TODO(JV1.x): atrás de um proxy, ler X-Forwarded-For só de proxies de confiança.
   return req.socket.remoteAddress ?? 'desconhecido';
@@ -511,7 +516,11 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
     }
     const chave = req.headers['sec-websocket-key'];
     const versao = req.headers['sec-websocket-version'];
-    if (typeof chave !== 'string' || String(req.headers.upgrade).toLowerCase() !== 'websocket' || versao !== '13') {
+    // Ordem 25 (V20; RFC 6455 §4.2.1): só um GET em HTTP/1.1 ou acima, com uma chave que é base64 de 16 bytes. Antes, um
+    // POST, um HTTP/1.0 ou a chave «x» (ou vazia) recebiam 101. (O «Connection: Upgrade» já o exige o http do Node.)
+    const http11 = req.httpVersionMajor > 1 || (req.httpVersionMajor === 1 && req.httpVersionMinor >= 1);
+    if (req.method !== 'GET' || !http11 || !chaveWsValida(chave)
+      || String(req.headers.upgrade).toLowerCase() !== 'websocket' || versao !== '13') {
       socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
       return;
     }
