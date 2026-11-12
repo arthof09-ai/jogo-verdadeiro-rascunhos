@@ -204,6 +204,9 @@ const NOME_EVENTO := {
 	"revertido": "voltar", "modo": "modo", "lobby": "mesa", "fim": "fim", "teste_morte": "teste de morte",
 	"recusa": "recusa", "reacao": "reacção", "consumivel": "consumível", "pausa": "pausa", "retomada": "continuar",
 	"raio": "raio", "dano_ambiente": "dano do ambiente", "fogo": "fogo", "aviso_motor": "aviso do motor",
+	# Ordem 27 (N25-2, palavra do Mestre 11/11/2026): os seis tipos que apareciam crus na lista do «voltar».
+	"cura": "Cura", "acao": "Ação", "ia": "Ação do monstro", "erro_motor": "Erro do motor",
+	"escala": "Escalada", "recomeco": "Recomeço",
 }
 
 # ---------------------------------------------------------------- estado da sala e alertas

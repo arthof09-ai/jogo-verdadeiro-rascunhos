@@ -233,7 +233,7 @@ Paridade da auditoria da ordem 10 (REF_35 do site). A mecânica não muda: golpe
 
 ## Ordem 25 do CM-000009 — segunda tranche da varredura do cliente (11/11/2026)
 
-Lidos contra os schemas e o contrato: `hud/hud.gd`, `hud/frases_batalha.gd`, `cenas/arena/arena.gd`, `cenas/mestre/arena_mestre.gd`, `cenas/mestre/textos_mestre.gd`, `cenas/comum/marcador_figura.gd`, `rede/uuid.gd`. **Nenhum achado para corrigir**; nenhum código do cliente mudou nesta ordem. Registado, sem correcção: **N25-2** — os tipos `cura`, `acao`, `ia`, `erro_motor`, `escala` e `recomeco` não têm nome no `NOME_EVENTO` (`textos_mestre.gd`) e aparecem crus na lista dos pontos de «voltar» do Mestre; dar-lhes nome é texto do ecrã, fica para quem o escreve. O detalhe está no README do servidor, secção «Ordem 25».
+Lidos contra os schemas e o contrato: `hud/hud.gd`, `hud/frases_batalha.gd`, `cenas/arena/arena.gd`, `cenas/mestre/arena_mestre.gd`, `cenas/mestre/textos_mestre.gd`, `cenas/comum/marcador_figura.gd`, `rede/uuid.gd`. **Nenhum achado para corrigir**; nenhum código do cliente mudou nesta ordem. Registado, sem correcção: **N25-2** — os tipos `cura`, `acao`, `ia`, `erro_motor`, `escala` e `recomeco` não têm nome no `NOME_EVENTO` (`textos_mestre.gd`) e aparecem crus na lista dos pontos de «voltar» do Mestre; dar-lhes nome é texto do ecrã, fica para quem o escreve. **→ Decidido pelo Mestre (11/11/2026) e feito na ordem 27:** «Cura», «Ação», «Ação do monstro», «Erro do motor», «Escalada», «Recomeço». O detalhe está no README do servidor, secção «Ordem 25».
 
 ## Ordem 26 do CM-000009 — terceira tranche da varredura do cliente (11/11/2026)
 
