@@ -5,7 +5,8 @@
 // sala abrir:
 //  (1) esquema completo em profundidade — tipos e campos obrigatórios em todos os níveis do estado `sala/1`, e a
 //      forma dos eventos, recibos e fluxos que o servidor volta a ler;
-//  (2) referências que existem — a ficha de cada figura, a figura da vez, da ordem, de cada lugar e de cada cartão.
+//  (2) referências que existem — a ficha de cada figura, a figura da vez, da ordem, de cada lugar e de cada cartão
+//      aberto (ordem 35, N34-1: os fechados são história e podem apontar para uma figura que o «voltar» desfez).
 // Um campo inválido = ErroJournal com o `caminho` do campo (ex.: `figuras.<id>.fichaId`): a sala não abre.
 //
 // O que é obrigatório: o que o servidor sempre escreveu e lê sem rede. O que ele próprio já lia com tolerância à falta
@@ -136,8 +137,13 @@ function conferirCartao(c, i, e) {
   exigir(c, 'decisao', p, ouNull(ehTexto), 'não é texto nem null');
   seHouver(c, 'figuraId', p, ouNull(ehTextoCheio), 'não é texto nem null');
   seHouver(c, 'alvoId', p, ouNull(ehTextoCheio), 'não é texto nem null');
-  // Camada 2: as figuras do cartão existem.
-  for (const k of ['figuraId', 'alvoId']) if (ehTexto(c[k]) && !tem(e.figuras, c[k])) falha(p + '.' + k, 'figura inexistente');
+  // Camada 2: as figuras do cartão ABERTO existem (ordem 35, N34-1). Só os abertos se voltam a ler (o cartão pendente,
+  // a MASTER_VIEW, o MASTER_APPROVE). Os fechados são história: o «voltar» para antes de uma figura deixa os cartões
+  // nascidos depois fechados «revertido», a apontar para a figura que ainda não existia — e esse estado, gravado pelo
+  // próprio servidor, tem de voltar a abrir. A forma (texto ou null) continua conferida acima.
+  if (c.estado === 'aberto') {
+    for (const k of ['figuraId', 'alvoId']) if (ehTexto(c[k]) && !tem(e.figuras, c[k])) falha(p + '.' + k, 'figura inexistente');
+  }
   seHouver(c, 'tecnicaId', p, ouNull(ehTexto), 'não é texto nem null');
   seHouver(c, 'razao', p, ouNull(ehTexto), 'não é texto nem null');
   seHouver(c, 'faces', p, ouNull(Array.isArray), 'não é lista nem null');
