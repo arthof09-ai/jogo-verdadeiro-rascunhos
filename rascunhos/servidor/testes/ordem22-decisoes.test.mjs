@@ -195,6 +195,7 @@ test('ordem 22 (N21-1): o Mestre entra de fresco numa sala restaurada no fim com
   despejar('sai', 'mestre', vista); // entra no tráfego conferido com o schema (job protocolo)
   assert.deepEqual(vista.avisoMotor, {
     codigo: 'MOTOR_DIFERENTE', recomecar: 'recusado', motorGravado: gravado, motorAgora: 'e'.repeat(64),
+    quaisDiferem: ['vlabSha'], // ordem 34 (N27-2): só o vlabSha mudou
   });
   // Igual ao soMestre do evento do journal.
   const ev = sala2.depuracao.eventos().find((e) => e.tipo === 'aviso_motor');

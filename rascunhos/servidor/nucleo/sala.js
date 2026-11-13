@@ -383,6 +383,7 @@ export function criarSala({
         tx.emitir('aviso_motor', {}, {
           codigo: 'MOTOR_DIFERENTE', recomecar: 'recusado',
           motorGravado: tx.estado.motores?.vlabSha ?? null, motorAgora: motoresInfo.vlabSha ?? null,
+          quaisDiferem: quaisDiferem(tx.estado.motores), // ordem 34 (N27-2)
         });
         return;
       }
@@ -425,6 +426,21 @@ export function criarSala({
     return true;
   }
   /**
+   * Ordem 34 (N27-2, sentença da bancada de 12/11/2026): os NOMES dos campos de versão que fazem o motor não provado
+   * igual, pela ordem fixa vlabSha, dmgVersao, levelupSha (nunca os valores). A mesma regra do motorProvadoIgual: o
+   * vlabSha difere se falta de um dos lados ou se é outro; os outros dois se não são iguais (null dos dois lados =
+   * igual, N27-1). Com o motor não provado igual a lista tem 1 a 3 nomes, sem repetidos.
+   */
+  function quaisDiferem(gravados) {
+    const g = gravados ?? {};
+    const lista = [];
+    const shaG = g.vlabSha ?? null;
+    if (shaG === null || motoresInfo.vlabSha === null || shaG !== motoresInfo.vlabSha) lista.push('vlabSha');
+    if ((g.dmgVersao ?? null) !== motoresInfo.dmgVersao) lista.push('dmgVersao');
+    if ((g.levelupSha ?? null) !== motoresInfo.levelupSha) lista.push('levelupSha');
+    return lista;
+  }
+  /**
    * Ordem 22 (N21-1, palavra do Mestre 11/11/2026 16:13: sim): o aviso do motor também na vista do Mestre, para quem
    * entra de fresco (sem lastSeq só recebe o snapshot, que não traz o evento `aviso_motor`). Os mesmos campos do
    * soMestre do evento, enquanto a condição do aviso dura (sala no fim gravada com outro motor; o «Recomeçar» é
@@ -436,7 +452,7 @@ export function criarSala({
     const gravado = m.motores?.vlabSha ?? null;
     const agoraSha = motoresInfo.vlabSha ?? null;
     if (m.fase !== 'fim' || motorProvadoIgual(m.motores)) return null;
-    return { codigo: 'MOTOR_DIFERENTE', recomecar: 'recusado', motorGravado: gravado, motorAgora: agoraSha };
+    return { codigo: 'MOTOR_DIFERENTE', recomecar: 'recusado', motorGravado: gravado, motorAgora: agoraSha, quaisDiferem: quaisDiferem(m.motores) };
   }
   function u32() {
     return rng() >>> 0;

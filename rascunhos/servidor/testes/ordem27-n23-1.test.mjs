@@ -64,7 +64,10 @@ function exigirMotorNaoProvadoNoFim(sala2, { gravado, agora }) {
   const av = avisos(sala2);
   assert.equal(av.length, 1, 'um aviso_motor no journal, na hora do restauro');
   assert.deepEqual(av[0].dados, {}, 'nada nos dados públicos');
-  assert.deepEqual(av[0].soMestre, { codigo: 'MOTOR_DIFERENTE', recomecar: 'recusado', motorGravado: gravado, motorAgora: agora });
+  // Ordem 34 (N27-2): o aviso ganhou `quaisDiferem` (os valores exactos conferem-se em ordem34-n27-2.test.mjs).
+  const { quaisDiferem, ...resto } = av[0].soMestre;
+  assert.deepEqual(resto, { codigo: 'MOTOR_DIFERENTE', recomecar: 'recusado', motorGravado: gravado, motorAgora: agora });
+  assert.ok(Array.isArray(quaisDiferem) && quaisDiferem.length >= 1, 'diz qual versão difere');
 
   const rh = ligar(sala2, JOIN_HEROINA, '10.0.27.1');
   assert.ok(!rh.mensagens.some((x) => x.type === 'MASTER_VIEW' || 'avisoMotor' in x), 'a Party não recebe a vista');

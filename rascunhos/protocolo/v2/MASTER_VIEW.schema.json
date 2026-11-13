@@ -122,12 +122,20 @@
             { "type": "null" },
             {
               "type": "object",
-              "required": ["codigo", "recomecar", "motorGravado", "motorAgora"],
+              "required": ["codigo", "recomecar", "motorGravado", "motorAgora", "quaisDiferem"],
               "properties": {
                 "codigo": { "const": "MOTOR_DIFERENTE" },
                 "recomecar": { "const": "recusado" },
                 "motorGravado": { "type": ["string", "null"] },
-                "motorAgora": { "type": ["string", "null"] }
+                "motorAgora": { "type": ["string", "null"] },
+                "quaisDiferem": {
+                  "description": "Ordem 34 (N27-2, sentença da bancada 12/11/2026): os NOMES dos campos de versão que diferem (nunca os valores), 1 a 3, sem repetidos, nesta ordem fixa: vlabSha, dmgVersao, levelupSha. As sete listas possíveis.",
+                  "enum": [
+                    ["vlabSha"], ["dmgVersao"], ["levelupSha"],
+                    ["vlabSha", "dmgVersao"], ["vlabSha", "levelupSha"], ["dmgVersao", "levelupSha"],
+                    ["vlabSha", "dmgVersao", "levelupSha"]
+                  ]
+                }
               },
               "additionalProperties": false
             }

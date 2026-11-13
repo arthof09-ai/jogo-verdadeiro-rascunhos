@@ -377,7 +377,27 @@ func _alertar_motor(aviso: Dictionary, seq_reserva: String) -> void:
 	if _amb_narrados.has(chave):
 		return
 	_amb_narrados[chave] = true
-	_juntar_alerta(Textos.ALERTA["aviso_motor"])
+	_juntar_alerta(texto_aviso_motor(aviso))
+
+
+## Ordem 34 (N27-2): o texto do aviso do motor. Com `quaisDiferem` (os nomes dos campos que diferem), cada um em
+## palavra simples e todos de uma vez, num alerta só («a versão de dano mudou», «… e …»). Sem o campo (evento de um
+## journal de antes desta ordem), o texto de sempre. O hash (motorGravado/motorAgora) nunca entra no texto.
+static func texto_aviso_motor(aviso: Dictionary) -> String:
+	var frases: Array[String] = []
+	var quais = aviso.get("quaisDiferem")
+	if quais is Array:
+		for nome in ["vlabSha", "dmgVersao", "levelupSha"]:  # a ordem fixa do contrato
+			if quais.has(nome):
+				frases.append(Textos.MOTOR_MUDOU[nome])
+	if frases.is_empty():
+		return Textos.ALERTA["aviso_motor"]
+	var junto := frases[0]
+	if frases.size() == 2:
+		junto = "%s e %s" % [frases[0], frases[1]]
+	elif frases.size() == 3:
+		junto = "%s, %s e %s" % [frases[0], frases[1], frases[2]]
+	return Textos.ALERTA["aviso_motor_qual"] % junto
 
 
 ## Ordem 12 (paridade com o site, REF_35): a heroína já caída levou um golpe e o motor subiu-lhe as falhas. O site

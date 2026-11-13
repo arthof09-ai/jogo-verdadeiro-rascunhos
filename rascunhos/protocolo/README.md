@@ -162,4 +162,4 @@ Pedidas pela revisão do Muse (CM-000009) ao desenho JV3.1 (Notion: «JV3.1 — 
 
 - `MASTER_SEARCH.texto`: obrigatório, de 1 a 64 caracteres **depois de aparado** (padrão `^\s*\S(?:[\s\S]{0,62}\S)?\s*$`, no lugar do `maxLength` 64). Fora disto, ou com um campo a mais, o servidor responde `ERRO` `formato` (nunca pesquisa `''` nem corta).
 - `ERRO.cmdId` (novo, opcional): só nessa recusa — o `cmdId` recebido se for um id válido, senão `null`. A recusa da pesquisa não conta para o fecho `1008` da ligação.
-
+- Ordem 34 (N27-2): o aviso do motor (D-35 `aviso_motor`.soMestre e D-36 `MASTER_VIEW.avisoMotor`) ganhou `quaisDiferem` — os nomes dos campos que diferem (`vlabSha`, `dmgVersao`, `levelupSha`, por esta ordem, 1 a 3, sem repetidos; nunca os valores). Obrigatório no `avisoMotor` (as sete listas possíveis como `enum`); `motorGravado`/`motorAgora` como estavam.
