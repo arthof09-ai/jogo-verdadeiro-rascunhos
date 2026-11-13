@@ -1,0 +1,48 @@
+// haste.gdshader — Ordem 38 (defeito 6). As outras famílias de erva: espigas, flores e juncos
+// (uma haste fina + uma cabeça). Geometria, sem alfa. O mesmo vento da relva (onda que viaja,
+// fase só da posição) e somem com a distância (encolhem até zero, sem salto).
+// UV.y = altura (0–1). UV.x: < 0,5 haste, ≥ 0,5 cabeça. COLOR (instância) = cor da cabeça.
+// INSTANCE_CUSTOM = (r de ordem, —, tom, —).
+shader_type spatial;
+render_mode unshaded, cull_disabled, world_vertex_coords;
+
+#include "luz_floresta.gdshaderinc"
+
+uniform vec3 cor_haste : source_color = vec3(0.37, 0.44, 0.28);
+uniform vec2 vento_dir = vec2(0.86, 0.51);
+uniform float vento_forca : hint_range(0.0, 0.6) = 0.20;
+uniform float vento_vel : hint_range(0.0, 4.0) = 1.0;
+uniform float some_de = 34.0;
+uniform float some_ate = 60.0;
+
+varying float v_alt;
+varying float v_cabeca;
+varying vec3 v_cor;
+varying vec4 v_mapa;
+
+void vertex() {
+	v_alt = UV.y;
+	v_cabeca = step(0.5, UV.x);
+	vec3 raiz = MODEL_MATRIX[3].xyz;
+	vec3 p = VERTEX;
+	float d_cam = distance(raiz.xz, CAMERA_POSITION_WORLD.xz);
+	float fica = 1.0 - smoothstep(some_de, some_ate, d_cam + INSTANCE_CUSTOM.r * 14.0);
+	p = raiz + (p - raiz) * fica;
+	vec2 dv = normalize(vento_dir);
+	float t = TIME * vento_vel;
+	float raj = smoothstep(0.30, 0.78, textureLod(ruido, raiz.xz * 0.011 - dv * t * 0.030, 0.0).r);
+	float fase = dot(raiz.xz, dv) * 0.24 - t * 1.35;
+	float onda = 0.5 + 0.5 * sin(fase);
+	float d = (0.18 + 0.50 * onda + 0.50 * raj * (0.4 + 0.6 * onda)) * vento_forca * v_alt * v_alt;
+	p.xz += dv * d;
+	p.y -= d * d * 0.8;
+	VERTEX = p;
+	v_mapa = ler_mapa_lod(raiz.xz);
+	v_cor = COLOR.rgb * (0.88 + 0.24 * INSTANCE_CUSTOM.b);
+}
+
+void fragment() {
+	vec3 alb = mix(cor_haste * (0.7 + 0.5 * v_alt), v_cor, v_cabeca);
+	float vis = smoothstep(0.30, 0.70, v_mapa.r);
+	ALBEDO = min(luz_pintada(alb, vec3(0.0, 1.0, 0.0), vis), vec3(0.94));
+}
