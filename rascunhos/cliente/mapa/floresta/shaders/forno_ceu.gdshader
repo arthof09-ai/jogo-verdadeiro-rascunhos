@@ -183,9 +183,12 @@ void fragment() {
 		float halo = (1.0 - smoothstep(1.0, 3.07, rs)) * 0.22;
 		float coroa = (1.0 - smoothstep(1.0, 1.42, rs)) * (0.10 + 0.10 * ruido3(vec3(atan(dot(d, cross(s, vec3(0, 1, 0))), d.y - s.y) * 7.0, 1.0, 2.0)));
 		cor += vec3(1.0, 0.95, 0.80) * (halo + coroa) * step(1.0, rs);
-		float limbo = 1.0 - 0.07 * smoothstep(0.2, 1.0, rs);
-		vec3 disco = vec3(1.0, 0.985, 0.90) * limbo + vec3(0.05) * smoothstep(0.93, 0.985, rs);
-		cor = mix(cor, min(disco, vec3(1.0)), 1.0 - smoothstep(0.955, 1.0, rs));
+		// o clarão em volta não estoura em branco: fica creme-ouro, para o disco (branco-quente)
+		// se ler POR CIMA dele — antes o disco saía mais escuro que o clarão (bola cinzenta).
+		cor = mix(min(cor, vec3(1.0, 0.955, 0.80)), cor, smoothstep(3.0, 9.0, rs));
+		float limbo = 1.0 - 0.03 * smoothstep(0.5, 1.0, rs);
+		vec3 disco = vec3(1.0, 1.0, 0.95) * limbo;
+		cor = mix(cor, disco, 1.0 - smoothstep(0.93, 1.0, rs));
 	}
 
 	// ---------- a base funde-se na cor do horizonte (a mesma fórmula do jogo, já na tinta)
