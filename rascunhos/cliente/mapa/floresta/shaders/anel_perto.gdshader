@@ -9,5 +9,5 @@ vec3 de_srgb(vec3 c) {
 }
 
 void fragment() {
-	ALBEDO = de_srgb(COLOR.rgb);
+	ALBEDO = COLOR.rgb;
 }

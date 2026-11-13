@@ -32,8 +32,8 @@ void fragment() {
 	float r = texture(ruido, v_pos.xz * 0.33 + v_pos.y * 0.21).r;
 	float r2 = texture(ruido, v_pos.xy * 0.85 + v_pos.z * 0.6).r;
 	float pinc = r * 0.55 + r2 * 0.45;
-	float ndl = dot(n, dir_luz) + (pinc - 0.5) * 1.0;
-	float k = smoothstep(-0.10, 0.06, ndl) * 0.5 + smoothstep(0.36, 0.52, ndl) * 0.5;
+	float ndl = dot(n, dir_luz) + (pinc - 0.5) * 0.75;
+	float k = smoothstep(-0.20, 0.10, ndl) * 0.5 + smoothstep(0.28, 0.58, ndl) * 0.5;
 	float ao = COLOR.a;
 	vec3 alb = COLOR.rgb * (0.82 + 0.36 * r);
 	vec3 amb = cor_ceu * (0.26 + 0.20 * n.y);

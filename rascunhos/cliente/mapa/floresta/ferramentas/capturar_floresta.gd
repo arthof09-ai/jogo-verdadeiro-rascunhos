@@ -10,6 +10,8 @@ extends SceneTree
 ## Precisa de janela (GPU): NÃO corre com --headless.
 
 const CENA := "res://mapa/floresta/campo_floresta.tscn"
+const LARGURA := 1920
+const ALTURA := 1080
 
 var _pasta := "res://mapa/floresta/capturas"
 var _so: Array = []
@@ -40,15 +42,27 @@ func _sinal(v: float) -> String:
 func _correr() -> void:
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = 0
+	# A prova faz-se num SubViewport de 1920×1080 (a resolução do projecto), seja qual for o
+	# tamanho do ecrã desta máquina; a janela só o mostra.
+	var vp := SubViewport.new()
+	vp.size = Vector2i(LARGURA, ALTURA)
+	vp.own_world_3d = true
+	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	root.add_child(vp)
+	var mostra := TextureRect.new()
+	mostra.texture = vp.get_texture()
+	mostra.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	mostra.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	mostra.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root.add_child(mostra)
 	var cena: Node3D = (load(CENA) as PackedScene).instantiate()
 	cena.set("mostrar_medicao", false)
-	root.add_child(cena)
+	vp.add_child(cena)
 	await _quadros(12)
 	var pasta_abs := ProjectSettings.globalize_path(_pasta)
 	DirAccess.make_dir_recursive_absolute(pasta_abs)
 	var vistas: Array = cena.get("VISTAS")
 	var linhas: Array = []
-	var vp := root.get_viewport()
 	for i in vistas.size():
 		if not _so.is_empty() and not _so.has(i):
 			continue
@@ -62,9 +76,10 @@ func _correr() -> void:
 		img.save_png(pasta_abs.path_join(nome))
 		var m := {"vista": v[0], "ficheiro": nome}
 		if _medir:
-			m["chamadas_total"] = RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
-			m["primitivas_total"] = RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME)
-			m["objectos_total"] = RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME)
+			m["chamadas_total"] = _info(vp, Viewport.RENDER_INFO_DRAW_CALLS_IN_FRAME)
+			m["primitivas_total"] = _info(vp, Viewport.RENDER_INFO_PRIMITIVES_IN_FRAME)
+			m["objectos_total"] = _info(vp, Viewport.RENDER_INFO_OBJECTS_IN_FRAME)
+			m["chamadas_servidor"] = RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
 			# FPS sem v-sync: 2 s de quadros contados pelo relógio
 			var t0 := Time.get_ticks_usec()
 			var n := 0
@@ -78,8 +93,8 @@ func _correr() -> void:
 			# só o fundo (céu + anéis + âncora)
 			cena.call("so_fundo", true)
 			await _quadros(4)
-			m["chamadas_fundo"] = RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
-			m["primitivas_fundo"] = RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME)
+			m["chamadas_fundo"] = _info(vp, Viewport.RENDER_INFO_DRAW_CALLS_IN_FRAME)
+			m["primitivas_fundo"] = _info(vp, Viewport.RENDER_INFO_PRIMITIVES_IN_FRAME)
 			if i == 0 or i == 12:
 				vp.get_texture().get_image().save_png(pasta_abs.path_join(nome.replace(".png", "_SO-FUNDO.png")))
 			cena.call("so_fundo", false)
@@ -87,7 +102,8 @@ func _correr() -> void:
 		print("[captura] %s" % JSON.stringify(m))
 	if _medir:
 		var saida := {
-			"janela": [vp.get_visible_rect().size.x, vp.get_visible_rect().size.y],
+			"resolucao_da_prova": [LARGURA, ALTURA],
+			"ecra": [DisplayServer.screen_get_size().x, DisplayServer.screen_get_size().y],
 			"placa": RenderingServer.get_video_adapter_name(),
 			"metodo": str(ProjectSettings.get_setting("rendering/renderer/rendering_method")),
 			"motor": Engine.get_version_info()["string"],
@@ -99,6 +115,11 @@ func _correr() -> void:
 		f.close()
 		print("[captura] medicao.json gravado")
 	quit(0)
+
+
+## Contador do viewport da prova (só os objectos 3D visíveis; o céu é uma passagem à parte).
+func _info(vp: Viewport, que: Viewport.RenderInfo) -> int:
+	return vp.get_render_info(Viewport.RENDER_INFO_TYPE_VISIBLE, que)
 
 
 ## Diferença média de luma (0–255) entre duas imagens, amostrada de 4 em 4 píxeis.

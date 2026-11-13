@@ -37,8 +37,8 @@ const COR_CEU_AMBIENTE := Color("#a9b98f")
 # ---------------------------------------------------------------- névoa
 ## A névoa começa DEPOIS da arena e satura antes do anel longe.
 const NEVOA_INICIO := 40.0
-const NEVOA_FIM := 112.0
-const NEVOA_TECTO := 0.90  # opacidade máxima (fog_density no modo profundidade)
+const NEVOA_FIM := 125.0
+const NEVOA_TECTO := 0.78  # opacidade máxima (fog_density no modo profundidade)
 const NEVOA_CURVA := 1.25  # >1: a névoa demora a entrar (a orla da arena fica mais limpa)
 
 # ---------------------------------------------------------------- vegetação e chão

@@ -129,6 +129,7 @@ func bolha(centro: Vector3, escala: Vector3, sub: int, cor: Color, semente: floa
 
 
 ## Rocha FACETADA: icosfera deslocada, com vértices por face (normal dura, pincelada de pedra).
+## UV.x = quanto a superfície lisa olha para cima (o musgo não segue as facetas).
 func rocha(centro: Vector3, escala: Vector3, rot: Basis, sub: int, cor: Color, semente: float, rugoso: float = 0.34) -> void:
 	var ico := icosfera(sub)
 	var vs: PackedVector3Array = ico[0]
@@ -136,8 +137,11 @@ func rocha(centro: Vector3, escala: Vector3, rot: Basis, sub: int, cor: Color, s
 	var r3 := _r3()
 	var pos := PackedVector3Array()
 	pos.resize(vs.size())
+	var cima := PackedFloat32Array()  # quanto a superfície LISA olha para cima (para o musgo)
+	cima.resize(vs.size())
 	for i in vs.size():
 		var p := vs[i]
+		cima[i] = (rot * Vector3(p.x / escala.x, p.y / escala.y, p.z / escala.z)).normalized().y
 		var d := 1.0 + rugoso * r3.get_noise_3d(p.x * 0.9 + semente, p.y * 0.9 + semente * 1.3, p.z * 0.9 - semente) \
 				+ rugoso * 0.5 * r3.get_noise_3d(p.x * 2.3 - semente, p.y * 2.3, p.z * 2.3 + semente)
 		# degraus: a pedra racha em planos
@@ -155,7 +159,7 @@ func rocha(centro: Vector3, escala: Vector3, rot: Basis, sub: int, cor: Color, s
 		var tom := 0.86 + 0.28 * r3.get_noise_3d(a.x * 0.8 + float(k), a.y * 0.8, a.z * 0.8)
 		var cf := Color(cor.r * tom, cor.g * tom, cor.b * tom, 1.0)
 		c.append_array([cf, cf, cf])
-		uv.append_array([Vector2.ZERO, Vector2.ZERO, Vector2.ZERO])
+		uv.append_array([Vector2(cima[fs[k]], 1.0), Vector2(cima[fs[k + 2]], 1.0), Vector2(cima[fs[k + 1]], 1.0)])
 		idx.append_array([base, base + 1, base + 2])
 
 

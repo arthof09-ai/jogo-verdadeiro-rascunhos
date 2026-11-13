@@ -38,7 +38,7 @@ const MAPA_N := 384          # resolução do mapa do chão (luz/terra)
 const MAPA_MEIO := 66.0      # o mapa do chão cobre [-66, 66] m
 const BLOCO_RELVA := 20.0    # lado de cada bloco de relva (1 MultiMesh = 1 draw call)
 const ANCORA_DIST := 215.0
-const ANCORA_ALTURA := 78.0
+const ANCORA_ALTURA := 96.0
 
 ## Vistas etiquetadas (capturas e teclas 1–9): nome, x, z, altura dos olhos, azimute, inclinação.
 const VISTAS: Array = [
@@ -629,6 +629,7 @@ func _criar_rochas() -> void:
 	var m := _mat(SH_SOLIDO)
 	m.set_shader_parameter("cor_musgo", Paleta.PEDRA_MUSGO)
 	m.set_shader_parameter("forca_musgo", 0.85)
+	m.set_shader_parameter("musgo_liso", 1.0)
 	_instancia(arena, lote.fechar(), m, "Pedras")
 	medidas["rochas_tri"] = lote.triangulos()
 
@@ -918,10 +919,11 @@ func _criar_anel_longe() -> void:
 	var sol_az := deg_to_rad(Paleta.SOL_AZIMUTE)
 	# raio, altura mínima, altura máxima, ar (0–1), tinta, frequência do perfil, dentes
 	var capas: Array = [
-		[135.0, 13.0, 27.0, 0.62, Paleta.ANEL_FLORESTA.lerp(Paleta.ANEL_MONTE, 0.25), 260.0, 0.9],
-		[185.0, 24.0, 46.0, 0.74, Paleta.ANEL_FLORESTA.lerp(Paleta.ANEL_MONTE, 0.65), 180.0, 0.45],
-		[245.0, 36.0, 84.0, 0.83, Paleta.ANEL_MONTE, 140.0, 0.0],
+		[135.0, 8.0, 17.0, 0.76, Paleta.ANEL_FLORESTA.lerp(Paleta.ANEL_MONTE, 0.25), 260.0, 0.9],
+		[185.0, 14.0, 30.0, 0.85, Paleta.ANEL_FLORESTA.lerp(Paleta.ANEL_MONTE, 0.65), 180.0, 0.45],
+		[245.0, 22.0, 54.0, 0.905, Paleta.ANEL_MONTE, 140.0, 0.0],
 	]
+	var az_ancora := deg_to_rad(Relevo.ANCORA_AZIMUTE)
 	var n := 384
 	for capa in capas:
 		var raio: float = capa[0]
@@ -944,6 +946,9 @@ func _criar_anel_longe() -> void:
 				p = 1.0 - absf(2.0 * p - 1.0)
 				p = p * 0.75 + 0.25 * (0.5 + 0.5 * rn.get_noise_2d(cx * freq * 6.0 + 9.0, sz * freq * 6.0))
 			var h := lerpf(hmin, hmax, clampf(p, 0.0, 1.0))
+			# o passo da árvore-âncora: as capas da frente baixam para o tronco se ver inteiro
+			if raio < ANCORA_DIST:
+				h *= lerpf(0.60, 1.0, smoothstep(deg_to_rad(9.0), deg_to_rad(30.0), absf(angle_difference(ang, az_ancora))))
 			# dentes de copa na silhueta de floresta
 			h += dentes * (1.2 + 1.2 * rn.get_noise_2d(cx * 4200.0, sz * 4200.0 + raio))
 			var x := sin(ang) * raio
