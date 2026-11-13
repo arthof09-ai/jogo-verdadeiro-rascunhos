@@ -46,16 +46,16 @@ const VISTAS: Array = [
 	["centro_olha-leste", 0.0, 0.0, 1.7, 90.0, 3.0],
 	["centro_olha-sul", 0.0, 0.0, 1.7, 180.0, 3.0],
 	["centro_olha-oeste", 0.0, 0.0, 1.7, -90.0, 3.0],
-	["canto-NO_olha-centro", -28.0, -28.0, 1.7, 135.0, 0.0],
-	["canto-NE_olha-centro", 28.0, -28.0, 1.7, -135.0, 0.0],
-	["canto-SE_olha-centro", 28.0, 28.0, 1.7, -45.0, 0.0],
-	["canto-SO_olha-centro", -28.0, 28.0, 1.7, 45.0, 0.0],
-	["canto-NO_olha-fora", -28.0, -28.0, 1.7, -45.0, 4.0],
-	["canto-NE_olha-fora", 28.0, -28.0, 1.7, 45.0, 4.0],
-	["canto-SE_olha-fora", 28.0, 28.0, 1.7, 135.0, 4.0],
-	["canto-SO_olha-fora", -28.0, 28.0, 1.7, -135.0, 4.0],
+	["canto-NO_olha-centro", -25.5, -28.5, 1.7, 138.0, 0.0],
+	["canto-NE_olha-centro", 29.0, -26.0, 1.7, -132.0, 0.0],
+	["canto-SE_olha-centro", 25.0, 29.5, 1.7, -40.0, 0.0],
+	["canto-SO_olha-centro", -29.5, 25.5, 1.7, 49.0, 0.0],
+	["canto-NO_olha-fora", -25.5, -28.5, 1.7, -45.0, 4.0],
+	["canto-NE_olha-fora", 29.0, -26.0, 1.7, 45.0, 4.0],
+	["canto-SE_olha-fora", 25.0, 29.5, 1.7, 135.0, 4.0],
+	["canto-SO_olha-fora", -29.5, 25.5, 1.7, -135.0, 4.0],
 	["longe_vista-ref07", 5.0, 27.0, 2.3, -11.0, 1.0],
-	["alto_mapa-inteiro", 0.0, 62.0, 46.0, 0.0, -38.0],
+	["alto_mapa-inteiro", 0.0, 46.0, 34.0, 0.0, -40.0],
 ]
 
 @export var semente: int = 37
@@ -517,9 +517,9 @@ func _criar_arvores() -> void:
 		var incl: Vector3 = a["incl"]
 		var fase: float = a["fase"]
 		var cimo: Vector3 = a["cimo"]
-		var casca := Paleta.CASCA.lerp(Color("#7a6a55"), _rf(0.0, 0.45))
-		var casca_base := casca.darkened(0.30)
-		casca_base.a = 0.80
+		var casca := Paleta.CASCA.lerp(Color("#93806a"), _rf(0.30, 0.75))
+		var casca_base := casca.darkened(0.20)
+		casca_base.a = 0.86
 		# tronco: 7 níveis, raiz alargada, leve torção
 		var pts: Array = []
 		for i in 7:
@@ -628,7 +628,8 @@ func _criar_rochas() -> void:
 		lote.rocha(c + Vector3(0, esc.y * 0.22, 0), esc, rot, 2 if tam > 1.1 else 1, cor, _rf(0.0, 60.0))
 	var m := _mat(SH_SOLIDO)
 	m.set_shader_parameter("cor_musgo", Paleta.PEDRA_MUSGO)
-	m.set_shader_parameter("forca_musgo", 0.85)
+	m.set_shader_parameter("forca_musgo", 0.80)
+	m.set_shader_parameter("musgo_de", 0.56)
 	m.set_shader_parameter("musgo_liso", 1.0)
 	_instancia(arena, lote.fechar(), m, "Pedras")
 	medidas["rochas_tri"] = lote.triangulos()
@@ -640,6 +641,7 @@ func _criar_arbustos() -> void:
 	var l := Lote.new()
 	l.bolha(Vector3(0, 0.42, 0), Vector3(0.9, 0.62, 0.9), 1, Color.WHITE, 3.0, Vector3(0, -0.2, 0), 0.0, 0.5, 0.36)
 	l.bolha(Vector3(0.55, 0.30, 0.25), Vector3(0.55, 0.42, 0.55), 1, Color(0.92, 0.95, 0.9), 11.0, Vector3(0, -0.2, 0), 0.3, 0.5, 0.36)
+	l.bolha(Vector3(-0.42, 0.26, -0.40), Vector3(0.48, 0.36, 0.48), 1, Color(0.86, 0.92, 0.84), 23.0, Vector3(0, -0.2, 0), 0.6, 0.5, 0.36)
 	var malha := l.fechar()
 	var lugares: Array[Transform3D] = []
 	var cores: Array[Color] = []
@@ -662,8 +664,8 @@ func _criar_arbustos() -> void:
 			prob *= 0.35
 		if _rng.randf() > prob or _terra_em(x, z) > 0.5:
 			continue
-		var s := _rf(0.7, 1.7)
-		var b := Basis(Vector3.UP, _rf(0.0, TAU)).scaled(Vector3(s, s * _rf(0.8, 1.2), s))
+		var s := _rf(0.5, 1.15)
+		var b := Basis(Vector3.UP, _rf(0.0, TAU)).scaled(Vector3(s, s * _rf(0.85, 1.3), s))
 		lugares.append(Transform3D(b, Vector3(x, Relevo.altura(x, z) - 0.05, z)))
 		var tinta := Paleta.COPA_A.lerp(Paleta.COPA_B, _rf(0.2, 1.0))
 		tinta.a = 1.0
@@ -824,13 +826,27 @@ func _ponto_anel(ang: float, f: float) -> Vector2:
 	return Vector2(dx * r, dz * r)
 
 
-## A tinta do anel próximo: luz cozinhada (lado do sol quente, lado da sombra frio) e depois
-## o AR — a cor do horizonte entra com a distância e com a baixa do vale (a bruma assenta).
-func _tinta_perto(cor: Color, nrm: Vector3, p: Vector3) -> Color:
-	var k := smoothstep(-0.25, 0.65, nrm.dot(Paleta.dir_luz()))
-	var c := Color(cor.r * lerpf(0.60, 1.16, k), cor.g * lerpf(0.70, 1.08, k), cor.b * lerpf(0.86, 0.84, k))
+## A tinta do anel próximo: a MESMA conta de luz dos shaders da arena (copa.gdshader /
+## luz_floresta.gdshaderinc), feita uma vez por vértice e guardada na cor — por isso a primeira
+## fila do anel casa com a última fila de árvores reais. Depois entra o AR: a cor do horizonte
+## cresce com a distância e com a baixa do vale (a bruma assenta).
+## `ao` = oclusão (0–1): copas por dentro, chão debaixo da floresta.
+func _tinta_perto(cor: Color, nrm: Vector3, p: Vector3, ao: float = 1.0) -> Color:
+	# a pincelada: uma mancha de ~2 m parte a luz em toques, como nas copas reais
+	var mancha := Relevo.ruido().get_noise_3d(p.x * 55.0, p.y * 55.0, p.z * 55.0)
+	var ndl := nrm.dot(Paleta.dir_luz()) + mancha * 0.55
+	var k := smoothstep(-0.20, 0.10, ndl) * 0.5 + smoothstep(0.28, 0.58, ndl) * 0.5
+	var alb := cor.srgb_to_linear()
+	var ceu := Paleta.COR_CEU_AMBIENTE.srgb_to_linear()
+	var sol := Paleta.COR_SOL.srgb_to_linear()
+	var sombra := Paleta.COR_SOMBRA.srgb_to_linear()
+	var baixo := clampf(0.5 - 0.5 * nrm.y, 0.0, 1.0)
+	var amb := ceu * (0.26 + 0.20 * nrm.y) + Color(0.46, 0.48, 0.17) * (0.375 * baixo)
+	var luz := amb + (sombra * 0.45).lerp(sol, k * ao)
+	var escuro := lerpf(0.72, 1.0, ao)
+	var c := Color(alb.r * luz.r * escuro, alb.g * luz.g * escuro, alb.b * luz.b * escuro).linear_to_srgb()
 	var f := Relevo.fora(p.x, p.z)
-	var quanto := lerpf(0.06, 0.46, clampf((f - Relevo.ANEL_DENTRO) / (Relevo.ANEL_FORA - Relevo.ANEL_DENTRO), 0.0, 1.0))
+	var quanto := lerpf(0.04, 0.46, clampf((f - Relevo.ANEL_DENTRO) / (Relevo.ANEL_FORA - Relevo.ANEL_DENTRO), 0.0, 1.0))
 	quanto += 0.30 * smoothstep(1.0, -11.0, p.y)
 	return Paleta.ar(c, quanto)                                          # (c) a tinta dos anéis
 
@@ -890,6 +906,21 @@ func _criar_anel_perto() -> void:
 			tinta = tinta.lerp(Paleta.COPA_OURO, 0.4)
 		var sub := 1 if f2 < Relevo.ANEL_DENTRO + 16.0 else 0
 		var centro := Vector3(p4.x, h2 + alto * 0.58, p4.y)
+		if f2 < Relevo.ANEL_DENTRO + 8.0:
+			# as filas da frente (coladas à orla real) imitam a forma das árvores reais:
+			# tronco + 3 massas achatadas em volta do cimo + 1 por cima
+			var cimo2 := Vector3(p4.x, h2 + alto * 0.50, p4.y)
+			var pe_vol := cimo2 + Vector3(0, alto * 0.10, 0)
+			for b3 in 3:
+				var a5 := TAU * (float(b3) + _rf(-0.3, 0.3)) / 3.0
+				var rb2 := alto * _rf(0.20, 0.26)
+				var c5 := cimo2 + Vector3(cos(a5) * alto * 0.20, alto * _rf(0.05, 0.18), sin(a5) * alto * 0.20)
+				lt.bolha(c5, Vector3(rb2, rb2 * 0.72, rb2), 1, tinta.lerp(Paleta.COPA_B, _rf(0.0, 0.4)), _rf(0.0, 80.0), pe_vol, 0.0, 0.0, 0.34)
+			lt.bolha(cimo2 + Vector3(0, alto * 0.30, 0), Vector3(alto * 0.22, alto * 0.16, alto * 0.22), 0, tinta, _rf(0.0, 80.0), pe_vol, 0.0, 0.0, 0.34)
+			var casca2 := Paleta.CASCA.lerp(Color("#93806a"), 0.4)
+			lt.tubo([[Vector3(p4.x, h2 - 0.5, p4.y), alto * 0.040], [cimo2, alto * 0.024]], 5, casca2, casca2, false)
+			postas += 1
+			continue
 		lt.bolha(centro, Vector3(largo, alto * 0.46, largo), sub, tinta, _rf(0.0, 80.0), centro - Vector3(0, alto * 0.3, 0), 0.0, 0.0, 0.34)
 		if sub == 1:
 			var c2 := centro + Vector3(_rf(-1.0, 1.0) * largo * 0.7, -alto * _rf(0.05, 0.22), _rf(-1.0, 1.0) * largo * 0.7)
