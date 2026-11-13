@@ -137,11 +137,11 @@ func rocha(centro: Vector3, escala: Vector3, rot: Basis, sub: int, cor: Color, s
 	var r3 := _r3()
 	var pos := PackedVector3Array()
 	pos.resize(vs.size())
-	var cima := PackedFloat32Array()  # quanto a superfície LISA olha para cima (para o musgo)
-	cima.resize(vs.size())
+	var lisa := PackedVector3Array()  # normal da forma LISA (para o musgo e para amaciar as facetas)
+	lisa.resize(vs.size())
 	for i in vs.size():
 		var p := vs[i]
-		cima[i] = (rot * Vector3(p.x / escala.x, p.y / escala.y, p.z / escala.z)).normalized().y
+		lisa[i] = (rot * Vector3(p.x / escala.x, p.y / escala.y, p.z / escala.z)).normalized()
 		var d := 1.0 + rugoso * r3.get_noise_3d(p.x * 0.9 + semente, p.y * 0.9 + semente * 1.3, p.z * 0.9 - semente) \
 				+ rugoso * 0.5 * r3.get_noise_3d(p.x * 2.3 - semente, p.y * 2.3, p.z * 2.3 + semente)
 		# degraus: a pedra racha em planos
@@ -155,11 +155,12 @@ func rocha(centro: Vector3, escala: Vector3, rot: Basis, sub: int, cor: Color, s
 		var nf := (b - a).cross(cc - a).normalized()
 		var base := v.size()
 		v.append_array([a, cc, b])
-		n.append_array([nf, nf, nf])
-		var tom := 0.86 + 0.28 * r3.get_noise_3d(a.x * 0.8 + float(k), a.y * 0.8, a.z * 0.8)
+		# faceta com a aresta amaciada: 60% plano, 40% forma lisa
+		n.append_array([nf.lerp(lisa[fs[k]], 0.4).normalized(), nf.lerp(lisa[fs[k + 2]], 0.4).normalized(), nf.lerp(lisa[fs[k + 1]], 0.4).normalized()])
+		var tom := 0.90 + 0.20 * r3.get_noise_3d(a.x * 0.8 + float(k), a.y * 0.8, a.z * 0.8)
 		var cf := Color(cor.r * tom, cor.g * tom, cor.b * tom, 1.0)
 		c.append_array([cf, cf, cf])
-		uv.append_array([Vector2(cima[fs[k]], 1.0), Vector2(cima[fs[k + 2]], 1.0), Vector2(cima[fs[k + 1]], 1.0)])
+		uv.append_array([Vector2(lisa[fs[k]].y, 1.0), Vector2(lisa[fs[k + 2]].y, 1.0), Vector2(lisa[fs[k + 1]].y, 1.0)])
 		idx.append_array([base, base + 1, base + 2])
 
 

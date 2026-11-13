@@ -19,10 +19,16 @@ vec2 uv_mapa(vec2 xz) {
 	return xz / (2.0 * mapa_meio) + 0.5;
 }
 
+// A luz que a relva ao sol devolve para cima: aquece o que olha para baixo (copas por baixo,
+// barrigas das pedras, troncos) — sem isto a sombra da floresta fica um buraco negro.
+vec3 ressalto_chao(vec3 n) {
+	return vec3(0.46, 0.48, 0.17) * 0.30 * clamp(0.5 - 0.5 * n.y, 0.0, 1.0);
+}
+
 vec3 luz_pintada(vec3 albedo, vec3 n, float vis) {
 	float ndl = dot(n, dir_luz);
 	float k = smoothstep(-0.15, 0.55, ndl) * vis;
-	vec3 amb = cor_ceu * (0.30 + 0.20 * n.y);
+	vec3 amb = cor_ceu * (0.30 + 0.20 * n.y) + ressalto_chao(n);
 	vec3 direta = mix(cor_sombra * 0.42, cor_sol, k);
 	return albedo * (amb + direta);
 }

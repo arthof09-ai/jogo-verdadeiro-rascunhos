@@ -36,7 +36,7 @@ void fragment() {
 	float k = smoothstep(-0.20, 0.10, ndl) * 0.5 + smoothstep(0.28, 0.58, ndl) * 0.5;
 	float ao = COLOR.a;
 	vec3 alb = COLOR.rgb * (0.82 + 0.36 * r);
-	vec3 amb = cor_ceu * (0.26 + 0.20 * n.y);
+	vec3 amb = cor_ceu * (0.26 + 0.20 * n.y) + ressalto_chao(n) * 1.25;
 	vec3 cor = alb * (amb + mix(cor_sombra * 0.45, cor_sol, k * ao));
 	// o tom mais alto leva ouro (a luz rasante da referência)
 	cor += cor_ouro * cor_sol * smoothstep(0.62, 0.80, ndl) * 0.30 * ao;

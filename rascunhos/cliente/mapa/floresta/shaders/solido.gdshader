@@ -8,6 +8,7 @@ render_mode unshaded, cull_back, world_vertex_coords;
 uniform vec3 cor_musgo : source_color = vec3(0.40, 0.50, 0.23);
 uniform float forca_musgo : hint_range(0.0, 1.0) = 0.8;
 // 1 = o musgo segue a forma LISA (UV.x, pedras); 0 = segue a normal (troncos)
+uniform float musgo_de : hint_range(0.0, 1.0) = 0.40;
 uniform float musgo_liso : hint_range(0.0, 1.0) = 0.0;
 
 varying vec3 v_pos;
@@ -24,7 +25,7 @@ void fragment() {
 	float r2 = texture(ruido, (v_pos.xy + v_pos.z * vec2(0.4, 0.8)) * 1.3).r;
 	vec3 alb = COLOR.rgb * (0.78 + 0.30 * r + 0.14 * r2);
 	float cima = mix(n.y, UV.x * 0.75 + n.y * 0.25, musgo_liso);
-	float musgo = smoothstep(0.40, 0.72, cima + (r - 0.5) * 0.7) * forca_musgo;
+	float musgo = smoothstep(musgo_de, musgo_de + 0.32, cima + (r - 0.5) * 0.7) * forca_musgo;
 	alb = mix(alb, cor_musgo * (0.78 + 0.44 * r2), musgo);
 	float vis = smoothstep(0.30, 0.70, texture(mapa_chao, uv_mapa(v_pos.xz)).b + (r2 - 0.5) * 0.4);
 	vec3 cor = luz_pintada(alb, n, vis);
