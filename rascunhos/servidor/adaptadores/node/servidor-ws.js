@@ -618,9 +618,15 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
     }
     const saidas = sala.receber(lig.seatId, msg);
     // Rejeições de formato repetidas (inclui o excesso de ritmo) fecham a ligação.
-    const formatoMal = saidas.some((s) => s.seatId === lig.seatId && (
+    const minhas = saidas.filter((s) => s.seatId === lig.seatId);
+    const formatoMal = minhas.some((s) => (
       (s.msg?.type === 'ROOM_REJECT' && s.msg.motivo === 'formato') || (s.msg?.type === 'ERRO' && s.msg.codigo === 'formato')));
     entregar(saidas);
+    // Ordem 34 (N26-1): o ERRO formato só da pesquisa (MASTER_SEARCH fora do schema) NÃO conta para o fecho 1008 — nem
+    // desfaz a contagem dos outros erros de formato desta ligação. O excesso de ritmo (ROOM_REJECT) conta, como sempre.
+    const soPesquisaMal = msg && typeof msg === 'object' && msg.type === 'MASTER_SEARCH'
+      && minhas.length > 0 && minhas.every((s) => s.msg?.type === 'ERRO' && s.msg.codigo === 'formato');
+    if (soPesquisaMal) return;
     contarFormato(lig, formatoMal);
   }
 

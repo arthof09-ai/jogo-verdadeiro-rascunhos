@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "MASTER_SEARCH.schema.json",
   "title": "MASTER_SEARCH (Mestre → servidor)",
-  "description": "§5: pesquisa de monstro por nome. E-C3: isento de revision; não muda estado, não tem recibo (cmdId opcional: errata proposta D-27). Resposta: MASTER_RESULTS.",
+  "description": "§5: pesquisa de monstro por nome. E-C3: isento de revision; não muda estado, não tem recibo (cmdId opcional: errata proposta D-27). Resposta: MASTER_RESULTS. Ordem 34 (N26-1): fora deste schema, ERRO formato com o cmdId (ou null); não conta para o fecho 1008 da ligação.",
   "type": "object",
   "required": ["v", "type", "roomId", "texto"],
   "properties": {
@@ -11,7 +11,11 @@
     "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
     "cmdId": { "$ref": "comum.schema.json#/$defs/idOpaco" },
     "revision": { "$ref": "comum.schema.json#/$defs/revision" },
-    "texto": { "type": "string", "maxLength": 64 }
+    "texto": {
+      "type": "string",
+      "description": "Ordem 34 (N26-1): obrigatório, de 1 a 64 caracteres DEPOIS de aparado (os espaços das pontas não contam; caracteres, não bytes). Fora disto (ausente, vazio, só espaços, não-string, mais de 64) o servidor responde ERRO formato com o cmdId — nunca pesquisa '' nem corta.",
+      "pattern": "^\\s*\\S(?:[\\s\\S]{0,62}\\S)?\\s*$"
+    }
   },
   "additionalProperties": false
 }

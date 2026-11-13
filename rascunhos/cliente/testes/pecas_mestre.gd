@@ -292,16 +292,18 @@ func _correr() -> void:
 	var procura: LineEdit = c._aba_mesa._procura
 	var contador: Label = c._aba_mesa._contador
 	_ok(procura.max_length == 64, "N26-1: o campo de pesquisa aceita 64 caracteres no máximo")
-	_ok(contador != null and contador.is_visible_in_tree(), "N26-1: o contador está à vista")
+	_ok(contador != null and contador.visible and contador.get_parent() == procura.get_parent(), "N26-1: o contador está à vista, ao lado do campo")
 	_ok(contador != null and contador.text == "3/64", "N26-1: o contador conta o que está escrito (veio «%s»)" % (contador.text if contador else "?"))
 	procura.text = ""
 	procura.insert_text_at_caret("a".repeat(70) + "ç".repeat(30))
+	procura.text_changed.emit(procura.text)  # o que o LineEdit emite quando se escreve no teclado
 	_ok(procura.text.length() == 64, "N26-1: a escrita pára aos 64 (ficou com %d)" % procura.text.length())
 	_ok(contador.text == "64/64", "N26-1: o contador mostra 64/64 (veio «%s»)" % contador.text)
 	c._aba_mesa.procurar()
 	_ok(_pesquisas.size() == 1 and str(_pesquisas.back()) == "a".repeat(64), "N26-1: os 64 que ficaram no campo saem inteiros")
 	procura.text = ""
 	procura.insert_text_at_caret("ç".repeat(64))
+	procura.text_changed.emit(procura.text)
 	_ok(procura.text.length() == 64 and contador.text == "64/64", "N26-1: contam-se caracteres, não bytes (64 acentuados cabem)")
 	procura.text = " orc "
 	c._aba_mesa.procurar()

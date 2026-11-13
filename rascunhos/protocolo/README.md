@@ -158,3 +158,8 @@ Pedidas pela revisão do Muse (CM-000009) ao desenho JV3.1 (Notion: «JV3.1 — 
 - **Errata D-36 (N21-1; palavra do Mestre, 11/11/2026 16:13): `MASTER_VIEW` (resposta) ganha `avisoMotor`.** `null`, ou `{codigo: 'MOTOR_DIFERENTE', recomecar: 'recusado', motorGravado, motorAgora}` — os campos do `soMestre` do evento `aviso_motor` (D-35) — enquanto a sala estiver no fim gravada com outro motor. Para o Mestre que entra sem `lastSeq` (só recebe o snapshot, sem eventos). O servidor manda-o sempre; fica fora do `required` para as vistas de antes. Só o Mestre.
 - **17-2 (palavra do Mestre, 11/11/2026 14:27) não muda o protocolo:** a sala de espera (sala restaurada a meio da batalha, antes do Mestre entrar) usa o `ROOM_SNAPSHOT` de sempre com `fase: 'lobby'`, sem figuras nem vez; com o Mestre dentro chega o snapshot da batalha. Conferido no job `protocolo` (o tráfego do teste novo passa nos schemas).
 
+## Ordem 34 do CM-000009: N26-1, o `MASTER_SEARCH` estrito (12/11/2026)
+
+- `MASTER_SEARCH.texto`: obrigatório, de 1 a 64 caracteres **depois de aparado** (padrão `^\s*\S(?:[\s\S]{0,62}\S)?\s*$`, no lugar do `maxLength` 64). Fora disto, ou com um campo a mais, o servidor responde `ERRO` `formato` (nunca pesquisa `''` nem corta).
+- `ERRO.cmdId` (novo, opcional): só nessa recusa — o `cmdId` recebido se for um id válido, senão `null`. A recusa da pesquisa não conta para o fecho `1008` da ligação.
+

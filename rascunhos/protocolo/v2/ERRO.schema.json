@@ -10,7 +10,11 @@
     "type": { "const": "ERRO" },
     "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
     "codigo": { "enum": ["versao", "formato", "proibido", "bloqueado", "credenciais", "interno", "sem_lugar"] },
-    "texto": { "$ref": "comum.schema.json#/$defs/textoSemNumeros" }
+    "texto": { "$ref": "comum.schema.json#/$defs/textoSemNumeros" },
+    "cmdId": {
+      "description": "Ordem 34 (N26-1): só na recusa do MASTER_SEARCH fora do schema (ERRO formato, a forma única dessa recusa). O cmdId recebido se for um id válido, senão null.",
+      "oneOf": [{ "$ref": "comum.schema.json#/$defs/idOpaco" }, { "type": "null" }]
+    }
   },
   "additionalProperties": false
 }

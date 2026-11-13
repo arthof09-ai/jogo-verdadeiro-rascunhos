@@ -2926,10 +2926,12 @@ export function criarSala({
     const tipo = msg.type;
     // Isentos de revision e de recibo (E-C3).
     if (tipo === 'MASTER_SEARCH') {
-      const texto = typeof msg.texto === 'string' ? msg.texto.trim().toLowerCase().slice(0, 64) : '';
+      // Ordem 34 (N26-1): schema estrito. Fora dele = ERRO formato com o cmdId (nunca pesquisar '' nem cortar).
+      if (!pesquisaBemFormada(msg)) return [{ seatId: s, msg: erroPesquisa(msg) }];
+      const texto = msg.texto.trim().toLowerCase();
       const resultados = Object.values(fichas)
         .filter((f) => f.papel !== 'jogadora')
-        .filter((f) => !texto || f.nome.toLowerCase().includes(texto) || (f.nomePublico ?? '').toLowerCase().includes(texto) || f.id.includes(texto))
+        .filter((f) => f.nome.toLowerCase().includes(texto) || (f.nomePublico ?? '').toLowerCase().includes(texto) || f.id.includes(texto))
         .slice(0, 50)
         .map((f) => ({ fichaId: f.id, nome: f.nome, nomePublico: f.nomePublico ?? null, papel: f.papel, classificacao: f.classificacao }));
       return [{ seatId: s, msg: { v: PROTOCOLO, type: 'MASTER_RESULTS', roomId, resultados } }];
@@ -2958,12 +2960,37 @@ export function criarSala({
     return executarComRecibo({ seatId: s, chave, id, idCampo, hashAcao }, (tx) => executarComandoMestre(tx, s, msg), ehAct ? aoRecusarActMestre : null);
   }
 
+  /**
+   * Ordem 34 (N26-1, sentença da bancada de 12/11/2026): o MASTER_SEARCH com o schema estrito (additionalProperties:
+   * false). `texto` obrigatório, string, de 1 a 64 caracteres depois de aparado (caracteres, não bytes: conta-se por
+   * ponto de código, como o maxLength do schema); `cmdId` e `revision`, se vierem, na forma do schema.
+   */
+  const CAMPOS_PESQUISA = Object.freeze(new Set(['v', 'type', 'roomId', 'cmdId', 'revision', 'texto']));
+  const MAX_PESQUISA = 64;
+  function pesquisaBemFormada(msg) {
+    for (const k of Object.keys(msg)) if (!CAMPOS_PESQUISA.has(k)) return false;
+    if (msg.cmdId !== undefined && !(typeof msg.cmdId === 'string' && RE_ID.test(msg.cmdId))) return false;
+    if (msg.revision !== undefined && !(Number.isInteger(msg.revision) && msg.revision >= 0)) return false;
+    if (typeof msg.texto !== 'string') return false;
+    const n = [...msg.texto.trim()].length;
+    return n >= 1 && n <= MAX_PESQUISA;
+  }
+  /** A forma única da recusa da pesquisa: ERRO formato (não é comando de sala, não tem recibo), com o cmdId ou null. */
+  function erroPesquisa(msg) {
+    const cmdId = typeof msg.cmdId === 'string' && RE_ID.test(msg.cmdId) ? msg.cmdId : null;
+    return { ...msgErro('formato', 'Pesquisa mal formada: escreva o nome, sem passar do limite.'), cmdId };
+  }
+
   function processarUm(seatId, msg) {
     const seat = journal.estado.lugares[seatId];
     if (!seat) return [];
     if (!msg || typeof msg !== 'object' || Array.isArray(msg)) return [{ seatId, msg: msgErro('formato', TEXTOS_RECUSA.formato) }];
     if (msg.v !== PROTOCOLO) return [{ seatId, msg: msgErro('versao', 'Versão do protocolo não suportada.') }];
-    if (msg.roomId !== undefined && msg.roomId !== roomId) return [{ seatId, msg: msgErro('formato', 'Sala errada.') }];
+    if (msg.roomId !== undefined && msg.roomId !== roomId) {
+      // A pesquisa com a sala errada também está fora do schema: a mesma forma de recusa (com o cmdId), só ao Mestre.
+      if (msg.type === 'MASTER_SEARCH' && seat.papel === 'mestre') return [{ seatId, msg: erroPesquisa(msg) }];
+      return [{ seatId, msg: msgErro('formato', 'Sala errada.') }];
+    }
     const ehComando = msg.type === 'ROOM_INTENT' || (typeof msg.type === 'string' && msg.type.startsWith('MASTER_'));
     if (ehComando && !dentroDoRitmo(seatId)) {
       // TODO(JV1.x): o adaptador fecha a ligação se o excesso se repetir (§2).

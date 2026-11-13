@@ -136,6 +136,8 @@ const NOME_ACAO := {
 const ABA_MESA := "Mesa"
 const PROCURAR := "Procurar"
 const PROCURAR_DICA := "Nome da criatura ou do NPC"
+## Ordem 34 (N26-1): o contador do campo de pesquisa (escritos / máximo).
+const CONTADOR_PROCURA := "%d/%d"
 const NA_MESA := "Na mesa"
 const GUARDAR_MESA := "Guardar a mesa"
 const COMECAR := "Começar a batalha"

@@ -68,6 +68,8 @@ func _correr() -> void:
 	var mesa = _m._aba_mesa
 
 	print("== lobby ==")
+	# Ordem 34 (N26-1): a pesquisa vazia já não sai (o servidor recusa-a); escreve-se o nome, como o Mestre.
+	mesa._procura.text = "orc"
 	mesa.procurar()
 	if not (await _esperar(func(): return mesa._resultados.has("orc-teste"), "a pesquisa trouxe o orc (MASTER_RESULTS)")):
 		_fim()

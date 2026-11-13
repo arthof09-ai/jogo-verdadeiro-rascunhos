@@ -60,7 +60,7 @@ function cenarioLobby() {
   exigirAplicada(m.mestre('MASTER_LOBBY_SET', {
     mapaId: 'arena-teste', criaturasDisponiveis: ['orc-teste', 'lobo-teste'], npcsDisponiveis: ['bandido-teste'],
   }));
-  const resultados = m.enviar('mestre', { type: 'MASTER_SEARCH', texto: '' }).find((x) => x.type === 'MASTER_RESULTS');
+  const resultados = m.enviar('mestre', { type: 'MASTER_SEARCH', texto: 'teste' }).find((x) => x.type === 'MASTER_RESULTS');
   const vista = m.enviar('mestre', { type: 'MASTER_VIEW' }).find((x) => x.type === 'MASTER_VIEW');
   return { vista, resultados };
 }

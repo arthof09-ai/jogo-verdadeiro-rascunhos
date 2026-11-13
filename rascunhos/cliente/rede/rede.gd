@@ -225,7 +225,8 @@ func pedir_vista_mestre() -> void:
 	_enviar_dict(_com_sala({"v": PROTOCOLO, "type": "MASTER_VIEW"}))
 
 
-## Só o Mestre: MASTER_SEARCH (pesquisa de criatura ou NPC por nome; "" lista tudo).
+## Só o Mestre: MASTER_SEARCH (pesquisa de criatura ou NPC por nome; de 1 a 64 caracteres depois de aparado —
+## ordem 34, N26-1: fora disso o servidor responde ERRO formato; a aba Mesa não manda o vazio).
 func pesquisar_fichas(texto: String) -> void:
 	if papel != "mestre" or estado_ligacao != Ligacao.NA_MESA or not _dentro_do_limite():
 		return

@@ -13,6 +13,9 @@ extends VBoxContainer
 
 const Textos := preload("res://cenas/mestre/textos_mestre.gd")
 ## Ordem 26 (V22): MASTER_SEARCH.texto tem maxLength 64 (caracteres). O servidor já pesquisava só os primeiros 64.
+## Ordem 34 (N26-1): o servidor recusa a pesquisa fora do schema (vazia, só espaços ou com mais de 64 depois de aparada:
+## ERRO formato). Aqui o campo não deixa escrever mais de 64 (max_length conta caracteres, não bytes), o contador mostra
+## quantos vão, e «Procurar» com o campo vazio não manda nada. A recusa do servidor é a rede de trás.
 const MAX_PROCURA := 64
 
 ## O ecrã do Mestre (mestre.gd): enviar(tipo, campos) e pesquisar(texto).
@@ -26,6 +29,7 @@ var _lobby_visto := ""  # JSON do último lobby que veio na vista (para não apa
 var _fase := ""
 var _armado_comecar := false
 var _procura: LineEdit
+var _contador: Label
 var _lista_res: VBoxContainer
 var _guardar: Button
 var _comecar: Button
@@ -51,8 +55,14 @@ func montar(m) -> void:
 	_procura.name = "Procura"
 	_procura.placeholder_text = Textos.PROCURAR_DICA
 	_procura.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_procura.max_length = MAX_PROCURA
 	_procura.text_submitted.connect(func(_t): procurar())
+	_procura.text_changed.connect(func(_t): _contar())
 	linha.add_child(_procura)
+	_contador = Label.new()
+	_contador.name = "ContadorProcura"
+	linha.add_child(_contador)
+	_contar()
 	var b := Button.new()
 	b.text = Textos.PROCURAR
 	b.pressed.connect(procurar)
@@ -103,7 +113,17 @@ func montar(m) -> void:
 
 
 func procurar() -> void:
-	mestre.pesquisar(_procura.text.strip_edges().left(MAX_PROCURA))
+	_contar()
+	var texto := _procura.text.strip_edges()
+	if texto.is_empty() or texto.length() > MAX_PROCURA:
+		return  # N26-1: o servidor recusaria; nunca se pesquisa '' nem se corta em silêncio
+	mestre.pesquisar(texto)
+
+
+## N26-1: o contador do campo de pesquisa («12/64»).
+func _contar() -> void:
+	if _contador:
+		_contador.text = Textos.CONTADOR_PROCURA % [_procura.text.length(), MAX_PROCURA]
 
 
 func receber_resultados(msg: Dictionary) -> void:

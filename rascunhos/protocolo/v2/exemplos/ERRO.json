@@ -22,5 +22,18 @@
       "codigo": "credenciais",
       "texto": "Não foi possível entrar."
     }
+  },
+  {
+    "caso": "pesquisa_mal_formada",
+    "sentido": "servidor → cliente",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "ERRO",
+      "roomId": "sala-teste",
+      "codigo": "formato",
+      "texto": "Pesquisa mal formada: escreva o nome, sem passar do limite.",
+      "cmdId": "cmd-7"
+    }
   }
 ]
