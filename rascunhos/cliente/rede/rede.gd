@@ -224,10 +224,12 @@ func montar_comando_mestre(tipo: String, campos: Dictionary, revision, id: Strin
 
 
 ## Só o Mestre: pede a MASTER_VIEW (isenta de revisão e de recibo, E-C3).
-func pedir_vista_mestre() -> void:
+## Ordem 35: devolve se o pedido saiu. `false` = fora da mesa, sem ligação ou fora do limite de 10 envios/s (§2):
+## quem pede tem de voltar a pedir (antes o pedido perdia-se calado e a vista ficava velha até ao evento seguinte).
+func pedir_vista_mestre() -> bool:
 	if papel != "mestre" or estado_ligacao != Ligacao.NA_MESA or not _dentro_do_limite():
-		return
-	_enviar_dict(_com_sala({"v": PROTOCOLO, "type": "MASTER_VIEW"}))
+		return false
+	return _enviar_dict(_com_sala({"v": PROTOCOLO, "type": "MASTER_VIEW"}))
 
 
 ## Só o Mestre: MASTER_SEARCH (pesquisa de criatura ou NPC por nome; de 1 a 64 caracteres depois de aparado —

@@ -286,3 +286,28 @@ Lido sem mais achados: o envio das intenções (`arena.enviar_acao` com a `Estad
 **N27-2 — o aviso do motor diz qual versão mudou, em palavras simples.** O ecrã do Mestre (`mestre.gd`, `texto_aviso_motor`) traduz cada nome de `quaisDiferem` (evento `aviso_motor` ou `avisoMotor` da vista): `vlabSha` → «o motor (VLAB) mudou», `dmgVersao` → «a versão de dano mudou», `levelupSha` → «a versão de subida de nível mudou» (`Textos.MOTOR_MUDOU`). Se diferem dois ou três, vão todos de uma vez, num alerta só («Sala restaurada com outra versão do motor — o motor (VLAB) mudou e a versão de subida de nível mudou. «Recomeçar» não vai funcionar.»). O hash cru nunca vai ao ecrã (fica no registo do servidor); sem o campo (evento de um journal antigo) fica o texto de sempre. Testes: `pecas_mestre.gd` 200 → 207.
 
 **N32-1 — os avisos que o Mestre perdeu chegam num só bloco.** O ecrã do Mestre (`mestre.gd`) recebe o `MASTER_ALERTAS` (vem com a `MASTER_VIEW`) e mostra **um bloco**, por cima do tabuleiro: primeiro «perdidos por limite: N» (se houve perdas), depois «N avisos enquanto estavas fora:» e um aviso por linha, com a hora deste aparelho («21:05 — Muitas entradas erradas (ip).»); a lista rola se for comprida; **um toque** («Fechar») fecha-o — nunca uma janela por alerta (um bloco novo com o anterior ainda aberto junta-se a ele). Cada alerta confirma-se ao servidor por id (`Rede.confirmar_alertas` → `MASTER_ALERTA_ACK`), o do bloco e o que chega ao vivo; o duplicado (a ligação caiu antes da confirmação) resolve-se pelo id em `Rede.alertas_vistos` (fica na `Rede`, não na cena: a cena do Mestre fecha e reabre quando a ligação cai) — não volta a aparecer, mas confirma-se outra vez. A `Rede` só entrega o bloco no lugar do Mestre (privacidade, §7). Testes: `pecas_mestre.gd` 207 → 223.
+
+## Ordem 35 do CM-000009 — a intermitência da ponta a ponta (13/11/2026)
+
+**A falha:** a ponta a ponta falhou uma vez no CI e passou na repetição (run 43342487508, commit `fe12d46`, tentativa 1, motor falso). Falhou «a vista depois do «voltar» chegou (tempo esgotado)»: o Mestre ficou 30 s com a vista de antes do «voltar».
+
+**A causa:** o limite do aparelho, 10 envios por segundo (§2, `Rede._dentro_do_limite`), deitava fora o pedido da `MASTER_VIEW` sem aviso, e o ecrã do Mestre não o voltava a pedir.
+- **A rajada:** nessa corrida o lobby andou 0,2 s mais depressa («Guardar a mesa» em 0,1 s, contra 0,3 s nas três corridas boas). Entre a entrada do Mestre e o pedido da vista que sai 0,25 s depois do `revertido`, couberam 10 envios em menos de 1 s:
+  - VIEW de abertura, SEARCH, LOBBY_SET e VIEW;
+  - START e VIEW;
+  - PLACE e VIEW;
+  - APPROVE e SUPERVISOR «voltar».
+- **O pedido perdido:** o pedido da vista era o 11.º envio. `pedir_vista_mestre()` não dizia se tinha saído e o temporizador de 0,25 s (`mestre.gd`, `_process`) não tinha nova tentativa.
+- **Porque ficou assim:** depois do «voltar» não chega mais nenhum evento, por isso nada voltava a armar o pedido. O mesmo podia acontecer ao Mestre de verdade, depois de uma rajada de toques.
+
+**A correcção:**
+- `Rede.pedir_vista_mestre()` devolve se o pedido saiu.
+- O ecrã do Mestre (`_pedir_vista_agora`) volta a armar o pedido daqui a 0,25 s quando ele não saiu (o limite, ou fora da mesa), até sair. Vale ao abrir, depois de cada evento ou recibo, e no botão «Atualizar».
+- Uma função de pedido que não responde (`null`, as dos testes de ecrã) conta como saída.
+
+**O teste endurecido:**
+- **`testes/e2e_mestre.gd`:** logo a seguir ao «voltar» ter saído, a janela de 10 envios/s fica cheia de propósito, sem enviar nada. O caso que antes dependia do relógio acontece agora em todas as corridas.
+  - A vista nova tem de chegar mesmo assim.
+  - Verificação nova: o pedido esperou pela janela e voltou a ser feito, mais de 1 s depois. A ponta a ponta passa a ter 17 verificações (eram 16).
+- **`testes/abrir_mestre.gd`:** com a janela cheia, a `Rede` diz que o pedido não saiu e não gasta mais nada da janela. O pedido que não sai volta a ser feito até sair, ao abrir e depois de um evento. São +6 verificações (57).
+- **A prova:** com só os testes (commit `96c4c3d`), as três verificações novas do `abrir_mestre.gd` falharam no CI (run 43412302437). Depois da correcção, passam.

@@ -164,7 +164,7 @@ func _ready() -> void:
 	if not Rede.cartao_ativo.is_empty():
 		aplicar_cartao(Rede.cartao_ativo)
 	_mostrar_aviso_se_preciso()
-	pedir_vista_fn.call()
+	_pedir_vista_agora()
 
 
 ## Defesa da privacidade (desenho §7 b): fora do lugar do Mestre esta cena não mostra nada.
@@ -183,7 +183,16 @@ func _process(delta: float) -> void:
 	if _espera_vista >= 0.0:
 		_espera_vista -= delta
 		if _espera_vista < 0.0:
-			pedir_vista_fn.call()
+			_pedir_vista_agora()
+
+
+## Ordem 35 (trabalho 2): o pedido que não saiu (`false`: o limite de 10 envios/s do aparelho, ou fora da mesa) volta
+## a ser feito daqui a ESPERA_VISTA_S, até sair. Antes perdia-se calado: depois de uma rajada de toques (ex.: o
+## «Voltar até aqui» logo a seguir a «Confirmar»), a vista ficava a do instante antigo até chegar outro evento.
+## Quem não diz (`null`, as funções dos testes de ecrã) conta como saído.
+func _pedir_vista_agora() -> void:
+	if pedir_vista_fn.call() == false:
+		_pedir_vista_em_breve()
 
 
 func _pedir_vista_em_breve() -> void:
@@ -986,7 +995,7 @@ func _montar() -> void:
 	_recomecar = _botao(sala, Textos.RECOMECAR, pedir_recomecar)
 	_pausar = _botao(sala, Textos.PAUSAR, func(): _enviar("MASTER_PAUSE", {}))
 	_continuar = _botao(sala, Textos.CONTINUAR, func(): _enviar("MASTER_RESUME", {}))
-	_atualizar = _botao(sala, Textos.ATUALIZAR, func(): pedir_vista_fn.call())
+	_atualizar = _botao(sala, Textos.ATUALIZAR, func(): _pedir_vista_agora())
 	_som = _botao(sala, Textos.SOM_LIGADO, _alternar_som)
 	# Ordem 8 (item 8): mudar a escala a meio da batalha.
 	_escala_rotulo = _rotulo(sala, "EscalaAtual")
