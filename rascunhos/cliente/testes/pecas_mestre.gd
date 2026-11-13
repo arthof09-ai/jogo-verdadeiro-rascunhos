@@ -1004,6 +1004,36 @@ func _aviso_motor(c) -> void:
 	c.aplicar_vista(sem)
 	await _quadros(1)
 	_ok(c.alertas.size() == n2 + 1, "avisoMotor null: nada")
+	# Ordem 34 (N27-2): o aviso diz QUAL versão mudou (quaisDiferem: nomes dos campos), em palavras simples; o hash cru
+	# nunca vai ao ecrã. Dois (ou três) diferentes: um alerta só, com todos de uma vez.
+	var n3: int = c.alertas.size()
+	var so_dano: Dictionary = vista.duplicate(true)
+	so_dano["avisoMotor"] = {"codigo": "MOTOR_DIFERENTE", "recomecar": "recusado", "motorGravado": "c".repeat(64),
+		"motorAgora": "c".repeat(64), "quaisDiferem": ["dmgVersao"]}
+	c.aplicar_vista(so_dano)
+	await _quadros(1)
+	var t1: String = c.alertas.back() if c.alertas.size() > n3 else ""
+	_ok(c.alertas.size() == n3 + 1, "N27-2: só o dmgVersao diferente — um alerta")
+	_ok(t1.contains("a versão de dano mudou"), "N27-2: o alerta diz «a versão de dano mudou» (veio «%s»)" % t1)
+	_ok(not t1.contains("cccccccc") and not t1.contains("dmgVersao"), "N27-2: nem o hash nem o nome do campo no ecrã")
+	var dois := {"v": 2, "type": "ROOM_EVENT", "roomId": "sala-teste", "seq": 996, "revision": 9, "ts": "2026-11-11T12:00:00.000Z",
+		"tipo": "aviso_motor", "dados": {"journalSeq": 79, "soMestre": {"codigo": "MOTOR_DIFERENTE", "recomecar": "recusado",
+		"motorGravado": "1".repeat(64), "motorAgora": "2".repeat(64), "quaisDiferem": ["vlabSha", "levelupSha"]}}}
+	c._ao_evento(dois)
+	await _quadros(1)
+	var t2: String = c.alertas.back() if c.alertas.size() > n3 + 1 else ""
+	_ok(c.alertas.size() == n3 + 2, "N27-2: dois diferentes — um alerta só (não um por campo)")
+	_ok(t2.contains("o motor (VLAB) mudou") and t2.contains("a versão de subida de nível mudou"),
+		"N27-2: os dois de uma vez (veio «%s»)" % t2)
+	_ok(not t2.contains("1111") and not t2.contains("2222"), "N27-2: o hash cru não vai ao ecrã")
+	var tres: Dictionary = vista.duplicate(true)
+	tres["avisoMotor"] = {"codigo": "MOTOR_DIFERENTE", "recomecar": "recusado", "motorGravado": "3".repeat(64),
+		"motorAgora": "4".repeat(64), "quaisDiferem": ["vlabSha", "dmgVersao", "levelupSha"]}
+	c.aplicar_vista(tres)
+	await _quadros(1)
+	var t3: String = c.alertas.back() if c.alertas.size() > n3 + 2 else ""
+	_ok(c.alertas.size() == n3 + 3 and t3.contains("o motor (VLAB) mudou") and t3.contains("a versão de dano mudou")
+		and t3.contains("a versão de subida de nível mudou"), "N27-2: os três de uma vez (veio «%s»)" % t3)
 
 
 ## Ordem 29 (V25): a ligação cai com um comando do Mestre em voo e o recibo perde-se. Antes, `_em_voo` só se esvaziava
