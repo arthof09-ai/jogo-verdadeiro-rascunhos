@@ -282,18 +282,31 @@ func _correr() -> void:
 	var lobby_vista: Dictionary = fx["lobby"]["vista"]
 	c.aplicar_vista(lobby_vista)
 	_ok(c._terminar.disabled and c._recomecar.disabled, "no lobby, «Terminar batalha» e «Recomeçar» estão desligados")
+	# Ordem 34 (N26-1): o servidor recusa a pesquisa vazia (nunca pesquisa '' por omissão): o campo vazio não manda nada.
 	c._aba_mesa.procurar()
-	_ok(_pesquisas.size() == 1, "«Procurar» pede a pesquisa ao servidor")
-	# Ordem 26 (V22): MASTER_SEARCH.texto tem maxLength 64 (caracteres). Antes ia o que estivesse no campo, sem limite.
-	c._aba_mesa._procura.text = "  " + "a".repeat(70) + "ç".repeat(30) + "  "
+	_ok(_pesquisas.size() == 0, "N26-1: «Procurar» com o campo vazio não manda pesquisa")
+	c._aba_mesa._procura.text = "   "
 	c._aba_mesa.procurar()
-	var longa := str(_pesquisas.back())
-	_ok(longa.length() <= 64, "V22: a pesquisa longa sai com 64 caracteres no máximo (saiu com %d)" % longa.length())
-	_ok(longa == "a".repeat(64), "V22: corta pelos primeiros 64, depois de tirar os espaços (o que o servidor já pesquisava)")
-	c._aba_mesa._procura.text = " orc "
+	_ok(_pesquisas.size() == 0, "N26-1: só espaços também não manda")
+	# Ordem 34 (N26-1): o campo limita a escrita a 64 caracteres, com contador à vista (a recusa do servidor é a rede de trás).
+	var procura: LineEdit = c._aba_mesa._procura
+	var contador: Label = c._aba_mesa._contador
+	_ok(procura.max_length == 64, "N26-1: o campo de pesquisa aceita 64 caracteres no máximo")
+	_ok(contador != null and contador.is_visible_in_tree(), "N26-1: o contador está à vista")
+	_ok(contador != null and contador.text == "3/64", "N26-1: o contador conta o que está escrito (veio «%s»)" % (contador.text if contador else "?"))
+	procura.text = ""
+	procura.insert_text_at_caret("a".repeat(70) + "ç".repeat(30))
+	_ok(procura.text.length() == 64, "N26-1: a escrita pára aos 64 (ficou com %d)" % procura.text.length())
+	_ok(contador.text == "64/64", "N26-1: o contador mostra 64/64 (veio «%s»)" % contador.text)
+	c._aba_mesa.procurar()
+	_ok(_pesquisas.size() == 1 and str(_pesquisas.back()) == "a".repeat(64), "N26-1: os 64 que ficaram no campo saem inteiros")
+	procura.text = ""
+	procura.insert_text_at_caret("ç".repeat(64))
+	_ok(procura.text.length() == 64 and contador.text == "64/64", "N26-1: contam-se caracteres, não bytes (64 acentuados cabem)")
+	procura.text = " orc "
 	c._aba_mesa.procurar()
 	_ok(str(_pesquisas.back()) == "orc", "a pesquisa curta sai igual, sem os espaços")
-	_ok(_pesquisas.size() == 3, "cada «Procurar» pede uma pesquisa")
+	_ok(_pesquisas.size() == 2, "cada «Procurar» com texto pede uma pesquisa")
 	_rede._ao_receber(JSON.stringify(fx["lobby"]["resultados"]))
 	await _quadros(1)
 	var caixas: Array = []
