@@ -31,7 +31,12 @@ void fragment() {
 	vec3 alb = mix(relva, chao, terra);
 	vec3 n = normalize(v_n);
 	float incl = 1.0 - n.y;
-	alb = mix(alb, cor_pedra * (0.78 + 0.44 * r3), smoothstep(0.17, 0.30, incl + (r3 - 0.5) * 0.10));
+	// a rocha das rampas: camadas deitadas (estratos) em vez de grão miúdo — o grão lia-se
+	// como chuvisco cinzento na escarpa do terraço — e musgo a entrar pelas manchas
+	float estrato = texture(ruido, vec2((v_pos.x + v_pos.z) * 0.035, v_pos.y * 0.42 + r2 * 0.25)).r;
+	vec3 pedra = cor_pedra * (0.74 + 0.40 * estrato + 0.08 * r3);
+	pedra = mix(pedra, cor_musgo, smoothstep(0.48, 0.78, r2) * 0.50);
+	alb = mix(alb, pedra, smoothstep(0.17, 0.30, incl + (r2 - 0.5) * 0.10));
 	// a orla da sombra quebra-se em pinceladas (a luz coada pelas copas)
 	float vis = smoothstep(0.30, 0.70, m.r + (texture(ruido, v_pos.xz * 0.9).r - 0.5) * 0.45);
 	ALBEDO = luz_pintada(alb, n, vis);
