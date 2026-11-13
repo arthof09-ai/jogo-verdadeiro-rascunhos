@@ -1,0 +1,14 @@
+[
+  {
+    "caso": "o Mestre confirma o bloco (os dois ids e o perdido)",
+    "sentido": "cliente → servidor",
+    "papel": "mestre",
+    "mensagem": {
+      "v": 2,
+      "type": "MASTER_ALERTA_ACK",
+      "roomId": "sala-teste",
+      "ids": ["a3f1c09d2b7e44a6a1b2c3d4e5f60718", "a9b8c7d6e5f40312a1b2c3d4e5f60719"],
+      "perdidos": 1
+    }
+  }
+]

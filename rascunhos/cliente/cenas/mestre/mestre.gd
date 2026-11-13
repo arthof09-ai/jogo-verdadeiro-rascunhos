@@ -46,6 +46,8 @@ var pedir_vista_fn: Callable
 var pesquisar_fn: Callable
 ## Ordem 29 (V25): RECEIPT_QUERY com os ids dos comandos em voo, ao voltar à mesa (os testes trocam-no).
 var consultar_fn: Callable
+## Ordem 34 (N32-1): a confirmação dos alertas por id, MASTER_ALERTA_ACK (os testes trocam-no): (ids, perdidos).
+var confirmar_alertas_fn: Callable
 
 var vista: Dictionary = {}
 var cartao: Dictionary = {}
@@ -123,6 +125,11 @@ var _som: Button
 var _escolha: PanelContainer
 var _lista_escolha: VBoxContainer
 var _aviso_primeira: PanelContainer
+## Ordem 34 (N32-1): o bloco dos avisos de quando o Mestre estava fora (um bloco, um toque para fechar).
+var _bloco_avisos: PanelContainer
+var _bloco_rolar: ScrollContainer
+var _bloco_texto: Label
+var _bloco_fechar: Button
 
 
 func _ready() -> void:
@@ -137,6 +144,8 @@ func _ready() -> void:
 		pesquisar_fn = Callable(Rede, "pesquisar_fichas")
 	if not consultar_fn.is_valid():
 		consultar_fn = Callable(Rede, "consultar_recibos")
+	if not confirmar_alertas_fn.is_valid():
+		confirmar_alertas_fn = Callable(Rede, "confirmar_alertas")
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	theme = _tema
 	_montar()
@@ -326,7 +335,9 @@ func _ao_mestre(msg: Dictionary) -> void:
 		"MASTER_CARD":
 			aplicar_cartao(msg)
 		"MASTER_ALERTA":
-			_juntar_alerta(Modelo.texto_alerta(msg))
+			_receber_alerta(msg)
+		"MASTER_ALERTAS":
+			_receber_bloco(msg)
 		"MASTER_RESULTS":
 			_aba_mesa.receber_resultados(msg)
 		"MASTER_EXPORT":
@@ -720,6 +731,75 @@ func _juntar_alerta(texto: String) -> void:
 	_alerta.text = Textos.ALERTAS % alertas.size() + "\n" + texto
 
 
+## Ordem 34 (N32-1): o alerta ao vivo. Confirma-se ao servidor pelo id (sai da fila); o mesmo id outra vez (a ligação
+## caiu antes de a confirmação chegar) não aparece duas vezes, mas confirma-se outra vez.
+func _receber_alerta(msg: Dictionary) -> void:
+	var id := str(msg.get("id", "")) if msg.get("id") is String else ""
+	if id == "":
+		_juntar_alerta(Modelo.texto_alerta(msg))  # servidor de antes da fila: como sempre
+		return
+	confirmar_alertas_fn.call([id], 0)
+	if Rede.alertas_vistos.has(id):
+		return
+	Rede.alertas_vistos[id] = true
+	_juntar_alerta(Modelo.texto_alerta(msg))
+
+
+## Ordem 34 (N32-1): o bloco dos avisos de quando estava fora (vem com a MASTER_VIEW). Um bloco, por ordem: primeiro
+## «perdidos por limite: N» (se houve perdas), depois «N avisos enquanto estavas fora:» e um aviso por linha, com a
+## hora. Tudo se confirma (ids e perdidos); o que já foi mostrado (o mesmo id; os mesmos perdidos) não se repete.
+func _receber_bloco(msg: Dictionary) -> void:
+	var lista: Array = msg.get("alertas") if msg.get("alertas") is Array else []
+	var perdidos := int(msg.get("perdidos")) if (msg.get("perdidos") is int or msg.get("perdidos") is float) else 0
+	var ids: Array = []
+	var novos: Array = []
+	for a in lista:
+		if not (a is Dictionary) or not (a.get("id") is String):
+			continue
+		var id := str(a.get("id"))
+		ids.append(id)
+		if not Rede.alertas_vistos.has(id):
+			Rede.alertas_vistos[id] = true
+			novos.append(a)
+	if not ids.is_empty() or perdidos > 0:
+		confirmar_alertas_fn.call(ids, perdidos)
+	var mostrar_perdidos := perdidos > 0 and perdidos != Rede.perdidos_mostrados
+	Rede.perdidos_mostrados = perdidos
+	if novos.is_empty() and not mostrar_perdidos:
+		return
+	var linhas: Array[String] = []
+	if mostrar_perdidos:
+		linhas.append(Textos.PERDIDOS_LIMITE % perdidos)
+	if not novos.is_empty():
+		linhas.append(Textos.AVISOS_FORA_1 if novos.size() == 1 else Textos.AVISOS_FORA % novos.size())
+		for a in novos:
+			linhas.append(Textos.LINHA_AVISO % [hora_local(str(a.get("hora", ""))), Modelo.texto_alerta(a)])
+	var texto := "\n".join(linhas)
+	if _bloco_avisos.visible and _bloco_texto.text != "":
+		texto = _bloco_texto.text + "\n" + texto  # ainda aberto: junta-se ao mesmo bloco, nunca outra janela
+	_bloco_texto.text = texto
+	_bloco_avisos.visible = true
+	_ao_redimensionar()
+
+
+func _fechar_bloco() -> void:
+	_bloco_avisos.visible = false
+	_bloco_texto.text = ""
+
+
+## Ordem 34 (N32-1): «HH:MM» na hora deste aparelho, a partir da hora ISO do servidor (UTC). Sem hora legível: «--:--».
+static func hora_local(iso: String) -> String:
+	if iso.length() < 16 or iso[13] != ":":
+		return "--:--"
+	var h := iso.substr(11, 2)
+	var m := iso.substr(14, 2)
+	if not (h.is_valid_int() and m.is_valid_int()):
+		return "--:--"
+	var bias := int(Time.get_time_zone_from_system().get("bias", 0))
+	var minutos := posmod(int(h) * 60 + int(m) + bias, 24 * 60)
+	return "%02d:%02d" % [floori(minutos / 60.0), minutos % 60]
+
+
 func _avisar_cartao() -> void:
 	# Aviso só neste aparelho: vibra no telemóvel (o som entra com os assets da V2.1).
 	if OS.has_feature("mobile"):
@@ -941,6 +1021,25 @@ func _montar() -> void:
 	_aviso_primeira.add_child(caixa)
 	_rotulo(caixa, "AvisoTexto").text = Textos.AVISO_PRIMEIRA
 	_botao(caixa, Textos.ENTENDIDO, _aviso_entendido)
+
+	# Ordem 34 (N32-1): o bloco dos avisos de quando o Mestre estava fora — um bloco só, a rolar se for comprido, e um
+	# toque («Fechar») para o fechar.
+	_bloco_avisos = PanelContainer.new()
+	_bloco_avisos.name = "BlocoAvisos"
+	_bloco_avisos.visible = false
+	add_child(_bloco_avisos)
+	var caixa_bloco := VBoxContainer.new()
+	_bloco_avisos.add_child(caixa_bloco)
+	_bloco_rolar = ScrollContainer.new()
+	_bloco_rolar.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	caixa_bloco.add_child(_bloco_rolar)
+	_bloco_texto = Label.new()
+	_bloco_texto.name = "BlocoTexto"
+	_bloco_texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_bloco_texto.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_bloco_rolar.add_child(_bloco_texto)
+	_bloco_fechar = _botao(caixa_bloco, Textos.FECHAR_AVISOS, _fechar_bloco)
+	_bloco_fechar.name = "FecharAvisos"
 	_desenhar_cartao()
 
 
@@ -1042,6 +1141,15 @@ func _ao_redimensionar() -> void:
 	_aviso_primeira.position = Vector2(margem * 2.0, margem * 2.0)
 	_aviso_primeira.custom_minimum_size = Vector2(minf(area.x - largura_folha - margem * 4.0, float(_fonte) * 18.0), 0.0)
 	_aviso_primeira.size = _aviso_primeira.custom_minimum_size
+	# Ordem 34 (N32-1): o bloco dos avisos por cima do tabuleiro; a lista rola até metade da altura.
+	if _bloco_avisos:
+		var largura_bloco := maxf(minf(area.x - largura_folha - margem * 4.0, float(_fonte) * 24.0), float(_fonte) * 10.0)
+		var n_linhas := maxi(_bloco_texto.text.count("\n") + 1, 1)
+		var alto := minf(altura_linha * float(n_linhas) * 1.3 + float(_fonte) * 0.5, area.y * 0.5)
+		_bloco_rolar.custom_minimum_size = Vector2(largura_bloco - margem * 2.0, alto)
+		_bloco_avisos.position = Vector2(margem * 2.0, margem * 2.0)
+		_bloco_avisos.custom_minimum_size = Vector2(largura_bloco, 0.0)
+		_bloco_avisos.size = _bloco_avisos.get_combined_minimum_size()
 	# A letra nova só muda o tamanho mínimo da barra das abas no quadro seguinte: uma segunda passagem.
 	if _repassar:
 		_repassar = false

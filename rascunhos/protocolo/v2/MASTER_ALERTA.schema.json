@@ -2,12 +2,15 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "MASTER_ALERTA.schema.json",
   "title": "MASTER_ALERTA (servidor → Mestre)",
-  "description": "Aviso ao Mestre, fora do journal (E-P9). Motivos que o servidor emite hoje: bloqueio_join (5 entradas erradas: alvo 'ip' ou 'lugar') e segunda_ligacao (o mesmo lugar abriu outra ligação). Escrito pela conferência I0004 a partir de sala.js alertaMestre().",
+  "description": "Aviso ao Mestre, fora do journal (E-P9). Motivos que o servidor emite hoje: bloqueio_join (5 entradas erradas: alvo 'ip' ou 'lugar') e segunda_ligacao (o mesmo lugar abriu outra ligação). Escrito pela conferência I0004 a partir de sala.js alertaMestre(). Ordem 34 (N32-1): cada alerta entra na fila da sala (ficheiro próprio, 100 por sala, 7 dias), com id, número de ordem e hora, esteja o Mestre ligado ou não; sai na hora às ligações vivas do Mestre e só sai da fila com a confirmação MASTER_ALERTA_ACK por id. Os que ele perdeu chegam no bloco MASTER_ALERTAS.",
   "type": "object",
   "required": [
     "v",
     "type",
     "roomId",
+    "id",
+    "ordem",
+    "hora",
     "motivo"
   ],
   "properties": {
@@ -19,6 +22,19 @@
     },
     "roomId": {
       "$ref": "comum.schema.json#/$defs/roomId"
+    },
+    "id": {
+      "$ref": "comum.schema.json#/$defs/idOpaco",
+      "description": "Ordem 34 (N32-1): id único do alerta (o cliente resolve o duplicado por ele e confirma-o com MASTER_ALERTA_ACK)."
+    },
+    "ordem": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Ordem 34 (N32-1): número de ordem do alerta na sala (continua depois do reinício)."
+    },
+    "hora": {
+      "$ref": "comum.schema.json#/$defs/ts",
+      "description": "Ordem 34 (N32-1): a hora do alerta (UTC)."
     },
     "motivo": {
       "enum": [

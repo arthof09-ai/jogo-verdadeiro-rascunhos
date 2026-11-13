@@ -28,7 +28,7 @@ signal precisa_entrar(motivo: String)
 ## ERRO do servidor durante a entrada (credenciais, bloqueado ...). `texto` é a frase do servidor.
 signal entrada_recusada(codigo: String, texto: String)
 signal erro_recebido(codigo: String, texto: String)
-## Só o Mestre: MASTER_VIEW, MASTER_CARD, MASTER_RESULTS, MASTER_ALERTA, MASTER_EXPORT.
+## Só o Mestre: MASTER_VIEW, MASTER_CARD, MASTER_RESULTS, MASTER_ALERTA, MASTER_ALERTAS, MASTER_EXPORT.
 signal mestre_recebido(msg: Dictionary)
 ## Só o Mestre: ROOM_RECEIPT / ROOM_REJECT de um comando (id = cmdId, ou intentId no MASTER_ACT).
 signal comando_respondido(id: String, msg: Dictionary)
@@ -68,6 +68,11 @@ var texto_ultimo_erro := ""
 ## Só do Mestre: a última MASTER_VIEW e o cartão ativo (podem chegar antes de a cena abrir).
 var ultima_vista_mestre: Dictionary = {}
 var cartao_ativo: Dictionary = {}
+## Ordem 34 (N32-1): os ids dos alertas do Mestre já mostrados nesta sessão (o duplicado — a ligação caiu antes da
+## confirmação — resolve-se pelo id) e os últimos «perdidos por limite» mostrados. Aqui e não na cena: a cena do Mestre
+## fecha e reabre quando a ligação cai, e o duplicado chega justamente depois disso.
+var alertas_vistos: Dictionary = {}
+var perdidos_mostrados := 0
 ## Os testes sem tela desligam a escrita em disco.
 var persistir := true
 
@@ -231,6 +236,16 @@ func pesquisar_fichas(texto: String) -> void:
 	if papel != "mestre" or estado_ligacao != Ligacao.NA_MESA or not _dentro_do_limite():
 		return
 	_enviar_dict(_com_sala({"v": PROTOCOLO, "type": "MASTER_SEARCH", "texto": texto}))
+
+
+## Ordem 34 (N32-1): só o Mestre — a confirmação de recepção dos alertas, por id (o servidor só os retira da fila com
+## ela). `perdidos`: os do bloco confirmado. Sem resposta. Fora da mesa não sai: o servidor volta a mandá-los.
+func confirmar_alertas(ids: Array, perdidos: int) -> void:
+	if papel != "mestre" or estado_ligacao != Ligacao.NA_MESA or not _dentro_do_limite():
+		return
+	if ids.is_empty() and perdidos <= 0:
+		return
+	_enviar_dict(_com_sala({"v": PROTOCOLO, "type": "MASTER_ALERTA_ACK", "ids": ids.duplicate(), "perdidos": maxi(perdidos, 0)}))
 
 
 ## Pede os eventos depois de `ultimo_seq` (fluxo deste lugar, E-P4).
@@ -468,7 +483,7 @@ func _ao_receber(texto: String) -> void:
 			sala_retomada.emit()
 		"ERRO":
 			_ao_erro(msg)
-		"MASTER_VIEW", "MASTER_CARD", "MASTER_RESULTS", "MASTER_ALERTA", "MASTER_EXPORT" when papel != "mestre":
+		"MASTER_VIEW", "MASTER_CARD", "MASTER_RESULTS", "MASTER_ALERTA", "MASTER_ALERTAS", "MASTER_EXPORT" when papel != "mestre":
 			pass  # privacidade (desenho JV3.1 §7): fora do lugar do Mestre, nada do Mestre se guarda nem se mostra
 		"MASTER_VIEW":
 			ultima_vista_mestre = msg
@@ -476,7 +491,7 @@ func _ao_receber(texto: String) -> void:
 		"MASTER_CARD":
 			cartao_ativo = msg
 			mestre_recebido.emit(msg)
-		"MASTER_RESULTS", "MASTER_ALERTA", "MASTER_EXPORT":
+		"MASTER_RESULTS", "MASTER_ALERTA", "MASTER_ALERTAS", "MASTER_EXPORT":
 			mestre_recebido.emit(msg)  # o MASTER_EXPORT nunca se escreve em log
 		_:
 			pass

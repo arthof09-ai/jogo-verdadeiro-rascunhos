@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MASTER_ALERTAS.schema.json",
+  "title": "MASTER_ALERTAS (servidor → Mestre)",
+  "description": "Ordem 34 (N32-1, sentença da bancada 12/11/2026): o bloco dos alertas que o Mestre ainda não confirmou (a ligação dele estava em baixo, ou o servidor reiniciou), por ordem, num só bloco. Sai logo a seguir a cada MASTER_VIEW do Mestre (a pedida e a da entrada) enquanto houver alertas por confirmar ou perdidos por contar; nunca à Party. `perdidos`: quantos se perderam por limite (o 101.º tirou o mais antigo, ou passaram os 7 dias) desde o último bloco confirmado — o ecrã abre com «perdidos por limite: N». Cada alerta só sai da fila com a confirmação MASTER_ALERTA_ACK por id; sem ela volta no bloco seguinte (pelo menos uma vez; o cliente resolve o duplicado pelo id).",
+  "type": "object",
+  "required": ["v", "type", "roomId", "perdidos", "alertas"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "MASTER_ALERTAS" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "perdidos": { "type": "integer", "minimum": 0 },
+    "alertas": {
+      "type": "array",
+      "maxItems": 100,
+      "items": { "$ref": "#/$defs/alerta" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "alerta": {
+      "type": "object",
+      "description": "Um alerta da fila: os campos do MASTER_ALERTA sem v, type e roomId.",
+      "required": ["id", "ordem", "hora", "motivo"],
+      "properties": {
+        "id": { "$ref": "comum.schema.json#/$defs/idOpaco" },
+        "ordem": { "type": "integer", "minimum": 1 },
+        "hora": { "$ref": "comum.schema.json#/$defs/ts" },
+        "motivo": { "enum": ["bloqueio_join", "segunda_ligacao"] },
+        "alvo": { "enum": ["ip", "lugar"] },
+        "papel": { "$ref": "comum.schema.json#/$defs/papel" },
+        "nome": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

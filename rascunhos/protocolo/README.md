@@ -36,7 +36,8 @@ protocolo/
 | `ERRO` | servidor → quem causou |
 | `MASTER_LOBBY_SET`, `MASTER_START`, `MASTER_PLACE`, `MASTER_MODE`, `MASTER_ACT`, `MASTER_APPROVE`, `MASTER_CONFIRM_DICE`, `MASTER_AMBIENTE`, `MASTER_SUPERVISOR`, `MASTER_PAUSE`, `MASTER_RESUME`, `MASTER_SEARCH` | Mestre → servidor |
 | `MASTER_VIEW` | Mestre ↔ servidor (pedido vazio; resposta com a vista inteira) |
-| `MASTER_CARD`, `MASTER_RESULTS`, `MASTER_ALERTA`, `MASTER_EXPORT` | servidor → Mestre |
+| `MASTER_CARD`, `MASTER_RESULTS`, `MASTER_ALERTA`, `MASTER_ALERTAS`, `MASTER_EXPORT` | servidor → Mestre |
+| `MASTER_ALERTA_ACK` | Mestre → servidor (confirmação dos alertas, por id) |
 
 `ROOM_EVENT` e `ROOM_SNAPSHOT` têm um ramo por papel: `#/$defs/paraMestre`, `#/$defs/paraJogadora` e `#/$defs/paraEspectador`. A «outra jogadora» vê o mesmo que o espectador: os campos `propria` só chegam à jogadora a quem o evento diz respeito. Essa regra é semântica (depende de quem recebe) e a ferramenta de conferência confere-a.
 
@@ -51,7 +52,7 @@ python3 protocolo/ferramentas/conferir-schemas.py /tmp/trafego.jsonl
 
 Com `PROTOCOLO_DUMP`, os ajudantes dos testes (`servidor/testes/ajudantes.mjs`) escrevem cada mensagem que entra ou sai do servidor. Sem a variável, não escrevem nada. A conferência:
 
-1. meta-valida os 31 schemas e confirma que todos os `$ref` resolvem;
+1. meta-valida os 33 schemas e confirma que todos os `$ref` resolvem;
 2. valida os exemplos de `v2/exemplos/`;
 3. valida cada mensagem que **sai** do servidor contra o schema do seu `type`; em `ROOM_EVENT` e `ROOM_SNAPSHOT`, contra o ramo do papel de quem recebeu;
 4. confere a regra da outra jogadora: um evento que não é da jogadora tem de caber em `paraEspectador`;
@@ -163,3 +164,10 @@ Pedidas pela revisão do Muse (CM-000009) ao desenho JV3.1 (Notion: «JV3.1 — 
 - `MASTER_SEARCH.texto`: obrigatório, de 1 a 64 caracteres **depois de aparado** (padrão `^\s*\S(?:[\s\S]{0,62}\S)?\s*$`, no lugar do `maxLength` 64). Fora disto, ou com um campo a mais, o servidor responde `ERRO` `formato` (nunca pesquisa `''` nem corta).
 - `ERRO.cmdId` (novo, opcional): só nessa recusa — o `cmdId` recebido se for um id válido, senão `null`. A recusa da pesquisa não conta para o fecho `1008` da ligação.
 - Ordem 34 (N27-2): o aviso do motor (D-35 `aviso_motor`.soMestre e D-36 `MASTER_VIEW.avisoMotor`) ganhou `quaisDiferem` — os nomes dos campos que diferem (`vlabSha`, `dmgVersao`, `levelupSha`, por esta ordem, 1 a 3, sem repetidos; nunca os valores). Obrigatório no `avisoMotor` (as sete listas possíveis como `enum`); `motorGravado`/`motorAgora` como estavam.
+
+## Ordem 34 do CM-000009: N32-1, a fila de alertas do Mestre (12/11/2026)
+
+- `MASTER_ALERTA` ganhou `id` (idOpaco), `ordem` (inteiro ≥ 1) e `hora` (ts), obrigatórios: cada alerta entra na fila da sala (ficheiro próprio do servidor, 100 por sala, 7 dias).
+- `MASTER_ALERTAS` (novo, servidor → Mestre): o bloco dos alertas por confirmar, por ordem (`alertas`, até 100) e os `perdidos` por limite desde o último bloco confirmado. Sai logo a seguir a cada `MASTER_VIEW` do Mestre enquanto houver o que entregar.
+- `MASTER_ALERTA_ACK` (novo, Mestre → servidor): a confirmação por `ids` (e os `perdidos` do bloco); só com ela o alerta sai da fila. Sem resposta; mal formada = `ERRO formato`.
+

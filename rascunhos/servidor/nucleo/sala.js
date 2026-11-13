@@ -16,6 +16,7 @@ import { criarJournal, restaurarJournal, ErroJournal } from './journal.js';
 import { conferirEstadoProfundo, conferirRegistoProfundo } from './conferir-estado.js';
 import { projetarEvento, projetarSnapshot, efeitoAmbiente, nomePublicoDe, visivelDe } from './projecao.js';
 import * as Amb from './ambiente.js';
+import { criarFilaAlertas } from './fila-alertas.js';
 
 export const PROTOCOLO = 2;
 /** A escala com que a sala nasce (Q5 do site, jogo.js: CASA_M = 1,5 m). Ordem 8 do CM-000009 (item 8, desempate do
@@ -276,10 +277,11 @@ function joinBemFormado(msg) {
  * @param {(faces:number) => number} [p.dadoAmbiente]  dado do raio e do fogo (ordem 13): 1..faces. Por omissão, sai do rng.
  * @param {string} [p.restaurarDe]  exportação do journal (restaura em vez de criar)
  * @param {string} [p.chaveJournal]  chave HMAC da exportação
+ * @param {string} [p.restaurarAlertasDe]  ordem 34 (N32-1): o texto do ficheiro próprio da fila de alertas do Mestre
  */
 export function criarSala({
   motores, fichas, rng, rngSemente, agora, hash = sha256Hex, config = {}, restaurarDe = null, chaveJournal = null,
-  dadoAmbiente = null,
+  dadoAmbiente = null, restaurarAlertasDe = null,
 } = {}) {
   // ------------------------------------------------------------------ verificações de entrada
   if (!motores || !motores.Vlab || typeof motores.Vlab.resolverAtaque !== 'function') {
@@ -370,6 +372,13 @@ export function criarSala({
     journal = criarJournal({ estadoInicial: construirEstadoInicial(), hash });
   }
   guardarCheckpoint();
+  // Ordem 34 (N32-1): a fila de MASTER_ALERTA, fora do journal (E-P9) e do estado de jogo. Os ids saem do hash da
+  // sala, do número de ordem e da hora — não gastam o rng (as sementes da batalha ficam as mesmas).
+  const filaAlertas = criarFilaAlertas({
+    agora,
+    novoId: (ordem, ts) => 'a' + hash('alerta\u0000' + roomId + '\u0000' + ordem + '\u0000' + ts).slice(0, 31),
+    restaurarDe: restaurarAlertasDe,
+  });
   if (restaurarDe && batalhaEmCurso(journal.estado)) esperaMestre = true;
   if (restaurarDe && !motorProvadoIgual(journal.estado.motores)) {
     // E-C11: versão de motor diferente ao acordar → ROOM_PAUSED {manutencao}.
@@ -972,9 +981,30 @@ export function criarSala({
   function lugarDoMestre(m) {
     return Object.values(m.lugares).find((s) => s.papel === 'mestre');
   }
+  /**
+   * Ordem 34 (N32-1): cada MASTER_ALERTA entra na fila (com id, número de ordem e hora), esteja o Mestre ligado ou não,
+   * e sai na hora às ligações vivas dele. Só sai da fila com a confirmação (MASTER_ALERTA_ACK) por id.
+   */
   function alertaMestre(motivo, extra = {}) {
     const s = lugarDoMestre(journal.estado);
-    return s ? [{ seatId: s.seatId, msg: { v: PROTOCOLO, type: 'MASTER_ALERTA', roomId, motivo, ...extra } }] : [];
+    const a = filaAlertas.juntar(motivo, extra);
+    return s ? [{ seatId: s.seatId, msg: { v: PROTOCOLO, type: 'MASTER_ALERTA', roomId, ...a } }] : [];
+  }
+  /** Ordem 34 (N32-1): o bloco dos alertas por confirmar (e dos perdidos), com cada MASTER_VIEW do Mestre; null = nada. */
+  function blocoAlertas() {
+    const p = filaAlertas.pendentes();
+    if (!p.alertas.length && !p.perdidos) return null;
+    return { v: PROTOCOLO, type: 'MASTER_ALERTAS', roomId, perdidos: p.perdidos, alertas: p.alertas };
+  }
+  /** Ordem 34 (N32-1): a confirmação do Mestre — só os campos do schema; ids 1 a 100, sem repetidos; perdidos >= 0. */
+  function confirmacaoBemFormada(msg) {
+    for (const k of Object.keys(msg)) if (!['v', 'type', 'roomId', 'ids', 'perdidos'].includes(k)) return false;
+    if (!Array.isArray(msg.ids) || msg.ids.length < 1 || msg.ids.length > 100) {
+      // Um bloco só com perdidos confirma-se com a lista vazia e os perdidos.
+      if (!(Array.isArray(msg.ids) && msg.ids.length === 0 && Number.isInteger(msg.perdidos) && msg.perdidos > 0)) return false;
+    }
+    if (!msg.ids.every((id) => typeof id === 'string' && RE_ID.test(id)) || new Set(msg.ids).size !== msg.ids.length) return false;
+    return msg.perdidos === undefined || (Number.isInteger(msg.perdidos) && msg.perdidos >= 0);
   }
 
   // =================================================================== transação (gravado junto)
@@ -2342,6 +2372,8 @@ export function criarSala({
     if (o) out.push({ seatId, msg: mensagemOpcoes(s, o) });
     if (s.papel === 'mestre') {
       out.push({ seatId, msg: mensagemVistaMestre() });
+      const bloco = blocoAlertas(); // ordem 34 (N32-1): os avisos de quando estava fora, logo a seguir à vista
+      if (bloco) out.push({ seatId, msg: bloco });
       const c = cartaoAtivo(m);
       if (c) out.push({ seatId, msg: mensagemCartao(c) });
     }
@@ -2952,7 +2984,16 @@ export function criarSala({
         .map((f) => ({ fichaId: f.id, nome: f.nome, nomePublico: f.nomePublico ?? null, papel: f.papel, classificacao: f.classificacao }));
       return [{ seatId: s, msg: { v: PROTOCOLO, type: 'MASTER_RESULTS', roomId, resultados } }];
     }
-    if (tipo === 'MASTER_VIEW') return [{ seatId: s, msg: mensagemVistaMestre() }];
+    if (tipo === 'MASTER_VIEW') {
+      const bloco = blocoAlertas(); // ordem 34 (N32-1): a fila entrega por ordem, num só bloco, com a vista
+      return [{ seatId: s, msg: mensagemVistaMestre() }, ...(bloco ? [{ seatId: s, msg: bloco }] : [])];
+    }
+    if (tipo === 'MASTER_ALERTA_ACK') {
+      // Ordem 34 (N32-1): isenta de revision e de recibo, como a pesquisa; sem resposta.
+      if (!confirmacaoBemFormada(msg)) return [{ seatId: s, msg: msgErro('formato', TEXTOS_RECUSA.formato) }];
+      filaAlertas.confirmar(msg.ids, msg.perdidos ?? 0);
+      return [];
+    }
     if (tipo === 'MASTER_SUPERVISOR' && msg.op === 'exportar') {
       // E-P13: só o lugar do Mestre, nunca por URL servida; marcada MESTRE-ONLY.
       return [{ seatId: s, msg: { v: PROTOCOLO, type: 'MASTER_EXPORT', roomId, marca: 'MESTRE-ONLY', conteudo: journal.exportar({ chave: chaveJournal ?? undefined }) } }];
@@ -3231,6 +3272,8 @@ export function criarSala({
     conexaoAberta,
     conexaoFechada,
     exportar: () => journal.exportar({ chave: chaveJournal ?? undefined }),
+    // Ordem 34 (N32-1): o texto do ficheiro próprio da fila de alertas (o adaptador grava-o à parte do journal).
+    exportarAlertas: () => filaAlertas.exportar(),
     lugares: () => Object.values(journal.estado.lugares).map((s) => ({ seatId: s.seatId, papel: s.papel, nome: s.nome })),
     // Só para testes e ferramentas do Mestre: nunca ligar isto a uma rota pública.
     depuracao: Object.freeze({

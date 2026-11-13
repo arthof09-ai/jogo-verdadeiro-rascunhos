@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MASTER_ALERTA_ACK.schema.json",
+  "title": "MASTER_ALERTA_ACK (Mestre → servidor)",
+  "description": "Ordem 34 (N32-1): a confirmação de recepção dos alertas, por id (o servidor só os retira da fila com ela). `perdidos`: os perdidos que o bloco confirmado levava (descontam-se; os que chegarem depois ficam para o bloco seguinte). Um bloco só com perdidos confirma-se com `ids` vazio e `perdidos` > 0. Isenta de revision e de recibo; sem resposta. Fora deste schema: ERRO formato. Um id que já saiu da fila não é erro.",
+  "type": "object",
+  "required": ["v", "type", "roomId", "ids"],
+  "properties": {
+    "v": { "$ref": "comum.schema.json#/$defs/v" },
+    "type": { "const": "MASTER_ALERTA_ACK" },
+    "roomId": { "$ref": "comum.schema.json#/$defs/roomId" },
+    "ids": {
+      "type": "array",
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": { "$ref": "comum.schema.json#/$defs/idOpaco" }
+    },
+    "perdidos": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": false,
+  "if": { "required": ["ids"], "properties": { "ids": { "type": "array", "maxItems": 0 } } },
+  "then": { "required": ["perdidos"], "properties": { "perdidos": { "minimum": 1 } } }
+}

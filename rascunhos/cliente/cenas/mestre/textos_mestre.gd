@@ -258,6 +258,12 @@ const CAMARA_LIVRE_SUBIR := "▲"
 const CAMARA_LIVRE_DESCER := "▼"
 
 # ---------------------------------------------------------------- aviso da primeira entrada (emenda 2)
+## Ordem 34 (N32-1, sentença da bancada): o bloco dos avisos que o Mestre perdeu (um bloco, um toque para fechar).
+const PERDIDOS_LIMITE := "perdidos por limite: %d"
+const AVISOS_FORA_1 := "1 aviso enquanto estavas fora:"
+const AVISOS_FORA := "%d avisos enquanto estavas fora:"
+const LINHA_AVISO := "%s — %s"
+const FECHAR_AVISOS := "Fechar"
 const AVISO_PRIMEIRA := "Este ecrã é só do Mestre."
 const ENTENDIDO := "Entendido"
 

@@ -15,6 +15,7 @@ import { readFileSync, writeFileSync, renameSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { ErroJournal } from '../../nucleo/journal.js';
+import { conferirTextoFilaAlertas, ErroFilaAlertas } from '../../nucleo/fila-alertas.js';
 
 const GUID_WS = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
 export const LIMITE_MENSAGEM = 16 * 1024;
@@ -477,14 +478,103 @@ async function servirEstatico(req, res, pasta) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Ordem 34 (N32-1): a fila de alertas do Mestre em ficheiro PRÓPRIO, separado do journal e do estado de jogo
+// (avisos não se misturam com estado). MESTRE-ONLY no nome e na marca, fora da pasta estática, como o journal. Sem
+// "alertas" na config, o ficheiro fica ao lado do journal: <journal sem .json>-alertas.json.
+// ---------------------------------------------------------------------------
+
+/** Grava um texto num ficheiro de uma vez (temporário + troca), como o journal. */
+export function gravarFicheiroAtomico(caminho, texto) {
+  const temporario = caminho + '.a-gravar';
+  try {
+    writeFileSync(temporario, texto, { encoding: 'utf8', mode: 0o600 });
+    renameSync(temporario, caminho);
+  } catch (e) {
+    try {
+      rmSync(temporario, { force: true });
+    } catch {
+      // sem nada a fazer: o erro original é o que conta
+    }
+    throw e;
+  }
+}
+
+/** O caminho do ficheiro da fila: o da config ou, sem ele, ao lado do journal. null = sem ficheiro (só em memória). */
+export function caminhoDosAlertas({ alertas = null, journal = null }, pastaEstatica = null, p = path) {
+  if (alertas) return conferirCaminhoJournal(alertas, pastaEstatica, p);
+  if (!journal) return null;
+  const derivado = journal.replace(/(\.json)?$/i, '-alertas.json');
+  return conferirCaminhoJournal(derivado, pastaEstatica, p);
+}
+
+/**
+ * Lê e confere o ficheiro da fila no arranque. Sem ficheiro: fila vazia (texto null). Estragado: recusa (a sala não
+ * abre, falha fechada como o journal; o ficheiro fica intacto, sem reparação).
+ * @returns {{ok:true, texto:string|null} | {ok:false, erro:Error, caminho:string}}
+ */
+export function lerFilaAlertas(caminho, ler = (c) => readFileSync(c, 'utf8')) {
+  let texto;
+  try {
+    texto = ler(caminho);
+  } catch (e) {
+    if (e && e.code === 'ENOENT') return { ok: true, texto: null };
+    return { ok: false, erro: e, caminho };
+  }
+  try {
+    conferirTextoFilaAlertas(texto);
+  } catch (e) {
+    return { ok: false, erro: e, caminho };
+  }
+  return { ok: true, texto };
+}
+
+/** O texto da recusa da fila para o registo (só do Mestre). */
+export function textoRecusaAlertas(recusa, salaId = null) {
+  const motivo = recusa?.erro instanceof ErroFilaAlertas ? recusa.erro.message : (recusa?.erro?.code ?? recusa?.erro?.message ?? 'erro');
+  return 'fila de alertas recusada: sala ' + (salaId ?? '(desconhecida)') + ': ' + motivo
+    + (recusa?.caminho ? ' [ficheiro intacto: ' + path.basename(recusa.caminho) + ']' : '');
+}
+
+/**
+ * Gravador da fila: grava o ficheiro próprio sempre que a fila muda (antes de o alerta sair às ligações). Uma falha
+ * fica pendente e volta a tentar-se na gravação seguinte. `escrever`: por omissão, o disco (os testes passam outro).
+ */
+export function criarGravadorAlertas({ sala, caminho, registo = () => {}, escrever = gravarFicheiroAtomico }) {
+  let ultimo = null;
+  let pendente = false;
+  return {
+    gravar() {
+      const texto = sala.exportarAlertas();
+      if (texto === ultimo) {
+        pendente = false;
+        return false;
+      }
+      try {
+        escrever(caminho, texto);
+        ultimo = texto;
+        if (pendente) registo('alertas: gravação em disco reposta');
+        pendente = false;
+        return true;
+      } catch (e) {
+        if (!pendente) registo('alertas: falhou a gravação em disco (' + (e?.code ?? e?.message ?? 'erro') + ')');
+        pendente = true;
+        return false;
+      }
+    },
+    pendente: () => pendente,
+  };
+}
+
 /**
  * Cria o servidor HTTP+WS para uma sala.
  * @param {{sala:Object, pastaEstatica?:string, caminhoWs?:string, registo?:(t:string)=>void,
  *   journal?:{gravar:()=>boolean}}} p
  * IMPORTANTE: a pasta estática é só o cliente. Nunca lá ponha exportações do journal (E-P13).
  * `journal` (ordem 16): o gravador de criarGravadorJournal; grava ANTES de entregar as saídas.
+ * `alertas` (ordem 34, N32-1): o gravador de criarGravadorAlertas; grava a fila ANTES de entregar as saídas.
  */
-export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', registo = () => {}, journal = null }) {
+export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', registo = () => {}, journal = null, alertas = null }) {
   const porLugar = new Map(); // seatId → Set<Ligacao>
   const todas = new Set();
 
@@ -501,6 +591,7 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
 
   function entregar(saidas) {
     if (journal) journal.gravar(); // o que a mesa vê já está em disco
+    if (alertas) alertas.gravar(); // ordem 34 (N32-1): a fila no ficheiro dela antes de o alerta sair
     for (const { seatId, msg } of saidas) {
       for (const l of porLugar.get(seatId) ?? []) {
         if (!l.enviarJson(msg)) l.fechar(4001, 'envio falhou'); // E-C7
@@ -585,6 +676,7 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
         throw e;
       }
       if (journal) journal.gravar(); // antes de qualquer resposta (também a de recusa)
+      if (alertas) alertas.gravar(); // ordem 34 (N32-1): o alerta do travão já está na fila em disco
       if (!r.ok) {
         for (const m of r.mensagens) lig.enviarJson(m);
         entregar(r.saidas);
@@ -781,15 +873,30 @@ async function principal(argv) {
     return; // a sala não abre
   }
   const pastaEstatica = cfg.pastaEstatica ? path.resolve(base, cfg.pastaEstatica) : null;
-  const criar = (restaurarDe) => criarSala({
-    motores, fichas: r.fichas, rng: rngNode(), agora: () => Date.now(), config: cfg.sala,
-    chaveJournal: cfg.chaveJournal ?? null, restaurarDe,
-  });
   let sala;
   let journal = null;
+  // Ordem 34 (N32-1): a fila de alertas do Mestre, no ficheiro dela; lida e conferida antes de a sala abrir.
+  const caminhoAlertas = caminhoDosAlertas({
+    alertas: cfg.alertas ? path.resolve(base, cfg.alertas) : null,
+    journal: cfg.journal ? path.resolve(base, cfg.journal) : null,
+  }, pastaEstatica);
+  let textoAlertas = null;
+  if (caminhoAlertas) {
+    const lida = lerFilaAlertas(caminhoAlertas);
+    if (!lida.ok) {
+      console.error(textoRecusaAlertas(lida, cfg.sala?.roomId ?? null));
+      process.exitCode = 1;
+      return; // falha fechada: não repara e não escreve por cima do ficheiro
+    }
+    textoAlertas = lida.texto;
+  }
+  const criarComAlertas = (restaurarDe) => criarSala({
+    motores, fichas: r.fichas, rng: rngNode(), agora: () => Date.now(), config: cfg.sala,
+    chaveJournal: cfg.chaveJournal ?? null, restaurarDe, restaurarAlertasDe: textoAlertas,
+  });
   if (cfg.journal) {
     const caminhoJournal = conferirCaminhoJournal(path.resolve(base, cfg.journal), pastaEstatica);
-    const aberta = abrirSalaComJournal({ caminho: caminhoJournal, criar });
+    const aberta = abrirSalaComJournal({ caminho: caminhoJournal, criar: criarComAlertas });
     if (!aberta.ok) {
       // Ordem 34 (N31-1): registo só do Mestre (a consola do servidor), com a sala e o caminho do campo que falhou.
       console.error(textoRecusaJournal(aberta));
@@ -801,13 +908,19 @@ async function principal(argv) {
     journal = criarGravadorJournal({ sala, caminho: caminhoJournal, registo: (t) => console.error(t) });
     journal.gravar();
   } else {
-    sala = criar(null);
+    sala = criarComAlertas(null);
+  }
+  let alertas = null;
+  if (caminhoAlertas) {
+    alertas = criarGravadorAlertas({ sala, caminho: caminhoAlertas, registo: (t) => console.error(t) });
+    alertas.gravar();
   }
   const servidor = criarServidor({
     sala,
     pastaEstatica,
     registo: (t) => console.log(t),
     journal,
+    alertas,
   });
   servidor.listen(cfg.porta ?? 8080, cfg.host ?? '0.0.0.0');
 }

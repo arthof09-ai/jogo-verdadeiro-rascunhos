@@ -1088,7 +1088,8 @@ func _fila_alertas(c) -> void:
 	_rede._ao_receber(JSON.stringify({"v": 2, "type": "MASTER_ALERTAS", "roomId": "sala-teste", "perdidos": 2, "alertas": []}))
 	await _quadros(1)
 	_ok(painel.visible and c._bloco_texto.text.begins_with("perdidos por limite: 2"), "N32-1: só perdidos também se mostra (veio «%s»)" % c._bloco_texto.text)
-	_ok(acks.size() == 4 and acks[3][0] == [] and acks[3][1] == 2, "N32-1: e confirma os perdidos")
+	_ok(acks.size() == 5 and acks[3][0] == ["al-9"] and acks[4][0] == [] and acks[4][1] == 2,
+		"N32-1: o alerta ao vivo repetido confirma-se outra vez, e o bloco só de perdidos confirma os perdidos (veio %s)" % [acks])
 	c._bloco_fechar.pressed.emit()
 	await _quadros(1)
 	# Bloco vazio (nada pendente): nada aparece.
