@@ -113,11 +113,24 @@ func _correr() -> void:
 	# A vista de antes do «voltar»: a de depois pode chegar logo a seguir ao evento (sem corrida de leitura).
 	var seq_voltar := int(_m.vista.get("journalSeq", 0))
 	_m._aba_registo.confirmar()
+	# Ordem 35 (trabalho 2): esta espera falhou uma vez no CI (run 43342487508, tentativa 1, motor falso) — o lobby
+	# andou 0,2 s mais depressa e o pedido da vista de depois do «voltar» foi o 11.º envio do Mestre em menos de 1 s;
+	# o limite do aparelho (10/s) deitou-o fora e ninguém o voltou a pedir (30 s sem vista). Para não depender da
+	# sorte do relógio, a janela fica cheia de propósito, logo a seguir ao «voltar» ter saído (sem enviar nada): o
+	# pedido da vista tem de esperar que a janela abra e voltar a ser feito. Isto acontece agora em todas as corridas.
+	# Dez carimbos de agora (os mais velhos saíam antes e abriam a janela mais cedo): fica fechada até cheia_em + 1 s.
+	var cheia_em := Time.get_ticks_msec()
+	_rede._envios_recentes.clear()
+	for i in _rede.LIMITE_COMANDOS_POR_S:
+		_rede._envios_recentes.append(cheia_em)
 	await _esperar(func(): return _eventos.has("revertido"), "«Voltar até aqui» → o servidor voltou (evento revertido)")
 
 	print("== terminar e recomeçar (N4) ==")
 	var vista_nova := func(): return int(_m.vista.get("journalSeq", 0)) != seq_voltar and _m._espera_vista < 0.0
-	await _esperar(vista_nova, "a vista depois do «voltar» chegou")
+	if await _esperar(vista_nova, "a vista depois do «voltar» chegou, com a janela de 10 envios/s cheia"):
+		# Só pode ter saído depois de a janela abrir (> 1 s): prova de que o pedido recusado foi feito outra vez.
+		var passou := Time.get_ticks_msec() - cheia_em
+		_ok(passou > 1000, "o pedido da vista esperou pela janela e voltou a ser feito (%d ms)" % passou)
 	print("  fase=", _m.vista.get("fase"), " revisao=", _estado.revisao, " alertas=", _m.alertas)
 	_m.pedir_terminar()
 	_m.pedir_terminar()

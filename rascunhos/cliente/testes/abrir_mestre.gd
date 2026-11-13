@@ -311,6 +311,37 @@ func _correr() -> void:
 	_ok(not c2._aviso_primeira.visible, "o aviso da 1.ª entrada não volta depois de «Entendido»")
 	c2.queue_free()
 
+	# Ordem 35 (trabalho 2): a ponta a ponta falhou uma vez no CI (run 43342487508, tentativa 1) porque o pedido da
+	# MASTER_VIEW de depois do «voltar» foi o 11.º envio em menos de 1 s: o limite do aparelho (10/s, §2) deitou-o fora
+	# e ninguém o voltou a pedir. O pedido que não sai tem de voltar a ser feito.
+	print("== o pedido da vista que não saiu volta a ser pedido (ordem 35) ==")
+	_rede.papel = "mestre"
+	_rede.estado_ligacao = _rede.Ligacao.NA_MESA
+	var agora := Time.get_ticks_msec()
+	_rede._envios_recentes.clear()
+	for i in _rede.LIMITE_COMANDOS_POR_S:
+		_rede._envios_recentes.append(agora)
+	_ok(_rede.pedir_vista_mestre() == false, "com a janela de 10 envios/s cheia, a Rede diz que o pedido da vista não saiu")
+	_ok(_rede._envios_recentes.size() == _rede.LIMITE_COMANDOS_POR_S, "e não gastou mais nada da janela")
+	_rede._envios_recentes.clear()
+	_rede.estado_ligacao = _rede.Ligacao.DESLIGADA
+	var tentativas := [0]
+	var c3 = ps.instantiate()
+	c3.enviar_fn = _capturar
+	c3.pedir_vista_fn = func():
+		tentativas[0] += 1
+		return tentativas[0] >= 3  # ao abrir e na 1.ª nova tentativa o limite não deixa sair
+	root.add_child(c3)
+	await create_timer(1.2).timeout
+	_ok(tentativas[0] == 3, "ao abrir: o pedido que não saiu volta a ser feito até sair (%d pedidos)" % tentativas[0])
+	_ok(c3._espera_vista < 0.0, "depois de sair, não há mais pedidos à espera")
+	tentativas[0] = 1
+	c3._pedir_vista_em_breve()  # como depois de um evento (o «revertido»)
+	await create_timer(1.2).timeout
+	_ok(tentativas[0] == 3, "depois de um evento: o pedido que não saiu volta a ser feito até sair (%d pedidos)" % tentativas[0])
+	_ok(c3._espera_vista < 0.0, "e pára quando sai")
+	c3.queue_free()
+
 	var saida := OS.get_environment("MESTRE_COMANDOS")
 	if saida != "":
 		var f := FileAccess.open(saida, FileAccess.WRITE)
