@@ -16,7 +16,7 @@ func _init() -> void:
 	var abs_pasta := ProjectSettings.globalize_path(pasta)
 	var nomes: Array = []
 	for f in DirAccess.get_files_at(abs_pasta):
-		if f.ends_with(".png") and not f.contains("SO-FUNDO") and not f.contains("MOVIMENTO"):
+		if (f.ends_with(".png") or f.ends_with(".jpg")) and not f.begins_with("_folha") and not f.contains("SO-FUNDO") and not f.contains("MOVIMENTO"):
 			nomes.append(f)
 	nomes.sort()
 	var folha_n := 0

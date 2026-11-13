@@ -6,7 +6,9 @@ extends SceneTree
 ## vista 13 fica também gravada a IMAGEM dessa diferença, «_MOVIMENTO-2s»: o que mexeu acende).
 ##
 ##   godot --path cliente --resolution 1920x1080 -s res://mapa/floresta/ferramentas/capturar_floresta.gd
-##   (opções depois de «--»:  --so=3,12   só essas vistas ·  --sem-medir  ·  --pasta=capturas/x)
+##   (opções depois de «--»:  --so=3,12   só essas vistas ·  --sem-medir  ·  --pasta=capturas/x
+##    ·  --jpg   grava JPEG a 95 % em vez de PNG: o conjunto que vai para o repositório pesa
+##       várias vezes menos; para ver sem perdas, corre sem --jpg para uma pasta de ensaio)
 ##
 ## Precisa de janela (GPU): NÃO corre com --headless.
 
@@ -17,6 +19,7 @@ const ALTURA := 1080
 var _pasta := "res://mapa/floresta/capturas"
 var _so: Array = []
 var _medir := true
+var _jpg := false
 
 
 func _init() -> void:
@@ -26,6 +29,8 @@ func _init() -> void:
 				_so.append(int(s))
 		elif a == "--sem-medir":
 			_medir = false
+		elif a == "--jpg":
+			_jpg = true
 		elif a.begins_with("--pasta="):
 			_pasta = "res://mapa/floresta/" + a.trim_prefix("--pasta=")
 	process_frame.connect(_correr, CONNECT_ONE_SHOT)
@@ -72,9 +77,9 @@ func _correr() -> void:
 		cena.call("ir_para_vista", i)
 		await _quadros(6)
 		var img := vp.get_texture().get_image()
-		var nome := "%02d_%s_x%s_z%s_olhos%sm_az%s_incl%s.png" % [i + 1, v[0], _sinal(v[1]), _sinal(v[2]),
+		var base := "%02d_%s_x%s_z%s_olhos%sm_az%s_incl%s" % [i + 1, v[0], _sinal(v[1]), _sinal(v[2]),
 			str(v[3]).replace(".", ","), _sinal(v[4]), _sinal(v[5])]
-		img.save_png(pasta_abs.path_join(nome))
+		var nome := _gravar(img, pasta_abs.path_join(base))
 		var m := {"vista": v[0], "ficheiro": nome}
 		if _medir:
 			m["chamadas_total"] = _info(vp, Viewport.RENDER_INFO_DRAW_CALLS_IN_FRAME)
@@ -92,20 +97,21 @@ func _correr() -> void:
 			var img2 := vp.get_texture().get_image()
 			m["movimento_luma_media"] = snappedf(_diferenca(img, img2), 0.001)
 			if i == 0 or i == 12:
-				_imagem_diferenca(img, img2).save_png(pasta_abs.path_join(nome.replace(".png", "_MOVIMENTO-2s.png")))
+				_imagem_diferenca(img, img2).save_png(pasta_abs.path_join(base + "_MOVIMENTO-2s.png"))
 			# só o fundo (céu + anéis + âncora)
 			cena.call("so_fundo", true)
 			await _quadros(4)
 			m["chamadas_fundo"] = _info(vp, Viewport.RENDER_INFO_DRAW_CALLS_IN_FRAME)
 			m["primitivas_fundo"] = _info(vp, Viewport.RENDER_INFO_PRIMITIVES_IN_FRAME)
 			if i == 0 or i == 12:
-				vp.get_texture().get_image().save_png(pasta_abs.path_join(nome.replace(".png", "_SO-FUNDO.png")))
+				_gravar(vp.get_texture().get_image(), pasta_abs.path_join(base + "_SO-FUNDO"))
 			cena.call("so_fundo", false)
 		linhas.append(m)
 		print("[captura] %s" % JSON.stringify(m))
 	if _medir:
 		var saida := {
 			"resolucao_da_prova": [LARGURA, ALTURA],
+			"formato": "jpg 95 %" if _jpg else "png",
 			"ecra": [DisplayServer.screen_get_size().x, DisplayServer.screen_get_size().y],
 			"placa": RenderingServer.get_video_adapter_name(),
 			"metodo": str(ProjectSettings.get_setting("rendering/renderer/rendering_method")),
@@ -118,6 +124,16 @@ func _correr() -> void:
 		f.close()
 		print("[captura] medicao.json gravado")
 	quit(0)
+
+
+## Grava a captura (PNG, ou JPEG a 95 % com --jpg) e devolve o nome do ficheiro.
+func _gravar(img: Image, caminho_sem_extensao: String) -> String:
+	var caminho := caminho_sem_extensao + (".jpg" if _jpg else ".png")
+	if _jpg:
+		img.save_jpg(caminho, 0.95)
+	else:
+		img.save_png(caminho)
+	return caminho.get_file()
 
 
 ## Contador do viewport da prova (só os objectos 3D visíveis; o céu é uma passagem à parte).
