@@ -56,6 +56,11 @@ const VISTAS: Array = [
 	["canto-SO_olha-fora", -29.5, 25.5, 1.7, -135.0, 4.0],
 	["longe_vista-ref07", 5.0, 27.0, 2.3, -11.0, 1.0],
 	["alto_mapa-inteiro", 0.0, 46.0, 34.0, 0.0, -40.0],
+	# as diagonais do centro: com as 4 primeiras, a volta de 360° fica vista de 45 em 45 graus
+	["centro_olha-nordeste", 0.0, 0.0, 1.7, 45.0, 3.0],
+	["centro_olha-sueste", 0.0, 0.0, 1.7, 135.0, 3.0],
+	["centro_olha-sudoeste", 0.0, 0.0, 1.7, -135.0, 3.0],
+	["centro_olha-noroeste", 0.0, 0.0, 1.7, -45.0, 3.0],
 ]
 
 @export var semente: int = 37
@@ -846,7 +851,9 @@ func _tinta_perto(cor: Color, nrm: Vector3, p: Vector3, ao: float = 1.0) -> Colo
 	var escuro := lerpf(0.72, 1.0, ao)
 	var c := Color(alb.r * luz.r * escuro, alb.g * luz.g * escuro, alb.b * luz.b * escuro).linear_to_srgb()
 	var f := Relevo.fora(p.x, p.z)
-	var quanto := lerpf(0.04, 0.46, clampf((f - Relevo.ANEL_DENTRO) / (Relevo.ANEL_FORA - Relevo.ANEL_DENTRO), 0.0, 1.0))
+	# em curva: as primeiras filas (as que os cantos da arena vêem a 20–30 m) ficam com o tom
+	# das árvores reais; o clarear guarda-se para o fundo do anel
+	var quanto := lerpf(0.04, 0.46, pow(clampf((f - Relevo.ANEL_DENTRO) / (Relevo.ANEL_FORA - Relevo.ANEL_DENTRO), 0.0, 1.0), 1.5))
 	quanto += 0.30 * smoothstep(1.0, -11.0, p.y)
 	return Paleta.ar(c, quanto)                                          # (c) a tinta dos anéis
 
@@ -870,7 +877,8 @@ func _criar_anel_perto() -> void:
 			var nrm := Relevo.normal(p2.x, p2.y)
 			lt.n.append(nrm)
 			var chao := Paleta.CHAO_RELVA.lerp(Paleta.ANEL_FLORESTA, 0.5).darkened(0.18)
-			lt.c.append(_tinta_perto(chao, nrm.lerp(Vector3.UP, 0.5), p))
+			# é chão DEBAIXO da floresta: à frente quase todo em sombra (como a orla real)
+			lt.c.append(_tinta_perto(chao, nrm.lerp(Vector3.UP, 0.5), p, lerpf(0.40, 0.80, tj)))
 			lt.uv.append(Vector2.ZERO)
 	# a contra-encosta: para lá da crista o chão cai e derrete na cor do horizonte
 	for i in na:
@@ -888,6 +896,7 @@ func _criar_anel_perto() -> void:
 	var tri_saia := lt.triangulos()
 	# --- a linha de árvores: bolhas pobres (20–80 triângulos), tinta cozinhada
 	var inicio := lt.v.size()
+	var troncos := PackedInt32Array()  # pares [de, até[ dos vértices que são tronco
 	var postas := 0
 	var tent := 0
 	while postas < 760 and tent < 5000:
@@ -918,20 +927,30 @@ func _criar_anel_perto() -> void:
 				lt.bolha(c5, Vector3(rb2, rb2 * 0.72, rb2), 1, tinta.lerp(Paleta.COPA_B, _rf(0.0, 0.4)), _rf(0.0, 80.0), pe_vol, 0.0, 0.0, 0.34)
 			lt.bolha(cimo2 + Vector3(0, alto * 0.30, 0), Vector3(alto * 0.22, alto * 0.16, alto * 0.22), 0, tinta, _rf(0.0, 80.0), pe_vol, 0.0, 0.0, 0.34)
 			var casca2 := Paleta.CASCA.lerp(Color("#93806a"), 0.4)
+			troncos.append(lt.v.size())
 			lt.tubo([[Vector3(p4.x, h2 - 0.5, p4.y), alto * 0.040], [cimo2, alto * 0.024]], 5, casca2, casca2, false)
+			troncos.append(lt.v.size())
 			postas += 1
 			continue
 		lt.bolha(centro, Vector3(largo, alto * 0.46, largo), sub, tinta, _rf(0.0, 80.0), centro - Vector3(0, alto * 0.3, 0), 0.0, 0.0, 0.34)
 		if sub == 1:
 			var c2 := centro + Vector3(_rf(-1.0, 1.0) * largo * 0.7, -alto * _rf(0.05, 0.22), _rf(-1.0, 1.0) * largo * 0.7)
 			lt.bolha(c2, Vector3(largo * 0.75, alto * 0.30, largo * 0.75), 0, tinta.darkened(0.08), _rf(0.0, 80.0), centro - Vector3(0, alto * 0.3, 0), 0.0, 0.0, 0.34)
-			var casca := Paleta.CASCA.darkened(0.15)
+			var casca := Paleta.CASCA.lerp(Color("#93806a"), 0.4)
+			troncos.append(lt.v.size())
 			lt.tubo([[Vector3(p4.x, h2 - 0.5, p4.y), alto * 0.034], [Vector3(p4.x, h2 + alto * 0.45, p4.y), alto * 0.022]], 4, casca, casca, false)
+			troncos.append(lt.v.size())
 		postas += 1
+	# a tinta: a oclusão da bolha (cor.a) entra na conta como no shader das copas reais; os
+	# troncos estão debaixo das copas — quase todos em sombra, como os da orla real
+	var e_tronco := PackedByteArray()
+	e_tronco.resize(lt.v.size())
+	for k in range(0, troncos.size(), 2):
+		for i in range(troncos[k], troncos[k + 1]):
+			e_tronco[i] = 1
 	for i in range(inicio, lt.v.size()):
 		var cor := lt.c[i]
-		var ao := cor.a
-		var cc := _tinta_perto(Color(cor.r * lerpf(0.7, 1.0, ao), cor.g * lerpf(0.7, 1.0, ao), cor.b * lerpf(0.7, 1.0, ao)), lt.n[i], lt.v[i])
+		var cc := _tinta_perto(Color(cor.r, cor.g, cor.b), lt.n[i], lt.v[i], 0.15 if e_tronco[i] == 1 else cor.a)
 		cc.a = 1.0
 		lt.c[i] = cc
 	var mat := ShaderMaterial.new()
@@ -1047,7 +1066,7 @@ func _criar_ancora() -> void:
 		var k := smoothstep(-0.35, 0.75, lt.n[i].dot(sol))
 		var ao := lerpf(0.72, 1.0, cor.a)
 		var c2 := Color(cor.r * lerpf(0.62, 1.20, k) * ao, cor.g * lerpf(0.72, 1.10, k) * ao, cor.b * lerpf(0.90, 0.80, k) * ao)
-		var quanto := 0.70 + 0.26 * (1.0 - smoothstep(-6.0, 34.0, lt.v[i].y))
+		var quanto := 0.70 + 0.26 * (1.0 - smoothstep(6.0, 44.0, lt.v[i].y))
 		var cc := Paleta.ar(c2, quanto)
 		cc.a = 1.0
 		lt.c[i] = cc
