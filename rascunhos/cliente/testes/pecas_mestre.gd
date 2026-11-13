@@ -376,6 +376,7 @@ func _correr() -> void:
 	_exportar(c)
 	_join_sem_sala()
 	await _aviso_motor(c)
+	await _fila_alertas(c)
 	await _recibo_perdido(c, fx["mestre"]["cartoes"]["ia"])
 	await _nomes_juntos(c, fx["mestre"]["vista"])
 	await _camara_livre(c)
@@ -1034,6 +1035,75 @@ func _aviso_motor(c) -> void:
 	var t3: String = c.alertas.back() if c.alertas.size() > n3 + 2 else ""
 	_ok(c.alertas.size() == n3 + 3 and t3.contains("o motor (VLAB) mudou") and t3.contains("a versão de dano mudou")
 		and t3.contains("a versão de subida de nível mudou"), "N27-2: os três de uma vez (veio «%s»)" % t3)
+
+
+## Ordem 34 (N32-1): os avisos que o Mestre perdeu chegam num só bloco (MASTER_ALERTAS, com a MASTER_VIEW): «perdidos
+## por limite: N» primeiro, depois «N avisos enquanto estavas fora:» com a hora de cada; um toque fecha. Cada alerta
+## confirma-se ao servidor por id (MASTER_ALERTA_ACK); o duplicado (a ligação caiu antes da confirmação) resolve-se
+## pelo id — não volta a aparecer, mas confirma-se outra vez.
+func _fila_alertas(c) -> void:
+	print("== Fila de avisos do Mestre (ordem 34, N32-1) ==")
+	var acks: Array = []
+	c.confirmar_alertas_fn = func(ids, perdidos): acks.append([ids, perdidos])
+	var bloco := {"v": 2, "type": "MASTER_ALERTAS", "roomId": "sala-teste", "perdidos": 3, "alertas": [
+		{"id": "al-1", "ordem": 4, "hora": "2026-11-12T21:05:00.000Z", "motivo": "bloqueio_join", "alvo": "ip"},
+		{"id": "al-2", "ordem": 5, "hora": "2026-11-12T21:07:00.000Z", "motivo": "segunda_ligacao", "papel": "jogadora", "nome": "Heroína Teste"},
+	]}
+	_rede._ao_receber(JSON.stringify(bloco))
+	await _quadros(1)
+	var painel: Control = c._bloco_avisos
+	var texto: String = c._bloco_texto.text if c._bloco_texto else ""
+	_ok(painel != null and painel.visible, "N32-1: o bloco de avisos aparece")
+	var linhas := texto.split("\n")
+	_ok(linhas.size() >= 4 and linhas[0] == "perdidos por limite: 3", "N32-1: o bloco abre com «perdidos por limite: 3» (veio «%s»)" % texto)
+	_ok(linhas.size() >= 4 and linhas[1] == "2 avisos enquanto estavas fora:", "N32-1: «2 avisos enquanto estavas fora:» (veio «%s»)" % texto)
+	var re := RegEx.create_from_string("^\\d\\d:\\d\\d — ")
+	_ok(linhas.size() >= 4 and re.search(linhas[2]) != null and re.search(linhas[3]) != null, "N32-1: cada aviso com a hora")
+	var ModeloA = load("res://cenas/mestre/modelo_mestre.gd")
+	_ok(texto.contains(ModeloA.texto_alerta(bloco["alertas"][0])) and texto.contains(ModeloA.texto_alerta(bloco["alertas"][1])),
+		"N32-1: os dois avisos no mesmo bloco, por ordem")
+	_ok(acks.size() == 1 and acks[0][0] == ["al-1", "al-2"] and acks[0][1] == 3, "N32-1: confirma ao servidor os dois ids e os perdidos (veio %s)" % [acks])
+	# O mesmo bloco outra vez (a ligação caiu antes de a confirmação chegar): não aparece de novo, confirma-se outra vez.
+	var antes: String = c._bloco_texto.text
+	_rede._ao_receber(JSON.stringify(bloco))
+	await _quadros(1)
+	_ok(c._bloco_texto.text == antes, "N32-1: o duplicado (os mesmos ids) não repete os avisos")
+	_ok(acks.size() == 2 and acks[1][0] == ["al-1", "al-2"], "N32-1: o duplicado também se confirma")
+	# Um toque fecha.
+	c._bloco_fechar.pressed.emit()
+	await _quadros(1)
+	_ok(not painel.visible, "N32-1: um toque fecha o bloco")
+	# Ao vivo: o MASTER_ALERTA com id vai aos alertas e confirma-se; o mesmo id outra vez não repete.
+	var n: int = c.alertas.size()
+	var vivo := {"v": 2, "type": "MASTER_ALERTA", "roomId": "sala-teste", "id": "al-9", "ordem": 9, "hora": "2026-11-12T21:30:00.000Z",
+		"motivo": "segunda_ligacao", "papel": "jogadora", "nome": "Heroína Teste"}
+	_rede._ao_receber(JSON.stringify(vivo))
+	await _quadros(1)
+	_ok(c.alertas.size() == n + 1 and acks.size() == 3 and acks[2][0] == ["al-9"], "N32-1: o alerta ao vivo aparece e confirma-se pelo id")
+	_rede._ao_receber(JSON.stringify(vivo))
+	await _quadros(1)
+	_ok(c.alertas.size() == n + 1, "N32-1: o mesmo alerta ao vivo repetido não aparece duas vezes")
+	_ok(not painel.visible, "N32-1: o alerta ao vivo não abre o bloco")
+	# Um bloco só com perdidos (tudo o resto expirou): mostra-se na mesma — perda silenciosa nunca.
+	_rede._ao_receber(JSON.stringify({"v": 2, "type": "MASTER_ALERTAS", "roomId": "sala-teste", "perdidos": 2, "alertas": []}))
+	await _quadros(1)
+	_ok(painel.visible and c._bloco_texto.text.begins_with("perdidos por limite: 2"), "N32-1: só perdidos também se mostra (veio «%s»)" % c._bloco_texto.text)
+	_ok(acks.size() == 4 and acks[3][0] == [] and acks[3][1] == 2, "N32-1: e confirma os perdidos")
+	c._bloco_fechar.pressed.emit()
+	await _quadros(1)
+	# Bloco vazio (nada pendente): nada aparece.
+	_rede._ao_receber(JSON.stringify({"v": 2, "type": "MASTER_ALERTAS", "roomId": "sala-teste", "perdidos": 0, "alertas": []}))
+	await _quadros(1)
+	_ok(not painel.visible, "N32-1: bloco vazio não abre nada")
+	# Fora do lugar do Mestre, a Rede não entrega o bloco (privacidade, desenho §7).
+	var vistos: Array = []
+	var ouvir := func(m): vistos.append(str(m.get("type", "")))
+	_rede.mestre_recebido.connect(ouvir)
+	_rede.papel = "jogadora"
+	_rede._ao_receber(JSON.stringify(bloco))
+	_rede.papel = "mestre"
+	_rede.mestre_recebido.disconnect(ouvir)
+	_ok(not vistos.has("MASTER_ALERTAS"), "N32-1: fora do lugar do Mestre o bloco não passa da Rede")
 
 
 ## Ordem 29 (V25): a ligação cai com um comando do Mestre em voo e o recibo perde-se. Antes, `_em_voo` só se esvaziava
