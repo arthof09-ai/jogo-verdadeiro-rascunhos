@@ -2,7 +2,8 @@ extends SceneTree
 ## capturar_floresta.gd — Ordem 37. A PROVA POR RENDER do mapa da floresta: abre a cena, pousa a
 ## câmara em cada vista etiquetada, grava a captura (posição e ângulo escritos no NOME do
 ## ficheiro) e MEDE: chamadas de desenho (cena inteira e só o fundo), primitivas, FPS sem
-## v-sync e o movimento da relva (diferença entre dois quadros da mesma vista).
+## v-sync e o movimento da relva (diferença entre dois quadros da mesma vista; da vista 1 e da
+## vista 13 fica também gravada a IMAGEM dessa diferença, «_MOVIMENTO-2s»: o que mexeu acende).
 ##
 ##   godot --path cliente --resolution 1920x1080 -s res://mapa/floresta/ferramentas/capturar_floresta.gd
 ##   (opções depois de «--»:  --so=3,12   só essas vistas ·  --sem-medir  ·  --pasta=capturas/x)
@@ -90,6 +91,8 @@ func _correr() -> void:
 			# a relva mexe? diferença média entre este quadro e o de 2 s antes (0–255, luma)
 			var img2 := vp.get_texture().get_image()
 			m["movimento_luma_media"] = snappedf(_diferenca(img, img2), 0.001)
+			if i == 0 or i == 12:
+				_imagem_diferenca(img, img2).save_png(pasta_abs.path_join(nome.replace(".png", "_MOVIMENTO-2s.png")))
 			# só o fundo (céu + anéis + âncora)
 			cena.call("so_fundo", true)
 			await _quadros(4)
@@ -133,3 +136,17 @@ func _diferenca(a: Image, b: Image) -> float:
 			soma += absf(ca.get_luminance() - cb.get_luminance())
 			n += 1
 	return soma / float(maxi(n, 1)) * 255.0
+
+
+## A prova visível de que a relva mexe: |quadro − quadro 2 s depois| ×6, a meia resolução.
+## Preto = parado (céu, pedra, troncos, anéis); claro = mexeu (relva, copas, arbustos).
+func _imagem_diferenca(a: Image, b: Image) -> Image:
+	var w := a.get_width() / 2
+	var h := a.get_height() / 2
+	var dados := PackedByteArray()
+	dados.resize(w * h)
+	for y in h:
+		for x in w:
+			var d := absf(a.get_pixel(x * 2, y * 2).get_luminance() - b.get_pixel(x * 2, y * 2).get_luminance())
+			dados[y * w + x] = int(clampf(d * 6.0, 0.0, 1.0) * 255.0)
+	return Image.create_from_data(w, h, false, Image.FORMAT_L8, dados)
