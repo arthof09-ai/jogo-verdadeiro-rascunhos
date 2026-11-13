@@ -83,6 +83,8 @@ function conferirFigura(f, id, fichas) {
   exigir(f, 'modo', p, ouNull((v) => MODOS.includes(v)), 'modo desconhecido');
   seHouver(f, 'casaColocacao', p, ouNull(ehObj), 'não é objecto nem null');
   if (ehObj(f.casaColocacao)) conferirCasa(f.casaColocacao, p + '.casaColocacao', true);
+  // Ordem 34 (D-1): a ordem de colocação (journals de antes não a têm); presente, inteiro >= 1.
+  if (ehObj(f.casaColocacao)) seHouver(f.casaColocacao, 'ordem', p + '.casaColocacao', (v) => Number.isInteger(v) && v >= 1, 'não é inteiro >= 1');
 }
 
 function conferirLugar(s, id, e, fluxos) {

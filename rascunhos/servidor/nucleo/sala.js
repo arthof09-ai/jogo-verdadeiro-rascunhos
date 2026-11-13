@@ -2434,7 +2434,7 @@ export function criarSala({
           f.x = casa.x;
           f.y = casa.y;
           f.colocada = true;
-          f.casaColocacao = { x: casa.x, y: casa.y, orientacao: f.orientacao }; // para o «Recomeçar» (N4)
+          f.casaColocacao = { x: casa.x, y: casa.y, orientacao: f.orientacao, ordem: proximaOrdemColocacao(m) }; // «Recomeçar» (N4, D-1)
           tx.emitir('colocacao', {
             figuraId: f.id, nomePublico: nomePublicoDe(fichaDe(f)), lado: f.lado, x: f.x, y: f.y, orientacao: f.orientacao, visivel: visivelDe(f),
           }, { fichaId: f.fichaId });
@@ -2461,7 +2461,7 @@ export function criarSala({
         f.y = msg.casa.y;
         f.orientacao = msg.orientacao ?? 'S';
         f.colocada = true; // só AGORA existe para as jogadoras
-        f.casaColocacao = { x: f.x, y: f.y, orientacao: f.orientacao }; // para o «Recomeçar» (N4)
+        f.casaColocacao = { x: f.x, y: f.y, orientacao: f.orientacao, ordem: proximaOrdemColocacao(m) }; // «Recomeçar» (N4, D-1)
         m.figuras[id] = f;
         tx.emitir('colocacao', {
           figuraId: id, nomePublico: nomePublicoDe(ficha), lado: f.lado, x: f.x, y: f.y, orientacao: f.orientacao, visivel: visivelDe(f),
@@ -2723,13 +2723,16 @@ export function criarSala({
     if (!motorProvadoIgual(m.motores)) {
       throw new ErroRecusa('acao_invalida', 'MOTOR_DIFERENTE: a sala foi gravada com outro motor (E-C11); recomeçar precisa da migração de versão');
     }
+    // Ordem 34 (D-1, destino do N28-1): as casas de chegada calculam-se antes de mexer em nada (a recusa é atómica).
+    const destinos = destinosDoRecomeco(m);
     fecharCartoesAbertos(tx);
     for (const f of colocadas(m)) {
       const novo = novaFigura(f.id, fichas[f.fichaId], null);
-      const c = f.casaColocacao ?? { x: f.x, y: f.y, orientacao: f.orientacao };
+      const c = casaColocacaoDe(f);
+      const d = destinos.get(f.id);
       Object.assign(f, novo, {
-        colocada: true, x: c.x, y: c.y, orientacao: c.orientacao ?? 'S', casaInicial: f.casaInicial,
-        casaColocacao: c, modo: f.modo,
+        colocada: true, x: d.x, y: d.y, orientacao: c.orientacao ?? 'S', casaInicial: f.casaInicial,
+        casaColocacao: f.casaColocacao ?? c, modo: f.modo,
       });
     }
     m.fase = 'combate';
@@ -2745,6 +2748,100 @@ export function criarSala({
     iniciarVez(tx, m.figuras[m.ordem[m.vezIdx]]);
     tx.snapshotsTodos = true;
     return 'APLICADA';
+  }
+
+  /** D-1: o número da próxima colocação (1, 2, …) — a ordem em que as figuras foram colocadas sobrevive ao journal. */
+  function proximaOrdemColocacao(m) {
+    let maior = 0;
+    for (const f of Object.values(m.figuras)) {
+      const o = f.casaColocacao?.ordem;
+      if (Number.isInteger(o) && o > maior) maior = o;
+    }
+    return maior + 1;
+  }
+  function casaColocacaoDe(f) {
+    return f.casaColocacao ?? { x: f.x, y: f.y, orientacao: f.orientacao };
+  }
+
+  /**
+   * Ordem 34, item 7 — regra D-1 (palavra do Mestre, 12/11/2026: «A personagem volta para a casa mais próxima.»).
+   * Cada figura colocada volta à sua casaColocacao. Quando a mesma casa é a casa de colocação de mais de uma figura (uma
+   * colocada a meio do jogo numa casa que a dona tinha deixado), a ocupante — a ÚLTIMA colocada lá (`casaColocacao.ordem`)
+   * — fica, e cada uma das outras vai para a casa livre mais próxima da SUA casa de colocação; ninguém é despejado.
+   * Distância = passos do BFS do motor (4 vizinhos, dentro do mapa, as outras figuras vivas a bloquear, como
+   * distanciaCasas e o distanciaEntre do site; no recomeço estão todas vivas). Desempate a igual distância: a primeira na
+   * ordem de leitura do mapa (linha a linha, de cima para baixo, da esquerda para a direita).
+   * Casos que a regra não cobre (N34-2, sem regra inventada): nenhuma casa livre alcançável; duas figuras que voltam a
+   * querer a mesma casa (a escolha dependeria da ordem); duas colocadas na mesma casa sem ordem de colocação gravada
+   * (journal de antes desta ordem). Nesses casos o «Recomeçar» é recusado sem mexer em nada; o porquê vai só ao Mestre.
+   * Devolve Map figuraId → {x, y}.
+   */
+  function destinosDoRecomeco(m) {
+    const semCasa = (texto) => new ErroRecusa('acao_invalida', 'RECOMECAR_SEM_CASA: ' + texto);
+    const porCasa = new Map();
+    for (const f of colocadas(m)) {
+      const c = casaColocacaoDe(f);
+      const k = chaveCasa(c.x, c.y);
+      if (!porCasa.has(k)) porCasa.set(k, []);
+      porCasa.get(k).push(f);
+    }
+    const destinos = new Map();
+    const voltam = [];
+    const ordemDe = (f) => (Number.isInteger(f.casaColocacao?.ordem) ? f.casaColocacao.ordem : 0);
+    for (const lista of porCasa.values()) {
+      const c = casaColocacaoDe(lista[0]);
+      if (lista.length === 1) {
+        destinos.set(lista[0].id, { x: c.x, y: c.y });
+        continue;
+      }
+      const maior = Math.max(...lista.map(ordemDe));
+      const ultimas = lista.filter((f) => ordemDe(f) === maior);
+      if (ultimas.length !== 1) {
+        throw semCasa(`a casa (${c.x},${c.y}) é a casa de colocação de ${lista.length} figuras e não se sabe qual foi colocada por último`);
+      }
+      destinos.set(ultimas[0].id, { x: c.x, y: c.y });
+      for (const f of lista) if (f !== ultimas[0]) voltam.push(f);
+    }
+    if (!voltam.length) return destinos;
+    const tomadas = new Set([...destinos.values()].map((d) => chaveCasa(d.x, d.y)));
+    const escolhidas = new Map();
+    voltam.sort((a, b) => casaColocacaoDe(a).y - casaColocacaoDe(b).y || casaColocacaoDe(a).x - casaColocacaoDe(b).x || (a.id < b.id ? -1 : 1));
+    for (const f of voltam) {
+      const c = casaColocacaoDe(f);
+      const livre = casaLivreMaisProxima(m, c, tomadas);
+      if (!livre) throw semCasa(`nenhuma casa livre alcançável a partir de (${c.x},${c.y}), a casa de colocação de ${f.id}`);
+      const k = chaveCasa(livre.x, livre.y);
+      if (escolhidas.has(k)) {
+        throw semCasa(`${escolhidas.get(k)} e ${f.id} voltam as duas para a mesma casa livre (${livre.x},${livre.y})`);
+      }
+      escolhidas.set(k, f.id);
+      destinos.set(f.id, livre);
+    }
+    return destinos;
+  }
+
+  /** BFS do motor a partir de `origem`, com `tomadas` a bloquear; a primeira camada com casas livres, pela leitura do mapa. */
+  function casaLivreMaisProxima(m, origem, tomadas) {
+    const vistos = new Set([chaveCasa(origem.x, origem.y)]);
+    let camada = [{ x: origem.x, y: origem.y }];
+    while (camada.length) {
+      const seguinte = [];
+      for (const c of camada) {
+        for (const [dx, dy] of VIZ4) {
+          const x = c.x + dx;
+          const y = c.y + dy;
+          if (!dentro(m, x, y)) continue;
+          const k = chaveCasa(x, y);
+          if (vistos.has(k)) continue;
+          vistos.add(k);
+          if (tomadas.has(k)) continue; // ocupada: não é livre e não se passa por ela
+          seguinte.push({ x, y });
+        }
+      }
+      if (seguinte.length) return seguinte.sort((a, b) => a.y - b.y || a.x - b.x)[0];
+      camada = seguinte;
+    }
+    return null;
   }
 
   /**
