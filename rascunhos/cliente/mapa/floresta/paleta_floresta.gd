@@ -39,6 +39,7 @@ const COR_CEU_AMBIENTE := Color("#a9b98f")
 const NEVOA_INICIO := 40.0
 const NEVOA_FIM := 112.0
 const NEVOA_TECTO := 0.90  # opacidade máxima (fog_density no modo profundidade)
+const NEVOA_CURVA := 1.25  # >1: a névoa demora a entrar (a orla da arena fica mais limpa)
 
 # ---------------------------------------------------------------- vegetação e chão
 const RELVA_BASE := Color("#3f5a26")

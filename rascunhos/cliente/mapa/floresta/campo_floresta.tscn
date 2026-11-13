@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://mapa/floresta/campo_floresta.gd" id="1_campo"]
+[ext_resource type="Script" path="res://mapa/floresta/camera_livre.gd" id="2_camera"]
+
+[sub_resource type="Environment" id="Environment_floresta"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_medicao"]
+font_size = 22
+outline_size = 6
+outline_color = Color(0, 0, 0, 0.75)
+
+[node name="CampoFloresta" type="Node3D"]
+script = ExtResource("1_campo")
+
+[node name="Ambiente" type="WorldEnvironment" parent="." groups=["ambiente"]]
+environment = SubResource("Environment_floresta")
+
+[node name="Sol" type="DirectionalLight3D" parent="." groups=["sol"]]
+
+[node name="Camera" type="Camera3D" parent="."]
+current = true
+fov = 62.0
+near = 0.1
+far = 520.0
+script = ExtResource("2_camera")
+
+[node name="Medicao" type="CanvasLayer" parent="."]
+
+[node name="Rotulo" type="Label" parent="Medicao"]
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 1200.0
+offset_bottom = 44.0
+text = "Floresta 37"
+label_settings = SubResource("LabelSettings_medicao")
