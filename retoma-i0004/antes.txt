@@ -1,4 +1,4 @@
-# SHA-256 no 9cbaca8 (antes) dos 29 ficheiros que o ramo muda. Formato do MANIFESTO.
+# SHA-256 no 9cbaca8 (antes) dos 31 ficheiros que o ramo muda. Formato do MANIFESTO.
 6cfe2067be7e314d47c4177140463fb51612de93092818ed92a1a166f2e2d332  rascunhos/cliente/README.md
 32ccc3b31a161712a8ed3bb64388568ba98e107020f43443b6443e60e9a5316f  rascunhos/cliente/arte/cenas/clareira_prova.gd
 f3f4a28720733f5e39d286ce39be05725d513ef413673982f34e21da7319c77d  rascunhos/cliente/cenas/arena/arena.gd
@@ -9,8 +9,10 @@ d37764d8a52a47aabb062526c9331e429644bef3bc7332b9792cda5762da5ed3  rascunhos/clie
 d804b33951f70776550ae1a6ea0fd1b9cc452f86d0c5c9eef154aa0a02ee2127  rascunhos/cliente/rede/fila_intencoes.gd
 ee489784f6a2e975845fe7f26b60b1b359fa44740bd7511a663bd7a3baade196  rascunhos/cliente/rede/rede.gd
 01f6c24e8510ad7bcb838e21c0cbfb80f7643471fcf7d19c0541d3a4eebbf447  rascunhos/cliente/testes/rodar_testes.gd
+961329fcee360b71a6d7c3e0e3ac39f91958d9d5d4d51471192e857861777a99  rascunhos/protocolo/v2/ERRO.schema.json
 51a816d08faf5c7c030246e065186e91a0d7bf6392b4d798a75c5926417dacfc  rascunhos/protocolo/v2/MASTER_AMBIENTE.schema.json
 6afcd3f796d57f45dca1655d6cd971723a67fa5df829590feb9f50ea314a4b46  rascunhos/protocolo/v2/MASTER_APPROVE.schema.json
+9392fe757b1c4157ffffa6fe5ad39ca1fd518869bcdb9be09380a0348076568a  rascunhos/protocolo/v2/MASTER_SEARCH.schema.json
 513fe623bdbf749b0ee12b4788c782282f415c83c600b190b8234841ac05b0f0  rascunhos/protocolo/v2/MASTER_SUPERVISOR.schema.json
 b73d9b75e46383aecc3899bffbdfb49ebdfb1a951caff8364d1923d6f385e910  rascunhos/protocolo/v2/ROOM_EVENT.schema.json
 5df9a6b165f21369695c1a73f0107df062d7a12876dc758b306e8028649a213d  rascunhos/protocolo/v2/ROOM_JOIN.schema.json
