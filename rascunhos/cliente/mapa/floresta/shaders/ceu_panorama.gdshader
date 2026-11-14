@@ -1,5 +1,5 @@
-// ceu_panorama.gdshader — Ordem 37. O céu é PINTURA: uma textura (ceu/ceu_floresta_v2.png),
-// zero geometria. Sol, lua, nuvens e estrelas vivem na textura.
+// ceu_panorama.gdshader — Ordem 37/38. O céu é PINTURA: uma textura (ceu/ceu_floresta_v3.png),
+// zero geometria. Sol, lua de dia e nuvens vivem na textura (uma só hora nos 360°; sem estrelas).
 // A faixa baixa funde-se na COR DO HORIZONTE — a mesma variável da névoa e da tinta dos anéis
 // (paleta_floresta.gd). Fórmula da v2: mix(horizonte, pintura, smoothstep(0; 0,15; y)).
 // Mapa da textura: u = azimute (0,5 = norte), v = elevação de +90° (0) a elev_min (1).

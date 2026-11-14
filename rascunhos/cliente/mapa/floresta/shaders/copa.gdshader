@@ -1,4 +1,6 @@
-// copa.gdshader — Ordem 37. Copas e arbustos: massas pintadas (sem alfa), 3 tons de pincelada,
+// copa.gdshader — Ordem 37/38. Copas e arbustos: massas pintadas (sem alfa), 3 tons de pincelada,
+// (Ordem 38, defeito 3: o ouro já não se SOMA à copa — mistura-se, contido; a copa fica no verde
+// frio da cobertura e só o tom alto e a contraluz puxam ao verde-ouro.)
 // normais de volume, contraluz dourada na orla e vento no vértice.
 // COLOR.rgb = tinta da bolha; COLOR.a = oclusão cozinhada. UV = (fase do vento, peso do vento).
 shader_type spatial;
@@ -39,11 +41,11 @@ void fragment() {
 	vec3 amb = cor_ceu * (0.26 + 0.20 * n.y) + ressalto_chao(n) * 1.25;
 	vec3 cor = alb * (amb + mix(cor_sombra * 0.45, cor_sol, k * ao));
 	// o tom mais alto leva ouro (a luz rasante da referência)
-	cor += cor_ouro * cor_sol * smoothstep(0.62, 0.80, ndl) * 0.30 * ao;
+	cor = mix(cor, cor_ouro * cor_sol * 1.15, smoothstep(0.62, 0.85, ndl) * 0.26 * ao);
 	// contraluz na orla
 	vec3 vw = normalize(CAMERA_POSITION_WORLD - v_pos);
 	float orla = 1.0 - max(dot(n, vw), 0.0);
 	float contra = max(dot(-vw, dir_luz), 0.0);
-	cor += cor_ouro * cor_sol * orla * orla * (0.10 + 0.9 * contra * contra) * 0.55;
+	cor = mix(cor, cor_ouro * cor_sol * 1.2, orla * orla * (0.06 + 0.9 * contra * contra) * 0.42);
 	ALBEDO = cor * mix(0.72, 1.0, ao);
 }

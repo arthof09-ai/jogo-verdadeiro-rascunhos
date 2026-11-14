@@ -1,4 +1,6 @@
-// solido.gdshader — Ordem 37. Troncos e pedras: tinta do vértice + pincelada + musgo por cima.
+// solido.gdshader — Ordem 37/38. Troncos e pedras: tinta do vértice + pincelada + musgo por cima.
+// Ordem 38: para lá do mapa do chão é floresta fechada (ler_mapa), não a última linha da textura;
+// e o pé escurece com a oclusão de contacto (canal A do mapa) — nada pousa sem sombra.
 // A sombra das copas vem do canal B do mapa do chão (só copas: não se sombreiam a si próprios).
 shader_type spatial;
 render_mode unshaded, cull_back, world_vertex_coords;
@@ -27,10 +29,11 @@ void fragment() {
 	float cima = mix(n.y, UV.x * 0.75 + n.y * 0.25, musgo_liso);
 	float musgo = smoothstep(musgo_de, musgo_de + 0.32, cima + (r - 0.5) * 0.7) * forca_musgo;
 	alb = mix(alb, cor_musgo * (0.78 + 0.44 * r2), musgo);
-	float vis = smoothstep(0.30, 0.70, texture(mapa_chao, uv_mapa(v_pos.xz)).b + (r2 - 0.5) * 0.4);
+	vec4 m = ler_mapa(v_pos.xz);
+	float vis = smoothstep(0.30, 0.70, m.b + (r2 - 0.5) * 0.4);
 	vec3 cor = luz_pintada(alb, n, vis);
 	vec3 vw = normalize(CAMERA_POSITION_WORLD - v_pos);
 	float orla = 1.0 - max(dot(n, vw), 0.0);
-	cor += cor_sol * alb * orla * orla * orla * 0.5 * vis * smoothstep(-0.2, 0.4, dot(n, dir_luz));
+	cor += cor_sol * alb * orla * orla * orla * 0.35 * vis * smoothstep(-0.2, 0.4, dot(n, dir_luz));
 	ALBEDO = cor * COLOR.a;
 }
