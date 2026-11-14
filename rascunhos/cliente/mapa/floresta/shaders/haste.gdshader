@@ -44,5 +44,7 @@ void vertex() {
 void fragment() {
 	vec3 alb = mix(cor_haste * (0.7 + 0.5 * v_alt), v_cor, v_cabeca);
 	float vis = smoothstep(0.30, 0.70, v_mapa.r);
-	ALBEDO = min(luz_pintada(alb, vec3(0.0, 1.0, 0.0), vis), vec3(0.94));
+	// a cabeça é palha ou pétala, não um espelho: luz contida e tecto de cor (defeito 5)
+	vec3 cor = luz_pintada(alb, vec3(0.0, 1.0, 0.0), vis) * mix(1.0, 0.74, v_cabeca);
+	ALBEDO = min(cor, vec3(0.90, 0.86, 0.74));
 }

@@ -29,7 +29,7 @@ static func _rf(r: RandomNumberGenerator, a: float, b: float) -> float:
 static func raio_tronco(familia: int, h: float) -> float:
 	match familia:
 		REDONDA:
-			return h * 0.050
+			return h * 0.040
 		CONIFERA:
 			return h * 0.030
 		JOVEM:
@@ -173,20 +173,21 @@ static func _jovem(lt: Lote, lc: Lote, pos: Vector3, h: float, detalhe: int, r: 
 	var casca := Paleta.CASCA_CLARA.lerp(Color("#c9c2ae"), _rf(r, 0.2, 0.7))
 	var cimo := _tronco(lt, pos, topo, raio, 0.45, incl, fase, casca, detalhe, 0.35)
 	var sombras: Array = []
-	var n := r.randi_range(4, 5) if detalhe > 0 else 2
+	var n := r.randi_range(5, 6) if detalhe > 0 else 3
 	var centro_vol := cimo - Vector3(0, h * 0.05, 0)
 	for b in n:
 		var t := float(b) / float(maxi(n - 1, 1))
-		var ang := TAU * (float(b) * 0.38 + r.randf() * 0.2)
-		var dist := h * _rf(r, 0.05, 0.13) * (1.0 - 0.6 * t)
-		var c := cimo + Vector3(cos(ang) * dist, h * lerpf(-0.20, 0.24, t), sin(ang) * dist)
-		var rb := h * _rf(r, 0.11, 0.15) * lerpf(1.0, 0.8, t)
+		# massas pequenas em espiral larga à volta do tronco: copa leve, com céu por entre elas
+		var ang := TAU * (float(b) * 0.40 + r.randf() * 0.12)
+		var dist := h * _rf(r, 0.13, 0.21) * (1.0 - 0.78 * t * t)
+		var c := cimo + Vector3(cos(ang) * dist, h * lerpf(-0.22, 0.27, t), sin(ang) * dist)
+		var rb := h * _rf(r, 0.10, 0.135) * lerpf(1.0, 0.78, t)
 		if detalhe > 0 and b < n - 1:
 			lt.tubo([[cimo - Vector3(0, (0.45 - 0.3 * t) * topo, 0), raio * 0.36], [c, raio * 0.12]], 4, casca, casca, false)
 		var tinta := Paleta.COPA_JOVEM.lerp(Paleta.COPA_REDONDA_B, _rf(r, 0.0, 0.6))
 		if r.randf() < 0.18:
 			tinta = tinta.lerp(Paleta.COPA_OURO, _rf(r, 0.3, 0.6))
-		lc.bolha(c, Vector3(rb, rb * _rf(r, 1.15, 1.40), rb), detalhe, tinta, _rf(r, 0.0, 90.0), centro_vol, fase, 1.2, 0.36)
+		lc.bolha(c, Vector3(rb * 1.25, rb * _rf(r, 0.80, 1.0), rb * 1.25), detalhe, tinta, _rf(r, 0.0, 90.0), centro_vol, fase, 1.2, 0.36)
 		sombras.append([c, rb * 0.85])
 	return sombras
 
@@ -376,7 +377,7 @@ static func haste(tipo: String) -> ArrayMesh:
 			idx.append_array([c, p0, p1, c, p1, p2])
 	else:
 		# losango (espiga) ou charuto (junco): 4 gomos, dois níveis
-		var raio := 0.028 if tipo == "espiga" else 0.035
+		var raio := 0.020 if tipo == "espiga" else 0.032
 		var comp := 0.16 if tipo == "espiga" else 0.20
 		var b2 := v.size()
 		v.append(topo)
