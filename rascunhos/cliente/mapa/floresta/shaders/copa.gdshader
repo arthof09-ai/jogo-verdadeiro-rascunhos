@@ -7,6 +7,7 @@ shader_type spatial;
 render_mode unshaded, cull_back, world_vertex_coords;
 
 #include "luz_floresta.gdshaderinc"
+#include "recorte_vista.gdshaderinc"
 
 uniform vec3 cor_ouro : source_color = vec3(0.70, 0.65, 0.27);
 uniform vec2 vento_dir = vec2(0.85, 0.5);
@@ -29,6 +30,9 @@ void vertex() {
 }
 
 void fragment() {
+	if (recorte_vista(VERTEX, INV_VIEW_MATRIX, CAMERA_POSITION_WORLD, FRAGCOORD.xy)) {
+		discard;
+	}
 	vec3 n = normalize(v_n);
 	// pinceladas de folha: ruído em dois planos do mundo
 	float r = texture(ruido, v_pos.xz * 0.33 + v_pos.y * 0.21).r;

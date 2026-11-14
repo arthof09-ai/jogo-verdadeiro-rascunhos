@@ -5,6 +5,7 @@ shader_type spatial;
 render_mode unshaded, cull_back, world_vertex_coords;
 
 #include "luz_floresta.gdshaderinc"
+#include "recorte_vista.gdshaderinc"
 
 varying vec3 v_pos;
 varying vec3 v_n;
@@ -15,6 +16,9 @@ void vertex() {
 }
 
 void fragment() {
+	if (recorte_vista(VERTEX, INV_VIEW_MATRIX, CAMERA_POSITION_WORLD, FRAGCOORD.xy)) {
+		discard;
+	}
 	vec3 n = normalize(v_n);
 	float r = texture(ruido, (v_pos.xz + v_pos.y * vec2(0.7, 0.3)) * 0.9).r;
 	vec3 alb = COLOR.rgb * (0.86 + 0.28 * r);

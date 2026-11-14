@@ -31,6 +31,9 @@ const NOMES_MODO := {"fixa": Modo.FIXA, "360": Modo.LIVRE_360, "panorama": Modo.
 @export var sensibilidade_orbita: float = 0.3
 @export var passo_roda: float = 1.1
 
+## Ordem 42: a altura do chão em (x, z) — a arena dá a do relevo do mapa. Sem ela, o chão é y = 0.
+var altura_em: Callable = Callable()
+
 var modo: int = Modo.FIXA
 var zoom: float = ZOOM_PADRAO
 var foco := Vector3.ZERO
@@ -102,6 +105,11 @@ func definir_modo(m: int) -> void:
 			pass
 
 
+## O ponto para onde a câmara está a olhar agora (já suavizado).
+func foco_atual() -> Vector3:
+	return _s_foco
+
+
 func definir_modo_por_nome(nome: String) -> void:
 	definir_modo(int(NOMES_MODO.get(nome, Modo.FIXA)))
 
@@ -150,17 +158,22 @@ func _posicionar(alvo: Vector3, rumo_g: float, incl_g: float, dist: float) -> vo
 	look_at_from_position(alvo + desvio, alvo, Vector3.UP)
 
 
+func _chao(x: float, z: float) -> float:
+	return float(altura_em.call(x, z)) if altura_em.is_valid() else 0.0
+
+
 ## Afasta até os cantos da arena (no chão e à altura das cabeças) caberem no ecrã.
+## Ordem 42: os cantos e os meios das bordas à altura do relevo nesse ponto (o chão não é plano).
 func _recalcular_panorama() -> void:
 	if not is_inside_tree():
 		return
 	var meio := _tamanho * 0.5
 	var cantos: Array = []
 	for altura in [0.0, 1.8]:
-		cantos.append(_centro + Vector3(-meio.x, altura, -meio.y))
-		cantos.append(_centro + Vector3(meio.x, altura, -meio.y))
-		cantos.append(_centro + Vector3(-meio.x, altura, meio.y))
-		cantos.append(_centro + Vector3(meio.x, altura, meio.y))
+		for f: Vector2 in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1), Vector2(0, -1), Vector2(0, 1), Vector2(-1, 0), Vector2(1, 0)]:
+			var x := _centro.x + meio.x * f.x
+			var z := _centro.z + meio.y * f.y
+			cantos.append(Vector3(x, _chao(x, z) + altura, z))
 	var guardado := global_transform
 	var d := maxf(_tamanho.x, _tamanho.y) * 0.5
 	for i in 60:
@@ -181,7 +194,7 @@ func _limitar() -> void:
 	var meio := _tamanho * 0.5
 	foco.x = clampf(foco.x, _centro.x - meio.x, _centro.x + meio.x)
 	foco.z = clampf(foco.z, _centro.z - meio.y, _centro.z + meio.y)
-	foco.y = 0.0
+	foco.y = _chao(foco.x, foco.z)
 
 
 # ---------------------------------------------------------------- gestos

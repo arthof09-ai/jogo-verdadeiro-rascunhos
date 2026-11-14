@@ -6,6 +6,7 @@ shader_type spatial;
 render_mode unshaded, cull_back, world_vertex_coords;
 
 #include "luz_floresta.gdshaderinc"
+#include "recorte_vista.gdshaderinc"
 
 uniform vec3 cor_musgo : source_color = vec3(0.40, 0.50, 0.23);
 uniform float forca_musgo : hint_range(0.0, 1.0) = 0.8;
@@ -22,6 +23,9 @@ void vertex() {
 }
 
 void fragment() {
+	if (recorte_vista(VERTEX, INV_VIEW_MATRIX, CAMERA_POSITION_WORLD, FRAGCOORD.xy)) {
+		discard;
+	}
 	vec3 n = normalize(v_n);
 	float r = texture(ruido, (v_pos.xz + v_pos.y * vec2(0.7, 0.3)) * 0.42).r;
 	float r2 = texture(ruido, (v_pos.xy + v_pos.z * vec2(0.4, 0.8)) * 1.3).r;

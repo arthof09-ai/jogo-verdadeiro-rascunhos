@@ -232,6 +232,14 @@ func ir_para_vista(i: int) -> void:
 		_camera.call("ler_transformacao")
 
 
+## Ordem 42: o recorte da vista da câmara da mesa (shaders/recorte_vista.gdshaderinc): o que fica entre a
+## câmara e `foco` (copas, troncos, pedras, marcos) some num ponteado. raio = 0 desliga.
+func definir_recorte_vista(foco: Vector3, raio: float) -> void:
+	for m in _mats:
+		m.set_shader_parameter("vista_foco", foco)
+		m.set_shader_parameter("vista_raio", raio)
+
+
 func definir_densidade_relva(f: float) -> void:
 	densidade_relva = clampf(f, 0.1, 1.0)
 	relva.definir_densidade(densidade_relva)

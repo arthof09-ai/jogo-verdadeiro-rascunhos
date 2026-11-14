@@ -8,6 +8,11 @@ extends Node3D
 ## - O cliente NUNCA calcula regra: não decide casas, custos nem alvos; só mostra e envia.
 ## - Chega-se aqui pelo lobby (cenas/lobby) quando a fase passa a "combate"; se o lugar
 ##   se perder (token inválido, outro aparelho, "Sair da mesa"), volta-se ao lobby.
+## - ORDEM 42: o campo de batalha é o MAPA DA FLORESTA (mapa/floresta/campo_floresta.gd). A grelha do
+##   snapshot assenta no centro da arena do mapa, alinhada às linhas de 1,5 m dele; cada casa, cada
+##   destaque e cada figura fica à altura do relevo (Relevo.altura: a mesma altura que a malha do
+##   chão desenha). O fundo, o céu, a névoa e o sol são os do mapa — um só, no Ambiente e no Sol
+##   desta cena. Só apresentação: as casas, os custos e os alvos continuam a vir do servidor.
 
 enum Modo { NENHUM, MOVER, ATAQUE, CONSUMIVEL }
 
@@ -34,6 +39,17 @@ const COR_MORTA := Color(0.35, 0.35, 0.35)
 const COR_FOGO := Color(1.0, 0.45, 0.10, 0.55)
 
 const CameraMesa := preload("res://camera/camera_mesa.gd")
+## Ordem 42: o mapa da floresta e a sua altura única.
+const CampoFloresta := preload("res://mapa/floresta/campo_floresta.gd")
+const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
+const GrelhaMapa := preload("res://mapa/floresta/grelha_floresta.gd")
+const SH_SOBRE := preload("res://cenas/arena/sobre_relevo.gdshader")
+## Quantos metros acima do chão vai o que se cola ao relevo (o resto resolve-o o shader).
+const LEVANTA_M := 0.03
+## Divisões por lado de cada remendo de casa (os vértices seguem o relevo).
+const DIVISOES_CASA := 4
+## Raio (m) do cilindro câmara → foco onde as copas e os marcos do mapa somem (não tapam o jogo).
+const RAIO_RECORTE_M := 5.0
 ## Ordem 15 (parte F): os nomes das figuras juntas não se sobrepõem no ecrã.
 const NomesSemSobrepor := preload("res://cenas/comum/nomes_sem_sobrepor.gd")
 
@@ -48,15 +64,20 @@ const NomesSemSobrepor := preload("res://cenas/comum/nomes_sem_sobrepor.gd")
 var largura := 20
 var altura := 20
 var casa_m := 1.5
+## Ordem 42: canto noroeste da casa (0, 0) no mundo (x, z). A grelha fica centrada no mapa.
+var origem := Vector2(-15.0, -15.0)
+## O mapa da floresta (o campo de batalha), filho desta cena.
+var mapa: Node3D
 var modo: int = Modo.NENHUM
 
 var _item: Dictionary = {}
 var _casas: Dictionary = {}  # Vector2i -> custoM (como veio do servidor)
 var _alvos: Dictionary = {}  # figuraId -> Array de opções de ataque, ou true
 var _cursor := Vector2i(-1, -1)
-var _destaques: MultiMeshInstance3D
-var _fogo: MultiMeshInstance3D
+var _destaques: MeshInstance3D
+var _fogo: MeshInstance3D
 var _marcador: MeshInstance3D
+var _mat_destaque: ShaderMaterial
 var _rotulo_custo: Label3D
 var _nos: Dictionary = {}  # figuraId -> Node3D
 var _focou := false
@@ -68,6 +89,10 @@ var _ultimo_id := ""  # o intentId da última intenção que saiu
 
 ## Ordem 15 (parte F): a cada quadro, os nomes arrumam-se para a câmara.
 func _process(_delta: float) -> void:
+	# Ordem 42: o que fica entre a câmara da mesa e o foco (copas, marcos) não tapa o jogo.
+	if mapa != null and is_instance_valid(mapa):
+		var raio := RAIO_RECORTE_M if camera.is_processing() else 0.0
+		mapa.definir_recorte_vista(camera.foco_atual() + Vector3(0.0, 1.0, 0.0), raio)
 	var rotulos: Array = []
 	for no in _nos.values():
 		if is_instance_valid(no) and (no as Node).has_node("Nome"):
@@ -76,7 +101,9 @@ func _process(_delta: float) -> void:
 
 
 func _ready() -> void:
-	_sol.rotation_degrees = Vector3(-55.0, 35.0, 0.0)
+	# Ordem 42: o Sol já não se roda aqui — a direcção é a da luz pintada do mapa (paleta).
+	camera.altura_em = altura_chao
+	_perfis.perfil_aplicado.connect(_ao_perfil_aplicado)
 	_construir_grelha(largura_padrao, altura_padrao, casa_m_padrao)
 	camera.toque.connect(_ao_toque)
 	Estado.snapshot_aplicado.connect(_ao_snapshot)
@@ -113,66 +140,37 @@ func _construir_grelha(w: int, h: int, c: float) -> void:
 	for n in _grelha.get_children():
 		n.queue_free()
 	var tam := Vector2(largura * casa_m, altura * casa_m)
+	origem = _origem_no_mapa(tam)
+	_garantir_mapa(Rect2(origem, tam))
 
-	var chao := MeshInstance3D.new()
-	var plano := PlaneMesh.new()
-	plano.size = tam
-	var mat_chao := StandardMaterial3D.new()
-	mat_chao.albedo_color = COR_CHAO
-	plano.material = mat_chao
-	chao.mesh = plano
-	chao.position = Vector3(tam.x * 0.5, 0.0, tam.y * 0.5)
-	_grelha.add_child(chao)
-
+	# Sem chão próprio: o chão é o do mapa. As linhas seguem o relevo (amostra a cada 1/4 de casa).
 	var im := ImmediateMesh.new()
-	im.surface_begin(Mesh.PRIMITIVE_LINES, _material_sem_luz(COR_LINHAS))
+	im.surface_begin(Mesh.PRIMITIVE_LINES, _material_sobre(COR_LINHAS, false))
+	var passos_x := largura * DIVISOES_CASA
+	var passos_z := altura * DIVISOES_CASA
 	for i in range(largura + 1):
-		im.surface_add_vertex(Vector3(i * casa_m, 0.02, 0.0))
-		im.surface_add_vertex(Vector3(i * casa_m, 0.02, tam.y))
+		var x := origem.x + i * casa_m
+		for k in passos_z:
+			im.surface_add_vertex(_no_chao(x, origem.y + tam.y * k / passos_z, LEVANTA_M))
+			im.surface_add_vertex(_no_chao(x, origem.y + tam.y * (k + 1) / passos_z, LEVANTA_M))
 	for j in range(altura + 1):
-		im.surface_add_vertex(Vector3(0.0, 0.02, j * casa_m))
-		im.surface_add_vertex(Vector3(tam.x, 0.02, j * casa_m))
+		var z := origem.y + j * casa_m
+		for k in passos_x:
+			im.surface_add_vertex(_no_chao(origem.x + tam.x * k / passos_x, z, LEVANTA_M))
+			im.surface_add_vertex(_no_chao(origem.x + tam.x * (k + 1) / passos_x, z, LEVANTA_M))
 	im.surface_end()
 	var linhas := MeshInstance3D.new()
+	linhas.name = "Linhas"
 	linhas.mesh = im
+	linhas.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_grelha.add_child(linhas)
 
-	var mm := MultiMesh.new()
-	mm.transform_format = MultiMesh.TRANSFORM_3D
-	mm.use_colors = true
-	var quad := PlaneMesh.new()
-	quad.size = Vector2(casa_m * 0.9, casa_m * 0.9)
-	var mat_q := _material_sem_luz(Color.WHITE)
-	mat_q.vertex_color_use_as_albedo = true
-	quad.material = mat_q
-	mm.mesh = quad
-	mm.instance_count = largura * altura
-	mm.visible_instance_count = 0
-	_destaques = MultiMeshInstance3D.new()
-	_destaques.multimesh = mm
-	_grelha.add_child(_destaques)
-
+	_mat_destaque = _material_sobre(Color.WHITE, true)
 	# Ordem 13: as casas a arder, por baixo dos destaques.
-	var mf := MultiMesh.new()
-	mf.transform_format = MultiMesh.TRANSFORM_3D
-	var qf := PlaneMesh.new()
-	qf.size = Vector2(casa_m * 0.96, casa_m * 0.96)
-	qf.material = _material_sem_luz(COR_FOGO)
-	mf.mesh = qf
-	mf.instance_count = largura * altura
-	mf.visible_instance_count = 0
-	_fogo = MultiMeshInstance3D.new()
-	_fogo.name = "Fogo"
-	_fogo.multimesh = mf
-	_grelha.add_child(_fogo)
-
-	_marcador = MeshInstance3D.new()
-	var q2 := PlaneMesh.new()
-	q2.size = Vector2(casa_m * 0.98, casa_m * 0.98)
-	q2.material = _material_sem_luz(COR_CURSOR)
-	_marcador.mesh = q2
+	_fogo = _nova_camada("Fogo", 1)
+	_destaques = _nova_camada("Destaques", 2)
+	_marcador = _nova_camada("Cursor", 3)
 	_marcador.visible = false
-	_grelha.add_child(_marcador)
 
 	_rotulo_custo = Label3D.new()
 	_rotulo_custo.billboard = BaseMaterial3D.BILLBOARD_ENABLED
@@ -183,36 +181,167 @@ func _construir_grelha(w: int, h: int, c: float) -> void:
 	_rotulo_custo.visible = false
 	_grelha.add_child(_rotulo_custo)
 
-	camera.configurar_arena(Vector3(tam.x * 0.5, 0.0, tam.y * 0.5), tam)
+	var meio := origem + tam * 0.5
+	camera.configurar_arena(Vector3(meio.x, altura_chao(meio.x, meio.y), meio.y), tam)
 	_mostrar_destaques()
 	mostrar_fogo()
 
 
-func _material_sem_luz(cor: Color) -> StandardMaterial3D:
-	var m := StandardMaterial3D.new()
-	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	m.albedo_color = cor
+## Ordem 42: onde fica a grelha no mapa. Centrada no centro da arena do mapa (0, 0) e, se as casas
+## forem de 1,5 m, encostada às linhas da grelha do mapa (−37,5 + k × 1,5): cada casa do jogo é
+## uma casa do mapa (20 × 20 → casas 15–34 do mapa).
+func _origem_no_mapa(tam: Vector2) -> Vector2:
+	var o := -tam * 0.5
+	if is_equal_approx(casa_m, GrelhaMapa.CASA_M):
+		o.x = -GrelhaMapa.MEIO + roundf((o.x + GrelhaMapa.MEIO) / GrelhaMapa.CASA_M) * GrelhaMapa.CASA_M
+		o.y = -GrelhaMapa.MEIO + roundf((o.y + GrelhaMapa.MEIO) / GrelhaMapa.CASA_M) * GrelhaMapa.CASA_M
+	return o
+
+
+## O mapa é construído para a zona jogável (lá dentro não põe nada que ocupe uma casa sem o servidor
+## saber). Se o snapshot mudar o tamanho da grelha, o mapa refaz-se para a zona nova.
+func _garantir_mapa(zona: Rect2) -> void:
+	if mapa != null and is_instance_valid(mapa) and mapa.zona_jogo.is_equal_approx(zona):
+		return
+	if mapa != null and is_instance_valid(mapa):
+		remove_child(mapa)
+		mapa.free()
+	mapa = CampoFloresta.new()
+	mapa.name = "Mapa"
+	mapa.no_ambiente = ^"../Ambiente"
+	mapa.no_sol = ^"../Sol"
+	mapa.no_camera = ^"../Camera"
+	mapa.vistas_por_tecla = false
+	mapa.mostrar_medicao = false
+	mapa.zona_jogo = zona
+	add_child(mapa)
+	move_child(mapa, 0)
+	if _perfis.atual != "":
+		_ao_perfil_aplicado(_perfis.atual)
+
+
+## A altura do chão do mapa em (x, z) do mundo: a altura final única (malha = colisão = consulta).
+func altura_chao(x: float, z: float) -> float:
+	return Relevo.altura(x, z)
+
+
+func _no_chao(x: float, z: float, levanta: float) -> Vector3:
+	return Vector3(x, Relevo.altura(x, z) + levanta, z)
+
+
+func _material_sobre(cor: Color, da_instancia: bool) -> ShaderMaterial:
+	var m := ShaderMaterial.new()
+	m.shader = SH_SOBRE
+	m.set_shader_parameter("cor", cor)
+	m.set_shader_parameter("cor_da_instancia", da_instancia)
 	return m
+
+
+func _nova_camada(nome: String, prioridade: int) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	mi.name = nome
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	var m := _mat_destaque.duplicate() as ShaderMaterial
+	m.render_priority = prioridade
+	mi.material_override = m
+	_grelha.add_child(mi)
+	return mi
+
+
+## Uma malha com um remendo por casa: (DIVISOES_CASA + 1)² vértices por casa, cada um à altura do
+## relevo + `levanta`. `casas` = [[Vector2i, Color], ...]; `escala` = fracção da casa coberta.
+func _malha_casas(casas: Array, escala: float, levanta: float) -> ArrayMesh:
+	if casas.is_empty():
+		return null
+	var n := DIVISOES_CASA
+	var v := PackedVector3Array()
+	var cores := PackedColorArray()
+	var idx := PackedInt32Array()
+	var lado := casa_m * escala
+	for e: Array in casas:
+		var c: Vector2i = e[0]
+		var cor: Color = e[1]
+		var x0 := origem.x + (c.x + 0.5) * casa_m - lado * 0.5
+		var z0 := origem.y + (c.y + 0.5) * casa_m - lado * 0.5
+		var base := v.size()
+		for j in n + 1:
+			for i in n + 1:
+				v.append(_no_chao(x0 + lado * i / n, z0 + lado * j / n, levanta))
+				cores.append(cor)
+		for j in n:
+			for i in n:
+				var a := base + j * (n + 1) + i
+				idx.append_array([a, a + 1, a + n + 1, a + 1, a + n + 2, a + n + 1])
+	var arr := []
+	arr.resize(Mesh.ARRAY_MAX)
+	arr[Mesh.ARRAY_VERTEX] = v
+	arr[Mesh.ARRAY_COLOR] = cores
+	arr[Mesh.ARRAY_INDEX] = idx
+	var malha := ArrayMesh.new()
+	malha.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
+	return malha
 
 
 func dentro(c: Vector2i) -> bool:
 	return c.x >= 0 and c.y >= 0 and c.x < largura and c.y < altura
 
 
+## Centro da casa, em cima do chão do mapa (a altura do relevo nesse ponto).
 func centro_casa(c: Vector2i) -> Vector3:
-	return Vector3((c.x + 0.5) * casa_m, 0.0, (c.y + 0.5) * casa_m)
+	var x := origem.x + (c.x + 0.5) * casa_m
+	var z := origem.y + (c.y + 0.5) * casa_m
+	return Vector3(x, Relevo.altura(x, z), z)
 
 
-## Casa sob um ponto da tela, ou (-1,-1). É só geometria de ecrã → chão.
+## Ordem 42: onde pousa o pé de uma figura na casa: no centro, à altura MAIS BAIXA do relevo debaixo da
+## pegada (o centro e 8 pontos no raio da base). Numa encosta nenhum lado da base fica no ar; o lado
+## de cima entra uns centímetros no chão (a relva tapa-o).
+func pe_figura(c: Vector2i) -> Vector3:
+	var p := centro_casa(c)
+	var r := casa_m * 0.28
+	var y := p.y
+	for k in 8:
+		var a := TAU * k / 8.0
+		y = minf(y, Relevo.altura(p.x + cos(a) * r, p.z + sin(a) * r))
+	return Vector3(p.x, y, p.z)
+
+
+## Casa sob um ponto da tela, ou (-1,-1). É só geometria de ecrã → chão (o relevo do mapa): o raio
+## desce até ao primeiro ponto abaixo do chão e afina-se por bisseção.
 func casa_em_tela(p: Vector2) -> Vector2i:
-	var origem := camera.project_ray_origin(p)
-	var direcao := camera.project_ray_normal(p)
-	var hit = Plane(Vector3.UP, 0.0).intersects_ray(origem, direcao)
+	var hit = ponto_no_chao(camera.project_ray_origin(p), camera.project_ray_normal(p))
 	if hit == null:
 		return Vector2i(-1, -1)
-	var c := Vector2i(floori(hit.x / casa_m), floori(hit.z / casa_m))
+	var c := Vector2i(floori((hit.x - origem.x) / casa_m), floori((hit.z - origem.y) / casa_m))
 	return c if dentro(c) else Vector2i(-1, -1)
+
+
+## O primeiro ponto onde o raio (o, d) toca o chão do mapa, ou null.
+func ponto_no_chao(o: Vector3, d: Vector3):
+	if d.y > -0.0005:
+		return null
+	# começa onde o raio desce abaixo dos 12 m (o relevo da arena do mapa fica muito abaixo disso)
+	var t := maxf((o.y - 12.0) / -d.y, 0.0)
+	var passo := 0.25
+	var antes := t
+	for i in 4000:
+		var q := o + d * t
+		if q.y <= Relevo.altura(q.x, q.z):
+			var a := antes
+			var b := t
+			for k in 14:
+				var m := (a + b) * 0.5
+				var qm := o + d * m
+				if qm.y <= Relevo.altura(qm.x, qm.z):
+					b = m
+				else:
+					a = m
+			return o + d * b
+		if q.y < -40.0:
+			return null
+		antes = t
+		t += passo
+	return null
 
 
 ## Posição na tela da cabeça de uma figura (para os números de dano), ou null.
@@ -428,40 +557,33 @@ func _direcao_tela(v: Vector2) -> Vector2i:
 func _mostrar_destaques() -> void:
 	if _destaques == null:
 		return
-	var mm := _destaques.multimesh
-	var n := 0
+	var lista: Array = []
 	if modo == Modo.MOVER:
 		for c in _casas:
-			if dentro(c) and n < mm.instance_count:
-				mm.set_instance_transform(n, Transform3D(Basis(), centro_casa(c) + Vector3(0.0, 0.03, 0.0)))
-				mm.set_instance_color(n, COR_MOVER)
-				n += 1
+			if dentro(c):
+				lista.append([c, COR_MOVER])
 	elif modo == Modo.ATAQUE or modo == Modo.CONSUMIVEL:
 		for fid in _alvos:
 			var c: Vector2i = Estado.casa_de(Estado.figuras.get(fid))
-			if dentro(c) and n < mm.instance_count:
-				mm.set_instance_transform(n, Transform3D(Basis(), centro_casa(c) + Vector3(0.0, 0.03, 0.0)))
-				mm.set_instance_color(n, COR_ALVO)
-				n += 1
-	mm.visible_instance_count = n
+			if dentro(c):
+				lista.append([c, COR_ALVO])
+	_destaques.mesh = _malha_casas(lista, 0.9, LEVANTA_M + 0.01)
 
 
 ## Ordem 13: desenha as casas a arder que o servidor mandou (Estado.fogo.casas). Devolve quantas desenhou.
 func mostrar_fogo() -> int:
 	if _fogo == null:
 		return 0
-	var mm := _fogo.multimesh
-	var n := 0
+	var lista: Array = []
 	var casas = Estado.fogo.get("casas") if Estado.fogo.get("casas") is Array else []
 	for k in casas:
 		if not (k is Dictionary):
 			continue
 		var c := Vector2i(int(k.get("x", -1)), int(k.get("y", -1)))
-		if dentro(c) and n < mm.instance_count:
-			mm.set_instance_transform(n, Transform3D(Basis(), centro_casa(c) + Vector3(0.0, 0.025, 0.0)))
-			n += 1
-	mm.visible_instance_count = n
-	return n
+		if dentro(c) and lista.size() < largura * altura:
+			lista.append([c, COR_FOGO])
+	_fogo.mesh = _malha_casas(lista, 0.96, LEVANTA_M + 0.005)
+	return lista.size()
 
 
 func _atualizar_cursor() -> void:
@@ -472,7 +594,7 @@ func _atualizar_cursor() -> void:
 	_rotulo_custo.visible = false
 	if not ver:
 		return
-	_marcador.position = centro_casa(_cursor) + Vector3(0.0, 0.04, 0.0)
+	_marcador.mesh = _malha_casas([[_cursor, COR_CURSOR]], 0.98, LEVANTA_M + 0.02)
 	var custo = _casas.get(_cursor)
 	if custo is float or custo is int:
 		_rotulo_custo.text = ("%.1f" % float(custo)).replace(".", ",") + " m"
@@ -492,7 +614,7 @@ func _sincronizar_figuras() -> void:
 		if no == null:
 			no = _criar_figura()
 			_nos[id] = no
-			no.position = centro_casa(c)
+			no.position = pe_figura(c)
 		_atualizar_figura(no, id, f, c)
 	for id in _nos.keys():
 		if not vistos.has(id):
@@ -526,7 +648,7 @@ func _criar_figura() -> Node3D:
 
 
 func _atualizar_figura(no: Node3D, id: String, f: Dictionary, c: Vector2i) -> void:
-	var destino := centro_casa(c)
+	var destino := pe_figura(c)
 	if no.position.distance_to(destino) > 0.01:
 		var tw := no.create_tween()
 		tw.tween_property(no, "position", destino, 0.25)
@@ -624,6 +746,18 @@ func _ao_preferencia(chave: String, valor) -> void:
 func _aplicar_perfil(perfil: String) -> void:
 	if not _perfis.aplicar(perfil):
 		_perfis.aplicar("medio")
+
+
+## Ordem 42: o perfil chega também ao mapa — a relva do mapa tem LOD próprio, por isso a densidade da
+## folhagem do perfil passa-se ao mapa (não pelo grupo «folhagem_densa»). O número é o da tabela do
+## AplicadorPerfil; a arena não tem números próprios.
+func _ao_perfil_aplicado(nome: String) -> void:
+	if mapa == null or not is_instance_valid(mapa):
+		return
+	var fonte: Dictionary = _perfis.tabela if not _perfis.tabela.is_empty() else AplicadorPerfil.PERFIS
+	var cfg: Dictionary = fonte.get(nome, fonte.get("medio", {}))
+	var base: Dictionary = AplicadorPerfil.PERFIS["medio"]
+	mapa.definir_densidade_relva(float(cfg.get("folhagem_densidade", base["folhagem_densidade"])))
 
 
 static func _num_ou(v, padrao: int) -> int:
