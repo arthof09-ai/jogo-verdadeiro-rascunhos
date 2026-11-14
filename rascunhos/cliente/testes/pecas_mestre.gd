@@ -1222,6 +1222,13 @@ func _clima(c) -> void:
 	cl.desligar()
 	cl.definir_acumulacao(0.0, 0.0)
 	cl.segundos_transicao = 0.01
+	# Ordem 41: o que a neve forte juntou (aglomerado, gelo) derrete devagar, de propósito — com isso por
+	# derreter o módulo continua acordado. «Seco» é também o estado forte a zero; e o vento da nevasca
+	# acalma em segundos_levantar (encurtado aqui, como a transição).
+	await _quadros(4)
+	_ok(cl.aglomerado > 0.0 and not cl.parado(), "ordem 41: com neve aglomerada por derreter, o módulo não dorme")
+	cl.segundos_levantar = 0.01
+	cl.definir_forte(0.0, 0.0, 0.0, 0.0)
 	await _quadros(4)
 	var limpos := (chao[0] as MeshInstance3D).material_overlay == null
 	for n in vestidos:
