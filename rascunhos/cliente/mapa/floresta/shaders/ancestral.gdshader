@@ -16,7 +16,7 @@ uniform vec3 cor_horizonte : source_color = vec3(0.84, 0.82, 0.67);
 uniform vec3 cor_musgo : source_color = vec3(0.37, 0.48, 0.21);
 uniform vec3 cor_folha_luz : source_color = vec3(0.53, 0.64, 0.24);
 uniform sampler2D ruido : filter_linear_mipmap, repeat_enable, hint_default_white;
-uniform float altura = 130.0;
+uniform float altura = 260.0;
 uniform float ar_topo : hint_range(0.0, 1.0) = 0.16;
 uniform float ar_base : hint_range(0.0, 1.0) = 0.50;
 
@@ -31,8 +31,10 @@ void vertex() {
 void fragment() {
 	vec3 n = normalize(v_n);
 	float h = v_loc.y / altura;
-	float r1 = texture(ruido, v_loc.xz * 0.011 + v_loc.y * 0.007).r;
-	float r2 = texture(ruido, v_loc.xy * 0.045 + v_loc.z * 0.031).r;
+	// as pinceladas medem-se em fracções da árvore (q = metros de uma árvore de 130 m)
+	vec3 q = v_loc * (130.0 / altura);
+	float r1 = texture(ruido, q.xz * 0.011 + q.y * 0.007).r;
+	float r2 = texture(ruido, q.xy * 0.045 + q.z * 0.031).r;
 	float sol = COLOR.a;
 	vec3 alb = COLOR.rgb;
 	float ndl = dot(n, dir_luz);
@@ -43,7 +45,7 @@ void fragment() {
 	} else {
 		if (UV.x < 0.5) {
 			// casca: veios ao alto, e musgo onde a casca olha para cima e nas manchas
-			float veio = texture(ruido, vec2((v_loc.x + v_loc.z) * 0.060, v_loc.y * 0.006)).r;
+			float veio = texture(ruido, vec2((q.x + q.z) * 0.060, q.y * 0.006)).r;
 			alb *= 0.74 + 0.34 * veio + 0.16 * r2;
 			float musgo = smoothstep(0.50, 0.78, r1 * 0.75 + max(n.y, 0.0) * 0.55 + (1.0 - smoothstep(0.0, 0.35, h)) * 0.10);
 			alb = mix(alb, cor_musgo * (0.75 + 0.5 * r2), musgo * 0.72);

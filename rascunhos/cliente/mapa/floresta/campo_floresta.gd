@@ -1,46 +1,71 @@
 extends Node3D
-## campo_floresta.gd — ORDEM 37: o campo de batalha da FLORESTA (jogo Assimilação).
+## campo_floresta.gd — o campo de batalha da FLORESTA (jogo Assimilação). Ordem 37; religado à
+## fundação corrigida na Ordem 38.
 ##
-## Constrói o mapa inteiro na carga, a partir de UMA função de relevo (relevo_floresta.gd) e de
-## UMA paleta (paleta_floresta.gd). Receita do fundo: ESTUDO-ELDEN.md (obrigatória).
+## Constrói o mapa inteiro na carga, a partir de UMA altura (relevo_floresta.gd), UMA paleta
+## (paleta_floresta.gd), UMA grelha (grelha_floresta.gd) e das formas por família
+## (formas_floresta.gd). Receita do fundo: ESTUDO-ELDEN.md.
 ##
-##   Arena (0–30 m do centro; o quadrado jogável de 60×60 m) ... 3D real: relevo, relva alta
-##     que se mexe, árvores, pedras, arbustos. O orçamento vai todo aqui.
-##   Orla (até ~16 m para lá da arena) ......................... 3D real: a cinta de floresta.
-##   Anel próximo (~46–100 m) ................................. geometria pobre, UMA malha,
-##     tinta com a luz e o ar cozinhados (cor do vértice) + névoa do motor por cima.
-##   Anel longe (135–245 m) ................................... 3 silhuetas planas em anel
-##     FECHADO, UMA malha, todo o ar na tinta (fora da névoa do motor).
-##   Árvore-âncora (215 m, a norte) ........................... 3D real, simples e gigante.
-##   Céu ....................................................... pintura (textura), 1 passagem.
+##   ARENA — o quadrado jogável de 75 × 75 m (50 × 50 casas de 1,5 m) e a orla rica (24 m):
+##     relevo, relva alta que se mexe, árvores de 4 famílias, estrato intermédio, pedras, e
+##     UM MARCO POR QUADRANTE (defeito 4):
+##       NO  o outeiro dos menires ....... terreno alto para defender (carvalhos velhos)
+##       NE  a cova do charco ............ travessia em desvantagem (vidoeiros, juncos)
+##       SE  o terraço do santuário ...... altura fortificada com duas rampas (pinheiros-mansos)
+##       SO  a garganta .................. corredor entre o lombo de rocha e o tronco tombado (abetos)
+##   FUNDO — o que não se alcança:
+##     o anel de floresta (24–80 m para lá da arena): árvores INTEIRAS de malha pobre, no mesmo
+##       chão e com a mesma luz (defeito 1: nenhuma vista denuncia o palco);
+##     o anel longe: duas silhuetas fechadas e a serra, com o ar na tinta;
+##     a ÁRVORE ANCESTRAL (260 m, a norte): geometria verdadeira, opaca, com sombra e contacto;
+##     o céu: pintura, uma só hora nos 360°.
 ##
-## SEM fogueira. SEM disco de terra no meio. Qualidade uniforme: a mesma densidade de relva,
-## pedra e árvore em toda a arena (os 4 cantos têm árvore, pedra e relevo próprios).
+## SEM fogueira. SEM disco de terra no meio.
 ##
-## Nós que o jogo pode usar: grupo «sol» (DirectionalLight3D, sem sombra por defeito) e grupo
-## «ambiente» (WorldEnvironment). altura_em(x, z) e Relevo.centro_casa(i, j) dão o chão.
+## HIGIENE (defeito 11): o mapa do chão coze-se UMA vez, depois de todos os carimbos (carimbar
+## depois de cozer é erro com nome); nada falha calado (erros_floresta.gd).
+##
+## Para o jogo: `grelha` (contrato mundo↔casa, bloqueio, cobertura, ocupação), altura_em(x, z),
+## grupo «sol» (DirectionalLight3D) e grupo «ambiente» (WorldEnvironment).
 
 const Paleta := preload("res://mapa/floresta/paleta_floresta.gd")
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
 const Lote := preload("res://mapa/floresta/lote_malha.gd")
+const Formas := preload("res://mapa/floresta/formas_floresta.gd")
+const Grelha := preload("res://mapa/floresta/grelha_floresta.gd")
+const Erros := preload("res://mapa/floresta/erros_floresta.gd")
+const Ancestral := preload("res://mapa/floresta/arvore_ancestral.gd")
+const RelvaFloresta := preload("res://mapa/floresta/relva_floresta.gd")
 
 const SH_TERRENO := preload("res://mapa/floresta/shaders/terreno.gdshader")
 const SH_RELVA := preload("res://mapa/floresta/shaders/relva.gdshader")
+const SH_HASTE := preload("res://mapa/floresta/shaders/haste.gdshader")
 const SH_COPA := preload("res://mapa/floresta/shaders/copa.gdshader")
 const SH_SOLIDO := preload("res://mapa/floresta/shaders/solido.gdshader")
-const SH_ANEL_PERTO := preload("res://mapa/floresta/shaders/anel_perto.gdshader")
+const SH_MARCO := preload("res://mapa/floresta/shaders/marco.gdshader")
+const SH_AGUA := preload("res://mapa/floresta/shaders/agua.gdshader")
+const SH_ANEL := preload("res://mapa/floresta/shaders/anel_floresta.gdshader")
 const SH_ANEL_LONGE := preload("res://mapa/floresta/shaders/anel_longe.gdshader")
+const SH_ANCESTRAL := preload("res://mapa/floresta/shaders/ancestral.gdshader")
 const SH_CEU := preload("res://mapa/floresta/shaders/ceu_panorama.gdshader")
 
-const CEU_PNG := "res://mapa/floresta/ceu/ceu_floresta_v2.png"
+const CEU_PNG := "res://mapa/floresta/ceu/ceu_floresta_v3.png"
 const CEU_ELEV_MIN := -6.0
-const MAPA_N := 384          # resolução do mapa do chão (luz/terra)
-const MAPA_MEIO := 66.0      # o mapa do chão cobre [-66, 66] m
-const BLOCO_RELVA := 20.0    # lado de cada bloco de relva (1 MultiMesh = 1 draw call)
-const ANCORA_DIST := 215.0
-const ANCORA_ALTURA := 96.0
+const MAPA_N := 512          # resolução do mapa do chão (luz / terra / copas / contacto)
+const MAPA_MEIO := 72.0      # o mapa do chão cobre [-72, 72] m
+const RELEVO_N := 120        # resolução da sombra e da oclusão do relevo (1,2 m)
+const ESCARPA_M := 1.7       # desnível dentro de uma casa a partir do qual ela não se pisa
+
+## A Árvore Ancestral: a que distância do centro da arena, a que altura tem o pé, e a rotação
+## (0 = frente do palácio virada a NORTE, palavra do Mestre; da arena vê-se a face sul).
+const ANCESTRAL_DIST := 580.0
+const ANCESTRAL_PE := -22.0
+const ANCESTRAL_ROTACAO := 0.0
+const CAMERA_LONGE := 1500.0
+const CAMERA_PERTO := 0.25
 
 ## Vistas etiquetadas (capturas e teclas 1–9): nome, x, z, altura dos olhos, azimute, inclinação.
+## As 14 primeiras são AS MESMAS da Ordem 37 (mesma posição, mesmo ângulo).
 const VISTAS: Array = [
 	["centro_olha-norte", 0.0, 0.0, 1.7, -7.0, 3.0],
 	["centro_olha-leste", 0.0, 0.0, 1.7, 90.0, 3.0],
@@ -63,7 +88,7 @@ const VISTAS: Array = [
 	["centro_olha-noroeste", 0.0, 0.0, 1.7, -45.0, 3.0],
 ]
 
-@export var semente: int = 37
+@export var semente: int = 38
 ## Fracção dos tufos de relva desenhada (perfis: 1,0 alto · 0,7 médio · 0,45 baixo).
 @export_range(0.1, 1.0) var densidade_relva: float = 1.0
 @export var mostrar_medicao: bool = true
@@ -75,18 +100,23 @@ const VISTAS: Array = [
 
 var arena: Node3D
 var fundo: Node3D
+var grelha: Grelha
+var relva: RelvaFloresta
 var medidas: Dictionary = {}
 
 var _rng := RandomNumberGenerator.new()
 var _mats: Array[ShaderMaterial] = []
 var _ruido_tex: Texture2D
 var _mapa_tex: ImageTexture
-var _luz := PackedFloat32Array()      # sol que chega (árvores + pedras)
-var _luz_copas := PackedFloat32Array()  # sol que chega (só copas)
-var _terra := PackedFloat32Array()    # terra à mostra / relva excluída
-var _arvores: Array = []              # {pos, h, r, topo, bolhas: [[centro, raio]]}
-var _rochas: Array = []               # [centro: Vector3, raio: float]
-var _relva_mms: Array[MultiMesh] = []
+## O mapa do chão, entrelaçado (4 números por ponto): 0 = sol que chega (tudo) · 1 = terra à
+## mostra · 2 = sol que chega contando só as copas · 3 = oclusão de contacto (1 = aberto).
+var _mapa := PackedFloat32Array()
+var _cozido := false
+var _tudo: Dictionary = {}       # casas de 6 m -> [Vector3(x, z, raio)]: tudo o que ocupa chão
+var _so_arvores: Dictionary = {} # idem, só os troncos (para a distância entre árvores)
+var _troncos: Array = []         # [Vector2, raio]: os troncos de dentro da arena (para a grelha)
+var _rochas: Array = []          # [Vector3 centro, tamanho]
+var _lote_pedras := Lote.new()
 var _t_rotulo := 0.0
 
 
@@ -99,28 +129,33 @@ func _ready() -> void:
 	fundo = Node3D.new()
 	fundo.name = "Fundo"
 	add_child(fundo)
-	_luz.resize(MAPA_N * MAPA_N)
-	_luz.fill(1.0)
-	_terra.resize(MAPA_N * MAPA_N)
-	_terra.fill(0.0)
+	grelha = Grelha.new()
 	_ruido_tex = _gerar_ruido()
 	_montar_ambiente()
+	_iniciar_mapa()
+	# as vistas etiquetadas ficam livres (ninguém planta um tronco em cima da câmara)
+	for v in VISTAS:
+		if float(v[3]) < 10.0:
+			_ocupar(_tudo, float(v[1]), float(v[2]), 2.4)
+	# ---- tudo o que carimba o chão…
+	_levantar_marcos()
 	_plantar_arvores()
 	_semear_rochas()
 	_riscar_trilho()
+	_criar_estrato()
+	# ---- …e só depois se coze, UMA vez
 	_cozer_mapa_chao()
 	_criar_terreno()
-	_criar_arvores()
-	_criar_rochas()
-	_criar_arbustos()
 	_criar_relva()
-	_criar_anel_perto()
+	_marcar_grelha()
+	_criar_anel()
 	_criar_anel_longe()
-	_criar_ancora()
+	_criar_ancestral()
 	_escrever_materiais()
 	ir_para_vista(0)
 	_rotulo.visible = mostrar_medicao
 	medidas["carga_ms"] = Time.get_ticks_msec() - t0
+	medidas["erros"] = Erros.contagem()
 	print("[floresta] pronta em %d ms | %s" % [medidas["carga_ms"], JSON.stringify(medidas)])
 
 
@@ -130,10 +165,11 @@ func _process(delta: float) -> void:
 	_t_rotulo += delta
 	if _t_rotulo >= 0.5:
 		_t_rotulo = 0.0
-		_rotulo.text = "Floresta 37 | %d fps | %d chamadas | %d primitivas | teclas 1-9 vistas, F fundo, WASD andar" % [
+		_rotulo.text = "Floresta 38 | %d fps | %d chamadas | %d primitivas | relva %d tufos | 1-9 vistas, F fundo, L LOD, WASD andar" % [
 			Engine.get_frames_per_second(),
 			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME),
-			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME)]
+			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME),
+			relva.tufos_ativos()]
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -146,6 +182,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		ir_para_vista(12)
 	elif k.keycode == KEY_F:
 		so_fundo(arena.visible)
+	elif k.keycode == KEY_L:
+		relva.ligar_lod(not relva.lod_ligado)
 	elif k.keycode == KEY_M:
 		_rotulo.visible = not _rotulo.visible
 
@@ -156,13 +194,15 @@ func altura_em(x: float, z: float) -> float:
 	return Relevo.altura(x, z)
 
 
-## Esconde a arena e deixa só o fundo (céu + anéis + âncora) — para MEDIR os draw calls do fundo.
+## Esconde a arena e deixa só o fundo (céu + anel de floresta + anel longe + Árvore Ancestral)
+## — para MEDIR as chamadas de desenho do fundo.
 func so_fundo(ligar: bool) -> void:
 	arena.visible = not ligar
 
 
 func ir_para_vista(i: int) -> void:
 	if i < 0 or i >= VISTAS.size():
+		Erros.erro(Erros.VISTA_INVALIDA, "ir_para_vista(%d)" % i)
 		return
 	var v: Array = VISTAS[i]
 	var x: float = v[1]
@@ -175,8 +215,7 @@ func ir_para_vista(i: int) -> void:
 
 func definir_densidade_relva(f: float) -> void:
 	densidade_relva = clampf(f, 0.1, 1.0)
-	for mm in _relva_mms:
-		mm.visible_instance_count = int(round(mm.instance_count * densidade_relva)) if densidade_relva < 0.999 else -1
+	relva.definir_densidade(densidade_relva)
 
 
 # ------------------------------------------------------------------ ambiente e materiais
@@ -192,7 +231,10 @@ func _montar_ambiente() -> void:
 		# Projecto ainda não importado (clone fresco): lê o PNG directamente.
 		var img := Image.load_from_file(ProjectSettings.globalize_path(CEU_PNG))
 		if img != null:
+			img.generate_mipmaps()
 			tex = ImageTexture.create_from_image(img)
+	if tex == null:
+		Erros.erro(Erros.CEU_EM_FALTA, CEU_PNG)
 	mat_ceu.set_shader_parameter("pintura", tex)
 	mat_ceu.set_shader_parameter("cor_horizonte", Paleta.COR_HORIZONTE)      # (a) a faixa baixa do céu
 	mat_ceu.set_shader_parameter("faixa", Paleta.FAIXA_HORIZONTE)
@@ -218,13 +260,16 @@ func _montar_ambiente() -> void:
 	env.fog_depth_curve = Paleta.NEVOA_CURVA
 	env.fog_sky_affect = 0.0   # o céu é pintura: a sua faixa baixa JÁ é a cor do horizonte
 	env.fog_aerial_perspective = 0.0
-	# O sol do jogo (para as figuras): mesma direcção e cor da luz pintada. Sem sombra por
-	# defeito — as sombras do cenário vêm cozidas no mapa do chão.
+	# O sol do jogo (para as figuras): a MESMA direcção e cor da luz pintada e do disco do céu.
+	# Sem sombra por defeito — as sombras do cenário vêm cozidas no mapa do chão.
 	var l := Paleta.dir_luz()
 	_sol.look_at_from_position(Vector3.ZERO, -l, Vector3.UP)
 	_sol.light_color = Paleta.COR_SOL
 	_sol.light_energy = 1.1
 	_sol.shadow_enabled = false
+	# a Árvore Ancestral está longe: a câmara tem de a alcançar
+	_camera.far = CAMERA_LONGE
+	_camera.near = CAMERA_PERTO
 
 
 func _mat(sh: Shader) -> ShaderMaterial:
@@ -234,13 +279,14 @@ func _mat(sh: Shader) -> ShaderMaterial:
 	return m
 
 
-## A luz pintada e o mapa do chão escrevem-se em TODOS os materiais da arena, num sítio só.
+## A luz pintada e o mapa do chão escrevem-se em TODOS os materiais, num sítio só.
 func _escrever_materiais() -> void:
 	for m in _mats:
 		m.set_shader_parameter("dir_luz", Paleta.dir_luz())
 		m.set_shader_parameter("cor_sol", Paleta.COR_SOL)
 		m.set_shader_parameter("cor_sombra", Paleta.COR_SOMBRA)
 		m.set_shader_parameter("cor_ceu", Paleta.COR_CEU_AMBIENTE)
+		m.set_shader_parameter("cor_horizonte", Paleta.COR_HORIZONTE)       # (c) o ar pintado
 		m.set_shader_parameter("mapa_chao", _mapa_tex)
 		m.set_shader_parameter("mapa_meio", MAPA_MEIO)
 		m.set_shader_parameter("ruido", _ruido_tex)
@@ -261,15 +307,102 @@ func _rf(a: float, b: float) -> float:
 	return _rng.randf_range(a, b)
 
 
-# ------------------------------------------------------------------ mapa do chão (luz + terra)
+func _instancia(pai: Node3D, malha: Mesh, mat: Material, nome: String) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	mi.name = nome
+	mi.mesh = malha
+	mi.material_override = mat
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	pai.add_child(mi)
+	return mi
+
+
+# ------------------------------------------------------------------ quem ocupa o chão
+
+func _ocupar(tabela: Dictionary, x: float, z: float, raio: float) -> void:
+	var c := Vector2i(floori(x / 6.0), floori(z / 6.0))
+	if not tabela.has(c):
+		tabela[c] = []
+	(tabela[c] as Array).append(Vector3(x, z, raio))
+
+
+## Não há nada da tabela a menos de `folga` (m, para lá do raio de cada coisa)?
+func _livre(tabela: Dictionary, x: float, z: float, folga: float) -> bool:
+	var c := Vector2i(floori(x / 6.0), floori(z / 6.0))
+	for dj in range(-1, 2):
+		for di in range(-1, 2):
+			var chave := c + Vector2i(di, dj)
+			if not tabela.has(chave):
+				continue
+			for o: Vector3 in tabela[chave]:
+				var d := folga + o.z
+				if (o.x - x) * (o.x - x) + (o.y - z) * (o.y - z) < d * d:
+					return false
+	return true
+
+
+# ------------------------------------------------------------------ mapa do chão
 
 func _mi(x: float) -> int:
 	return int((x + MAPA_MEIO) / (2.0 * MAPA_MEIO) * MAPA_N)
 
 
-## Carimbo elíptico suave: baixa `arr` até (1 - forca) no centro. `dir` = eixo maior (unitário).
-func _carimbo_min(arr: PackedFloat32Array, cx: float, cz: float, ra: float, rb: float, dir: Vector2, forca: float) -> void:
+## O mapa nasce com o que é do RELEVO (defeito 8): a sombra que as vertentes deitam (canal 0) e
+## a oclusão no pé delas (canal 3). Faz-se a 1,2 m e alarga-se para a resolução do mapa.
+func _iniciar_mapa() -> void:
+	var n := RELEVO_N
+	var passo := 2.0 * MAPA_MEIO / float(n)
+	var l := Paleta.dir_luz()
+	var d2 := Vector2(l.x, l.z).normalized()
+	var sobe := l.y / Vector2(l.x, l.z).length()
+	var roda: Array[Vector2] = []
+	for k in 6:
+		roda.append(Vector2(cos(TAU * k / 6.0), sin(TAU * k / 6.0)) * 2.4)
+	var dados := PackedFloat32Array()
+	dados.resize(n * n * 4)
+	for j in n:
+		var z := -MAPA_MEIO + (float(j) + 0.5) * passo
+		for i in n:
+			var x := -MAPA_MEIO + (float(i) + 0.5) * passo
+			var h := Relevo.altura(x, z)
+			var tapa := 0.0
+			for s in range(1, 11):
+				var t := float(s) * 1.2
+				var a := Relevo.altura(x + d2.x * t, z + d2.y * t) - (h + 0.12 + sobe * t)
+				if a > 0.0:
+					tapa = maxf(tapa, a / (0.20 + 0.10 * t))
+			var media := 0.0
+			for o in roda:
+				media += Relevo.altura(x + o.x, z + o.y)
+			var cova := clampf((media / 6.0 - h - 0.05) / 0.75, 0.0, 1.0)
+			var k4 := (j * n + i) * 4
+			dados[k4] = 1.0 - 0.88 * clampf(tapa, 0.0, 1.0)
+			dados[k4 + 1] = 0.0
+			dados[k4 + 2] = 1.0
+			dados[k4 + 3] = 1.0 - 0.75 * cova
+	var img := Image.create_from_data(n, n, false, Image.FORMAT_RGBAF, dados.to_byte_array())
+	img.resize(MAPA_N, MAPA_N, Image.INTERPOLATE_BILINEAR)
+	_mapa = img.get_data().to_float32_array()
+	if _mapa.size() != MAPA_N * MAPA_N * 4:
+		Erros.erro(Erros.MALHA_VAZIA, "mapa do chão: %d números em vez de %d" % [_mapa.size(), MAPA_N * MAPA_N * 4])
+		_mapa.resize(MAPA_N * MAPA_N * 4)
+		_mapa.fill(1.0)
+
+
+func _pode_carimbar(quem: String) -> bool:
+	if _cozido:
+		Erros.erro(Erros.COZEDURA_FORA_DE_ORDEM, quem)
+		return false
+	return true
+
+
+## Carimbo elíptico suave: baixa o canal até (1 - forca) no centro. `dir` = eixo maior (unitário).
+func _carimbo_min(canal: int, cx: float, cz: float, ra: float, rb: float, dir: Vector2, forca: float) -> void:
+	if not _pode_carimbar("carimbo_min(%d)" % canal):
+		return
 	var ext := maxf(ra, rb)
+	if absf(cx) - ext > MAPA_MEIO or absf(cz) - ext > MAPA_MEIO:
+		return
 	var x0 := clampi(_mi(cx - ext), 0, MAPA_N - 1)
 	var x1 := clampi(_mi(cx + ext), 0, MAPA_N - 1)
 	var z0 := clampi(_mi(cz - ext), 0, MAPA_N - 1)
@@ -284,13 +417,18 @@ func _carimbo_min(arr: PackedFloat32Array, cx: float, cz: float, ra: float, rb: 
 			var b := (wx * perp.x + wz * perp.y) / rb
 			var q := a * a + b * b
 			if q < 1.0:
-				var s := forca * (1.0 - smoothstep(0.45, 1.0, q))
-				var i := iz * MAPA_N + ix
-				if 1.0 - s < arr[i]:
-					arr[i] = 1.0 - s
+				var s := 1.0 - forca * (1.0 - smoothstep(0.45, 1.0, q))
+				var i := (iz * MAPA_N + ix) * 4 + canal
+				if s < _mapa[i]:
+					_mapa[i] = s
 
 
-func _carimbo_max(arr: PackedFloat32Array, cx: float, cz: float, raio: float, forca: float) -> void:
+## Carimbo redondo suave: sobe o canal até `forca` no centro.
+func _carimbo_max(canal: int, cx: float, cz: float, raio: float, forca: float) -> void:
+	if not _pode_carimbar("carimbo_max(%d)" % canal):
+		return
+	if absf(cx) - raio > MAPA_MEIO or absf(cz) - raio > MAPA_MEIO:
+		return
 	var x0 := clampi(_mi(cx - raio), 0, MAPA_N - 1)
 	var x1 := clampi(_mi(cx + raio), 0, MAPA_N - 1)
 	var z0 := clampi(_mi(cz - raio), 0, MAPA_N - 1)
@@ -303,20 +441,30 @@ func _carimbo_max(arr: PackedFloat32Array, cx: float, cz: float, raio: float, fo
 			var q := (wx * wx + wz * wz) / (raio * raio)
 			if q < 1.0:
 				var s := forca * (1.0 - smoothstep(0.35, 1.0, q))
-				var i := iz * MAPA_N + ix
-				if s > arr[i]:
-					arr[i] = s
+				var i := (iz * MAPA_N + ix) * 4 + canal
+				if s > _mapa[i]:
+					_mapa[i] = s
 
 
-func _terra_em(x: float, z: float) -> float:
+## Lê um canal do mapa do chão em (x, z); fora do mapa devolve `fora`.
+func _ler(canal: int, x: float, z: float, fora: float = 0.0) -> float:
 	var ix := _mi(x)
 	var iz := _mi(z)
 	if ix < 0 or iz < 0 or ix >= MAPA_N or iz >= MAPA_N:
-		return 0.0
-	return _terra[iz * MAPA_N + ix]
+		return fora
+	return _mapa[(iz * MAPA_N + ix) * 4 + canal]
 
 
-## Onde cai no chão a sombra de um ponto a `p` (a luz vem de dir_luz).
+func _terra_em(x: float, z: float) -> float:
+	return _ler(1, x, z, 0.0)
+
+
+## Quanta copa há por cima (0 = céu aberto, 1 = debaixo da floresta).
+func _coberto_em(x: float, z: float) -> float:
+	return 1.0 - _ler(2, x, z, 0.3)
+
+
+## Onde cai no chão a sombra de um ponto `p` (a luz vem de dir_luz).
 func _sombra_de(p: Vector3) -> Vector2:
 	var l := Paleta.dir_luz()
 	var g := Vector2(p.x, p.z)
@@ -326,98 +474,145 @@ func _sombra_de(p: Vector3) -> Vector2:
 	return g
 
 
-func _cozer_mapa_chao() -> void:
+## A sombra de uma coisa ALTA e estreita (tronco, menir, lanterna): carimbos ao longo da altura.
+func _sombra_alta(canais: Array, pe: Vector3, alto: float, raio: float, forca: float) -> void:
 	var l := Paleta.dir_luz()
 	var dir := Vector2(l.x, l.z).normalized()
-	var estica := 1.0 / l.y
-	# 1) copas (e troncos) — o canal «só copas» é copiado antes das pedras
-	for a in _arvores:
-		for b in a["bolhas"]:
-			var c: Vector3 = b[0]
-			var r: float = b[1]
-			var g := _sombra_de(c)
-			_carimbo_min(_luz, g.x, g.y, r * estica * 0.8, r * 0.95, dir, 0.92)
-		var pos: Vector3 = a["pos"]
-		var topo: float = a["topo"]
-		var rt: float = a["r"]
-		var n := int(topo / 0.45)
-		for s in n:
-			var g2 := _sombra_de(pos + Vector3(0, float(s) * 0.45, 0))
-			_carimbo_min(_luz, g2.x, g2.y, rt * 1.5, rt * 1.5, dir, 0.85)
-	_luz_copas = _luz.duplicate()
-	# 2) pedras
-	for r in _rochas:
-		var c2: Vector3 = r[0]
-		var raio: float = r[1]
-		var g3 := _sombra_de(c2 + Vector3(0, raio * 0.2, 0))
-		_carimbo_min(_luz, g3.x, g3.y, raio * 0.9 * (1.0 + 0.5 * estica), raio * 0.95, dir, 0.9)
-	var img := Image.create_empty(MAPA_N, MAPA_N, false, Image.FORMAT_RGB8)
-	var dados := PackedByteArray()
-	dados.resize(MAPA_N * MAPA_N * 3)
-	for i in MAPA_N * MAPA_N:
-		dados[i * 3] = int(clampf(_luz[i], 0.0, 1.0) * 255.0)
-		dados[i * 3 + 1] = int(clampf(_terra[i], 0.0, 1.0) * 255.0)
-		dados[i * 3 + 2] = int(clampf(_luz_copas[i], 0.0, 1.0) * 255.0)
-	img.set_data(MAPA_N, MAPA_N, false, Image.FORMAT_RGB8, dados)
+	var n := maxi(int(alto / maxf(raio * 1.2, 0.45)), 1)
+	for s in n + 1:
+		var g := _sombra_de(pe + Vector3(0, alto * float(s) / float(n), 0))
+		for canal: int in canais:
+			_carimbo_min(canal, g.x, g.y, raio * 1.5, raio * 1.2, dir, forca)
+
+
+## O pé de qualquer coisa pousada: escurece o contacto (canal 3) — nada flutua.
+func _contacto(x: float, z: float, raio: float, forca: float = 0.6) -> void:
+	_carimbo_min(3, x, z, raio, raio, Vector2.RIGHT, forca)
+
+
+## Coze o mapa do chão: UMA vez, depois de todos os carimbos (defeito 11).
+func _cozer_mapa_chao() -> void:
+	if _cozido:
+		Erros.erro(Erros.COZEDURA_FORA_DE_ORDEM, "o mapa do chão já estava cozido")
+		return
+	var img := Image.create_from_data(MAPA_N, MAPA_N, false, Image.FORMAT_RGBAF, _mapa.to_byte_array())
+	img.convert(Image.FORMAT_RGBA8)
 	_mapa_tex = ImageTexture.create_from_image(img)
+	_cozido = true
+	medidas["mapa_chao_cozeduras"] = 1
 
 
-## Um trilho de bicho, estreito e torto, que passa LONGE do centro (sem disco de terra no meio).
+## Um trilho de bicho, estreito e torto: sai da garganta, contorna o centro por noroeste (nunca a
+## menos de 12 m dele — não há disco de terra no meio) e sai a leste, entre a cova e o terraço.
 func _riscar_trilho() -> void:
-	var pts: Array[Vector2] = [Vector2(-34, 19), Vector2(-22, 15), Vector2(-12, 19), Vector2(-2, 21),
-		Vector2(8, 15.5), Vector2(15, 7), Vector2(23, 1), Vector2(29, -7), Vector2(36, -10)]
+	var pts: Array[Vector2] = [Vector2(-21.0, 38.5), Vector2(-20.5, 29.0), Vector2(-19.3, 20.0), Vector2(-18.0, 11.0),
+		Vector2(-13.5, 3.0), Vector2(-11.5, -6.0), Vector2(-4.0, -12.5), Vector2(5.0, -13.5), Vector2(12.0, -8.5),
+		Vector2(20.5, -3.5), Vector2(29.0, 0.5), Vector2(39.0, 2.5)]
+	var rn := Relevo.ruido()
 	for i in pts.size() - 1:
 		var a := pts[i]
 		var b := pts[i + 1]
 		var n := int(a.distance_to(b) / 0.35)
+		var perp := (b - a).orthogonal().normalized()
 		for s in n:
-			var p := a.lerp(b, float(s) / n)
-			var desvio := Relevo.ruido().get_noise_2d(p.x * 9.0, p.y * 9.0) * 0.9
-			var larg := 0.55 + 0.35 * Relevo.ruido().get_noise_2d(p.x * 20.0 + 9.0, p.y * 20.0)
-			var perp := (b - a).orthogonal().normalized()
-			_carimbo_max(_terra, p.x + perp.x * desvio, p.y + perp.y * desvio, maxf(larg, 0.35), 0.75)
+			var p := a.lerp(b, float(s) / float(n))
+			var desvio := rn.get_noise_2d(p.x * 9.0, p.y * 9.0) * 0.9
+			var larg := 0.50 + 0.30 * rn.get_noise_2d(p.x * 20.0 + 9.0, p.y * 20.0)
+			_carimbo_max(1, p.x + perp.x * desvio, p.y + perp.y * desvio, maxf(larg, 0.35), 0.72)
 
 
 # ------------------------------------------------------------------ terreno
 
+## O chão: a zona FINA (0,75 m, |x|,|z| ≤ 42 m) e a LARGA (3 m, até à orla da malha), feitas
+## DIRECTAMENTE das duas grelhas cozidas do relevo, com a diagonal de (i+1, j) a (i, j+1) — a
+## mesma de Relevo.altura(). A colisão é feita dos MESMOS triângulos da zona fina (defeito 9).
 func _criar_terreno() -> void:
-	var meio := int(Relevo.MEIO_3D)
-	var n := meio * 2 + 1
-	var alt := PackedFloat32Array()
-	alt.resize(n * n)
-	for j in n:
-		for i in n:
-			alt[j * n + i] = Relevo.altura(float(i - meio), float(j - meio))
+	var m := _mat(SH_TERRENO)
+	m.set_shader_parameter("cor_relva", Paleta.CHAO_RELVA)
+	m.set_shader_parameter("cor_relva_seca", Paleta.RELVA_SECA.darkened(0.25))
+	m.set_shader_parameter("cor_floresta", Paleta.CHAO_FLORESTA)
+	m.set_shader_parameter("cor_terra", Paleta.CHAO_TERRA)
+	m.set_shader_parameter("cor_musgo", Paleta.CHAO_MUSGO)
+	m.set_shader_parameter("cor_pedra", Paleta.PEDRA)
+	m.set_shader_parameter("cor_pedra_quente", Paleta.PEDRA_QUENTE)
+	m.set_shader_parameter("meio_arena", Relevo.MEIO)
+	m.set_shader_parameter("ar_de", Relevo.ANEL_FORA - 22.0)
+	m.set_shader_parameter("ar_ate", Relevo.CHAO_FORA)
+	# ---- zona fina
+	var nf := Relevo.N_FINO
+	var gf := Relevo.grelha_fina()
 	var v := PackedVector3Array()
 	var nor := PackedVector3Array()
-	v.resize(n * n)
-	nor.resize(n * n)
-	var fora := PackedFloat32Array()
-	fora.resize(n * n)
-	for j in n:
-		for i in n:
-			var x := float(i - meio)
-			var z := float(j - meio)
-			var f := Relevo.fora(x, z)
-			fora[j * n + i] = f
-			var h := alt[j * n + i]
-			# a orla do terreno real mergulha por baixo da saia do anel (fecha a emenda)
-			if f > Relevo.ANEL_DENTRO + 2.5:
-				h -= 1.4 * smoothstep(Relevo.ANEL_DENTRO + 2.5, Relevo.ANEL_DENTRO + 4.5, f)
-			v[j * n + i] = Vector3(x, h, z)
-			var hx0 := alt[j * n + maxi(i - 1, 0)]
-			var hx1 := alt[j * n + mini(i + 1, n - 1)]
-			var hz0 := alt[maxi(j - 1, 0) * n + i]
-			var hz1 := alt[mini(j + 1, n - 1) * n + i]
-			nor[j * n + i] = Vector3(hx0 - hx1, 2.0, hz0 - hz1).normalized()
+	v.resize(nf * nf)
+	nor.resize(nf * nf)
+	for j in nf:
+		var z := -Relevo.MEIO_FINO + j * Relevo.PASSO_FINO
+		for i in nf:
+			var x := -Relevo.MEIO_FINO + i * Relevo.PASSO_FINO
+			v[j * nf + i] = Vector3(x, gf[j * nf + i], z)
+			nor[j * nf + i] = Relevo.normal(x, z)
 	var idx := PackedInt32Array()
-	var limite := Relevo.ANEL_DENTRO + 4.5
-	for j in n - 1:
-		for i in n - 1:
-			var a := j * n + i
-			if fora[a] > limite and fora[a + 1] > limite and fora[a + n] > limite and fora[a + n + 1] > limite:
+	idx.resize((nf - 1) * (nf - 1) * 6)
+	var faces := PackedVector3Array()
+	faces.resize((nf - 1) * (nf - 1) * 6)
+	var k := 0
+	for j in nf - 1:
+		for i in nf - 1:
+			var a := j * nf + i
+			for o: int in [a, a + 1, a + nf, a + 1, a + nf + 1, a + nf]:
+				idx[k] = o
+				faces[k] = v[o]
+				k += 1
+	_instancia(arena, _malha_chao(v, nor, idx), m, "Terreno")
+	medidas["terreno_fino_tri"] = idx.size() / 3
+	# Colisão (jogável): os MESMOS triângulos que se vêem.
+	var corpo := StaticBody3D.new()
+	corpo.name = "ChaoColisao"
+	var forma := ConcavePolygonShape3D.new()
+	forma.set_faces(faces)
+	var cs := CollisionShape3D.new()
+	cs.shape = forma
+	corpo.add_child(cs)
+	arena.add_child(corpo)
+	# ---- zona larga (a floresta da orla e do anel): sem os quadrados que a zona fina já cobre
+	var nl := Relevo.N_LARGO
+	var gl := Relevo.grelha_larga()
+	var vl := PackedVector3Array()
+	var norl := PackedVector3Array()
+	var foral := PackedFloat32Array()
+	vl.resize(nl * nl)
+	norl.resize(nl * nl)
+	foral.resize(nl * nl)
+	for j in nl:
+		var z := -Relevo.MEIO_LARGO + j * Relevo.PASSO_LARGO
+		for i in nl:
+			var x := -Relevo.MEIO_LARGO + i * Relevo.PASSO_LARGO
+			var h := gl[j * nl + i]
+			vl[j * nl + i] = Vector3(x, h, z)
+			foral[j * nl + i] = Relevo.fora(x, z)
+			var hx0 := gl[j * nl + maxi(i - 1, 0)]
+			var hx1 := gl[j * nl + mini(i + 1, nl - 1)]
+			var hz0 := gl[maxi(j - 1, 0) * nl + i]
+			var hz1 := gl[mini(j + 1, nl - 1) * nl + i]
+			norl[j * nl + i] = Vector3(hx0 - hx1, 2.0 * Relevo.PASSO_LARGO, hz0 - hz1).normalized()
+	var idxl := PackedInt32Array()
+	var limite := Relevo.CHAO_FORA + 1.0
+	var borda := Relevo.MEIO_FINO - 0.01
+	for j in nl - 1:
+		for i in nl - 1:
+			var a := j * nl + i
+			var p0 := vl[a]
+			var p1 := vl[a + nl + 1]
+			if absf(p0.x) <= borda + 0.02 and absf(p1.x) <= borda + 0.02 and absf(p0.z) <= borda + 0.02 and absf(p1.z) <= borda + 0.02:
 				continue
-			idx.append_array([a, a + 1, a + n, a + 1, a + n + 1, a + n])
+			if foral[a] > limite and foral[a + 1] > limite and foral[a + nl] > limite and foral[a + nl + 1] > limite:
+				continue
+			idxl.append_array([a, a + 1, a + nl, a + 1, a + nl + 1, a + nl])
+	_instancia(fundo, _malha_chao(vl, norl, idxl), m, "TerrenoLargo")
+	medidas["terreno_largo_tri"] = idxl.size() / 3
+
+
+func _malha_chao(v: PackedVector3Array, nor: PackedVector3Array, idx: PackedInt32Array) -> ArrayMesh:
 	var arr := []
 	arr.resize(Mesh.ARRAY_MAX)
 	arr[Mesh.ARRAY_VERTEX] = v
@@ -425,132 +620,308 @@ func _criar_terreno() -> void:
 	arr[Mesh.ARRAY_INDEX] = idx
 	var malha := ArrayMesh.new()
 	malha.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
-	var mi := MeshInstance3D.new()
-	mi.name = "Terreno"
-	mi.mesh = malha
-	var m := _mat(SH_TERRENO)
-	m.set_shader_parameter("cor_relva", Paleta.CHAO_RELVA)
-	m.set_shader_parameter("cor_relva_seca", Paleta.RELVA_SECA.darkened(0.25))
-	m.set_shader_parameter("cor_terra", Paleta.CHAO_TERRA)
-	m.set_shader_parameter("cor_musgo", Paleta.CHAO_MUSGO)
-	m.set_shader_parameter("cor_pedra", Paleta.PEDRA)
-	mi.material_override = m
-	arena.add_child(mi)
-	medidas["terreno_tri"] = idx.size() / 3
-	# Colisão (jogável): o mesmo relevo, em HeightMapShape3D de 1 m.
-	var corpo := StaticBody3D.new()
-	corpo.name = "ChaoColisao"
-	var forma := HeightMapShape3D.new()
-	forma.map_width = n
-	forma.map_depth = n
-	forma.map_data = alt
-	var cs := CollisionShape3D.new()
-	cs.shape = forma
-	corpo.add_child(cs)
-	arena.add_child(corpo)
+	return malha
+
+
+# ------------------------------------------------------------------ os marcos (um por quadrante)
+
+func _levantar_marcos() -> void:
+	var obra := Lote.new()       # construído: santuário e lanternas (shaders/marco.gdshader)
+	var madeira := Lote.new()    # madeira morta: o tronco tombado e a árvore seca do charco
+	var r := RandomNumberGenerator.new()
+	r.seed = 3804
+	_marco_menires(r)
+	_marco_santuario(obra, r)
+	_marco_garganta(madeira)
+	_marco_charco(madeira, r)
+	_instancia(arena, obra.fechar(), _mat(SH_MARCO), "MarcoSantuario")
+	var mm := _mat(SH_SOLIDO)
+	mm.set_shader_parameter("cor_musgo", Paleta.PEDRA_MUSGO)
+	mm.set_shader_parameter("forca_musgo", 0.62)
+	mm.set_shader_parameter("musgo_de", 0.50)
+	_instancia(arena, madeira.fechar(), mm, "MarcoMadeira")
+	medidas["marcos_tri"] = obra.triangulos() + madeira.triangulos()
+
+
+## NO — o OUTEIRO DOS MENIRES: sete pedras altas em roda no topo plano (uma tombou) e a laje no
+## meio. Quem está lá em cima vê a arena toda e tem as pedras por cobertura.
+func _marco_menires(r: RandomNumberGenerator) -> void:
+	var c := Relevo.OUTEIRO
+	var n := 7
+	for k in n:
+		var ang := TAU * (float(k) + r.randf_range(-0.12, 0.12)) / float(n) + 0.35
+		var d := 3.25 + r.randf_range(-0.2, 0.2)
+		var x := c.x + cos(ang) * d
+		var z := c.y + sin(ang) * d
+		var alto := r.randf_range(2.5, 3.6)
+		var deitado := k == 4
+		var pe := Vector3(x, Relevo.altura(x, z) - 0.30, z)
+		Formas.menir(_lote_pedras, pe, alto, r, deitado)
+		_ocupar(_tudo, x, z, 0.9)
+		_carimbo_max(1, x, z, 1.0, 0.85)
+		_contacto(x, z, 1.5, 0.65)
+		if deitado:
+			_sombra_alta([0], pe, 0.7, 1.2, 0.85)
+			grelha.dar_cobertura(Grelha.casa_em(x, z), Grelha.COBERTURA_MEIA)
+		else:
+			_sombra_alta([0], pe, alto, alto * 0.21, 0.90)
+			grelha.bloquear(Grelha.casa_em(x, z), "menir")
+	# a laje do meio e o chão gasto dentro da roda (a relva rareia, não some)
+	var hc := Relevo.altura(c.x, c.y)
+	_lote_pedras.rocha(Vector3(c.x, hc + 0.16, c.y), Vector3(1.35, 0.36, 0.95), Basis(Vector3.UP, 0.6), 2, Paleta.PEDRA_QUENTE, 12.0, 0.16)
+	_ocupar(_tudo, c.x, c.y, 1.3)
+	_carimbo_max(1, c.x, c.y, 1.7, 0.9)
+	_carimbo_max(1, c.x, c.y, 3.6, 0.42)
+	_contacto(c.x, c.y, 2.0, 0.5)
+	grelha.dar_cobertura(Grelha.casa_em(c.x, c.y), Grelha.COBERTURA_MEIA)
+
+
+## SE — o TERRAÇO DO SANTUÁRIO: o pagode pequeno (ecoa o palácio da Árvore Ancestral) no cimo
+## da escarpa, virado ao centro da arena; lanternas acesas a ladear o cimo e o pé das duas rampas.
+func _marco_santuario(obra: Lote, r: RandomNumberGenerator) -> void:
+	var t := Relevo.TERRACO
+	var frente := (-t).normalized()                  # para o centro da arena
+	var p := t - frente * 1.1
+	var rot := atan2(-frente.x, -frente.y)
+	var base := Basis(Vector3.UP, rot)
+	var y := Relevo.altura(p.x, p.y)
+	obra.juntar(Formas.santuario(), Transform3D(base, Vector3(p.x, y, p.y)))
+	# ocupa, carimba e bloqueia a planta (2,6 × 2,3 m de meias medidas, mais os degraus)
+	_ocupar(_tudo, p.x, p.y, 3.2)
+	_ocupar(_tudo, p.x + frente.x * 2.8, p.y + frente.y * 2.8, 1.4)
+	_carimbo_max(1, p.x, p.y, 3.5, 1.0)
+	for s in 5:
+		_carimbo_max(1, p.x + frente.x * (2.2 + s * 0.9), p.y + frente.y * (2.2 + s * 0.9), 1.25, 0.8)
+	_contacto(p.x, p.y, 4.6, 0.7)
+	var l := Paleta.dir_luz()
+	var dir := Vector2(l.x, l.z).normalized()
+	for degrau: Array in [[0.8, 3.2], [2.4, 3.2], [3.6, 2.4], [4.8, 1.6], [5.8, 0.9]]:
+		var g := _sombra_de(Vector3(p.x, y + float(degrau[0]), p.y))
+		_carimbo_min(0, g.x, g.y, float(degrau[1]) * 1.25, float(degrau[1]), dir, 0.92)
+	for lj in Grelha.LADO:
+		for ci in Grelha.LADO:
+			var casa := Vector2i(ci, lj)
+			var cc := Grelha.canto(casa) + Vector2(0.75, 0.75) - p
+			var lx := cc.dot(Vector2(-frente.y, frente.x))
+			var lz := cc.dot(frente)
+			if absf(lx) < 2.7 and lz > -2.4 and lz < 2.4:
+				grelha.bloquear(casa, "santuário")
+	# as lanternas: duas no cimo de cada rampa (3 casas de passagem entre elas), uma no pé
+	for sinal: float in [1.0, -1.0]:
+		var rampa := frente.rotated(deg_to_rad(96.0) * sinal)
+		var lado := rampa.orthogonal()
+		for pos: Vector2 in [t + rampa * 6.6 + lado * 2.35, t + rampa * 6.6 - lado * 2.35, t + rampa * 15.0 + lado * 2.6 * sinal]:
+			var yl := Relevo.altura(pos.x, pos.y)
+			obra.juntar(Formas.lanterna(), Transform3D(Basis(Vector3.UP, r.randf() * TAU), Vector3(pos.x, yl - 0.03, pos.y)))
+			_ocupar(_tudo, pos.x, pos.y, 0.6)
+			_carimbo_max(1, pos.x, pos.y, 0.8, 0.8)
+			_contacto(pos.x, pos.y, 1.0, 0.6)
+			_sombra_alta([0], Vector3(pos.x, yl, pos.y), 1.8, 0.36, 0.88)
+			grelha.bloquear(Grelha.casa_em(pos.x, pos.y), "lanterna")
+
+
+## SO — a GARGANTA: o tronco tombado de um gigante faz de muro a leste; o lombo de rocha (que é
+## relevo) faz de muro a oeste. Entre os dois, um corredor de 3–4 casas.
+func _marco_garganta(madeira: Lote) -> void:
+	var a := Relevo.TRONCO_A
+	var b := Relevo.TRONCO_B
+	var raio := Relevo.TRONCO_RAIO
+	var ha := Relevo.altura(a.x, a.y)
+	var hb := Relevo.altura(b.x, b.y)
+	# assenta: o eixo nunca fica a mais de 0,8 raios do chão (nunca flutua; onde o chão sobe, enterra-se)
+	var folga := INF
+	for s in 21:
+		var t := float(s) / 20.0
+		var q := a.lerp(b, t)
+		folga = minf(folga, Relevo.altura(q.x, q.y) - lerpf(ha, hb, t))
+	var pa := Vector3(a.x, ha + folga + raio * 0.8, a.y)
+	var pb := Vector3(b.x, hb + folga + raio * 0.8, b.y)
+	var eixo := (pb - pa).normalized()
+	var lado := Vector3.UP.cross(eixo).normalized()
+	var base := Basis(lado, eixo, lado.cross(eixo))
+	madeira.juntar(Formas.tronco_tombado(pa.distance_to(pb), raio), Transform3D(base, pa))
+	var n := int(a.distance_to(b) / 1.1)
+	for s in n + 1:
+		var t := float(s) / float(n)
+		var q := a.lerp(b, t)
+		var centro := pa.lerp(pb, t)
+		_ocupar(_tudo, q.x, q.y, raio + 0.4)
+		_carimbo_max(1, q.x, q.y, raio * 1.25, 0.95)
+		_contacto(q.x, q.y, raio * 2.3, 0.62)
+		var g := _sombra_de(centro + Vector3(0, raio * 0.5, 0))
+		_carimbo_min(0, g.x, g.y, raio * 1.5, raio * 1.3, Vector2.RIGHT, 0.90)
+	# o prato das raízes (na ponta sul) deita sombra alta
+	_sombra_alta([0], Vector3(a.x, ha, a.y), raio * 3.6, raio * 1.3, 0.85)
+	for lj in Grelha.LADO:
+		for ci in Grelha.LADO:
+			var casa := Vector2i(ci, lj)
+			var d := Relevo.ao_segmento(Grelha.canto(casa) + Vector2(0.75, 0.75), a, b).x
+			if d < raio + 0.30:
+				grelha.bloquear(casa, "tronco tombado")
+			elif d < raio + 1.6:
+				grelha.dar_cobertura(casa, Grelha.COBERTURA_TOTAL)
+
+
+## NE — a COVA DO CHARCO: água parada no fundo (quem atravessa fica em baixo e à vista) e a
+## árvore seca na margem.
+func _marco_charco(madeira: Lote, r: RandomNumberGenerator) -> void:
+	var c := Relevo.COVA
+	var nivel := Relevo.nivel_agua()
+	var l := Lote.new()
+	var na := 36
+	var nr := 8
+	l.v.append(Vector3(c.x, nivel, c.y))
+	l.n.append(Vector3.UP)
+	l.c.append(Color(1, 1, 1, clampf(Relevo.agua(c.x, c.y) / Relevo.AGUA_ABAIXO, 0.0, 1.0)))
+	l.uv.append(Vector2.ZERO)
+	for j in range(1, nr + 1):
+		var rho := 6.6 * float(j) / float(nr)
+		for i in na:
+			var ang := TAU * float(i) / float(na)
+			var x := c.x + cos(ang) * rho
+			var z := c.y + sin(ang) * rho
+			l.v.append(Vector3(x, nivel, z))
+			l.n.append(Vector3.UP)
+			l.c.append(Color(1, 1, 1, clampf(Relevo.agua(x, z) / Relevo.AGUA_ABAIXO, 0.0, 1.0)))
+			l.uv.append(Vector2.ZERO)
+	for i in na:
+		l.idx.append_array([0, 1 + i, 1 + (i + 1) % na])
+	for j in range(1, nr):
+		for i in na:
+			var d0 := 1 + (j - 1) * na + i
+			var d1 := 1 + (j - 1) * na + (i + 1) % na
+			l.idx.append_array([d0, d0 + na, d1 + na, d0, d1 + na, d1])
+	var ma := _mat(SH_AGUA)
+	ma.set_shader_parameter("cor_funda", Paleta.AGUA)
+	ma.set_shader_parameter("cor_rasa", Paleta.AGUA_RASA)
+	ma.set_shader_parameter("cor_reflexo", Paleta.CEU_MEIO)
+	_instancia(arena, l.fechar(), ma, "Charco")
+	medidas["agua_tri"] = l.triangulos()
+	# a margem: lodo à mostra numa faixa estreita à volta da água
+	for i in 40:
+		var ang := TAU * float(i) / 40.0
+		_carimbo_max(1, c.x + cos(ang) * 5.1, c.y + sin(ang) * 5.1, 1.0, 0.62)
+	# a árvore seca, inclinada para a água
+	var ps := c + Vector2(4.9, 3.6)
+	var pe := Vector3(ps.x, Relevo.altura(ps.x, ps.y), ps.y)
+	Formas.arvore_morta(madeira, pe, 8.0, Vector3(-0.16, 0.0, -0.10), r)
+	_ocupar(_tudo, ps.x, ps.y, 0.8)
+	_ocupar(_so_arvores, ps.x, ps.y, 0.4)
+	_troncos.append([ps, 0.4])
+	_carimbo_max(1, ps.x, ps.y, 1.3, 0.9)
+	_contacto(ps.x, ps.y, 1.6, 0.6)
+	_sombra_alta([0], pe, 8.0, 0.42, 0.85)
 
 
 # ------------------------------------------------------------------ árvores
 
+## A família que manda em cada quadrante (defeitos 4 e 6): NO carvalho · NE vidoeiro ·
+## SE pinheiro-manso · SO abeto. `dominio` = fracção das árvores que é da família da casa.
+func _familia_em(x: float, z: float, dominio: float) -> int:
+	if _rng.randf() > dominio:
+		return _rng.randi_range(0, 3)
+	if z < 0.0:
+		return Formas.REDONDA if x < 0.0 else Formas.JOVEM
+	return Formas.CONIFERA if x < 0.0 else Formas.GUARDA_SOL
+
+
+func _altura_familia(familia: int) -> float:
+	match familia:
+		Formas.REDONDA:
+			return _rf(13.5, 18.5)
+		Formas.CONIFERA:
+			return _rf(15.0, 22.0)
+		Formas.JOVEM:
+			return _rf(9.0, 13.0)
+	return _rf(13.0, 18.0)
+
+
+## Planta UMA árvore em (x, z): malha nos lotes, sombra e pé no mapa do chão, lugar ocupado.
+func _arvore(lt: Lote, lc: Lote, x: float, z: float, h: float, familia: int, detalhe: int, sombra_fina: bool) -> void:
+	var pos := Vector3(x, Relevo.altura(x, z), z)
+	var sombras: Array = Formas.arvore(lt, lc, familia, pos, h, detalhe, _rng)
+	var raio := Formas.raio_tronco(familia, h)
+	_ocupar(_tudo, x, z, raio + 0.35)
+	_ocupar(_so_arvores, x, z, 0.0)
+	if Grelha.casa_em(x, z) != Grelha.FORA:
+		_troncos.append([Vector2(x, z), raio])
+	if absf(x) > MAPA_MEIO + 12.0 or absf(z) > MAPA_MEIO + 12.0:
+		return
+	var l := Paleta.dir_luz()
+	var dir := Vector2(l.x, l.z).normalized()
+	var estica := 1.0 / l.y
+	if sombra_fina:
+		for s: Array in sombras:
+			var c: Vector3 = s[0]
+			var rb: float = s[1]
+			var g := _sombra_de(c)
+			_carimbo_min(0, g.x, g.y, rb * estica * 0.8, rb * 0.95, dir, 0.92)
+			_carimbo_min(2, g.x, g.y, rb * estica * 0.8, rb * 0.95, dir, 0.92)
+		_sombra_alta([0, 2], pos, h * 0.45, raio * 1.1, 0.85)
+	else:
+		# na orla funda basta a mancha da copa inteira
+		var meio := Vector3.ZERO
+		for s: Array in sombras:
+			meio += s[0] as Vector3
+		meio /= float(maxi(sombras.size(), 1))
+		var g2 := _sombra_de(meio)
+		var rc := h * (0.20 if familia == Formas.CONIFERA or familia == Formas.JOVEM else 0.34)
+		_carimbo_min(0, g2.x, g2.y, rc * estica * 0.8, rc, dir, 0.90)
+		_carimbo_min(2, g2.x, g2.y, rc * estica * 0.8, rc, dir, 0.90)
+	# raízes: terra à mostra e contacto escuro em volta do pé
+	_carimbo_max(1, x, z, raio * 2.2 + 0.9, 0.95)
+	_contacto(x, z, raio * 3.0 + 1.2, 0.62)
+
+
 func _plantar_arvores() -> void:
-	# Dentro da arena: postas à mão — orla e cantos, três no interior, nenhuma no centro
-	# e nenhuma na linha da janela norte (a vista da árvore-âncora).
-	var dentro: Array = [
-		[-25.0, -22.5, 15.0], [-27.0, 3.0, 13.5], [-22.0, 25.0, 16.0], [1.5, 27.8, 14.0],
-		[26.0, 25.5, 15.5], [27.0, -4.0, 13.0], [23.5, -25.0, 14.5],
-		[-10.0, 13.0, 12.5], [11.5, -15.0, 11.5], [-16.0, -13.0, 12.0]]
-	for d in dentro:
-		_registar_arvore(float(d[0]), float(d[1]), float(d[2]))
-	# A cinta de floresta na orla: ao acaso com distância mínima; a janela norte fica aberta.
-	var tentativas := 0
-	var postas := 0
-	while postas < 118 and tentativas < 9000:
-		tentativas += 1
-		var x := _rf(-51.0, 51.0)
-		var z := _rf(-51.0, 51.0)
-		var f := Relevo.fora(x, z)
-		if f < 1.8 or f > Relevo.ANEL_DENTRO + 1.5:
-			continue
-		if Relevo.na_janela(x, z):
-			continue
-		var livre := true
-		for a in _arvores:
-			var p: Vector3 = a["pos"]
-			if Vector2(p.x - x, p.z - z).length_squared() < 5.0 * 5.0:
-				livre = false
-				break
-		if not livre:
-			continue
-		_registar_arvore(x, z, _rf(11.0, 16.5))
-		postas += 1
-	medidas["arvores"] = _arvores.size()
-
-
-func _registar_arvore(x: float, z: float, h: float) -> void:
-	var pos := Vector3(x, Relevo.altura(x, z) - 0.15, z)
-	var raio := h * _rf(0.030, 0.040)
-	var topo := h * _rf(0.50, 0.60)
-	var incl := Vector3(_rf(-0.10, 0.10), 0.0, _rf(-0.10, 0.10))
-	var fase := _rf(0.0, 1.0)
-	var cimo := pos + Vector3(incl.x * topo, topo, incl.z * topo)
-	var bolhas: Array = []
-	var nb := _rng.randi_range(5, 7)
-	for b in nb:
-		var ang := TAU * (float(b) + _rf(-0.3, 0.3)) / float(nb)
-		var dist := h * _rf(0.14, 0.26)
-		var sobe := h * _rf(0.05, 0.24)
-		var c := cimo + Vector3(cos(ang) * dist, sobe, sin(ang) * dist)
-		bolhas.append([c, h * _rf(0.17, 0.24)])
-	bolhas.append([cimo + Vector3(_rf(-0.6, 0.6), h * _rf(0.26, 0.34), _rf(-0.6, 0.6)), h * _rf(0.19, 0.25)])
-	_arvores.append({"pos": pos, "h": h, "r": raio, "topo": topo, "incl": incl, "fase": fase, "cimo": cimo, "bolhas": bolhas})
-	# raízes: terra à mostra em volta do tronco, relva excluída no pé
-	_carimbo_max(_terra, x, z, raio * 2.2 + 1.1, 0.95)
-
-
-func _criar_arvores() -> void:
 	# 4 quadrantes × (troncos, copas) = 8 malhas: o corte por frustum trabalha por quadrante.
 	var troncos: Array = [Lote.new(), Lote.new(), Lote.new(), Lote.new()]
 	var copas: Array = [Lote.new(), Lote.new(), Lote.new(), Lote.new()]
-	for a in _arvores:
-		var pos: Vector3 = a["pos"]
-		var q := (0 if pos.x < 0.0 else 1) + (0 if pos.z < 0.0 else 2)
-		var lt: Lote = troncos[q]
-		var lc: Lote = copas[q]
-		var h: float = a["h"]
-		var raio: float = a["r"]
-		var topo: float = a["topo"]
-		var incl: Vector3 = a["incl"]
-		var fase: float = a["fase"]
-		var cimo: Vector3 = a["cimo"]
-		var casca := Paleta.CASCA.lerp(Color("#93806a"), _rf(0.30, 0.75))
-		var casca_base := casca.darkened(0.20)
-		casca_base.a = 0.86
-		# tronco: 7 níveis, raiz alargada, leve torção
-		var pts: Array = []
-		for i in 7:
-			var t := float(i) / 6.0
-			var y := t * topo
-			var c := pos + Vector3(incl.x * y + sin(t * 3.0 + fase * 6.0) * 0.22 * t, y, incl.z * y + cos(t * 2.3 + fase * 4.0) * 0.22 * t)
-			var r := raio * lerpf(1.0, 0.58, t) * (1.0 + 1.1 * exp(-y / (raio * 1.8)))
-			pts.append([c, r])
-		pts[6][0] = cimo
-		lt.tubo(pts, 8, casca_base, casca, false)
-		# ramos até às bolhas + as bolhas
-		# perto da arena a copa tem mais malha (silhueta mais rica); na orla funda basta menos
-		var sub := 2 if Relevo.fora(pos.x, pos.z) < 9.0 else 1
-		var centro_vol := cimo + Vector3(0, h * 0.14, 0)
-		var bolhas: Array = a["bolhas"]
-		for bi in bolhas.size():
-			var b: Array = bolhas[bi]
-			var c2: Vector3 = b[0]
-			var rb: float = b[1]
-			var base_ramo := cimo - Vector3(0, _rf(0.0, 0.18) * topo, 0)
-			var meio_ramo := base_ramo.lerp(c2, 0.5) + Vector3(0, -0.06 * h, 0)
-			lt.tubo([[base_ramo, raio * 0.42], [meio_ramo, raio * 0.30], [c2, raio * 0.14]], 5, casca, casca, false)
-			var tinta := Paleta.COPA_A.lerp(Paleta.COPA_B, _rf(0.0, 1.0))
-			if _rng.randf() < 0.16:
-				tinta = tinta.lerp(Paleta.COPA_OURO, _rf(0.3, 0.6))
-			lc.bolha(c2, Vector3(rb, rb * _rf(0.66, 0.80), rb), sub, tinta, _rf(0.0, 90.0), centro_vol, fase, 1.0)
+	var R := Formas.REDONDA
+	var G := Formas.GUARDA_SOL
+	var C := Formas.CONIFERA
+	var J := Formas.JOVEM
+	# Dentro da arena: postas à mão. Cada quadrante a sua família; o miolo (16 m) e a janela
+	# norte (a vista da Árvore Ancestral) ficam abertos; as rampas e o corredor ficam livres.
+	var dentro: Array = [
+		# NO — carvalhos velhos à volta do outeiro
+		[-31.0, -11.5, 17.5, R], [-11.0, -30.0, 16.0, R], [-32.0, -32.0, 18.0, R], [-10.0, -11.5, 14.0, R],
+		[-33.5, -1.5, 15.5, R], [-17.0, -34.5, 15.0, R],
+		# NE — vidoeiros à volta do charco
+		[11.0, -27.5, 12.0, J], [13.5, -30.5, 10.5, J], [31.0, -12.5, 12.5, J], [33.5, -32.5, 13.0, J],
+		[28.0, -8.5, 11.0, J], [9.5, -12.0, 11.5, J], [8.5, -34.5, 12.0, J], [34.0, -21.0, 10.0, J],
+		# SE — pinheiros-mansos à volta do terraço
+		[33.5, 19.5, 16.0, G], [19.5, 34.0, 17.0, G], [33.0, 33.0, 18.0, G], [9.0, 22.5, 14.5, G],
+		[34.0, 3.0, 14.0, G], [2.0, 35.0, 16.0, G],
+		# SO — abetos a ladear a garganta
+		[-31.5, 14.0, 18.0, C], [-33.0, 20.5, 15.5, C], [-34.0, 32.0, 20.0, C], [-9.0, 27.5, 17.0, C],
+		[-10.0, 15.0, 15.0, C], [-28.0, 35.0, 18.0, C], [-11.5, 34.0, 16.0, C]]
+	for d: Array in dentro:
+		var x: float = d[0]
+		var z: float = d[1]
+		var q := (0 if x < 0.0 else 1) + (0 if z < 0.0 else 2)
+		_arvore(troncos[q], copas[q], x, z, float(d[2]), int(d[3]), 2, true)
+	medidas["arvores_arena"] = dentro.size()
+	# A orla rica (até 24 m para lá da arena): ao acaso com distância mínima, por famílias.
+	# A janela norte fica aberta.
+	var postas := 0
+	var tentativas := 0
+	while postas < 250 and tentativas < 14000:
+		tentativas += 1
+		var x := _rf(-62.0, 62.0)
+		var z := _rf(-62.0, 62.0)
+		var f := Relevo.fora(x, z)
+		if f < 1.0 or f > Relevo.ORLA_FORA:
+			continue
+		if Relevo.na_janela(x, z, 3.0):
+			continue
+		if not _livre(_so_arvores, x, z, 4.7) or not _livre(_tudo, x, z, 1.3):
+			continue
+		var familia := _familia_em(x, z, 0.62)
+		var q := (0 if x < 0.0 else 1) + (0 if z < 0.0 else 2)
+		_arvore(troncos[q], copas[q], x, z, _altura_familia(familia), familia, 2 if f < 6.0 else 1, f < 9.0)
+		postas += 1
+	medidas["arvores_orla"] = postas
 	var mat_tronco := _mat(SH_SOLIDO)
 	mat_tronco.set_shader_parameter("cor_musgo", Paleta.PEDRA_MUSGO)
 	mat_tronco.set_shader_parameter("forca_musgo", 0.45)
@@ -558,270 +929,267 @@ func _criar_arvores() -> void:
 	mat_copa.set_shader_parameter("cor_ouro", Paleta.COPA_OURO)
 	var tri := 0
 	for q in 4:
-		var lt2: Lote = troncos[q]
-		var lc2: Lote = copas[q]
-		if not lt2.vazio():
-			_instancia(arena, lt2.fechar(), mat_tronco, "Troncos%d" % q)
-			tri += lt2.triangulos()
-		if not lc2.vazio():
-			var mi := _instancia(arena, lc2.fechar(), mat_copa, "Copas%d" % q)
+		var lt: Lote = troncos[q]
+		var lc: Lote = copas[q]
+		if not lt.vazio():
+			_instancia(arena, lt.fechar(), mat_tronco, "Troncos%d" % q)
+			tri += lt.triangulos()
+		if not lc.vazio():
+			var mi := _instancia(arena, lc.fechar(), mat_copa, "Copas%d" % q)
 			mi.extra_cull_margin = 1.0
-			tri += lc2.triangulos()
+			tri += lc.triangulos()
 	medidas["arvores_tri"] = tri
-
-
-func _instancia(pai: Node3D, malha: Mesh, mat: Material, nome: String) -> MeshInstance3D:
-	var mi := MeshInstance3D.new()
-	mi.name = nome
-	mi.mesh = malha
-	mi.material_override = mat
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	pai.add_child(mi)
-	return mi
 
 
 # ------------------------------------------------------------------ pedras
 
 func _semear_rochas() -> void:
-	# À mão: a escarpa do terraço (sueste), o cômoro (oeste), a beira da cova (nordeste),
-	# o miradouro da janela (norte) e pedras soltas pelos 4 quadrantes.
+	# À mão, por quadrante: cada pedra está onde serve o combate (meia cobertura no prado, o
+	# miradouro da janela, o pé do outeiro, a beira da cova, o pé da escarpa, a crista do lombo).
 	var lugares: Array = [
-		[10.3, 12.0, 2.6], [12.2, 9.2, 1.8], [9.3, 15.8, 2.0], [14.8, 7.8, 1.3], [11.2, 19.4, 1.5], [20.5, 14.0, 1.0],
-		[-14.8, 6.3, 1.6], [-11.4, 9.6, 1.0], [-15.6, 10.2, 0.7],
-		[4.0, -8.0, 1.2], [12.6, -7.4, 0.9], [6.4, -15.8, 1.4],
-		[-6.5, -30.5, 2.3], [-1.0, -32.5, 1.5], [-10.5, -29.0, 1.1], [3.5, -30.0, 0.8],
-		[-22.0, -8.0, 2.1], [-6.0, -20.0, 1.6], [20.0, -14.0, 1.9], [-4.0, 18.5, 1.2], [24.5, 6.5, 1.5],
-		[-24.0, 16.5, 1.3], [1.5, -4.5, 0.55], [-7.0, -6.0, 0.8], [-19.0, -22.0, 1.4], [17.0, 24.5, 1.7],
-		[-27.5, 27.0, 1.6], [27.5, -27.0, 1.8], [-28.0, -27.5, 1.3], [5.5, 5.0, 0.6], [-2.0, 9.0, 0.45]]
-	for g in lugares:
-		_registar_rocha(float(g[0]), float(g[1]), float(g[2]))
+		# o prado do meio: pedras baixas, meia cobertura — nunca um muro
+		[4.5, -6.5, 1.1], [-7.5, 3.5, 0.9], [6.5, 8.5, 0.8], [-3.0, -14.5, 1.2], [13.0, 1.0, 0.75], [-12.5, -3.0, 0.6],
+		# N — o miradouro da janela
+		[-8.5, -33.5, 1.9], [-2.5, -35.5, 1.3], [3.0, -33.0, 1.0], [-13.5, -31.0, 1.2],
+		# NO — o pé do outeiro
+		[-12.5, -12.5, 1.5], [-28.0, -9.0, 1.3], [-9.5, -23.5, 1.1], [-33.0, -22.0, 1.4], [-24.0, -35.5, 1.0],
+		# NE — o rebordo da cova
+		[10.0, -14.5, 1.6], [26.5, -10.0, 1.2], [15.5, -28.5, 1.0], [32.0, -18.5, 1.1], [20.0, -34.5, 1.2],
+		# SE — o pé da escarpa do terraço
+		[13.6, 13.2, 2.2], [15.8, 10.4, 1.5], [10.6, 15.8, 1.6], [11.6, 19.0, 1.1], [18.2, 9.2, 1.0], [34.0, 26.0, 1.4],
+		# SO — a crista do lombo e a boca da garganta
+		[-23.6, 19.0, 2.1], [-23.1, 15.4, 1.4], [-22.6, 12.2, 1.8], [-22.2, 9.4, 1.2], [-24.2, 22.4, 1.5],
+		[-9.5, 19.5, 1.3], [-11.5, 7.5, 1.0], [-34.5, 8.0, 1.2],
+		# as beiras
+		[34.5, -4.5, 1.3], [-5.0, 34.5, 1.1]]
+	for g: Array in lugares:
+		var tam: float = g[2]
+		_registar_rocha(float(g[0]), float(g[1]), tam)
 		# satélites: 1–2 pedras menores encostadas
 		for s in _rng.randi_range(1, 2):
 			var ang := _rf(0.0, TAU)
-			var d := float(g[2]) * _rf(0.9, 1.4)
-			_registar_rocha(float(g[0]) + cos(ang) * d, float(g[1]) + sin(ang) * d, float(g[2]) * _rf(0.25, 0.5))
+			var d := tam * _rf(0.9, 1.4)
+			var sx := float(g[0]) + cos(ang) * d
+			var sz := float(g[1]) + sin(ang) * d
+			if _livre(_tudo, sx, sz, 0.2):
+				_registar_rocha(sx, sz, tam * _rf(0.25, 0.5))
 	# Na orla: ao acaso.
 	var postas := 0
 	var tentativas := 0
-	while postas < 34 and tentativas < 2000:
+	while postas < 46 and tentativas < 3000:
 		tentativas += 1
-		var x := _rf(-48.0, 48.0)
-		var z := _rf(-48.0, 48.0)
+		var x := _rf(-60.0, 60.0)
+		var z := _rf(-60.0, 60.0)
 		var f := Relevo.fora(x, z)
-		if f < 0.5 or f > Relevo.ANEL_DENTRO:
+		if f < 0.5 or f > Relevo.ORLA_FORA - 2.0:
 			continue
-		if _terra_em(x, z) > 0.3:
+		var tam := _rf(0.6, 2.4)
+		if not _livre(_tudo, x, z, tam * 0.9 + 0.3):
 			continue
-		_registar_rocha(x, z, _rf(0.6, 2.4))
+		_registar_rocha(x, z, tam)
 		postas += 1
-	medidas["rochas"] = _rochas.size()
-
-
-func _registar_rocha(x: float, z: float, tam: float) -> void:
-	_rochas.append([Vector3(x, Relevo.altura(x, z), z), tam])
-	_carimbo_max(_terra, x, z, tam * 1.25 + 0.25, 1.0)
-
-
-func _criar_rochas() -> void:
-	var lote := Lote.new()
-	for r in _rochas:
-		var c: Vector3 = r[0]
-		var tam: float = r[1]
-		var esc := Vector3(tam * _rf(0.85, 1.25), tam * _rf(0.55, 0.9), tam * _rf(0.85, 1.25))
-		var rot := Basis(Vector3.UP, _rf(0.0, TAU)) * Basis(Vector3.RIGHT, _rf(-0.25, 0.25))
-		var cor := Paleta.PEDRA.lerp(Color("#a09a86"), _rf(0.0, 0.6))
-		lote.rocha(c + Vector3(0, esc.y * 0.22, 0), esc, rot, 2 if tam > 1.1 else 1, cor, _rf(0.0, 60.0))
 	var m := _mat(SH_SOLIDO)
 	m.set_shader_parameter("cor_musgo", Paleta.PEDRA_MUSGO)
 	m.set_shader_parameter("forca_musgo", 0.80)
 	m.set_shader_parameter("musgo_de", 0.56)
 	m.set_shader_parameter("musgo_liso", 1.0)
-	_instancia(arena, lote.fechar(), m, "Pedras")
-	medidas["rochas_tri"] = lote.triangulos()
+	_instancia(arena, _lote_pedras.fechar(), m, "Pedras")
+	medidas["rochas"] = _rochas.size()
+	medidas["rochas_tri"] = _lote_pedras.triangulos()
 
 
-# ------------------------------------------------------------------ arbustos
+func _registar_rocha(x: float, z: float, tam: float) -> void:
+	var c := Vector3(x, Relevo.altura(x, z), z)
+	_rochas.append([c, tam])
+	_ocupar(_tudo, x, z, tam * 0.9)
+	var esc := Vector3(tam * _rf(0.85, 1.25), tam * _rf(0.55, 0.9), tam * _rf(0.85, 1.25))
+	var rot := Basis(Vector3.UP, _rf(0.0, TAU)) * Basis(Vector3.RIGHT, _rf(-0.25, 0.25))
+	var cor := Paleta.PEDRA.lerp(Paleta.PEDRA_QUENTE, _rf(0.0, 0.7))
+	_lote_pedras.rocha(c + Vector3(0, esc.y * 0.20, 0), esc, rot, 2 if tam > 1.1 else 1, cor, _rf(0.0, 60.0))
+	var l := Paleta.dir_luz()
+	var g := _sombra_de(c + Vector3(0, tam * 0.3, 0))
+	_carimbo_min(0, g.x, g.y, tam * 0.9 * (1.0 + 0.5 / l.y), tam * 0.95, Vector2(l.x, l.z).normalized(), 0.9)
+	_carimbo_max(1, x, z, tam * 1.2 + 0.2, 1.0)
+	_contacto(x, z, tam * 1.8 + 0.5, 0.62)
 
-func _criar_arbustos() -> void:
-	var l := Lote.new()
-	l.bolha(Vector3(0, 0.42, 0), Vector3(0.9, 0.62, 0.9), 1, Color.WHITE, 3.0, Vector3(0, -0.2, 0), 0.0, 0.5, 0.36)
-	l.bolha(Vector3(0.55, 0.30, 0.25), Vector3(0.55, 0.42, 0.55), 1, Color(0.92, 0.95, 0.9), 11.0, Vector3(0, -0.2, 0), 0.3, 0.5, 0.36)
-	l.bolha(Vector3(-0.42, 0.26, -0.40), Vector3(0.48, 0.36, 0.48), 1, Color(0.86, 0.92, 0.84), 23.0, Vector3(0, -0.2, 0), 0.6, 0.5, 0.36)
-	var malha := l.fechar()
-	var lugares: Array[Transform3D] = []
-	var cores: Array[Color] = []
-	var tent := 0
-	# espalhados pela arena e pela orla, mais cerrados junto à floresta e às pedras
-	while lugares.size() < 230 and tent < 6000:
-		tent += 1
-		var x := _rf(-47.0, 47.0)
-		var z := _rf(-47.0, 47.0)
-		var f := Relevo.fora(x, z)
-		if f > Relevo.ANEL_DENTRO:
-			continue
-		var prob := 0.10 + 0.55 * smoothstep(-9.0, 2.0, f)
-		for r in _rochas:
-			var c: Vector3 = r[0]
-			if Vector2(c.x - x, c.z - z).length() < float(r[1]) * 1.5 + 1.2:
-				prob = 0.7
-				break
-		if Relevo.na_janela(x, z) and f > -2.0:
-			prob *= 0.35
-		if _rng.randf() > prob or _terra_em(x, z) > 0.5:
-			continue
-		var s := _rf(0.5, 1.15)
-		var b := Basis(Vector3.UP, _rf(0.0, TAU)).scaled(Vector3(s, s * _rf(0.85, 1.3), s))
-		lugares.append(Transform3D(b, Vector3(x, Relevo.altura(x, z) - 0.05, z)))
-		var tinta := Paleta.COPA_A.lerp(Paleta.COPA_B, _rf(0.2, 1.0))
-		tinta.a = 1.0
-		cores.append(tinta)
-		_carimbo_max(_terra, x, z, s * 0.75, 0.7)
-	var mm := MultiMesh.new()
-	mm.transform_format = MultiMesh.TRANSFORM_3D
-	mm.use_colors = true
-	mm.mesh = malha
-	mm.instance_count = lugares.size()
-	for i in lugares.size():
-		mm.set_instance_transform(i, lugares[i])
-		mm.set_instance_color(i, cores[i])
-	var mmi := MultiMeshInstance3D.new()
-	mmi.name = "Arbustos"
-	mmi.multimesh = mm
+
+# ------------------------------------------------------------------ estrato intermédio
+
+## O que fica entre a relva e as copas (defeito 6): quatro silhuetas que não se confundem com
+## pedra — arbusto de chamas direitas, silvado baixo com bagas, feto em arco, folha larga.
+## Um MultiMesh por família e por quadrante (o corte por frustum tira os de trás).
+func _criar_estrato() -> void:
+	var malhas: Array = [Formas.arbusto(11), Formas.silvado(12), Formas.feto(13), Formas.folha_larga(14)]
+	var nomes: Array[String] = ["Arbustos", "Silvados", "Fetos", "FolhasLargas"]
+	var quantos: Array[int] = [96, 44, 240, 210]
+	var listas: Array = []
+	for t in 4:
+		listas.append([[], [], [], []])
+	var cova := Relevo.COVA
+	for tipo in 4:
+		var postos := 0
+		var tent := 0
+		while postos < quantos[tipo] and tent < 30000:
+			tent += 1
+			var x := _rf(-60.0, 60.0)
+			var z := _rf(-60.0, 60.0)
+			var f := Relevo.fora(x, z)
+			if f > Relevo.ORLA_FORA - 3.0 or Vector2(x, z).length() < 15.0:
+				continue
+			if Relevo.agua(x, z) > 0.02 or Relevo.normal(x, z).y < 0.82 or _terra_em(x, z) > 0.5:
+				continue
+			var coberto := _coberto_em(x, z)
+			var beira := 1.0 - smoothstep(0.0, 4.0, Vector2(x - cova.x, z - cova.y).length() - 5.4)
+			var prob := 0.0
+			var folga := 0.9
+			match tipo:
+				0:  # arbusto: a orla da floresta, à volta das pedras e ao longo do lombo
+					prob = 0.05 + 0.55 * smoothstep(-8.0, 1.0, f) * (1.0 - smoothstep(10.0, 18.0, f))
+					prob = maxf(prob, 0.55 * (1.0 - smoothstep(2.0, 4.5, Relevo.ao_segmento(Vector2(x, z), Relevo.LOMBO_A, Relevo.LOMBO_B).x)))
+					folga = 1.3
+				1:  # silvado: clareiras de sol na orla e o pé das vertentes
+					prob = 0.04 + 0.30 * smoothstep(-5.0, 3.0, f) * (1.0 - coberto)
+					folga = 1.5
+				2:  # feto: debaixo das copas, na garganta e à beira da cova
+					prob = 0.04 + 0.65 * coberto + 0.45 * beira
+					if x < -8.0 and z > 6.0:
+						prob += 0.25
+					folga = 0.55
+				3:  # folha larga: a beira-água e a sombra funda
+					prob = 0.03 + 0.85 * beira + 0.35 * coberto * smoothstep(0.0, 8.0, f)
+					folga = 0.5
+			if Relevo.na_janela(x, z) and f > -3.0:
+				prob *= 0.35
+			if _rng.randf() > prob or not _livre(_tudo, x, z, folga):
+				continue
+			var s := _rf(0.75, 1.25)
+			if tipo == 0:
+				s = _rf(0.85, 1.35)
+			var b := Basis(Vector3.UP, _rf(0.0, TAU)).scaled(Vector3(s, s * _rf(0.88, 1.18), s))
+			var tom := _rf(0.86, 1.08)
+			(listas[tipo][(0 if x < 0.0 else 1) + (0 if z < 0.0 else 2)] as Array).append(
+				[Transform3D(b, Vector3(x, Relevo.altura(x, z) - 0.04, z)), Color(tom, tom * _rf(0.96, 1.04), tom * _rf(0.92, 1.0), 1.0)])
+			if tipo < 2:
+				_ocupar(_tudo, x, z, 0.55 * s)
+				_carimbo_max(1, x, z, 0.75 * s, 0.7)
+				_contacto(x, z, 1.3 * s, 0.5)
+				var g := _sombra_de(Vector3(x, Relevo.altura(x, z) + 0.6 * s, z))
+				var l := Paleta.dir_luz()
+				_carimbo_min(0, g.x, g.y, 1.3 * s, 0.9 * s, Vector2(l.x, l.z).normalized(), 0.8)
+				grelha.dar_cobertura(Grelha.casa_em(x, z), Grelha.COBERTURA_MEIA)
+			else:
+				_ocupar(_tudo, x, z, 0.15)
+				_contacto(x, z, 0.8 * s, 0.35)
+			postos += 1
+		medidas["estrato_" + nomes[tipo].to_lower()] = postos
 	var m := _mat(SH_COPA)
 	m.set_shader_parameter("cor_ouro", Paleta.COPA_OURO)
-	m.set_shader_parameter("vento_forca", 0.10)
-	mmi.material_override = m
-	mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	arena.add_child(mmi)
-	medidas["arbustos"] = lugares.size()
-	medidas["arbustos_tri"] = lugares.size() * l.triangulos()
-	# a sombra dos arbustos entra no mapa do chão (pequena, ao pé)
-	var luz := Paleta.dir_luz()
-	var dir := Vector2(luz.x, luz.z).normalized()
-	for t in lugares:
-		var g := _sombra_de(t.origin + Vector3(0, 0.4, 0))
-		_carimbo_min(_luz, g.x, g.y, 1.3 * t.basis.get_scale().x, 0.9 * t.basis.get_scale().x, dir, 0.8)
-	_cozer_mapa_chao_final()
-
-
-## Os arbustos carimbaram luz e terra depois do primeiro cozer: regrava a textura.
-func _cozer_mapa_chao_final() -> void:
-	var dados := PackedByteArray()
-	dados.resize(MAPA_N * MAPA_N * 3)
-	for i in MAPA_N * MAPA_N:
-		dados[i * 3] = int(clampf(_luz[i], 0.0, 1.0) * 255.0)
-		dados[i * 3 + 1] = int(clampf(_terra[i], 0.0, 1.0) * 255.0)
-		dados[i * 3 + 2] = int(clampf(_luz_copas[i], 0.0, 1.0) * 255.0)
-	var img := Image.create_from_data(MAPA_N, MAPA_N, false, Image.FORMAT_RGB8, dados)
-	_mapa_tex = ImageTexture.create_from_image(img)
+	m.set_shader_parameter("vento_forca", 0.09)
+	var tri := 0
+	for tipo in 4:
+		var lote: Lote = malhas[tipo]
+		var malha := lote.fechar()
+		for q in 4:
+			var lista: Array = listas[tipo][q]
+			if lista.is_empty():
+				continue
+			var mm := MultiMesh.new()
+			mm.transform_format = MultiMesh.TRANSFORM_3D
+			mm.use_colors = true
+			mm.mesh = malha
+			mm.instance_count = lista.size()
+			for i in lista.size():
+				mm.set_instance_transform(i, lista[i][0])
+				mm.set_instance_color(i, lista[i][1])
+			var mmi := MultiMeshInstance3D.new()
+			mmi.name = "%s%d" % [nomes[tipo], q]
+			mmi.multimesh = mm
+			mmi.material_override = m
+			mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			arena.add_child(mmi)
+			tri += lista.size() * lote.triangulos()
+	medidas["estrato_tri"] = tri
 
 
 # ------------------------------------------------------------------ relva
 
-## Um tufo: 6 lâminas de 3 triângulos, abertas em leque, curvas. Altura normalizada (1 = ponta).
-func _malha_tufo() -> ArrayMesh:
-	var v := PackedVector3Array()
-	var uv := PackedVector2Array()
-	var idx := PackedInt32Array()
-	var r := RandomNumberGenerator.new()
-	r.seed = 4242
-	for b in 6:
-		var ang := TAU * (float(b) + r.randf_range(-0.35, 0.35)) / 6.0
-		var fora_dir := Vector3(cos(ang), 0.0, sin(ang))
-		var lado := Vector3(-sin(ang + r.randf_range(-0.5, 0.5)), 0.0, cos(ang))
-		var larg := r.randf_range(0.030, 0.045)
-		var alt := r.randf_range(0.62, 1.0)
-		var abre := r.randf_range(0.10, 0.34)
-		var pe := fora_dir * r.randf_range(0.02, 0.13)
-		var meio := pe + fora_dir * abre * 0.35 + Vector3(0, alt * 0.52, 0)
-		var ponta := pe + fora_dir * abre + Vector3(0, alt, 0)
-		var base := v.size()
-		v.append_array([pe - lado * larg, pe + lado * larg, meio - lado * larg * 0.72, meio + lado * larg * 0.72, ponta])
-		uv.append_array([Vector2(0, 0), Vector2(1, 0), Vector2(0, 0.52 * alt), Vector2(1, 0.52 * alt), Vector2(0.5, alt)])
-		idx.append_array([base, base + 1, base + 2, base + 1, base + 3, base + 2, base + 2, base + 3, base + 4])
-	var arr := []
-	arr.resize(Mesh.ARRAY_MAX)
-	arr[Mesh.ARRAY_VERTEX] = v
-	arr[Mesh.ARRAY_TEX_UV] = uv
-	arr[Mesh.ARRAY_INDEX] = idx
-	var m := ArrayMesh.new()
-	m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
-	return m
-
-
 func _criar_relva() -> void:
-	var tufo := _malha_tufo()
 	var mat := _mat(SH_RELVA)
 	mat.set_shader_parameter("cor_base", Paleta.RELVA_BASE)
 	mat.set_shader_parameter("cor_ponta", Paleta.RELVA_PONTA)
 	mat.set_shader_parameter("cor_seca", Paleta.RELVA_SECA)
-	var rn := Relevo.ruido()
-	var limite := Relevo.ANEL_DENTRO + 3.0
-	var total := 0
-	var blocos := 0
-	var meio := 60.0
-	var nb := int(2.0 * meio / BLOCO_RELVA)
-	for bj in nb:
-		for bi in nb:
-			var x0 := -meio + bi * BLOCO_RELVA
-			var z0 := -meio + bj * BLOCO_RELVA
-			var xs: Array[Transform3D] = []
-			var cs: Array[Color] = []
-			var candidatos := int(BLOCO_RELVA * BLOCO_RELVA * 5.2)
-			for k in candidatos:
-				var x := x0 + _rng.randf() * BLOCO_RELVA
-				var z := z0 + _rng.randf() * BLOCO_RELVA
-				var f := Relevo.fora(x, z)
-				if f > limite:
-					continue
-				# densidade: cheia na arena; na orla rareia debaixo da floresta
-				var dens := 1.0
-				if f > 0.0:
-					dens = lerpf(0.85, 0.22, clampf(f / limite, 0.0, 1.0))
-				var mancha := rn.get_noise_2d(x * 6.0 + 300.0, z * 6.0)
-				dens *= 0.80 + 0.35 * mancha
-				var terra := _terra_em(x, z)
-				if terra > 0.55:
-					continue
-				dens *= 1.0 - terra
-				if _rng.randf() > dens:
-					continue
-				var nrm := Relevo.normal(x, z)
-				if nrm.y < 0.80:
-					continue
-				var alto := _rf(0.55, 0.95) * (1.0 + 0.30 * mancha)
-				var largo := _rf(0.9, 1.35)
-				var b := Basis(Vector3.UP, _rf(0.0, TAU)).scaled(Vector3(largo, alto, largo))
-				xs.append(Transform3D(b, Vector3(x, Relevo.altura(x, z) - 0.04, z)))
-				var seca := clampf(0.5 + rn.get_noise_2d(x * 3.0 - 200.0, z * 3.0 + 70.0) * 1.4, 0.0, 1.0) * _rf(0.5, 1.0)
-				cs.append(Color(_rng.randf(), seca * 0.8, _rng.randf(), 1.0))
-			if xs.is_empty():
-				continue
-			var mm := MultiMesh.new()
-			mm.transform_format = MultiMesh.TRANSFORM_3D
-			mm.use_custom_data = true
-			mm.mesh = tufo
-			mm.instance_count = xs.size()
-			for i in xs.size():
-				mm.set_instance_transform(i, xs[i])
-				mm.set_instance_custom_data(i, cs[i])
-			var mmi := MultiMeshInstance3D.new()
-			mmi.name = "Relva_%d_%d" % [bi, bj]
-			mmi.multimesh = mm
-			mmi.material_override = mat
-			mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-			mmi.extra_cull_margin = 1.0
-			arena.add_child(mmi)
-			_relva_mms.append(mm)
-			total += xs.size()
-			blocos += 1
-	medidas["relva_tufos"] = total
-	medidas["relva_blocos"] = blocos
-	medidas["relva_tri"] = total * 18
-	definir_densidade_relva(densidade_relva)
+	mat.set_shader_parameter("cor_floresta", Paleta.RELVA_SOMBRA)
+	var mat_haste := _mat(SH_HASTE)
+	mat_haste.set_shader_parameter("cor_haste", Paleta.JUNCO)
+	relva = RelvaFloresta.new()
+	relva.name = "Relva"
+	arena.add_child(relva)
+	relva.semear(mat, mat_haste, _terra_em, _coberto_em, semente + 7)
+	medidas.merge(relva.medidas, true)
+	relva.definir_densidade(densidade_relva)
 
 
-# ------------------------------------------------------------------ o fundo: anel próximo
+# ------------------------------------------------------------------ a grelha (terreno estático)
+
+## Escreve na grelha o que o terreno é: o que BLOQUEIA (tronco, rocha, água funda, escarpa — os
+## marcos já se escreveram ao levantar-se) e a COBERTURA que cada casa dá.
+func _marcar_grelha() -> void:
+	for lj in Grelha.LADO:
+		for ci in Grelha.LADO:
+			var casa := Vector2i(ci, lj)
+			var c := Grelha.canto(casa) + Vector2(0.75, 0.75)
+			if Relevo.agua(c.x, c.y) > 0.40:
+				grelha.bloquear(casa, "água funda")
+			elif Grelha.degrau(casa) > ESCARPA_M:
+				grelha.bloquear(casa, "escarpa")
+	for t: Array in _troncos:
+		var p: Vector2 = t[0]
+		var casa := Grelha.casa_em(p.x, p.y)
+		grelha.bloquear(casa, "tronco")
+		for viz in Grelha.vizinhas(casa, false):
+			grelha.dar_cobertura(viz, Grelha.COBERTURA_MEIA)
+	for r: Array in _rochas:
+		var c: Vector3 = r[0]
+		var tam: float = r[1]
+		var casa := Grelha.casa_em(c.x, c.z)
+		if casa == Grelha.FORA:
+			continue
+		if tam >= 1.0:
+			var alcance := int(ceil(tam / Grelha.CASA_M))
+			for dj in range(-alcance, alcance + 1):
+				for di in range(-alcance, alcance + 1):
+					var outra := casa + Vector2i(di, dj)
+					if not Grelha.dentro(outra):
+						continue
+					var d := (Grelha.canto(outra) + Vector2(0.75, 0.75)).distance_to(Vector2(c.x, c.z))
+					if d < tam * 0.85 or outra == casa:
+						grelha.bloquear(outra, "rocha")
+					elif d < tam * 0.85 + 1.6:
+						grelha.dar_cobertura(outra, Grelha.COBERTURA_TOTAL if tam >= 1.5 else Grelha.COBERTURA_MEIA)
+		elif tam >= 0.5:
+			grelha.dar_cobertura(casa, Grelha.COBERTURA_MEIA)
+	# A prova de que se joga: todas as casas livres têm de estar ligadas ao centro (4 vizinhas).
+	var visto := PackedByteArray()
+	visto.resize(Grelha.LADO * Grelha.LADO)
+	var fila: Array[Vector2i] = [Vector2i(25, 25)]
+	visto[Grelha.indice(fila[0])] = 1
+	var cabeca := 0
+	while cabeca < fila.size():
+		var casa := fila[cabeca]
+		cabeca += 1
+		for viz in Grelha.vizinhas(casa, false):
+			if visto[Grelha.indice(viz)] == 0 and not grelha.bloqueada(viz):
+				visto[Grelha.indice(viz)] = 1
+				fila.append(viz)
+	var bloqueadas := grelha.casas_bloqueadas()
+	medidas["casas"] = Grelha.LADO * Grelha.LADO
+	medidas["casas_bloqueadas"] = bloqueadas
+	medidas["casas_livres"] = Grelha.LADO * Grelha.LADO - bloqueadas
+	medidas["casas_livres_isoladas"] = Grelha.LADO * Grelha.LADO - bloqueadas - fila.size()
+	medidas["centro_livre"] = not grelha.bloqueada(Vector2i(25, 25))
+
+
+# ------------------------------------------------------------------ o fundo: o anel de floresta
 
 ## Ponto do mundo a `f` metros para fora da orla da arena, no azimute `ang` (radianos).
 func _ponto_anel(ang: float, f: float) -> Vector2:
@@ -831,183 +1199,116 @@ func _ponto_anel(ang: float, f: float) -> Vector2:
 	return Vector2(dx * r, dz * r)
 
 
-## A tinta do anel próximo: a MESMA conta de luz dos shaders da arena (copa.gdshader /
-## luz_floresta.gdshaderinc), feita uma vez por vértice e guardada na cor — por isso a primeira
-## fila do anel casa com a última fila de árvores reais. Depois entra o AR: a cor do horizonte
-## cresce com a distância e com a baixa do vale (a bruma assenta).
-## `ao` = oclusão (0–1): copas por dentro, chão debaixo da floresta.
-func _tinta_perto(cor: Color, nrm: Vector3, p: Vector3, ao: float = 1.0) -> Color:
-	# a pincelada: uma mancha de ~2 m parte a luz em toques, como nas copas reais
-	var mancha := Relevo.ruido().get_noise_3d(p.x * 55.0, p.y * 55.0, p.z * 55.0)
-	var ndl := nrm.dot(Paleta.dir_luz()) + mancha * 0.55
-	var k := smoothstep(-0.20, 0.10, ndl) * 0.5 + smoothstep(0.28, 0.58, ndl) * 0.5
-	var alb := cor.srgb_to_linear()
-	var ceu := Paleta.COR_CEU_AMBIENTE.srgb_to_linear()
-	var sol := Paleta.COR_SOL.srgb_to_linear()
-	var sombra := Paleta.COR_SOMBRA.srgb_to_linear()
-	var baixo := clampf(0.5 - 0.5 * nrm.y, 0.0, 1.0)
-	var amb := ceu * (0.26 + 0.20 * nrm.y) + Color(0.46, 0.48, 0.17) * (0.375 * baixo)
-	var luz := amb + (sombra * 0.45).lerp(sol, k * ao)
-	var escuro := lerpf(0.72, 1.0, ao)
-	var c := Color(alb.r * luz.r * escuro, alb.g * luz.g * escuro, alb.b * luz.b * escuro).linear_to_srgb()
-	var f := Relevo.fora(p.x, p.z)
-	# em curva: as primeiras filas (as que os cantos da arena vêem a 20–30 m) ficam com o tom
-	# das árvores reais; o clarear guarda-se para o fundo do anel
-	var quanto := lerpf(0.04, 0.46, pow(clampf((f - Relevo.ANEL_DENTRO) / (Relevo.ANEL_FORA - Relevo.ANEL_DENTRO), 0.0, 1.0), 1.5))
-	quanto += 0.30 * smoothstep(1.0, -11.0, p.y)
-	return Paleta.ar(c, quanto)                                          # (c) a tinta dos anéis
-
-
-func _criar_anel_perto() -> void:
-	var lt := Lote.new()
-	# --- a saia de terreno (a MESMA função de relevo, em malha pobre)
-	var na := 144
-	var nr := 9
-	var base := lt.v.size()
-	for j in nr + 1:
-		var tj := float(j) / float(nr)
-		var f := lerpf(Relevo.ANEL_DENTRO - 1.0, Relevo.ANEL_FORA, pow(tj, 1.15))
-		for i in na:
-			var ang := TAU * float(i) / float(na)
-			var p2 := _ponto_anel(ang, f)
-			var h := Relevo.altura(p2.x, p2.y)
-			h -= 0.9 * (1.0 - smoothstep(Relevo.ANEL_DENTRO, Relevo.ANEL_DENTRO + 5.0, f))
-			var p := Vector3(p2.x, h, p2.y)
-			lt.v.append(p)
-			var nrm := Relevo.normal(p2.x, p2.y)
-			lt.n.append(nrm)
-			var chao := Paleta.CHAO_RELVA.lerp(Paleta.ANEL_FLORESTA, 0.5).darkened(0.18)
-			# é chão DEBAIXO da floresta: à frente quase todo em sombra (como a orla real)
-			lt.c.append(_tinta_perto(chao, nrm.lerp(Vector3.UP, 0.5), p, lerpf(0.40, 0.80, tj)))
-			lt.uv.append(Vector2.ZERO)
-	# a contra-encosta: para lá da crista o chão cai e derrete na cor do horizonte
-	for i in na:
-		var ang2 := TAU * float(i) / float(na)
-		var p3 := _ponto_anel(ang2, Relevo.ANEL_FORA + 16.0)
-		lt.v.append(Vector3(p3.x, Relevo.altura(p3.x, p3.y) - 26.0, p3.y))
-		lt.n.append(Vector3.UP)
-		lt.c.append(Paleta.COR_HORIZONTE)
-		lt.uv.append(Vector2.ZERO)
-	for j in nr + 1:
-		for i in na:
-			var a := base + j * na + i
-			var b := base + j * na + (i + 1) % na
-			lt.idx.append_array([a, b, a + na, b, b + na, a + na])
-	var tri_saia := lt.triangulos()
-	# --- a linha de árvores: bolhas pobres (20–80 triângulos), tinta cozinhada
-	var inicio := lt.v.size()
-	var troncos := PackedInt32Array()  # pares [de, até[ dos vértices que são tronco
+## A floresta para lá da orla rica (defeito 1). Árvores INTEIRAS das mesmas famílias, com o pé
+## no MESMO chão (a zona larga do terreno, que vai até à cor do horizonte) e a mesma luz; só a
+## malha é pobre. Uma malha por quadrante (tronco e copa juntos): no máximo 4 chamadas.
+func _criar_anel() -> void:
+	var troncos: Array = [Lote.new(), Lote.new(), Lote.new(), Lote.new()]
+	var copas: Array = [Lote.new(), Lote.new(), Lote.new(), Lote.new()]
 	var postas := 0
 	var tent := 0
-	while postas < 760 and tent < 5000:
+	while postas < 720 and tent < 30000:
 		tent += 1
-		var ang3 := _rf(0.0, TAU)
-		var f2 := lerpf(Relevo.ANEL_DENTRO + 1.0, Relevo.ANEL_FORA - 1.0, pow(_rng.randf(), 1.25))
-		var p4 := _ponto_anel(ang3, f2)
-		var h2 := Relevo.altura(p4.x, p4.y)
-		var alto := _rf(9.5, 15.5)
-		# na janela norte as árvores do vale são mais baixas: a vista fica aberta
-		if Relevo.na_janela(p4.x, p4.y):
-			alto *= lerpf(0.62, 1.0, clampf((f2 - 20.0) / 30.0, 0.0, 1.0))
-		var largo := alto * _rf(0.30, 0.42)
-		var tinta := Paleta.ANEL_FLORESTA.lerp(Paleta.COPA_B, _rf(0.0, 0.55))
-		if _rng.randf() < 0.14:
-			tinta = tinta.lerp(Paleta.COPA_OURO, 0.4)
-		var sub := 1 if f2 < Relevo.ANEL_DENTRO + 16.0 else 0
-		var centro := Vector3(p4.x, h2 + alto * 0.58, p4.y)
-		if f2 < Relevo.ANEL_DENTRO + 8.0:
-			# as filas da frente (coladas à orla real) imitam a forma das árvores reais:
-			# tronco + 3 massas achatadas em volta do cimo + 1 por cima
-			var cimo2 := Vector3(p4.x, h2 + alto * 0.50, p4.y)
-			var pe_vol := cimo2 + Vector3(0, alto * 0.10, 0)
-			for b3 in 3:
-				var a5 := TAU * (float(b3) + _rf(-0.3, 0.3)) / 3.0
-				var rb2 := alto * _rf(0.20, 0.26)
-				var c5 := cimo2 + Vector3(cos(a5) * alto * 0.20, alto * _rf(0.05, 0.18), sin(a5) * alto * 0.20)
-				lt.bolha(c5, Vector3(rb2, rb2 * 0.72, rb2), 1, tinta.lerp(Paleta.COPA_B, _rf(0.0, 0.4)), _rf(0.0, 80.0), pe_vol, 0.0, 0.0, 0.34)
-			lt.bolha(cimo2 + Vector3(0, alto * 0.30, 0), Vector3(alto * 0.22, alto * 0.16, alto * 0.22), 0, tinta, _rf(0.0, 80.0), pe_vol, 0.0, 0.0, 0.34)
-			var casca2 := Paleta.CASCA.lerp(Color("#93806a"), 0.4)
-			troncos.append(lt.v.size())
-			lt.tubo([[Vector3(p4.x, h2 - 0.5, p4.y), alto * 0.040], [cimo2, alto * 0.024]], 5, casca2, casca2, false)
-			troncos.append(lt.v.size())
-			postas += 1
+		var ang := _rf(0.0, TAU)
+		var f := lerpf(Relevo.ORLA_FORA + 0.5, Relevo.ANEL_FORA, pow(_rng.randf(), 1.15))
+		var p := _ponto_anel(ang, f)
+		var baixa := 1.0
+		if Relevo.na_janela(p.x, p.y, 5.0):
+			# na janela da Árvore Ancestral o vale fica aberto: poucas árvores, baixas e ao fundo
+			if f < 40.0 or _rng.randf() > 0.4:
+				continue
+			baixa = 0.62
+		if not _livre(_so_arvores, p.x, p.y, 5.2):
 			continue
-		lt.bolha(centro, Vector3(largo, alto * 0.46, largo), sub, tinta, _rf(0.0, 80.0), centro - Vector3(0, alto * 0.3, 0), 0.0, 0.0, 0.34)
-		if sub == 1:
-			var c2 := centro + Vector3(_rf(-1.0, 1.0) * largo * 0.7, -alto * _rf(0.05, 0.22), _rf(-1.0, 1.0) * largo * 0.7)
-			lt.bolha(c2, Vector3(largo * 0.75, alto * 0.30, largo * 0.75), 0, tinta.darkened(0.08), _rf(0.0, 80.0), centro - Vector3(0, alto * 0.3, 0), 0.0, 0.0, 0.34)
-			var casca := Paleta.CASCA.lerp(Color("#93806a"), 0.4)
-			troncos.append(lt.v.size())
-			lt.tubo([[Vector3(p4.x, h2 - 0.5, p4.y), alto * 0.034], [Vector3(p4.x, h2 + alto * 0.45, p4.y), alto * 0.022]], 4, casca, casca, false)
-			troncos.append(lt.v.size())
+		var familia := _familia_em(p.x, p.y, 0.55)
+		var q := (0 if p.x < 0.0 else 1) + (0 if p.y < 0.0 else 2)
+		var pos := Vector3(p.x, Relevo.altura(p.x, p.y), p.y)
+		Formas.arvore(troncos[q], copas[q], familia, pos, _altura_familia(familia) * baixa, 1 if f < 44.0 else 0, _rng)
+		_ocupar(_so_arvores, p.x, p.y, 0.0)
 		postas += 1
-	# a tinta: a oclusão da bolha (cor.a) entra na conta como no shader das copas reais; os
-	# troncos estão debaixo das copas — quase todos em sombra, como os da orla real
-	var e_tronco := PackedByteArray()
-	e_tronco.resize(lt.v.size())
-	for k in range(0, troncos.size(), 2):
-		for i in range(troncos[k], troncos[k + 1]):
-			e_tronco[i] = 1
-	for i in range(inicio, lt.v.size()):
-		var cor := lt.c[i]
-		var cc := _tinta_perto(Color(cor.r, cor.g, cor.b), lt.n[i], lt.v[i], 0.15 if e_tronco[i] == 1 else cor.a)
-		cc.a = 1.0
-		lt.c[i] = cc
-	var mat := ShaderMaterial.new()
-	mat.shader = SH_ANEL_PERTO
-	_instancia(fundo, lt.fechar(), mat, "AnelPerto")
-	medidas["anel_perto_tri"] = lt.triangulos()
-	medidas["anel_perto_saia_tri"] = tri_saia
-	medidas["anel_perto_arvores"] = postas
+	var m := _mat(SH_ANEL)
+	m.set_shader_parameter("cor_ouro", Paleta.COPA_OURO)
+	m.set_shader_parameter("cor_musgo", Paleta.PEDRA_MUSGO)
+	var tri := 0
+	for q in 4:
+		var lt: Lote = troncos[q]
+		var lc: Lote = copas[q]
+		if lt.vazio():
+			continue
+		for i in lt.uv.size():
+			lt.uv[i] = Vector2(2.0, 0.0)      # marca TRONCO (shaders/anel_floresta.gdshader)
+		var base := lt.v.size()
+		lt.v.append_array(lc.v)
+		lt.n.append_array(lc.n)
+		lt.c.append_array(lc.c)
+		lt.uv.append_array(lc.uv)
+		var de := lt.idx.size()
+		lt.idx.append_array(lc.idx)
+		for i in range(de, lt.idx.size()):
+			lt.idx[i] += base
+		var mi := _instancia(fundo, lt.fechar(), m, "AnelFloresta%d" % q)
+		mi.extra_cull_margin = 1.0
+		tri += lt.triangulos()
+	medidas["anel_arvores"] = postas
+	medidas["anel_tri"] = tri
 
 
 # ------------------------------------------------------------------ o fundo: anel longe
 
+## Duas silhuetas FECHADAS à volta do mapa (floresta e montes, em quadrado arredondado para lá
+## da orla do chão) e a serra ao fundo (círculo, atrás da Árvore Ancestral). Todo o ar na tinta;
+## a base de cada uma é a COR DO HORIZONTE.
 func _criar_anel_longe() -> void:
 	var lt := Lote.new()
 	var rn := Relevo.ruido()
 	var sol_az := deg_to_rad(Paleta.SOL_AZIMUTE)
-	# raio, altura mínima, altura máxima, ar (0–1), tinta, frequência do perfil, dentes
-	var capas: Array = [
-		[135.0, 8.0, 17.0, 0.76, Paleta.ANEL_FLORESTA.lerp(Paleta.ANEL_MONTE, 0.25), 260.0, 0.9],
-		[185.0, 14.0, 30.0, 0.85, Paleta.ANEL_FLORESTA.lerp(Paleta.ANEL_MONTE, 0.65), 180.0, 0.45],
-		[245.0, 22.0, 54.0, 0.905, Paleta.ANEL_MONTE, 140.0, 0.0],
-	]
 	var az_ancora := deg_to_rad(Relevo.ANCORA_AZIMUTE)
+	# para fora (ou raio, se círculo), altura mín, altura máx, ar (0–1), tinta, frequência, dentes, círculo?, base
+	var capas: Array = [
+		[Relevo.CHAO_FORA + 14.0, 8.0, 18.0, 0.60, Paleta.ANEL_FLORESTA.lerp(Paleta.ANEL_MONTE, 0.25), 260.0, 0.9, false, -34.0],
+		[Relevo.CHAO_FORA + 78.0, 15.0, 34.0, 0.74, Paleta.ANEL_FLORESTA.lerp(Paleta.ANEL_MONTE, 0.70), 180.0, 0.45, false, -40.0],
+		[980.0, 60.0, 190.0, 0.86, Paleta.ANEL_SERRA, 140.0, 0.0, true, -90.0],
+	]
 	var n := 384
-	for capa in capas:
-		var raio: float = capa[0]
+	for capa: Array in capas:
+		var dist: float = capa[0]
 		var hmin: float = capa[1]
 		var hmax: float = capa[2]
 		var ar: float = capa[3]
 		var tinta: Color = capa[4]
 		var freq: float = capa[5]
 		var dentes: float = capa[6]
+		var circulo: bool = capa[7]
+		var chao: float = capa[8]
 		var base := lt.v.size()
 		for i in n:
 			var ang := TAU * float(i) / float(n)
 			var cx := cos(ang)
 			var sz := sin(ang)
 			# perfil periódico: ruído amostrado sobre um círculo (fecha sem costura)
-			var p := 0.5 + 0.5 * rn.get_noise_2d(cx * freq + raio, sz * freq)
-			p = p * 0.65 + 0.35 * (0.5 + 0.5 * rn.get_noise_2d(cx * freq * 3.1, sz * freq * 3.1 + raio))
+			var p := 0.5 + 0.5 * rn.get_noise_2d(cx * freq + dist, sz * freq)
+			p = p * 0.65 + 0.35 * (0.5 + 0.5 * rn.get_noise_2d(cx * freq * 3.1, sz * freq * 3.1 + dist))
 			if dentes <= 0.0:
-				# montanhas: cumes vincados
+				# serra: cumes vincados
 				p = 1.0 - absf(2.0 * p - 1.0)
 				p = p * 0.75 + 0.25 * (0.5 + 0.5 * rn.get_noise_2d(cx * freq * 6.0 + 9.0, sz * freq * 6.0))
 			var h := lerpf(hmin, hmax, clampf(p, 0.0, 1.0))
-			# o passo da árvore-âncora: as capas da frente baixam para o tronco se ver inteiro
-			if raio < ANCORA_DIST:
-				h *= lerpf(0.60, 1.0, smoothstep(deg_to_rad(9.0), deg_to_rad(30.0), absf(angle_difference(ang, az_ancora))))
+			var pos: Vector2
+			if circulo:
+				pos = Vector2(sin(ang), -cos(ang)) * dist
+			else:
+				pos = _ponto_anel(ang, dist)
+				# o passo da Árvore Ancestral: as capas da frente baixam para o pé dela se ver
+				h *= lerpf(0.22, 1.0, smoothstep(deg_to_rad(11.0), deg_to_rad(34.0), absf(angle_difference(ang, az_ancora))))
+				h += Relevo.altura(pos.x, pos.y) * 0.35
 			# dentes de copa na silhueta de floresta
-			h += dentes * (1.2 + 1.2 * rn.get_noise_2d(cx * 4200.0, sz * 4200.0 + raio))
-			var x := sin(ang) * raio
-			var z := -cos(ang) * raio
+			h += dentes * (1.2 + 1.2 * rn.get_noise_2d(cx * 4200.0, sz * 4200.0 + dist))
 			# para o lado do sol o ar é mais espesso (mais claro)
 			var lado := 0.5 + 0.5 * cos(ang - sol_az)
-			var ar_i := clampf(ar + 0.09 * lado * lado, 0.0, 0.96)
+			var ar_i := clampf(ar + 0.08 * lado * lado, 0.0, 0.96)
 			var cor_topo := Paleta.ar(tinta, ar_i)
-			lt.v.append_array([Vector3(x, -34.0, z), Vector3(x, h * 0.30, z), Vector3(x, h * 0.72, z), Vector3(x, h, z)])
+			lt.v.append_array([Vector3(pos.x, chao, pos.y), Vector3(pos.x, chao + (h - chao) * 0.55, pos.y),
+				Vector3(pos.x, chao + (h - chao) * 0.85, pos.y), Vector3(pos.x, h, pos.y)])
 			var nrm := Vector3(-sin(ang), 0.0, cos(ang))
 			lt.n.append_array([nrm, nrm, nrm, nrm])
 			# a base é a COR DO HORIZONTE: a bruma entre as capas (a emenda sem costura)
@@ -1024,53 +1325,27 @@ func _criar_anel_longe() -> void:
 	medidas["anel_longe_tri"] = lt.triangulos()
 
 
-# ------------------------------------------------------------------ o fundo: árvore-âncora
+# ------------------------------------------------------------------ o fundo: a Árvore Ancestral
 
-func _criar_ancora() -> void:
-	var lt := Lote.new()
-	var d := Paleta.dir_de(Relevo.ANCORA_AZIMUTE, 0.0)
-	var pe := Vector3(d.x * ANCORA_DIST, -14.0, d.z * ANCORA_DIST)
-	var h := ANCORA_ALTURA
-	var casca := Color("#6b6248")
-	var raio := h * 0.085
-	var topo := h * 0.50
-	var pts: Array = []
-	for i in 8:
-		var t := float(i) / 7.0
-		var y := t * (topo + 14.0)
-		var r := raio * lerpf(1.0, 0.62, t) * (1.0 + 1.5 * exp(-y / (raio * 2.6)))
-		pts.append([pe + Vector3(sin(t * 2.0) * 1.5, y, cos(t * 1.7) * 1.2), r])
-	lt.tubo(pts, 10, casca, casca, false)
-	var cimo: Vector3 = pts[7][0]
-	var centro_vol := cimo + Vector3(0, h * 0.10, 0)
-	# copa em guarda-chuva: 3 andares de bolhas achatadas
-	var andares: Array = [[0.50, 0.02, 7, 0.20], [0.30, 0.16, 6, 0.21], [0.0, 0.27, 1, 0.26]]
-	var r3 := RandomNumberGenerator.new()
-	r3.seed = 707
-	for andar in andares:
-		var dist: float = float(andar[0]) * h
-		var sobe: float = float(andar[1]) * h
-		var quantas: int = andar[2]
-		var rb: float = float(andar[3]) * h
-		for b in quantas:
-			var ang := TAU * (float(b) + r3.randf_range(-0.25, 0.25)) / float(quantas)
-			var c := cimo + Vector3(cos(ang) * dist * r3.randf_range(0.85, 1.1), sobe + r3.randf_range(-0.03, 0.03) * h, sin(ang) * dist * r3.randf_range(0.85, 1.1))
-			if quantas > 1:
-				lt.tubo([[cimo - Vector3(0, r3.randf_range(0.0, 0.2) * topo, 0), raio * 0.36], [cimo.lerp(c, 0.55) - Vector3(0, 0.03 * h, 0), raio * 0.26], [c, raio * 0.12]], 6, casca, casca, false)
-			var tinta := Paleta.ANEL_FLORESTA.lerp(Paleta.COPA_OURO, r3.randf_range(0.10, 0.40))
-			lt.bolha(c, Vector3(rb * r3.randf_range(0.95, 1.2), rb * 0.52, rb * r3.randf_range(0.95, 1.2)), 1, tinta, r3.randf_range(0.0, 90.0), centro_vol, 0.0, 0.0, 0.30)
-	# tinta: luz cozinhada + MUITO ar (está a 215 m); a base derrete na cor do horizonte
-	var sol := Paleta.dir_sol_pintado()
-	for i in lt.v.size():
-		var cor := lt.c[i]
-		var k := smoothstep(-0.35, 0.75, lt.n[i].dot(sol))
-		var ao := lerpf(0.72, 1.0, cor.a)
-		var c2 := Color(cor.r * lerpf(0.62, 1.20, k) * ao, cor.g * lerpf(0.72, 1.10, k) * ao, cor.b * lerpf(0.90, 0.80, k) * ao)
-		var quanto := 0.70 + 0.26 * (1.0 - smoothstep(6.0, 44.0, lt.v[i].y))
-		var cc := Paleta.ar(c2, quanto)
-		cc.a = 1.0
-		lt.c[i] = cc
-	var mat := ShaderMaterial.new()
-	mat.shader = SH_ANEL_LONGE
-	_instancia(fundo, lt.fechar(), mat, "ArvoreAncora")
-	medidas["ancora_tri"] = lt.triangulos()
+## O marco do mapa (defeito 2): geometria verdadeira, opaca, com a luz do mapa, a sombra da
+## copa cozida no tronco e o outeiro de copas onde assenta (com a sombra dela pintada: contacto).
+func _criar_ancestral() -> void:
+	var d: Dictionary = Ancestral.construir()
+	var rumo := Paleta.dir_de(Relevo.ANCORA_AZIMUTE, 0.0)
+	var pe := Vector3(rumo.x * ANCESTRAL_DIST, ANCESTRAL_PE, rumo.z * ANCESTRAL_DIST)
+	var m := _mat(SH_ANCESTRAL)
+	m.set_shader_parameter("cor_musgo", Paleta.ANCESTRAL_MUSGO)
+	m.set_shader_parameter("cor_folha_luz", Paleta.ANCESTRAL_FOLHA_LUZ)
+	m.set_shader_parameter("altura", Ancestral.ALTURA)
+	var mi := _instancia(fundo, d["malha"], m, "ArvoreAncestral")
+	mi.position = pe
+	mi.rotation.y = ANCESTRAL_ROTACAO
+	var mat_monte := ShaderMaterial.new()
+	mat_monte.shader = SH_ANEL_LONGE
+	var monte := _instancia(fundo, d["outeiro"], mat_monte, "OuteiroAncestral")
+	monte.position = pe
+	medidas["ancestral_tri"] = d["tri"]
+	medidas["ancestral_partes"] = d["partes"]
+	medidas["ancestral_outeiro_tri"] = d["outeiro_tri"]
+	medidas["ancestral_altura_m"] = Ancestral.ALTURA
+	medidas["ancestral_dist_m"] = ANCESTRAL_DIST

@@ -25,8 +25,10 @@ const Paleta := preload("res://mapa/floresta/paleta_floresta.gd")
 const Lote := preload("res://mapa/floresta/lote_malha.gd")
 const Formas := preload("res://mapa/floresta/formas_floresta.gd")
 
-const ALTURA := 130.0
+## 260 m (palavra do Mestre): do pé das raízes ao cimo da copa.
+const ALTURA := 260.0
 const RAIO_COPA := 0.78          # × ALTURA
+const RAIO_OUTEIRO := 1.15       # × ALTURA: até onde vai o mar de copas onde a árvore assenta
 const N_RAIZES := 14
 const PALACIO := Vector3(0.0, 0.615, -0.15)   # centro da plataforma (× ALTURA); −Z = norte
 
@@ -300,7 +302,7 @@ static func _outeiro() -> Lote:
 	var nr := 9
 	for j in nr + 1:
 		var t := float(j) / float(nr)
-		var rho := ALTURA * lerpf(0.10, 1.45, t)
+		var rho := ALTURA * lerpf(0.10, RAIO_OUTEIRO, t)
 		for i in na:
 			var ang := TAU * float(i) / float(na)
 			var x := cos(ang) * rho
