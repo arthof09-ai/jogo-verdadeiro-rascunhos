@@ -17,7 +17,8 @@ extends RefCounted
 ## O desenho (lê-se sem medidor — defeito 8): um marco de relevo por quadrante.
 ##   NO  o OUTEIRO dos menires ........ +3,3 m, topo plano: terreno alto para defender
 ##   NE  a COVA do charco ............. −2,6 m, com água no fundo: travessia em desvantagem
-##   SE  o TERRAÇO do santuário ....... +3,6 m, escarpa virada ao centro, duas rampas nos flancos
+##   SE  o TERRAÇO do santuário ....... +3,6 m, escarpa virada ao centro, duas rampas nos flancos,
+##                                      encosta de relva pelas costas (do canto da arena)
 ##   SO  a GARGANTA ................... um lombo de rocha e um tronco tombado: o corredor
 ##   N   a janela para a Árvore Ancestral (o chão cai para o vale)   ·   S  o monte sobe
 
@@ -120,7 +121,9 @@ static func ao_segmento(p: Vector2, a: Vector2, b: Vector2) -> Vector2:
 
 
 ## A largura da descida do terraço conforme o lado: escarpa (1,3 m) virada ao centro da arena,
-## duas rampas largas nos flancos, encosta média nas costas.
+## duas rampas largas nos flancos, e nas costas uma encosta de relva comprida (13 m) que sobe do
+## canto da arena — quem vem do canto chega ao santuário por trás, a ver a arena por cima dele
+## (antes as costas eram um talude de rocha a pique colado à vista 07).
 static func terraco_descida(px: float, pz: float) -> float:
 	var p := Vector2(px, pz)
 	if p.length_squared() < 0.0001:
@@ -128,7 +131,7 @@ static func terraco_descida(px: float, pz: float) -> float:
 	var a := absf(p.angle_to(-TERRACO))  # 0 = virado ao centro da arena
 	var rampa := exp(-pow((a - deg_to_rad(96.0)) / deg_to_rad(27.0), 2.0))
 	var costas := _ss(deg_to_rad(128.0), deg_to_rad(165.0), a)
-	return 1.3 + 9.6 * rampa + 3.4 * costas
+	return 1.3 + 9.6 * rampa + 12.0 * costas
 
 
 ## A FÓRMULA do desenho. Só o forno da grelha (_cozer) a chama.
