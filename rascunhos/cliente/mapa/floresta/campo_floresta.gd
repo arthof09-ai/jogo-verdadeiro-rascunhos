@@ -855,9 +855,9 @@ func _arvore(lt: Lote, lc: Lote, x: float, z: float, h: float, familia: int, det
 			var c: Vector3 = s[0]
 			var rb: float = s[1]
 			var g := _sombra_de(c)
-			_carimbo_min(0, g.x, g.y, rb * estica * 0.8, rb * 0.95, dir, 0.92)
-			_carimbo_min(2, g.x, g.y, rb * estica * 0.8, rb * 0.95, dir, 0.92)
-		_sombra_alta([0, 2], pos, h * 0.45, raio * 1.1, 0.85)
+			_carimbo_min(0, g.x, g.y, rb * estica * 0.8, rb * 0.95, dir, 0.84)
+			_carimbo_min(2, g.x, g.y, rb * estica * 0.8, rb * 0.95, dir, 0.84)
+		_sombra_alta([0, 2], pos, h * 0.45, raio * 1.1, 0.80)
 	else:
 		# na orla funda basta a mancha da copa inteira
 		var meio := Vector3.ZERO
@@ -866,11 +866,22 @@ func _arvore(lt: Lote, lc: Lote, x: float, z: float, h: float, familia: int, det
 		meio /= float(maxi(sombras.size(), 1))
 		var g2 := _sombra_de(meio)
 		var rc := h * (0.20 if familia == Formas.CONIFERA or familia == Formas.JOVEM else 0.34)
-		_carimbo_min(0, g2.x, g2.y, rc * estica * 0.8, rc, dir, 0.90)
-		_carimbo_min(2, g2.x, g2.y, rc * estica * 0.8, rc, dir, 0.90)
+		# mais fraca que a das árvores da arena: debaixo da floresta a luz chega coada, em manchas
+		_carimbo_min(0, g2.x, g2.y, rc * estica * 0.8, rc, dir, 0.70)
+		_carimbo_min(2, g2.x, g2.y, rc * estica * 0.8, rc, dir, 0.70)
 	# raízes: terra à mostra e contacto escuro em volta do pé
 	_carimbo_max(1, x, z, raio * 2.2 + 0.9, 0.95)
 	_contacto(x, z, raio * 3.0 + 1.2, 0.62)
+
+
+## A CLAREIRA DE SOL do outeiro: uma aberta na parede de floresta a oés-sudoeste dele (o rumo
+## do sol), para a luz da tarde acender os menires — o marco lê-se de toda a arena.
+func _na_clareira_de_sol(x: float, z: float) -> bool:
+	var l := Paleta.dir_luz()
+	var para_sol := Vector2(l.x, l.z).normalized()
+	var d := Vector2(x, z) - Relevo.OUTEIRO
+	var ao_longo := d.dot(para_sol)
+	return ao_longo > 0.0 and ao_longo < 46.0 and absf(d.dot(para_sol.orthogonal())) < 7.5 + 0.12 * ao_longo
 
 
 func _plantar_arvores() -> void:
@@ -884,14 +895,14 @@ func _plantar_arvores() -> void:
 	# Dentro da arena: postas à mão. Cada quadrante a sua família; o miolo (16 m) e a janela
 	# norte (a vista da Árvore Ancestral) ficam abertos; as rampas e o corredor ficam livres.
 	var dentro: Array = [
-		# NO — carvalhos velhos à volta do outeiro
-		[-31.0, -11.5, 17.5, R], [-11.0, -30.0, 16.0, R], [-32.0, -32.0, 18.0, R], [-10.0, -11.5, 14.0, R],
-		[-33.5, -1.5, 15.5, R], [-17.0, -34.5, 15.0, R],
+		# NO — carvalhos velhos a norte e a oeste do outeiro (nunca a oés-sudoeste: o sol da
+		# tarde tem de chegar aos menires; e nenhum na linha das vistas etiquetadas)
+		[-33.5, -24.0, 17.5, R], [-17.5, -30.5, 16.0, R], [-33.5, -1.5, 15.5, R], [-22.5, -35.0, 15.0, R],
 		# NE — vidoeiros à volta do charco
-		[11.0, -27.5, 12.0, J], [13.5, -30.5, 10.5, J], [31.0, -12.5, 12.5, J], [33.5, -32.5, 13.0, J],
-		[28.0, -8.5, 11.0, J], [9.5, -12.0, 11.5, J], [8.5, -34.5, 12.0, J], [34.0, -21.0, 10.0, J],
-		# SE — pinheiros-mansos à volta do terraço
-		[33.5, 19.5, 16.0, G], [19.5, 34.0, 17.0, G], [33.0, 33.0, 18.0, G], [9.0, 22.5, 14.5, G],
+		[11.5, -27.5, 12.0, J], [14.0, -30.5, 10.5, J], [31.0, -12.5, 12.5, J], [33.5, -32.5, 13.0, J],
+		[28.0, -8.5, 11.0, J], [9.5, -12.0, 11.5, J], [10.5, -34.5, 12.0, J], [34.0, -21.0, 10.0, J],
+		# SE — pinheiros-mansos à volta do terraço (nenhum a oés-sudoeste do santuário)
+		[33.5, 19.5, 16.0, G], [19.5, 34.0, 17.0, G], [33.0, 33.0, 18.0, G],
 		[34.0, 3.0, 14.0, G], [2.0, 35.0, 16.0, G],
 		# SO — abetos a ladear a garganta
 		[-31.5, 14.0, 18.0, C], [-33.0, 20.5, 15.5, C], [-34.0, 32.0, 20.0, C], [-9.0, 27.5, 17.0, C],
@@ -913,7 +924,7 @@ func _plantar_arvores() -> void:
 		var f := Relevo.fora(x, z)
 		if f < 1.0 or f > Relevo.ORLA_FORA:
 			continue
-		if Relevo.na_janela(x, z, 3.0):
+		if Relevo.na_janela(x, z, 3.0) or _na_clareira_de_sol(x, z):
 			continue
 		if not _livre(_so_arvores, x, z, 4.7) or not _livre(_tudo, x, z, 1.3):
 			continue
