@@ -20,6 +20,7 @@ var _saida := ""
 var _arena: Node3D
 var _vp: SubViewport
 var _rotulo: Label
+var _rotulo_janela: Label  # a mesma etiqueta na janela (é a janela que o --write-movie grava)
 var _t := 0.0
 var _medidas: Dictionary = {"tempos": []}
 var _passos: Array = []   # [t, Callable]
@@ -147,6 +148,13 @@ func _comecar() -> void:
 	ls.outline_color = Color(0, 0, 0, 0.85)
 	_rotulo.label_settings = ls
 	camada.add_child(_rotulo)
+	var camada_janela := CanvasLayer.new()
+	camada_janela.layer = 100
+	root.add_child(camada_janela)
+	_rotulo_janela = Label.new()
+	_rotulo_janela.position = Vector2(110, 18)
+	_rotulo_janela.label_settings = ls
+	camada_janela.add_child(_rotulo_janela)
 	await process_frame
 	await process_frame
 	_arena._perfis.aplicar("alto")
@@ -198,6 +206,7 @@ func _comecar() -> void:
 func _quadro() -> void:
 	_t += DT
 	_rotulo.text = _estado_texto()
+	_rotulo_janela.text = _rotulo.text
 	while _feitos < _passos.size() and _t >= float(_passos[_feitos][0]):
 		var f: Callable = _passos[_feitos][1]
 		_feitos += 1

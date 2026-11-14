@@ -708,7 +708,7 @@ func _marco_menires(r: RandomNumberGenerator) -> void:
 		_ocupar(_tudo, x, z, 0.9)
 		_carimbo_max(1, x, z, 1.0, 0.85)
 		_contacto(x, z, 1.5, 0.65)
-		obstaculos.append({"nome": "menir", "c": Vector3(x, pe.y + 0.30, z), "m": Vector3(1.1, 0.7, 1.1) if deitado else Vector3(0.6, alto, 0.6)})
+		obstaculos.append({"nome": "menir", "c": Vector3(x, pe.y + 0.30, z), "m": Vector3(1.1, 0.7, 1.1) if deitado else Vector3(0.45, alto, 0.45)})
 		if deitado:
 			_sombra_alta([0], pe, 0.7, 1.2, 0.85)
 			grelha.dar_cobertura(Grelha.casa_em(x, z), Grelha.COBERTURA_MEIA)
@@ -1095,7 +1095,7 @@ func _registar_rocha(x: float, z: float, tam: float) -> void:
 		return
 	_rochas.append([c, tam])
 	if tam >= 0.8:
-		obstaculos.append({"nome": "rocha", "c": c, "m": Vector3(tam * 0.9, tam * 0.7, tam * 0.9)})
+		obstaculos.append({"nome": "rocha", "c": c, "m": Vector3(tam * 0.6, tam * 0.7, tam * 0.6)})
 	_lote_pedras.rocha(c + Vector3(0, esc.y * 0.20, 0), esc, rot, 2 if tam > 1.1 else 1, cor, veio)
 	var l := Paleta.dir_luz()
 	var g := _sombra_de(c + Vector3(0, tam * 0.3, 0))
