@@ -419,7 +419,7 @@ static func telhado(l: Lote, centro: Vector3, mx: float, mz: float, alt: float, 
 	var perfil: Array = [[q, alt * 0.10], [q * 0.90, 0.0], [q * 0.56, alt * 0.30], [q * 0.26, alt * 0.74], [q * 0.12, alt]]
 	l.torno(centro, perfil, 4, beira, cor, true, rot + PI * 0.25, Vector2(mx, mz), uv_x)
 	# por baixo fecha (quem olha de baixo vê o forro, não o céu)
-	var forro := Color(cor.r * 0.55, cor.g * 0.55, cor.b * 0.55, cor.a)
+	var forro := Color(cor.r * 0.78, cor.g * 0.78, cor.b * 0.78, cor.a)
 	l.torno(centro, [[0.0, alt * 0.06], [q * 0.90, 0.0], [q, alt * 0.10]], 4, forro, forro, true, rot + PI * 0.25, Vector2(mx, mz), uv_x)
 	# a cumeeira fecha em cima
 	l.torno(centro, [[q * 0.12, alt], [0.0, alt * 1.04]], 4, cor, cor, true, rot + PI * 0.25, Vector2(mx, mz), uv_x)

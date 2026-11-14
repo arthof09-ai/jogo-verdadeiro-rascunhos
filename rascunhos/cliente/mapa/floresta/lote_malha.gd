@@ -195,6 +195,10 @@ func torno(centro: Vector3, perfil: Array, lados: int, cor_base: Color, cor_topo
 				if nf.length_squared() < 1e-12:
 					nf = (b1 - a1).cross(a1 - a0)
 				if nf.length_squared() < 1e-12:
+					# o perfil COMEÇA no eixo (a0 = a1): o forro de um telhado, uma tampa. Antes esta
+					# fatia era saltada e o telhado, visto de baixo, era só o aro da beira contra o céu.
+					nf = (b0 - a0).cross(b1 - a0)
+				if nf.length_squared() < 1e-12:
 					continue
 				nf = nf.normalized()
 				var base := v.size()
