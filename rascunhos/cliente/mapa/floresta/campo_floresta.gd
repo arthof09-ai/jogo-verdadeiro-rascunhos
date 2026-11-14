@@ -93,10 +93,25 @@ const VISTAS: Array = [
 @export_range(0.1, 1.0) var densidade_relva: float = 1.0
 @export var mostrar_medicao: bool = true
 
-@onready var _ambiente: WorldEnvironment = $Ambiente
-@onready var _sol: DirectionalLight3D = $Sol
-@onready var _camera: Camera3D = $Camera
-@onready var _rotulo: Label = $Medicao/Rotulo
+## ORDEM 42 — o mapa como campo de batalha DO JOGO (cenas/arena/arena.gd).
+## Na arena, o mapa usa o Ambiente, o Sol e a Câmara DA ARENA (um céu só, uma luz só): estes
+## caminhos apontam para eles. Sozinho (campo_floresta.tscn) ficam os seus.
+@export var no_ambiente: NodePath = ^"Ambiente"
+@export var no_sol: NodePath = ^"Sol"
+@export var no_camera: NodePath = ^"Camera"
+## Teclas 1–9/0/F/L/M e a vista 0 na carga (só no mapa sozinho; na arena a câmara é a da mesa).
+@export var vistas_por_tecla: bool = true
+## A ZONA JOGÁVEL do jogo (x, z no mundo; vazia = nenhuma). Lá dentro o mapa não põe nada que
+## ocupe uma casa sem o servidor saber: nem pedras soltas, nem árvores, nem estrato; e o tronco
+## tombado da garganta acaba à entrada dela. Os marcos de relevo ficam (são chão).
+@export var zona_jogo: Rect2 = Rect2()
+## A relva dentro da zona jogável fica a esta fracção da altura (pisada; continua a mexer).
+@export_range(0.1, 1.0) var relva_no_campo: float = 0.38
+
+@onready var _ambiente: WorldEnvironment = get_node(no_ambiente)
+@onready var _sol: DirectionalLight3D = get_node(no_sol)
+@onready var _camera: Camera3D = get_node(no_camera)
+@onready var _rotulo: Label = get_node_or_null(^"Medicao/Rotulo")
 
 var arena: Node3D
 var fundo: Node3D
@@ -152,15 +167,17 @@ func _ready() -> void:
 	_criar_anel_longe()
 	_criar_ancestral()
 	_escrever_materiais()
-	ir_para_vista(0)
-	_rotulo.visible = mostrar_medicao
+	if vistas_por_tecla:
+		ir_para_vista(0)
+	if _rotulo != null:
+		_rotulo.visible = mostrar_medicao
 	medidas["carga_ms"] = Time.get_ticks_msec() - t0
 	medidas["erros"] = Erros.contagem()
 	print("[floresta] pronta em %d ms | %s" % [medidas["carga_ms"], JSON.stringify(medidas)])
 
 
 func _process(delta: float) -> void:
-	if not mostrar_medicao:
+	if not mostrar_medicao or _rotulo == null:
 		return
 	_t_rotulo += delta
 	if _t_rotulo >= 0.5:
@@ -173,6 +190,8 @@ func _process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not vistas_por_tecla:
+		return
 	var k := event as InputEventKey
 	if k == null or not k.pressed or k.echo:
 		return
@@ -184,7 +203,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		so_fundo(arena.visible)
 	elif k.keycode == KEY_L:
 		relva.ligar_lod(not relva.lod_ligado)
-	elif k.keycode == KEY_M:
+	elif k.keycode == KEY_M and _rotulo != null:
 		_rotulo.visible = not _rotulo.visible
 
 
@@ -339,6 +358,17 @@ func _livre(tabela: Dictionary, x: float, z: float, folga: float) -> bool:
 				if (o.x - x) * (o.x - x) + (o.y - z) * (o.y - z) < d * d:
 					return false
 	return true
+
+
+## Ordem 42: o ponto (x, z), com `raio` à volta, toca a zona jogável do jogo?
+func _na_zona(x: float, z: float, raio: float) -> bool:
+	if not zona_jogo.has_area():
+		return false
+	return zona_jogo.grow(raio + 0.25).has_point(Vector2(x, z))
+
+
+func _contar_tirado(o_que: String) -> void:
+	medidas["zona_tirados_" + o_que] = int(medidas.get("zona_tirados_" + o_que, 0)) + 1
 
 
 # ------------------------------------------------------------------ mapa do chão
@@ -726,6 +756,17 @@ func _marco_garganta(madeira: Lote) -> void:
 	var a := Relevo.TRONCO_A
 	var b := Relevo.TRONCO_B
 	var raio := Relevo.TRONCO_RAIO
+	# Ordem 42: na arena, o tronco (a ponta da copa, a norte) acaba antes da zona jogável.
+	if zona_jogo.has_area():
+		var corte := 1.0
+		for s in 101:
+			var q := a.lerp(b, float(s) / 100.0)
+			if _na_zona(q.x, q.y, raio + 0.3):
+				corte = maxf(float(s - 1) / 100.0, 0.2)
+				break
+		if corte < 1.0:
+			b = a.lerp(b, corte)
+			medidas["zona_tronco_tombado_m"] = snappedf(a.distance_to(b), 0.1)
 	var ha := Relevo.altura(a.x, a.y)
 	var hb := Relevo.altura(b.x, b.y)
 	# assenta: o eixo nunca fica a mais de 0,8 raios do chão (nunca flutua; onde o chão sobe, enterra-se)
@@ -839,6 +880,13 @@ func _altura_familia(familia: int) -> float:
 ## Planta UMA árvore em (x, z): malha nos lotes, sombra e pé no mapa do chão, lugar ocupado.
 func _arvore(lt: Lote, lc: Lote, x: float, z: float, h: float, familia: int, detalhe: int, sombra_fina: bool) -> void:
 	var pos := Vector3(x, Relevo.altura(x, z), z)
+	if _na_zona(x, z, Formas.raio_tronco(familia, h) + 0.5):
+		# Ordem 42: não se planta dentro da zona jogável — mas a semente gasta-se igual (o resto do
+		# mapa sai o MESMO) e o lugar fica ocupado (nada mais nasce ali).
+		Formas.arvore(Lote.new(), Lote.new(), familia, pos, h, detalhe, _rng)
+		_ocupar(_tudo, x, z, Formas.raio_tronco(familia, h) + 0.35)
+		_contar_tirado("arvores")
+		return
 	var sombras: Array = Formas.arvore(lt, lc, familia, pos, h, detalhe, _rng)
 	var raio := Formas.raio_tronco(familia, h)
 	_ocupar(_tudo, x, z, raio + 0.35)
@@ -1012,12 +1060,16 @@ func _semear_rochas() -> void:
 
 func _registar_rocha(x: float, z: float, tam: float) -> void:
 	var c := Vector3(x, Relevo.altura(x, z), z)
-	_rochas.append([c, tam])
 	_ocupar(_tudo, x, z, tam * 0.9)
 	var esc := Vector3(tam * _rf(0.85, 1.25), tam * _rf(0.55, 0.9), tam * _rf(0.85, 1.25))
 	var rot := Basis(Vector3.UP, _rf(0.0, TAU)) * Basis(Vector3.RIGHT, _rf(-0.25, 0.25))
 	var cor := Paleta.PEDRA.lerp(Paleta.PEDRA_QUENTE, _rf(0.0, 0.7))
-	_lote_pedras.rocha(c + Vector3(0, esc.y * 0.20, 0), esc, rot, 2 if tam > 1.1 else 1, cor, _rf(0.0, 60.0))
+	var veio := _rf(0.0, 60.0)
+	if _na_zona(x, z, tam * 0.9):
+		_contar_tirado("rochas")   # Ordem 42: a semente gastou-se igual; a pedra não se põe
+		return
+	_rochas.append([c, tam])
+	_lote_pedras.rocha(c + Vector3(0, esc.y * 0.20, 0), esc, rot, 2 if tam > 1.1 else 1, cor, veio)
 	var l := Paleta.dir_luz()
 	var g := _sombra_de(c + Vector3(0, tam * 0.3, 0))
 	_carimbo_min(0, g.x, g.y, tam * 0.9 * (1.0 + 0.5 / l.y), tam * 0.95, Vector2(l.x, l.z).normalized(), 0.9)
@@ -1079,8 +1131,13 @@ func _criar_estrato() -> void:
 				s = _rf(0.85, 1.35)
 			var b := Basis(Vector3.UP, _rf(0.0, TAU)).scaled(Vector3(s, s * _rf(0.88, 1.18), s))
 			var tom := _rf(0.86, 1.08)
+			var cor_e := Color(tom, tom * _rf(0.96, 1.04), tom * _rf(0.92, 1.0), 1.0)
+			if _na_zona(x, z, 0.9 * s):
+				_contar_tirado("estrato")   # Ordem 42: fora da zona jogável (a semente gastou-se igual)
+				postos += 1
+				continue
 			(listas[tipo][(0 if x < 0.0 else 1) + (0 if z < 0.0 else 2)] as Array).append(
-				[Transform3D(b, Vector3(x, Relevo.altura(x, z) - 0.04, z)), Color(tom, tom * _rf(0.96, 1.04), tom * _rf(0.92, 1.0), 1.0)])
+				[Transform3D(b, Vector3(x, Relevo.altura(x, z) - 0.04, z)), cor_e])
 			if tipo < 2:
 				_ocupar(_tudo, x, z, 0.55 * s)
 				_carimbo_max(1, x, z, 0.75 * s, 0.7)
@@ -1136,6 +1193,12 @@ func _criar_relva() -> void:
 	relva = RelvaFloresta.new()
 	relva.name = "Relva"
 	arena.add_child(relva)
+	if zona_jogo.has_area():
+		var r := Vector4(zona_jogo.position.x, zona_jogo.position.y, zona_jogo.end.x, zona_jogo.end.y)
+		mat.set_shader_parameter("campo_rect", r)
+		mat.set_shader_parameter("campo_alto", relva_no_campo)
+		mat_haste.set_shader_parameter("campo_rect", r)
+		mat_haste.set_shader_parameter("campo_alto", relva_no_campo * 0.6)
 	relva.semear(mat, mat_haste, _terra_em, _coberto_em, semente + 7)
 	medidas.merge(relva.medidas, true)
 	relva.definir_densidade(densidade_relva)

@@ -15,6 +15,18 @@ uniform float vento_vel : hint_range(0.0, 4.0) = 1.0;
 uniform float some_de = 34.0;
 uniform float some_ate = 60.0;
 
+// ORDEM 42 — a zona jogável do jogo (cenas/arena): a relva lá dentro está PISADA (baixa), para as
+// casas, os destaques e o pé das figuras se lerem — e continua a mexer com o mesmo vento.
+uniform vec4 campo_rect = vec4(0.0);   // (x0, z0, x1, z1) no mundo; vazia = nenhuma (o mapa sozinho)
+uniform float campo_alto = 1.0;        // fracção da altura que a erva tem lá dentro
+float no_campo(vec2 xz) {
+	if (campo_rect.z <= campo_rect.x) {
+		return 0.0;
+	}
+	vec2 fora = max(campo_rect.xy - xz, xz - campo_rect.zw);
+	return 1.0 - smoothstep(-0.9, 0.6, max(fora.x, fora.y));
+}
+
 varying float v_alt;
 varying float v_cabeca;
 varying vec3 v_cor;
@@ -27,7 +39,7 @@ void vertex() {
 	vec3 p = VERTEX;
 	float d_cam = distance(raiz.xz, CAMERA_POSITION_WORLD.xz);
 	float fica = 1.0 - smoothstep(some_de, some_ate, d_cam + INSTANCE_CUSTOM.r * 14.0);
-	p = raiz + (p - raiz) * fica;
+	p = raiz + (p - raiz) * fica * mix(1.0, campo_alto, no_campo(raiz.xz));
 	vec2 dv = normalize(vento_dir);
 	float t = TIME * vento_vel;
 	float raj = smoothstep(0.30, 0.78, textureLod(ruido, raiz.xz * 0.011 - dv * t * 0.030, 0.0).r);

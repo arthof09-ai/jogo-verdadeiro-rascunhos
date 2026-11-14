@@ -37,6 +37,18 @@ uniform float lod_min = 0.10;
 uniform float lod_ligado = 1.0;
 uniform float densidade = 1.0;
 
+// ORDEM 42 — a zona jogável do jogo (cenas/arena): a relva lá dentro está PISADA (baixa), para as
+// casas, os destaques e o pé das figuras se lerem — e continua a mexer com o mesmo vento.
+uniform vec4 campo_rect = vec4(0.0);   // (x0, z0, x1, z1) no mundo; vazia = nenhuma (o mapa sozinho)
+uniform float campo_alto = 1.0;        // fracção da altura que a erva tem lá dentro
+float no_campo(vec2 xz) {
+	if (campo_rect.z <= campo_rect.x) {
+		return 0.0;
+	}
+	vec2 fora = max(campo_rect.xy - xz, xz - campo_rect.zw);
+	return 1.0 - smoothstep(-0.9, 0.6, max(fora.x, fora.y));
+}
+
 varying float v_alt;
 varying float v_dobra;
 varying vec3 v_tom;
@@ -61,6 +73,8 @@ void vertex() {
 	float alarga = min(inversesqrt(k), 2.6);
 	p.xz = raiz.xz + (p.xz - raiz.xz) * alarga * fica;
 	p.y = raiz.y + (p.y - raiz.y) * fica * mix(1.0, 1.12, clamp(alarga - 1.0, 0.0, 1.0));
+	float baixa = mix(1.0, campo_alto, no_campo(raiz.xz));
+	p.y = raiz.y + (p.y - raiz.y) * baixa;
 	// ---- vento: onda que viaja (fase só da posição)
 	vec2 dv = normalize(vento_dir);
 	float t = TIME * vento_vel;
@@ -74,6 +88,7 @@ void vertex() {
 	float peso = v_alt * v_alt;
 	float d = (0.18 + 0.42 * onda + 0.14 * onda2 + 0.50 * raj * (0.4 + 0.6 * onda)) * vento_forca * peso;
 	float trem = sin(t * 5.3 + raiz.x * 3.1 + raiz.z * 2.3) * 0.010 * peso;
+	d *= mix(1.0, baixa, 0.6);
 	p.xz += dv * (d + trem);
 	p.y -= d * d * 1.2;
 	VERTEX = p;
