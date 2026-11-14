@@ -1,5 +1,9 @@
 # Ordem 37 — o campo de batalha da floresta: notas de medição
 
+> **Nota da Ordem 38 (2026-11-14):** este documento é o fecho da Ordem 37 e fica como estava. A Ordem 38
+> refez a fundação, o fundo e a vegetação: os tamanhos e os números abaixo estão ultrapassados pelos de
+> `ESTADO-FINAL-ORDEM-38.md`. Os comandos para abrir a cena e repetir as provas continuam certos.
+
 *Fecho da missão, 2026-11-13. Ramo `fable/mapa-37`. Tudo o que aqui está foi medido nesta máquina
 (PCDANASA, NVIDIA GeForce RTX 4060, Godot 4.7.2, Compatibility) — os números vêm de
 `capturas/medicao.json`, gravado pela própria ferramenta de capturas. O que NÃO foi medido está
