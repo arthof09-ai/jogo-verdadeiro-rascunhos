@@ -408,11 +408,6 @@ func _raiz() -> Node:
 
 
 func _vestir_alvos() -> void:
-	if not is_inside_tree():
-		return
-	var raiz := _raiz()
-	if raiz == null:
-		return
 	var precisa := molhado > 0.0 or neve > 0.0 or tipo != "nenhum"
 	if not precisa:
 		return
@@ -420,12 +415,15 @@ func _vestir_alvos() -> void:
 		_mat_chao = _material(SH_CHAO, -20)
 		_mat_figura = _material(SH_FIGURA, 0)
 	var vistos := {}
-	for n in get_tree().get_nodes_in_group(GRUPO_CHAO):
-		if raiz == n or raiz.is_ancestor_of(n):
-			_vestir(n, _mat_chao, vistos, false)
-	for n in get_tree().get_nodes_in_group(GRUPO_FIGURA):
-		if raiz == n or raiz.is_ancestor_of(n):
-			_vestir(n, _mat_figura, vistos, true)
+	# Os grupos procuram-se na árvore da cena (debaixo da raiz dos alvos); os registados à mão valem sempre.
+	var raiz := _raiz() if is_inside_tree() else null
+	if raiz != null:
+		for n in get_tree().get_nodes_in_group(GRUPO_CHAO):
+			if raiz == n or raiz.is_ancestor_of(n):
+				_vestir(n, _mat_chao, vistos, false)
+		for n in get_tree().get_nodes_in_group(GRUPO_FIGURA):
+			if raiz == n or raiz.is_ancestor_of(n):
+				_vestir(n, _mat_figura, vistos, true)
 	_vestir_manuais(_manuais_chao, _mat_chao, vistos, false)
 	_vestir_manuais(_manuais_figura, _mat_figura, vistos, true)
 	# Quem saiu da cena (ou morreu) sai da lista.
@@ -435,7 +433,7 @@ func _vestir_alvos() -> void:
 			if no != null and (no as GeometryInstance3D).material_overlay in [_mat_chao, _mat_figura]:
 				(no as GeometryInstance3D).material_overlay = null
 			_vestidos.erase(id)
-	if _sol == null or not is_instance_valid(_sol):
+	if raiz != null and (_sol == null or not is_instance_valid(_sol)):
 		_sol = _achar_sol(raiz)
 
 

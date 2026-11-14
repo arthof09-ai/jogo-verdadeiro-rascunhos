@@ -12,6 +12,9 @@ const FilaIntencoes := preload("res://rede/fila_intencoes.gd")
 const Uuid := preload("res://rede/uuid.gd")
 const Perfis := preload("res://arte/perfis/aplicar_perfil.gd")
 const Frases := preload("res://hud/frases_batalha.gd")
+## Ordem 40: o clima (chuva e neve) — módulo de apresentação.
+const Clima := preload("res://arte/clima/clima.gd")
+const IntegradorVento := preload("res://arte/clima/integrador_vento.gd")
 
 var _total := 0
 var _falhas := 0
@@ -41,6 +44,8 @@ func _initialize() -> void:
 	_teste_aguardando_mestre_desconhecida()
 	_teste_validacao_da_entrada()
 	_teste_lobby_valida_antes_de_enviar()
+	_teste_clima_frame_a_frame()
+	_teste_clima_modulo()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -591,3 +596,168 @@ func _teste_lobby_valida_antes_de_enviar() -> void:
 		_ok(lobby._campo_pin.text == "12345", "e o que ela escreveu fica no campo, para corrigir")
 	lobby.free()
 
+
+# ---------------------------------------------------------------- ordem 40: clima (chuva e neve)
+
+## O vento da medição: roda 150° e ganha força a meio (aos 0,5 s), com rajadas pelo caminho.
+func _vento_que_muda(t: float) -> Vector2:
+	var rumo := deg_to_rad(20.0 + (150.0 if t > 0.5 else 0.0) + 10.0 * sin(0.9 * t))
+	return Vector2(cos(rumo), sin(rumo)) * (2.5 * (1.7 if t > 0.5 else 1.0) * (1.0 + 0.25 * sin(2.3 * t)))
+
+
+## A lição da REF_85: o movimento de cada floco integra-se FRAME A FRAME (posição += (vento do frame + queda) × dt).
+func _teste_clima_frame_a_frame() -> void:
+	print("Clima (ordem 40): o deslocamento integra-se frame a frame — nenhum floco contra o vento")
+	var integ := IntegradorVento.new()
+	integ.definir_caixa(Vector3(38.0, 12.0, 38.0))
+	var m: Dictionary = integ.medir(3000, 60, 1.0 / 60.0, _vento_que_muda, 1.8, 0.32)
+	_ok(int(m["deslocamentos"]) > 170000, "3000 flocos × 60 frames com o vento a rodar 150° a meio: %d deslocamentos medidos" % int(m["deslocamentos"]))
+	_ok(int(m["contra_o_vento"]) == 0, "0 deslocamentos contra o vento do frame (%.1f%%)" % float(m["percent_contra"]))
+	_ok(int(m["subiram"]) == 0, "nenhum floco sobe")
+	_ok(float(m["salto_max_m"]) < 0.25, "salto máximo entre frames abaixo de 0,25 m (%.3f m)" % float(m["salto_max_m"]))
+	# O mesmo, 10 s seguidos (as rajadas sobem e descem muitas vezes): continua a zero.
+	var longo := IntegradorVento.new()
+	longo.definir_caixa(Vector3(38.0, 12.0, 38.0))
+	var m10: Dictionary = longo.medir(300, 600, 1.0 / 60.0, _vento_que_muda, 1.8, 0.32)
+	_ok(int(m10["contra_o_vento"]) == 0 and int(m10["subiram"]) == 0, "300 flocos × 600 frames (10 s de rajadas): 0 contra o vento, nenhum sobe (%d deslocamentos)" % int(m10["deslocamentos"]))
+	# Controlo: a fórmula ERRADA da REF_85 («vento actual × tempo total»), com o mesmo vento nos mesmos 10 s,
+	# anda contra ele sempre que a rajada abranda (o produto encolhe e a nuvem inteira recua).
+	var contra := 0
+	var total := 0
+	var antes := Vector2.ZERO
+	for q in 600:
+		var t := float(q + 1) / 60.0
+		var v := _vento_que_muda(t)
+		var p := v * t
+		if q > 0:
+			total += 1
+			if (p - antes).dot(v) < -1e-7:
+				contra += 1
+		antes = p
+	_ok(contra > 60, "controlo: a fórmula errada («vento × tempo total») anda contra este mesmo vento em %d de %d frames (%.1f%%)" % [contra, total, 100.0 * contra / float(total)])
+	# Mudar o vento não mexe no que já se andou: o acumulado só cresce com o vento de cada frame.
+	var i2 := IntegradorVento.new()
+	i2.definir_caixa(Vector3(38.0, 12.0, 38.0))
+	i2.avancar(1.0 / 60.0, Vector2(3.0, 0.0), 1.8, 0.0)
+	var antes_x: float = i2.d_vento[0].x
+	i2.avancar(1.0 / 60.0, Vector2(0.0, 0.0), 1.8, 0.0)
+	_ok(antes_x > 0.0 and is_equal_approx(i2.d_vento[0].x, antes_x), "o vento cai para zero: o que o floco já andou fica onde está")
+	# Os pesos cabem em inteiros pequenos (exactos na GPU) e o ganho do vento é sempre positivo.
+	var s: Dictionary = IntegradorVento.sortear(500, 7, true)
+	var pesos_bons := true
+	for i in 500:
+		var w: Vector3i = s["w"][i]
+		var l: Vector3i = s["l"][i]
+		var k: int = s["k"][i]
+		if w.x < 0 or w.y < 0 or w.z < 0 or w.x + w.y + w.z < 12 or w.x + w.y + w.z > 16 or k < 10 or k > 16:
+			pesos_bons = false
+		if absi(l.x) > 8 or absi(l.y) > 8 or absi(l.z) > 8:
+			pesos_bons = false
+		var c: Color = IntegradorVento.empacotar(k, w, l, int(s["r"][i]))
+		if c.r > 2047.0 or c.g > 2047.0 or c.b > 2047.0 or c.a > 2047.0 or c.r < 0.0 or c.g < 0.0 or c.b < 0.0 or c.a < 0.0:
+			pesos_bons = false
+	_ok(pesos_bons, "os pesos de 500 flocos: vento ≥ 0 (soma 12..16), queda 10..16, balanço −8..8, empacotados em inteiros até 2047")
+
+
+## O módulo: desligado não custa nada; liga, troca e regula sem reiniciar; o chão e as figuras respondem.
+func _teste_clima_modulo() -> void:
+	print("Clima (ordem 40): liga, troca de clima, intensidade e perfil sem reiniciar; chão e figuras respondem")
+	var cena := Node3D.new()
+	root.add_child(cena)
+	var chao := MeshInstance3D.new()
+	chao.mesh = PlaneMesh.new()
+	chao.add_to_group(Clima.GRUPO_CHAO)
+	cena.add_child(chao)
+	var figura := Node3D.new()
+	figura.add_to_group(Clima.GRUPO_FIGURA)
+	cena.add_child(figura)
+	var corpo := MeshInstance3D.new()
+	corpo.mesh = CapsuleMesh.new()
+	(corpo.mesh as CapsuleMesh).material = StandardMaterial3D.new()
+	figura.add_child(corpo)
+	var anel := MeshInstance3D.new()
+	anel.mesh = PlaneMesh.new()
+	var sem_luz := StandardMaterial3D.new()
+	sem_luz.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	(anel.mesh as PlaneMesh).material = sem_luz
+	figura.add_child(anel)
+	var c = Clima.new()
+	cena.add_child(c)
+	# Aqui a cena ainda não está na árvore (o _initialize corre antes de a raiz entrar), por isso os alvos
+	# registam-se à mão; a procura pelos grupos, com a arena de verdade, prova-se no testes/pecas_mestre.gd.
+	c.registar_chao(chao)
+	c.registar_figura(figura)
+	c.rajadas = 0.0
+	c.configurar_area(Vector3(15.0, 0.0, 15.0), Vector2(30.0, 30.0))
+	c.definir_grelha(Vector3.ZERO, 1.5)
+	_ok(c.parado() and not c.is_processing() and c.get_child_count() == 0 and chao.material_overlay == null, "desligado: não processa, não cria nós, não veste nada")
+	_ok(c.caixa_minimo().is_equal_approx(Vector3(-4.0, 0.0, -4.0)) and c.caixa_tamanho().is_equal_approx(Vector3(38.0, 12.0, 38.0)), "a caixa do clima cobre o campo inteiro (30×30 m) mais 4 m de folga, 12 m de altura")
+	_ok(not c.definir("granizo", "forte") and not c.definir("neve", "media") and c.tipo == "nenhum", "clima ou intensidade desconhecidos: recusa e fica como estava")
+
+	# Neve forte, perfil médio.
+	_ok(c.definir("neve", "forte") and c.is_processing(), "neve forte: liga sem reiniciar a cena")
+	var neve_antes := 0.0
+	var sempre_a_subir := true
+	for i in 90:
+		c.avancar(1.0 / 30.0)
+		if c.neve < neve_antes:
+			sempre_a_subir = false
+		neve_antes = c.neve
+	_ok(c.contagem_atual("neve") == 6000 and c.contagem_atual("chuva") == 0, "neve forte no perfil Médio: 6000 flocos (%d)" % c.contagem_atual("neve"))
+	_ok(sempre_a_subir and c.neve > 0.05 and c.neve < 0.08, "a neve acumula aos poucos: 3 s de neve forte = %.3f (45 s até cobrir)" % c.neve)
+	_ok(chao.material_overlay != null and corpo.material_overlay != null, "o chão e o corpo da figura ganham a camada do clima (material_overlay)")
+	_ok(anel.material_overlay == null and corpo.get_active_material(0) is StandardMaterial3D and chao.get_active_material(0) == null, "o anel sem luz fica de fora e nenhum material da cena foi trocado")
+	_ok(c.vestidos().size() == 2, "2 nós vestidos (chão e corpo)")
+	c.definir("neve", "fraco")
+	for i in 60:
+		c.avancar(1.0 / 30.0)
+	_ok(c.contagem_atual("neve") == 2000, "neve fraca, sem reiniciar: 2000 flocos (%d)" % c.contagem_atual("neve"))
+	c.definir_perfil("alto")
+	for i in 60:
+		c.avancar(1.0 / 30.0)
+	_ok(c.contagem_atual("neve") == 3000, "perfil Alto: 3000 flocos (%d)" % c.contagem_atual("neve"))
+	c.definir_perfil("Baixo")
+	for i in 60:
+		c.avancar(1.0 / 30.0)
+	_ok(c.contagem_atual("neve") == 1000, "perfil Baixo: 1000 flocos (%d)" % c.contagem_atual("neve"))
+
+	# Troca para chuva forte: a neve sai, a chuva entra, a neve pousada derrete e o chão molha.
+	var neve_pousada: float = c.neve
+	c.definir_perfil("medio")
+	_ok(c.definir_por_nome("chuva-forte") and c.tipo == "chuva" and c.intensidade == "forte", "«chuva-forte» pelo nome")
+	for i in 90:
+		c.avancar(1.0 / 30.0)
+	_ok(c.contagem_atual("chuva") == 5000 and c.contagem_atual("salpicos") == 350 and c.contagem_atual("neve") == 0, "chuva forte no Médio: 5000 gotas e 350 salpicos; os flocos saíram (%d, %d, %d)" % [c.contagem_atual("chuva"), c.contagem_atual("salpicos"), c.contagem_atual("neve")])
+	_ok(c.molhado > 0.3 and c.neve < neve_pousada, "o chão molha (%.2f) e a neve pousada derrete (%.3f → %.3f)" % [c.molhado, neve_pousada, c.neve])
+	c.definir("chuva", "fraco")
+	for i in 60:
+		c.avancar(1.0 / 30.0)
+	_ok(c.contagem_atual("chuva") == 1600 and c.contagem_atual("salpicos") == 120, "chuva fraca: 1600 gotas e 120 salpicos (%d, %d)" % [c.contagem_atual("chuva"), c.contagem_atual("salpicos")])
+
+	# Um só vento para os dois climas.
+	c.definir_vento(90.0, 4.0)
+	var v: Vector2 = c.vento_do_frame()
+	_ok(absf(v.x) < 0.001 and is_equal_approx(v.y, 4.0), "o vento é um só: 90° e 4 m/s → (0, 4) no chão, para a chuva e para a neve")
+
+	# Desliga: a chuva sai, o chão seca e o módulo volta a dormir.
+	c.desligar()
+	c.segundos_secar = 1.0
+	c.segundos_derreter = 1.0
+	for i in 120:
+		c.avancar(1.0 / 30.0)
+	_ok(c.parado() and not c.is_processing(), "desligado e seco: o módulo dorme outra vez")
+	_ok(chao.material_overlay == null and corpo.material_overlay == null and c.vestidos().is_empty(), "e tira a camada do chão e da figura")
+	var visiveis := 0
+	for n in c.get_children():
+		if (n as Node3D).visible:
+			visiveis += 1
+	_ok(visiveis == 0, "nenhuma partícula à vista")
+
+	# Só apresentação: o módulo não lê o estado do jogo nem a rede.
+	var limpo := true
+	for ficheiro in ["clima.gd", "integrador_vento.gd"]:
+		var codigo := FileAccess.get_file_as_string("res://arte/clima/" + ficheiro)
+		if codigo == "" or codigo.contains("Estado.") or codigo.contains("Rede.") or codigo.contains("enviar_"):
+			limpo = false
+	_ok(limpo, "o código do clima não toca no Estado nem na Rede (só apresentação)")
+	cena.free()
