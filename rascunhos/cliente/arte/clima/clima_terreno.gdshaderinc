@@ -18,6 +18,11 @@ const float CLIMA_MARGEM_LAMA = 0.12;
 
 uniform vec4 bacias[8];        // x, z, raio (m), fundura (m)
 uniform int n_bacias = 0;
+// Ordem 42: a bacia do RELEVO (tipo 1) — um ponto baixo de verdade do mapa, achado pela inundação do terreno.
+// A água tem a superfície PLANA: sobe do fundo (nível − fundura) até ao nível de transbordo (m, no mundo), e o
+// próprio relevo dá a forma à bolsa. Tipo 0 = a taça da Ordem 41 (como era).
+uniform int bacias_tipo[8];
+uniform float bacias_nivel[8];
 uniform float chao_ref_y = 0.0;
 uniform vec4 abrigos[8];       // x, z, meia-largura x, meia-largura z (m)
 uniform float abrigos_alt[8];  // altura (m)
@@ -38,12 +43,24 @@ vec2 clima_torcer(vec2 p) {
 // `margem` (0..1, em fracção da fundura) alarga a conta para fora da linha de água (a faixa da lama).
 float clima_fundura(vec2 xz, float y_rel, float a, float margem) {
 	vec2 q = clima_torcer(xz);
-	float d = -1.0;
+	// Ordem 42: «nenhuma bacia aqui» tem de dar seco também num chão com relevo (era −1 − y_rel: o chão mais
+	// de 1 m abaixo da referência saía molhado). Num chão liso (y_rel = 0) é o mesmo −1 de antes.
+	float d = -1.0 + y_rel;
 	for (int i = 0; i < CLIMA_MAX_BACIAS; i++) {
 		if (i >= n_bacias) {
 			break;
 		}
 		vec4 b = bacias[i];
+		if (bacias_tipo[i] == 1) {
+			vec2 v0 = (xz - b.xy) / max(b.z, 0.01);
+			float y_abs = y_rel + chao_ref_y;
+			// só o chão da cova: o que está abaixo do fundo dela é de fora (do outro lado do transbordo)
+			if (dot(v0, v0) < 1.0 && y_abs > bacias_nivel[i] - b.w - 0.03) {
+				float nivel = bacias_nivel[i] - b.w + (a + margem) * b.w;
+				d = max(d, nivel - y_abs + y_rel);
+			}
+			continue;
+		}
 		vec2 v = (q - b.xy) / max(b.z, 0.01);
 		float u2 = min(dot(v, v), 1.0);
 		float taca = (1.0 - u2) * (1.0 - u2);

@@ -23,6 +23,7 @@ shader_type spatial;
 render_mode unshaded, cull_disabled, world_vertex_coords;
 
 #include "luz_floresta.gdshaderinc"
+#include "res://arte/clima/clima_terreno.gdshaderinc"
 
 uniform vec3 cor_base : source_color = vec3(0.34, 0.40, 0.21);
 uniform vec3 cor_ponta : source_color = vec3(0.70, 0.68, 0.42);
@@ -41,6 +42,14 @@ uniform float densidade = 1.0;
 // casas, os destaques e o pé das figuras se lerem — e continua a mexer com o mesmo vento.
 uniform vec4 campo_rect = vec4(0.0);   // (x0, z0, x1, z1) no mundo; vazia = nenhuma (o mapa sozinho)
 uniform float campo_alto = 1.0;        // fracção da altura que a erva tem lá dentro
+// ORDEM 42 + clima (arte/clima): a erva responde ao clima da arena. Os valores são os do módulo do clima
+// (neve pousada, aglomerado da nevasca, água e lama do alagamento) e as bacias e os abrigos chegam pelo
+// clima_terreno.gdshaderinc. A erva afoga-se nas bolsas (a água lê-se no chão) e enterra-se e branqueia
+// debaixo da neve (o manto e os montes lêem-se). Tudo a zero: a erva de sempre.
+uniform float clima_neve = 0.0;
+uniform float clima_aglomerado = 0.0;
+uniform float clima_agua = 0.0;
+uniform float clima_lama = 0.0;
 float no_campo(vec2 xz) {
 	if (campo_rect.z <= campo_rect.x) {
 		return 0.0;
@@ -50,6 +59,7 @@ float no_campo(vec2 xz) {
 }
 
 varying float v_alt;
+varying float v_neve;
 varying float v_dobra;
 varying vec3 v_tom;
 varying vec3 v_pos;
@@ -74,6 +84,23 @@ void vertex() {
 	p.xz = raiz.xz + (p.xz - raiz.xz) * alarga * fica;
 	p.y = raiz.y + (p.y - raiz.y) * fica * mix(1.0, 1.12, clamp(alarga - 1.0, 0.0, 1.0));
 	float baixa = mix(1.0, campo_alto, no_campo(raiz.xz));
+	// clima: a água e a lama afogam a erva; a neve enterra-a
+	float y_rel = raiz.y - chao_ref_y;
+	float afoga = 0.0;
+	if (clima_agua > 0.0) {
+		afoga = smoothstep(-0.015, 0.05, clima_fundura(raiz.xz, y_rel, clima_agua * CLIMA_ENCHE, 0.0));
+	}
+	if (clima_lama > 0.0) {
+		afoga = max(afoga, 0.65 * smoothstep(-0.01, 0.03, clima_fundura(raiz.xz, y_rel, clima_lama * CLIMA_ENCHE, CLIMA_MARGEM_LAMA)));
+	}
+	float neve_aqui = clima_neve;
+	if (clima_aglomerado > 0.0) {
+		float ab = clima_abrigo(raiz.xz);
+		float exposto = 1.0 - clamp(ab * 1.4, 0.0, 1.0);
+		neve_aqui = clima_neve * (1.0 - clima_aglomerado * exposto * 0.67) + clima_aglomerado * ab * 1.05;
+	}
+	v_neve = clamp(neve_aqui, 0.0, 1.0);
+	baixa *= (1.0 - afoga) * (1.0 - 0.80 * clamp(neve_aqui, 0.0, 1.0));
 	p.y = raiz.y + (p.y - raiz.y) * baixa;
 	// ---- vento: onda que viaja (fase só da posição)
 	vec2 dv = normalize(vento_dir);
@@ -116,5 +143,8 @@ void fragment() {
 	vec3 vw = normalize(CAMERA_POSITION_WORLD - v_pos);
 	float contra = max(dot(-vw, dir_luz), 0.0);
 	cor *= 1.0 + 0.22 * contra * contra * v_alt * vis;
-	ALBEDO = min(cor, vec3(0.86, 0.84, 0.70));
+	cor = min(cor, vec3(0.86, 0.84, 0.70));
+	// clima: a erva debaixo da neve fica branca (as pontas primeiro)
+	cor = mix(cor, vec3(0.86, 0.89, 0.93) * mix(0.72, 1.0, vis), v_neve * mix(0.55, 0.95, v_alt));
+	ALBEDO = cor;
 }

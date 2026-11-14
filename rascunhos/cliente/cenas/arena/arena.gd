@@ -44,6 +44,10 @@ const CampoFloresta := preload("res://mapa/floresta/campo_floresta.gd")
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
 const GrelhaMapa := preload("res://mapa/floresta/grelha_floresta.gd")
 const SH_SOBRE := preload("res://cenas/arena/sobre_relevo.gdshader")
+## Ordem 42 (parte 2): os pontos baixos REAIS do relevo, para o alagamento do clima.
+const BaciasRelevo := preload("res://cenas/arena/bacias_do_relevo.gd")
+## Quantos dos obstáculos reais do mapa (os mais perto da zona) dão abrigo à neve (o módulo aceita até 8).
+const ABRIGOS_DO_MAPA := 8
 ## Quantos metros acima do chão vai o que se cola ao relevo (o resto resolve-o o shader).
 const LEVANTA_M := 0.03
 ## Divisões por lado de cada remendo de casa (os vértices seguem o relevo).
@@ -80,6 +84,7 @@ var _destaques: MeshInstance3D
 var _fogo: MeshInstance3D
 var _marcador: MeshInstance3D
 var _mat_destaque: ShaderMaterial
+var _relva_com_clima := false
 var _rotulo_custo: Label3D
 var _nos: Dictionary = {}  # figuraId -> Node3D
 var _focou := false
@@ -96,6 +101,12 @@ func _process(_delta: float) -> void:
 	if mapa != null and is_instance_valid(mapa):
 		var raio := RAIO_RECORTE_M if camera.is_processing() else 0.0
 		mapa.definir_recorte_vista(camera.foco_atual() + Vector3(0.0, 1.0, 0.0), raio)
+		# Ordem 42 (parte 2): a relva do mapa responde ao clima (afoga nas bolsas, enterra-se na neve).
+		if clima != null and (clima.neve > 0.0 or clima.aglomerado > 0.0 or clima.agua > 0.0 or clima.lama > 0.0 or _relva_com_clima):
+			_relva_com_clima = clima.neve > 0.0 or clima.aglomerado > 0.0 or clima.agua > 0.0 or clima.lama > 0.0
+			var m: ShaderMaterial = mapa.materiais_relva()[0]
+			if m != null:
+				clima.empurrar_terreno_para(m)
 	var rotulos: Array = []
 	for no in _nos.values():
 		if is_instance_valid(no) and (no as Node).has_node("Nome"):
@@ -194,6 +205,7 @@ func _construir_grelha(w: int, h: int, c: float) -> void:
 	camera.configurar_arena(centro, tam)
 	clima.configurar_area(centro, tam)
 	clima.definir_grelha(Vector3(origem.x, centro.y, origem.y), casa_m)
+	_ligar_clima_ao_mapa(Rect2(origem, tam))
 	_mostrar_destaques()
 	mostrar_fogo()
 
@@ -234,6 +246,48 @@ func _garantir_mapa(zona: Rect2) -> void:
 			chao.add_to_group(Clima.GRUPO_CHAO)
 	if _perfis.atual != "":
 		_ao_perfil_aplicado(_perfis.atual)
+
+
+## Ordem 42 (parte 2): o clima sobre o mapa. As bacias do alagamento são os pontos baixos REAIS do relevo
+## (inundação do terreno: cenas/arena/bacias_do_relevo.gd) e os abrigos da nevasca são os obstáculos REAIS
+## do mapa (menires, santuário, lanternas, tronco tombado, rochas, árvores — mapa.obstaculos), os mais
+## perto da zona. Cada abrigo é uma caixa invisível com a medida do obstáculo (o módulo lê a caixa da malha).
+func _ligar_clima_ao_mapa(zona: Rect2) -> void:
+	clima.altura_do_chao = altura_chao
+	# A zona jogável do mapa não tem muros: a neve da nevasca não se junta nas bordas dela (um quadrado
+	# branco à volta do campo), junta-se contra os obstáculos reais.
+	clima.bordas_abrigo = 0.0
+	clima.definir_bacias(BaciasRelevo.achar(zona))
+	var raiz := Node3D.new()
+	raiz.name = "AbrigosDoMapa"
+	_grelha.add_child(raiz)
+	var lista: Array = []
+	for o: Dictionary in mapa.obstaculos:
+		var c: Vector3 = o["c"]
+		var m: Vector3 = o["m"]
+		var caixa := Rect2(c.x - m.x, c.z - m.z, m.x * 2.0, m.z * 2.0)
+		var dx := maxf(maxf(zona.position.x - caixa.end.x, caixa.position.x - zona.end.x), 0.0)
+		var dz := maxf(maxf(zona.position.y - caixa.end.y, caixa.position.y - zona.end.y), 0.0)
+		lista.append([sqrt(dx * dx + dz * dz), o])
+	lista.sort_custom(func(a, b): return float(a[0]) < float(b[0]))
+	for e: Array in lista.slice(0, ABRIGOS_DO_MAPA):
+		var o: Dictionary = e[1]
+		var m: Vector3 = o["m"]
+		var mi := MeshInstance3D.new()
+		mi.name = "Abrigo_" + String(o["nome"]).replace(" ", "_")
+		var caixa := BoxMesh.new()
+		caixa.size = Vector3(m.x * 2.0, m.y, m.z * 2.0)
+		mi.mesh = caixa
+		mi.position = (o["c"] as Vector3) + Vector3(0.0, m.y * 0.5, 0.0)
+		mi.visible = false  # só a medida: o que se vê é o obstáculo do mapa
+		mi.add_to_group(Clima.GRUPO_OBSTACULO)
+		raiz.add_child(mi)
+	# As malhas reais dos obstáculos vestem a camada do clima (neve em cima, gelo): registadas à mão, depois
+	# das caixas — o módulo só dá abrigo aos 8 primeiros, por isso estas não roubam lugar às medidas.
+	for caminho in ["Arena/Pedras", "Arena/MarcoMadeira", "Arena/MarcoSantuario", "Arena/Troncos0", "Arena/Troncos1", "Arena/Troncos2", "Arena/Troncos3"]:
+		var no := mapa.get_node_or_null(caminho)
+		if no != null:
+			clima.registar_obstaculo(no)
 
 
 ## A altura do chão do mapa em (x, z) do mundo: a altura final única (malha = colisão = consulta).

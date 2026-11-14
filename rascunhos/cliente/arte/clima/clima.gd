@@ -179,6 +179,10 @@ var _nevasca_vento := 0.0            # 0..1: o vento da nevasca levantado
 var _vento_lento := Vector2.ZERO     # o rumo do vento, alisado (os montes não rodam com cada rajada)
 var _d_varre := 0.0                  # m que o vento andou, somados frame a frame (a neve rasteira anda com isto)
 var _bacias: Array[Vector4] = []     # x, z, raio, fundura
+## Ordem 42: por bacia, o nível de transbordo (m, no mundo) das bacias do RELEVO; NAN = a taça da Ordem 41.
+var _bacias_nivel: Array[float] = []
+## Ordem 42 (opcional): a altura do chão em (x, z) — só para a medição do alagamento num chão com relevo.
+var altura_do_chao: Callable = Callable()
 var _bacias_dadas := false
 var _abrigos: Array[Vector4] = []    # x, z, meia-largura x, meia-largura z
 var _abrigos_alt: Array[float] = []
@@ -292,18 +296,35 @@ func definir_forte(novo_aglomerado: float, novo_gelo: float, nova_agua: float, n
 ## poças previstas no desenho do mapa (P1–P4) entram, sem mexer no módulo. Sem isto, o módulo sorteia 5
 ## bacias no campo (sempre as mesmas para o mesmo campo). Lista vazia = volta às sorteadas.
 ## Num chão com relevo de verdade, a altura da malha entra sozinha na conta (as covas reais também enchem).
+## Ordem 42: um Dictionary com "nivel" (m, no mundo) é uma bacia do RELEVO — um ponto baixo de verdade do mapa
+## (ver cenas/arena/bacias_do_relevo.gd): a água sobe com a superfície plana do fundo (nivel − fundura) até ao
+## nível de transbordo, e é o relevo que lhe dá a forma; o raio só limita até onde ela conta.
 func definir_bacias(lista: Array) -> void:
 	var novas: Array[Vector4] = []
+	var niveis: Array[float] = []
 	for b in lista:
 		if novas.size() >= MAX_BACIAS:
 			break
 		if b is Vector4:
 			novas.append(Vector4(b.x, b.y, maxf(b.z, 0.1), maxf(b.w, 0.005)))
+			niveis.append(NAN)
 		elif b is Dictionary:
 			novas.append(Vector4(float(b.get("x", 0.0)), float(b.get("z", 0.0)), maxf(float(b.get("raio", 2.0)), 0.1), maxf(float(b.get("fundura", 0.08)), 0.005)))
+			niveis.append(float(b["nivel"]) if b.has("nivel") else NAN)
 	_bacias_dadas = not novas.is_empty()
 	_bacias = novas if _bacias_dadas else _bacias_automaticas()
+	if not _bacias_dadas:
+		niveis.clear()
+	_bacias_nivel = niveis
 	_terreno_mudou = true
+
+
+## Ordem 42: o nível de transbordo de cada bacia em uso (NAN = taça da Ordem 41).
+func bacias_nivel() -> Array[float]:
+	var r: Array[float] = []
+	for i in _bacias.size():
+		r.append(_bacias_nivel[i] if i < _bacias_nivel.size() else NAN)
+	return r
 
 
 ## As bacias em uso (x, z, raio, fundura).
@@ -589,8 +610,17 @@ static func torcer(p: Vector2) -> Vector2:
 func fundura_em(xz: Vector2, enchimento: float = -1.0, margem: float = 0.0, y_rel: float = 0.0) -> float:
 	var a := (agua if enchimento < 0.0 else enchimento) * ENCHE
 	var q := torcer(xz)
-	var d := -1.0
-	for b in _bacias:
+	var d := -1.0 + y_rel  # Ordem 42: seco onde nenhuma bacia conta, também num chão com relevo
+	for i in _bacias.size():
+		var b := _bacias[i]
+		if i < _bacias_nivel.size() and not is_nan(_bacias_nivel[i]):
+			# Ordem 42: bacia do relevo (espelho de clima_fundura no shader)
+			var v0 := (xz - Vector2(b.x, b.y)) / maxf(b.z, 0.01)
+			var y_abs := y_rel + _centro.y
+			if v0.length_squared() < 1.0 and y_abs > _bacias_nivel[i] - b.w - 0.03:
+				var nivel := _bacias_nivel[i] - b.w + (a + margem) * b.w
+				d = maxf(d, nivel - y_abs + y_rel)
+			continue
 		var v := (q - Vector2(b.x, b.y)) / maxf(b.z, 0.01)
 		var u2 := minf(v.length_squared(), 1.0)
 		var taca := (1.0 - u2) * (1.0 - u2)
@@ -655,11 +685,12 @@ func medir_alagamento(passo_m: float = 0.1) -> Dictionary:
 	for j in nz:
 		for i in nx:
 			var p := Vector2(x0 + (i + 0.5) * passo, z0 + (j + 0.5) * passo)
-			var d := fundura_em(p)
+			var y_rel := (float(altura_do_chao.call(p.x, p.y)) - _centro.y) if altura_do_chao.is_valid() else 0.0
+			var d := fundura_em(p, -1.0, 0.0, y_rel)
 			if d > 0.0:
 				com_agua += 1
 				fundura_max = maxf(fundura_max, d)
-			if lama > 0.0 and fundura_em(p, lama, MARGEM_LAMA) > 0.0055:
+			if lama > 0.0 and fundura_em(p, lama, MARGEM_LAMA, y_rel) > 0.0055:
 				com_lama += 1
 	var celula := passo * passo
 	var campo := _tamanho.x * _tamanho.y
@@ -1021,12 +1052,30 @@ func _empurrar_uniformes() -> void:
 	_mat_figura.set_shader_parameter(&"cor_reflexo", cor_reflexo)
 
 
+## Ordem 42: o mesmo, para um material de fora do módulo que inclua clima_terreno.gdshaderinc (a relva do
+## mapa): as bacias, os abrigos e o campo, e o estado (neve, aglomerado, água, lama).
+func empurrar_terreno_para(m: ShaderMaterial) -> void:
+	_empurrar_terreno(m)
+	m.set_shader_parameter(&"vento_abrigo", _vento_lento.normalized() if _vento_lento != Vector2.ZERO else Vector2.RIGHT)
+	m.set_shader_parameter(&"clima_neve", neve)
+	m.set_shader_parameter(&"clima_aglomerado", aglomerado)
+	m.set_shader_parameter(&"clima_agua", agua)
+	m.set_shader_parameter(&"clima_lama", lama)
+
+
 ## Ordem 41: as bacias, os abrigos e o campo (clima_terreno.gdshaderinc) para um material.
 func _empurrar_terreno(m: ShaderMaterial) -> void:
 	var b := PackedVector4Array()
 	b.resize(MAX_BACIAS)
+	var tipos := PackedInt32Array()
+	tipos.resize(MAX_BACIAS)
+	var niveis := PackedFloat32Array()
+	niveis.resize(MAX_BACIAS)
 	for i in mini(_bacias.size(), MAX_BACIAS):
 		b[i] = _bacias[i]
+		if i < _bacias_nivel.size() and not is_nan(_bacias_nivel[i]):
+			tipos[i] = 1
+			niveis[i] = _bacias_nivel[i]
 	var ab := PackedVector4Array()
 	ab.resize(MAX_ABRIGOS)
 	var alt := PackedFloat32Array()
@@ -1036,6 +1085,8 @@ func _empurrar_terreno(m: ShaderMaterial) -> void:
 		alt[i] = _abrigos_alt[i]
 	m.set_shader_parameter(&"bacias", b)
 	m.set_shader_parameter(&"n_bacias", mini(_bacias.size(), MAX_BACIAS))
+	m.set_shader_parameter(&"bacias_tipo", tipos)
+	m.set_shader_parameter(&"bacias_nivel", niveis)
 	m.set_shader_parameter(&"abrigos", ab)
 	m.set_shader_parameter(&"abrigos_alt", alt)
 	m.set_shader_parameter(&"n_abrigos", mini(_abrigos.size(), MAX_ABRIGOS))

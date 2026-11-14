@@ -300,7 +300,9 @@ void fragment() {
 		// Pó: um véu fino e liso desde o primeiro minuto (sem pontilhado).
 		float po = clamp(q * 3.0, 0.0, 1.0) * (0.22 + 0.20 * n3);
 		a_neve = mix(clamp(max(manto, po), 0.0, 1.0) * 0.93, 0.985, monte) * cima;
-		if (grelha_casa_m > 0.0) {
+		// Ordem 42: o fio só dentro do campo (num mapa, o chão vai muito além da grelha).
+		vec2 fora_campo = abs(xz - campo.xy) - campo.zw;
+		if (grelha_casa_m > 0.0 && max(fora_campo.x, fora_campo.y) < 0.02) {
 			vec2 qg = (xz - grelha_origem.xz) / grelha_casa_m;
 			vec2 dq = abs(fract(qg + 0.5) - 0.5) * grelha_casa_m;
 			float dl = min(dq.x, dq.y);

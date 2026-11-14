@@ -118,6 +118,9 @@ var fundo: Node3D
 var grelha: Grelha
 var relva: RelvaFloresta
 var medidas: Dictionary = {}
+## Ordem 42: os OBSTÁCULOS REAIS do mapa (para o clima: a neve da nevasca junta-se contra eles). Cada um é
+## {"nome", "c": Vector3 (o pé, no chão), "m": Vector3 (meias-larguras x e z; y = altura)}.
+var obstaculos: Array = []
 
 var _rng := RandomNumberGenerator.new()
 var _mats: Array[ShaderMaterial] = []
@@ -132,6 +135,8 @@ var _so_arvores: Dictionary = {} # idem, só os troncos (para a distância entre
 var _troncos: Array = []         # [Vector2, raio]: os troncos de dentro da arena (para a grelha)
 var _rochas: Array = []          # [Vector3 centro, tamanho]
 var _lote_pedras := Lote.new()
+var _mat_relva: ShaderMaterial
+var _mat_haste: ShaderMaterial
 var _t_rotulo := 0.0
 
 
@@ -238,6 +243,11 @@ func definir_recorte_vista(foco: Vector3, raio: float) -> void:
 	for m in _mats:
 		m.set_shader_parameter("vista_foco", foco)
 		m.set_shader_parameter("vista_raio", raio)
+
+
+## Ordem 42: os materiais da relva e das hastes (o clima da arena escreve-lhes a neve e a água).
+func materiais_relva() -> Array[ShaderMaterial]:
+	return [_mat_relva, _mat_haste]
 
 
 func definir_densidade_relva(f: float) -> void:
@@ -698,6 +708,7 @@ func _marco_menires(r: RandomNumberGenerator) -> void:
 		_ocupar(_tudo, x, z, 0.9)
 		_carimbo_max(1, x, z, 1.0, 0.85)
 		_contacto(x, z, 1.5, 0.65)
+		obstaculos.append({"nome": "menir", "c": Vector3(x, pe.y + 0.30, z), "m": Vector3(1.1, 0.7, 1.1) if deitado else Vector3(0.6, alto, 0.6)})
 		if deitado:
 			_sombra_alta([0], pe, 0.7, 1.2, 0.85)
 			grelha.dar_cobertura(Grelha.casa_em(x, z), Grelha.COBERTURA_MEIA)
@@ -724,6 +735,7 @@ func _marco_santuario(obra: Lote, r: RandomNumberGenerator) -> void:
 	var base := Basis(Vector3.UP, rot)
 	var y := Relevo.altura(p.x, p.y)
 	obra.juntar(Formas.santuario(), Transform3D(base, Vector3(p.x, y, p.y)))
+	obstaculos.append({"nome": "santuário", "c": Vector3(p.x, y, p.y), "m": Vector3(2.6, 5.8, 2.6)})
 	# ocupa, carimba e bloqueia a planta (2,6 × 2,3 m de meias medidas, mais os degraus)
 	_ocupar(_tudo, p.x, p.y, 3.2)
 	_ocupar(_tudo, p.x + frente.x * 2.8, p.y + frente.y * 2.8, 1.4)
@@ -751,6 +763,7 @@ func _marco_santuario(obra: Lote, r: RandomNumberGenerator) -> void:
 		for pos: Vector2 in [t + rampa * 6.6 + lado * 2.35, t + rampa * 6.6 - lado * 2.35, t + rampa * 15.0 + lado * 2.6 * sinal]:
 			var yl := Relevo.altura(pos.x, pos.y)
 			obra.juntar(Formas.lanterna(), Transform3D(Basis(Vector3.UP, r.randf() * TAU), Vector3(pos.x, yl - 0.03, pos.y)))
+			obstaculos.append({"nome": "lanterna", "c": Vector3(pos.x, yl, pos.y), "m": Vector3(0.35, 1.8, 0.35)})
 			_ocupar(_tudo, pos.x, pos.y, 0.6)
 			_carimbo_max(1, pos.x, pos.y, 0.8, 0.8)
 			_contacto(pos.x, pos.y, 1.0, 0.6)
@@ -789,6 +802,9 @@ func _marco_garganta(madeira: Lote) -> void:
 	var lado := Vector3.UP.cross(eixo).normalized()
 	var base := Basis(lado, eixo, lado.cross(eixo))
 	madeira.juntar(Formas.tronco_tombado(pa.distance_to(pb), raio), Transform3D(base, pa))
+	var meio_t := (a + b) * 0.5
+	obstaculos.append({"nome": "tronco tombado", "c": Vector3(meio_t.x, Relevo.altura(meio_t.x, meio_t.y), meio_t.y),
+		"m": Vector3(absf(a.x - b.x) * 0.5 + raio, raio * 2.0, absf(a.y - b.y) * 0.5 + raio)})
 	var n := int(a.distance_to(b) / 1.1)
 	for s in n + 1:
 		var t := float(s) / float(n)
@@ -901,6 +917,7 @@ func _arvore(lt: Lote, lc: Lote, x: float, z: float, h: float, familia: int, det
 	_ocupar(_so_arvores, x, z, 0.0)
 	if Grelha.casa_em(x, z) != Grelha.FORA:
 		_troncos.append([Vector2(x, z), raio])
+		obstaculos.append({"nome": "árvore", "c": pos, "m": Vector3(raio, h * 0.5, raio)})
 	if absf(x) > MAPA_MEIO + 12.0 or absf(z) > MAPA_MEIO + 12.0:
 		return
 	var l := Paleta.dir_luz()
@@ -1077,6 +1094,8 @@ func _registar_rocha(x: float, z: float, tam: float) -> void:
 		_contar_tirado("rochas")   # Ordem 42: a semente gastou-se igual; a pedra não se põe
 		return
 	_rochas.append([c, tam])
+	if tam >= 0.8:
+		obstaculos.append({"nome": "rocha", "c": c, "m": Vector3(tam * 0.9, tam * 0.7, tam * 0.9)})
 	_lote_pedras.rocha(c + Vector3(0, esc.y * 0.20, 0), esc, rot, 2 if tam > 1.1 else 1, cor, veio)
 	var l := Paleta.dir_luz()
 	var g := _sombra_de(c + Vector3(0, tam * 0.3, 0))
@@ -1192,11 +1211,13 @@ func _criar_estrato() -> void:
 
 func _criar_relva() -> void:
 	var mat := _mat(SH_RELVA)
+	_mat_relva = mat
 	mat.set_shader_parameter("cor_base", Paleta.RELVA_BASE)
 	mat.set_shader_parameter("cor_ponta", Paleta.RELVA_PONTA)
 	mat.set_shader_parameter("cor_seca", Paleta.RELVA_SECA)
 	mat.set_shader_parameter("cor_floresta", Paleta.RELVA_SOMBRA)
 	var mat_haste := _mat(SH_HASTE)
+	_mat_haste = mat_haste
 	mat_haste.set_shader_parameter("cor_haste", Paleta.JUNCO)
 	relva = RelvaFloresta.new()
 	relva.name = "Relva"
