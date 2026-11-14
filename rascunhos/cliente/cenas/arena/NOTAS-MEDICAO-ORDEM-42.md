@@ -5,6 +5,9 @@
 `capturas/medicao.json` e da saída de `ferramentas/provar_assentamento.gd`. Estas notas não aprovam
 nada: o juízo é da bancada e do olho do Mestre.*
 
+> A Parte 2 da ordem (o clima forte sobre o mapa integrado) está em `provas/ordem-42-clima-no-mapa/README.md`,
+> e o fecho das duas partes em `ESTADO-FINAL-ORDEM-42.md` (nesta pasta).
+
 ## O que mudou na arena
 
 A cena principal do cliente (`cenas/arena/arena.tscn`) apresenta agora o mapa da floresta como o
