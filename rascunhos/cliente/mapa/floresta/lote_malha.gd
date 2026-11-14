@@ -1,7 +1,8 @@
 extends RefCounted
-## lote_malha.gd — Ordem 37: um LOTE de geometria que se funde numa só malha (1 draw call).
+## lote_malha.gd — Ordem 37/38: um LOTE de geometria que se funde numa só malha (1 draw call).
 ## Guarda vértices, normais, cores e UV; no fim, fechar() devolve uma ArrayMesh.
-## Peças: tubo (troncos, ramos), bolha (copas), rocha (facetada), mais triângulos soltos.
+## Peças: tubo (troncos, ramos), bolha (copas), rocha (facetada), torno (sólidos de revolução:
+## cones de conífera, telhados, colunas), caixa, lâmina (folhas e frondes), juntar (carimbar).
 
 var v := PackedVector3Array()
 var n := PackedVector3Array()
@@ -103,7 +104,7 @@ func tubo(pts: Array, lados: int, cor_base: Color, cor_topo: Color, fechar_topo:
 ## Bolha de copa: icosfera deslocada por ruído, achatada por baixo, com normais «de volume»
 ## (puxadas para fora do centro da árvore) e cor/AO cozinhados. UV = (fase do vento, peso do vento).
 func bolha(centro: Vector3, escala: Vector3, sub: int, cor: Color, semente: float,
-		centro_volume: Vector3, fase: float, peso_vento: float, rugoso: float = 0.30) -> void:
+		centro_volume: Vector3, fase: float, peso_vento: float, rugoso: float = 0.30, baixo: float = 0.55) -> void:
 	var ico := icosfera(sub)
 	var vs: PackedVector3Array = ico[0]
 	var fs: PackedInt32Array = ico[1]
@@ -114,7 +115,7 @@ func bolha(centro: Vector3, escala: Vector3, sub: int, cor: Color, semente: floa
 				+ rugoso * 0.45 * r3.get_noise_3d(p.x * 3.1 - semente, p.y * 3.1 + semente, p.z * 3.1)
 		var q := p * d
 		if q.y < 0.0:
-			q.y *= 0.55
+			q.y *= baixo
 		var pos := centro + Vector3(q.x * escala.x, q.y * escala.y, q.z * escala.z)
 		v.append(pos)
 		var nv := (pos - centro_volume).normalized()
@@ -162,6 +163,131 @@ func rocha(centro: Vector3, escala: Vector3, rot: Basis, sub: int, cor: Color, s
 		c.append_array([cf, cf, cf])
 		uv.append_array([Vector2(lisa[fs[k]].y, 1.0), Vector2(lisa[fs[k + 2]].y, 1.0), Vector2(lisa[fs[k + 1]].y, 1.0)])
 		idx.append_array([base, base + 1, base + 2])
+
+
+## Sólido de revolução em volta de `centro`: perfil = [[raio, y], ...] de baixo para cima.
+## `duro` = faces vivas (telhados de 4 águas, prismas, colunas de pedra); senão liso.
+## `oval` estica o raio em X e Z (telhado rectangular); `rot` roda em volta de Y (radianos).
+## cor.a passa tal qual (os shaders lêem-no como oclusão ou como «luz própria»).
+func torno(centro: Vector3, perfil: Array, lados: int, cor_base: Color, cor_topo: Color,
+		duro: bool = false, rot: float = 0.0, oval: Vector2 = Vector2.ONE, uv_x: float = 0.0) -> void:
+	var niveis := perfil.size()
+	var anel: Array[PackedVector3Array] = []
+	for i in niveis:
+		var r: float = perfil[i][0]
+		var y: float = perfil[i][1]
+		var pts := PackedVector3Array()
+		for k in lados:
+			var a := rot + TAU * float(k) / float(lados)
+			pts.append(centro + Vector3(cos(a) * r * oval.x, y, sin(a) * r * oval.y))
+		anel.append(pts)
+	if duro:
+		for i in niveis - 1:
+			var t0 := float(i) / float(niveis - 1)
+			var t1 := float(i + 1) / float(niveis - 1)
+			for k in lados:
+				var k1 := (k + 1) % lados
+				var a0 := anel[i][k]
+				var a1 := anel[i][k1]
+				var b0 := anel[i + 1][k]
+				var b1 := anel[i + 1][k1]
+				var nf := (b0 - a0).cross(a1 - a0)
+				if nf.length_squared() < 1e-12:
+					nf = (b1 - a1).cross(a1 - a0)
+				if nf.length_squared() < 1e-12:
+					continue
+				nf = nf.normalized()
+				var base := v.size()
+				v.append_array([a0, a1, b0, b1])
+				n.append_array([nf, nf, nf, nf])
+				var c0 := cor_base.lerp(cor_topo, t0)
+				var c1 := cor_base.lerp(cor_topo, t1)
+				c.append_array([c0, c0, c1, c1])
+				uv.append_array([Vector2(uv_x, t0), Vector2(uv_x, t0), Vector2(uv_x, t1), Vector2(uv_x, t1)])
+				idx.append_array([base, base + 1, base + 2, base + 1, base + 3, base + 2])
+		return
+	var base2 := v.size()
+	for i in niveis:
+		var ia := maxi(i - 1, 0)
+		var ib := mini(i + 1, niveis - 1)
+		var dr: float = float(perfil[ib][0]) - float(perfil[ia][0])
+		var dy: float = float(perfil[ib][1]) - float(perfil[ia][1])
+		var t := float(i) / float(niveis - 1)
+		for k in lados:
+			var a := rot + TAU * float(k) / float(lados)
+			var nr := Vector3(cos(a) * dy / maxf(oval.x, 0.001), -dr, sin(a) * dy / maxf(oval.y, 0.001))
+			if nr.length_squared() < 1e-10:
+				nr = Vector3.UP
+			v.append(anel[i][k])
+			n.append(nr.normalized())
+			c.append(cor_base.lerp(cor_topo, t))
+			uv.append(Vector2(uv_x, t))
+	for i in niveis - 1:
+		for k in lados:
+			var a0 := base2 + i * lados + k
+			var a1 := base2 + i * lados + (k + 1) % lados
+			idx.append_array([a0, a1, a0 + lados, a1, a1 + lados, a0 + lados])
+
+
+## Caixa orientada (faces vivas). `meias` = meias medidas; `base` roda-a.
+func caixa(centro: Vector3, meias: Vector3, base: Basis, cor: Color, uv_x: float = 0.0) -> void:
+	var eixos: Array[Vector3] = [Vector3.RIGHT, Vector3.UP, Vector3.BACK]
+	for e in 3:
+		for sinal: float in [-1.0, 1.0]:
+			var nrm: Vector3 = eixos[e] * sinal
+			var u: Vector3 = eixos[(e + 1) % 3]
+			var w: Vector3 = eixos[(e + 2) % 3]
+			var b0 := v.size()
+			for q: Vector2 in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
+				var loc: Vector3 = nrm + u * q.x + w * q.y
+				v.append(centro + base * Vector3(loc.x * meias.x, loc.y * meias.y, loc.z * meias.z))
+				n.append((base * nrm).normalized())
+				c.append(cor)
+				uv.append(Vector2(uv_x, 0.5 + 0.5 * loc.y))
+			if sinal > 0.0:
+				idx.append_array([b0, b0 + 2, b0 + 1, b0 + 1, b0 + 2, b0 + 3])
+			else:
+				idx.append_array([b0, b0 + 1, b0 + 2, b0 + 1, b0 + 3, b0 + 2])
+
+
+## Lâmina (folha, fronde): fita ao longo de `pts`, com as larguras dadas, deitada segundo `lado`.
+## Sai com as DUAS faces (os shaders de massa cortam as costas). UV = (fase, peso do vento).
+func lamina(pts: PackedVector3Array, larguras: PackedFloat32Array, lado: Vector3, cor_base: Color,
+		cor_ponta: Color, fase: float = 0.0, peso_vento: float = 0.5) -> void:
+	var m := pts.size()
+	for face in 2:
+		var base := v.size()
+		for i in m:
+			var t := float(i) / float(m - 1)
+			var dir := (pts[mini(i + 1, m - 1)] - pts[maxi(i - 1, 0)]).normalized()
+			var nrm := lado.cross(dir).normalized() * (1.0 if face == 0 else -1.0)
+			var cor := cor_base.lerp(cor_ponta, t)
+			v.append_array([pts[i] - lado * larguras[i], pts[i] + lado * larguras[i]])
+			n.append_array([nrm, nrm])
+			c.append_array([cor, cor])
+			uv.append_array([Vector2(fase, peso_vento * t), Vector2(fase, peso_vento * t)])
+		for i in m - 1:
+			var a := base + i * 2
+			if face == 0:
+				idx.append_array([a, a + 2, a + 1, a + 1, a + 2, a + 3])
+			else:
+				idx.append_array([a, a + 1, a + 2, a + 1, a + 3, a + 2])
+
+
+## Junta outro lote a este, transformado (para carimbar uma peça feita na origem).
+func juntar(outro: RefCounted, t: Transform3D = Transform3D.IDENTITY) -> void:
+	var base := v.size()
+	var ov: PackedVector3Array = outro.get("v")
+	var on: PackedVector3Array = outro.get("n")
+	var nb := t.basis.inverse().transposed()
+	for i in ov.size():
+		v.append(t * ov[i])
+		n.append((nb * on[i]).normalized())
+	c.append_array(outro.get("c"))
+	uv.append_array(outro.get("uv"))
+	var oi: PackedInt32Array = outro.get("idx")
+	for i in oi:
+		idx.append(base + i)
 
 
 func triangulos() -> int:
