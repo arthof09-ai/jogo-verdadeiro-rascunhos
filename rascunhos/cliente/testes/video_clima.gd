@@ -9,6 +9,10 @@ extends SceneTree
 ##   VÍDEO DA COMUTAÇÃO (chuva fraca → forte → neve fraca → forte → desligado, na mesma cena, sem reiniciar):
 ##     godot --path cliente --resolution 1280x720 --fixed-fps 30 --write-movie <pasta>/comutacao.avi \
 ##       -s res://testes/video_clima.gd -- --modo=troca --saida=<pasta>
+##   A ARENA DA JOGADORA (cenas/arena/arena.tscn, com o HUD e um snapshot público de bancada): chuva forte e
+##   neve forte na cena que a jogadora vê, com as capturas pelo caminho:
+##     godot --path cliente --resolution 1280x720 --fixed-fps 30 --write-movie <pasta>/arena-jogadora.avi \
+##       -s res://testes/video_clima.gd -- --modo=jogadora --saida=<pasta>
 ##   CAPTURAS (acumulação da neve em 3 tempos; chão molhado antes/depois):
 ##     godot --path cliente --resolution 1920x1080 --fixed-fps 30 --disable-vsync \
 ##       -s res://testes/video_clima.gd -- --modo=fotos --saida=<pasta>
@@ -90,6 +94,11 @@ func _correr() -> void:
 	root.content_scale_size = _quadro
 	var rede := root.get_node("Rede")
 	rede.persistir = false
+	if _modo == "jogadora":
+		await _jogadora()
+		print("bancada do clima: %d falha(s)" % _falhas)
+		quit(1 if _falhas > 0 else 0)
+		return
 	rede.papel = "mestre"
 	_montar()
 	await _quadros(3)
@@ -284,6 +293,82 @@ func _troca() -> void:
 	await _passar(3.0, "COMUTAÇÃO sem reiniciar · DESLIGADO (os flocos saem; a neve pousada fica a derreter)")
 	await _gravar("troca-3-desligado.png")
 	print("  video troca: ", JSON.stringify({"perfil": cl.perfil, "segundos": _t, "molhado": cl.molhado, "neve": cl.neve}))
+
+
+# ---------------------------------------------------------------- a arena da jogadora
+
+## A cena que a jogadora vê (arena.tscn: céu claro, cápsulas, HUD), com um snapshot PÚBLICO de bancada (não é
+## o jogo). O clima liga-se como a arena o liga: pela preferência "clima" (arena._ao_preferencia).
+func _jogadora() -> void:
+	var rede := root.get_node("Rede")
+	var estado := root.get_node("Estado")
+	rede.papel = "jogadora"
+	rede.estado_ligacao = rede.Ligacao.NA_MESA
+	rede._ativo = true  # a arena chama Rede.iniciar(); com isto não vai ao lobby (como o testes/hud_acoes.gd)
+	estado.aplicar_snapshot({
+		"v": 2, "type": "ROOM_SNAPSHOT", "roomId": "sala-bancada", "seq": 1, "revision": 5, "fase": "combate",
+		"mapa": {"largura": 20, "altura": 20}, "iniciativa": ["fA", "fB", "fC", "fD"], "vezId": "fA", "rodada": 1, "ambiente": {},
+		"figuras": [
+			{"id": "fA", "nomePublico": "Heroína Teste", "lado": "jogadora", "x": 8, "y": 10},
+			{"id": "fB", "nomePublico": "Aliada Teste", "lado": "jogadora", "x": 7, "y": 12},
+			{"id": "fC", "nomePublico": "Lobo Teste", "lado": "criatura", "x": 11, "y": 9},
+			{"id": "fD", "nomePublico": "Orc Teste", "lado": "criatura", "x": 12, "y": 11},
+		],
+		"propria": {"figuraId": "fA", "paLivre": 40, "estadoMorte": null, "ficha": {}},
+	})
+	var arena = (load("res://cenas/arena/arena.tscn") as PackedScene).instantiate()
+	root.add_child(arena)
+	await _quadros(2)
+	var movimentos: Array = []
+	for dx in range(-1, 2):
+		for dy in range(1, 3):
+			movimentos.append({"x": 9 + dx, "y": 11 + dy, "custoM": 1.5 * float(absi(dx) + dy)})
+	estado.receber_opcoes({"v": 2, "type": "ROOM_OPTIONS", "revision": 5, "vezId": "fA", "orcamentoM": 9.0,
+		"mover": movimentos, "ataques": [], "consumiveis": [], "acoes": ["encerrar"], "reacoes": []})
+	arena.definir_modo(arena.Modo.MOVER)  # as casas do «Mover» destacadas: têm de continuar a ler-se
+	arena._aplicar_perfil(_perfil)
+	var cl = arena.clima
+	cl.desligar()
+	cl.definir_acumulacao(0.0, 0.0)
+	cl.definir_vento(_vento_rumo, _vento_forca)
+	arena.camera.definir_modo(arena.camera.Modo.FIXA)
+	arena.camera.repor_zoom()
+	arena.camera.focar(arena.centro_casa(Vector2i(9, 11)))
+	arena.camera._saltar()
+	var camada := CanvasLayer.new()
+	camada.layer = 50
+	root.add_child(camada)
+	var rotulo := Label.new()
+	rotulo.position = Vector2(20, 92)
+	rotulo.add_theme_font_size_override("font_size", 20)
+	rotulo.add_theme_color_override("font_color", Color(1, 1, 1))
+	rotulo.add_theme_color_override("font_outline_color", Color(0, 0, 0))
+	rotulo.add_theme_constant_override("outline_size", 8)
+	camada.add_child(rotulo)
+	var passar := func(segundos: float, extra: String) -> void:
+		var fim := _t + segundos
+		while _t < fim - 0.0001:
+			await process_frame
+			_t += _dt
+			var v: Vector2 = cl.vento_do_frame()
+			rotulo.text = "ORDEM 40 · CLIMA · ARENA DA JOGADORA · %s%s · perfil %s
+vento %.1f m/s → %d° · molhado %d%% · neve pousada %d%% · t = %.1f s · %s" % [
+				NOMES[cl.tipo], (" " + NOMES[cl.intensidade]) if cl.tipo != "nenhum" else "", cl.perfil, v.length(),
+				int(round(rad_to_deg(atan2(v.y, v.x)))), int(round(cl.molhado * 100.0)), int(round(cl.neve * 100.0)), _t, extra]
+	await passar.call(1.5, "ANTES (sem clima)")
+	await _gravar("jogadora-0-antes.png")
+	arena._ao_preferencia("clima", "chuva-forte")
+	await passar.call(9.0, "preferência «clima» = chuva-forte")
+	await _gravar("jogadora-1-chuva-forte.png")
+	arena._ao_preferencia("clima", "neve-forte")
+	await passar.call(14.0, "preferência «clima» = neve-forte")
+	await _gravar("jogadora-2-neve-forte.png")
+	arena.camera.definir_zoom(3.0)
+	await passar.call(5.0, "neve forte · de perto")
+	await _gravar("jogadora-3-neve-forte-perto.png")
+	arena._ao_preferencia("clima", "nenhum")
+	await passar.call(2.5, "preferência «clima» = nenhum")
+	print("  video arena-jogadora: ", JSON.stringify({"perfil": cl.perfil, "segundos": _t, "molhado": cl.molhado, "neve": cl.neve}))
 
 
 # ---------------------------------------------------------------- capturas
