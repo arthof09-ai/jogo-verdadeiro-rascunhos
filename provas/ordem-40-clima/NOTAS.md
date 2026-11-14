@@ -163,6 +163,25 @@ aparelho. Não foi medido no Redmi nem no export web.
 5. Os grupos só se procuram dentro da árvore; os alvos registados à mão valem sempre (para os testes sem janela).
 6. Neve fraca: o chão cobre em 90 s (era 150 s) — em 24 s de vídeo já se lê o véu.
 
+## Nota 3 — a arena da jogadora com render (2026-11-14, fecho)
+
+A segunda sessão morreu às 02:32 (limite de 5 h) dois minutos depois da nota 2, com um modo novo da bancada
+escrito e corrido mas por commitar: `--modo=jogadora` do `testes/video_clima.gd`. A sessão do fecho conferiu-o
+(abre os 37 scripts, 167 de 167 testes, a corrida gravada deu 0 falhas), commitou-o e juntou a prova:
+
+- `videos/arena-jogadora.mp4` (32 s, 1280×720, perfil Alto): a cena que a jogadora vê (`cenas/arena/arena.tscn`,
+  com o HUD e as casas do «Mover» destacadas, sobre um snapshot público de bancada — não é o jogo). 1,5 s sem
+  clima → preferência `"clima"` = `chuva-forte` (9 s) → `neve-forte` (14 s) → de perto (5 s) → `nenhum`.
+  O clima liga-se como a arena o liga (`arena._ao_preferencia`), sem reiniciar a cena.
+- `capturas/jogadora-0…3` e `folhas/folha-arena-jogadora.png`.
+
+**O que vi** (nas 4 capturas e na folha de 6 quadros): o chão molha e branqueia como na arena do Mestre; as
+casas azuis do «Mover» e a casa amarela da vez continuam a ler-se com chuva forte a 100% de molhado e com neve
+a ~40%; as cápsulas ganham o topo branco com a neve e mantêm a cor; o HUD fica por cima de tudo. Não vi
+z-fighting nas cápsulas com contorno (perfil Alto). **Defeito da bancada, não do clima:** a etiqueta do vídeo
+fica por cima do botão «FICHA» (canto superior esquerdo). Este vídeo é o 6.º — os 5 vídeos pedidos pela ordem
+continuam a ser os da nota 2. Fecha o ponto 3 da lista abaixo (fica lá, riscado, para a história).
+
 ## O que ficou por fazer / por conferir
 
 1. **Não há interruptor na interface.** O clima liga-se pela API, pela preferência `"clima"` (a arena da
@@ -171,9 +190,9 @@ aparelho. Não foi medido no Redmi nem no export web.
    Se um dia o clima for decidido pelo Mestre para a mesa toda, isso é estado de jogo e tem de vir do servidor.
 2. **Não medido no telemóvel nem no export web** (só PC, RTX 4060). Os shaders usam só o que o Compatibility
    tem (sem textura de ecrã, sem profundidade), mas o custo real das camadas transparentes só se vê no aparelho.
-3. **A arena da jogadora (`arena.gd`) só foi provada sem janela** (a cena abre, o módulo está ligado, os
-   testes passam). Os vídeos e as capturas são da arena do Mestre (marcadores do site). Falta ver com render
-   a cápsula da jogadora com contorno (perfil Alto) por baixo da camada do clima.
+3. ~~**A arena da jogadora (`arena.gd`) só foi provada sem janela**~~ — **feito na nota 3**
+   (`videos/arena-jogadora.mp4`): vista com render, cápsulas com contorno no perfil Alto. Falta só o olho do
+   Mestre sobre esse vídeo.
 4. **Figuras GLB**: a camada está feita para qualquer malha, mas só foi vista nos marcadores.
 5. **Chão com relevo** (o mapa da cadeia): a camada do chão serve qualquer malha (usa a posição e a normal
    do mundo; em paredes a pique não põe neve nem poças), mas os **salpicos** nascem num plano à altura do
