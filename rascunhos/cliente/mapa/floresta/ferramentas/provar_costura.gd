@@ -1,6 +1,7 @@
 extends SceneTree
-## provar_costura.gd — Ordem 37. A PROVA DA COR ÚNICA, em números: esconde a arena e o anel
-## próximo, olha para os 4 rumos e lê a coluna central do ecrã, de cima para baixo, através da
+## provar_costura.gd — Ordem 37 (religada à cena da Ordem 38). A PROVA DA COR ÚNICA, em números:
+## esconde a arena e tudo o que no fundo não é o anel longe (chão largo, anel de floresta, Árvore
+## Ancestral), olha para os 4 rumos e lê a coluna central do ecrã, de cima para baixo, através da
 ## base do anel longe (que é pintada com COR_HORIZONTE) até ao céu por baixo dela (cuja faixa
 ## baixa é COR_HORIZONTE). Se a tinta, a névoa e o céu forem a MESMA cor, não há degrau.
 ##
@@ -28,7 +29,18 @@ func _correr() -> void:
 	for i in 8:
 		await process_frame
 	cena.call("so_fundo", true)
-	(cena.get_node("Fundo/AnelPerto") as Node3D).visible = false
+	# Ordem 38: do fundo fica só o anel longe (o chão largo, o anel de floresta e a Árvore
+	# Ancestral escondem-se — ficariam entre a câmara e a base das capas). Pelo NOME do que fica,
+	# não do que sai: a ferramenta da Ordem 37 pedia «Fundo/AnelPerto», que já não existe, e
+	# ficava pendurada num erro de script.
+	var fundo := cena.get("fundo") as Node3D
+	if fundo == null or fundo.get_node_or_null("AnelLonge") == null:
+		push_error("[costura] a cena não tem Fundo/AnelLonge")
+		quit(1)
+		return
+	for filho in fundo.get_children():
+		if filho is Node3D and filho.name != &"AnelLonge":
+			(filho as Node3D).visible = false
 	var alvo := Paleta.COR_HORIZONTE
 	print("[costura] COR_HORIZONTE = #%s (%d %d %d)" % [alvo.to_html(false), alvo.r8, alvo.g8, alvo.b8])
 	var pior := 0
