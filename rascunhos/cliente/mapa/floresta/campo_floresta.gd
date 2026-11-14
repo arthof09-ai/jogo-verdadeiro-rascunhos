@@ -896,8 +896,9 @@ func _plantar_arvores() -> void:
 	# norte (a vista da Árvore Ancestral) ficam abertos; as rampas e o corredor ficam livres.
 	var dentro: Array = [
 		# NO — carvalhos velhos a norte e a oeste do outeiro (nunca a oés-sudoeste: o sol da
-		# tarde tem de chegar aos menires; e nenhum na linha das vistas etiquetadas)
-		[-33.5, -24.0, 17.5, R], [-17.5, -30.5, 16.0, R], [-33.5, -1.5, 15.5, R], [-22.5, -35.0, 15.0, R],
+		# tarde tem de chegar aos menires; nenhum na linha das vistas etiquetadas, nem entre elas
+		# e o sol — a vista do canto NO ficava à sombra de um carvalho, com a encosta a negro)
+		[-36.5, -33.0, 17.5, R], [-17.5, -30.5, 16.0, R], [-33.5, -1.5, 15.5, R], [-22.5, -35.0, 15.0, R],
 		# NE — vidoeiros à volta do charco
 		[11.5, -27.5, 12.0, J], [14.0, -30.5, 10.5, J], [31.0, -12.5, 12.5, J], [33.5, -32.5, 13.0, J],
 		[28.0, -8.5, 11.0, J], [9.5, -12.0, 11.5, J], [10.5, -34.5, 12.0, J], [34.0, -21.0, 10.0, J],
@@ -905,7 +906,7 @@ func _plantar_arvores() -> void:
 		[33.5, 19.5, 16.0, G], [19.5, 34.0, 17.0, G], [33.0, 33.0, 18.0, G],
 		[34.0, 3.0, 14.0, G], [2.0, 35.0, 16.0, G],
 		# SO — abetos a ladear a garganta
-		[-31.5, 14.0, 18.0, C], [-33.0, 20.5, 15.5, C], [-34.0, 32.0, 20.0, C], [-9.0, 27.5, 17.0, C],
+		[-31.5, 14.0, 18.0, C], [-33.0, 20.5, 15.5, C], [-35.5, 36.0, 20.0, C], [-9.0, 27.5, 17.0, C],
 		[-10.0, 15.0, 15.0, C], [-28.0, 35.0, 18.0, C], [-11.5, 34.0, 16.0, C]]
 	for d: Array in dentro:
 		var x: float = d[0]
