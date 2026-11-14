@@ -1,4 +1,4 @@
-# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 262 ficheiros mudados ou novos em rascunhos/.
+# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 263 ficheiros mudados ou novos em rascunhos/.
 93c8f082052020ffc4a3a95831f74a5a16a295f366e54842045791c071fc83e4  rascunhos/cliente/README.md
 788d62ee94b08834bce8822fb93052183fb766194e885995cd261a3a07afe312  rascunhos/cliente/arte/cenas/clareira_prova.gd
 dd55941279825704fba76ae427b0bd13e08267471f23a8a1efc2f90b71d759cb  rascunhos/cliente/arte/cenas/clareira_prova.tscn
@@ -13,7 +13,8 @@ c78cceefa381311df83e0a74bbd7a62ae339529ce590bf64bea64b9ef82cf65c  rascunhos/clie
 9c0d13ca9a99dfae75b7fcf6a85fea2f13868f16d2f9254d7597bf39ee86308e  rascunhos/cliente/arte/clima/integrador_vento.gd
 046135c76e03d6275361c26d1bc143d73d7fba82333b22f35421730dd1aadd13  rascunhos/cliente/arte/clima/neve_flocos.gdshader
 1a803741156261b099a7b3ac6f7057280c6e2e1a4bd9fad6aff6adf12dc2b29a  rascunhos/cliente/camera/camera_mesa.gd
-46faf205ad66c6298651f84eaab16b76892a43705cd96c7c9bcfa76dff471d6c  rascunhos/cliente/cenas/arena/NOTAS-MEDICAO-ORDEM-42.md
+960dfddc3c30a65f61ea5b91280d091f9cb5050d933558cf52adfbba4cb61193  rascunhos/cliente/cenas/arena/ESTADO-FINAL-ORDEM-42.md
+d4b6ad85a3113f421ccdb6d9282cf12da50f0adf4df87221e640c78a48debb0e  rascunhos/cliente/cenas/arena/NOTAS-MEDICAO-ORDEM-42.md
 6c3dae454a8557d1e1af903b119288ee7acef13cdba040e3b4b66df70b9c9ff7  rascunhos/cliente/cenas/arena/arena.gd
 f4c4c2d3f1bea80a5b839628975ada5edb33ebe0c2f7810feed3378d263f01ac  rascunhos/cliente/cenas/arena/arena.tscn
 d4f5d0046851206020b41dd023af58c4a02f01321a5b3a571f77e0990f296d30  rascunhos/cliente/cenas/arena/bacias_do_relevo.gd
