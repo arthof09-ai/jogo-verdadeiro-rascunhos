@@ -17,8 +17,8 @@ uniform vec3 cor_musgo : source_color = vec3(0.37, 0.48, 0.21);
 uniform vec3 cor_folha_luz : source_color = vec3(0.53, 0.64, 0.24);
 uniform sampler2D ruido : filter_linear_mipmap, repeat_enable, hint_default_white;
 uniform float altura = 260.0;
-uniform float ar_topo : hint_range(0.0, 1.0) = 0.16;
-uniform float ar_base : hint_range(0.0, 1.0) = 0.50;
+uniform float ar_topo : hint_range(0.0, 1.0) = 0.10;
+uniform float ar_base : hint_range(0.0, 1.0) = 0.34;
 
 varying vec3 v_loc;
 varying vec3 v_n;
@@ -60,7 +60,7 @@ void fragment() {
 			alb = mix(alb, cor_folha_luz, smoothstep(0.30, 0.85, ndl) * 0.60 * sol);
 			// o cimo de cada almofada apanha o céu: tom alto mesmo do lado de lá do sol
 			alb = mix(alb, cor_folha_luz, smoothstep(0.45, 0.95, n.y) * 0.30 * sol);
-			alb *= mix(0.60, 1.0, smoothstep(-0.35, 0.35, n.y));
+			alb *= mix(0.50, 0.92, smoothstep(-0.35, 0.35, n.y));
 		} else {
 			alb *= 0.88 + 0.24 * r2;
 		}

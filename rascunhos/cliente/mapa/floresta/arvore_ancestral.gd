@@ -14,9 +14,12 @@ extends RefCounted
 ## (ferramentas/provar_ancestral.gd, lado a lado com as referências).
 ##
 ## PROPORÇÕES medidas na referência norte (H = altura total, do pé das raízes ao cimo da copa):
-##   copa ......... raio 0,78 H; cimo a 1,00 H; orla a 0,66 H; cúpula de almofadas com forro
-##   tronco ....... raio 0,17 H a meia altura; forquilha a 0,56 H
-##   raízes ....... 14 contrafortes, nascem a 0,30–0,47 H e chegam a 0,66–0,86 H do eixo
+##   copa ......... raio 0,78 H; cimo a 1,00 H (medido na malha: 260,3 m); orla a 0,59–0,66 H, em
+##                  lóbulos; cúpula de almofadas em CACHO (massas pequenas no dorso) com forro
+##   tronco ....... cintura de 0,29 H de largo com as nervuras (miolo de raio 0,13 H); abre em
+##                  leque de 14 pernadas a partir de 0,40–0,50 H, à vista por baixo da copa
+##   raízes ....... 21 contrafortes finos (0,04–0,06 H de largo junto ao tronco), nascem a
+##                  0,26–0,47 H e chegam a 0,68–0,92 H do eixo; 16 nervuras soltas entre elas
 ##   palácio ...... plataforma a 0,615 H (raio 0,165 H), 0,15 H para norte do eixo; cimo a 0,86 H
 ##   pagodes ...... 23 na face norte (posições lidas da referência) + 23 nas outras faces
 ##
@@ -31,11 +34,13 @@ const Formas := preload("res://mapa/floresta/formas_floresta.gd")
 const ALTURA := 260.0
 const RAIO_COPA := 0.78          # × ALTURA
 const RAIO_OUTEIRO := 1.15       # × ALTURA: até onde vai o mar de copas onde a árvore assenta
-const N_RAIZES := 14
+const N_RAIZES := 21
 const PALACIO := Vector3(0.0, 0.615, -0.15)   # centro da plataforma (× ALTURA); −Z = norte
 ## O perfil do tronco: [raio, altura] de baixo para cima (× ALTURA).
-const PERFIL_TRONCO: Array = [[0.240, -0.04], [0.218, 0.08], [0.192, 0.22], [0.170, 0.38], [0.162, 0.48],
-	[0.174, 0.555], [0.150, 0.60]]
+## (sucessão 3, medido no lado a lado: a cintura da referência tem 0,29 H de largo COM as nervuras —
+## o miolo estava 40 % gordo de mais e lia-se como um cone liso)
+const PERFIL_TRONCO: Array = [[0.212, -0.04], [0.186, 0.08], [0.158, 0.22], [0.136, 0.38], [0.130, 0.48],
+	[0.148, 0.555], [0.138, 0.60]]
 
 ## Os pagodes da face NORTE, lidos da referência «norte»: [x NO ECRÃ, altura, raio da plataforma,
 ## andares]. A câmara da referência está a norte e olha para sul: a esquerda do ecrã (x < 0) é
@@ -70,7 +75,9 @@ static func _raio_tronco(y: float) -> float:
 
 ## Cimo da copa (a cúpula do guarda-chuva) à distância rho do eixo.
 static func _cimo_copa(rho: float) -> float:
-	return 0.985 - 0.33 * pow(clampf(rho / RAIO_COPA, 0.0, 1.2), 2.2)
+	# 0,948 e não 0,985: com as almofadas e os cachos por cima, o cimo MEDIDO na malha dava 269,7 m;
+	# a árvore tem 260 m (palavra do Mestre). A orla fica onde estava (0,655 H).
+	return 0.948 - 0.293 * pow(clampf(rho / RAIO_COPA, 0.0, 1.2), 2.2)
 
 
 ## O CHÃO onde a árvore assenta (× ALTURA): o outeiro baixo, o mesmo para a malha do outeiro,
@@ -130,10 +137,10 @@ static func _tronco(m: Lote) -> void:
 ## A altura do eixo de uma raiz a `rho` do eixo (a `s` do caminho, 0 = tronco, 1 = ponta).
 ## Medido na referência: a crista das raízes cai em exponencial (0,32 H a 0,31 H do eixo · 0,21 a
 ## 0,44 · 0,09 a 0,63) e só na ponta pousa no chão, meio enterrada, com um arco ou dois pelo caminho.
-static func _raiz_y(p: Vector3, s: float, nasce: float, raio: float, fi: float) -> float:
+static func _raiz_y(p: Vector3, s: float, nasce: float, raio: float, fi: float, rho0: float) -> float:
 	var rho := Vector2(p.x, p.z).length()
 	var chao := _chao(p.x, p.z) + raio * 0.30
-	var crista := nasce * exp(-(rho - 0.158) / 0.27)
+	var crista := nasce * exp(-(rho - rho0) / 0.27)
 	var pousa := smoothstep(0.55, 1.0, s)
 	var arco := 0.012 * sin(s * PI * 3.0 + fi) * s * (1.0 - s) * 4.0
 	return maxf(lerpf(crista, chao, pousa) + arco, chao)
@@ -152,50 +159,67 @@ static func _raizes(m: Lote, r: RandomNumberGenerator, apoios: Array) -> void:
 	var funda := Paleta.ANCESTRAL_CASCA.lerp(Paleta.ANCESTRAL_CASCA_FUNDA, 0.5)
 	for k in N_RAIZES:
 		var az0 := TAU * (float(k) + r.randf_range(-0.28, 0.28)) / float(N_RAIZES)
-		var alcance := r.randf_range(0.66, 0.86)
-		var nasce := r.randf_range(0.30, 0.47)
-		var onda := r.randf_range(1.2, 2.2)
+		var alcance := r.randf_range(0.68, 0.92)
+		var nasce := r.randf_range(0.26, 0.47)
+		var onda := r.randf_range(1.2, 2.4)
 		var fi := r.randf() * TAU
-		var grosso := r.randf_range(0.040, 0.050)
-		var torce := r.randf_range(-0.32, 0.32)
+		# medido na referência: junto ao tronco uma raiz tem 0,04–0,06 H de largo (não 0,09: eram tentáculos)
+		var grosso := r.randf_range(0.022, 0.033)
+		var torce := r.randf_range(-0.36, 0.36)
 		var cimo := r.randf_range(0.50, 0.56)
+		var rho0 := _raio_tronco(nasce) + 0.004
 		var pts: Array = []
 		# a NERVURA: a raiz sobe pelo tronco, torcida, até debaixo da forquilha (o tronco é um feixe)
 		var n_nerv := 7
 		for i in n_nerv:
 			var t := float(i) / float(n_nerv)
 			var y := lerpf(cimo, nasce, t)
-			var raio := lerpf(0.026, grosso + 0.012, t)
-			pts.append([_pol(_raio_tronco(y) - raio * 0.12, az0 + torce * (1.0 - t), y), raio])
+			var raio := lerpf(0.017, grosso + 0.007, t)
+			pts.append([_pol(_raio_tronco(y) - raio * 0.10, az0 + torce * (1.0 - t), y), raio])
 		# a RAIZ: larga o tronco e vai pousar longe
 		for i in 18:
 			var s := float(i) / 17.0
-			var rho := lerpf(0.158, alcance, pow(s, 1.5))
-			var az := az0 + 0.26 * sin(s * PI * onda + fi) * s + 0.05 * sin(s * 11.0 + fi * 2.0) * s
-			var raio := grosso * pow(1.0 - s, 0.9) + 0.012
+			var rho := lerpf(rho0, alcance, pow(s, 1.5))
+			var az := az0 + 0.24 * sin(s * PI * onda + fi) * s + 0.05 * sin(s * 11.0 + fi * 2.0) * s
+			var raio := grosso * pow(1.0 - s, 0.8) + 0.007
 			var p := _pol(rho, az, 0.0)
-			p.y = _raiz_y(p, s, nasce, raio, fi)
+			p.y = _raiz_y(p, s, nasce, raio, fi, rho0)
 			pts.append([p, raio])
-		m.tubo(pts, 9, funda, casca, true)
+		m.tubo(pts, 8, funda, casca, true)
 		_guardar_apoios(apoios, pts, n_nerv + 2)
 		# a raiz bifurca a meio caminho
-		if r.randf() < 0.75:
-			var s0 := r.randf_range(0.34, 0.5)
+		if r.randf() < 0.85:
+			var s0 := r.randf_range(0.30, 0.5)
 			var lado := -1.0 if r.randf() < 0.5 else 1.0
-			var az1 := az0 + 0.26 * sin(s0 * PI * onda + fi) * s0 + 0.05 * sin(s0 * 11.0 + fi * 2.0) * s0
+			var az1 := az0 + 0.24 * sin(s0 * PI * onda + fi) * s0 + 0.05 * sin(s0 * 11.0 + fi * 2.0) * s0
 			var alcance2 := alcance * r.randf_range(0.80, 0.98)
 			var pts2: Array = []
 			for i in 10:
 				var t := float(i) / 9.0
 				var s := lerpf(s0, 1.0, t)
-				var rho := lerpf(0.158, lerpf(alcance, alcance2, t), pow(s, 1.5))
-				var az := az1 + lado * (0.06 + 0.30 * t) * pow(t, 0.8) + 0.05 * sin(t * 5.0 + fi)
-				var raio := (grosso * pow(1.0 - s, 0.9) + 0.012) * lerpf(0.85, 0.62, minf(t * 3.0, 1.0))
+				var rho := lerpf(rho0, lerpf(alcance, alcance2, t), pow(s, 1.5))
+				var az := az1 + lado * (0.05 + 0.24 * t) * pow(t, 0.8) + 0.05 * sin(t * 5.0 + fi)
+				var raio := (grosso * pow(1.0 - s, 0.8) + 0.007) * lerpf(0.85, 0.66, minf(t * 3.0, 1.0))
 				var p := _pol(rho, az, 0.0)
-				p.y = _raiz_y(p, s, nasce, raio, fi + 1.7)
+				p.y = _raiz_y(p, s, nasce, raio, fi + 1.7, rho0)
 				pts2.append([p, raio])
-			m.tubo(pts2, 7, funda, casca, true)
+			m.tubo(pts2, 6, funda, casca, true)
 			_guardar_apoios(apoios, pts2, 1)
+	# ---- as nervuras soltas: entre as raízes o tronco não é um cone liso — é feixe até ao chão
+	for k in 16:
+		var az0 := TAU * (float(k) + r.randf_range(-0.3, 0.3)) / 16.0
+		var torce := r.randf_range(-0.45, 0.45)
+		var grosso := r.randf_range(0.013, 0.021)
+		var y0 := r.randf_range(0.50, 0.57)
+		var y1 := r.randf_range(-0.03, 0.10)
+		var fi := r.randf() * TAU
+		var pts3: Array = []
+		for i in 9:
+			var t := float(i) / 8.0
+			var y := lerpf(y0, y1, t)
+			var raio := grosso * (0.55 + 0.45 * sin(t * PI)) + 0.004
+			pts3.append([_pol(_raio_tronco(y) * 0.93 + raio * 0.25, az0 + torce * t + 0.05 * sin(t * 7.0 + fi), y), raio])
+		m.tubo(pts3, 6, funda, casca, true)
 
 
 ## O sector do palácio (a norte): ramos e forro da copa afastam-se para ele se ver.
@@ -208,22 +232,24 @@ static func _copa(m: Lote, f: Lote, r: RandomNumberGenerator) -> void:
 	var ponta := casca.lerp(Paleta.ANCESTRAL_CASCA_FUNDA, 0.5)
 	# ---- os ramos-mestres baixos: em candelabro — largam o tronco a subir e deitam-se por
 	# baixo da copa até à orla; a ponta acaba DENTRO das almofadas
-	var n1 := 12
+	var n1 := 14
 	for k in n1:
 		var az := TAU * (float(k) + r.randf_range(-0.22, 0.22)) / float(n1)
 		if _no_sector_do_palacio(az, 0.42):
 			az += 0.42 if az > 0.0 else -0.42
-		var alc := r.randf_range(0.50, 0.68)
-		var y0 := r.randf_range(0.50, 0.56)
-		var y1 := _cimo_copa(alc) - r.randf_range(0.065, 0.095)
+		var alc := r.randf_range(0.50, 0.68) * _baia(az)      # a ponta acaba dentro da copa, também na baía
+		# (sucessão 3: largavam o tronco já dentro do forro e não se viam; na referência o tronco
+		# abre-se em leque de pernadas grossas a partir de 0,45 H, à vista por baixo da copa)
+		var y0 := r.randf_range(0.40, 0.50)
+		var y1 := _cimo_copa(alc) - r.randf_range(0.085, 0.110)
 		var fi := r.randf() * TAU
 		var pts: Array = []
 		for i in 10:
 			var t := float(i) / 9.0
 			var rho := 0.10 + (alc - 0.10) * pow(t, 0.9)
-			var y := y0 + (y1 - y0) * (1.0 - pow(1.0 - t, 2.2)) + 0.012 * sin(t * TAU + fi) * t
+			var y := y0 + (y1 - y0) * (1.0 - pow(1.0 - t, 1.35)) + 0.012 * sin(t * TAU + fi) * t
 			var a := az + 0.16 * sin(t * 2.6 + fi) * t
-			pts.append([_pol(rho, a, y), 0.050 * pow(1.0 - t, 1.2) + 0.008])
+			pts.append([_pol(rho, a, y), 0.056 * pow(1.0 - t, 1.1) + 0.009])
 		m.tubo(pts, 8, casca, ponta, true)
 		for fq in 3:
 			var p0: Vector3 = pts[3 + fq * 2][0]
@@ -239,7 +265,7 @@ static func _copa(m: Lote, f: Lote, r: RandomNumberGenerator) -> void:
 		var az := TAU * (float(k) + 0.5 + r.randf_range(-0.22, 0.22)) / float(n2)
 		if _no_sector_do_palacio(az, 0.36):
 			az += 0.36 if az > 0.0 else -0.36
-		var alc := r.randf_range(0.18, 0.42)
+		var alc := r.randf_range(0.18, 0.42) * _baia(az)
 		var y1 := _cimo_copa(alc) - r.randf_range(0.05, 0.08)
 		var fi := r.randf() * TAU
 		var pts: Array = []
@@ -254,10 +280,13 @@ static func _copa(m: Lote, f: Lote, r: RandomNumberGenerator) -> void:
 	# soltos com céu por entre eles; com ela é um corpo, e as almofadas são o relevo desse corpo.
 	_lente(f)
 	# ---- as almofadas da copa: anéis [distância ao eixo, quantas, raio, subdivisão, 0 cúpula / 1 forro]
+	# (sucessão 3, do lado a lado: as almofadas lisas liam-se como pedras verdes. Na referência cada
+	# massa da copa é um CACHO — uma almofada grande com massas pequenas por cima, e sulcos escuros
+	# entre cachos. Agora cada almofada da cúpula leva 5–6 massas pequenas no dorso.)
 	var aneis: Array = [[0.0, 1, 0.150, 2, 0], [0.17, 6, 0.140, 2, 0], [0.32, 9, 0.132, 2, 0], [0.45, 12, 0.122, 2, 0],
-		[0.56, 15, 0.110, 2, 0], [0.655, 18, 0.098, 2, 0], [0.735, 20, 0.082, 1, 0],
-		[0.40, 8, 0.100, 1, 1], [0.57, 12, 0.090, 1, 1], [0.70, 16, 0.072, 1, 1],
-		[0.775, 26, 0.052, 1, 2]]      # 2 = os tufos caídos da orla (a orla não é uma linha)
+		[0.56, 17, 0.110, 1, 0], [0.655, 22, 0.096, 1, 0], [0.725, 28, 0.074, 1, 0],
+		[0.36, 8, 0.100, 1, 1], [0.52, 12, 0.084, 1, 1], [0.64, 16, 0.062, 1, 1],
+		[0.735, 30, 0.040, 1, 2]]      # 2 = os tufos da orla (a orla não é uma linha) — PRESOS à lente
 	var centro_vol := Vector3(0.0, 0.60, 0.0)
 	for anel: Array in aneis:
 		var rho0: float = anel[0]
@@ -272,27 +301,46 @@ static func _copa(m: Lote, f: Lote, r: RandomNumberGenerator) -> void:
 			if rho0 == 0.0:
 				rho = 0.0
 			var rp := rp0 * r.randf_range(0.86, 1.14) * lerpf(_baia(az), 1.0, 0.5)
-			var ry := rp * r.randf_range(0.56, 0.70)
+			# nenhuma almofada passa da orla da lente: o que passava ficava solto no ar (medido no
+			# lado a lado da sucessão 3: 5 tufos a flutuar por baixo da orla)
+			rho = minf(rho, 0.975 * RAIO_COPA * _baia(az) - rp * 0.45)
+			var ry := rp * r.randf_range(0.52, 0.66)
 			var tinta := Paleta.ANCESTRAL_FOLHA.lerp(Paleta.ANCESTRAL_FOLHA_LUZ, r.randf_range(0.0, 0.55))
 			var y := _cimo_copa(rho) - ry * 0.62 + r.randf_range(-0.012, 0.012)
 			if forro:
 				# o forro: a camada de baixo, escura — dá espessura à copa e esconde as pontas dos ramos
 				if _no_sector_do_palacio(az, 0.60):
 					continue
-				y = _cimo_copa(rho) - 0.118 + r.randf_range(-0.012, 0.012)
+				y = _cimo_copa(rho) - lerpf(0.124, 0.094, pow(rho / RAIO_COPA, 2.0)) + r.randf_range(-0.010, 0.010)
 				ry *= 0.7
 				tinta = tinta.lerp(Paleta.ANCESTRAL_FOLHA_FUNDA, 0.5)
 			elif int(anel[4]) == 2:
-				y = _cimo_copa(rho) - r.randf_range(0.060, 0.100)
-				ry *= r.randf_range(0.9, 1.5)
+				# dentro da espessura da lente na orla (entre 0,058 e 0,090 abaixo do cimo): pendem, mas presos
+				rho = minf(rho, 0.93 * RAIO_COPA * _baia(az) - rp * 0.10)      # por baixo da aba da lente
+				y = _cimo_copa(rho) - r.randf_range(0.046, 0.066)
+				ry *= r.randf_range(1.1, 1.6)
 				tinta = tinta.lerp(Paleta.ANCESTRAL_FOLHA_FUNDA, 0.25)
-			f.bolha(_pol(rho, az, y), Vector3(rp, ry, rp), sub, tinta, r.randf_range(0.0, 90.0), centro_vol, 0.0, 0.0, 0.42, 0.34)
+			f.bolha(_pol(rho, az, y), Vector3(rp, ry, rp), sub, tinta, r.randf_range(0.0, 90.0), centro_vol, 0.0, 0.0, 0.36, 0.34)
+			if int(anel[4]) == 0:
+				# o cacho: massas pequenas pousadas no dorso da almofada (meio enterradas nela)
+				var quantos := 6 if rp0 > 0.10 else 4
+				for q in quantos:
+					var a2 := TAU * (float(q) + r.randf_range(-0.3, 0.3)) / float(quantos)
+					var d2 := r.randf_range(0.30, 0.74) if q > 0 else 0.0
+					var rs := rp * r.randf_range(0.30, 0.42)
+					var sobe := ry * sqrt(maxf(1.0 - d2 * d2, 0.0)) * 0.80
+					var pc := _pol(rho, az, y) + Vector3(cos(a2) * d2 * rp, sobe, sin(a2) * d2 * rp)
+					var t2 := tinta.lerp(Paleta.ANCESTRAL_FOLHA_LUZ, r.randf_range(0.10, 0.45))
+					f.bolha(pc, Vector3(rs, rs * r.randf_range(0.55, 0.72), rs), 1, t2, r.randf_range(0.0, 90.0), _pol(rho, az, y - ry), 0.0, 0.0, 0.34, 0.45)
 
 
 ## A BAÍA DO PALÁCIO: a norte, a copa recolhe-se (até 58 % do raio) para a frente do palácio se
 ## ver por baixo da orla — na referência «norte» o palácio vê-se inteiro, com a copa por trás.
 static func _baia(az: float) -> float:
-	return 1.0 - 0.42 * (1.0 - smoothstep(0.26, 0.60, absf(angle_difference(az, 0.0))))
+	# a orla não é um círculo de compasso: avança e recua em lóbulos (visto de lado, a aba da copa
+	# deixa de ser uma régua)
+	var lobulos := 1.0 + 0.045 * sin(az * 5.0 + 1.3) + 0.030 * sin(az * 11.0 + 0.4)
+	return (1.0 - 0.42 * (1.0 - smoothstep(0.26, 0.60, absf(angle_difference(az, 0.0))))) * lobulos
 
 
 ## A lente da copa: de baixo (eixo → orla, o forro) para cima (orla → eixo, a cúpula), com a
@@ -301,10 +349,11 @@ static func _lente(f: Lote) -> void:
 	var lados := 36
 	var perfil: Array = []        # [fracção do raio da copa, quanto abaixo do cimo, é cúpula?]
 	for i in 7:
-		perfil.append([0.94 * float(i) / 6.0, 0.112, false])
-	perfil.append([0.975, 0.088, false])
+		var fr := float(i) / 6.0
+		perfil.append([0.90 * fr, lerpf(0.122, 0.090, fr * fr), false])      # o forro sobe para a orla: a orla afina
+	perfil.append([0.93, 0.074, false])      # a lente acaba DENTRO das almofadas da orla (não se vê a aba)
 	for i in 9:
-		perfil.append([0.94 * float(8 - i) / 8.0, 0.058, true])
+		perfil.append([0.90 * float(8 - i) / 8.0, 0.058, true])
 	var base := f.v.size()
 	var niveis := perfil.size()
 	for i in niveis:
@@ -313,7 +362,9 @@ static func _lente(f: Lote) -> void:
 		for k in lados:
 			var az := TAU * float(k) / float(lados)
 			var rho := float(perfil[i][0]) * RAIO_COPA * _baia(az)
-			f.v.append(_pol(rho, az, _cimo_copa(rho) - float(perfil[i][1])))
+			# o forro ondula (a barriga da copa não é um tecto liso)
+			var onda := 0.0 if cima else 0.013 * sin(az * 7.0 + float(i) * 1.1) * float(perfil[i][0])
+			f.v.append(_pol(rho, az, _cimo_copa(rho) - float(perfil[i][1]) + onda))
 			f.n.append(Vector3.ZERO)
 			f.c.append(Color(tinta.r, tinta.g, tinta.b, 0.80 if cima else 0.50))
 			f.uv.append(Vector2.ZERO)
@@ -347,12 +398,13 @@ static func _lente(f: Lote) -> void:
 ## Um andar de pagode: parede de madeira com a faixa das janelas ACESA entre colunas escuras,
 ## lintel e telhado de 4 águas. Devolve a altura onde assenta o andar seguinte.
 static func _andar(obra: Lote, lume: Lote, base: Vector3, mx: float, mz: float, alt: float, tx: float, tz: float,
-		alt_telhado: float, rot: float = 0.0, colunas: int = 4) -> float:
+		alt_telhado: float, rot: float = 0.0, colunas: int = 4, dourado: float = 0.0) -> float:
 	var b := Basis(Vector3.UP, rot)
 	var ouro := Paleta.ANCESTRAL_OURO
 	var madeira := Paleta.ANCESTRAL_MADEIRA
 	var escuro := madeira.darkened(0.42)
-	obra.caixa(base + Vector3(0, alt * 0.5, 0), Vector3(mx, alt * 0.5, mz), b, madeira.darkened(0.12))
+	# `dourado`: o palácio é de ouro (na referência é a peça mais clara da árvore), os pagodes de madeira
+	obra.caixa(base + Vector3(0, alt * 0.5, 0), Vector3(mx, alt * 0.5, mz), b, madeira.darkened(0.12).lerp(ouro, dourado))
 	lume.caixa(base + Vector3(0, alt * 0.56, 0), Vector3(mx * 1.012, alt * 0.30, mz * 1.012), b, ouro)
 	for i in colunas:
 		var x := lerpf(-mx, mx, float(i) / float(colunas - 1))
@@ -385,15 +437,15 @@ static func _palacio(obra: Lote, lume: Lote) -> void:
 		obra.tubo([[Vector3(d.x, y_pe, d.y), 0.0085], [q, 0.0060]], 4, escuro, escuro, false)
 	var y := p.y + 0.010
 	# os três andares, de telhados altos
-	y = _andar(obra, lume, Vector3(p.x, y, p.z), 0.105, 0.058, 0.046, 0.152, 0.100, 0.052, 0.0, 6)
-	y = _andar(obra, lume, Vector3(p.x, y, p.z), 0.068, 0.040, 0.034, 0.104, 0.070, 0.044, 0.0, 5)
-	y = _andar(obra, lume, Vector3(p.x, y, p.z), 0.040, 0.026, 0.030, 0.066, 0.048, 0.046, 0.0, 4)
+	y = _andar(obra, lume, Vector3(p.x, y, p.z), 0.105, 0.058, 0.046, 0.152, 0.100, 0.052, 0.0, 6, 0.70)
+	y = _andar(obra, lume, Vector3(p.x, y, p.z), 0.068, 0.040, 0.034, 0.104, 0.070, 0.044, 0.0, 5, 0.70)
+	y = _andar(obra, lume, Vector3(p.x, y, p.z), 0.040, 0.026, 0.030, 0.066, 0.048, 0.046, 0.0, 4, 0.70)
 	lume.torno(Vector3(p.x, y + 0.018, p.z), [[0.006, 0.0], [0.010, 0.006], [0.004, 0.013], [0.006, 0.019], [0.0, 0.034]], 6, ouro, ouro.lightened(0.2))
 	# a porta grande, acesa, virada a norte
 	lume.caixa(Vector3(p.x, p.y + 0.010 + 0.021, p.z - 0.0595), Vector3(0.022, 0.021, 0.002), Basis.IDENTITY, Color("#ffe9a8"))
 	# as duas alas baixas
 	for sx: float in [-1.0, 1.0]:
-		_andar(obra, lume, Vector3(p.x + sx * 0.128, p.y + 0.010, p.z + 0.012), 0.026, 0.026, 0.026, 0.044, 0.044, 0.030, 0.0, 3)
+		_andar(obra, lume, Vector3(p.x + sx * 0.128, p.y + 0.010, p.z + 0.012), 0.026, 0.026, 0.026, 0.044, 0.044, 0.030, 0.0, 3, 0.55)
 
 
 ## Um pagode pequeno numa plataforma redonda. `pes` = [[de, até], ...]: as estacas ou
@@ -429,13 +481,37 @@ static func _pes_tronco(c: Vector3, s: float) -> Array:
 
 
 ## As estacas de um pagode pousado numa raiz (ou no chão): descem da plataforma até ao apoio.
+## (sucessão 3: as estacas desciam a direito e, falhando a raiz, iam até ao chão — pagodes em
+## «torres de água» de 30 m. Na referência os pagodes assentam NA raiz, em cavalete curto: agora
+## os pés fecham para a crista da raiz mais próxima por baixo da plataforma.)
 static func _pes_estacas(c: Vector3, s: float, apoios: Array) -> Array:
+	var melhor := -1
+	var nota := INF
+	for i in apoios.size():
+		var p: Vector3 = apoios[i][0]
+		var topo := p.y + float(apoios[i][1]) * 0.7
+		if topo > c.y:
+			continue
+		var d := Vector2(p.x - c.x, p.z - c.z).length()
+		if d > s * 1.4:
+			continue
+		var n := d + (c.y - topo) * 0.5
+		if n < nota:
+			nota = n
+			melhor = i
 	var pes: Array = []
 	for i in 6:
 		var ang := TAU * float(i) / 6.0
 		var q := c + Vector3(cos(ang) * 0.80 * s, -0.08 * s, sin(ang) * 0.80 * s)
-		var pe := Vector3(lerpf(q.x, c.x, 0.35), 0.0, lerpf(q.z, c.z, 0.35))
-		pe.y = minf(_apoio(pe.x, pe.z, apoios, 0.0), q.y) - 0.006
+		var pe: Vector3
+		if melhor >= 0:
+			var p: Vector3 = apoios[melhor][0]
+			var raio: float = apoios[melhor][1]
+			var abre := minf(0.24 * s, raio * 0.75)
+			pe = Vector3(p.x + cos(ang) * abre, p.y + raio * 0.30, p.z + sin(ang) * abre)
+		else:
+			pe = Vector3(lerpf(q.x, c.x, 0.35), 0.0, lerpf(q.z, c.z, 0.35))
+			pe.y = minf(_apoio(pe.x, pe.z, apoios, 0.0), q.y) - 0.006
 		pes.append([q, pe])
 	return pes
 
@@ -496,7 +572,7 @@ static func _pagodes(obra: Lote, lume: Lote, r: RandomNumberGenerator, apoios: A
 			continue
 		var pa: Vector3 = apoios[melhor][0]
 		var topo_a := pa.y + float(apoios[melhor][1]) * 0.7
-		var ca := Vector3(lerpf(wx, pa.x, 0.7), clampf(y, topo_a + 0.012, topo_a + 0.060), pa.z)
+		var ca := Vector3(lerpf(wx, pa.x, 0.88), clampf(y, topo_a + 0.012, topo_a + 0.044), pa.z)
 		_pagode(obra, lume, ca, s, atan2(ca.x, -ca.z), int(g[3]), _pes_estacas(ca, s, apoios))
 		postos.append([ca, s])
 	# ---- as outras faces (leste, sul, oeste): a mesma densidade
@@ -522,7 +598,7 @@ static func _pagodes(obra: Lote, lume: Lote, r: RandomNumberGenerator, apoios: A
 			continue
 		var s := r.randf_range(0.036, 0.056)
 		var topo := p.y + float(a[1]) * 0.7
-		var c := Vector3(p.x, topo + r.randf_range(0.022, 0.050), p.z)
+		var c := Vector3(p.x, topo + r.randf_range(0.016, 0.040), p.z)
 		if _ha_vizinho(postos, c, s):
 			continue
 		_pagode(obra, lume, c, s, atan2(c.x, -c.z), 2 if s > 0.046 else 1, _pes_estacas(c, s, apoios))
@@ -537,7 +613,7 @@ static func _pagodes(obra: Lote, lume: Lote, r: RandomNumberGenerator, apoios: A
 		var c: Vector3 = o[0]
 		var s: float = o[1]
 		var no_tronco := Vector2(c.x, c.z).length() < _raio_tronco(c.y) + s
-		if not no_tronco and c.y - _apoio(c.x, c.z, apoios, s * 0.6) > 0.10:
+		if not no_tronco and c.y - _apoio(c.x, c.z, apoios, s * 1.4) > 0.10:
 			no_ar += 1
 	return Vector2i(postos.size(), no_ar)
 
@@ -596,7 +672,7 @@ static func _outeiro(apoios: Array) -> Lote:
 			var bossa := _rn.get_noise_2d(x * ALTURA * 2.3, z * ALTURA * 2.3)
 			var cor := Paleta.ANEL_FLORESTA.lerp(Paleta.ANCESTRAL_FOLHA_FUNDA, 0.60 + 0.3 * bossa)
 			cor = cor.darkened(_sombra_no_chao(x, z) * 0.55)
-			var ar := lerpf(0.40, 0.62, t)
+			var ar := lerpf(0.24, 0.62, t)
 			if j == nr:
 				ar = 1.0
 			l.c.append(Paleta.ar(cor, ar))
@@ -613,11 +689,13 @@ static func _outeiro(apoios: Array) -> Lote:
 	var sol := Paleta.dir_luz()
 	var postas := 0
 	var tent := 0
-	while postas < 260 and tent < 800:
+	# (sucessão 3: 260 copas em 1,15 H de raio liam-se como seixos num prado; a referência é um MAR
+	# de copas fechado, com as raízes a sair dele. 640 copas, as de perto maiores.)
+	while postas < 640 and tent < 2400:
 		tent += 1
-		var rho := lerpf(0.22, 1.04, sqrt(r.randf()))
+		var rho := lerpf(0.20, 1.06, sqrt(r.randf()))
 		var p := _pol(rho, r.randf() * TAU, 0.0)
-		var rp := r.randf_range(0.016, 0.028)
+		var rp := r.randf_range(0.020, 0.034)
 		p.y = _chao(p.x, p.z)
 		var livre := true
 		for a: Array in apoios:
@@ -630,11 +708,11 @@ static func _outeiro(apoios: Array) -> Lote:
 			continue
 		var de := copas.v.size()
 		var tinta := Paleta.ANEL_FLORESTA.lerp(Paleta.ANCESTRAL_FOLHA, r.randf_range(0.15, 0.6))
-		copas.bolha(p + Vector3(0, rp * 0.42, 0), Vector3(rp, rp * r.randf_range(0.62, 0.9), rp), 1, tinta,
+		copas.bolha(p + Vector3(0, rp * 0.42, 0), Vector3(rp, rp * r.randf_range(0.62, 0.9), rp), 1 if rho < 0.62 else 0, tinta,
 			r.randf_range(0.0, 90.0), p - Vector3(0, rp, 0), 0.0, 0.0, 0.36, 0.5)
 		# a luz cozida na tinta: cimo ao sol, barriga em sombra, a sombra da árvore e o ar
 		var sombra := _sombra_no_chao(p.x, p.z)
-		var ar := lerpf(0.40, 0.62, clampf((rho - 0.10) / (RAIO_OUTEIRO - 0.10), 0.0, 1.0))
+		var ar := lerpf(0.24, 0.62, clampf((rho - 0.10) / (RAIO_OUTEIRO - 0.10), 0.0, 1.0))
 		for i in range(de, copas.v.size()):
 			var c := copas.c[i]
 			var luz := (0.50 + 0.85 * smoothstep(-0.25, 0.85, copas.n[i].dot(sol))) * lerpf(0.55, 1.0, c.a)

@@ -1364,4 +1364,8 @@ func _criar_ancestral() -> void:
 	if int(d["pagodes_no_ar"]) > 0:
 		Erros.erro(Erros.SEM_APOIO, "Árvore Ancestral: %d pagode(s) sem apoio por baixo" % int(d["pagodes_no_ar"]))
 	medidas["ancestral_altura_m"] = Ancestral.ALTURA
+	# a altura MEDIDA na malha (não a declarada): do pé do tronco (y = 0 do modelo) ao cimo da copa
+	var caixa: AABB = (d["malha"] as ArrayMesh).get_aabb()
+	medidas["ancestral_cimo_medido_m"] = snappedf(caixa.end.y, 0.1)
+	medidas["ancestral_largura_medida_m"] = snappedf(maxf(caixa.size.x, caixa.size.z), 0.1)
 	medidas["ancestral_dist_m"] = ANCESTRAL_DIST
