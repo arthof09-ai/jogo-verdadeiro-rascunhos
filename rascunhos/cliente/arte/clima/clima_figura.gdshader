@@ -5,7 +5,7 @@
 //   neve (0..1):    neve em cima — começa no topo (cabeça) e desce pelas faces viradas para cima; a camada
 //                   sobe uns centímetros, para a neve ter corpo. Só visual: não muda altura nenhuma do jogo.
 shader_type spatial;
-render_mode unshaded, blend_mix, depth_draw_never, cull_back, shadows_disabled, world_vertex_coords;
+render_mode unshaded, blend_mix, depth_draw_never, cull_back, shadows_disabled;
 
 uniform float molhado : hint_range(0.0, 1.0) = 0.0;
 uniform float neve : hint_range(0.0, 1.0) = 0.0;
@@ -21,10 +21,14 @@ varying vec3 v_mundo;
 varying vec3 v_normal;
 
 void vertex() {
-	// world_vertex_coords: VERTEX e NORMAL já estão no mundo.
-	v_normal = NORMAL;
-	VERTEX.y += espessura_m * neve * smoothstep(0.0, 0.6, NORMAL.y);
-	v_mundo = VERTEX;
+	v_normal = normalize(MODEL_NORMAL_MATRIX * NORMAL);
+	// A neve sobe uns centímetros para CIMA no mundo. A conta faz-se no espaço do modelo e soma zero quando
+	// não há neve: o vértice fica igual, bit a bit, ao do material da figura (sem isto a camada do molhado
+	// «lutava» pela profundidade com a figura e ficava aos salpicos).
+	vec3 cima_local = vec3(0.0, 1.0, 0.0) * mat3(MODEL_MATRIX);
+	cima_local /= max(dot(cima_local, cima_local), 1e-8);
+	VERTEX += cima_local * (espessura_m * neve * smoothstep(0.0, 0.6, v_normal.y));
+	v_mundo = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 }
 
 void fragment() {
@@ -35,15 +39,15 @@ void fragment() {
 	vec3 brilho = vec3(0.0);
 	float a_molhado = 0.0;
 	if (molhado > 0.001) {
-		float raspao = pow(1.0 - nv, 3.0);
+		float raspao = pow(1.0 - nv, 4.0);
 		vec3 R = reflect(-V, N);
 		vec3 ceu = cor_reflexo * mix(1.1, 0.8, clamp(R.y, 0.0, 1.0));
-		float sol = pow(max(dot(R, normalize(luz_dir)), 0.0), 28.0);
-		// Um reflexo largo do céu nas faces viradas para cima (pedra molhada).
-		float topo = smoothstep(0.1, 0.9, N.y) * 0.22;
-		float lustro = pow(max(dot(R, normalize(luz_dir)), 0.0), 5.0) * 0.35;
-		brilho = (ceu * (0.12 + 0.70 * raspao + topo) + luz_cor * (sol * 0.8 + lustro)) * molhado;
-		a_molhado = clamp(max(molhado * 0.32, max(brilho.r, max(brilho.g, brilho.b))), 0.0, 1.0);
+		float sol = pow(max(dot(R, normalize(luz_dir)), 0.0), 36.0);
+		// Um reflexo do céu nas faces viradas para cima; a cor da figura continua a mandar (lê-se quem é quem).
+		float topo = smoothstep(0.1, 0.9, N.y) * 0.10;
+		float lustro = pow(max(dot(R, normalize(luz_dir)), 0.0), 6.0) * 0.20;
+		brilho = (ceu * (0.03 + 0.50 * raspao + topo) + luz_cor * (sol * 0.85 + lustro)) * molhado;
+		a_molhado = clamp(max(molhado * 0.26, max(brilho.r, max(brilho.g, brilho.b))), 0.0, 1.0);
 		brilho = min(brilho, vec3(a_molhado));
 	}
 

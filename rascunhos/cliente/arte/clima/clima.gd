@@ -68,7 +68,7 @@ const SEMENTE_NEVE := 4085
 @export var margem_m: float = 4.0
 ## Segundos de chuva até o chão estar todo molhado, e de neve até o chão estar todo branco.
 @export var segundos_molhar := {"fraco": 24.0, "forte": 9.0}
-@export var segundos_nevar := {"fraco": 150.0, "forte": 45.0}
+@export var segundos_nevar := {"fraco": 90.0, "forte": 45.0}
 ## Segundos para secar / derreter depois de o clima parar.
 @export var segundos_secar: float = 40.0
 @export var segundos_derreter: float = 60.0

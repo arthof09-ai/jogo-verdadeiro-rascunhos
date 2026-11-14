@@ -6,6 +6,9 @@ extends SceneTree
 ##   VÍDEO (um clima e uma intensidade por corrida; o Godot grava o .avi, quadro a quadro, a 30 fps certos):
 ##     godot --path cliente --resolution 1280x720 --fixed-fps 30 --write-movie <pasta>/neve-forte.avi \
 ##       -s res://testes/video_clima.gd -- --modo=video --clima=neve --intensidade=forte --saida=<pasta>
+##   VÍDEO DA COMUTAÇÃO (chuva fraca → forte → neve fraca → forte → desligado, na mesma cena, sem reiniciar):
+##     godot --path cliente --resolution 1280x720 --fixed-fps 30 --write-movie <pasta>/comutacao.avi \
+##       -s res://testes/video_clima.gd -- --modo=troca --saida=<pasta>
 ##   CAPTURAS (acumulação da neve em 3 tempos; chão molhado antes/depois):
 ##     godot --path cliente --resolution 1920x1080 --fixed-fps 30 --disable-vsync \
 ##       -s res://testes/video_clima.gd -- --modo=fotos --saida=<pasta>
@@ -93,6 +96,8 @@ func _correr() -> void:
 	match _modo:
 		"video":
 			await _video()
+		"troca":
+			await _troca()
 		"fotos":
 			await _fotos()
 		"medir":
@@ -116,6 +121,10 @@ func _montar() -> void:
 	_a.add_child(perfis)
 	perfis.perfil_aplicado.connect(_a.clima.definir_perfil)
 	perfis.aplicar(_perfil)
+	# A bancada começa sempre SECA e sem clima: o --clima= desta bancada também é lido pelo módulo (é o
+	# parâmetro de apresentação dele), e o primeiro segundo de cada vídeo tem de ser o «antes».
+	_a.clima.desligar()
+	_a.clima.definir_acumulacao(0.0, 0.0)
 	_a.camera.definir_modo(_a.camera.Modo.FIXA)
 	_a.camera.repor_zoom()
 	_a.camera.focar(_centro_das_figuras())
@@ -250,6 +259,31 @@ func _video() -> void:
 		"clima": _clima, "intensidade": _intensidade, "perfil": cl.perfil, "segundos": _t,
 		"gotas": cl.contagem_atual("chuva"), "salpicos": cl.contagem_atual("salpicos"), "flocos": cl.contagem_atual("neve"),
 		"molhado": cl.molhado, "neve": cl.neve}))
+
+
+## O vídeo da COMUTAÇÃO: os dois climas e as duas intensidades, de seguida, na mesma cena, sem reiniciar nada.
+## A chuva molha; a neve entra e o molhado seca por baixo dela; no fim desliga-se e o que pousou fica a derreter.
+func _troca() -> void:
+	var cl = _a.clima
+	cl.definir_vento(_vento_rumo, _vento_forca)
+	_a.camera.definir_zoom(1.6)
+	_a.camera._saltar()
+	_por_seta()
+	await _passar(1.0, "câmara Fixa · sem clima")
+	cl.definir("chuva", "fraco")
+	await _passar(5.0, "COMUTAÇÃO sem reiniciar · chuva fraca")
+	cl.definir("chuva", "forte")
+	await _passar(5.0, "COMUTAÇÃO sem reiniciar · chuva fraca → CHUVA FORTE")
+	await _gravar("troca-1-chuva-forte.png")
+	cl.definir("neve", "fraco")
+	await _passar(5.0, "COMUTAÇÃO sem reiniciar · chuva forte → NEVE FRACA (o molhado seca)")
+	cl.definir("neve", "forte")
+	await _passar(6.0, "COMUTAÇÃO sem reiniciar · neve fraca → NEVE FORTE")
+	await _gravar("troca-2-neve-forte.png")
+	cl.definir("nenhum")
+	await _passar(3.0, "COMUTAÇÃO sem reiniciar · DESLIGADO (os flocos saem; a neve pousada fica a derreter)")
+	await _gravar("troca-3-desligado.png")
+	print("  video troca: ", JSON.stringify({"perfil": cl.perfil, "segundos": _t, "molhado": cl.molhado, "neve": cl.neve}))
 
 
 # ---------------------------------------------------------------- capturas
