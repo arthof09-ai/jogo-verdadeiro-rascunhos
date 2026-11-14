@@ -4,7 +4,7 @@ extends RefCounted
 ## Feita à imagem das 5 referências (referencias-arvore-ancestral/): uma figueira colossal de
 ## copa em guarda-chuva, tronco de feixe (as raízes sobem por ele como nervuras) com
 ## raízes-contraforte que se espraiam como um polvo e assentam no chão, o PALÁCIO de três
-## telhados pousado na forquilha e quatro dúzias de pagodes em plataformas redondas — uns
+## telhados pousado na forquilha e quatro dezenas de pagodes em plataformas redondas — uns
 ## encostados ao tronco em mãos-francesas, outros sobre as raízes em estacas. NADA flutua: cada
 ## pagode sabe onde tem os pés.
 ##
@@ -19,9 +19,10 @@ extends RefCounted
 ##   tronco ....... cintura de 0,29 H de largo com as nervuras (miolo de raio 0,13 H); abre em
 ##                  leque de 14 pernadas a partir de 0,40–0,50 H, à vista por baixo da copa
 ##   raízes ....... 21 contrafortes finos (0,04–0,06 H de largo junto ao tronco), nascem a
-##                  0,26–0,47 H e chegam a 0,68–0,92 H do eixo; 16 nervuras soltas entre elas
+##                  0,26–0,47 H e chegam a 0,68–0,92 H do eixo; 26 nervuras soltas entre elas
 ##   palácio ...... plataforma a 0,615 H (raio 0,165 H), 0,15 H para norte do eixo; cimo a 0,86 H
-##   pagodes ...... 23 na face norte (posições lidas da referência) + 23 nas outras faces
+##   pagodes ...... 42: os da face norte nas posições lidas da referência, os outros com a mesma
+##                  densidade nas faces leste, sul e oeste
 ##
 ## Uma só malha, um só material (shaders/ancestral.gdshader): 1 chamada de desenho.
 ## UV.x = matéria (0 madeira, 1 folha, 2 construção, 3 luz própria); COLOR.a = sol que chega.
@@ -206,8 +207,8 @@ static func _raizes(m: Lote, r: RandomNumberGenerator, apoios: Array) -> void:
 			m.tubo(pts2, 6, funda, casca, true)
 			_guardar_apoios(apoios, pts2, 1)
 	# ---- as nervuras soltas: entre as raízes o tronco não é um cone liso — é feixe até ao chão
-	for k in 16:
-		var az0 := TAU * (float(k) + r.randf_range(-0.3, 0.3)) / 16.0
+	for k in 26:
+		var az0 := TAU * (float(k) + r.randf_range(-0.3, 0.3)) / 26.0
 		var torce := r.randf_range(-0.45, 0.45)
 		var grosso := r.randf_range(0.013, 0.021)
 		var y0 := r.randf_range(0.50, 0.57)
@@ -241,7 +242,7 @@ static func _copa(m: Lote, f: Lote, r: RandomNumberGenerator) -> void:
 		# (sucessão 3: largavam o tronco já dentro do forro e não se viam; na referência o tronco
 		# abre-se em leque de pernadas grossas a partir de 0,45 H, à vista por baixo da copa)
 		var y0 := r.randf_range(0.40, 0.50)
-		var y1 := _cimo_copa(alc) - r.randf_range(0.085, 0.110)
+		var y1 := _cimo_copa(alc) - r.randf_range(0.062, 0.084)      # a ponta morre DENTRO da lente (no filme viam-se cotos)
 		var fi := r.randf() * TAU
 		var pts: Array = []
 		for i in 10:
@@ -249,7 +250,7 @@ static func _copa(m: Lote, f: Lote, r: RandomNumberGenerator) -> void:
 			var rho := 0.10 + (alc - 0.10) * pow(t, 0.9)
 			var y := y0 + (y1 - y0) * (1.0 - pow(1.0 - t, 1.35)) + 0.012 * sin(t * TAU + fi) * t
 			var a := az + 0.16 * sin(t * 2.6 + fi) * t
-			pts.append([_pol(rho, a, y), 0.056 * pow(1.0 - t, 1.1) + 0.009])
+			pts.append([_pol(rho, a, y), 0.060 * pow(1.0 - t, 1.1) + 0.002])
 		m.tubo(pts, 8, casca, ponta, true)
 		for fq in 3:
 			var p0: Vector3 = pts[3 + fq * 2][0]
@@ -258,7 +259,7 @@ static func _copa(m: Lote, f: Lote, r: RandomNumberGenerator) -> void:
 			var rho2 := alc * r.randf_range(0.72, 1.08)
 			var p2 := _pol(rho2, a2, _cimo_copa(rho2) - r.randf_range(0.05, 0.08))
 			var grosso := 0.026 - 0.005 * float(fq)
-			m.tubo([[p0, grosso], [p0.lerp(p2, 0.5) + Vector3(0, 0.022, 0), grosso * 0.62], [p2, 0.006]], 5, casca, ponta, true)
+			m.tubo([[p0, grosso], [p0.lerp(p2, 0.5) + Vector3(0, 0.022, 0), grosso * 0.62], [p2, 0.002]], 5, casca, ponta, true)
 	# ---- os ramos altos: sobem em leque para o miolo da cúpula
 	var n2 := 8
 	for k in n2:
@@ -273,9 +274,9 @@ static func _copa(m: Lote, f: Lote, r: RandomNumberGenerator) -> void:
 			var t := float(i) / 7.0
 			var rho := 0.06 + (alc - 0.06) * t
 			var y := 0.57 + (y1 - 0.57) * (1.0 - pow(1.0 - t, 1.5))
-			pts.append([_pol(rho, az + 0.10 * sin(t * 3.0 + fi), y), 0.042 * pow(1.0 - t, 1.0) + 0.007])
+			pts.append([_pol(rho, az + 0.10 * sin(t * 3.0 + fi), y), 0.044 * pow(1.0 - t, 1.0) + 0.002])
 		m.tubo(pts, 7, casca, ponta, true)
-	m.tubo([[Vector3(0.02, 0.58, 0.03), 0.05], [Vector3(-0.02, 0.76, 0.02), 0.03], [Vector3(0.01, 0.93, 0.0), 0.008]], 7, casca, ponta, true)
+	m.tubo([[Vector3(0.02, 0.58, 0.03), 0.05], [Vector3(-0.02, 0.76, 0.02), 0.03], [Vector3(0.01, 0.90, 0.0), 0.003]], 7, casca, ponta, true)
 	# ---- a LENTE: a massa da copa (cúpula por cima, forro por baixo). Sem ela a copa são pires
 	# soltos com céu por entre eles; com ela é um corpo, e as almofadas são o relevo desse corpo.
 	_lente(f)
