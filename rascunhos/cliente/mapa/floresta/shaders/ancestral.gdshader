@@ -51,16 +51,22 @@ void fragment() {
 			alb = mix(alb, cor_musgo * (0.75 + 0.5 * r2), musgo * 0.72);
 			ndl += (veio - 0.5) * 0.35;
 		} else if (UV.x < 1.5) {
-			// folha: pincelada que parte a luz em toques; o tom alto é verde-ouro
+			// folha: pincelada que parte a luz em toques; o tom alto é verde-ouro; a barriga
+			// das almofadas é funda (é ela que dá o volume à cúpula)
 			float pinc = r1 * 0.5 + r2 * 0.5;
-			ndl += (pinc - 0.5) * 0.9;
-			alb *= 0.80 + 0.40 * r2;
-			alb = mix(alb, cor_folha_luz, smoothstep(0.35, 0.85, ndl) * 0.55 * sol);
+			float r3 = texture(ruido, q.xz * 0.16 + q.y * 0.11).r;
+			ndl += (pinc - 0.5) * 0.9 + (r3 - 0.5) * 0.5;
+			alb *= 0.74 + 0.36 * r2 + 0.16 * r3;
+			alb = mix(alb, cor_folha_luz, smoothstep(0.30, 0.85, ndl) * 0.60 * sol);
+			// o cimo de cada almofada apanha o céu: tom alto mesmo do lado de lá do sol
+			alb = mix(alb, cor_folha_luz, smoothstep(0.45, 0.95, n.y) * 0.30 * sol);
+			alb *= mix(0.60, 1.0, smoothstep(-0.35, 0.35, n.y));
 		} else {
 			alb *= 0.88 + 0.24 * r2;
 		}
 		float k = (smoothstep(-0.25, 0.10, ndl) * 0.45 + smoothstep(0.10, 0.80, ndl) * 0.55) * sol;
 		vec3 amb = cor_ceu * (0.34 + 0.18 * n.y) + vec3(0.40, 0.44, 0.22) * 0.20 * clamp(0.5 - 0.5 * n.y, 0.0, 1.0);
+		amb *= mix(0.62, 1.0, sol);   // onde o sol não chega, o céu também chega menos
 		cor = alb * (amb + mix(cor_sombra * 0.42, cor_sol * 1.30, k));
 	}
 	float ar = mix(ar_base, ar_topo, smoothstep(0.0, 0.42, h));

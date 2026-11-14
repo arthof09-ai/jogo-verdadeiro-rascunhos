@@ -19,6 +19,7 @@ const MALHA_VAZIA := "FLORESTA-E11-MALHA-VAZIA"
 const SEM_GPU := "FLORESTA-E12-SEM-JANELA-GPU"               # a ferramenta precisa de render
 const COZEDURA_FORA_DE_ORDEM := "FLORESTA-E13-COZEDURA-FORA-DE-ORDEM"  # carimbo depois de cozer
 const ARGUMENTO_INVALIDO := "FLORESTA-E14-ARGUMENTO-INVALIDO"
+const SEM_APOIO := "FLORESTA-E15-SEM-APOIO"                  # alguma coisa ficou a flutuar
 
 static var _registo: Array[String] = []
 

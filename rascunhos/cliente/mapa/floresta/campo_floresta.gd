@@ -1358,5 +1358,9 @@ func _criar_ancestral() -> void:
 	medidas["ancestral_tri"] = d["tri"]
 	medidas["ancestral_partes"] = d["partes"]
 	medidas["ancestral_outeiro_tri"] = d["outeiro_tri"]
+	medidas["ancestral_pagodes"] = d["pagodes"]
+	medidas["ancestral_pagodes_no_ar"] = d["pagodes_no_ar"]
+	if int(d["pagodes_no_ar"]) > 0:
+		Erros.erro(Erros.SEM_APOIO, "Árvore Ancestral: %d pagode(s) sem apoio por baixo" % int(d["pagodes_no_ar"]))
 	medidas["ancestral_altura_m"] = Ancestral.ALTURA
 	medidas["ancestral_dist_m"] = ANCESTRAL_DIST
