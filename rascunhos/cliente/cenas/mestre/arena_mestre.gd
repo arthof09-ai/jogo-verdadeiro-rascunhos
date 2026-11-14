@@ -22,6 +22,8 @@ const Marcador := preload("res://cenas/comum/marcador_figura.gd")
 const CamaraLivre := preload("res://cenas/mestre/camara_livre.gd")
 ## Ordem 15 (parte F): os nomes das figuras juntas não se sobrepõem no ecrã.
 const NomesSemSobrepor := preload("res://cenas/comum/nomes_sem_sobrepor.gd")
+## Ordem 40: o clima (chuva e neve) é um módulo de apresentação; a arena só o liga. Nunca calcula regra.
+const Clima := preload("res://arte/clima/clima.gd")
 
 const COR_CHAO := Color(0.30, 0.42, 0.26)
 # Do site (cena.js): fundo 353b48, grelha c9c2a7, casas do «mover» cab577 a 50% com contorno f5d59b,
@@ -40,6 +42,7 @@ var altura := 0
 var casa_m := 1.5
 var camera: CameraMesa
 var camara_livre: CamaraLivre
+var clima: Clima
 
 var _grelha: Node3D
 var _figuras: Node3D
@@ -96,6 +99,9 @@ func _ready() -> void:
 	_anel.mesh = Marcador.anel_plano(0.65, COR_ANEL)  # o anel de destino do site (0,65, ffd28b)
 	_anel.visible = false
 	add_child(_anel)
+	clima = Clima.new()
+	clima.name = "Clima"
+	add_child(clima)
 	construir_grelha(20, 20, 1.5)
 
 
@@ -128,6 +134,7 @@ func construir_grelha(w: int, h: int, c: float) -> void:
 	plano.material = _material(COR_CHAO, false)
 	chao.mesh = plano
 	chao.position = Vector3(tam.x * 0.5, 0.0, tam.y * 0.5)
+	chao.add_to_group(Clima.GRUPO_CHAO)  # ordem 40: o chão responde ao clima (molhado, neve)
 	_grelha.add_child(chao)
 	var im := ImmediateMesh.new()
 	im.surface_begin(Mesh.PRIMITIVE_LINES, _material(COR_LINHAS, true))
@@ -142,6 +149,8 @@ func construir_grelha(w: int, h: int, c: float) -> void:
 	linhas.mesh = im
 	_grelha.add_child(linhas)
 	camera.configurar_arena(Vector3(tam.x * 0.5, 0.0, tam.y * 0.5), tam)
+	clima.configurar_area(Vector3(tam.x * 0.5, 0.0, tam.y * 0.5), tam)
+	clima.definir_grelha(Vector3.ZERO, casa_m)
 
 
 ## Desenha a vista do Mestre: a grelha do mapa e as figuras colocadas.
@@ -301,6 +310,7 @@ func _nova_figura(f: Dictionary) -> Node3D:
 	var altura_m := float(f.get("alturaM")) if (f.get("alturaM") is float or f.get("alturaM") is int) else 0.0
 	var forma := str(f.get("marcador")) if f.get("marcador") is String else "marcador"
 	var marcador: Node3D = Marcador.criar(altura_m, forma, _entradas)
+	marcador.add_to_group(Clima.GRUPO_FIGURA)  # ordem 40: a figura responde ao clima (molhada, neve em cima)
 	_entradas += 1
 	no.add_child(marcador)
 	var rotulo := Label3D.new()

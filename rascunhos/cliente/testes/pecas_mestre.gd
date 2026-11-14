@@ -380,6 +380,7 @@ func _correr() -> void:
 	await _recibo_perdido(c, fx["mestre"]["cartoes"]["ia"])
 	await _nomes_juntos(c, fx["mestre"]["vista"])
 	await _camara_livre(c)
+	await _clima(c)
 
 	var todos: Array = []
 	_textos(c, todos)
@@ -1175,6 +1176,67 @@ func _recibo_perdido(c, card_ia: Dictionary) -> void:
 	c._aba_mesa.ligar_esquema(false)
 	c._aba_mesa.parar()
 	_rede.estado_ligacao = estado_antes
+
+
+## Ordem 40: o clima na arena do Mestre — liga sem reiniciar, o chão e os corpos das figuras ganham a camada
+## (pelos grupos, com a arena de verdade), nada do jogo muda, e desligado tudo volta ao que era.
+func _clima(c) -> void:
+	print("== clima (ordem 40) ==")
+	var a = c._arena
+	var cl = a.clima
+	_ok(cl != null and cl.parado() and not cl.is_processing(), "a arena do Mestre tem o módulo do clima, desligado e a dormir")
+	var chao: Array[Node] = []
+	for n in get_nodes_in_group(&"clima_chao"):
+		if a.is_ancestor_of(n):
+			chao.append(n)
+	var figuras: Array[Node] = []
+	for n in get_nodes_in_group(&"clima_figura"):
+		if a.is_ancestor_of(n):
+			figuras.append(n)
+	_ok(chao.size() == 1 and figuras.size() == a.figuras_desenhadas(), "o chão (1) e as figuras (%d) estão nos grupos do clima" % figuras.size())
+	var tam := Vector2(a.largura * a.casa_m, a.altura * a.casa_m)
+	_ok(cl.caixa_minimo().x <= 0.0 and cl.caixa_minimo().z <= 0.0 and cl.caixa_tamanho().x >= tam.x and cl.caixa_tamanho().z >= tam.y,
+		"a caixa do clima cobre o campo inteiro (%d×%d m)" % [int(tam.x), int(tam.y)])
+	var comandos_antes := _comandos.size()
+	var destaques_antes: int = a.casas_destacadas().size()
+	var desenhadas_antes: int = a.figuras_desenhadas()
+	_ok(cl.definir("neve", "forte"), "neve forte: liga sem reiniciar a cena")
+	await _quadros(4)
+	var vestidos: Array[Node] = cl.vestidos()
+	var corpos := 0
+	var sem_luz := 0
+	for n in vestidos:
+		if n != chao[0]:
+			corpos += 1
+			var m := (n as MeshInstance3D).get_active_material(0) as BaseMaterial3D
+			if m != null and m.shading_mode == BaseMaterial3D.SHADING_MODE_UNSHADED:
+				sem_luz += 1
+	_ok((chao[0] as MeshInstance3D).material_overlay != null and vestidos.has(chao[0]), "o chão ganha a camada do clima (material_overlay)")
+	_ok(corpos >= figuras.size() and sem_luz == 0, "os corpos das figuras também (%d malhas); anéis e sombras de contacto ficam de fora" % corpos)
+	_ok(cl.neve > 0.0 and cl.contagem_atual("neve") > 0, "a neve cai (%d flocos) e começa a pousar" % cl.contagem_atual("neve"))
+	_ok(cl.definir("chuva", "fraco") and cl.tipo == "chuva", "troca para chuva fraca sem reiniciar")
+	await _quadros(4)
+	_ok(cl.molhado > 0.0 and cl.contagem_atual("chuva") > 0, "a chuva cai (%d gotas) e o chão começa a molhar" % cl.contagem_atual("chuva"))
+	_ok(_comandos.size() == comandos_antes and a.casas_destacadas().size() == destaques_antes and a.figuras_desenhadas() == desenhadas_antes,
+		"o clima não manda comando nenhum nem mexe em casas, destaques ou figuras (só apresentação)")
+	cl.desligar()
+	cl.definir_acumulacao(0.0, 0.0)
+	cl.segundos_transicao = 0.01
+	# Ordem 41: o que a neve forte juntou (aglomerado, gelo) derrete devagar, de propósito — com isso por
+	# derreter o módulo continua acordado (posto à mão: quanto sobra depois de 4 quadros depende do passo
+	# de tempo da máquina). «Seco» é também o estado forte a zero; e o vento da nevasca acalma em
+	# segundos_levantar (encurtado aqui, como a transição).
+	cl.definir_forte(0.5, 0.0, 0.0, 0.0)
+	await _quadros(4)
+	_ok(cl.aglomerado > 0.0 and not cl.parado() and cl.is_processing(), "ordem 41: com neve aglomerada por derreter, o módulo não dorme")
+	cl.segundos_levantar = 0.01
+	cl.definir_forte(0.0, 0.0, 0.0, 0.0)
+	await _quadros(4)
+	var limpos := (chao[0] as MeshInstance3D).material_overlay == null
+	for n in vestidos:
+		if is_instance_valid(n) and (n as MeshInstance3D).material_overlay != null:
+			limpos = false
+	_ok(limpos and cl.parado() and not cl.is_processing(), "desligado e seco: a camada sai do chão e das figuras e o módulo dorme")
 
 
 func _textos(no: Node, saida: Array) -> void:

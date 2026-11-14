@@ -52,6 +52,8 @@ const DIVISOES_CASA := 4
 const RAIO_RECORTE_M := 5.0
 ## Ordem 15 (parte F): os nomes das figuras juntas não se sobrepõem no ecrã.
 const NomesSemSobrepor := preload("res://cenas/comum/nomes_sem_sobrepor.gd")
+## Ordem 40: o clima (chuva e neve) é um módulo de apresentação; a arena só o liga. Nunca calcula regra.
+const Clima := preload("res://arte/clima/clima.gd")
 
 @onready var camera: CameraMesa = $Camera
 @onready var hud = $HUD  # hud.gd (sem tipo para não criar preload circular)
@@ -85,6 +87,7 @@ var _saindo := false
 var _mover_depois: Dictionary = {}  # o movimento que segue o «Sair c/ segurança» aceite
 var _id_seguranca := ""  # o intentId do Desvincular desse movimento (ordem 33: só o recibo DELE o solta)
 var _ultimo_id := ""  # o intentId da última intenção que saiu
+var clima: Clima  # ordem 40
 
 
 ## Ordem 15 (parte F): a cada quadro, os nomes arrumam-se para a câmara.
@@ -104,6 +107,10 @@ func _ready() -> void:
 	# Ordem 42: o Sol já não se roda aqui — a direcção é a da luz pintada do mapa (paleta).
 	camera.altura_em = altura_chao
 	_perfis.perfil_aplicado.connect(_ao_perfil_aplicado)
+	clima = Clima.new()
+	clima.name = "Clima"
+	add_child(clima)
+	_perfis.perfil_aplicado.connect(clima.definir_perfil)  # as contagens do clima seguem o perfil gráfico
 	_construir_grelha(largura_padrao, altura_padrao, casa_m_padrao)
 	camera.toque.connect(_ao_toque)
 	Estado.snapshot_aplicado.connect(_ao_snapshot)
@@ -143,7 +150,8 @@ func _construir_grelha(w: int, h: int, c: float) -> void:
 	origem = _origem_no_mapa(tam)
 	_garantir_mapa(Rect2(origem, tam))
 
-	# Sem chão próprio: o chão é o do mapa. As linhas seguem o relevo (amostra a cada 1/4 de casa).
+	# Sem chão próprio: o chão é o do mapa (e é ele que responde ao clima: ver _garantir_mapa).
+	# As linhas seguem o relevo (amostra a cada 1/4 de casa).
 	var im := ImmediateMesh.new()
 	im.surface_begin(Mesh.PRIMITIVE_LINES, _material_sobre(COR_LINHAS, false))
 	var passos_x := largura * DIVISOES_CASA
@@ -182,7 +190,10 @@ func _construir_grelha(w: int, h: int, c: float) -> void:
 	_grelha.add_child(_rotulo_custo)
 
 	var meio := origem + tam * 0.5
-	camera.configurar_arena(Vector3(meio.x, altura_chao(meio.x, meio.y), meio.y), tam)
+	var centro := Vector3(meio.x, altura_chao(meio.x, meio.y), meio.y)
+	camera.configurar_arena(centro, tam)
+	clima.configurar_area(centro, tam)
+	clima.definir_grelha(Vector3(origem.x, centro.y, origem.y), casa_m)
 	_mostrar_destaques()
 	mostrar_fogo()
 
@@ -216,6 +227,11 @@ func _garantir_mapa(zona: Rect2) -> void:
 	mapa.zona_jogo = zona
 	add_child(mapa)
 	move_child(mapa, 0)
+	# Ordem 42 + clima (Ordens 40/41): o chão que molha e branqueia é o do mapa (a zona fina e a larga).
+	for caminho in [^"Arena/Terreno", ^"Fundo/TerrenoLargo"]:
+		var chao := mapa.get_node_or_null(caminho)
+		if chao != null:
+			chao.add_to_group(Clima.GRUPO_CHAO)
 	if _perfis.atual != "":
 		_ao_perfil_aplicado(_perfis.atual)
 
@@ -627,6 +643,7 @@ func _criar_figura() -> Node3D:
 	var corpo := MeshInstance3D.new()
 	corpo.name = "Corpo"
 	corpo.add_to_group(&"figura")  # o AplicadorPerfil liga/desliga o contorno por este grupo
+	corpo.add_to_group(Clima.GRUPO_FIGURA)  # ordem 40: a figura responde ao clima (molhada, neve em cima)
 	var capsula := CapsuleMesh.new()
 	capsula.radius = casa_m * 0.28
 	capsula.height = 1.7
@@ -737,6 +754,9 @@ func _ao_preferencia(chave: String, valor) -> void:
 			camera.definir_modo_por_nome(str(valor))
 		"zoom_padrao":
 			camera.repor_zoom()
+		"clima":
+			# Ordem 40: parâmetro de apresentação ("nenhum", "chuva-fraca", "chuva-forte", "neve-fraca", "neve-forte").
+			clima.definir_por_nome(str(valor))
 		_:
 			pass
 
