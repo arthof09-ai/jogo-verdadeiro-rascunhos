@@ -140,10 +140,12 @@ quadros, nas folhas e nas capturas.
 
 ## ESTADO FINAL — Passagem
 
-- **O que mudou** (sobre `940ae30`): `06772d7`, `15452c2`, `21137b8`, `5cd8bd1`, `6a6b15a` e este commit.
-- **Onde parou**: a ordem está fechada do lado do executor. A ponta `6a6b15a` foi empurrada sem force para
-  `origin/fable/clima-41-expansao`; o resultado do CI vem na mensagem de fecho da sessão. A `main` e os outros
-  ramos não foram tocados.
+- **O que mudou** (sobre `940ae30`): `06772d7`, `15452c2`, `21137b8`, `5cd8bd1`, `6a6b15a`, `0f9bf83`,
+  `ed13ac7`, `6d0f50b` e este commit (só este ficheiro).
+- **Onde parou**: a ordem está fechada do lado do executor. Tudo foi empurrado sem force para
+  `origin/fable/clima-41-expansao`. **CI verde na ponta `6d0f50b`**: Testes dos rascunhos (run 43614614178,
+  todos os jobs, incluindo `retoma-pc` e `cliente`) e Sonda de privacidade (run 43614614148). A `main` e os
+  outros ramos não foram tocados.
 - **Próximo passo**: conferência do coordenador sobre os 3 vídeos e os pontos abertos 1 a 5, e depois o
   olho do Mestre.
 - **Fora do repo** (`C:\Users\txcga\fable-clima-expansao\`): `prova41/` (AVIs, quadros, logs),
