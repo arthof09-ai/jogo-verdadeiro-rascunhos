@@ -86,6 +86,18 @@ func _correr() -> void:
 			m["primitivas_total"] = _info(vp, Viewport.RENDER_INFO_PRIMITIVES_IN_FRAME)
 			m["objectos_total"] = _info(vp, Viewport.RENDER_INFO_OBJECTS_IN_FRAME)
 			m["chamadas_servidor"] = RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+			# Ordem 38, defeito 10: o LOD da relva em números — a MESMA vista com o LOD desligado
+			var relva: Node = cena.get("relva")
+			if relva != null:
+				m["relva_tufos_desenhados"] = relva.call("tufos_ativos")
+				relva.call("ligar_lod", false)
+				await _quadros(4)
+				m["primitivas_sem_lod"] = _info(vp, Viewport.RENDER_INFO_PRIMITIVES_IN_FRAME)
+				m["relva_tufos_sem_lod"] = relva.call("tufos_ativos")
+				relva.call("ligar_lod", true)
+				await _quadros(4)
+			# Ordem 38, defeitos 3 e 5: a cor do quadro em números
+			m["cor"] = _cor(img)
 			# FPS sem v-sync: 2 s de quadros contados pelo relógio
 			var t0 := Time.get_ticks_usec()
 			var n := 0
@@ -139,6 +151,47 @@ func _gravar(img: Image, caminho_sem_extensao: String) -> String:
 ## Contador do viewport da prova (só os objectos 3D visíveis; o céu é uma passagem à parte).
 func _info(vp: Viewport, que: Viewport.RenderInfo) -> int:
 	return vp.get_render_info(Viewport.RENDER_INFO_TYPE_VISIBLE, que)
+
+
+## A cor do quadro (amostrada de 6 em 6 píxeis), em % dos píxeis:
+##   verde_lima ...... o verde-ácido da Ordem 37 (matiz 70–110°, saturação > 0,55, valor > 0,55)
+##   verde_ouro ...... matiz 45–70° (palha, ouro velho)  ·  verde_frio ... matiz 110–170°
+##   ceu ............. matiz 190–250°  ·  estourado ... valor > 0,97 e saturação < 0,25 (branco queimado)
+## e a saturação média dos verdes (matiz 45–170°).
+func _cor(img: Image) -> Dictionary:
+	var n := 0
+	var lima := 0
+	var ouro := 0
+	var frio := 0
+	var ceu := 0
+	var estourado := 0
+	var sat_verdes := 0.0
+	var n_verdes := 0
+	for y in range(0, img.get_height(), 6):
+		for x in range(0, img.get_width(), 6):
+			var c := img.get_pixel(x, y)
+			var h := c.h * 360.0
+			n += 1
+			if c.v > 0.97 and c.s < 0.25:
+				estourado += 1
+			if c.s < 0.08:
+				continue
+			if h >= 190.0 and h < 250.0:
+				ceu += 1
+			elif h >= 45.0 and h < 170.0:
+				sat_verdes += c.s
+				n_verdes += 1
+				if h < 70.0:
+					ouro += 1
+				elif h >= 110.0:
+					frio += 1
+				elif c.s > 0.55 and c.v > 0.55:
+					lima += 1
+	var f := 100.0 / float(maxi(n, 1))
+	return {"verde_lima_%": snappedf(lima * f, 0.1), "verde_ouro_%": snappedf(ouro * f, 0.1),
+		"verde_frio_%": snappedf(frio * f, 0.1), "ceu_%": snappedf(ceu * f, 0.1),
+		"estourado_%": snappedf(estourado * f, 0.01),
+		"saturacao_media_dos_verdes": snappedf(sat_verdes / float(maxi(n_verdes, 1)), 0.001)}
 
 
 ## Diferença média de luma (0–255) entre duas imagens, amostrada de 4 em 4 píxeis.
