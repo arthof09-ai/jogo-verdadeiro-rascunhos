@@ -32,6 +32,7 @@ const N_FINO := 113            # 2 × 42 / 0,75 + 1
 const PASSO_LARGO := 3.0
 const MEIO_LARGO := 126.0
 const N_LARGO := 85            # 2 × 126 / 3 + 1
+const COSTURA_M := 3.0         # largura da faixa onde a zona fina se cose à larga (39–42 m)
 
 ## Distâncias «para fora da arena» (ver fora()).
 const ORLA_FORA := 24.0        # até aqui a floresta é a rica (árvores inteiras, relva, arbustos)
@@ -170,20 +171,31 @@ static func forma(x: float, z: float) -> float:
 	if f > 30.0:
 		var ang := atan2(x, -z)
 		var crista := 7.0 + 5.0 * n.get_noise_2d(cos(ang) * 160.0, sin(ang) * 160.0) + 4.0 * (0.5 - 0.5 * cos(ang))
-		h += crista * _ss(30.0, 72.0, f)
+		# na janela da Árvore Ancestral não há crista: o vale fica aberto até ela
+		var fecho := _ss(deg_to_rad(JANELA_MEIA_LARGURA * 0.7), deg_to_rad(JANELA_MEIA_LARGURA * 2.2), absf(angle_difference(ang, deg_to_rad(ANCORA_AZIMUTE))))
+		h += crista * _ss(30.0, 72.0, f) * lerpf(0.10, 1.0, fecho)
 	return h
 
 
 static func _cozer() -> void:
-	_fino.resize(N_FINO * N_FINO)
-	for j in N_FINO:
-		for i in N_FINO:
-			_fino[j * N_FINO + i] = forma(-MEIO_FINO + i * PASSO_FINO, -MEIO_FINO + j * PASSO_FINO)
 	_largo.resize(N_LARGO * N_LARGO)
 	for j in N_LARGO:
 		for i in N_LARGO:
 			_largo[j * N_LARGO + i] = forma(-MEIO_LARGO + i * PASSO_LARGO, -MEIO_LARGO + j * PASSO_LARGO)
-	_nivel_agua = forma(COVA.x, COVA.y) + AGUA_ABAIXO
+	# A zona fina COSE-SE à larga: nos últimos 3 m (já fora da arena jogável, que acaba aos
+	# 37,5 m) a altura fina desliza para a superfície da grelha larga, e na borda é exactamente
+	# ela — sem degrau nem fresta entre as duas malhas, e a consulta é contínua.
+	_fino.resize(N_FINO * N_FINO)
+	for j in N_FINO:
+		for i in N_FINO:
+			var x := -MEIO_FINO + i * PASSO_FINO
+			var z := -MEIO_FINO + j * PASSO_FINO
+			var h := forma(x, z)
+			var borda := _ss(MEIO_FINO - COSTURA_M, MEIO_FINO, maxf(absf(x), absf(z)))
+			if borda > 0.0:
+				h = lerpf(h, _interpolar(_largo, N_LARGO, MEIO_LARGO, PASSO_LARGO, x, z), borda)
+			_fino[j * N_FINO + i] = h
+	_nivel_agua = _interpolar(_fino, N_FINO, MEIO_FINO, PASSO_FINO, COVA.x, COVA.y) + AGUA_ABAIXO
 
 
 ## A grelha fina cozida (N_FINO × N_FINO, linha a linha de norte para sul): a malha do chão e a
@@ -202,7 +214,7 @@ static func grelha_larga() -> PackedFloat32Array:
 
 ## Altura da superfície de triângulos de uma grelha regular. A diagonal de cada quadrado vai
 ## de (i+1, j) a (i, j+1) — a mesma da malha (campo_floresta._criar_terreno) e a mesma da
-## HeightMapShape3D (provado por raio em ferramentas/provar_grelha.gd).
+## colisão, que é feita dos MESMOS triângulos (provado por raio em ferramentas/provar_grelha.gd).
 static func _interpolar(g: PackedFloat32Array, n: int, meio: float, passo: float, x: float, z: float) -> float:
 	var fx := clampf((x + meio) / passo, 0.0, float(n - 1) - 0.00001)
 	var fz := clampf((z + meio) / passo, 0.0, float(n - 1) - 0.00001)
