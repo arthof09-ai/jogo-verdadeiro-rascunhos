@@ -36,6 +36,8 @@ const COR_FOGO := Color(1.0, 0.45, 0.10, 0.55)
 const CameraMesa := preload("res://camera/camera_mesa.gd")
 ## Ordem 15 (parte F): os nomes das figuras juntas não se sobrepõem no ecrã.
 const NomesSemSobrepor := preload("res://cenas/comum/nomes_sem_sobrepor.gd")
+## Ordem 40: o clima (chuva e neve) é um módulo de apresentação; a arena só o liga. Nunca calcula regra.
+const Clima := preload("res://arte/clima/clima.gd")
 
 @onready var camera: CameraMesa = $Camera
 @onready var hud = $HUD  # hud.gd (sem tipo para não criar preload circular)
@@ -64,6 +66,7 @@ var _saindo := false
 var _mover_depois: Dictionary = {}  # o movimento que segue o «Sair c/ segurança» aceite
 var _id_seguranca := ""  # o intentId do Desvincular desse movimento (ordem 33: só o recibo DELE o solta)
 var _ultimo_id := ""  # o intentId da última intenção que saiu
+var clima: Clima  # ordem 40
 
 
 ## Ordem 15 (parte F): a cada quadro, os nomes arrumam-se para a câmara.
@@ -77,6 +80,10 @@ func _process(_delta: float) -> void:
 
 func _ready() -> void:
 	_sol.rotation_degrees = Vector3(-55.0, 35.0, 0.0)
+	clima = Clima.new()
+	clima.name = "Clima"
+	add_child(clima)
+	_perfis.perfil_aplicado.connect(clima.definir_perfil)  # as contagens do clima seguem o perfil gráfico
 	_construir_grelha(largura_padrao, altura_padrao, casa_m_padrao)
 	camera.toque.connect(_ao_toque)
 	Estado.snapshot_aplicado.connect(_ao_snapshot)
@@ -122,6 +129,7 @@ func _construir_grelha(w: int, h: int, c: float) -> void:
 	plano.material = mat_chao
 	chao.mesh = plano
 	chao.position = Vector3(tam.x * 0.5, 0.0, tam.y * 0.5)
+	chao.add_to_group(Clima.GRUPO_CHAO)  # ordem 40: o chão responde ao clima (molhado, neve)
 	_grelha.add_child(chao)
 
 	var im := ImmediateMesh.new()
@@ -184,6 +192,8 @@ func _construir_grelha(w: int, h: int, c: float) -> void:
 	_grelha.add_child(_rotulo_custo)
 
 	camera.configurar_arena(Vector3(tam.x * 0.5, 0.0, tam.y * 0.5), tam)
+	clima.configurar_area(Vector3(tam.x * 0.5, 0.0, tam.y * 0.5), tam)
+	clima.definir_grelha(Vector3.ZERO, casa_m)
 	_mostrar_destaques()
 	mostrar_fogo()
 
@@ -505,6 +515,7 @@ func _criar_figura() -> Node3D:
 	var corpo := MeshInstance3D.new()
 	corpo.name = "Corpo"
 	corpo.add_to_group(&"figura")  # o AplicadorPerfil liga/desliga o contorno por este grupo
+	corpo.add_to_group(Clima.GRUPO_FIGURA)  # ordem 40: a figura responde ao clima (molhada, neve em cima)
 	var capsula := CapsuleMesh.new()
 	capsula.radius = casa_m * 0.28
 	capsula.height = 1.7
@@ -615,6 +626,9 @@ func _ao_preferencia(chave: String, valor) -> void:
 			camera.definir_modo_por_nome(str(valor))
 		"zoom_padrao":
 			camera.repor_zoom()
+		"clima":
+			# Ordem 40: parâmetro de apresentação ("nenhum", "chuva-fraca", "chuva-forte", "neve-fraca", "neve-forte").
+			clima.definir_por_nome(str(valor))
 		_:
 			pass
 
