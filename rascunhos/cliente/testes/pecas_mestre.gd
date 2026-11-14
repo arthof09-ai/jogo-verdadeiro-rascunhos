@@ -1223,10 +1223,12 @@ func _clima(c) -> void:
 	cl.definir_acumulacao(0.0, 0.0)
 	cl.segundos_transicao = 0.01
 	# Ordem 41: o que a neve forte juntou (aglomerado, gelo) derrete devagar, de propósito — com isso por
-	# derreter o módulo continua acordado. «Seco» é também o estado forte a zero; e o vento da nevasca
-	# acalma em segundos_levantar (encurtado aqui, como a transição).
+	# derreter o módulo continua acordado (posto à mão: quanto sobra depois de 4 quadros depende do passo
+	# de tempo da máquina). «Seco» é também o estado forte a zero; e o vento da nevasca acalma em
+	# segundos_levantar (encurtado aqui, como a transição).
+	cl.definir_forte(0.5, 0.0, 0.0, 0.0)
 	await _quadros(4)
-	_ok(cl.aglomerado > 0.0 and not cl.parado(), "ordem 41: com neve aglomerada por derreter, o módulo não dorme")
+	_ok(cl.aglomerado > 0.0 and not cl.parado() and cl.is_processing(), "ordem 41: com neve aglomerada por derreter, o módulo não dorme")
 	cl.segundos_levantar = 0.01
 	cl.definir_forte(0.0, 0.0, 0.0, 0.0)
 	await _quadros(4)
