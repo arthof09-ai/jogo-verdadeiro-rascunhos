@@ -35,6 +35,7 @@ uniform float lod_perto = 16.0;
 uniform float lod_longe = 90.0;
 uniform float lod_min = 0.10;
 uniform float lod_ligado = 1.0;
+uniform float densidade = 1.0;
 
 varying float v_alt;
 varying float v_dobra;
@@ -55,7 +56,7 @@ void vertex() {
 	vec3 p = VERTEX;
 	// ---- LOD: encolher o que sai, alargar o que fica
 	float d_cam = distance(raiz.xz, CAMERA_POSITION_WORLD.xz);
-	float k = mix(1.0, manter(d_cam), lod_ligado);
+	float k = mix(1.0, manter(d_cam), lod_ligado) * densidade;
 	float fica = 1.0 - smoothstep(k * 0.80, k, INSTANCE_CUSTOM.r);
 	float alarga = min(inversesqrt(k), 2.6);
 	p.xz = raiz.xz + (p.xz - raiz.xz) * alarga * fica;
