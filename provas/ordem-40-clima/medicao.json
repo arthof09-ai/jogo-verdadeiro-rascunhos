@@ -1,0 +1,159 @@
+{
+  "casos": [
+    {
+      "clima": "sem clima",
+      "draw_calls": 42,
+      "fps": 2284.96572551412,
+      "ms": 0.437643326039387,
+      "particulas": 0,
+      "perfil": "baixo",
+      "primitivas": 3538
+    },
+    {
+      "clima": "chuva fraco",
+      "draw_calls": 51,
+      "fps": 2016.29534602238,
+      "ms": 0.495959087527895,
+      "particulas": 900,
+      "perfil": "baixo",
+      "primitivas": 6322
+    },
+    {
+      "clima": "chuva forte",
+      "draw_calls": 51,
+      "fps": 2044.0513307329,
+      "ms": 0.489224504768892,
+      "particulas": 2800,
+      "perfil": "baixo",
+      "primitivas": 10122
+    },
+    {
+      "clima": "neve fraco",
+      "draw_calls": 51,
+      "fps": 2023.24102514878,
+      "ms": 0.494256486286138,
+      "particulas": 1000,
+      "perfil": "baixo",
+      "primitivas": 6522
+    },
+    {
+      "clima": "neve forte",
+      "draw_calls": 51,
+      "fps": 2039.34602937478,
+      "ms": 0.490353272860995,
+      "particulas": 3000,
+      "perfil": "baixo",
+      "primitivas": 10522
+    },
+    {
+      "clima": "sem clima",
+      "draw_calls": 42,
+      "fps": 2113.38904707503,
+      "ms": 0.473173645611545,
+      "particulas": 0,
+      "perfil": "medio",
+      "primitivas": 3538
+    },
+    {
+      "clima": "chuva fraco",
+      "draw_calls": 52,
+      "fps": 1912.39673057655,
+      "ms": 0.522904052287582,
+      "particulas": 1720,
+      "perfil": "medio",
+      "primitivas": 7962
+    },
+    {
+      "clima": "chuva forte",
+      "draw_calls": 52,
+      "fps": 1919.5239580584,
+      "ms": 0.5209625,
+      "particulas": 5350,
+      "perfil": "medio",
+      "primitivas": 15222
+    },
+    {
+      "clima": "neve fraco",
+      "draw_calls": 51,
+      "fps": 1913.27327711666,
+      "ms": 0.522664489155997,
+      "particulas": 2000,
+      "perfil": "medio",
+      "primitivas": 8522
+    },
+    {
+      "clima": "neve forte",
+      "draw_calls": 51,
+      "fps": 1887.60832127334,
+      "ms": 0.529770921610169,
+      "particulas": 6000,
+      "perfil": "medio",
+      "primitivas": 16522
+    },
+    {
+      "clima": "sem clima",
+      "draw_calls": 42,
+      "fps": 2261.68110296448,
+      "ms": 0.442148983200707,
+      "particulas": 0,
+      "perfil": "alto",
+      "primitivas": 3538
+    },
+    {
+      "clima": "chuva fraco",
+      "draw_calls": 52,
+      "fps": 2015.4133372265,
+      "ms": 0.496176134954106,
+      "particulas": 2600,
+      "perfil": "alto",
+      "primitivas": 9722
+    },
+    {
+      "clima": "chuva forte",
+      "draw_calls": 52,
+      "fps": 2033.24482777411,
+      "ms": 0.491824686501106,
+      "particulas": 8600,
+      "perfil": "alto",
+      "primitivas": 21722
+    },
+    {
+      "clima": "neve fraco",
+      "draw_calls": 51,
+      "fps": 2035.65699179688,
+      "ms": 0.491241895874263,
+      "particulas": 3000,
+      "perfil": "alto",
+      "primitivas": 10522
+    },
+    {
+      "clima": "neve forte",
+      "draw_calls": 51,
+      "fps": 1919.79746136783,
+      "ms": 0.52088828125,
+      "particulas": 9000,
+      "perfil": "alto",
+      "primitivas": 22522
+    }
+  ],
+  "janela": [
+    1028,
+    749
+  ],
+  "quadro_do_render": [
+    1920,
+    1080
+  ],
+  "ref_85": {
+    "contra_o_vento": 0,
+    "deslocamentos": 1793075,
+    "dt": 0.0166666666666667,
+    "flocos": 3000,
+    "percent_contra": 0.0,
+    "quadros": 600,
+    "salto_max_m": 0.116952285170555,
+    "subiram": 0,
+    "voltas_da_caixa": 6925
+  },
+  "render": "NVIDIA GeForce RTX 4060"
+}

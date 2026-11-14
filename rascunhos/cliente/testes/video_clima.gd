@@ -345,21 +345,27 @@ func _medir() -> void:
 	for perfil in ["baixo", "medio", "alto"]:
 		perfis.aplicar(perfil)
 		for caso in [["nenhum", "fraco"], ["chuva", "fraco"], ["chuva", "forte"], ["neve", "fraco"], ["neve", "forte"]]:
+			# Em tempo real: espera-se pelo RELÓGIO (não por quadros) que o clima anterior saia de todo e que o
+			# novo chegue à contagem cheia; só então se mede, 2 s seguidos, já em regime.
 			cl.definir("nenhum")
 			cl.definir_acumulacao(0.0, 0.0)
-			await _quadros(30)
+			await create_timer(0.6).timeout
+			if not cl.parado():
+				printerr("  FALHA medir: o clima anterior não saiu (", perfil, " ", caso, ")")
+				_falhas += 1
 			cl.definir(caso[0], caso[1])
 			if caso[0] == "chuva":
 				cl.definir_acumulacao(0.8, 0.0)
 			elif caso[0] == "neve":
 				cl.definir_acumulacao(0.0, 0.6)
-			await _quadros(90)
-			var n := 300
+			await create_timer(0.8).timeout
+			var n := 0
 			var chamadas := 0
 			var primitivas := 0
 			var t0 := Time.get_ticks_usec()
-			for i in n:
+			while Time.get_ticks_usec() - t0 < 2000000:
 				await process_frame
+				n += 1
 				chamadas = maxi(chamadas, int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)))
 				primitivas = maxi(primitivas, int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME)))
 			var seg := float(Time.get_ticks_usec() - t0) / 1e6
@@ -380,7 +386,8 @@ func _medir() -> void:
 	print("  REF_85 ", JSON.stringify(m))
 	var janela := root.size
 	var f := FileAccess.open(_saida.path_join("medicao.json"), FileAccess.WRITE)
-	f.store_string(JSON.stringify({"render": RenderingServer.get_video_adapter_name(), "janela": [janela.x, janela.y], "casos": linhas, "ref_85": m}, "  "))
+	f.store_string(JSON.stringify({"render": RenderingServer.get_video_adapter_name(), "janela": [janela.x, janela.y],
+		"quadro_do_render": [root.get_texture().get_width(), root.get_texture().get_height()], "casos": linhas, "ref_85": m}, "  "))
 	f.close()
 	var g := FileAccess.open(_saida.path_join("medicao.md"), FileAccess.WRITE)
 	g.store_string(texto)
