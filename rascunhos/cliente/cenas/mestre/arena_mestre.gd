@@ -83,6 +83,7 @@ var _casas_fogo: Array[Vector2i] = []
 var _contornos: MeshInstance3D
 var _anel: MeshInstance3D
 var _nos: Dictionary = {}  # figuraId -> Node3D
+var _pes_recusados: Dictionary = {}  # Ordem 58: figuraId -> recusa do pé (casa bloqueada pelo mapa)
 var _entradas := 0  # ordem de entrada das figuras: a cor do anel (cena.js `units.size % 5`)
 var _casas_destacadas: Array[Vector2i] = []
 var _clima_do_ambiente := ""  # o último clima de jogo visto na vista (só se segue quando muda)
@@ -235,17 +236,24 @@ func aplicar_vista(vista: Dictionary) -> void:
 	if m is Dictionary:
 		construir_grelha(int(m.get("largura", 20)), int(m.get("altura", 20)), float(m.get("casaM", 1.5)))
 	var vistos := {}
+	var recusados := {}
 	for f in Modelo.figuras(vista):
 		if not (f is Dictionary) or f.get("colocada") != true:
 			continue
 		var id := str(f.get("id", ""))
+		var c := Vector2i(int(f.get("x", 0)), int(f.get("y", 0)))
+		# Ordem 58: numa casa que o mapa bloqueia a figura não se põe de pé (recusa com nome: campo_da_mesa.gd),
+		# como na arena do jogador. A figura continua na folha do Mestre.
+		var recusa := CampoDaMesa.recusa_do_pe(mapa, origem, casa_m, c)
+		if recusa != "":
+			CampoDaMesa.anotar_recusa(_pes_recusados, recusados, id, recusa)
+			continue
 		vistos[id] = true
 		var no: Node3D = _nos.get(id)
 		if no == null:
 			no = _nova_figura(f)
 			_nos[id] = no
 			_figuras.add_child(no)
-		var c := Vector2i(int(f.get("x", 0)), int(f.get("y", 0)))
 		no.position = pe_figura(c)
 		(no.get_node("Rotulo") as Label3D).text = Modelo.nome_mestre(f)
 		# Morta: deitada como no site. Caída (viva): também deitada, para o Mestre a ver no chão.
@@ -258,6 +266,7 @@ func aplicar_vista(vista: Dictionary) -> void:
 		if not vistos.has(id):
 			(_nos[id] as Node).queue_free()
 			_nos.erase(id)
+	_pes_recusados = recusados
 	desenhar_fogo(vista)
 	var vez := str(vista.get("vezId", "")) if vista.get("vezId") is String else ""
 	_anel.visible = _nos.has(vez)
@@ -374,6 +383,12 @@ func camara_livre_ativa() -> bool:
 
 func figuras_desenhadas() -> int:
 	return _nos.size()
+
+
+## Ordem 58: as figuras colocadas em casas que o mapa bloqueia e que por isso não se põem de pé na arena:
+## figuraId -> «FLORESTA-E08-CASA-BLOQUEADA: (x,y) motivo» (campo_da_mesa.gd `recusa_do_pe`).
+func pes_recusados() -> Dictionary:
+	return _pes_recusados.duplicate()
 
 
 ## Centro da casa, em cima do chão do mapa (a altura do relevo nesse ponto), como na arena do jogador.

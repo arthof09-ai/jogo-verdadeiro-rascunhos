@@ -10,11 +10,14 @@ extends RefCounted
 ##   - `malha_casas`        os remendos por casa que seguem o relevo (destaques, fogo, cursor);
 ##   - `linhas_grelha`      as linhas da grelha amostradas no relevo;
 ##   - `ponto_no_chao`      o raio do toque contra o relevo;
-##   - `ligar_perfil`       (Ordem 52) o perfil gráfico do AplicadorPerfil chega à relva do mapa e ao clima.
+##   - `ligar_perfil`       (Ordem 52) o perfil gráfico do AplicadorPerfil chega à relva do mapa e ao clima;
+##   - `recusa_do_pe`       (Ordem 58) uma figura não fica de pé numa casa que o mapa bloqueia: recusa com nome.
 ## Só apresentação e geometria: não lê Estado, Rede nem nada do Mestre (canario_privacidade.gd).
 
 const CampoFloresta := preload("res://mapa/floresta/campo_floresta.gd")
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
+const Assentamento := preload("res://cenas/arena/assentamento.gd")
+const Erros := preload("res://mapa/floresta/erros_floresta.gd")
 ## Ordem 42 (parte 2): os pontos baixos REAIS do relevo, para o alagamento do clima.
 const BaciasRelevo := preload("res://cenas/arena/bacias_do_relevo.gd")
 const Clima := preload("res://arte/clima/clima.gd")
@@ -53,6 +56,34 @@ static func montar_mapa(dono: Node3D, zona: Rect2, ambiente: NodePath, sol: Node
 		if chao != null:
 			chao.add_to_group(Clima.GRUPO_CHAO)
 	return mapa
+
+
+## Ordem 58: o pé de uma figura numa casa que o MAPA bloqueia (menir, santuário, água funda, escarpa…). Até aqui as
+## duas arenas punham-na de pé na mesma: na 30 × 30 de 1,5 m, nas escarpas de 55° e 67°, o plano da base ficava até
+## 0,30 m do relevo (a reserva 3 da Ordem 45), e na água ou no menir a figura ficava em cima do que bloqueia.
+## A regra: a figura não se põe de pé ali. A arena RECUSA-A COM NOME, como o resto do sistema recusa pôr uma figura numa
+## casa bloqueada — o servidor (MASTER_PLACE → «CASA_BLOQUEADA: (x,y) motivo») e a grelha do mapa (`ocupar` →
+## FLORESTA-E08-CASA-BLOQUEADA, a casa fica como estava). Não se muda a figura para outra casa: a posição é do
+## servidor, e uma figura desenhada numa casa onde ele não a tem enganava o toque, os destaques e os alcances.
+## O que está bloqueado é a casa do mapa que contém o centro da casa do jogo (Assentamento.casa_do_mapa): a mesma
+## regra do terreno do servidor (provar_terreno_servidor.gd: o mesmo juízo, casa a casa, em 12 grelhas).
+## Devolve "" se a figura se põe de pé na casa `c`, ou o texto da recusa «FLORESTA-E08-CASA-BLOQUEADA: (x,y) motivo».
+## Sem mapa (ainda por montar) não recusa.
+static func recusa_do_pe(mapa: Node3D, origem: Vector2, casa_m: float, c: Vector2i) -> String:
+	if mapa == null or not is_instance_valid(mapa) or mapa.grelha == null:
+		return ""
+	var cm := Assentamento.casa_do_mapa(origem, casa_m, c)
+	if not mapa.grelha.bloqueada(cm):
+		return ""
+	return "%s: (%d,%d) %s" % [Erros.CASA_BLOQUEADA, c.x, c.y, mapa.grelha.motivo_bloqueio(cm)]
+
+
+## Ordem 58: guarda a recusa do pé de `id` em `agora` e avisa na consola (push_warning, uma vez) se ela é nova ou
+## mudou desde `antes` — a recusa não cala, e não se repete a cada snapshot.
+static func anotar_recusa(antes: Dictionary, agora: Dictionary, id: String, texto: String) -> void:
+	agora[id] = texto
+	if str(antes.get(id, "")) != texto:
+		push_warning("figura %s não se põe de pé: %s" % [id, texto])
 
 
 ## Ordem 42 (parte 2): o clima sobre o mapa. As bacias do alagamento são os pontos baixos REAIS do relevo
