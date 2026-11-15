@@ -849,7 +849,10 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
 //   {"porta":8080, "host":"0.0.0.0", "pastaEstatica":"../cliente",
 //    "motores":"../motores/gerado/motores.mjs", "fichas":"../dados-exemplo/fichas-ficticias.json",
 //    "sala":{ ...config de criarSala: lugares, iniciativa, mapa... },
-//    "journal":"../privado/registo-MESTRE-ONLY-sala.json", "chaveJournal":"<opcional, HMAC>"}
+//    "journal":"../privado/registo-MESTRE-ONLY-sala.json", "chaveJournal":"<opcional, HMAC>",
+//    "terreno":"../dados/terreno-floresta.json"}
+// Ordem 44: com "terreno", a sala conhece o relevo e os obstáculos do mapa (o pacote que o cliente gera com
+// cliente/cenas/arena/ferramentas/exportar_terreno.gd). Pacote com forma desconhecida → a sala não abre.
 // Ordem 16: com "journal", o adaptador grava o journal nesse ficheiro a cada commit (o ficheiro inteiro,
 // trocado de uma vez) e, ao arrancar, restaura a partir dele. Forma desconhecida → a sala não abre.
 // TODO(JV1.x): carregar o pacote privado do Mestre (carregarPacote) em vez de um JSON solto.
@@ -873,6 +876,7 @@ async function principal(argv) {
     return; // a sala não abre
   }
   const pastaEstatica = cfg.pastaEstatica ? path.resolve(base, cfg.pastaEstatica) : null;
+  const terreno = cfg.terreno ? JSON.parse(await readFile(path.resolve(base, cfg.terreno), 'utf8')) : null;
   let sala;
   let journal = null;
   // Ordem 34 (N32-1): a fila de alertas do Mestre, no ficheiro dela; lida e conferida antes de a sala abrir.
@@ -892,7 +896,7 @@ async function principal(argv) {
   }
   const criarComAlertas = (restaurarDe) => criarSala({
     motores, fichas: r.fichas, rng: rngNode(), agora: () => Date.now(), config: cfg.sala,
-    chaveJournal: cfg.chaveJournal ?? null, restaurarDe, restaurarAlertasDe: textoAlertas,
+    chaveJournal: cfg.chaveJournal ?? null, restaurarDe, restaurarAlertasDe: textoAlertas, terreno,
   });
   if (cfg.journal) {
     const caminhoJournal = conferirCaminhoJournal(path.resolve(base, cfg.journal), pastaEstatica);

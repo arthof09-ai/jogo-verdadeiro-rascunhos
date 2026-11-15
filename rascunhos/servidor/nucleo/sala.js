@@ -17,6 +17,7 @@ import { conferirEstadoProfundo, conferirRegistoProfundo } from './conferir-esta
 import { projetarEvento, projetarSnapshot, efeitoAmbiente, nomePublicoDe, visivelDe } from './projecao.js';
 import * as Amb from './ambiente.js';
 import { criarFilaAlertas } from './fila-alertas.js';
+import { prepararTerreno } from './terreno.js';
 
 export const PROTOCOLO = 2;
 /** A escala com que a sala nasce (Q5 do site, jogo.js: CASA_M = 1,5 m). Ordem 8 do CM-000009 (item 8, desempate do
@@ -278,10 +279,13 @@ function joinBemFormado(msg) {
  * @param {string} [p.restaurarDe]  exportação do journal (restaura em vez de criar)
  * @param {string} [p.chaveJournal]  chave HMAC da exportação
  * @param {string} [p.restaurarAlertasDe]  ordem 34 (N32-1): o texto do ficheiro próprio da fila de alertas do Mestre
+ * @param {Object} [p.terreno]  ordem 44: o pacote do terreno do mapa (dados/terreno-floresta.json, já lido), gerado pelo
+ *        cliente. Sem ele a sala é como antes (todas as casas se pisam). Com ele, a grelha do tamanho e da escala vivos
+ *        diz que casas estão bloqueadas (não se pisam, não se ocupam, não se atravessam) e a altura de cada casa.
  */
 export function criarSala({
   motores, fichas, rng, rngSemente, agora, hash = sha256Hex, config = {}, restaurarDe = null, chaveJournal = null,
-  dadoAmbiente = null, restaurarAlertasDe = null,
+  dadoAmbiente = null, restaurarAlertasDe = null, terreno = null,
 } = {}) {
   // ------------------------------------------------------------------ verificações de entrada
   if (!motores || !motores.Vlab || typeof motores.Vlab.resolverAtaque !== 'function') {
@@ -292,6 +296,8 @@ export function criarSala({
   }
   if (typeof rng !== 'function') throw new TypeError('criarSala: rng em falta');
   if (typeof agora !== 'function') throw new TypeError('criarSala: agora em falta');
+  // Ordem 44: o terreno do mapa (falha fechado: um pacote com forma desconhecida não abre a sala).
+  const terrenos = terreno == null ? null : typeof terreno.para === 'function' ? terreno : prepararTerreno(terreno);
 
   const sortearSemente = typeof rngSemente === 'function' ? rngSemente : rng;
   const depurar = config.depurar === true;
@@ -588,6 +594,26 @@ export function criarSala({
   function ocupada(m, x, y) {
     return colocadas(m).some((f) => f.x === x && f.y === y);
   }
+  /**
+   * Ordem 44: a grelha do terreno do mapa para o tamanho e a escala vivos (ou null: sem pacote, ou o pacote não tem
+   * esta grelha — e então a sala é como antes, todas as casas se pisam).
+   */
+  function terrenoDe(m) {
+    return terrenos ? terrenos.para(m.mapa.largura, m.mapa.altura, casaDe(m)) : null;
+  }
+  /** Ordem 44: dentro do mapa e não bloqueada pelo terreno (menir, santuário, rocha, água funda, escarpa…). */
+  function passavel(m, x, y) {
+    if (!dentro(m, x, y)) return false;
+    const t = terrenoDe(m);
+    return !t || !t.bloqueada(x, y);
+  }
+  function recusaCasa(m, casa) {
+    const t = terrenoDe(m);
+    if (t && dentro(m, casa.x, casa.y) && t.bloqueada(casa.x, casa.y)) {
+      return new ErroRecusa('acao_invalida', `CASA_BLOQUEADA: (${casa.x},${casa.y}) ${t.motivo(casa.x, casa.y)}`);
+    }
+    return new ErroRecusa('acao_invalida');
+  }
   function saoInimigos(a, b) {
     // TODO(JV1.x): NPC aliado. Hoje todo NPC é do lado das criaturas.
     return (a.lado === 'jogadora') !== (b.lado === 'jogadora');
@@ -632,7 +658,7 @@ export function criarSala({
       for (const [dx, dy] of VIZ4) {
         const x = c.x + dx;
         const y = c.y + dy;
-        if (!dentro(m, x, y)) continue;
+        if (!passavel(m, x, y)) continue;
         const k = chaveCasa(x, y);
         if (k === destino) return c.passos + 1;
         if (vistos.has(k) || bloqueia.has(k)) continue;
@@ -683,7 +709,7 @@ export function criarSala({
       for (const [dx, dy] of VIZ4) {
         const x = c.x + dx;
         const y = c.y + dy;
-        if (!dentro(m, x, y)) continue;
+        if (!passavel(m, x, y)) continue;
         const k = chaveCasa(x, y);
         if (dist.has(k) || bloqueia.has(k)) continue;
         dist.set(k, d + 1);
@@ -2477,7 +2503,7 @@ export function criarSala({
         if (!jog.length) throw new ErroRecusa('acao_invalida');
         for (const f of jog) {
           let casa = f.casaInicial;
-          if (!casa || !dentro(m, casa.x, casa.y) || ocupada(m, casa.x, casa.y)) casa = primeiraCasaLivre(m);
+          if (!casa || !passavel(m, casa.x, casa.y) || ocupada(m, casa.x, casa.y)) casa = primeiraCasaLivre(m);
           if (!casa) throw new ErroRecusa('acao_invalida');
           f.x = casa.x;
           f.y = casa.y;
@@ -2502,7 +2528,7 @@ export function criarSala({
         if (m.lobby && ![...m.lobby.criaturasDisponiveis, ...m.lobby.npcsDisponiveis].includes(ficha.id)) {
           throw new ErroRecusa('acao_invalida');
         }
-        if (!dentro(m, msg.casa.x, msg.casa.y) || ocupada(m, msg.casa.x, msg.casa.y)) throw new ErroRecusa('acao_invalida');
+        if (!passavel(m, msg.casa.x, msg.casa.y) || ocupada(m, msg.casa.x, msg.casa.y)) throw recusaCasa(m, msg.casa);
         const id = novoId('f', m.figuras);
         const f = novaFigura(id, ficha, null);
         f.x = msg.casa.x;
@@ -2613,7 +2639,7 @@ export function criarSala({
   }
 
   function primeiraCasaLivre(m) {
-    for (let y = 0; y < m.mapa.altura; y++) for (let x = 0; x < m.mapa.largura; x++) if (!ocupada(m, x, y)) return { x, y };
+    for (let y = 0; y < m.mapa.altura; y++) for (let x = 0; x < m.mapa.largura; x++) if (passavel(m, x, y) && !ocupada(m, x, y)) return { x, y };
     return null;
   }
 
@@ -2878,7 +2904,7 @@ export function criarSala({
         for (const [dx, dy] of VIZ4) {
           const x = c.x + dx;
           const y = c.y + dy;
-          if (!dentro(m, x, y)) continue;
+          if (!passavel(m, x, y)) continue;
           const k = chaveCasa(x, y);
           if (vistos.has(k)) continue;
           vistos.add(k);
@@ -3246,6 +3272,21 @@ export function criarSala({
     return saidas;
   }
 
+  /** Ordem 44: o juízo do terreno na grelha viva: por casa, a altura, o pé, se se pisa, o motivo e a cobertura. */
+  function juizoTerreno(m) {
+    const t = terrenoDe(m);
+    if (!t) return null;
+    const casas = [];
+    for (let y = 0; y < m.mapa.altura; y++) {
+      for (let x = 0; x < m.mapa.largura; x++) {
+        casas.push({
+          x, y, alturaM: t.alturaM(x, y), peM: t.peM(x, y), passavel: passavel(m, x, y), motivo: t.motivo(x, y), cobertura: t.cobertura(x, y),
+        });
+      }
+    }
+    return { largura: m.mapa.largura, altura: m.mapa.altura, casaM: casaDe(m), origemM: t.origemM, casas };
+  }
+
   function conexaoAberta(seatId) {
     const s = journal.estado.lugares[seatId];
     if (!s) return [];
@@ -3284,6 +3325,8 @@ export function criarSala({
       opcoes: (figuraId) => calcularOpcoes(journal.estado, figuraId),
       recibo: (seatId, id) => clonarJson(journal.recibo(chaveRecibo(seatId, id))),
       travao: () => tentativas.size, // ordem 18 (17-1): nº de entradas do travão do ROOM_JOIN
+      // Ordem 44: o que o servidor julga do terreno na grelha viva, casa a casa (null sem terreno para ela).
+      juizoTerreno: () => juizoTerreno(journal.estado),
     }),
   });
 }

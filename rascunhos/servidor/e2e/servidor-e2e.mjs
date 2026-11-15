@@ -16,6 +16,7 @@ import { criarServidor, rngNode } from '../adaptadores/node/servidor-ws.js';
 import { criarMotorFalso } from '../testes/motor-falso.mjs';
 import { pathToFileURL } from 'node:url';
 import path from 'node:path';
+import { readFileSync } from 'node:fs';
 import { fichasDeTeste, INICIATIVA, PIN, SENHAS } from '../testes/ajudantes.mjs';
 
 const porta = Number(process.argv[2] ?? 8765);
@@ -39,7 +40,11 @@ async function motorReal() {
 
 const motor = MOTOR_MJS ? await motorReal() : criarMotorFalso({ resultado: 'falha_critica' });
 console.log(`[servidor] motor ${MOTOR_MJS ? 'REAL ' + String(motor.MOTOR_SHA256).slice(0, 12) : 'falso'}`);
+// Ordem 44: o servidor de verdade conhece o terreno do mapa (o pacote gerado pelo cliente). Na grelha desta corrida
+// (20 × 20 de 1,5 m, a zona livre) não há casas bloqueadas: a corrida é a mesma de antes.
+const terreno = JSON.parse(readFileSync(new URL('../dados/terreno-floresta.json', import.meta.url), 'utf8'));
 const sala = criarSala({
+  terreno,
   motores: motor,
   fichas: fichasDeTeste(),
   rng: rngNode(),

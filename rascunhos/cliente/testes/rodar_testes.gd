@@ -15,6 +15,9 @@ const Frases := preload("res://hud/frases_batalha.gd")
 ## Ordem 40: o clima (chuva e neve) — módulo de apresentação.
 const Clima := preload("res://arte/clima/clima.gd")
 const IntegradorVento := preload("res://arte/clima/integrador_vento.gd")
+## Ordem 44: o terreno do mapa que o servidor lê (gerado pelo exportador, a partir da arena).
+const ExportarTerreno := preload("res://cenas/arena/ferramentas/exportar_terreno.gd")
+const Assentamento := preload("res://cenas/arena/assentamento.gd")
 
 var _total := 0
 var _falhas := 0
@@ -46,6 +49,8 @@ func _initialize() -> void:
 	_teste_lobby_valida_antes_de_enviar()
 	_teste_clima_frame_a_frame()
 	_teste_clima_modulo()
+	_teste_terreno_do_servidor_em_dia()
+	_teste_pe_na_encosta()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -761,3 +766,47 @@ func _teste_clima_modulo() -> void:
 			limpo = false
 	_ok(limpo, "o código do clima não toca no Estado nem na Rede (só apresentação)")
 	cena.free()
+
+
+# ---------------------------------------------------------------- Ordem 44: o terreno no servidor e o pé na encosta
+
+## O pacote do terreno que o servidor lê (servidor/dados/terreno-floresta.json) foi gerado a partir das fontes de
+## HOJE: o SHA de cada ficheiro de que o terreno depende (relevo, grelha do mapa, campo, formas, regra do assentamento)
+## tem de ser o que vai no pacote. Se alguém mudar o relevo ou a regra sem correr o exportador, fica vermelho aqui.
+func _teste_terreno_do_servidor_em_dia() -> void:
+	var texto := FileAccess.get_file_as_string(ExportarTerreno.caminho_saida())
+	var pacote = JSON.parse_string(texto)
+	_ok(pacote is Dictionary and pacote.get("cabecalho", {}).get("formato") == "terreno/1", "o pacote do terreno do servidor lê-se (terreno/1)")
+	if not pacote is Dictionary:
+		return
+	var no_pacote: Dictionary = pacote["cabecalho"].get("fontes", {})
+	var hoje := ExportarTerreno.sha_fontes()
+	var diferentes: Array = []
+	for f in hoje:
+		if String(no_pacote.get(f, "")) != String(hoje[f]):
+			diferentes.append(f)
+	_ok(diferentes.is_empty() and no_pacote.size() == hoje.size(),
+		"o terreno do servidor está em dia com as fontes do cliente (refazer com exportar_terreno.gd): %s" % (", ".join(diferentes) if diferentes else "%d fontes iguais" % hoje.size()))
+	var tamanhos: Array = []
+	for g in pacote.get("grelhas", []):
+		tamanhos.append("%dx%d@%s" % [int(g["largura"]), int(g["altura"]), g["casaM"]])
+	_ok(tamanhos.has("20x20@1.5") and tamanhos.has("30x30@1.5"), "o pacote tem a grelha de sempre e a maior (%s)" % ", ".join(tamanhos))
+
+
+## A regra do pé (assentamento.gd): num chão plano a base fica no chão e direita; numa encosta inclina-se com ela
+## (nem flutua nem se enterra mais de 0,10 m), e o corpo de pé sobe o justo para a cápsula tocar o plano.
+func _teste_pe_na_encosta() -> void:
+	var r := Assentamento.raio_pegada(1.5)
+	_ok(is_equal_approx(r, 0.42), "a pegada tem 0,42 m de raio nas casas de 1,5 m")
+	# o centro da zona é quase plano
+	var p := Assentamento.pegada(0.0, 0.0, r)
+	_ok(float(p["enterra"]) <= 0.10 and float(p["flutua"]) <= 0.10, "no centro do prado a base assenta (enterra %.3f, flutua %.3f m)" % [p["enterra"], p["flutua"]])
+	# a casa (0, 0) da grelha de sempre: a encosta do outeiro (a pior da Ordem 42, 0,60 m enterrada)
+	var c := Assentamento.centro_casa(Assentamento.origem_no_mapa(Vector2(30, 30), 1.5), 1.5, Vector2i(0, 0))
+	var e := Assentamento.pegada(c.x, c.z, r)
+	var inclina := rad_to_deg(atan((e["gradiente"] as Vector2).length()))
+	_ok(inclina > 30.0, "a casa (0, 0) é a encosta do outeiro (%.1f°)" % inclina)
+	_ok(float(e["enterra"]) <= 0.10 and float(e["flutua"]) <= 0.10, "lá a base inclinada nem se enterra nem flutua (%.3f / %.3f m; antes 0,60 m)" % [e["enterra"], e["flutua"]])
+	_ok(is_zero_approx(Assentamento.subida_do_corpo(Vector2.ZERO, r)), "no plano o corpo não sobe")
+	var sobe := Assentamento.subida_do_corpo(e["gradiente"], r)
+	_ok(sobe > 0.0 and sobe < 0.15, "na encosta o corpo sobe %.3f m para a cápsula tocar o plano sem o atravessar" % sobe)
