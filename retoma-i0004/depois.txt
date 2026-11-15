@@ -1,4 +1,4 @@
-# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 278 ficheiros mudados ou novos em rascunhos/.
+# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 279 ficheiros mudados ou novos em rascunhos/.
 93c8f082052020ffc4a3a95831f74a5a16a295f366e54842045791c071fc83e4  rascunhos/cliente/README.md
 788d62ee94b08834bce8822fb93052183fb766194e885995cd261a3a07afe312  rascunhos/cliente/arte/cenas/clareira_prova.gd
 dd55941279825704fba76ae427b0bd13e08267471f23a8a1efc2f90b71d759cb  rascunhos/cliente/arte/cenas/clareira_prova.tscn
@@ -72,6 +72,7 @@ bf96ae6e2c89ff16e310bb0611f4e5ea37302b6ccf0cd0d43de5901762b9f892  rascunhos/clie
 6ee56259b26c1de619323c7b6e3198842fad3f94652f12a26bf8c9809f4a544a  rascunhos/cliente/hud/hud.gd
 69a4bc143b6aaba6a612384db468053fbd13ebc94cd4f02eb1754457ab0ba361  rascunhos/cliente/mapa/floresta/.gitignore
 c7e3e425fe3734d6eb4918ffc62b654df99d0bd64b0a6a4b93f38e0af0599cb1  rascunhos/cliente/mapa/floresta/ESTADO-FINAL-ORDEM-38.md
+f60441d4e8614016d70a7e6482cf1c7a4798ea4405f79ae89cb41a930e9f942a  rascunhos/cliente/mapa/floresta/ESTADO-FINAL-ORDEM-48.md
 d8abe202e8961d7a3f7942c7a3676293b42685b0490d781bfec4d7178c59d584  rascunhos/cliente/mapa/floresta/NOTAS-MEDICAO.md
 41faaffb4100be4122b793a1c1a32b3a160ec80f789ed9c3df1a89d10e4c6c55  rascunhos/cliente/mapa/floresta/arvore_ancestral.gd
 3a92dba115abee97a08c44b427433c051e33d33b3a7fece0569f9746ce95d467  rascunhos/cliente/mapa/floresta/camera_livre.gd
