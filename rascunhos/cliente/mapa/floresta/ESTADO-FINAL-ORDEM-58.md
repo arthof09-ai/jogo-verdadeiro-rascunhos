@@ -13,8 +13,11 @@ Não toquei na árvore do clone `fable-mapa\repo` (a superfície da Ordem 57), n
 |---|---|
 | `dcef8ef` | **A medição de antes.** A prova nova `cenas/arena/ferramentas/provar_pes_bloqueadas.gd`, sozinha, antes da correcção. Neste commit sai com 15 falhas: são os números de antes. |
 | `b554ff2` | **A correcção.** `CampoDaMesa.recusa_do_pe` no módulo partilhado, e as duas arenas a chamá-la. A prova da Ordem 45 conta as recusadas à parte; `pecas_mestre` ganha 3 verificações e `hud_acoes` 4. |
-| *(este)* | As provas (`provas/ordem-58-pes/`) e este ESTADO. |
-| *(o seguinte)* | As listas da retoma e o MANIFESTO refeitos, porque este documento está dentro de `rascunhos/`. |
+| `8feb196` | As provas (`provas/ordem-58-pes/`) e este ESTADO, ainda sem a parte B. |
+| `ae1e574` | As listas da retoma e o MANIFESTO refeitos. É a ponta de `fable/pes-58`, empurrada no fecho da parte A. |
+| `e79384d` | **A fusão:** `fable/pes-58` entra em `fable/integracao-50` (ponta `ac2676b`), empurrada no fecho da parte B. |
+| *(este)* | Este ESTADO, completo, em `fable/integracao-50`. |
+| *(o seguinte)* | As listas da retoma e o MANIFESTO refeitos outra vez, porque este documento está dentro de `rascunhos/`. |
 
 ## 1. A medição de antes: a reserva reproduz-se
 
@@ -152,7 +155,24 @@ ficheiro não entrou em commit.
 
 ## 4. A fusão em `fable/integracao-50`
 
-*(a preencher no fecho da parte B)*
+- **Antes de fundir, a ponta do ramo `fable/pes-58`.** Empurrei-o no fecho da parte A, na ponta `ae1e574`. CI
+  «Testes dos rascunhos», run 43727718651: **verde nos 9 jobs** (`servidor`, `validador-glb`, `motor-real`,
+  `protocolo`, `cliente`, `godot-cliente`, `ponta-a-ponta`, `retoma-pc`, `foto-mestre`). «Sonda de privacidade»,
+  run 43727718716: verde.
+- **A ponta registada.** Fiz o fetch e o `ls-remote` às 12:04 e outra vez às 12:05 (-0300), logo antes de fundir.
+  `fable/integracao-50` estava em **`ac2676b`**, a ponta de partida desta ordem: a fusão do relógio da Ordem 57 ainda
+  não tinha aterrado. Por isso não houve ponta nova sobre que fundir, e as provas desta ordem valem como estão.
+- **A fusão.** `e79384d`, com `--no-ff` e um commit nomeado, sem conflitos. A árvore é **idêntica, byte a byte**, à
+  de `ae1e574`, onde tudo foi provado: o `git diff ae1e574 e79384d` sai vazio.
+- **Como a fiz.** `fable/integracao-50` está aberta no clone `fable-mapa\repo`, que é a superfície da Ordem 57. Para
+  não mexer nessa árvore, fiz a fusão nesta worktree, numa HEAD destacada sobre `origin/fable/integracao-50`, e
+  empurrei com `git push origin HEAD:fable/integracao-50`, um push normal, sem força. Não mexi no ref local
+  `fable/integracao-50`: o clone da 57 vê a ponta nova no próximo fetch.
+- **CI da fusão** (`e79384d`): «Testes dos rascunhos», run 43727971374, **verde nos 9 jobs**. «Sonda de
+  privacidade», run 43727971430: verde.
+- O commit deste ESTADO e o das listas da retoma vão por cima, na mesma linha. Esses dois commits não mudam código. O
+  CI do último deles está registado no fecho da sessão, não aqui, porque este documento não pode citar o run do
+  commit que o contém.
 
 ## Reservas, sem rodeios
 
