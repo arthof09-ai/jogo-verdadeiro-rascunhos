@@ -35,6 +35,8 @@ const COR_PROPRIA := Color(0.35, 0.60, 1.0)
 const COR_JOGADORA := Color(0.40, 0.85, 0.50)
 const COR_CRIATURA := Color(0.85, 0.35, 0.30)
 const COR_MORTA := Color(0.35, 0.35, 0.35)
+## Ordem 44: a mancha de contacto da base (a do marcador do site: 080c12, opacidade 0,35).
+const COR_BASE := Color(0.031, 0.047, 0.071, 0.35)
 ## Ordem 13: casa a arder (o fogo do ambiente; as casas vêm do servidor, em Estado.fogo).
 const COR_FOGO := Color(1.0, 0.45, 0.10, 0.55)
 
@@ -43,6 +45,9 @@ const CameraMesa := preload("res://camera/camera_mesa.gd")
 const CampoFloresta := preload("res://mapa/floresta/campo_floresta.gd")
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
 const GrelhaMapa := preload("res://mapa/floresta/grelha_floresta.gd")
+## Ordem 44: a regra única do assentamento (onde fica a grelha, a altura das casas, a base das figuras).
+## O exportador do terreno para o servidor chama as mesmas funções.
+const Assentamento := preload("res://cenas/arena/assentamento.gd")
 const SH_SOBRE := preload("res://cenas/arena/sobre_relevo.gdshader")
 ## Ordem 42 (parte 2): os pontos baixos REAIS do relevo, para o alagamento do clima.
 const BaciasRelevo := preload("res://cenas/arena/bacias_do_relevo.gd")
@@ -214,11 +219,7 @@ func _construir_grelha(w: int, h: int, c: float) -> void:
 ## forem de 1,5 m, encostada às linhas da grelha do mapa (−37,5 + k × 1,5): cada casa do jogo é
 ## uma casa do mapa (20 × 20 → casas 15–34 do mapa).
 func _origem_no_mapa(tam: Vector2) -> Vector2:
-	var o := -tam * 0.5
-	if is_equal_approx(casa_m, GrelhaMapa.CASA_M):
-		o.x = -GrelhaMapa.MEIO + roundf((o.x + GrelhaMapa.MEIO) / GrelhaMapa.CASA_M) * GrelhaMapa.CASA_M
-		o.y = -GrelhaMapa.MEIO + roundf((o.y + GrelhaMapa.MEIO) / GrelhaMapa.CASA_M) * GrelhaMapa.CASA_M
-	return o
+	return Assentamento.origem_no_mapa(tam, casa_m)
 
 
 ## O mapa é construído para a zona jogável (lá dentro não põe nada que ocupe uma casa sem o servidor
@@ -358,22 +359,22 @@ func dentro(c: Vector2i) -> bool:
 
 ## Centro da casa, em cima do chão do mapa (a altura do relevo nesse ponto).
 func centro_casa(c: Vector2i) -> Vector3:
-	var x := origem.x + (c.x + 0.5) * casa_m
-	var z := origem.y + (c.y + 0.5) * casa_m
-	return Vector3(x, Relevo.altura(x, z), z)
+	return Assentamento.centro_casa(origem, casa_m, c)
 
 
-## Ordem 42: onde pousa o pé de uma figura na casa: no centro, à altura MAIS BAIXA do relevo debaixo da
-## pegada (o centro e 8 pontos no raio da base). Numa encosta nenhum lado da base fica no ar; o lado
-## de cima entra uns centímetros no chão (a relva tapa-o).
+## Ordem 44 (parte B): onde pousa o pé de uma figura na casa — no centro, à altura da BASE INCLINADA com a
+## encosta (o plano que melhor se encosta ao relevo debaixo da pegada; ver assentamento.gd para o critério).
+## Até à Ordem 42 era a altura mais baixa da pegada, com a base horizontal: nas 6 casas do outeiro o lado de
+## cima entrava até 0,60 m no chão.
 func pe_figura(c: Vector2i) -> Vector3:
 	var p := centro_casa(c)
-	var r := casa_m * 0.28
-	var y := p.y
-	for k in 8:
-		var a := TAU * k / 8.0
-		y = minf(y, Relevo.altura(p.x + cos(a) * r, p.z + sin(a) * r))
-	return Vector3(p.x, y, p.z)
+	return Vector3(p.x, float(pegada_figura(c)["y"]), p.z)
+
+
+## A base de uma figura na casa `c`: {y, gradiente, normal, enterra, flutua} (assentamento.gd `pegada`).
+func pegada_figura(c: Vector2i) -> Dictionary:
+	var p := centro_casa(c)
+	return Assentamento.pegada(p.x, p.z, Assentamento.raio_pegada(casa_m))
 
 
 ## Casa sob um ponto da tela, ou (-1,-1). É só geometria de ecrã → chão (o relevo do mapa): o raio
@@ -705,6 +706,20 @@ func _criar_figura() -> Node3D:
 	corpo.mesh = capsula
 	corpo.position = Vector3(0.0, 0.85, 0.0)
 	no.add_child(corpo)
+	# Ordem 44: a BASE da figura — a mancha de contacto (como a do marcador do site, 080c12 a 35 %), que se
+	# inclina com a encosta e se cola ao chão por cima da relva (o shader dos remendos).
+	var base := MeshInstance3D.new()
+	base.name = "Base"
+	var disco := CylinderMesh.new()
+	disco.top_radius = casa_m * Assentamento.RAIO_PEGADA_FRAC
+	disco.bottom_radius = disco.top_radius
+	disco.height = 0.001
+	disco.radial_segments = 24
+	disco.rings = 1
+	disco.material = _material_sobre(COR_BASE, false)
+	base.mesh = disco
+	base.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	no.add_child(base)
 	var nome := Label3D.new()
 	nome.name = "Nome"
 	nome.billboard = BaseMaterial3D.BILLBOARD_ENABLED
@@ -716,6 +731,23 @@ func _criar_figura() -> Node3D:
 	no.add_child(nome)
 	_figuras.add_child(no)
 	return no
+
+
+## Ordem 44 (parte B): a base inclina-se com a encosta (no plano da pegada); o corpo de pé fica a prumo e
+## sobe o justo para a cápsula tocar o plano sem o atravessar; o corpo caído deita-se no plano da base.
+func _assentar_corpo(no: Node3D, c: Vector2i, deitada: bool) -> void:
+	var pg := pegada_figura(c)
+	var r := casa_m * Assentamento.RAIO_PEGADA_FRAC
+	# a normal do plano, no espaço da figura (que só roda à volta do Y, pela orientação)
+	var n: Vector3 = no.basis.inverse() * (pg["normal"] as Vector3)
+	var inclina := Basis(Quaternion(Vector3.UP, n.normalized()))
+	var base: MeshInstance3D = no.get_node("Base")
+	base.transform = Transform3D(inclina, n.normalized() * 0.02)
+	var corpo: MeshInstance3D = no.get_node("Corpo")
+	if deitada:
+		corpo.transform = Transform3D(inclina * Basis(Vector3.BACK, PI * 0.5), n.normalized() * r)
+	else:
+		corpo.transform = Transform3D(Basis.IDENTITY, Vector3(0.0, 0.85 + Assentamento.subida_do_corpo(pg["gradiente"], r), 0.0))
 
 
 func _atualizar_figura(no: Node3D, id: String, f: Dictionary, c: Vector2i) -> void:
@@ -738,11 +770,10 @@ func _atualizar_figura(no: Node3D, id: String, f: Dictionary, c: Vector2i) -> vo
 		cor = cor.lightened(0.35)  # PROVISÓRIO: o visual da transformação é do Plano B
 	mat.albedo_color = cor
 	var deitada: bool = visivel == "caida" or visivel == "morta"
-	corpo.rotation_degrees = Vector3(0.0, 0.0, 90.0 if deitada else 0.0)
-	corpo.position = Vector3(0.0, casa_m * 0.28 if deitada else 0.85, 0.0)
 	var ori = f.get("orientacao")
 	if ori is String and RUMO_ORIENTACAO.has(ori.to_upper()):
 		no.rotation_degrees.y = float(RUMO_ORIENTACAO[ori.to_upper()])
+	_assentar_corpo(no, c, deitada)
 	var rotulo: Label3D = no.get_node("Nome")
 	var texto = f.get("nomePublico")
 	rotulo.text = texto if texto is String else ""

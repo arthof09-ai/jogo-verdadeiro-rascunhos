@@ -4,17 +4,19 @@ extends SceneTree
 ##   1. cada centro de casa contra a altura do relevo (Relevo.altura = malha = colisão);
 ##   2. cada vértice dos remendos (destaques, fogo, cursor) e das linhas contra o relevo — nada abaixo
 ##      do chão, nada mais do que LEVANTA_M + 2 cm acima;
-##   3. cada figura: o pé contra o relevo debaixo da pegada (nenhum ponto da base no ar);
+##   3. cada figura: o pé contra o relevo debaixo da pegada — a base inclinada da Ordem 44 (parte B), com o
+##      antes (a regra da Ordem 42) e o depois em todas as casas e nas 6 da encosta do outeiro;
 ##   4. o toque: o raio de cada centro de casa, visto pela câmara da mesa, volta à MESMA casa;
 ##   5. o desvio mapa-grelha: as casas do jogo que o mapa bloqueia (tem de dar 0);
 ##   6. um céu só: quantos WorldEnvironment e DirectionalLight3D há na árvore.
 ##
-##   godot --headless --path cliente -s res://cenas/arena/ferramentas/provar_assentamento.gd
+##   godot --headless --path cliente -s res://cenas/arena/ferramentas/provar_assentamento.gd [-- --json=caminho]
 ## Sai com 0 se tudo passa, 1 se algo falha.
 
 const CENA := "res://cenas/arena/arena.tscn"
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
 const GrelhaMapa := preload("res://mapa/floresta/grelha_floresta.gd")
+const Assentamento := preload("res://cenas/arena/assentamento.gd")
 
 var _falhas := 0
 
@@ -27,6 +29,33 @@ func _ok(cond: bool, texto: String) -> void:
 	if not cond:
 		_falhas += 1
 	print(("  ok    " if cond else "  FALHA ") + texto)
+
+
+## Ordem 44: a régua do pé. [enterra, flutua] da base de altura `y` no centro (x, z) e inclinação `g` (dy/dx, dy/dz),
+## no centro e em 4 anéis de 32 pontos até ao raio `r`.
+static func _medir_base(x: float, z: float, y: float, g: Vector2, r: float) -> Array:
+	var enterra := 0.0
+	var flutua := 0.0
+	var pts: Array[Vector2] = [Vector2.ZERO]
+	for anel in [0.25, 0.5, 0.75, 1.0]:
+		for k in 32:
+			var a := TAU * k / 32.0
+			pts.append(Vector2(cos(a), sin(a)) * r * anel)
+	for q in pts:
+		var d := Relevo.altura(x + q.x, z + q.y) - (y + g.dot(q))
+		enterra = maxf(enterra, d)
+		flutua = maxf(flutua, -d)
+	return [enterra, flutua]
+
+
+## Ordem 44: a regra ANTIGA do pé (Ordem 42), só para a medição do antes: base horizontal, à altura mais baixa
+## do centro e de 8 pontos no raio da pegada.
+static func _pe_ordem42(x: float, z: float, y_centro: float, r: float) -> float:
+	var y := y_centro
+	for k in 8:
+		var a := TAU * k / 8.0
+		y = minf(y, Relevo.altura(x + cos(a) * r, z + sin(a) * r))
+	return y
 
 
 func _correr() -> void:
@@ -105,41 +134,78 @@ func _correr() -> void:
 				pior = maxf(pior, Relevo.altura(px, pz) - hr)
 	_ok(pior < 0.45, "entre vértices, o relevo sobe acima do remendo no máximo %.3f m (o shader puxa 0,45 m)" % pior)
 
-	# 3. figuras
-	var no_ar := 0.0
-	var enterra := 0.0
+	# 3. figuras (Ordem 44, parte B: a base inclinada com a encosta). A régua é independente do ajuste: o centro e
+	# 4 anéis de 32 pontos (129 pontos; o ajuste da base usa 33). Mede-se, em cada ponto da pegada, o relevo contra
+	# o PLANO da base: enterra = o relevo acima do plano, flutua = o plano acima do relevo.
+	var r_pe: float = Assentamento.raio_pegada(arena.casa_m)
+	var fora_do_sitio := 0
+	var fig_pior := [0.0, 0.0]
 	for id in arena._nos:
 		var no: Node3D = arena._nos[id]
 		var c := Vector2i(int(est.figuras[id]["x"]), int(est.figuras[id]["y"]))
 		var destino: Vector3 = arena.pe_figura(c)
-		var r: float = arena.casa_m * 0.28
-		for a in 16:
-			var ang := TAU * a / 16.0
-			var h := Relevo.altura(destino.x + cos(ang) * r, destino.z + sin(ang) * r)
-			no_ar = maxf(no_ar, destino.y - h)
-			enterra = maxf(enterra, h - destino.y)
+		var pg: Dictionary = arena.pegada_figura(c)
+		var m := _medir_base(destino.x, destino.z, destino.y, pg["gradiente"], r_pe)
+		fig_pior[0] = maxf(fig_pior[0], m[0])
+		fig_pior[1] = maxf(fig_pior[1], m[1])
 		if not no.position.is_equal_approx(destino):
-			_ok(false, "figura %s fora do sítio: %s em vez de %s" % [id, no.position, destino])
-	_ok(no_ar < 0.01, "pé das %d figuras: o ponto da base mais alto acima do chão %.3f m (nada no ar)" % [arena._nos.size(), no_ar])
-	print("        o lado de cima da base entra no chão até %.3f m (a relva pisada tapa)" % enterra)
-	# e em TODAS as casas (não só onde há figura): quanto entra o lado de cima da base?
-	var conta := [0, 0, 0]
-	var pior_casa := Vector2i(-1, -1)
-	var pior_e := 0.0
+			fora_do_sitio += 1
+		# a mancha da base no plano da pegada: a normal dela é a do plano
+		var base: Node3D = no.get_node("Base")
+		var n_base: Vector3 = (no.global_transform.basis * base.transform.basis * Vector3.UP).normalized()
+		if n_base.angle_to(pg["normal"]) > 0.001:
+			fora_do_sitio += 1
+	_ok(fora_do_sitio == 0, "as %d figuras estão no pé da casa e a base está no plano da encosta" % arena._nos.size())
+	_ok(fig_pior[0] <= 0.10 and fig_pior[1] <= 0.10, "pé das %d figuras: enterra no máximo %.3f m, flutua no máximo %.3f m (limite 0,10)" % [arena._nos.size(), fig_pior[0], fig_pior[1]])
+	# e em TODAS as casas: ANTES (a regra da Ordem 42: base horizontal à altura mais baixa da pegada) e DEPOIS
+	var casas_m: Array = []
+	var antes_pior := [0.0, 0.0]
+	var depois_pior_6 := [0.0, 0.0]
+	var depois_pior_resto := [0.0, 0.0]
+	var antes_pior_resto := [0.0, 0.0]
+	var seis: Array = []
 	for y in arena.altura:
 		for x in arena.largura:
-			var pe: Vector3 = arena.pe_figura(Vector2i(x, y))
-			var e := 0.0
-			for a in 16:
-				var ang := TAU * a / 16.0
-				e = maxf(e, Relevo.altura(pe.x + cos(ang) * arena.casa_m * 0.28, pe.z + sin(ang) * arena.casa_m * 0.28) - pe.y)
-			if e > 0.10: conta[0] += 1
-			if e > 0.20: conta[1] += 1
-			if e > 0.35: conta[2] += 1
-			if e > pior_e:
-				pior_e = e
-				pior_casa = Vector2i(x, y)
-	print("        nas 400 casas: base a entrar > 0,10 m em %d · > 0,20 m em %d · > 0,35 m em %d; pior %.3f m na casa %s (degrau da casa %.2f m)" % [conta[0], conta[1], conta[2], pior_e, pior_casa, GrelhaMapa.degrau(pior_casa + Vector2i(15, 15))])
+			var c := Vector2i(x, y)
+			var p: Vector3 = arena.centro_casa(c)
+			var y_antes := _pe_ordem42(p.x, p.z, p.y, r_pe)
+			var ma := _medir_base(p.x, p.z, y_antes, Vector2.ZERO, r_pe)
+			var pg: Dictionary = arena.pegada_figura(c)
+			var md := _medir_base(p.x, p.z, float(pg["y"]), pg["gradiente"], r_pe)
+			var g: Vector2 = pg["gradiente"]
+			var linha := {"x": x, "y": y, "inclinacao_graus": snappedf(rad_to_deg(atan(g.length())), 0.1),
+				"antes": {"peM": y_antes, "enterraM": ma[0], "flutuaM": ma[1]},
+				"depois": {"peM": float(pg["y"]), "enterraM": md[0], "flutuaM": md[1]}}
+			casas_m.append(linha)
+			antes_pior = [maxf(antes_pior[0], ma[0]), maxf(antes_pior[1], ma[1])]
+			if ma[0] > 0.35:
+				seis.append(linha)
+				depois_pior_6 = [maxf(depois_pior_6[0], md[0]), maxf(depois_pior_6[1], md[1])]
+			else:
+				depois_pior_resto = [maxf(depois_pior_resto[0], md[0]), maxf(depois_pior_resto[1], md[1])]
+				antes_pior_resto = [maxf(antes_pior_resto[0], ma[0]), maxf(antes_pior_resto[1], ma[1])]
+	print("        ANTES (Ordem 42, base horizontal ao ponto mais baixo): pior enterra %.3f m, pior flutua %.3f m (400 casas)" % antes_pior)
+	print("        as casas onde a base entrava > 0,35 m: %d" % seis.size())
+	for l in seis:
+		print("          casa (%d, %d), encosta %.1f°: antes enterra %.3f / flutua %.3f m → depois enterra %.3f / flutua %.3f m" % [l["x"], l["y"],
+			l["inclinacao_graus"], l["antes"]["enterraM"], l["antes"]["flutuaM"], l["depois"]["enterraM"], l["depois"]["flutuaM"]])
+	_ok(seis.size() == 6, "são as 6 casas da encosta do outeiro medidas na Ordem 42 (%d)" % seis.size())
+	_ok(depois_pior_6[0] <= 0.10 and depois_pior_6[1] <= 0.10, "DEPOIS, nas %d casas da encosta: enterra no máximo %.3f m, flutua no máximo %.3f m (limite 0,10)" % [seis.size(), depois_pior_6[0], depois_pior_6[1]])
+	_ok(depois_pior_resto[0] <= maxf(0.10, antes_pior_resto[0]) and depois_pior_resto[1] <= maxf(0.10, antes_pior_resto[1]),
+		"DEPOIS, nas outras %d casas: enterra no máximo %.3f m (antes %.3f), flutua no máximo %.3f m (antes %.3f)" % [400 - seis.size(),
+		depois_pior_resto[0], antes_pior_resto[0], depois_pior_resto[1], antes_pior_resto[1]])
+	var saida := ""
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--json="):
+			saida = a.trim_prefix("--json=")
+	if saida != "":
+		var f := FileAccess.open(saida, FileAccess.WRITE)
+		f.store_string(JSON.stringify({"regua": "centro + 4 anéis de 32 pontos (129), raio %.2f m" % r_pe,
+			"antes": "Ordem 42: base horizontal à altura mais baixa do centro e de 8 pontos no raio",
+			"depois": "Ordem 44: base inclinada (plano dos mínimos quadrados, minimax), assentamento.gd",
+			"seis": seis, "casas": casas_m}, " "))
+		f.close()
+		print("        medição escrita em %s" % saida)
 
 	# 4. o toque, pela câmara da mesa (Fixa, Panorama, 360° rasante)
 	var cam: Camera3D = arena.camera
