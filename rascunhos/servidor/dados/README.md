@@ -28,6 +28,9 @@ O pacote é o **mapa inteiro**; o servidor (`nucleo/terreno.js`) recorta dele a 
 - **A cobertura na faixa da borda** (casas cuja casa do mapa tem o centro a 1,35 m ou menos da borda da zona) pode
   vir de árvores e rochas que o cliente planta fora da zona, e essas mudam com a zona. Aí o servidor só afirma a
   cobertura total (2) e devolve `null` no resto — nunca um número errado. Fora da faixa, a cobertura é a do cliente.
+  **Ordem 59:** a faixa é só a dos lados da zona com mapa para lá deles. Um lado a `folgaFonteCoberturaM` (0,70 m)
+  ou menos da fronteira do mapa não traz cobertura de fora (as fontes só contam dentro do mapa e só sobrevivem a
+  mais de 0,70 m fora da zona): a faixa desse lado é servida com a cobertura do mapa, como o interior.
 
 ## Refazer o pacote
 

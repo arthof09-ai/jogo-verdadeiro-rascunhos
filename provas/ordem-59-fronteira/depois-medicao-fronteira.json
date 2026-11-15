@@ -1,0 +1,719 @@
+{
+ "ordem": 59,
+ "ferramenta": "servidor/ferramentas/medir-fronteira-cobertura.mjs",
+ "bordaCoberturaM": 1.35,
+ "folgaFonteCoberturaM": 0.7,
+ "folgaNoPacote": true,
+ "fontesDoPacote": {
+  "mapa/floresta/relevo_floresta.gd": "b3f9b30ebf6a3afc56f15d14d458627a2c26632d604af876912532cfc087ee8e",
+  "mapa/floresta/grelha_floresta.gd": "2aee3cdb2d9c5e3e6febe7c67e68e05268b216e61238ad14ac53072f9c332281",
+  "mapa/floresta/campo_floresta.gd": "045e6ee0767246c319d3da47c2084b1ce8017f8fc0854ec3f648883b510e5276",
+  "mapa/floresta/formas_floresta.gd": "fb3796a666c694df7f422e92ed87fa7a08d811263bc7940b2c3e7a75c279e207",
+  "cenas/arena/assentamento.gd": "4d64e08ee135fd72d7fa210c1196b8ef490ea4eb47054da5de21f8b0c76573b4",
+  "cenas/arena/ferramentas/exportar_terreno.gd": "03b2faf9ec00eef945989a123bf336c1a5b50eb98c3c129d81e63f6e2df384d1"
+ },
+ "grelhas": [
+  {
+   "grelha": "30x30@1.5",
+   "largura": 30,
+   "altura": 30,
+   "casaM": 1.5,
+   "origemM": [
+    -22.5,
+    -22.5
+   ],
+   "folgasM": [
+    15,
+    15,
+    15,
+    15
+   ],
+   "ladosNaFronteira": [],
+   "casas": 900,
+   "faixa": 116,
+   "faixaFronteira": 0,
+   "faixaInterior": 116,
+   "nulas": 99,
+   "nulasFronteira": 0,
+   "nulasInterior": 99,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 757,
+    "1": 1,
+    "2": 43,
+    "null": 99
+   },
+   "sha256": "81f9ca5dd9dfc8d43c0412a7dc49edc7d7c79832258748462e68b96c23478e62"
+  },
+  {
+   "grelha": "30x30@2",
+   "largura": 30,
+   "altura": 30,
+   "casaM": 2,
+   "origemM": [
+    -30,
+    -30
+   ],
+   "folgasM": [
+    7.5,
+    7.5,
+    7.5,
+    7.5
+   ],
+   "ladosNaFronteira": [],
+   "casas": 900,
+   "faixa": 116,
+   "faixaFronteira": 0,
+   "faixaInterior": 116,
+   "nulas": 107,
+   "nulasFronteira": 0,
+   "nulasInterior": 107,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 741,
+    "1": 3,
+    "2": 49,
+    "null": 107
+   },
+   "sha256": "0b5ccf9ef443416d6908f9d1c8182ed655b5fe128e28bd6c666f6b750117055d"
+  },
+  {
+   "grelha": "20x20@1.5",
+   "largura": 20,
+   "altura": 20,
+   "casaM": 1.5,
+   "origemM": [
+    -15,
+    -15
+   ],
+   "folgasM": [
+    22.5,
+    22.5,
+    22.5,
+    22.5
+   ],
+   "ladosNaFronteira": [],
+   "casas": 400,
+   "faixa": 76,
+   "faixaFronteira": 0,
+   "faixaInterior": 76,
+   "nulas": 76,
+   "nulasFronteira": 0,
+   "nulasInterior": 76,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 324,
+    "1": 0,
+    "2": 0,
+    "null": 76
+   },
+   "sha256": "72680735779ce605d020ba748b4bf905c870cf4f7ac3e1dd4c172f9b17de38b5"
+  },
+  {
+   "grelha": "25x25@1.5",
+   "largura": 25,
+   "altura": 25,
+   "casaM": 1.5,
+   "origemM": [
+    -18,
+    -18
+   ],
+   "folgasM": [
+    19.5,
+    18,
+    19.5,
+    18
+   ],
+   "ladosNaFronteira": [],
+   "casas": 625,
+   "faixa": 96,
+   "faixaFronteira": 0,
+   "faixaInterior": 96,
+   "nulas": 91,
+   "nulasFronteira": 0,
+   "nulasInterior": 91,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 524,
+    "1": 0,
+    "2": 10,
+    "null": 91
+   },
+   "sha256": "f1cccfe344cb99c17706e5368a58eb6ffe3bf535251065a59a9fbc31f6c211c1"
+  },
+  {
+   "grelha": "25x25@1",
+   "largura": 25,
+   "altura": 25,
+   "casaM": 1,
+   "origemM": [
+    -12.5,
+    -12.5
+   ],
+   "folgasM": [
+    25,
+    25,
+    25,
+    25
+   ],
+   "ladosNaFronteira": [],
+   "casas": 625,
+   "faixa": 184,
+   "faixaFronteira": 0,
+   "faixaInterior": 184,
+   "nulas": 184,
+   "nulasFronteira": 0,
+   "nulasInterior": 184,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 441,
+    "1": 0,
+    "2": 0,
+    "null": 184
+   },
+   "sha256": "802b7f08e6e888be1e492cad5babb44fa3ba52be3ae8eca994ed446757d2b716"
+  },
+  {
+   "grelha": "25x25@2",
+   "largura": 25,
+   "altura": 25,
+   "casaM": 2,
+   "origemM": [
+    -25,
+    -25
+   ],
+   "folgasM": [
+    12.5,
+    12.5,
+    12.5,
+    12.5
+   ],
+   "ladosNaFronteira": [],
+   "casas": 625,
+   "faixa": 49,
+   "faixaFronteira": 0,
+   "faixaInterior": 49,
+   "nulas": 42,
+   "nulasFronteira": 0,
+   "nulasInterior": 42,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 540,
+    "1": 1,
+    "2": 42,
+    "null": 42
+   },
+   "sha256": "b766b397340f5966cafc05bd5cce52d529f5cc591577d930be5459240264759c"
+  },
+  {
+   "grelha": "21x17@1",
+   "largura": 21,
+   "altura": 17,
+   "casaM": 1,
+   "origemM": [
+    -10.5,
+    -8.5
+   ],
+   "folgasM": [
+    27,
+    27,
+    29,
+    29
+   ],
+   "ladosNaFronteira": [],
+   "casas": 357,
+   "faixa": 87,
+   "faixaFronteira": 0,
+   "faixaInterior": 87,
+   "nulas": 87,
+   "nulasFronteira": 0,
+   "nulasInterior": 87,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 270,
+    "1": 0,
+    "2": 0,
+    "null": 87
+   },
+   "sha256": "b534a50025b3a3838a9267023745adda0826c3b133976d662d2b0562360a28c6"
+  },
+  {
+   "grelha": "33x27@2",
+   "largura": 33,
+   "altura": 27,
+   "casaM": 2,
+   "origemM": [
+    -33,
+    -27
+   ],
+   "folgasM": [
+    4.5,
+    4.5,
+    10.5,
+    10.5
+   ],
+   "ladosNaFronteira": [],
+   "casas": 891,
+   "faixa": 116,
+   "faixaFronteira": 0,
+   "faixaInterior": 116,
+   "nulas": 112,
+   "nulasFronteira": 0,
+   "nulasInterior": 112,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 725,
+    "1": 4,
+    "2": 50,
+    "null": 112
+   },
+   "sha256": "7e74e78d8e7d1557749027ae9eb55d93351a9afd0b9f957866a9593cf313b218"
+  },
+  {
+   "grelha": "44x20@1.5",
+   "largura": 44,
+   "altura": 20,
+   "casaM": 1.5,
+   "origemM": [
+    -33,
+    -15
+   ],
+   "folgasM": [
+    4.5,
+    4.5,
+    22.5,
+    22.5
+   ],
+   "ladosNaFronteira": [],
+   "casas": 880,
+   "faixa": 124,
+   "faixaFronteira": 0,
+   "faixaInterior": 124,
+   "nulas": 120,
+   "nulasFronteira": 0,
+   "nulasInterior": 120,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 749,
+    "1": 0,
+    "2": 11,
+    "null": 120
+   },
+   "sha256": "19a9dfc05b6623062c3c517d68ded434a1f1f893898daaf94101cca3afa8f8f5"
+  },
+  {
+   "grelha": "50x50@1.5",
+   "largura": 50,
+   "altura": 50,
+   "casaM": 1.5,
+   "origemM": [
+    -37.5,
+    -37.5
+   ],
+   "folgasM": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ladosNaFronteira": [
+    "oeste",
+    "este",
+    "norte",
+    "sul"
+   ],
+   "casas": 2500,
+   "faixa": 196,
+   "faixaFronteira": 196,
+   "faixaInterior": 0,
+   "nulas": 0,
+   "nulasFronteira": 0,
+   "nulasInterior": 0,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 2393,
+    "1": 6,
+    "2": 101,
+    "null": 0
+   },
+   "sha256": "e26746f325f6f997198fa9f5146274499bc3fcc97c7c65da635024d1b2775d28"
+  },
+  {
+   "grelha": "50x50@1",
+   "largura": 50,
+   "altura": 50,
+   "casaM": 1,
+   "origemM": [
+    -25,
+    -25
+   ],
+   "folgasM": [
+    12.5,
+    12.5,
+    12.5,
+    12.5
+   ],
+   "ladosNaFronteira": [],
+   "casas": 2500,
+   "faixa": 196,
+   "faixaFronteira": 0,
+   "faixaInterior": 196,
+   "nulas": 184,
+   "nulasFronteira": 0,
+   "nulasInterior": 184,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 2164,
+    "1": 10,
+    "2": 142,
+    "null": 184
+   },
+   "sha256": "6352d1210a78595f4f23af7ff76349d7e67a82987ef4f3d546dc6d90756845a4"
+  },
+  {
+   "grelha": "37x37@2",
+   "largura": 37,
+   "altura": 37,
+   "casaM": 2,
+   "origemM": [
+    -37,
+    -37
+   ],
+   "folgasM": [
+    0.5,
+    0.5,
+    0.5,
+    0.5
+   ],
+   "ladosNaFronteira": [
+    "oeste",
+    "este",
+    "norte",
+    "sul"
+   ],
+   "casas": 1369,
+   "faixa": 73,
+   "faixaFronteira": 73,
+   "faixaInterior": 0,
+   "nulas": 0,
+   "nulasFronteira": 0,
+   "nulasInterior": 0,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 1304,
+    "1": 4,
+    "2": 61,
+    "null": 0
+   },
+   "sha256": "4844e8d48d9de761ffa15b8309f84749fe8a7be62d470d9a340fcce6db29d9d9"
+  },
+  {
+   "grelha": "49x49@1.5",
+   "largura": 49,
+   "altura": 49,
+   "casaM": 1.5,
+   "origemM": [
+    -36,
+    -36
+   ],
+   "folgasM": [
+    1.5,
+    0,
+    1.5,
+    0
+   ],
+   "ladosNaFronteira": [
+    "este",
+    "sul"
+   ],
+   "casas": 2401,
+   "faixa": 192,
+   "faixaFronteira": 95,
+   "faixaInterior": 97,
+   "nulas": 97,
+   "nulasFronteira": 0,
+   "nulasInterior": 97,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 2197,
+    "1": 6,
+    "2": 101,
+    "null": 97
+   },
+   "sha256": "d3d7a2baf7a9ccd6305a4864cdbd163cac0bc94b844cff6f9e0beb97b29036f4"
+  },
+  {
+   "grelha": "50x20@1.5",
+   "largura": 50,
+   "altura": 20,
+   "casaM": 1.5,
+   "origemM": [
+    -37.5,
+    -15
+   ],
+   "folgasM": [
+    0,
+    0,
+    22.5,
+    22.5
+   ],
+   "ladosNaFronteira": [
+    "oeste",
+    "este"
+   ],
+   "casas": 1000,
+   "faixa": 136,
+   "faixaFronteira": 36,
+   "faixaInterior": 100,
+   "nulas": 96,
+   "nulasFronteira": 0,
+   "nulasInterior": 96,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 893,
+    "1": 0,
+    "2": 11,
+    "null": 96
+   },
+   "sha256": "b08df8fb1bf310126a18bc5043e83c376fdeceb79f5105a79f3de52d3f7809d3"
+  },
+  {
+   "grelha": "20x50@1.5",
+   "largura": 20,
+   "altura": 50,
+   "casaM": 1.5,
+   "origemM": [
+    -15,
+    -37.5
+   ],
+   "folgasM": [
+    22.5,
+    22.5,
+    0,
+    0
+   ],
+   "ladosNaFronteira": [
+    "norte",
+    "sul"
+   ],
+   "casas": 1000,
+   "faixa": 136,
+   "faixaFronteira": 36,
+   "faixaInterior": 100,
+   "nulas": 88,
+   "nulasFronteira": 0,
+   "nulasInterior": 88,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 896,
+    "1": 0,
+    "2": 16,
+    "null": 88
+   },
+   "sha256": "bf0e2b303dfab9339ac6b23979ac6dee6e3ab116720ab2db7bca9d1a8316ae8a"
+  },
+  {
+   "grelha": "49x30@1.5",
+   "largura": 49,
+   "altura": 30,
+   "casaM": 1.5,
+   "origemM": [
+    -36,
+    -22.5
+   ],
+   "folgasM": [
+    1.5,
+    0,
+    15,
+    15
+   ],
+   "ladosNaFronteira": [
+    "este"
+   ],
+   "casas": 1470,
+   "faixa": 154,
+   "faixaFronteira": 28,
+   "faixaInterior": 126,
+   "nulas": 112,
+   "nulasFronteira": 0,
+   "nulasInterior": 112,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 1293,
+    "1": 5,
+    "2": 60,
+    "null": 112
+   },
+   "sha256": "416911a4fabb7fb22350c21a84c965818fdaa3d9141ec46f4f901a22df8f004d"
+  },
+  {
+   "grelha": "37x20@2",
+   "largura": 37,
+   "altura": 20,
+   "casaM": 2,
+   "origemM": [
+    -37,
+    -20
+   ],
+   "folgasM": [
+    0.5,
+    0.5,
+    17.5,
+    17.5
+   ],
+   "ladosNaFronteira": [
+    "oeste",
+    "este"
+   ],
+   "casas": 740,
+   "faixa": 92,
+   "faixaFronteira": 18,
+   "faixaInterior": 74,
+   "nulas": 65,
+   "nulasFronteira": 0,
+   "nulasInterior": 65,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 653,
+    "1": 2,
+    "2": 20,
+    "null": 65
+   },
+   "sha256": "87b5e012296fcded2afb530471f0e4ca8924f21cefb4b1e066fa98b53fccc4e9"
+  },
+  {
+   "grelha": "20x37@2",
+   "largura": 20,
+   "altura": 37,
+   "casaM": 2,
+   "origemM": [
+    -20,
+    -37
+   ],
+   "folgasM": [
+    17.5,
+    17.5,
+    0.5,
+    0.5
+   ],
+   "ladosNaFronteira": [
+    "norte",
+    "sul"
+   ],
+   "casas": 740,
+   "faixa": 92,
+   "faixaFronteira": 18,
+   "faixaInterior": 74,
+   "nulas": 60,
+   "nulasFronteira": 0,
+   "nulasInterior": 60,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 644,
+    "1": 0,
+    "2": 36,
+    "null": 60
+   },
+   "sha256": "ca068d2b7753f5eadd52b7ff82d64aeeebf851eb1d0d3607dfdd73c66d1c67b1"
+  },
+  {
+   "grelha": "36x36@2",
+   "largura": 36,
+   "altura": 36,
+   "casaM": 2,
+   "origemM": [
+    -36,
+    -36
+   ],
+   "folgasM": [
+    1.5,
+    1.5,
+    1.5,
+    1.5
+   ],
+   "ladosNaFronteira": [],
+   "casas": 1296,
+   "faixa": 140,
+   "faixaFronteira": 0,
+   "faixaInterior": 140,
+   "nulas": 140,
+   "nulasFronteira": 0,
+   "nulasInterior": 140,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 1098,
+    "1": 3,
+    "2": 55,
+    "null": 140
+   },
+   "sha256": "a9b87ffa3d93e8347b3b0ea73707592dd363cf38828dce44dabb31ebe5a7f666"
+  },
+  {
+   "grelha": "48x48@1.5",
+   "largura": 48,
+   "altura": 48,
+   "casaM": 1.5,
+   "origemM": [
+    -36,
+    -36
+   ],
+   "folgasM": [
+    1.5,
+    1.5,
+    1.5,
+    1.5
+   ],
+   "ladosNaFronteira": [],
+   "casas": 2304,
+   "faixa": 188,
+   "faixaFronteira": 0,
+   "faixaInterior": 188,
+   "nulas": 188,
+   "nulasFronteira": 0,
+   "nulasInterior": 188,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 2009,
+    "1": 6,
+    "2": 101,
+    "null": 188
+   },
+   "sha256": "914301d62295d2d12cea08fe736ff3c8af5406ad2ab8e60001a11846b7c8efe4"
+  },
+  {
+   "grelha": "35x37@2",
+   "largura": 35,
+   "altura": 37,
+   "casaM": 2,
+   "origemM": [
+    -35,
+    -37
+   ],
+   "folgasM": [
+    2.5,
+    2.5,
+    0.5,
+    0.5
+   ],
+   "ladosNaFronteira": [
+    "norte",
+    "sul"
+   ],
+   "casas": 1295,
+   "faixa": 107,
+   "faixaFronteira": 33,
+   "faixaInterior": 74,
+   "nulas": 74,
+   "nulasFronteira": 0,
+   "nulasInterior": 74,
+   "nulasForaDaFaixa": 0,
+   "cobertura": {
+    "0": 1156,
+    "1": 4,
+    "2": 61,
+    "null": 74
+   },
+   "sha256": "cdaf16cc76a126415c959151f87e084a0b2720bb92d9e6ad1595483d5a9e29bf"
+  }
+ ]
+}

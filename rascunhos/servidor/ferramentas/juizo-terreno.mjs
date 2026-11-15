@@ -12,7 +12,8 @@
 //   mover     as casas que o servidor oferece à heroína (ROOM_OPTIONS.mover)
 // Ordem 48: qualquer tamanho que caiba no mapa (a sala recorta a grelha do mapa inteiro). A sala nasce com casas de
 // 1,5 m: um tamanho que não caiba nessa escala não abre (o erro nomeado sai no stderr, código ≠ 0). Na faixa da borda
-// a cobertura pode vir null (o servidor não a afirma: ver nucleo/terreno.js).
+// a cobertura pode vir null (o servidor não a afirma: ver nucleo/terreno.js) — desde a Ordem 59, só nos lados da
+// zona que não estão na fronteira do mapa.
 // Só fichas fictícias; nada do Mestre real.
 import { readFileSync } from 'node:fs';
 import { montarMesa, recibo } from '../testes/ajudantes.mjs';

@@ -19,6 +19,13 @@
 // casa do mapa tem o centro a `bordaCoberturaM` ou menos da borda, o servidor só afirma a cobertura total (2: no mapa a
 // cobertura só sobe) e, abaixo disso, diz que não sabe (null) — nunca um número errado. Fora da faixa é a do cliente.
 //
+// Ordem 59: a FRONTEIRA DO MAPA julga-se com a régua do interior. Um lado da zona a `folgaFonteCoberturaM` ou menos da
+// fronteira do mapa está FECHADO: o que dá cobertura e muda com a zona só conta dentro do mapa e só sobrevive a mais
+// dessa folga fora da zona (ver o exportador), logo desse lado não vem cobertura nenhuma de fora. A faixa da borda é
+// só a dos lados ABERTOS: uma casa cujo centro (da casa do mapa) só está perto de lados fechados tem a cobertura do
+// mapa, como longe da borda. Um pacote sem `folgaFonteCoberturaM` (anterior à Ordem 59) não fecha lado nenhum: a faixa
+// é a de sempre (calar é o lado seguro).
+//
 // FALHA FECHADO, SEMPRE COM NOME:
 //   - um pacote com forma desconhecida não se prepara (TypeError: a sala não abre com um terreno a meias);
 //   - uma grelha que o pacote não consegue servir (lado maior do que o mapa, escala sem tabela) NÃO vira «tudo se pisa»:
@@ -64,6 +71,10 @@ function prepararMapa(m, cab) {
     throw erro('cabecalho.casasDoMapa inválido');
   }
   if (!(typeof cab.bordaCoberturaM === 'number' && cab.bordaCoberturaM >= 0)) throw erro('cabecalho.bordaCoberturaM inválida');
+  const temFolga = cab.folgaFonteCoberturaM !== undefined;
+  if (temFolga && !(typeof cab.folgaFonteCoberturaM === 'number' && cab.folgaFonteCoberturaM >= 0)) {
+    throw erro('cabecalho.folgaFonteCoberturaM inválida');
+  }
   const lado = casas.lado;
   const n = lado * lado;
   if (!m || typeof m !== 'object' || m.lado !== lado) throw erro(`mapa: tem de ter ${lado} × ${lado} casas`);
@@ -79,6 +90,7 @@ function prepararMapa(m, cab) {
   }
   return Object.freeze({
     lado, casaM: casas.casaM, origemM: Object.freeze([...casas.origemM]), borda: cab.bordaCoberturaM,
+    folgaFonte: temFolga ? cab.folgaFonteCoberturaM : null,
     bloq: Uint8Array.from(m.bloqueadas), cob: Uint8Array.from(m.cobertura), motivos: Object.freeze({ ...motivos }),
   });
 }
@@ -200,16 +212,24 @@ function recortar(mapa, e, largura, altura) {
   /** A casa do mapa debaixo do centro da casa (x, y) do jogo, como índice no mapa, ou -1. */
   const casaMapa = (x, y) => (indice(x, y) < 0 ? -1 : rede.linhaMapa[kz + y] * mapa.lado + rede.colunaMapa[kx + x]);
   const bloqueada = (x, y) => { const k = casaMapa(x, y); return k >= 0 && mapa.bloq[k] === 1; };
-  /** O centro da casa do mapa `k` está a mais de bordaCoberturaM da borda da zona? (a cobertura é a do cliente) */
+  // Ordem 59: os lados [oeste, este, norte, sul] da zona que estão ABERTOS (com mapa para lá da folga das fontes de
+  // cobertura). Os fechados (na fronteira do mapa) não contam para a faixa da borda. Sem folga no pacote: todos abertos.
+  const mapaFimX = mapa.origemM[0] + mapa.lado * mapa.casaM;
+  const mapaFimZ = mapa.origemM[1] + mapa.lado * mapa.casaM;
+  const aberto = [ox - mapa.origemM[0], mapaFimX - fimX, oz - mapa.origemM[1], mapaFimZ - fimZ]
+    .map((folga) => mapa.folgaFonte === null || folga > mapa.folgaFonte);
+  /** O centro da casa do mapa `k` está a mais de bordaCoberturaM de todos os lados ABERTOS da zona? (cobertura do mapa) */
   const longeDaBorda = (k) => {
     const mx = mapa.origemM[0] + ((k % mapa.lado) + 0.5) * mapa.casaM;
     const mz = mapa.origemM[1] + (Math.floor(k / mapa.lado) + 0.5) * mapa.casaM;
-    return Math.min(mx - ox, fimX - mx, mz - oz, fimZ - mz) > mapa.borda;
+    return [mx - ox, fimX - mx, mz - oz, fimZ - mz].every((d, i) => !aberto[i] || d > mapa.borda);
   };
   let bloqueadas = 0;
   for (let y = 0; y < altura; y++) for (let x = 0; x < largura; x++) bloqueadas += bloqueada(x, y) ? 1 : 0;
   return {
     largura, altura, casaM, origemM: Object.freeze([ox, oz]),
+    /** Ordem 59: os lados da zona na fronteira do mapa (não trazem cobertura de fora: a faixa deles julga-se como o interior). */
+    ladosNaFronteira: Object.freeze(['oeste', 'este', 'norte', 'sul'].filter((_, i) => !aberto[i])),
     alturaM: (x, y) => { const k = indice(x, y); return k < 0 ? null : rede.alturaM[k]; },
     peM: (x, y) => { const k = indice(x, y); return k < 0 ? null : rede.peM[k]; },
     bloqueada,
@@ -220,6 +240,7 @@ function recortar(mapa, e, largura, altura) {
     /**
      * 0 nenhuma, 1 meia, 2 total. Na faixa da borda o que o cliente planta fora da zona pode SUBIR a cobertura (nunca a
      * baixa: no mapa a cobertura só sobe), logo 2 é 2; abaixo de 2 o servidor não sabe: null. null fora da grelha.
+     * Ordem 59: a faixa é só a dos lados abertos — junto à fronteira do mapa não há fonte de fora e serve-se o mapa.
      */
     cobertura: (x, y) => {
       const k = casaMapa(x, y);
