@@ -68,6 +68,8 @@ const PAUSAR := "Pausar"
 const ATUALIZAR := "Atualizar"
 const SOM_LIGADO := "Aviso de cartão: ligado"
 const SOM_DESLIGADO := "Aviso de cartão: desligado"
+## Ordem 52: a linha do perfil gráfico, com a palavra da ⚙ da jogadora (hud.gd «Gráficos»).
+const GRAFICOS := "Gráficos"
 const PARTY_VE := "A Party vê: %s"
 const HORA := "Hora: %s"
 const CLIMA := "Clima: %s"

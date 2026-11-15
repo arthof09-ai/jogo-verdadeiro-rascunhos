@@ -24,6 +24,9 @@ const ControlosLivre := preload("res://cenas/mestre/controlos_camara_livre.gd")
 const AbaRegisto := preload("res://cenas/mestre/aba_registo.gd")
 const AbaMesa := preload("res://cenas/mestre/aba_mesa.gd")
 const AbaAgir := preload("res://cenas/mestre/aba_agir.gd")
+## Ordem 52: a escolha do perfil gráfico das definições — a MESMA da ⚙ da jogadora (o mesmo ficheiro, a mesma chave,
+## o mesmo seletor «Gráficos»).
+const EscolhaPerfil := preload("res://arte/perfis/escolha_perfil.gd")
 
 const CENA_LOBBY := "res://cenas/lobby/lobby.tscn"
 const LARGURA_BASE := 1920.0
@@ -122,6 +125,8 @@ var _escala_mudar: Button
 var _continuar: Button
 var _atualizar: Button
 var _som: Button
+## Ordem 52: a linha «Gráficos» da aba Sala (Baixo / Médio / Alto). Sem escolha guardada, nenhum item marcado.
+var _graficos: OptionButton
 var _escolha: PanelContainer
 var _lista_escolha: VBoxContainer
 var _aviso_primeira: PanelContainer
@@ -149,6 +154,7 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	theme = _tema
 	_montar()
+	_aplicar_perfil_escolhido()  # Ordem 52: só se o Mestre já escolheu um perfil nas definições
 	Rede.mestre_recebido.connect(_ao_mestre)
 	Rede.comando_respondido.connect(_ao_resposta)
 	Rede.evento_recebido.connect(_ao_evento)
@@ -997,6 +1003,18 @@ func _montar() -> void:
 	_continuar = _botao(sala, Textos.CONTINUAR, func(): _enviar("MASTER_RESUME", {}))
 	_atualizar = _botao(sala, Textos.ATUALIZAR, func(): _pedir_vista_agora())
 	_som = _botao(sala, Textos.SOM_LIGADO, _alternar_som)
+	# Ordem 52: «Gráficos», o mesmo seletor da ⚙ da jogadora (arte/perfis/escolha_perfil.gd).
+	var linha_graficos := HBoxContainer.new()
+	linha_graficos.name = "LinhaGraficos"
+	sala.add_child(linha_graficos)
+	var rotulo_graficos := _rotulo(linha_graficos, "GraficosRotulo")
+	rotulo_graficos.text = Textos.GRAFICOS
+	rotulo_graficos.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_graficos = EscolhaPerfil.seletor()
+	_graficos.name = "Graficos"
+	_graficos.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_graficos.item_selected.connect(_ao_graficos)
+	linha_graficos.add_child(_graficos)
 	# Ordem 8 (item 8): mudar a escala a meio da batalha.
 	_escala_rotulo = _rotulo(sala, "EscalaAtual")
 	var linha_escala := HBoxContainer.new()
@@ -1105,6 +1123,32 @@ func _botao(pai: Node, texto: String, acao: Callable) -> Button:
 	b.pressed.connect(acao)
 	pai.add_child(b)
 	return b
+
+
+## Ordem 52: o perfil que ficou escolhido nas definições (user://preferencias.cfg [pref] perfil, a chave da ⚙ da
+## jogadora) aplica-se à arena do Mestre ao abrir. Sem escolha guardada, ou sem disco (Rede.persistir falso, como o
+## mestre.cfg), não se aplica nada: a relva fica a 1,0 e o clima no Médio, como antes.
+func _aplicar_perfil_escolhido() -> void:
+	var nome := EscolhaPerfil.escolhido() if Rede.persistir else ""
+	if nome != "":
+		escolher_perfil(nome, false)
+
+
+## Ordem 52: o Mestre escolhe um perfil na linha «Gráficos». A arena dele obedece (o mesmo AplicadorPerfil da arena
+## do jogador) e a escolha fica guardada na mesma chave da ⚙ da jogadora. Devolve false se o nome não é um perfil.
+func escolher_perfil(nome: String, guardar := true) -> bool:
+	var chave := AplicadorPerfil.normalizar(nome)
+	if not EscolhaPerfil.PERFIS.has(chave) or not _arena.aplicar_perfil(chave):
+		return false
+	_graficos.select(EscolhaPerfil.PERFIS.find(chave))
+	if guardar and Rede.persistir:
+		EscolhaPerfil.guardar(chave)
+	return true
+
+
+func _ao_graficos(i: int) -> void:
+	if i >= 0 and i < EscolhaPerfil.PERFIS.size():
+		escolher_perfil(EscolhaPerfil.PERFIS[i])
 
 
 func _alternar_som() -> void:

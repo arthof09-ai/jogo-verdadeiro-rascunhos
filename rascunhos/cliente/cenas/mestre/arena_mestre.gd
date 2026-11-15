@@ -69,6 +69,9 @@ var mapa: Node3D
 var camera: CameraMesa
 var camara_livre: CamaraLivre
 var clima: Clima
+## Ordem 52: o MESMO AplicadorPerfil da arena do jogador (arte/perfis/aplicar_perfil.gd, a tabela única). Só aplica
+## quando o Mestre escolheu um perfil nas definições (aplicar_perfil); sem escolha não mexe em nada.
+var perfis: AplicadorPerfil
 
 var _ambiente: WorldEnvironment
 var _sol: DirectionalLight3D
@@ -137,6 +140,12 @@ func _ready() -> void:
 	clima = Clima.new()
 	clima.name = "Clima"
 	add_child(clima)
+	# Ordem 52: o perfil gráfico chega à relva do mapa e às contagens do clima pelo código das duas arenas
+	# (campo_da_mesa.gd). Sem perfil_inicial: enquanto o Mestre não escolher, a relva fica a 1,0 e o clima no Médio.
+	perfis = AplicadorPerfil.new()
+	perfis.name = "Perfis"
+	add_child(perfis)
+	CampoDaMesa.ligar_perfil(perfis, clima, func() -> Node3D: return mapa)
 	construir_grelha(20, 20, 1.5)
 
 
@@ -198,6 +207,21 @@ func _garantir_mapa(zona: Rect2) -> void:
 		remove_child(mapa)
 		mapa.free()
 	mapa = CampoDaMesa.montar_mapa(self, zona, ^"../Ambiente", ^"../Sol", ^"../Camera")
+	# Ordem 52: o mapa novo nasce com a relva a 1,0; se o Mestre escolheu um perfil, volta à densidade dele.
+	if perfis != null and perfis.atual != "":
+		CampoDaMesa.perfil_no_mapa(perfis, mapa, perfis.atual)
+
+
+## Ordem 52: o perfil gráfico que o Mestre escolheu nas definições («baixo», «medio», «alto»), pelo mesmo
+## AplicadorPerfil da arena do jogador: a relva do mapa, as contagens do clima e o resto da tabela (escala 3D deste
+## SubViewport, MSAA, sombras, contorno). Devolve false se o nome não é um perfil (e nada muda).
+func aplicar_perfil(nome: String) -> bool:
+	return perfis.aplicar(nome)
+
+
+## O perfil aplicado agora, ou "" se o Mestre ainda não escolheu nenhum (o comportamento de antes da Ordem 52).
+func perfil_atual() -> String:
+	return perfis.atual
 
 
 ## A altura do chão do mapa em (x, z) do mundo: a altura final única (malha = colisão = consulta).
