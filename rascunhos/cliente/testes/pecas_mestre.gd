@@ -1397,6 +1397,7 @@ func _molde_do_mapa() -> void:
 	_ok(c.grelha.livre(Vector2i(10, 10)) and is_equal_approx(c.densidade_relva, 1.0) and not c.medidas.has("teste")
 		and (c.get_node("Arena/Terreno") as GeometryInstance3D).material_overlay == null,
 		"o que o jogo mexeu no outro mapa não chegou ao vestido (grelha livre, relva a 1,0, sem camada, medidas limpas)")
+	_relogio_no_molde(b, c)
 	var ms_vestido: int = c.medidas["carga_ms"]
 	_ok(ms_vestido * 5 < ms_construido, "vestir é muito mais rápido do que construir (%d ms contra %d ms)" % [ms_vestido, ms_construido])
 	c.definir_densidade_relva(0.5)
@@ -1406,6 +1407,62 @@ func _molde_do_mapa() -> void:
 	_ok(_iguais(Molde.retrato(d), ra), "mexer num mapa vestido também não chega ao molde: o seguinte continua igual ao construído")
 	for m in [b, c, d]:
 		m.get_parent().free()
+
+
+## Ordem 57: o relógio do mundo (Ordens 43, 55 e 56) e o molde (Ordem 54) convivem. `b` foi construído de raiz, `c`
+## vestiu-se do molde: cada um tem o SEU relógio, o seu vento e o seu forno das sombras (nada partilhado), e com a
+## mesma hora, a mesma lua e o mesmo dia do ano os dois pintam o mesmo céu, a mesma luz e a mesma névoa.
+func _relogio_no_molde(b: Node3D, c: Node3D) -> void:
+	var proprios := true
+	for nome in ["ciclo", "vento", "sombras", "lua"]:
+		var nb: Node = b.get(nome)
+		var nc: Node = c.get(nome)
+		proprios = proprios and nb != null and nc != null and nb != nc and nb.get_parent() == b and nc.get_parent() == c
+	_ok(proprios, "o mapa vestido tem o seu relógio, o seu vento, o seu forno das sombras e a sua lua (nada partilhado com o construído)")
+	var mc: ShaderMaterial = c.materiais_relva()[0]
+	_ok(c._mat_ceu != b._mat_ceu and c._mat_ceu == (c.get_node(c.no_ambiente) as WorldEnvironment).environment.sky.sky_material
+		and mc.get_shader_parameter("mapa_sombra") == c.sombras.textura()
+		and mc.get_shader_parameter("mapa_sombra") != b.sombras.textura(),
+		"o céu do vestido é o dele, e a relva dele lê as sombras do forno dele")
+	_ok(is_equal_approx(c.hora_do_mundo(), b.hora_do_mundo()) and c.fase_da_lua() == b.fase_da_lua() and c.estacao() == b.estacao(),
+		"os dois nascem à mesma hora do mundo (%.2f h), com a mesma lua (%s) e na mesma estação (%s)" % [c.hora_do_mundo(), c.fase_da_lua(), c.estacao()])
+	var diferencas := PackedStringArray()
+	for momento: Array in [[22.0, 0.0, 21.0], [5.75, 7.0, 49.0], [13.0, 14.0, 77.0], [18.5, 21.0, 105.0]]:
+		for m: Node3D in [b, c]:
+			m.ciclo.definir_hora(float(momento[0]))
+			m.ciclo.definir_idade_da_lua(float(momento[1]))
+			m.ciclo.definir_dia_do_ano(float(momento[2]))
+			m.aplicar_ciclo()
+		var fb := _ceu_e_luz(b)
+		var fc := _ceu_e_luz(c)
+		for k in fb:
+			if fb[k] != fc[k]:
+				diferencas.append("%s h, %s: %s / %s" % [momento[0], k, fb[k], fc[k]])
+	if not diferencas.is_empty():
+		printerr("    " + "
+    ".join(diferencas.slice(0, 5)))
+	_ok(diferencas.is_empty(), "com a hora, a lua e o ano a mudar (4 momentos), o vestido e o construído pintam o mesmo céu, a mesma luz e a mesma névoa (%d diferenças)" % diferencas.size())
+
+
+## O que o relógio escreve no mundo de um mapa: o céu (todos os parâmetros), a luz pintada da relva, a névoa e a luz
+## ambiente, o sol e a lua.
+func _ceu_e_luz(m: Node3D) -> Dictionary:
+	var r := {}
+	var ceu: ShaderMaterial = m._mat_ceu
+	for u in ceu.shader.get_shader_uniform_list():
+		if String(u["name"]) != "camadas":
+			r["céu." + String(u["name"])] = var_to_str(ceu.get_shader_parameter(u["name"]))
+	var relva: ShaderMaterial = m.materiais_relva()[0]
+	for nome in ["dir_luz", "cor_sol", "cor_sombra", "cor_ceu", "cor_horizonte", "sombra_forca", "ressalto", "noite", "lume"]:
+		r["relva." + nome] = var_to_str(relva.get_shader_parameter(nome))
+	var env: Environment = (m.get_node(m.no_ambiente) as WorldEnvironment).environment
+	for nome in ["fog_light_color", "fog_depth_begin", "fog_depth_end", "fog_density", "ambient_light_color"]:
+		r["névoa." + nome] = var_to_str(env.get(nome))
+	var sol: DirectionalLight3D = m.get_node(m.no_sol)
+	for luz: DirectionalLight3D in [sol, m.lua]:
+		for nome in ["visible", "transform", "light_color", "light_energy"]:
+			r["%s.%s" % [luz.name, nome]] = var_to_str(luz.get(nome))
+	return r
 
 
 func _mapa_novo(zona: Rect2) -> Node3D:

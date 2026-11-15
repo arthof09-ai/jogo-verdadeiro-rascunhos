@@ -464,7 +464,11 @@ class _Retrato:
 			p.append("aabb=%s" % var_to_str((o as Mesh).get_aabb()))
 			for s in (o as Mesh).get_surface_count():
 				p.append("sup%d=%s" % [s, valor((o as Mesh).surface_get_arrays(s))])
-		if o is Texture2D:
+		if o is ViewportTexture:
+			# (Ordem 57) o desenho de um SubViewport (o forno vivo das sombras): não é dado guardado, pinta-se em
+			# cada quadro; sem GPU nem existe. O que o decide é o nó dele, que entra no retrato à parte.
+			p.append("img=desenho de um SubViewport")
+		elif o is Texture2D:
 			var img := (o as Texture2D).get_image()
 			p.append("img=%s" % (valor(img.get_data()) if img != null else "null"))
 		return "%s=%s{%s}" % [id, o.get_class(), ", ".join(p)]
