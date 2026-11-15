@@ -1,0 +1,677 @@
+{
+	"continuidade": {
+		"a_que_hora": {
+			"arrebol": "05:26",
+			"ceu_luz": "05:50",
+			"cor_arrebol": "19:35",
+			"cor_baixo": "05:26",
+			"cor_ceu": "19:11",
+			"cor_clarao": "00:00",
+			"cor_disco": "00:00",
+			"cor_horizonte": "05:26",
+			"cor_luz": "05:57",
+			"cor_luz_sol": "00:00",
+			"cor_meio": "05:50",
+			"cor_sombra": "19:34",
+			"cor_zenite": "05:50",
+			"dir_lua": "01:47",
+			"dir_luz": "05:46",
+			"dir_sol": "10:43",
+			"estrelas": "05:16",
+			"lua_elevacao": "18:31",
+			"lua_energia": "05:36",
+			"lua_noite": "05:48",
+			"lume": "05:54",
+			"luz_elevacao": "05:46",
+			"manha": "00:00",
+			"nevoa_fim": "07:21",
+			"nevoa_inicio": "07:21",
+			"nevoa_tecto": "07:21",
+			"noite": "05:27",
+			"nuvem_luz": "05:26",
+			"nuvem_sombra": "05:50",
+			"peso_sol": "05:45",
+			"ressalto": "06:02",
+			"sol_elevacao": "07:20",
+			"sol_energia": "06:02",
+			"sol_visivel": "05:48",
+			"sombra_forca": "05:41"
+		},
+		"maior_salto_por_minuto": {
+			"arrebol": 0.0293,
+			"ceu_luz": 0.0129,
+			"cor_arrebol": 0.0159,
+			"cor_baixo": 0.0287,
+			"cor_ceu": 0.0147,
+			"cor_clarao": 0.0392,
+			"cor_disco": 0.0294,
+			"cor_horizonte": 0.0225,
+			"cor_luz": 0.0557,
+			"cor_luz_sol": 0.0196,
+			"cor_meio": 0.0188,
+			"cor_sombra": 0.007,
+			"cor_zenite": 0.011,
+			"dir_lua": 0.0044,
+			"dir_luz": 0.214,
+			"dir_sol": 0.0043,
+			"estrelas": 0.031,
+			"lua_elevacao": 0.197,
+			"lua_energia": 0.0297,
+			"lua_noite": 0.0261,
+			"lume": 0.0523,
+			"luz_elevacao": 12.282,
+			"manha": 0.1563,
+			"nevoa_fim": 0.2391,
+			"nevoa_inicio": 0.1522,
+			"nevoa_tecto": 0.0008,
+			"noite": 0.0313,
+			"nuvem_luz": 0.0261,
+			"nuvem_sombra": 0.0174,
+			"peso_sol": 0.0714,
+			"ressalto": 0.0268,
+			"sol_elevacao": 0.197,
+			"sol_energia": 0.033,
+			"sol_visivel": 0.0895,
+			"sombra_forca": 0.1211
+		},
+		"nota": "maior diferença entre minutos seguidos do mundo (cores: 0–1 por canal; direcções: distância de vectores unitários; números: absoluta). Com o dia de 24 min, 1 s real = 1 h do mundo: a 60 q/s UM QUADRO = UM MINUTO do mundo — esta tabela é o salto por quadro no jogo.",
+		"pior_cor": "cor_luz"
+	},
+	"deriva": {
+		"azimute_para_as_00h": -152.1,
+		"graus_por_hora_00_a_23": [
+			16.5,
+			12.3,
+			9.4,
+			10.0,
+			14.4,
+			20.4,
+			25.0,
+			25.7,
+			22.3,
+			16.8,
+			12.2,
+			11.0,
+			13.5,
+			17.7,
+			20.6,
+			20.0,
+			15.6,
+			9.6,
+			5.0,
+			4.3,
+			7.7,
+			13.2,
+			17.8,
+			19.0
+		],
+		"maior_passo_por_minuto_do_mundo_graus": 0.436,
+		"volta_em_24h_graus": 360.0
+	},
+	"transicoes": {
+		"duracao_do_dia_s": 1440.0,
+		"fases": [
+			"noite → madrugada às 05:29",
+			"madrugada → manhã às 06:31",
+			"manhã → dia às 08:34",
+			"dia → tarde às 16:27",
+			"tarde → entardecer às 18:30",
+			"entardecer → noite às 19:32"
+		],
+		"lua_culmina": "00:30 (elev 52.0°)",
+		"lua_nasce": "18:30",
+		"lua_poe": "06:30",
+		"lume_acende_a_meio": "19:07",
+		"lume_apaga_a_meio": "05:54",
+		"modo_prova_s": 96.0,
+		"passagens": {
+			"amanhecer_noite_a_madrugada (sol −18° → −6°)": {
+				"a": "05:28",
+				"de": "04:22",
+				"horas_do_mundo": 1.1,
+				"segundos_reais_dia_24min_e_modo_prova": [
+					66.1,
+					4.4
+				]
+			},
+			"aurora (sol −6° → +6°: madrugada rosa/dourada, a luz troca da lua para o sol)": {
+				"a": "06:31",
+				"de": "05:28",
+				"horas_do_mundo": 1.04,
+				"segundos_reais_dia_24min_e_modo_prova": [
+					62.4,
+					4.2
+				]
+			},
+			"cair_da_noite (sol −6° → −18°)": {
+				"a": "20:38",
+				"de": "19:32",
+				"horas_do_mundo": 1.1,
+				"segundos_reais_dia_24min_e_modo_prova": [
+					66.1,
+					4.4
+				]
+			},
+			"por_do_sol (sol +6° → −6°: laranja/vermelho, a luz troca do sol para a lua)": {
+				"a": "19:32",
+				"de": "18:29",
+				"horas_do_mundo": 1.04,
+				"segundos_reais_dia_24min_e_modo_prova": [
+					62.4,
+					4.2
+				]
+			}
+		},
+		"sol_culmina": "12:30 (elev 61.5°, az 180°)",
+		"sol_nasce": "06:00",
+		"sol_nasce_azimute": 77.9,
+		"sol_poe": "19:00",
+		"sol_poe_azimute": 282.1
+	},
+	"vento_por_hora": [
+		{
+			"de_onde_sopra": "NNE (028°)",
+			"desvio_direcao_graus": {
+				"dp": 4.8,
+				"max": 11.3
+			},
+			"forca_base": 0.2,
+			"forca_max": 0.45,
+			"forca_media": 0.31,
+			"forca_min": 0.17,
+			"hora": "00:00",
+			"intervalo_rajadas_s": [
+				5.5,
+				15.3,
+				28.1
+			],
+			"kmh_max": 12.1,
+			"kmh_media": 8.4,
+			"kmh_min": 4.5,
+			"rajadas_em_120s": 5
+		},
+		{
+			"de_onde_sopra": "NE (044°)",
+			"desvio_direcao_graus": {
+				"dp": 6.0,
+				"max": 12.9
+			},
+			"forca_base": 0.19,
+			"forca_max": 0.42,
+			"forca_media": 0.3,
+			"forca_min": 0.17,
+			"hora": "01:00",
+			"intervalo_rajadas_s": [
+				7.0,
+				12.1,
+				23.3
+			],
+			"kmh_max": 11.3,
+			"kmh_media": 8.2,
+			"kmh_min": 4.5,
+			"rajadas_em_120s": 7
+		},
+		{
+			"de_onde_sopra": "ENE (057°)",
+			"desvio_direcao_graus": {
+				"dp": 6.3,
+				"max": 15.0
+			},
+			"forca_base": 0.17,
+			"forca_max": 0.39,
+			"forca_media": 0.29,
+			"forca_min": 0.17,
+			"hora": "02:00",
+			"intervalo_rajadas_s": [
+				33.4,
+				33.5,
+				33.7
+			],
+			"kmh_max": 10.6,
+			"kmh_media": 7.8,
+			"kmh_min": 4.5,
+			"rajadas_em_120s": 3
+		},
+		{
+			"de_onde_sopra": "ENE (066°)",
+			"desvio_direcao_graus": {
+				"dp": 4.9,
+				"max": 9.9
+			},
+			"forca_base": 0.16,
+			"forca_max": 0.36,
+			"forca_media": 0.27,
+			"forca_min": 0.18,
+			"hora": "03:00",
+			"intervalo_rajadas_s": [
+				15.4,
+				21.6,
+				40.0
+			],
+			"kmh_max": 9.8,
+			"kmh_media": 7.3,
+			"kmh_min": 4.8,
+			"rajadas_em_120s": 5
+		},
+		{
+			"de_onde_sopra": "ENE (076°)",
+			"desvio_direcao_graus": {
+				"dp": 6.2,
+				"max": 15.9
+			},
+			"forca_base": 0.13,
+			"forca_max": 0.31,
+			"forca_media": 0.22,
+			"forca_min": 0.13,
+			"hora": "04:00",
+			"intervalo_rajadas_s": [
+				7.1,
+				16.5,
+				35.1
+			],
+			"kmh_max": 8.4,
+			"kmh_media": 5.9,
+			"kmh_min": 3.5,
+			"rajadas_em_120s": 8
+		},
+		{
+			"de_onde_sopra": "E (091°)",
+			"desvio_direcao_graus": {
+				"dp": 4.3,
+				"max": 9.2
+			},
+			"forca_base": 0.09,
+			"forca_max": 0.22,
+			"forca_media": 0.16,
+			"forca_min": 0.1,
+			"hora": "05:00",
+			"intervalo_rajadas_s": [
+				8.3,
+				19.5,
+				38.5
+			],
+			"kmh_max": 5.9,
+			"kmh_media": 4.2,
+			"kmh_min": 2.6,
+			"rajadas_em_120s": 6
+		},
+		{
+			"de_onde_sopra": "ESE (111°)",
+			"desvio_direcao_graus": {
+				"dp": 5.5,
+				"max": 13.3
+			},
+			"forca_base": 0.1,
+			"forca_max": 0.24,
+			"forca_media": 0.17,
+			"forca_min": 0.11,
+			"hora": "06:00",
+			"intervalo_rajadas_s": [
+				6.0,
+				15.7,
+				23.5
+			],
+			"kmh_max": 6.4,
+			"kmh_media": 4.5,
+			"kmh_min": 2.8,
+			"rajadas_em_120s": 6
+		},
+		{
+			"de_onde_sopra": "SE (136°)",
+			"desvio_direcao_graus": {
+				"dp": 6.0,
+				"max": 18.6
+			},
+			"forca_base": 0.14,
+			"forca_max": 0.33,
+			"forca_media": 0.24,
+			"forca_min": 0.13,
+			"hora": "07:00",
+			"intervalo_rajadas_s": [
+				16.7,
+				25.9,
+				44.5
+			],
+			"kmh_max": 9.0,
+			"kmh_media": 6.5,
+			"kmh_min": 3.6,
+			"rajadas_em_120s": 5
+		},
+		{
+			"de_onde_sopra": "SSE (162°)",
+			"desvio_direcao_graus": {
+				"dp": 5.4,
+				"max": 13.9
+			},
+			"forca_base": 0.25,
+			"forca_max": 0.56,
+			"forca_media": 0.41,
+			"forca_min": 0.23,
+			"hora": "08:00",
+			"intervalo_rajadas_s": [
+				10.9,
+				20.3,
+				27.3
+			],
+			"kmh_max": 15.2,
+			"kmh_media": 11.0,
+			"kmh_min": 6.2,
+			"rajadas_em_120s": 6
+		},
+		{
+			"de_onde_sopra": "S (184°)",
+			"desvio_direcao_graus": {
+				"dp": 5.3,
+				"max": 13.0
+			},
+			"forca_base": 0.36,
+			"forca_max": 0.74,
+			"forca_media": 0.54,
+			"forca_min": 0.32,
+			"hora": "09:00",
+			"intervalo_rajadas_s": [
+				10.1,
+				19.0,
+				37.7
+			],
+			"kmh_max": 20.1,
+			"kmh_media": 14.7,
+			"kmh_min": 8.6,
+			"rajadas_em_120s": 5
+		},
+		{
+			"de_onde_sopra": "SSO (201°)",
+			"desvio_direcao_graus": {
+				"dp": 4.8,
+				"max": 11.0
+			},
+			"forca_base": 0.48,
+			"forca_max": 0.98,
+			"forca_media": 0.73,
+			"forca_min": 0.5,
+			"hora": "10:00",
+			"intervalo_rajadas_s": [
+				23.5,
+				26.7,
+				31.5
+			],
+			"kmh_max": 26.5,
+			"kmh_media": 19.7,
+			"kmh_min": 13.5,
+			"rajadas_em_120s": 4
+		},
+		{
+			"de_onde_sopra": "SSO (213°)",
+			"desvio_direcao_graus": {
+				"dp": 3.5,
+				"max": 9.3
+			},
+			"forca_base": 0.6,
+			"forca_max": 1.14,
+			"forca_media": 0.82,
+			"forca_min": 0.53,
+			"hora": "11:00",
+			"intervalo_rajadas_s": [
+				14.5,
+				16.3,
+				18.3
+			],
+			"kmh_max": 30.8,
+			"kmh_media": 22.2,
+			"kmh_min": 14.2,
+			"rajadas_em_120s": 5
+		},
+		{
+			"de_onde_sopra": "SO (224°)",
+			"desvio_direcao_graus": {
+				"dp": 4.9,
+				"max": 11.9
+			},
+			"forca_base": 0.71,
+			"forca_max": 1.27,
+			"forca_media": 0.95,
+			"forca_min": 0.56,
+			"hora": "12:00",
+			"intervalo_rajadas_s": [
+				13.0,
+				21.1,
+				34.7
+			],
+			"kmh_max": 34.4,
+			"kmh_media": 25.7,
+			"kmh_min": 15.2,
+			"rajadas_em_120s": 4
+		},
+		{
+			"de_onde_sopra": "OSO (237°)",
+			"desvio_direcao_graus": {
+				"dp": 3.1,
+				"max": 7.3
+			},
+			"forca_base": 0.82,
+			"forca_max": 1.43,
+			"forca_media": 1.01,
+			"forca_min": 0.64,
+			"hora": "13:00",
+			"intervalo_rajadas_s": [
+				24.8,
+				29.9,
+				34.9
+			],
+			"kmh_max": 38.5,
+			"kmh_media": 27.2,
+			"kmh_min": 17.3,
+			"rajadas_em_120s": 3
+		},
+		{
+			"de_onde_sopra": "OSO (255°)",
+			"desvio_direcao_graus": {
+				"dp": 3.5,
+				"max": 8.7
+			},
+			"forca_base": 0.88,
+			"forca_max": 1.48,
+			"forca_media": 1.07,
+			"forca_min": 0.75,
+			"hora": "14:00",
+			"intervalo_rajadas_s": [
+				8.5,
+				19.6,
+				42.7
+			],
+			"kmh_max": 40.0,
+			"kmh_media": 29.0,
+			"kmh_min": 20.2,
+			"rajadas_em_120s": 6
+		},
+		{
+			"de_onde_sopra": "O (276°)",
+			"desvio_direcao_graus": {
+				"dp": 4.0,
+				"max": 9.3
+			},
+			"forca_base": 0.98,
+			"forca_max": 1.57,
+			"forca_media": 1.23,
+			"forca_min": 0.73,
+			"hora": "15:00",
+			"intervalo_rajadas_s": [
+				12.5,
+				24.4,
+				34.3
+			],
+			"kmh_max": 42.5,
+			"kmh_media": 33.2,
+			"kmh_min": 19.7,
+			"rajadas_em_120s": 4
+		},
+		{
+			"de_onde_sopra": "ONO (296°)",
+			"desvio_direcao_graus": {
+				"dp": 3.0,
+				"max": 7.2
+			},
+			"forca_base": 0.96,
+			"forca_max": 1.54,
+			"forca_media": 1.1,
+			"forca_min": 0.75,
+			"hora": "16:00",
+			"intervalo_rajadas_s": [
+				0.0,
+				0.0,
+				0.0
+			],
+			"kmh_max": 41.6,
+			"kmh_media": 29.7,
+			"kmh_min": 20.2,
+			"rajadas_em_120s": 1
+		},
+		{
+			"de_onde_sopra": "NO (311°)",
+			"desvio_direcao_graus": {
+				"dp": 3.7,
+				"max": 7.9
+			},
+			"forca_base": 0.86,
+			"forca_max": 1.42,
+			"forca_media": 1.05,
+			"forca_min": 0.67,
+			"hora": "17:00",
+			"intervalo_rajadas_s": [
+				12.0,
+				19.5,
+				26.3
+			],
+			"kmh_max": 38.3,
+			"kmh_media": 28.4,
+			"kmh_min": 18.1,
+			"rajadas_em_120s": 4
+		},
+		{
+			"de_onde_sopra": "NO (321°)",
+			"desvio_direcao_graus": {
+				"dp": 4.8,
+				"max": 16.0
+			},
+			"forca_base": 0.61,
+			"forca_max": 1.15,
+			"forca_media": 0.86,
+			"forca_min": 0.54,
+			"hora": "18:00",
+			"intervalo_rajadas_s": [
+				8.1,
+				16.5,
+				22.5
+			],
+			"kmh_max": 31.1,
+			"kmh_media": 23.1,
+			"kmh_min": 14.6,
+			"rajadas_em_120s": 7
+		},
+		{
+			"de_onde_sopra": "NO (326°)",
+			"desvio_direcao_graus": {
+				"dp": 5.0,
+				"max": 13.8
+			},
+			"forca_base": 0.46,
+			"forca_max": 0.92,
+			"forca_media": 0.65,
+			"forca_min": 0.36,
+			"hora": "19:00",
+			"intervalo_rajadas_s": [
+				7.7,
+				19.6,
+				34.6
+			],
+			"kmh_max": 24.9,
+			"kmh_media": 17.4,
+			"kmh_min": 9.6,
+			"rajadas_em_120s": 5
+		},
+		{
+			"de_onde_sopra": "NNO (330°)",
+			"desvio_direcao_graus": {
+				"dp": 4.5,
+				"max": 11.7
+			},
+			"forca_base": 0.27,
+			"forca_max": 0.59,
+			"forca_media": 0.41,
+			"forca_min": 0.23,
+			"hora": "20:00",
+			"intervalo_rajadas_s": [
+				11.1,
+				21.4,
+				32.1
+			],
+			"kmh_max": 15.9,
+			"kmh_media": 11.0,
+			"kmh_min": 6.2,
+			"rajadas_em_120s": 5
+		},
+		{
+			"de_onde_sopra": "NNO (338°)",
+			"desvio_direcao_graus": {
+				"dp": 5.6,
+				"max": 13.2
+			},
+			"forca_base": 0.24,
+			"forca_max": 0.53,
+			"forca_media": 0.38,
+			"forca_min": 0.22,
+			"hora": "21:00",
+			"intervalo_rajadas_s": [
+				8.2,
+				16.9,
+				33.8
+			],
+			"kmh_max": 14.2,
+			"kmh_media": 10.3,
+			"kmh_min": 5.9,
+			"rajadas_em_120s": 6
+		},
+		{
+			"de_onde_sopra": "N (351°)",
+			"desvio_direcao_graus": {
+				"dp": 5.2,
+				"max": 12.2
+			},
+			"forca_base": 0.2,
+			"forca_max": 0.43,
+			"forca_media": 0.31,
+			"forca_min": 0.19,
+			"hora": "22:00",
+			"intervalo_rajadas_s": [
+				17.1,
+				21.4,
+				25.7
+			],
+			"kmh_max": 11.7,
+			"kmh_media": 8.4,
+			"kmh_min": 5.0,
+			"rajadas_em_120s": 3
+		},
+		{
+			"de_onde_sopra": "N (009°)",
+			"desvio_direcao_graus": {
+				"dp": 3.2,
+				"max": 7.0
+			},
+			"forca_base": 0.2,
+			"forca_max": 0.45,
+			"forca_media": 0.3,
+			"forca_min": 0.17,
+			"hora": "23:00",
+			"intervalo_rajadas_s": [
+				12.8,
+				17.5,
+				24.6
+			],
+			"kmh_max": 12.1,
+			"kmh_media": 8.2,
+			"kmh_min": 4.7,
+			"rajadas_em_120s": 4
+		}
+	]
+}

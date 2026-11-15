@@ -307,8 +307,14 @@ static func calcular(h: float) -> Dictionary:
 	var lua_baixa := lerpf(1.35, 1.0, _suave(8.0, 35.0, l.y))
 	var lua_energia := LUA_ENERGIA * lua_baixa * (1.0 - _suave(-7.0, -2.2, e)) * _suave(0.0, 12.0, l.y)
 	var ceu_luz := _num(CEU_LUZ, onde)
-	var de_sol := sol_energia > 0.0 or lua_energia <= 0.0
+	# (sessão 3) QUEM é a luz-chave: um PESO contínuo (0 = lua, 1 = sol), não um interruptor. A
+	# passagem faz-se com o sol entre −5° e −1° (~20 min do mundo) — à volta da janela em que nenhum astro dá luz directa
+	# que se veja. Antes era um interruptor: a direcção da luz saltava ~180° (da lua a oeste
+	# para o sol a leste) de um minuto do mundo para o seguinte, às 05:49 e às 19:12.
+	var peso_sol := _suave(-5.0, -1.0, e)
+	var de_sol := peso_sol >= 0.5
 	d["luz_e_sol"] = de_sol
+	d["peso_sol"] = peso_sol
 	d["sol_energia"] = sol_energia
 	d["lua_energia"] = lua_energia
 	d["ceu_luz"] = ceu_luz
@@ -322,17 +328,22 @@ static func calcular(h: float) -> Dictionary:
 	d["cor_ceu"] = ambiente
 	# a luz-chave dos shaders pintados: nunca abaixo do enchimento de sombra (senão a sombra
 	# ficava MAIS clara que a luz no crepúsculo)
-	var chave := _escalar(cor_sol, sol_energia) if de_sol else _escalar(COR_LUA, lua_energia)
+	# (as duas energias nunca se sobrepõem: o sol acende aos −1,5°, a lua apaga aos −2,2°)
+	var chave := _max_luz(_escalar(cor_sol, sol_energia), _escalar(COR_LUA, lua_energia))
 	d["cor_luz"] = _max_luz(chave, _escalar(sombra, 0.46))
 	# a direcção da luz-chave; com o astro rasante a geometria da luz fica presa nos 3° (a luz
-	# já vem quase a zero nessa altura)
-	var az_luz := s.x if de_sol else l.x
-	var el_luz := maxf(e if de_sol else l.y, 3.0)
-	d["dir_luz"] = Paleta.dir_de(az_luz, el_luz)
-	d["luz_azimute"] = az_luz
-	d["luz_elevacao"] = el_luz
+	# já vem quase a zero nessa altura). Na passagem lua↔sol a direcção RODA por cima (a soma
+	# dos dois vectores quase opostos passa pelo alto): sem salto, e com a luz no mínimo
+	var d_sol := Paleta.dir_de(s.x, maxf(e, 3.0))
+	var d_lua := Paleta.dir_de(l.x, maxf(l.y, 3.0))
+	# (rotação a passo certo: da lua sobe ao zénite, do zénite desce ao sol — slerp em duas
+	# metades; a soma linear de dois vectores quase opostos rodava quase tudo no meio)
+	var dl := d_lua.slerp(Vector3.UP, peso_sol * 2.0) if peso_sol < 0.5 else Vector3.UP.slerp(d_sol, peso_sol * 2.0 - 1.0)
+	d["dir_luz"] = dl
+	d["luz_azimute"] = rad_to_deg(atan2(dl.x, -dl.z)) if Vector2(dl.x, dl.z).length() > 0.001 else 0.0
+	d["luz_elevacao"] = rad_to_deg(asin(clampf(dl.y, -1.0, 1.0)))
 	# as sombras: francas de dia, suaves ao luar, nenhumas no crepúsculo sem luz directa
-	d["sombra_forca"] = _suave(0.0, 0.5, sol_energia) if de_sol else 0.62 * _suave(0.0, 0.5 * LUA_ENERGIA, lua_energia)
+	d["sombra_forca"] = maxf(_suave(0.0, 0.5, sol_energia), 0.62 * _suave(0.0, 0.5 * LUA_ENERGIA, lua_energia))
 	d["ressalto"] = clampf(maxf(sol_energia, lua_energia * 0.5) * 0.8 + ceu_luz * 0.2, 0.0, 1.0)
 	# as luzes artificiais (lanternas, janelas): acendem quando o sol toca o horizonte
 	d["lume"] = 1.0 - _suave(-4.0, 1.5, e)
