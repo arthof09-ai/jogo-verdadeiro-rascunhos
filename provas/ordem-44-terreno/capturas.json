@@ -1,0 +1,235 @@
+{
+ "ordem": 44,
+ "ferramenta": "cliente/cenas/arena/ferramentas/capturar_terreno_44.gd",
+ "gpu": "NVIDIA GeForce RTX 4060",
+ "resolucao": [
+  1920,
+  1080
+ ],
+ "capturas": [
+  {
+   "ficheiro": "B01_casa-0-0_DEPOIS_encosta+36_enterra+0,00m_flutua+0,00m.jpg",
+   "etiqueta": "PARTE B · DEPOIS · casa (0, 0) · encosta 36°\nbase inclinada com a encosta (Ordem 44)\nenterra 0.00 m · flutua 0.00 m (régua de 129 pontos)"
+  },
+  {
+   "ficheiro": "B02_casa-1-0_DEPOIS_encosta+33_enterra+0,01m_flutua+0,01m.jpg",
+   "etiqueta": "PARTE B · DEPOIS · casa (1, 0) · encosta 33°\nbase inclinada com a encosta (Ordem 44)\nenterra 0.01 m · flutua 0.01 m (régua de 129 pontos)"
+  },
+  {
+   "ficheiro": "B03_casa-2-0_DEPOIS_encosta+26_enterra+0,01m_flutua+0,01m.jpg",
+   "etiqueta": "PARTE B · DEPOIS · casa (2, 0) · encosta 26°\nbase inclinada com a encosta (Ordem 44)\nenterra 0.01 m · flutua 0.01 m (régua de 129 pontos)"
+  },
+  {
+   "ficheiro": "B04_casa-0-1_DEPOIS_encosta+35_enterra+0,01m_flutua+0,01m.jpg",
+   "etiqueta": "PARTE B · DEPOIS · casa (0, 1) · encosta 35°\nbase inclinada com a encosta (Ordem 44)\nenterra 0.01 m · flutua 0.01 m (régua de 129 pontos)"
+  },
+  {
+   "ficheiro": "B05_casa-1-1_DEPOIS_encosta+26_enterra+0,02m_flutua+0,02m.jpg",
+   "etiqueta": "PARTE B · DEPOIS · casa (1, 1) · encosta 26°\nbase inclinada com a encosta (Ordem 44)\nenterra 0.02 m · flutua 0.02 m (régua de 129 pontos)"
+  },
+  {
+   "ficheiro": "B06_casa-0-2_DEPOIS_encosta+25_enterra+0,02m_flutua+0,02m.jpg",
+   "etiqueta": "PARTE B · DEPOIS · casa (0, 2) · encosta 25°\nbase inclinada com a encosta (Ordem 44)\nenterra 0.02 m · flutua 0.02 m (régua de 129 pontos)"
+  },
+  {
+   "ficheiro": "B07_grupo-encosta-NO_de-lado_DEPOIS.jpg",
+   "etiqueta": "PARTE B · DEPOIS · as 6 casas da encosta do outeiro, de lado"
+  },
+  {
+   "ficheiro": "B08_grupo-encosta-NO_de-baixo_DEPOIS.jpg",
+   "etiqueta": "PARTE B · DEPOIS · as 6 casas da encosta do outeiro, de baixo"
+  },
+  {
+   "ficheiro": "B09_casa-0-0_ANTES_encosta+36_enterra+0,60m_flutua+0,00m.jpg",
+   "etiqueta": "PARTE B · ANTES · casa (0, 0) · encosta 36°\nbase horizontal ao ponto mais baixo (Ordem 42)\nenterra 0.60 m · flutua 0.00 m (régua de 129 pontos)"
+  },
+  {
+   "ficheiro": "B10_casa-1-0_ANTES_encosta+33_enterra+0,55m_flutua+0,00m.jpg",
+   "etiqueta": "PARTE B · ANTES · casa (1, 0) · encosta 33°\nbase horizontal ao ponto mais baixo (Ordem 42)\nenterra 0.55 m · flutua 0.00 m (régua de 129 pontos)"
+  },
+  {
+   "ficheiro": "B11_casa-2-0_ANTES_encosta+26_enterra+0,41m_flutua+0,00m.jpg",
+   "etiqueta": "PARTE B · ANTES · casa (2, 0) · encosta 26°\nbase horizontal ao ponto mais baixo (Ordem 42)\nenterra 0.41 m · flutua 0.00 m (régua de 129 pontos)"
+  },
+  {
+   "ficheiro": "B12_casa-0-1_ANTES_encosta+35_enterra+0,58m_flutua+0,00m.jpg",
+   "etiqueta": "PARTE B · ANTES · casa (0, 1) · encosta 35°\nbase horizontal ao ponto mais baixo (Ordem 42)\nenterra 0.58 m · flutua 0.00 m (régua de 129 pontos)"
+  },
+  {
+   "ficheiro": "B13_casa-1-1_ANTES_encosta+26_enterra+0,41m_flutua+0,00m.jpg",
+   "etiqueta": "PARTE B · ANTES · casa (1, 1) · encosta 26°\nbase horizontal ao ponto mais baixo (Ordem 42)\nenterra 0.41 m · flutua 0.00 m (régua de 129 pontos)"
+  },
+  {
+   "ficheiro": "B14_casa-0-2_ANTES_encosta+25_enterra+0,40m_flutua+0,00m.jpg",
+   "etiqueta": "PARTE B · ANTES · casa (0, 2) · encosta 25°\nbase horizontal ao ponto mais baixo (Ordem 42)\nenterra 0.40 m · flutua 0.00 m (régua de 129 pontos)"
+  },
+  {
+   "ficheiro": "B15_grupo-encosta-NO_de-lado_ANTES.jpg",
+   "etiqueta": "PARTE B · ANTES · as 6 casas da encosta do outeiro, de lado"
+  },
+  {
+   "ficheiro": "B16_grupo-encosta-NO_de-baixo_ANTES.jpg",
+   "etiqueta": "PARTE B · ANTES · as 6 casas da encosta do outeiro, de baixo"
+  },
+  {
+   "ficheiro": "A17_grelha-30x30_panorama_PANORAMA.jpg",
+   "etiqueta": "PARTE A · grelha 30 × 30 de 1,5 m (maior que a zona livre 20 × 20)\npostes vermelhos: as 43 casas que o SERVIDOR julga bloqueadas, de pé na altura que ele dá\ndestaques azuis: as 41 casas que o servidor oferece à heroína (azul) para mover"
+  },
+  {
+   "ficheiro": "A18_grelha-30x30_menires-NO_mover-contorna_360.jpg",
+   "etiqueta": "PARTE A · 30 × 30 · a roda dos menires (fora da zona livre)\nheroína em (2, 2): o mover do servidor contorna os menires\npostes vermelhos: as 43 casas que o SERVIDOR julga bloqueadas, de pé na altura que ele dá\ndestaques azuis: as 41 casas que o servidor oferece à heroína (azul) para mover"
+  },
+  {
+   "ficheiro": "A19_grelha-30x30_menires-NO_rasante_360.jpg",
+   "etiqueta": "PARTE A · 30 × 30 · rasante aos menires\ncada poste nasce do chão desenhado (desvio cliente−servidor 0 m)"
+  },
+  {
+   "ficheiro": "A20_grelha-30x30_santuario-SE_360.jpg",
+   "etiqueta": "PARTE A · 30 × 30 · o santuário (canto SE, fora da zona livre)\nbloqueado no servidor; colocar em (28, 28) é recusado: «santuário»"
+  },
+  {
+   "ficheiro": "A21_grelha-30x30_encosta-dentro-da-zona_360.jpg",
+   "etiqueta": "PARTE A · 30 × 30 · as figuras que o servidor pôs na encosta (casas 5–7 = as 6 casas da Parte B)\npé desenhado = peM do servidor (0 m)"
+  }
+ ],
+ "servidor": {
+  "figuras": [
+   {
+    "id": "fba2529d0fcfbedbf",
+    "lado": "jogadora",
+    "x": 2.0,
+    "y": 2.0,
+    "peM": 2.63388824462891,
+    "peBits": "0000000034120540"
+   },
+   {
+    "id": "f0eca9c7df5e7493f",
+    "lado": "criatura",
+    "x": 5.0,
+    "y": 5.0,
+    "peM": 1.18231821060181,
+    "peBits": "00000080c6eaf23f"
+   },
+   {
+    "id": "f84d44cbfa536e9de",
+    "lado": "criatura",
+    "x": 6.0,
+    "y": 5.0,
+    "peM": 0.434107154607773,
+    "peBits": "0000006069c8db3f"
+   },
+   {
+    "id": "f79afaed802e9f4a2",
+    "lado": "criatura",
+    "x": 7.0,
+    "y": 5.0,
+    "peM": -0.190406277775764,
+    "peBits": "000000a03b5fc8bf"
+   },
+   {
+    "id": "fb3c8f91c318ec249",
+    "lado": "criatura",
+    "x": 5.0,
+    "y": 6.0,
+    "peM": 0.405408382415771,
+    "peBits": "0000000036f2d93f"
+   },
+   {
+    "id": "fd13543ea504fd68e",
+    "lado": "criatura",
+    "x": 6.0,
+    "y": 6.0,
+    "peM": -0.204541087150574,
+    "peBits": "00000000672ecabf"
+   },
+   {
+    "id": "ff9563be1fb6a9a74",
+    "lado": "criatura",
+    "x": 5.0,
+    "y": 7.0,
+    "peM": -0.269402354955673,
+    "peBits": "00000060e33dd1bf"
+   },
+   {
+    "id": "facad82a683d0d79a",
+    "lado": "criatura",
+    "x": 15.0,
+    "y": 15.0,
+    "peM": -0.0794915333390236,
+    "peBits": "000000a08e59b4bf"
+   },
+   {
+    "id": "fbd58ba6be8a46341",
+    "lado": "criatura",
+    "x": 10.0,
+    "y": 20.0,
+    "peM": 0.0837814062833786,
+    "peBits": "000000c0b272b53f"
+   },
+   {
+    "id": "ffd4255c748a7297a",
+    "lado": "criatura",
+    "x": 24.0,
+    "y": 24.0,
+    "peM": 0.792295396327972,
+    "peBits": "000000e07b5ae93f"
+   },
+   {
+    "id": "f1c8fc87e558f2d7e",
+    "lado": "criatura",
+    "x": 0.0,
+    "y": 10.0,
+    "peM": -0.9002805352211,
+    "peBits": "0000002019cfecbf"
+   },
+   {
+    "id": "fb43618ae935f84df",
+    "lado": "criatura",
+    "x": 12.0,
+    "y": 28.0,
+    "peM": 0.255866646766663,
+    "peBits": "000000801e60d03f"
+   },
+   {
+    "id": "f1b4ef29d66bb3273",
+    "lado": "criatura",
+    "x": 28.0,
+    "y": 12.0,
+    "peM": 0.270664840936661,
+    "peBits": "000000a09252d13f"
+   },
+   {
+    "id": "f1e5f13297b73ebb4",
+    "lado": "criatura",
+    "x": 0.0,
+    "y": 29.0,
+    "peM": 1.1286838054657,
+    "peBits": "000000c0160ff23f"
+   }
+  ],
+  "recusas": [
+   {
+    "x": 1.0,
+    "y": 0.0,
+    "detalhe": "CASA_BLOQUEADA: (1,0) menir"
+   },
+   {
+    "x": 3.0,
+    "y": 2.0,
+    "detalhe": "CASA_BLOQUEADA: (3,2) menir"
+   },
+   {
+    "x": 28.0,
+    "y": 28.0,
+    "detalhe": "CASA_BLOQUEADA: (28,28) santuário"
+   },
+   {
+    "x": 29.0,
+    "y": 0.0,
+    "detalhe": "CASA_BLOQUEADA: (29,0) água funda"
+   }
+  ],
+  "moverOferecidas": 41,
+  "bloqueadas": 43
+ }
+}
