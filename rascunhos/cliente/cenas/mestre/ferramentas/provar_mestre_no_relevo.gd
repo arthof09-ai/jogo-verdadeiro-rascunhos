@@ -14,7 +14,8 @@ extends SceneTree
 ##      (Ordem 58: a figura numa casa que o mapa bloqueia não se põe de pé — a arena recusa-a com nome; conta-se à parte)
 ##   4. o toque: o centro de cada casa, visto pela câmara da mesa do Mestre, volta à MESMA casa;
 ##   5. as casas do jogo que o mapa bloqueia (0, como na arena do jogador);
-##   6. um céu só no mundo do Mestre, e é o do mapa;
+##   6. um céu só no mundo do Mestre, e é o do mapa (Ordem 57: a lua do mapa conta à parte; o céu do Mestre e o do
+##      jogador comparam-se no mesmo momento do relógio do mundo);
 ##   7. o clima: as bacias e os abrigos do Mestre são os mesmos da arena do jogador.
 ##
 ##   godot --headless --path cliente -s res://cenas/mestre/ferramentas/provar_mestre_no_relevo.gd [-- --json=caminho]
@@ -349,19 +350,32 @@ func _medir_grelha(m, a, base: Dictionary, w: int, h: int, casa: float) -> void:
 
 	# 6. um céu só no mundo do Mestre (o SubViewport tem mundo próprio)
 	var amb: Array = a.find_children("*", "WorldEnvironment", true, false)
+	# (Ordem 57) desde a Ordem 43 o mapa tem também a LUA (DirectionalLight3D do grupo «lua», a luz da noite): conta à
+	# parte, e tem de ser a do mapa
 	var sois: Array = a.find_children("*", "DirectionalLight3D", true, false)
+	var luas: Array = sois.filter(func(l): return (l as Node).is_in_group("lua"))
 	var env: Environment = a.get_node("Ambiente").environment
 	var envj: Environment = jog.get_node("Ambiente").environment
-	_ok(amb.size() == 1 and sois.size() == 1, "um céu só no ecrã do Mestre: %d WorldEnvironment, %d DirectionalLight3D" % [amb.size(), sois.size()])
+	_ok(amb.size() == 1 and sois.size() - luas.size() == 1 and luas.size() == 1 and luas[0] == a.mapa.lua,
+		"um céu só no ecrã do Mestre: %d WorldEnvironment, %d sol e %d lua (a do mapa)" % [amb.size(), sois.size() - luas.size(), luas.size()])
 	_ok(env.background_mode == Environment.BG_SKY and env.sky != null and env.fog_enabled, "o Ambiente do Mestre é o do mapa (céu pintado e névoa)")
 	var sol_m: DirectionalLight3D = a.get_node("Sol")
 	var sol_j: DirectionalLight3D = jog.get_node("Sol")
+	# (Ordem 57) cada mapa tem o seu relógio do mundo, que abre às 16:15 quando o mapa nasce: as duas arenas abriram em
+	# momentos diferentes. O céu compara-se no MESMO momento do mundo (a hora, a lua e o dia do ano do jogador).
+	var cj = jog.mapa.ciclo
+	reg["relogio"] = {"mestre_h": a.mapa.hora_do_mundo(), "jogador_h": jog.mapa.hora_do_mundo()}
+	a.mapa.ciclo.definir_hora(cj.hora)
+	a.mapa.ciclo.definir_idade_da_lua(cj.idade_da_lua())
+	a.mapa.ciclo.definir_dia_do_ano(cj.dia_do_ano())
+	a.mapa.aplicar_ciclo()
+	jog.mapa.aplicar_ciclo()
 	_ok(env.sky.sky_material.get_class() == envj.sky.sky_material.get_class() and env.fog_light_color.is_equal_approx(envj.fog_light_color)
 		and is_equal_approx(env.fog_density, envj.fog_density) and sol_m.global_basis.z.is_equal_approx(sol_j.global_basis.z)
 		and sol_m.light_color.is_equal_approx(sol_j.light_color) and is_equal_approx(sol_m.light_energy, sol_j.light_energy),
 		"o céu, a névoa e o sol do Mestre são os da arena do jogador")
 	_ok(a.mapa.medidas.get("erros", -1) == 0, "o mapa do Mestre construiu-se com 0 erros")
-	reg["ceu"] = {"worldenvironment": amb.size(), "directionallight": sois.size(), "fundo": "BG_SKY" if env.background_mode == Environment.BG_SKY else str(env.background_mode)}
+	reg["ceu"] = {"worldenvironment": amb.size(), "directionallight": sois.size(), "lua": luas.size(), "fundo": "BG_SKY" if env.background_mode == Environment.BG_SKY else str(env.background_mode)}
 
 	# 7. o clima: as mesmas bacias e os mesmos abrigos
 	var bm: Array = a.clima.bacias()

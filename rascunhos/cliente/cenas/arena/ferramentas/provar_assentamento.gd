@@ -8,7 +8,7 @@ extends SceneTree
 ##      antes (a regra da Ordem 42) e o depois em todas as casas e nas 6 da encosta do outeiro;
 ##   4. o toque: o raio de cada centro de casa, visto pela câmara da mesa, volta à MESMA casa;
 ##   5. o desvio mapa-grelha: as casas do jogo que o mapa bloqueia (tem de dar 0);
-##   6. um céu só: quantos WorldEnvironment e DirectionalLight3D há na árvore.
+##   6. um céu só: quantos WorldEnvironment e DirectionalLight3D há na árvore (Ordem 57: o sol, e a lua do mapa à parte).
 ##
 ##   godot --headless --path cliente -s res://cenas/arena/ferramentas/provar_assentamento.gd [-- --json=caminho]
 ## Sai com 0 se tudo passa, 1 se algo falha.
@@ -244,9 +244,13 @@ func _correr() -> void:
 
 	# 6. um céu só
 	var ambientes := root.find_children("*", "WorldEnvironment", true, false).size()
-	var sois := root.find_children("*", "DirectionalLight3D", true, false).size()
+	# (Ordem 57) desde a Ordem 43 o mapa tem também a LUA (DirectionalLight3D do grupo «lua»): conta à parte, e é a do mapa
+	var luzes := root.find_children("*", "DirectionalLight3D", true, false)
+	var luas := luzes.filter(func(l): return (l as Node).is_in_group("lua"))
+	var sois := luzes.size() - luas.size()
 	var env: Environment = arena.get_node("Ambiente").environment
-	_ok(ambientes == 1 and sois == 1, "um céu só: %d WorldEnvironment, %d DirectionalLight3D" % [ambientes, sois])
+	_ok(ambientes == 1 and sois == 1 and luas.size() == 1 and luas[0] == arena.mapa.lua,
+		"um céu só: %d WorldEnvironment, %d sol e %d lua (a do mapa)" % [ambientes, sois, luas.size()])
 	_ok(env.background_mode == Environment.BG_SKY and env.sky != null and env.fog_enabled, "o Ambiente da arena é o do mapa (céu pintado e névoa)")
 	_ok(arena.mapa.medidas.get("erros", -1) == 0, "o mapa construiu-se com 0 erros")
 
