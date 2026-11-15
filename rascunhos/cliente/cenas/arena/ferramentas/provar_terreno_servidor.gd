@@ -196,7 +196,7 @@ func _correr() -> void:
 					cob_nula_diferente += 1
 			elif g.cobertura(cmapa) != int(c["cobertura"]):
 				difere_cob += 1
-			if lw * lh <= 900:
+			if lw == 25 and lh == 25:  # o detalhe casa a casa só na prova da ordem (as 25 × 25)
 				casas_rel.append({"x": cc.x, "y": cc.y, "zona": "dentro" if k == 0 else "fora",
 					"cliente": {"alturaM": p.y, "peM": pe.y, "bloqueada": bloq_cli, "motivo": g.motivo_bloqueio(cmapa) if bloq_cli else null,
 						"cobertura": g.cobertura(cmapa)},
