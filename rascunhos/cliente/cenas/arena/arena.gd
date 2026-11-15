@@ -39,6 +39,8 @@ const COR_MORTA := Color(0.35, 0.35, 0.35)
 const COR_BASE := Color(0.031, 0.047, 0.071, 0.35)
 ## Ordem 13: casa a arder (o fogo do ambiente; as casas vêm do servidor, em Estado.fogo).
 const COR_FOGO := Color(1.0, 0.45, 0.10, 0.55)
+## Ordem 60: quanto tempo o Aviso do HUD mostra uma recusa do pé (a marca na casa fica enquanto ela durar).
+const SEGUNDOS_AVISO_RECUSA := 6.0
 
 const CameraMesa := preload("res://camera/camera_mesa.gd")
 ## Ordem 42: o mapa da floresta e a sua altura única.
@@ -95,6 +97,8 @@ var _relva_com_clima := false
 var _rotulo_custo: Label3D
 var _nos: Dictionary = {}  # figuraId -> Node3D
 var _pes_recusados: Dictionary = {}  # Ordem 58: figuraId -> recusa do pé (casa bloqueada pelo mapa)
+var _marcas_recusa: Dictionary = {}  # Ordem 60: figuraId -> a marca da figura recusada (campo_da_mesa.gd)
+var _mat_recusa: ShaderMaterial  # Ordem 60: o material das marcas (o dos remendos, cor da instância)
 var _focou := false
 var _saindo := false
 var _mover_depois: Dictionary = {}  # o movimento que segue o «Sair c/ segurança» aceite
@@ -566,15 +570,22 @@ func _atualizar_cursor() -> void:
 func _sincronizar_figuras() -> void:
 	var vistos := {}
 	var recusados := {}
+	var marcas := {}
+	var novas: Array = []
 	for id in Estado.figuras:
 		var f: Dictionary = Estado.figuras[id]
 		var c: Vector2i = Estado.casa_de(f)
 		if not dentro(c):
 			continue  # não colocada (ou fora da arena): não existe aqui
 		# Ordem 58: numa casa que o mapa bloqueia a figura não se põe de pé (recusa com nome: campo_da_mesa.gd).
+		# Ordem 60: mas não some em silêncio — fica marcada na casa dela, e a recusa nova aparece no Aviso do HUD.
 		var recusa := CampoDaMesa.recusa_do_pe(mapa, origem, casa_m, c)
 		if recusa != "":
-			CampoDaMesa.anotar_recusa(_pes_recusados, recusados, str(id), recusa)
+			var nome_publico = f.get("nomePublico")
+			var e := {"nome": nome_publico if nome_publico is String else str(id), "casa": c, "recusa": recusa}
+			marcas[str(id)] = e
+			if CampoDaMesa.anotar_recusa(_pes_recusados, recusados, str(id), recusa):
+				novas.append(e)
 			continue
 		vistos[id] = true
 		var no: Node3D = _nos.get(id)
@@ -588,6 +599,13 @@ func _sincronizar_figuras() -> void:
 			_nos[id].queue_free()
 			_nos.erase(id)
 	_pes_recusados = recusados
+	if _mat_recusa == null:
+		_mat_recusa = _material_sobre(Color.WHITE, true)
+		_mat_recusa.render_priority = 2
+	CampoDaMesa.marcar_recusas(self, _marcas_recusa, marcas, origem, casa_m, _mat_recusa)
+	var aviso := CampoDaMesa.aviso_das_recusas(novas, false)
+	if aviso != "":
+		hud.mostrar_aviso(aviso, SEGUNDOS_AVISO_RECUSA)
 
 
 ## Ordem 58: as figuras que o servidor tem em casas que o mapa bloqueia e que por isso não se põem de pé aqui:

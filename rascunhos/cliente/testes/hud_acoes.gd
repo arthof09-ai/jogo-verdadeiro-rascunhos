@@ -333,10 +333,26 @@ func _teste_pe_em_casa_bloqueada() -> void:
 		"na escarpa (27,24) a figura não se põe de pé: recusa com nome «%s»" % rec.get("pA", ""))
 	_ok(nb != null and nb.position == arena.pe_figura(Vector2i(29, 24)), "a da casa livre (29,24) está de pé no pé da casa")
 	_ok(arena.posicao_tela("pA") == null, "a recusada não tem posição na tela (os números de dano caem no sítio de sempre)")
+	# Ordem 60: a recusa vê-se — a figura fica marcada na casa dela e o Aviso do HUD diz quem e porquê.
+	var marca: Node3D = arena._marcas_recusa.get("pA")
+	var rotulo: Label3D = marca.get_node("Rotulo") if marca != null else null
+	_ok(marca != null and marca.is_visible_in_tree() and rotulo.text.begins_with("✕ A") and rotulo.text.contains("escarpa")
+		and Vector2(rotulo.global_position.x, rotulo.global_position.z).distance_to(Vector2(arena.centro_casa(Vector2i(27, 24)).x, arena.centro_casa(Vector2i(27, 24)).z)) < 0.01,
+		"Ordem 60: a recusada não some — fica marcada na casa dela («%s»)" % (rotulo.text.replace("
+", " / ") if rotulo != null else ""))
+	var aviso: Label = arena.hud._aviso
+	_ok(aviso.visible and aviso.text.contains("«A»") and aviso.text.contains("escarpa") and not aviso.text.contains("«B»") and not aviso.text.contains("(27,24)"),
+		"Ordem 60: o Aviso do HUD diz quem não fica de pé e porquê, sem nada técnico («%s»)" % aviso.text)
+	aviso.visible = false
+	arena._ao_evento({})
+	await _quadros(1)
+	_ok(not aviso.visible and arena._marcas_recusa.get("pA") == marca, "Ordem 60: a mesma recusa outra vez não avisa de novo; a marca fica")
 	_estado.figuras["pA"]["x"] = 29
 	_estado.figuras["pB"]["x"] = 27
 	arena._ao_evento({})
 	await _quadros(1)
+	_ok(aviso.visible and aviso.text.contains("«B»") and not aviso.text.contains("«A»") and arena._marcas_recusa.has("pB") and not arena._marcas_recusa.has("pA"),
+		"Ordem 60: trocadas — a marca e o aviso seguem quem entra na escarpa («%s»)" % aviso.text)
 	rec = arena.pes_recusados()
 	var na: Node3D = arena._nos.get("pA")
 	_ok(na != null and na.position == arena.pe_figura(Vector2i(29, 24)) and not arena._nos.has("pB")
