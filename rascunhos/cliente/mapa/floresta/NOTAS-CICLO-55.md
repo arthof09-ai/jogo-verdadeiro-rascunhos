@@ -85,7 +85,7 @@ Dos 15 aos 27 desce simétrica (minguante 18–24; nova outra vez a partir do 25
 
 ### Em números — `provar_fases_lua.gd` (headless; sai com 1 se falhar)
 
-**24 de 24** com `--referencia` (22 de 22 sem ela, como corre no CI):
+**24 de 24** com `--referencia` (22 de 22 sem ela):
 
 1. **Âncora (a regressão):** o `ciclo_dia.gd` da Ordem 43 (`git show d7b9e6c:…`, sha256
    `4923caea…93d2`) e o novo, na cheia, dão as **40 saídas iguais bit a bit nos 1440 minutos do
@@ -152,6 +152,21 @@ código as repete byte a byte. Diferença média só na cena, por hora (0–255)
   −51° e a fase fora de todas as contas: é o vento.
 
 A mesma ordem de grandeza; a prova forte é a de números (bit a bit) e a do disco parado.
+
+### Para o CI (não entrou: o token desta máquina não tem o âmbito `workflow`)
+
+O passo, para o job `cliente` de `.github/workflows/testes.yml`, a seguir a «Abrir a Clareira de
+prova». Corre sem `--referencia`, e por isso faz 22 verificações:
+
+```yaml
+      - name: Fases da lua no relógio do mundo (Ordem 55)
+        if: always()
+        run: |
+          set -o pipefail
+          timeout 120 "$GODOT" --headless --path . -s res://mapa/floresta/ferramentas/provar_fases_lua.gd 2>&1 | tee "$RUNNER_TEMP/provar_fases_lua.log"
+          ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/provar_fases_lua.log"
+          grep -E "^[0-9]+ de [0-9]+ verificações passaram\.$" "$RUNNER_TEMP/provar_fases_lua.log"
+```
 
 ## A noite escura (os números; a pergunta é do Mestre)
 

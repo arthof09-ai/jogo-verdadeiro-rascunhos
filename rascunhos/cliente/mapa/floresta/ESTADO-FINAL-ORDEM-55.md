@@ -28,7 +28,7 @@ As medidas, os números e as tabelas estão em `NOTAS-CICLO-55.md`.
   nova a luz da lua é 0 em todos os minutos. Nos quartos é ½ da cheia em todos os minutos, com o
   `lua_baixa` intacto. Só as saídas da lua mudam com a fase. O relógio a andar 28 dias vira a
   idade 28 vezes, às 12:30, e volta à cheia. A troca não se vê. Nenhuma fase tem um passo por
-  minuto maior que a cheia. Sem `--referencia` (como corre no CI): 22 de 22.
+  minuto maior que a cheia. Sem `--referencia`: 22 de 22.
 - `provar_ciclo_vento.gd` (a prova da Ordem 43): o `curvas_ciclo_vento.json` sai **igual byte a
   byte**.
 - Render (RTX 4060, Compatibility, 1920×1080): as 4 capturas das fases correram sem erro. FPS sem
@@ -51,7 +51,13 @@ As medidas, os números e as tabelas estão em `NOTAS-CICLO-55.md`.
 | `provar_altura.gd` | maior 0,00002 m |
 | `provar_costura.gd` | **VERMELHA**, 67/255. Já estava vermelha antes desta ordem, igual byte a byte: ver «O que falta conferir» |
 
-- CI: corre no push do fecho. O resultado fica no commit seguinte a este.
+- CI: corre no push do fecho. O resultado fica no commit seguinte a este. **O passo novo do CI
+  não entrou.** Tinha juntado ao job `cliente` um passo para correr `provar_fases_lua.gd`, mas o
+  primeiro push foi recusado: o token desta máquina não tem o âmbito `workflow`, e o GitHub não
+  aceita assim commits que mexam em `.github/workflows/`. Os meus commits locais, ainda por
+  publicar, foram refeitos sem essa alteração (o resto ficou igual, conferido com `git diff`). O
+  texto do passo está em `NOTAS-CICLO-55.md` («Para o CI»), para quem tiver o âmbito. No CI de
+  hoje, `abrir_scripts.gd` já compila os scripts novos.
 
 ## ESTADO FINAL — Passagem
 
@@ -65,14 +71,15 @@ As medidas, os números e as tabelas estão em `NOTAS-CICLO-55.md`.
   - `ceu_ciclo.gdshader`: o disco com terminador; na cheia, o caminho de sempre.
   - `campo_floresta.gd`: repinta também quando muda a idade da lua; tecla U / Shift+U;
     `fase_da_lua()` na raiz.
-- `375efaf`: `provar_fases_lua.gd` e `capturas/ciclo55/fases_lua.json`; o passo «Fases da lua no
-  relógio do mundo (Ordem 55)» no job `cliente` do CI.
-- `25a4610`: o modo `--fases` em `filmar_dia.gd` e as capturas: `c55_22h00_1-nova`, `2-crescente`,
+- `027732e`: `provar_fases_lua.gd` e `capturas/ciclo55/fases_lua.json`.
+- `356a89f`: o modo `--fases` em `filmar_dia.gd` e as capturas: `c55_22h00_1-nova`, `2-crescente`,
   `3-cheia`, `4-minguante`, `_folha_fases.jpg` e `medicao_fases.json`. Os outros modos (`--horas`,
   `--dia`, `--vento`) ficam como estavam, painel incluído.
-- `2a38a98`: `NOTAS-CICLO-55.md`. Em `NOTAS-CICLO-43.md`, a linha da API das fases e a reserva da
+- `36a1e32`: `NOTAS-CICLO-55.md`. Em `NOTAS-CICLO-43.md`, a linha da API das fases e a reserva da
   lua dada por feita, a apontar para as notas novas.
-- (este commit): `ESTADO-FINAL-ORDEM-55.md`.
+- `c49149d`: `ESTADO-FINAL-ORDEM-55.md`.
+- (este commit): os hashes refeitos e o passo do CI que não entrou (acima); o mesmo em
+  `NOTAS-CICLO-55.md`.
 
 **Onde parou:** tudo o que a ordem pede está feito e commitado, com o push feito no fecho (sem
 force). Faltava ver o CI quando este ficheiro foi escrito; o resultado fica no commit seguinte.
