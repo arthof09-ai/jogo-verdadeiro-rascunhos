@@ -148,7 +148,7 @@ refez as listas da retoma. As listas entraram em `f6d2684`.
 
 **A ponta da linha mexeu-se.** O ramo nasceu de `ac2676b`. No fetch antes da fusão, a linha estava em **`b7e352b`**:
 tinham entrado as Ordens 57 (relógio), 58 e 60 (recusa no ecrã). Fundi sobre essa ponta nova. O ramo
-`fable/integracao-50` está aberto no clone `fable-mapaepo`, em que não toco. Por isso fiz a fusão nesta
+`fable/integracao-50` está aberto no clone `fable-mapa\repo`, em que não toco. Por isso fiz a fusão nesta
 worktree, num ramo local `fable/integracao-50-o59` nascido de `origin/fable/integracao-50`, e publiquei com
 `git push origin HEAD:refs/heads/fable/integracao-50` (avanço rápido, sem force, com outro fetch logo antes).
 
