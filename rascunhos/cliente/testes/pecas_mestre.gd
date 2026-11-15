@@ -1425,6 +1425,19 @@ func _mapa_novo(zona: Rect2) -> Node3D:
 	return CampoDaMesa.montar_mapa(dono, zona, ^"../Ambiente", ^"../Sol", ^"../Camera")
 
 
+## Ordem 60: a figura `id` está marcada como recusada na casa `c` da arena: o remendo cobre o centro da casa e o
+## rótulo diz o nome e o motivo.
+func _marca_recusa(arena, id: String, c: Vector2i, nome: String) -> bool:
+	var no: Node3D = arena._marcas_recusa.get(id)
+	if no == null or not is_instance_valid(no) or not no.is_inside_tree() or not no.is_visible_in_tree():
+		return false
+	var casa := no.get_node("Casa") as MeshInstance3D
+	var rotulo := no.get_node("Rotulo") as Label3D
+	var ct: Vector3 = arena.centro_da_casa(c) if arena.has_method("centro_da_casa") else arena.centro_casa(c)
+	var caixa: AABB = casa.global_transform * casa.get_aabb()
+	return casa.mesh != null and ct.x > caixa.position.x and ct.x < caixa.end.x and ct.z > caixa.position.z and ct.z < caixa.end.z 		and rotulo.text.contains(nome) and rotulo.text.contains("escarpa") and rotulo.text.begins_with("✕") 		and Vector2(rotulo.global_position.x - ct.x, rotulo.global_position.z - ct.z).length() < 0.01
+
+
 ## Compara dois retratos; se diferirem, mostra a primeira linha diferente (e o total, com `contar`).
 func _iguais(x: PackedStringArray, y: PackedStringArray, contar := false) -> bool:
 	if x == y:
@@ -1479,6 +1492,10 @@ func _pes_bloqueados(arena_m, vista_base: Dictionary) -> void:
 	b["x"] = 29
 	b["y"] = 24
 	v["vezId"] = ida
+	# Ordem 60: a recusa vê-se — os avisos que a arena manda ao ecrã do Mestre (os alertas).
+	var avisos: Array = []
+	var ouvir := func(t: String): avisos.append(t)
+	arena_m.recusas_novas.connect(ouvir)
 	arena_m.aplicar_vista(v)
 	await _quadros(1)
 	var rec: Dictionary = arena_m.pes_recusados()
@@ -1487,10 +1504,24 @@ func _pes_bloqueados(arena_m, vista_base: Dictionary) -> void:
 	var nb: Node3D = arena_m._nos.get(idb)
 	_ok(arena_m.figuras_desenhadas() == 1 and nb != null and nb.position == arena_m.pe_figura(Vector2i(29, 24)) and not arena_m._anel.visible,
 		"a da casa livre (29,24) fica de pé no pé da casa; a vez na recusada não tem anel")
+	var Modelo = load("res://cenas/mestre/modelo_mestre.gd")
+	var nome_a: String = Modelo.nome_mestre(a)
+	var nome_b: String = Modelo.nome_mestre(b)
+	_ok(_marca_recusa(arena_m, ida, Vector2i(27, 24), nome_a) and arena_m._marcas_recusa.size() == 1,
+		"Ordem 60: a recusada não some — fica marcada na casa dela (remendo e «✕ %s» com o motivo)" % nome_a)
+	_ok(avisos.size() == 1 and str(avisos[0]).contains(nome_a) and str(avisos[0]).contains("(27,24)") and str(avisos[0]).contains("escarpa")
+		and not str(avisos[0]).contains(nome_b), "Ordem 60: um aviso ao ecrã do Mestre, com o nome, a casa e o motivo %s" % [avisos])
+	arena_m.aplicar_vista(v)
+	await _quadros(1)
+	_ok(avisos.size() == 1 and _marca_recusa(arena_m, ida, Vector2i(27, 24), nome_a), "Ordem 60: a mesma vista outra vez não avisa de novo; a marca fica")
 	a["x"] = 29
 	b["x"] = 27
 	arena_m.aplicar_vista(v)
 	await _quadros(1)
+	_ok(avisos.size() == 2 and str(avisos[1]).contains(nome_b) and not str(avisos[1]).contains(nome_a)
+		and _marca_recusa(arena_m, idb, Vector2i(27, 24), nome_b) and not arena_m._marcas_recusa.has(ida),
+		"Ordem 60: trocadas — a marca e o aviso seguem quem entra na escarpa; quem sai fica sem marca")
+	arena_m.recusas_novas.disconnect(ouvir)
 	rec = arena_m.pes_recusados()
 	var na: Node3D = arena_m._nos.get(ida)
 	_ok(na != null and na.position == arena_m.pe_figura(Vector2i(29, 24)) and not arena_m._nos.has(idb) and rec.size() == 1
