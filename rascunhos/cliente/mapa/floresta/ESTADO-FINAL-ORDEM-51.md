@@ -74,7 +74,10 @@ Suites, locais, no Godot 4.7.2 (Windows, `--headless`):
 - `testes/abrir_scripts.gd`: 68 scripts, 0 falhas (inclui o script novo de medição);
 - servidor (`node --test testes/*.test.mjs`): 348 de 348;
 - ponta a ponta com o motor falso (servidor + jogadora Node + Mestre Godot): 17 de 17, Mestre 0, jogadora 0.
-- CI: ver a secção «Push e CI» abaixo.
+- CI (push normal, sem força, de `fable/toque-51`; workflows intocados): run **43706486001** «Testes dos rascunhos»
+  verde nos 9 jobs (servidor, validador-glb, motor-real, protocolo, cliente, godot-cliente, ponta-a-ponta,
+  foto-mestre, retoma-pc), confirmado pela API, no `8729fd2`; «Sonda de privacidade» 43706485900 verde. O commit
+  que regista isto (e as listas refeitas a seguir) corre outra vez; o resultado vem no relatório da sessão.
 
 ## Resíduos nomeados
 
