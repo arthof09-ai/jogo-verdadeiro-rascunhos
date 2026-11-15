@@ -68,4 +68,23 @@ neste clone). Ramo `fable/mestre-perfil-52`, tirado de `8cd941d` (ponta da Ordem
   aplica perfil nenhum. A relva fica a 1,0, o clima fica em `medio` e o seletor fica sem item marcado.
   `Rede.persistir` falso é a regra do próprio ecrã do Mestre para o `mestre.cfg`, e é assim em todos os testes.
 
-## Parte B: (a seguir)
+## Parte B: a ligação (commit `0cc49a9`)
+
+Feita como o plano diz. Ficheiros mudados:
+- `arte/perfis/escolha_perfil.gd` (novo);
+- `hud/hud.gd`: as constantes e o seletor passam a vir do módulo novo, com os mesmos valores;
+- `cenas/arena/campo_da_mesa.gd`: `ligar_perfil`, `perfil_no_mapa`, `densidade_do_perfil`;
+- `cenas/arena/arena.gd`: usa `ligar_perfil`, e `_ao_perfil_aplicado` delega;
+- `cenas/mestre/arena_mestre.gd`: nó `Perfis`, `aplicar_perfil`, `perfil_atual`, e a densidade reaplicada quando o
+  mapa se refaz;
+- `cenas/mestre/mestre.gd`: linha «Gráficos» na aba Sala, `_aplicar_perfil_escolhido` ao abrir, `escolher_perfil`;
+- `cenas/mestre/textos_mestre.gd`: `GRAFICOS`;
+- `testes/rodar_testes.gd`: a verificação da lista da ⚙ lê-a no sítio novo.
+
+## Parte C: provas (commit `2ec9978`)
+
+- `pecas_mestre` 255/255 (236 antes, mais as 19 de `_perfil_grafico`).
+- Medição com `cenas/mestre/ferramentas/medir_perfil_mestre_52.gd`, na árvore de antes (`8cd941d`) e na de depois.
+  O ecrã do Mestre «sem escolha» e a arena do jogador (como abre, baixo, medio, alto) ficam **iguais ao número**
+  entre antes e depois: os dois JSON comparados chave a chave são iguais.
+- (as suites completas, o ponta a ponta e o CI: a seguir)
