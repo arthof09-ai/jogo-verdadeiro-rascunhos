@@ -41,6 +41,8 @@ extends Node3D
 ##   Teclas: T modo de prova (dia em 96 s) · P pára/anda o relógio · , e . recuam/avançam 1 hora.
 ##   (Ordem 55) a LUA TEM FASES (ciclo.fase_da_lua(), também na raiz): U avança 1 dia da lua,
 ##     Shift+U recua 1 dia (a hora não muda).
+##   (Ordem 56) O ANO E AS ESTAÇÕES (ciclo.estacao(), também na raiz): Y avança 7 dias do ano (¼ de
+##     estação), Shift+Y recua 7 (a hora e a lua não mudam).
 
 const Paleta := preload("res://mapa/floresta/paleta_floresta.gd")
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
@@ -150,6 +152,7 @@ var _lanc := PackedFloat32Array()            # os lançadores de sombra (9 núme
 var _alturas := PackedFloat32Array()         # o relevo em RELEVO_N² (para a sombra viva do relevo)
 var _hora_aplicada := -1.0
 var _idade_lua_aplicada := -1.0
+var _dia_ano_aplicado := -1.0
 var _nuvens_desloc := 0.0
 var _hora_nuvens := -1.0
 
@@ -203,8 +206,9 @@ func _process(delta: float) -> void:
 	if _t_rotulo >= 0.5:
 		_t_rotulo = 0.0
 		var v: Dictionary = vento.vento_actual()
-		_rotulo.text = "Floresta 43 | %s %s | lua %s (dia %d) | vento de %s %.0f km/h | %d fps | %d chamadas | %d primitivas | relva %d tufos | 1-9 vistas, F fundo, L LOD, T prova, P pausa, , . hora, U lua" % [
-			ciclo.hora_texto(), ciclo.fase(), ciclo.fase_da_lua(), int(ciclo.idade_da_lua()), VentoMundo.rumo(v["azimute_de"]), float(v["velocidade_ms"]) * 3.6,
+		_rotulo.text = "Floresta 43 | %s %s | %s (dia %d do ano, %.1f h de sol) | lua %s (dia %d) | vento de %s %.0f km/h | %d fps | %d chamadas | %d primitivas | relva %d tufos | 1-9 vistas, F fundo, L LOD, T prova, P pausa, , . hora, U lua, Y estação" % [
+			ciclo.hora_texto(), ciclo.fase(), ciclo.estacao(), int(ciclo.dia_do_ano()), ciclo.duracao_do_dia(),
+			ciclo.fase_da_lua(), int(ciclo.idade_da_lua()), VentoMundo.rumo(v["azimute_de"]), float(v["velocidade_ms"]) * 3.6,
 			Engine.get_frames_per_second(),
 			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME),
 			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME),
@@ -235,6 +239,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		ciclo.definir_hora(ciclo.hora - 1.0)
 	elif k.keycode == KEY_U:
 		ciclo.definir_idade_da_lua(ciclo.idade_da_lua() + (-1.0 if k.shift_pressed else 1.0))
+	elif k.keycode == KEY_Y:
+		ciclo.definir_dia_do_ano(ciclo.dia_do_ano() + (-7.0 if k.shift_pressed else 7.0))
 
 
 # ------------------------------------------------------------------ API
@@ -251,6 +257,11 @@ func hora_do_mundo() -> float:
 ## (Ordem 55) A fase da lua agora: "nova" | "crescente" | "cheia" | "minguante". Só apresentação.
 func fase_da_lua() -> String:
 	return ciclo.fase_da_lua()
+
+
+## (Ordem 56) A estação agora: "primavera" | "verão" | "outono" | "inverno". Só apresentação.
+func estacao() -> String:
+	return ciclo.estacao()
 
 
 ## O vento do mundo agora: { direcao, forca, velocidade_ms, azimute_para, azimute_de, rajada }.
@@ -406,9 +417,10 @@ func _ligar_ciclo_e_vento() -> void:
 ## chamam-na depois de definir_hora().
 func aplicar_ciclo() -> void:
 	var h := ciclo.hora_do_mundo()
-	if is_equal_approx(h, _hora_aplicada) and ciclo.idade_da_lua() == _idade_lua_aplicada:
+	if is_equal_approx(h, _hora_aplicada) and ciclo.idade_da_lua() == _idade_lua_aplicada and ciclo.dia_do_ano() == _dia_ano_aplicado:
 		return
 	_idade_lua_aplicada = ciclo.idade_da_lua()
+	_dia_ano_aplicado = ciclo.dia_do_ano()
 	var e: Dictionary = ciclo.estado()
 	# ---- as nuvens andam com o vento (em horas do mundo: no modo de prova correm, como num
 	# filme acelerado)

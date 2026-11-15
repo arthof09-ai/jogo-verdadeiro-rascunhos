@@ -15,6 +15,13 @@ extends Node
 ##   relogio.lua_iluminada()   -> float, 0–1: a fracção do disco iluminada (a «quantidade» de lua)
 ##   sinal fase_da_lua_mudou(fase_da_lua) -> quando a fase da lua muda de nome
 ##   (e no estado(): lua_idade, lua_fase, lua_iluminada, lua_terminador, lua_lado)
+##   (Ordem 56) O ANO E AS ESTAÇÕES:
+##   relogio.dia_do_ano()      -> float, 0–112 contínuo (o mundo abre no dia 21, primavera)
+##   relogio.estacao()         -> "primavera" | "verão" | "outono" | "inverno"
+##   relogio.duracao_do_dia()  -> float, horas de sol acima do horizonte hoje
+##   relogio.definir_dia_do_ano(d) -> põe o ano num dia (dá a volta aos 112); a hora e a lua não mudam
+##   sinal estacao_mudou(estacao) -> quando a estação muda de nome
+##   (e no estado(): ano_dia, estacao, sol_declinacao, dia_duracao)
 ##
 ## A DURAÇÃO DO DIA configura-se num só sítio: DURACAO_DIA_S (segundos reais por dia do mundo;
 ## ou o export duracao_dia_s do nó). O MODO DE PROVA acelera-o: modo_prova = true (tecla T na
@@ -41,10 +48,22 @@ extends Node
 ##     posição da lua NÃO anda com a fase (fica a da Ordem 43, oposta ao sol), e os botões da noite
 ##     (lua_baixa, LUA_ENERGIA, o céu) ficam como estavam: a fase compõe-se com eles. O mundo abre
 ##     na lua cheia (LUA_IDADE_INICIAL = LUA_CHEIA).
+##   · (Ordem 56) O ANO E AS ESTAÇÕES: o ano tem DIAS_ANO = 112 dias do mundo, 4 estações de
+##     DIAS_ESTACAO = 28 (uma volta da lua cada). O dia do ano anda CONTÍNUO com o relógio (1/1440
+##     por minuto do mundo), e o que ele muda é só a DECLINAÇÃO do sol: uma sinusóide de amplitude
+##     SOL_DECL_AMPLITUDE, 0 no meio da primavera e do outono (os equinócios), máxima no meio do
+##     verão (o dia mais longo), mínima no meio do inverno (o mais curto). Daí sai, pela mesma
+##     trigonometria de sempre, quando o sol nasce e se põe e a que altura passa ao meio-dia. A cor
+##     dele sai das MESMAS tabelas de cor por elevação. Nenhuma curva de luz muda. O meio-dia solar
+##     fica às 12:30, e a lua e as fases dela não lêem o ano. A estação de REFERÊNCIA é a primavera,
+##     dia DIA_ANO_REFERENCIA = 21: aí a declinação é EXACTAMENTE SOL_DECLINACAO (9,5°), o dia da
+##     Ordem 43, bit a bit. O mundo abre nesse dia (DIA_ANO_INICIAL).
 
 signal fase_mudou(fase: String)
 ## (Ordem 55) quando a fase da lua muda de nome ("nova" | "crescente" | "cheia" | "minguante").
 signal fase_da_lua_mudou(fase_da_lua: String)
+## (Ordem 56) quando a estação muda de nome ("primavera" | "verão" | "outono" | "inverno").
+signal estacao_mudou(estacao: String)
 
 const Paleta := preload("res://mapa/floresta/paleta_floresta.gd")
 
@@ -117,6 +136,26 @@ const LUA_IDADE_INICIAL := LUA_CHEIA
 ## sol a pino — nem a luz nem o disco da lua se vêem nesse instante.
 const LUA_TROCA_HORA := LUA_CULMINA + 12.0
 
+# ---- (Ordem 56) o ano e as estações
+## Dias do mundo por estação: uma volta completa da lua.
+const DIAS_ESTACAO := 28.0
+## Dias do mundo por ano: 4 estações.
+const DIAS_ANO := 4.0 * DIAS_ESTACAO
+## As estações por ordem; cada uma cobre [n·28, (n+1)·28) dias do ano. O MEIO de cada uma é o
+## ponto do ano que lhe dá o nome: equinócio (primavera, dia 14), dia mais longo (verão, 42),
+## equinócio (outono, 70), dia mais curto (inverno, 98).
+const ESTACOES: Array[String] = ["primavera", "verão", "outono", "inverno"]
+## O dia do ano do equinócio da primavera (declinação 0, a subir): o meio da primavera.
+const DIA_EQUINOCIO := 0.5 * DIAS_ESTACAO
+## A estação de referência: primavera, dia 21 do ano (7 dias depois do equinócio, 1/16 de ano).
+## Aí a declinação é EXACTAMENTE SOL_DECLINACAO: o dia da Ordem 43.
+const DIA_ANO_REFERENCIA := 21.0
+## O mundo abre no dia de referência.
+const DIA_ANO_INICIAL := DIA_ANO_REFERENCIA
+## A amplitude da declinação: a que faz a sinusóide passar por SOL_DECLINACAO no dia de
+## referência — 9,5° / sen(π/8) = 24,82° (a Terra tem 23,44°; este mundo não é a Terra).
+const SOL_DECL_AMPLITUDE := SOL_DECLINACAO / 0.38268343236508984
+
 # ---- a névoa por HORA (a madrugada tem bruma; o entardecer também, menos): hora, início (m),
 # fim (m), tecto (opacidade máxima)
 const NEVOA: Array = [
@@ -135,18 +174,23 @@ var hora: float = HORA_INICIAL
 var dias: int = 0
 ## (Ordem 55) a idade da lua: dias do mundo desde a lua nova, 0–28 (vira às LUA_TROCA_HORA).
 var idade_lua: float = LUA_IDADE_INICIAL
+## (Ordem 56) o dia do ano, 0–112, CONTÍNUO (anda 1/24 por hora do mundo).
+var dia_ano: float = DIA_ANO_INICIAL
 
 var _estado: Dictionary = {}
 var _hora_do_estado := -1.0
 var _idade_do_estado := -1.0
+var _dia_do_estado := -1.0
 var _fase := ""
 var _fase_lua := ""
+var _estacao := ""
 
 
 func _ready() -> void:
 	add_to_group("relogio_mundo")
 	_fase = fase()
 	_fase_lua = fase_da_lua()
+	_estacao = estacao()
 
 
 func _process(delta: float) -> void:
@@ -191,17 +235,18 @@ func avancar_horas(dh: float) -> void:
 	while hora >= 24.0:
 		hora -= 24.0
 		dias += 1
-	_ver_fase()
+	# (Ordem 56) o ano anda contínuo com o relógio (antes de ver a fase: o sol já é o de agora)
+	definir_dia_do_ano(dia_ano + dh / 24.0)
 	if voltas_lua != 0:
 		definir_idade_da_lua(idade_lua + float(voltas_lua))
 
 
 func fase() -> String:
-	return fase_de(hora)
+	return fase_de(hora, dia_ano)
 
 
-static func fase_de(h: float) -> String:
-	var e := sol(h).y
+static func fase_de(h: float, dia_do_ano_d: float = DIA_ANO_REFERENCIA) -> String:
+	var e := sol(h, dia_do_ano_d).y
 	var manha := h < SOL_CULMINA and h > LUA_CULMINA
 	if e < -6.0:
 		return "noite"
@@ -213,10 +258,11 @@ static func fase_de(h: float) -> String:
 
 
 func estado() -> Dictionary:
-	if not is_equal_approx(hora, _hora_do_estado) or idade_lua != _idade_do_estado:
-		_estado = calcular(hora, idade_lua)
+	if not is_equal_approx(hora, _hora_do_estado) or idade_lua != _idade_do_estado or dia_ano != _dia_do_estado:
+		_estado = calcular(hora, idade_lua, dia_ano)
 		_hora_do_estado = hora
 		_idade_do_estado = idade_lua
+		_dia_do_estado = dia_ano
 	return _estado
 
 
@@ -266,6 +312,67 @@ static func iluminada_de(idade: float) -> float:
 	return clampf(0.5 * (1.0 - cos(deg_to_rad(angulo_de_fase(idade)))), 0.0, 1.0)
 
 
+# ---- (Ordem 56) o ano e as estações
+
+## O dia do ano, 0–112, contínuo (21 = o dia de referência, onde o mundo abre).
+func dia_do_ano() -> float:
+	return dia_ano
+
+
+## "primavera" | "verão" | "outono" | "inverno".
+func estacao() -> String:
+	return estacao_de(dia_ano)
+
+
+## Horas de sol acima do horizonte no dia do ano de agora.
+func duracao_do_dia() -> float:
+	return duracao_do_dia_de(dia_ano)
+
+
+## Põe o ano num dia (dá a volta aos 112). A hora e a lua não mudam.
+func definir_dia_do_ano(d: float) -> void:
+	dia_ano = fposmod(d, DIAS_ANO)
+	var e := estacao()
+	if e != _estacao:
+		_estacao = e
+		estacao_mudou.emit(e)
+	_ver_fase()
+
+
+## O nome da estação de um dia do ano: cada estação cobre 28 dias, [n·28, (n+1)·28).
+static func estacao_de(d: float) -> String:
+	return ESTACOES[int(floor(fposmod(d, DIAS_ANO) / DIAS_ESTACAO)) % 4]
+
+
+## A declinação do sol (graus) num dia do ano: AMPLITUDE · sen(2π (d − equinócio) / 112). Escrita
+## como SOL_DECLINACAO + AMPLITUDE · (sen φ(d) − sen φ(referência)) — o mesmo número, mas no dia
+## de referência a diferença é 0 EXACTO e a declinação sai 9,5 bit a bit (a âncora da Ordem 43).
+static func declinacao_de(d: float) -> float:
+	return SOL_DECLINACAO + SOL_DECL_AMPLITUDE * (sin(_fase_do_ano(d)) - sin(_fase_do_ano(DIA_ANO_REFERENCIA)))
+
+
+static func _fase_do_ano(d: float) -> float:
+	return TAU * (fposmod(d, DIAS_ANO) - DIA_EQUINOCIO) / DIAS_ANO
+
+
+## Metade do arco diurno do sol (horas): do nascer ao meio-dia solar. O nascer e o pôr são o
+## centro do disco a 0° (a regra da Ordem 43: na referência nasce às 06:00 e põe-se às 19:00).
+static func semiarco_de(d: float) -> float:
+	var c := -tan(deg_to_rad(LATITUDE)) * tan(deg_to_rad(declinacao_de(d)))
+	return rad_to_deg(acos(clampf(c, -1.0, 1.0))) / 15.0
+
+
+## Horas de sol acima do horizonte no dia do ano d.
+static func duracao_do_dia_de(d: float) -> float:
+	return 2.0 * semiarco_de(d)
+
+
+## (nascer, pôr) do sol no dia do ano d, em horas do relógio.
+static func nascer_e_por_de(d: float) -> Vector2:
+	var s := semiarco_de(d)
+	return Vector2(SOL_CULMINA - s, SOL_CULMINA + s)
+
+
 func _ver_fase() -> void:
 	var f := fase()
 	if f != _fase:
@@ -287,8 +394,10 @@ static func astro(h_graus: float, decl: float) -> Vector2:
 	return Vector2(rad_to_deg(atan2(leste, norte)), rad_to_deg(asin(clampf(sen_el, -1.0, 1.0))))
 
 
-static func sol(h: float) -> Vector2:
-	return astro((h - SOL_CULMINA) * 15.0, SOL_DECLINACAO)
+## (Ordem 56) o sol do dia do ano d: a declinação muda com a estação; sem d, é o dia de referência
+## (o sol da Ordem 43, bit a bit).
+static func sol(h: float, dia_do_ano_d: float = DIA_ANO_REFERENCIA) -> Vector2:
+	return astro((h - SOL_CULMINA) * 15.0, declinacao_de(dia_do_ano_d))
 
 
 static func lua(h: float) -> Vector2:
@@ -350,11 +459,12 @@ static func _max_luz(a: Color, b: Color) -> Color:
 
 # ------------------------------------------------------------------ tudo o que sai da hora
 
-## Função PURA: a mesma hora (e a mesma idade da lua) dá sempre o mesmo mundo. Sem a idade, é a
-## lua cheia — exactamente o mundo da Ordem 43.
-static func calcular(h: float, idade_lua_dias: float = LUA_CHEIA) -> Dictionary:
+## Função PURA: a mesma hora (e a mesma idade da lua, e o mesmo dia do ano) dá sempre o mesmo
+## mundo. Sem a idade, é a lua cheia; sem o dia do ano, é o dia de referência (primavera, 21) —
+## exactamente o mundo da Ordem 43.
+static func calcular(h: float, idade_lua_dias: float = LUA_CHEIA, dia_do_ano_d: float = DIA_ANO_REFERENCIA) -> Dictionary:
 	h = fposmod(h, 24.0)
-	var s := sol(h)
+	var s := sol(h, dia_do_ano_d)
 	var l := lua(h)
 	var e := s.y
 	var onde := _onde(e)
@@ -378,6 +488,12 @@ static func calcular(h: float, idade_lua_dias: float = LUA_CHEIA) -> Dictionary:
 	d["lua_iluminada"] = iluminada_de(idade)
 	d["lua_terminador"] = -1.0 if is_equal_approx(idade, LUA_CHEIA) else cos(deg_to_rad(angulo_de_fase(idade)))
 	d["lua_lado"] = -1.0 if idade < LUA_CHEIA else 1.0      # −1 = claro a oeste · +1 = claro a leste
+	# ---- (Ordem 56) o ano: só a declinação do sol muda; o resto sai dela pelas curvas de sempre
+	var dia_a := fposmod(dia_do_ano_d, DIAS_ANO)
+	d["ano_dia"] = dia_a
+	d["estacao"] = estacao_de(dia_a)
+	d["sol_declinacao"] = declinacao_de(dia_a)
+	d["dia_duracao"] = duracao_do_dia_de(dia_a)
 	# ---- céu
 	d["cor_zenite"] = _cor(ZENITE_M, ZENITE_T, onde, manha)
 	d["cor_meio"] = _cor(MEIO_M, MEIO_T, onde, manha)
