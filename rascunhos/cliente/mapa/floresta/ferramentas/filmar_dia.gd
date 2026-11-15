@@ -12,6 +12,11 @@ extends SceneTree
 ##                      65 s a 30 q/s (1 s de filme = 24 min do mundo). Câmara fixa na clareira.
 ##   --vento            o filme do VENTO: 24 h (05:00 → 05:00) em 120 s; câmara baixa sobre a relva;
 ##                      a hora, o rumo, a força, a rajada e o gráfico da força escritos no ecrã.
+##   --fases            (Ordem 55) as 4 FASES DA LUA (nova, crescente, cheia, minguante) à MESMA hora
+##                      da noite (HORA_FASES, 22:00), com o MESMO enquadramento e o MESMO vento (o
+##                      vento corre 6 s antes da 1.ª e fica parado): a fase é a única diferença. Em
+##                      capturas/ciclo55/ (c55_22h00_N-fase.jpg, _folha_fases.jpg, medicao_fases.json),
+##                      com um encaixe AMPLIADO do disco da lua (uma 3.ª câmara a olhar para a lua).
 ##   --quadros=PASTA    onde gravar os quadros JPEG dos filmes (q00000.jpg …; o MP4 faz-se depois
 ##                      com o ffmpeg — ver NOTAS-CICLO-43.md). Sem isto, grava em capturas/_ensaio.
 ##   --amostras         nos filmes: só 1 quadro em cada 150 (para conferir o enquadramento).
@@ -42,10 +47,17 @@ const VISTA_DIA := [5.0, 27.0, 2.3, -11.0, 2.0, 62.0]       # x, z, olhos, az, i
 const VISTA_VENTO := [3.0, 24.0, 1.6, -11.0, -7.0, 60.0]
 const ENCAIXE := 420
 const ENCAIXE_FOV := 150.0
+## (Ordem 55) as fases da lua: a hora (a lua alta a sueste, 38,7°; lua_baixa = 1×) e as idades.
+const HORA_FASES := 22.0
+const FASES_LUA := [["nova", 0.0], ["crescente", 7.0], ["cheia", 14.0], ["minguante", 21.0]]
+const ENCAIXE_LUA := 300
+const ENCAIXE_LUA_FOV := 6.0
 
 var _vp: SubViewport
 var _vp_ceu: SubViewport
 var _cam_ceu: Camera3D
+var _vp_lua: SubViewport
+var _cam_lua: Camera3D
 var _painel: Control
 var _cena: Node3D
 var _ciclo: Node
@@ -74,11 +86,11 @@ func _arg(nome: String, omissao: String) -> String:
 
 func _correr() -> void:
 	var args := OS.get_cmdline_user_args()
-	for m in ["--horas", "--dia", "--vento"]:
+	for m in ["--horas", "--dia", "--vento", "--fases"]:
 		if args.has(m):
 			_modo = m.trim_prefix("--")
 	if _modo == "":
-		push_error("[ciclo] diz o modo: --horas, --dia ou --vento")
+		push_error("[ciclo] diz o modo: --horas, --dia, --vento ou --fases")
 		quit(1)
 		return
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
@@ -138,6 +150,8 @@ func _correr() -> void:
 	match _modo:
 		"horas":
 			await _fazer_horas()
+		"fases":
+			await _fazer_fases()
 		"dia":
 			_titulo = "ORDEM 43 · UM DIA COMPLETO (timelapse: 1 s de filme = 24 min do mundo) · câmara fixa na clareira, a olhar para norte"
 			await _filmar(5.0, 26.0, 65.0)
@@ -281,6 +295,106 @@ func _fazer_horas() -> void:
 	print("[ciclo] medicao_ciclo.json gravado · modo de prova: %s" % JSON.stringify(prova))
 
 
+# ------------------------------------------------------------------ (Ordem 55) as fases da lua
+
+func _fazer_fases() -> void:
+	var pasta := ProjectSettings.globalize_path(_arg("--pasta", "res://mapa/floresta/capturas/ciclo55"))
+	DirAccess.make_dir_recursive_absolute(pasta)
+	_titulo = "ORDEM 55 · as fases da lua · %s, o mesmo enquadramento e o mesmo vento: só a fase muda" % Ciclo.texto_de(HORA_FASES)
+	# a 3.ª câmara: no centro da clareira, a olhar para a lua (o disco enche o encaixe)
+	_vp_lua = SubViewport.new()
+	_vp_lua.size = Vector2i(ENCAIXE_LUA, ENCAIXE_LUA)
+	_vp_lua.world_3d = _vp.find_world_3d()
+	_vp_lua.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_vp.add_child(_vp_lua)
+	_cam_lua = Camera3D.new()
+	_cam_lua.fov = ENCAIXE_LUA_FOV
+	_cam_lua.near = 0.5
+	_cam_lua.far = 9000.0
+	_vp_lua.add_child(_cam_lua)
+	_ciclo.call("definir_hora", HORA_FASES)
+	var dl: Vector3 = Ciclo.calcular(HORA_FASES)["dir_lua"]
+	var p0 := Vector3(0.0, float(_cena.call("altura_em", 0.0, 0.0)) + 1.7, 0.0)
+	_cam_lua.look_at_from_position(p0, p0 + dl, Vector3.UP)
+	_cam_lua.make_current()
+	# o vento corre 6 s UMA vez (a relva já vai dobrada pelo vento desta hora) e depois fica parado
+	for i in int(6.0 * QPS):
+		_vento.call("avancar", 1.0 / QPS)
+	var linhas: Array = []
+	var imagens: Array[Image] = []
+	for k in FASES_LUA.size():
+		var nome_fase: String = FASES_LUA[k][0]
+		_ciclo.call("definir_idade_da_lua", float(FASES_LUA[k][1]))
+		_cena.call("aplicar_ciclo")
+		_painel.visible = true
+		_vp_ceu.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+		_vp_lua.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+		_painel.queue_redraw()
+		await _quadros(8)
+		var e: Dictionary = _ciclo.call("estado")
+		var nome := "c55_%s_%d-%s.jpg" % [Ciclo.texto_de(HORA_FASES).replace(":", "h"), k + 1, nome_fase]
+		var img := _vp.get_texture().get_image()
+		img.save_jpg(pasta.path_join(nome), 0.95)
+		imagens.append(img)
+		var disco := _vp_lua.get_texture().get_image()
+		# ---- só a cena (sem painel nem encaixes): a luma e a medida
+		_painel.visible = false
+		_vp_ceu.render_target_update_mode = SubViewport.UPDATE_DISABLED
+		_vp_lua.render_target_update_mode = SubViewport.UPDATE_DISABLED
+		await _quadros(6)
+		var so_cena := _vp.get_texture().get_image()
+		var t0 := Time.get_ticks_usec()
+		var n := 0
+		while Time.get_ticks_usec() - t0 < 2000000:
+			await process_frame
+			n += 1
+		var m := {"fase": nome_fase, "idade_dias": FASES_LUA[k][1], "ficheiro": nome, "hora": Ciclo.texto_de(HORA_FASES),
+			"lua_iluminada": snappedf(float(e["lua_iluminada"]), 0.001), "lua_energia": snappedf(float(e["lua_energia"]), 0.0001),
+			"cor_luz": (e["cor_luz"] as Color).to_html(false), "sombra_forca": snappedf(float(e["sombra_forca"]), 0.0001),
+			"ressalto": snappedf(float(e["ressalto"]), 0.0001), "lua": [snappedf(float(e["lua_azimute"]), 0.1), snappedf(float(e["lua_elevacao"]), 0.1)],
+			"luz_da_lua_visivel": bool((_cena.get("lua") as Light3D).visible),
+			"luma_da_cena": _luma(so_cena), "disco_claro_%": _disco_claro(disco),
+			"fps_sem_vsync": snappedf(float(n) * 1000000.0 / float(Time.get_ticks_usec() - t0), 0.1),
+			"chamadas": _vp.get_render_info(Viewport.RENDER_INFO_TYPE_VISIBLE, Viewport.RENDER_INFO_DRAW_CALLS_IN_FRAME),
+			"primitivas": _vp.get_render_info(Viewport.RENDER_INFO_TYPE_VISIBLE, Viewport.RENDER_INFO_PRIMITIVES_IN_FRAME)}
+		linhas.append(m)
+		print("[fases] %s" % JSON.stringify(m))
+	# ---- a folha de contacto 2×2 (nova, crescente / cheia, minguante)
+	var folha := Image.create_empty(LARGURA, ALTURA, false, Image.FORMAT_RGB8)
+	for k in imagens.size():
+		var im: Image = imagens[k].duplicate()
+		im.convert(Image.FORMAT_RGB8)
+		im.resize(LARGURA / 2, ALTURA / 2, Image.INTERPOLATE_LANCZOS)
+		folha.blit_rect(im, Rect2i(0, 0, LARGURA / 2, ALTURA / 2), Vector2i((k % 2) * LARGURA / 2, (k / 2) * ALTURA / 2))
+	folha.save_jpg(pasta.path_join("_folha_fases.jpg"), 0.9)
+	var saida := {
+		"resolucao_da_prova": [LARGURA, ALTURA],
+		"placa": RenderingServer.get_video_adapter_name(),
+		"metodo": str(ProjectSettings.get_setting("rendering/renderer/rendering_method")),
+		"motor": Engine.get_version_info()["string"],
+		"enquadramento": {"x": VISTA_DIA[0], "z": VISTA_DIA[1], "olhos_m": VISTA_DIA[2], "az": VISTA_DIA[3], "incl": VISTA_DIA[4], "fov": VISTA_DIA[5]},
+		"nota": "a mesma hora (relógio parado), o mesmo enquadramento e o mesmo vento (parado depois de 6 s) nas 4: só muda a idade da lua. Luma e FPS medidos SÓ na cena (sem o painel nem os encaixes). disco_claro_% = píxeis claros no encaixe ampliado da lua.",
+		"fases": linhas,
+	}
+	var f := FileAccess.open(pasta.path_join("medicao_fases.json"), FileAccess.WRITE)
+	f.store_string(JSON.stringify(saida, "\t"))
+	f.close()
+	print("[fases] medicao_fases.json e _folha_fases.jpg gravados em %s" % pasta)
+
+
+## % de píxeis claros (luma > 0,55) no encaixe da lua: quanto do disco está iluminado.
+func _disco_claro(img: Image) -> float:
+	var n := 0
+	var claros := 0
+	for y in range(0, img.get_height(), 2):
+		for x in range(0, img.get_width(), 2):
+			var c := img.get_pixel(x, y)
+			n += 1
+			if 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b > 0.55:
+				claros += 1
+	return snappedf(claros * 100.0 / float(n), 0.01)
+
+
 ## Luma média (0–255) e % de píxeis estourados (> 0,97) e quase pretos (< 0,04), de 6 em 6 píxeis.
 func _luma(img: Image) -> Dictionary:
 	var soma := 0.0
@@ -321,6 +435,15 @@ func _desenhar() -> void:
 	_texto(Vector2(300, 112), String(_ciclo.call("fase")), 30)
 	_texto(Vector2(36, 196), "sol  az %4.0f°  elev %5.1f°" % [fposmod(float(e["sol_azimute"]), 360.0), float(e["sol_elevacao"])], 22, Color("#ffd27a"))
 	_texto(Vector2(36, 222), "lua  az %4.0f°  elev %5.1f°" % [fposmod(float(e["lua_azimute"]), 360.0), float(e["lua_elevacao"])], 22, Color("#b8ccff"))
+	if _modo == "fases" and _vp_lua != null:
+		# (Ordem 55) a fase, e o disco ampliado por baixo do encaixe do céu
+		var rl := Rect2(LARGURA - ENCAIXE_LUA - 20, 62 + ENCAIXE + 56, ENCAIXE_LUA, ENCAIXE_LUA)
+		_painel.draw_rect(rl.grow(4), Color(0, 0, 0, 0.7))
+		_painel.draw_texture_rect(_vp_lua.get_texture(), rl, false)
+		_texto(Vector2(rl.position.x, rl.end.y + 30), "a lua ampliada (campo de %.0f°)" % ENCAIXE_LUA_FOV, 18)
+		_painel.draw_rect(Rect2(20, 380, 580, 120), fundo)
+		_texto(Vector2(36, 430), "LUA %s" % String(e["lua_fase"]).to_upper(), 40, Color("#dfe8ff"))
+		_texto(Vector2(36, 476), "idade %d dias · %3.0f %% iluminada · luz da lua %.3f" % [int(e["lua_idade"]), float(e["lua_iluminada"]) * 100.0, float(e["lua_energia"])], 22, Color("#b8ccff"))
 	# ---- o vento
 	var de := Vento.rumo(float(v["azimute_de"]))
 	var kmh := float(v["velocidade_ms"]) * 3.6
