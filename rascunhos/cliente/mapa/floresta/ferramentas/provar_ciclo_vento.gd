@@ -254,5 +254,5 @@ func _continuidade() -> Dictionary:
 			pior_v = maior[k]
 			pior = k
 	print("[prova] continuidade: maior salto de cor por minuto do mundo = %.4f (%s às %s)" % [pior_v, pior, onde.get(pior, "")])
-	return {"nota": "maior diferença entre minutos seguidos do mundo (cores: 0–1 por canal; direcções: distância de vectores unitários; números: absoluta). Com o dia de 24 min, 1 s real = 1 h do mundo: a 60 q/s UM QUADRO = UM MINUTO do mundo — esta tabela é o salto por quadro no jogo.",
+	return {"nota": "maior diferença entre minutos seguidos do mundo (cores: 0–1 por canal; direcções: distância de vectores unitários; números: absoluta). Com o dia de 24 min, 1 min real = 1 h do mundo e 1 s real = 1 min do mundo: no jogo, a 60 q/s, cada valor desta tabela espalha-se por 60 quadros (no timelapse --dia, por 1,25 quadros).",
 		"maior_salto_por_minuto": maior, "a_que_hora": onde, "pior_cor": pior}

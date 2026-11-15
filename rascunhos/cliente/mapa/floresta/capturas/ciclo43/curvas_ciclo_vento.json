@@ -35,7 +35,7 @@
 			"sol_elevacao": "07:20",
 			"sol_energia": "06:02",
 			"sol_visivel": "05:48",
-			"sombra_forca": "05:41"
+			"sombra_forca": "06:03"
 		},
 		"maior_salto_por_minuto": {
 			"arrebol": 0.0293,
@@ -72,9 +72,9 @@
 			"sol_elevacao": 0.197,
 			"sol_energia": 0.033,
 			"sol_visivel": 0.0895,
-			"sombra_forca": 0.1211
+			"sombra_forca": 0.097
 		},
-		"nota": "maior diferença entre minutos seguidos do mundo (cores: 0–1 por canal; direcções: distância de vectores unitários; números: absoluta). Com o dia de 24 min, 1 s real = 1 h do mundo: a 60 q/s UM QUADRO = UM MINUTO do mundo — esta tabela é o salto por quadro no jogo.",
+		"nota": "maior diferença entre minutos seguidos do mundo (cores: 0–1 por canal; direcções: distância de vectores unitários; números: absoluta). Com o dia de 24 min, 1 min real = 1 h do mundo e 1 s real = 1 min do mundo: no jogo, a 60 q/s, cada valor desta tabela espalha-se por 60 quadros (no timelapse --dia, por 1,25 quadros).",
 		"pior_cor": "cor_luz"
 	},
 	"deriva": {

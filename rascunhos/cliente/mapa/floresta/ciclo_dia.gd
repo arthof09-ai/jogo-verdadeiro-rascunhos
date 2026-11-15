@@ -343,7 +343,9 @@ static func calcular(h: float) -> Dictionary:
 	d["luz_azimute"] = rad_to_deg(atan2(dl.x, -dl.z)) if Vector2(dl.x, dl.z).length() > 0.001 else 0.0
 	d["luz_elevacao"] = rad_to_deg(asin(clampf(dl.y, -1.0, 1.0)))
 	# as sombras: francas de dia, suaves ao luar, nenhumas no crepúsculo sem luz directa
-	d["sombra_forca"] = maxf(_suave(0.0, 0.5, sol_energia), 0.62 * _suave(0.0, 0.5 * LUA_ENERGIA, lua_energia))
+	# (a sombra da lua entra devagar, com o crepúsculo — sol de −2,5° a −9°, ~35 min do mundo:
+	# com a lua baixa a leste, a sombra comprida da orla cobre a clareira, e entrava em 9 min)
+	d["sombra_forca"] = maxf(_suave(0.0, 0.5, sol_energia), 0.62 * _suave(0.0, 0.5 * LUA_ENERGIA, lua_energia) * (1.0 - _suave(-9.0, -2.5, e)))
 	d["ressalto"] = clampf(maxf(sol_energia, lua_energia * 0.5) * 0.8 + ceu_luz * 0.2, 0.0, 1.0)
 	# as luzes artificiais (lanternas, janelas): acendem quando o sol toca o horizonte
 	d["lume"] = 1.0 - _suave(-4.0, 1.5, e)
