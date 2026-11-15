@@ -1,0 +1,2 @@
+postas 214 {"casaM":1.5,"figuras":215,"emBloqueadas":[]}
+escala 2 m: ROOM_RECEIPT {"casaM":2,"figuras":215,"emBloqueadas":["(6,4) menir","(22,4) água funda","(24,4) água funda","(24,6) água funda","(22,22) escarpa","(28,24) escarpa","(6,28) tronco tombado"]}
