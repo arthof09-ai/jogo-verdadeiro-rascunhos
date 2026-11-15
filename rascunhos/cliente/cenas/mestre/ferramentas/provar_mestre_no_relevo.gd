@@ -11,6 +11,7 @@ extends SceneTree
 ##      o anel e a sombra de contacto no plano da base; o fundo do corpo no plano; a régua independente (129
 ##      pontos) do plano contra o relevo, no raio da pegada, no da sombra (0,5) e no do anel (0,56); nas 6 casas
 ##      da encosta do outeiro e nas outras;
+##      (Ordem 58: a figura numa casa que o mapa bloqueia não se põe de pé — a arena recusa-a com nome; conta-se à parte)
 ##   4. o toque: o centro de cada casa, visto pela câmara da mesa do Mestre, volta à MESMA casa;
 ##   5. as casas do jogo que o mapa bloqueia (0, como na arena do jogador);
 ##   6. um céu só no mundo do Mestre, e é o do mapa;
@@ -245,12 +246,21 @@ func _medir_grelha(m, a, base: Dictionary, w: int, h: int, casa: float) -> void:
 	var n_bloq := 0
 	var pior_seis := {"pegada": [0.0, 0.0], "contacto": [0.0, 0.0], "anel": [0.0, 0.0]}
 	var casas_fig: Array = []
+	# Ordem 58: a figura numa casa que o mapa bloqueia não se põe de pé — a arena recusa-a com nome
+	# (campo_da_mesa.gd `recusa_do_pe`). Conta-se à parte; a régua mede as que ficam de pé.
+	var recusadas := 0
+	var recusas: Dictionary = a.pes_recusados()
 	for f in vista["mestre"]["figuras"]:
 		var id := str(f["id"])
 		var c := Vector2i(int(f["x"]), int(f["y"]))
 		var no: Node3D = a._nos.get(id)
+		var na_bloqueada: bool = not srv.is_empty() and int(srv["bloqueadas"][c.y * w + c.x]) == 1
 		if no == null:
-			fora += 1
+			if na_bloqueada and str(recusas.get(id, "")).begins_with("FLORESTA-E08-CASA-BLOQUEADA: (%d,%d) " % [c.x, c.y]):
+				recusadas += 1
+				casas_fig.append({"x": c.x, "y": c.y, "bloqueada": true, "recusada": recusas[id]})
+			else:
+				fora += 1
 			continue
 		var pe: Vector3 = a.pe_figura(c)
 		var pg: Dictionary = a.pegada_figura(c)
@@ -292,7 +302,8 @@ func _medir_grelha(m, a, base: Dictionary, w: int, h: int, casa: float) -> void:
 			alvo[raio_nome[0]] = [maxf(alvo[raio_nome[0]][0], md[0]), maxf(alvo[raio_nome[0]][1], md[1])]
 		casas_fig.append(linha)
 	var n_fig: int = vista["mestre"]["figuras"].size()
-	_ok(fora == 0 and a.figuras_desenhadas() == n_fig, "as %d figuras estão no pé da casa; anel e sombra de contacto no plano da encosta; corpo de pé a prumo" % n_fig)
+	_ok(fora == 0 and a.figuras_desenhadas() == n_fig - recusadas, "as %d figuras de pé estão no pé da casa; anel e sombra de contacto no plano da encosta; corpo de pé a prumo" % (n_fig - recusadas))
+	_ok(n_bloq == 0 and recusas.size() == recusadas, "Ordem 58: nenhuma figura de pé em casa bloqueada pelo mapa; %d recusadas com nome (FLORESTA-E08-CASA-BLOQUEADA)" % recusadas)
 	_ok(d_pe_jog == 0.0, "pé das figuras Mestre − jogador (pe_figura): maior %.6f m" % d_pe_jog)
 	_ok(d_pe_srv == 0.0, "pé das figuras Mestre − peM do servidor (bits do double): maior %s m" % str(d_pe_srv))
 	_ok(plano_corpo < 0.0001, "fundo do corpo de pé − plano da base: maior %.6f m (o cilindro assenta inteiro no plano)" % plano_corpo)
@@ -303,7 +314,7 @@ func _medir_grelha(m, a, base: Dictionary, w: int, h: int, casa: float) -> void:
 	# O limite da Ordem 44 vale nas casas que se pisam (as bloqueadas — menires, santuário, água — o servidor recusa).
 	_ok(pior["pegada"][0] <= 0.10 and pior["pegada"][1] <= 0.10 and pior_seis["pegada"][0] <= 0.10 and pior_seis["pegada"][1] <= 0.10,
 		"no raio da pegada (%.2f m), nas casas que se pisam: dentro do limite da Ordem 44 (0,10 m)" % r_pe)
-	reg["pe"] = {"figuras": n_fig, "em_casas_bloqueadas": n_bloq, "pior_bloqueadas": pior_bloq, "pe_mestre_menos_jogador_m": d_pe_jog, "pe_mestre_menos_servidor_m": d_pe_srv,
+	reg["pe"] = {"figuras": n_fig, "em_casas_bloqueadas": n_bloq, "recusadas_ordem_58": recusadas, "pior_bloqueadas": pior_bloq, "pe_mestre_menos_jogador_m": d_pe_jog, "pe_mestre_menos_servidor_m": d_pe_srv,
 		"fundo_do_corpo_menos_plano_m": plano_corpo, "pior_outras": pior, "pior_seis_da_encosta": pior_seis, "casas": casas_fig}
 
 	# 4. o toque, pela câmara da mesa do Mestre (Fixa, 360° rasante, Panorama) — e o mesmo na do jogador

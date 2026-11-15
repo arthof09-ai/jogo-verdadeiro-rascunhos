@@ -1,0 +1,72 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+== Ordem 58: os pés nas casas bloqueadas do mapa (SEM a correcção: os números de antes) ==
+-- grelha 20x20 de 1.5 m, o conjunto da Ordem 45 --
+  ok    o servidor de verdade julga a grelha 20x20 de 1.5 m
+pronto
+  ok    mestre: figuras de pé em casas bloqueadas 0 de 0
+  ok    mestre: 0 recusas com nome (FLORESTA-E08-CASA-BLOQUEADA), uma por casa bloqueada, com o motivo do servidor; 0 no total
+  ok    mestre: 54 de 54 figuras nas casas que se pisam desenhadas no pé da casa (= peM do servidor, bit a bit)
+  ok    mestre: figuras desenhadas 54 = figuras nas casas que se pisam 54
+  ok    jogador: figuras de pé em casas bloqueadas 0 de 0
+  ok    jogador: 0 recusas com nome (FLORESTA-E08-CASA-BLOQUEADA), uma por casa bloqueada, com o motivo do servidor; 0 no total
+  ok    jogador: 54 de 54 figuras nas casas que se pisam desenhadas no pé da casa (= peM do servidor, bit a bit)
+-- grelha 30x30 de 1.5 m, o conjunto da Ordem 45 --
+  ok    o servidor de verdade julga a grelha 30x30 de 1.5 m
+  FALHA mestre: figuras de pé em casas bloqueadas 5 de 5 (o plano da base contra o relevo nelas: enterra 0.304 / flutua 0.311 m, raio da pegada)
+  FALHA mestre: 0 recusas com nome (FLORESTA-E08-CASA-BLOQUEADA), uma por casa bloqueada, com o motivo do servidor; 0 no total · erradas: (27,0) «», (27,3) «», (27,24) «», (24,27) «», (1,0) «»
+  ok    mestre: 100 de 100 figuras nas casas que se pisam desenhadas no pé da casa (= peM do servidor, bit a bit)
+  FALHA mestre: figuras desenhadas 105 = figuras nas casas que se pisam 100
+  ok    mestre: as casas bloqueadas com figura são as 5 da reserva 3 da Ordem 45 [(27, 0), (27, 3), (27, 24), (24, 27), (1, 0)]
+        (27,0) água funda, 6.7°: DE PÉ · o plano da base contra o relevo: enterra 0.007 / flutua 0.007 m
+        (27,3) água funda, 10.0°: DE PÉ · o plano da base contra o relevo: enterra 0.004 / flutua 0.004 m
+        (27,24) escarpa, 55.1°: DE PÉ · o plano da base contra o relevo: enterra 0.304 / flutua 0.311 m
+        (24,27) escarpa, 67.3°: DE PÉ · o plano da base contra o relevo: enterra 0.287 / flutua 0.290 m
+        (1,0) menir, 1.5°: DE PÉ · o plano da base contra o relevo: enterra 0.003 / flutua 0.003 m
+  FALHA jogador: figuras de pé em casas bloqueadas 5 de 5 (o plano da base contra o relevo nelas: enterra 0.304 / flutua 0.311 m, raio da pegada)
+  FALHA jogador: 0 recusas com nome (FLORESTA-E08-CASA-BLOQUEADA), uma por casa bloqueada, com o motivo do servidor; 0 no total · erradas: (27,0) «», (27,3) «», (27,24) «», (24,27) «», (1,0) «»
+  ok    jogador: 100 de 100 figuras nas casas que se pisam desenhadas no pé da casa (= peM do servidor, bit a bit)
+  ok    jogador: as casas bloqueadas com figura são as 5 da reserva 3 da Ordem 45 [(27, 0), (27, 3), (27, 24), (24, 27), (1, 0)]
+        (27,0) água funda, 6.7°: DE PÉ · o plano da base contra o relevo: enterra 0.007 / flutua 0.007 m
+        (27,3) água funda, 10.0°: DE PÉ · o plano da base contra o relevo: enterra 0.004 / flutua 0.004 m
+        (27,24) escarpa, 55.1°: DE PÉ · o plano da base contra o relevo: enterra 0.304 / flutua 0.311 m
+        (24,27) escarpa, 67.3°: DE PÉ · o plano da base contra o relevo: enterra 0.287 / flutua 0.290 m
+        (1,0) menir, 1.5°: DE PÉ · o plano da base contra o relevo: enterra 0.003 / flutua 0.003 m
+-- grelha 20x20 de 1.5 m, uma figura em cada casa --
+  ok    o servidor de verdade julga a grelha 20x20 de 1.5 m
+  ok    mestre: figuras de pé em casas bloqueadas 0 de 0
+  ok    mestre: 0 recusas com nome (FLORESTA-E08-CASA-BLOQUEADA), uma por casa bloqueada, com o motivo do servidor; 0 no total
+  ok    mestre: 400 de 400 figuras nas casas que se pisam desenhadas no pé da casa (= peM do servidor, bit a bit)
+  ok    mestre: figuras desenhadas 400 = figuras nas casas que se pisam 400
+  ok    jogador: figuras de pé em casas bloqueadas 0 de 0
+  ok    jogador: 0 recusas com nome (FLORESTA-E08-CASA-BLOQUEADA), uma por casa bloqueada, com o motivo do servidor; 0 no total
+  ok    jogador: 400 de 400 figuras nas casas que se pisam desenhadas no pé da casa (= peM do servidor, bit a bit)
+-- grelha 30x30 de 1.5 m, uma figura em cada casa --
+  ok    o servidor de verdade julga a grelha 30x30 de 1.5 m
+  FALHA mestre: figuras de pé em casas bloqueadas 43 de 43 (o plano da base contra o relevo nelas: enterra 0.304 / flutua 0.311 m, raio da pegada)
+  FALHA mestre: 0 recusas com nome (FLORESTA-E08-CASA-BLOQUEADA), uma por casa bloqueada, com o motivo do servidor; 0 no total · erradas: (1,0) «», (25,0) «», (26,0) «», (27,0) «», (28,0) «», (29,0) «», (3,1) «», (25,1) «»
+  ok    mestre: 857 de 857 figuras nas casas que se pisam desenhadas no pé da casa (= peM do servidor, bit a bit)
+  FALHA mestre: figuras desenhadas 900 = figuras nas casas que se pisam 857
+  FALHA jogador: figuras de pé em casas bloqueadas 43 de 43 (o plano da base contra o relevo nelas: enterra 0.304 / flutua 0.311 m, raio da pegada)
+  FALHA jogador: 0 recusas com nome (FLORESTA-E08-CASA-BLOQUEADA), uma por casa bloqueada, com o motivo do servidor; 0 no total · erradas: (1,0) «», (25,0) «», (26,0) «», (27,0) «», (28,0) «», (29,0) «», (3,1) «», (25,1) «»
+  ok    jogador: 857 de 857 figuras nas casas que se pisam desenhadas no pé da casa (= peM do servidor, bit a bit)
+-- grelha 30x30 de 2.0 m, uma figura em cada casa --
+  ok    o servidor de verdade julga a grelha 30x30 de 2.0 m
+  FALHA mestre: figuras de pé em casas bloqueadas 42 de 42 (o plano da base contra o relevo nelas: enterra 0.377 / flutua 0.359 m, raio da pegada)
+  FALHA mestre: 0 recusas com nome (FLORESTA-E08-CASA-BLOQUEADA), uma por casa bloqueada, com o motivo do servidor; 0 no total · erradas: (23,3) «», (24,3) «», (25,3) «», (6,4) «», (22,4) «», (23,4) «», (24,4) «», (25,4) «»
+  ok    mestre: 858 de 858 figuras nas casas que se pisam desenhadas no pé da casa (= peM do servidor, bit a bit)
+  FALHA mestre: figuras desenhadas 900 = figuras nas casas que se pisam 858
+  FALHA jogador: figuras de pé em casas bloqueadas 42 de 42 (o plano da base contra o relevo nelas: enterra 0.377 / flutua 0.359 m, raio da pegada)
+  FALHA jogador: 0 recusas com nome (FLORESTA-E08-CASA-BLOQUEADA), uma por casa bloqueada, com o motivo do servidor; 0 no total · erradas: (23,3) «», (24,3) «», (25,3) «», (6,4) «», (22,4) «», (23,4) «», (24,4) «», (25,4) «»
+  ok    jogador: 858 de 858 figuras nas casas que se pisam desenhadas no pé da casa (= peM do servidor, bit a bit)
+-- grelha 25x25 de 1.0 m, uma figura em cada casa --
+  ok    o servidor de verdade julga a grelha 25x25 de 1.0 m
+  ok    mestre: figuras de pé em casas bloqueadas 0 de 0
+  ok    mestre: 0 recusas com nome (FLORESTA-E08-CASA-BLOQUEADA), uma por casa bloqueada, com o motivo do servidor; 0 no total
+  ok    mestre: 625 de 625 figuras nas casas que se pisam desenhadas no pé da casa (= peM do servidor, bit a bit)
+  ok    mestre: figuras desenhadas 625 = figuras nas casas que se pisam 625
+  ok    jogador: figuras de pé em casas bloqueadas 0 de 0
+  ok    jogador: 0 recusas com nome (FLORESTA-E08-CASA-BLOQUEADA), uma por casa bloqueada, com o motivo do servidor; 0 no total
+  ok    jogador: 625 de 625 figuras nas casas que se pisam desenhadas no pé da casa (= peM do servidor, bit a bit)
+medição escrita em C:/Users/txcga/fable-mapa/_tmp/o58/pes-antes.json
+15 FALHAS

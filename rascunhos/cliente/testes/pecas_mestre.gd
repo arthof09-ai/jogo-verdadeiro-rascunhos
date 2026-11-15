@@ -152,6 +152,7 @@ func _correr() -> void:
 		_ok(is_equal_approx(pivo.rotation.z, PI * 0.5) and is_equal_approx(MarcadorFig._y_minimo(pivo) + 0.0, 0.03), "morta: deitada e assente no chão com 0,03 m de folga")
 		MarcadorFig.deitar(m_orc, false)
 		_ok(is_zero_approx(pivo.rotation.z) and is_zero_approx(pivo.position.y), "viva: de pé outra vez")
+	await _pes_bloqueados(arena_m, vista_m)
 	arena_m.queue_free()
 
 	print("== «Voltar até aqui» (L8) ==")
@@ -1453,3 +1454,45 @@ func _fim() -> void:
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
+
+
+## Ordem 58: uma figura numa casa que o mapa bloqueia não se põe de pé na arena do Mestre: recusa com nome
+## (campo_da_mesa.gd `recusa_do_pe`), e volta a pôr-se de pé quando sai dela. Na 30 × 30 de 1,5 m, a casa (27,24) é
+## uma escarpa de 55° (a reserva 3 da Ordem 45: o pé ficava até 0,30 m do relevo) e a (29,24) pisa-se.
+## A prova completa, contra o servidor de verdade e nas duas arenas, é cenas/arena/ferramentas/provar_pes_bloqueadas.gd.
+func _pes_bloqueados(arena_m, vista_base: Dictionary) -> void:
+	print("== Ordem 58: o pé numa casa que o mapa bloqueia ==")
+	var v: Dictionary = vista_base.duplicate(true)
+	v["mapa"] = {"largura": 30, "altura": 30, "casaM": 1.5}
+	# Só duas figuras, em casas conhecidas: A na escarpa (27,24) e B na (29,24), que se pisa; depois trocam.
+	var duas: Array = []
+	for f in v["mestre"]["figuras"]:
+		if f.get("colocada") == true and duas.size() < 2:
+			duas.append(f)
+	v["mestre"]["figuras"] = duas
+	var a: Dictionary = duas[0]
+	var b: Dictionary = duas[1]
+	var ida := str(a["id"])
+	var idb := str(b["id"])
+	a["x"] = 27
+	a["y"] = 24
+	b["x"] = 29
+	b["y"] = 24
+	v["vezId"] = ida
+	arena_m.aplicar_vista(v)
+	await _quadros(1)
+	var rec: Dictionary = arena_m.pes_recusados()
+	_ok(not arena_m._nos.has(ida) and rec.size() == 1 and str(rec.get(ida, "")) == "FLORESTA-E08-CASA-BLOQUEADA: (27,24) escarpa",
+		"na escarpa (27,24) a figura não se põe de pé: recusa com nome «%s»" % rec.get(ida, ""))
+	var nb: Node3D = arena_m._nos.get(idb)
+	_ok(arena_m.figuras_desenhadas() == 1 and nb != null and nb.position == arena_m.pe_figura(Vector2i(29, 24)) and not arena_m._anel.visible,
+		"a da casa livre (29,24) fica de pé no pé da casa; a vez na recusada não tem anel")
+	a["x"] = 29
+	b["x"] = 27
+	arena_m.aplicar_vista(v)
+	await _quadros(1)
+	rec = arena_m.pes_recusados()
+	var na: Node3D = arena_m._nos.get(ida)
+	_ok(na != null and na.position == arena_m.pe_figura(Vector2i(29, 24)) and not arena_m._nos.has(idb) and rec.size() == 1
+		and str(rec.get(idb, "")) == "FLORESTA-E08-CASA-BLOQUEADA: (27,24) escarpa" and arena_m._anel.visible,
+		"trocadas: A sai da escarpa e põe-se de pé, com o anel da vez; B entra nela e fica recusada")

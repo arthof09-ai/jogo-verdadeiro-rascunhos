@@ -94,6 +94,7 @@ var _mat_destaque: ShaderMaterial
 var _relva_com_clima := false
 var _rotulo_custo: Label3D
 var _nos: Dictionary = {}  # figuraId -> Node3D
+var _pes_recusados: Dictionary = {}  # Ordem 58: figuraId -> recusa do pé (casa bloqueada pelo mapa)
 var _focou := false
 var _saindo := false
 var _mover_depois: Dictionary = {}  # o movimento que segue o «Sair c/ segurança» aceite
@@ -564,11 +565,17 @@ func _atualizar_cursor() -> void:
 
 func _sincronizar_figuras() -> void:
 	var vistos := {}
+	var recusados := {}
 	for id in Estado.figuras:
 		var f: Dictionary = Estado.figuras[id]
 		var c: Vector2i = Estado.casa_de(f)
 		if not dentro(c):
 			continue  # não colocada (ou fora da arena): não existe aqui
+		# Ordem 58: numa casa que o mapa bloqueia a figura não se põe de pé (recusa com nome: campo_da_mesa.gd).
+		var recusa := CampoDaMesa.recusa_do_pe(mapa, origem, casa_m, c)
+		if recusa != "":
+			CampoDaMesa.anotar_recusa(_pes_recusados, recusados, str(id), recusa)
+			continue
 		vistos[id] = true
 		var no: Node3D = _nos.get(id)
 		if no == null:
@@ -580,6 +587,13 @@ func _sincronizar_figuras() -> void:
 		if not vistos.has(id):
 			_nos[id].queue_free()
 			_nos.erase(id)
+	_pes_recusados = recusados
+
+
+## Ordem 58: as figuras que o servidor tem em casas que o mapa bloqueia e que por isso não se põem de pé aqui:
+## figuraId -> «FLORESTA-E08-CASA-BLOQUEADA: (x,y) motivo» (campo_da_mesa.gd `recusa_do_pe`).
+func pes_recusados() -> Dictionary:
+	return _pes_recusados.duplicate()
 
 
 func _criar_figura() -> Node3D:

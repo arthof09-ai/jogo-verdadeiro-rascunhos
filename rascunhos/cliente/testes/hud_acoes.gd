@@ -179,6 +179,7 @@ func _correr() -> void:
 	await _quadros(1)
 	await _teste_seguranca_na_arena()
 	await _teste_grelha_refeita_guarda_os_nomes()
+	await _teste_pe_em_casa_bloqueada()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -305,6 +306,44 @@ func _teste_grelha_refeita_guarda_os_nomes() -> void:
 	else:
 		_ok(false, "as linhas desse nó cobrem a grelha nova (sem malha)")
 	_estado.mapa = mapa_antes
+	arena.queue_free()
+	await _quadros(2)
+
+
+## Ordem 58: na arena do jogador, uma figura numa casa que o mapa bloqueia não se põe de pé: recusa com nome
+## (campo_da_mesa.gd `recusa_do_pe`, o mesmo caminho do ecrã do Mestre). Na 30 × 30 de 1,5 m, a (27,24) é uma escarpa
+## de 55° (a reserva 3 da Ordem 45) e a (29,24) pisa-se. Quando as duas figuras trocam de casa, a que sai da escarpa
+## volta a pôr-se de pé e a que entra deixa de estar. A prova completa (contra o servidor de verdade):
+## cenas/arena/ferramentas/provar_pes_bloqueadas.gd.
+func _teste_pe_em_casa_bloqueada() -> void:
+	print("== ordem 58: a figura numa casa que o mapa bloqueia não se põe de pé (arena do jogador) ==")
+	_rede._ativo = true  # como acima: sem ir ao lobby
+	var mapa_antes: Dictionary = _estado.mapa.duplicate()
+	var figuras_antes: Dictionary = _estado.figuras.duplicate(true)
+	_estado.mapa = {"largura": 30, "altura": 30, "casaM": 1.5}
+	_estado.figuras = {"pA": {"id": "pA", "nomePublico": "A", "x": 27, "y": 24, "lado": "criatura", "visivel": "de_pe"},
+		"pB": {"id": "pB", "nomePublico": "B", "x": 29, "y": 24, "lado": "criatura", "visivel": "de_pe"}}
+	var arena = (load("res://cenas/arena/arena.tscn") as PackedScene).instantiate()
+	root.add_child(arena)
+	await _quadros(2)
+	arena._ao_snapshot()
+	var rec: Dictionary = arena.pes_recusados()
+	var nb: Node3D = arena._nos.get("pB")
+	_ok(not arena._nos.has("pA") and str(rec.get("pA", "")) == "FLORESTA-E08-CASA-BLOQUEADA: (27,24) escarpa" and rec.size() == 1,
+		"na escarpa (27,24) a figura não se põe de pé: recusa com nome «%s»" % rec.get("pA", ""))
+	_ok(nb != null and nb.position == arena.pe_figura(Vector2i(29, 24)), "a da casa livre (29,24) está de pé no pé da casa")
+	_ok(arena.posicao_tela("pA") == null, "a recusada não tem posição na tela (os números de dano caem no sítio de sempre)")
+	_estado.figuras["pA"]["x"] = 29
+	_estado.figuras["pB"]["x"] = 27
+	arena._ao_evento({})
+	await _quadros(1)
+	rec = arena.pes_recusados()
+	var na: Node3D = arena._nos.get("pA")
+	_ok(na != null and na.position == arena.pe_figura(Vector2i(29, 24)) and not arena._nos.has("pB")
+		and str(rec.get("pB", "")) == "FLORESTA-E08-CASA-BLOQUEADA: (27,24) escarpa" and rec.size() == 1,
+		"trocadas: A sai da escarpa e põe-se de pé; B entra nela e fica recusada")
+	_estado.mapa = mapa_antes
+	_estado.figuras = figuras_antes
 	arena.queue_free()
 	await _quadros(2)
 
