@@ -396,6 +396,14 @@ func _correr() -> void:
 	_ok(nunca[0] == 1 and c4.get("falha_vista") == "", "o pedido que sai à 1.ª: um pedido só, sem falha (%d)" % nunca[0])
 	c4.queue_free()
 
+	# Ordem 54: a arena do Mestre abre depressa outra vez. Abriu-se o ecrã do Mestre quatro vezes (c, c2, c3, c4), sempre
+	# na mesma grelha: o mapa da floresta construiu-se só na 1.ª e as outras três vestiram-se do molde dela
+	# (mapa/floresta/molde_floresta.gd; a prova de que o mapa vestido é o mesmo está em pecas_mestre.gd).
+	print("== o mapa da mesma grelha não se constrói outra vez (ordem 54) ==")
+	var Molde = load("res://mapa/floresta/molde_floresta.gd")
+	_ok(int(Molde.contas["guardados"]) == 1 and int(Molde.contas["vestidos"]) == 3,
+		"4 aberturas do ecrã do Mestre: 1 mapa construído, 3 vestidos do molde (%s)" % [Molde.contas])
+
 	var saida := OS.get_environment("MESTRE_COMANDOS")
 	if saida != "":
 		var f := FileAccess.open(saida, FileAccess.WRITE)

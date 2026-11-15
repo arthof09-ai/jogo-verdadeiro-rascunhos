@@ -397,6 +397,7 @@ func _correr() -> void:
 		print("comandos escritos em ", saida, ": ", _comandos.size())
 	c.queue_free()
 	await _quadros(1)
+	await _molde_do_mapa()
 	_fim()
 
 
@@ -1341,6 +1342,103 @@ func _perfil_grafico(c) -> void:
 	_ok(c.escolher_perfil("Alto", false) and is_equal_approx(a.mapa.densidade_relva, 1.0) and cl.perfil == "alto" and op.selected == 2,
 		"«Alto»: relva a 1,0 e clima no Alto")
 	_ok(not c.escolher_perfil("ultra", false) and a.perfil_atual() == "alto", "um nome que não é perfil não muda nada")
+
+
+## Ordem 54: a arena do Mestre abre depressa outra vez. O mapa da floresta de uma zona constrói-se UMA vez; os mapas
+## seguintes da mesma zona nascem de uma cópia do molde dele (mapa/floresta/molde_floresta.gd). A prova de que nada
+## muda: o RETRATO inteiro do mapa vestido (nós, transformações, malhas, materiais com todos os parâmetros, MultiMesh,
+## grelha, estado dos scripts, o céu montado no dono) é igual, linha a linha, ao de um mapa construído de raiz.
+func _molde_do_mapa() -> void:
+	print("== o mapa reutilizado é o mesmo mapa (ordem 54) ==")
+	var Molde = load("res://mapa/floresta/molde_floresta.gd")
+	var Assentamento = load("res://cenas/arena/assentamento.gd")
+	var CampoFlorestaS = load("res://mapa/floresta/campo_floresta.gd")
+	var sozinho = CampoFlorestaS.new()
+	_ok(sozinho.reutilizar_molde == false, "o mapa sozinho (filmes, medições) constrói-se sempre: reutilizar_molde nasce desligado")
+	sozinho.free()
+	_ok(FileAccess.get_file_as_string("res://cenas/arena/campo_da_mesa.gd").contains("mapa.reutilizar_molde = true"),
+		"as duas arenas pedem o molde pelo módulo partilhado (campo_da_mesa.montar_mapa)")
+	var tam := Vector2(17 * 1.5, 13 * 1.5)  # uma zona que nenhuma arena deste teste usou
+	var zona := Rect2(Assentamento.origem_no_mapa(tam, 1.5), tam)
+
+	Molde.ligado = false
+	var a := _mapa_novo(zona)
+	var ra: PackedStringArray = Molde.retrato(a)
+	var n_mut_a: int = Molde.mutaveis(a).size()
+	var ms_construido: int = a.medidas["carga_ms"]
+	a.get_parent().free()
+	Molde.ligado = true
+	var g0: int = Molde.contas["guardados"]
+	var v0: int = Molde.contas["vestidos"]
+	var b := _mapa_novo(zona)
+	_ok(Molde.contas["guardados"] == g0 + 1 and Molde.contas["vestidos"] == v0, "a 1.ª construção da zona guarda o molde")
+	_ok(_iguais(Molde.retrato(b), ra), "guardar o molde não muda o mapa que o guardou (%d linhas do retrato)" % ra.size())
+	# O jogo mexe no mapa vivo: o perfil, o recorte da câmara, a neve e a água na relva, a camada do clima no chão,
+	# o LOD da relva, a ocupação da grelha, as medidas. Nada disto pode chegar ao molde.
+	b.definir_densidade_relva(0.5)
+	b.definir_recorte_vista(Vector3(1.0, 2.0, 3.0), 9.0)
+	(b.materiais_relva()[0] as ShaderMaterial).set_shader_parameter("neve", 0.7)
+	(b.get_node("Arena/Terreno") as GeometryInstance3D).material_overlay = StandardMaterial3D.new()
+	b.relva.atualizar_lod(Vector3(40.0, 0.0, 40.0))
+	b.grelha.ocupar(Vector2i(10, 10), "figura-teste")
+	b.obstaculos.append({"nome": "teste"})
+	b.medidas["teste"] = 1
+	var c := _mapa_novo(zona)
+	_ok(Molde.contas["vestidos"] == v0 + 1 and Molde.contas["guardados"] == g0 + 1,
+		"o mapa seguinte da mesma zona veste-se do molde (não se constrói outra vez)")
+	_ok(_iguais(Molde.retrato(c), ra, true),
+		"o mapa vestido é IGUAL ao construído de raiz: %d linhas do retrato, nós, malhas, materiais, MultiMesh, grelha, estado, céu" % ra.size())
+	var mut_b: Array = Molde.mutaveis(b)
+	var mut_c: Array = Molde.mutaveis(c)
+	var comuns := mut_c.filter(func(o): return o in mut_b)
+	_ok(comuns.is_empty() and mut_c.size() == n_mut_a,
+		"o vestido não partilha nada que mude com o outro mapa vivo (%d objectos seus: materiais, MultiMesh, grelha, lotes, acaso)" % mut_c.size())
+	_ok(c.grelha.livre(Vector2i(10, 10)) and is_equal_approx(c.densidade_relva, 1.0) and not c.medidas.has("teste")
+		and (c.get_node("Arena/Terreno") as GeometryInstance3D).material_overlay == null,
+		"o que o jogo mexeu no outro mapa não chegou ao vestido (grelha livre, relva a 1,0, sem camada, medidas limpas)")
+	var ms_vestido: int = c.medidas["carga_ms"]
+	_ok(ms_vestido * 5 < ms_construido, "vestir é muito mais rápido do que construir (%d ms contra %d ms)" % [ms_vestido, ms_construido])
+	c.definir_densidade_relva(0.5)
+	c.grelha.ocupar(Vector2i(3, 3), "outra")
+	(c.materiais_relva()[1] as ShaderMaterial).set_shader_parameter("agua", 0.4)
+	var d := _mapa_novo(zona)
+	_ok(_iguais(Molde.retrato(d), ra), "mexer num mapa vestido também não chega ao molde: o seguinte continua igual ao construído")
+	for m in [b, c, d]:
+		m.get_parent().free()
+
+
+func _mapa_novo(zona: Rect2) -> Node3D:
+	var CampoDaMesa = load("res://cenas/arena/campo_da_mesa.gd")
+	var dono := Node3D.new()
+	var amb := WorldEnvironment.new()
+	amb.name = "Ambiente"
+	amb.environment = Environment.new()
+	dono.add_child(amb)
+	var sol := DirectionalLight3D.new()
+	sol.name = "Sol"
+	dono.add_child(sol)
+	var cam := Camera3D.new()
+	cam.name = "Camera"
+	dono.add_child(cam)
+	root.add_child(dono)
+	return CampoDaMesa.montar_mapa(dono, zona, ^"../Ambiente", ^"../Sol", ^"../Camera")
+
+
+## Compara dois retratos; se diferirem, mostra a primeira linha diferente (e o total, com `contar`).
+func _iguais(x: PackedStringArray, y: PackedStringArray, contar := false) -> bool:
+	if x == y:
+		return true
+	var n := 0
+	for i in maxi(x.size(), y.size()):
+		var lx := x[i] if i < x.size() else "<nada>"
+		var ly := y[i] if i < y.size() else "<nada>"
+		if lx != ly:
+			n += 1
+			if n == 1:
+				printerr("    retrato, linha %d:\n      %s\n      %s" % [i, lx.left(600), ly.left(600)])
+	if contar:
+		printerr("    %d linhas diferentes (de %d / %d)" % [n, x.size(), y.size()])
+	return false
 
 
 func _textos(no: Node, saida: Array) -> void:
