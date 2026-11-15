@@ -51,12 +51,14 @@ const Assentamento := preload("res://cenas/arena/assentamento.gd")
 const SH_SOBRE := preload("res://cenas/arena/sobre_relevo.gdshader")
 ## Ordem 42 (parte 2): os pontos baixos REAIS do relevo, para o alagamento do clima.
 const BaciasRelevo := preload("res://cenas/arena/bacias_do_relevo.gd")
+## Ordem 45: o que esta arena e a do Mestre fazem igual sobre o mapa (montar, clima, remendos, linhas, toque).
+const CampoDaMesa := preload("res://cenas/arena/campo_da_mesa.gd")
 ## Quantos dos obstáculos reais do mapa (os mais perto da zona) dão abrigo à neve (o módulo aceita até 8).
-const ABRIGOS_DO_MAPA := 8
+const ABRIGOS_DO_MAPA := CampoDaMesa.ABRIGOS_DO_MAPA
 ## Quantos metros acima do chão vai o que se cola ao relevo (o resto resolve-o o shader).
 const LEVANTA_M := 0.03
 ## Divisões por lado de cada remendo de casa (os vértices seguem o relevo).
-const DIVISOES_CASA := 4
+const DIVISOES_CASA := CampoDaMesa.DIVISOES_CASA
 ## Raio (m) do cilindro câmara → foco onde as copas e os marcos do mapa somem (não tapam o jogo).
 const RAIO_RECORTE_M := 5.0
 ## Ordem 15 (parte F): os nomes das figuras juntas não se sobrepõem no ecrã.
@@ -107,11 +109,7 @@ func _process(_delta: float) -> void:
 		var raio := RAIO_RECORTE_M if camera.is_processing() else 0.0
 		mapa.definir_recorte_vista(camera.foco_atual() + Vector3(0.0, 1.0, 0.0), raio)
 		# Ordem 42 (parte 2): a relva do mapa responde ao clima (afoga nas bolsas, enterra-se na neve).
-		if clima != null and (clima.neve > 0.0 or clima.aglomerado > 0.0 or clima.agua > 0.0 or clima.lama > 0.0 or _relva_com_clima):
-			_relva_com_clima = clima.neve > 0.0 or clima.aglomerado > 0.0 or clima.agua > 0.0 or clima.lama > 0.0
-			var m: ShaderMaterial = mapa.materiais_relva()[0]
-			if m != null:
-				clima.empurrar_terreno_para(m)
+		_relva_com_clima = CampoDaMesa.relva_segue_clima(clima, mapa, _relva_com_clima)
 	var rotulos: Array = []
 	for no in _nos.values():
 		if is_instance_valid(no) and (no as Node).has_node("Nome"):
@@ -168,21 +166,7 @@ func _construir_grelha(w: int, h: int, c: float) -> void:
 
 	# Sem chão próprio: o chão é o do mapa (e é ele que responde ao clima: ver _garantir_mapa).
 	# As linhas seguem o relevo (amostra a cada 1/4 de casa).
-	var im := ImmediateMesh.new()
-	im.surface_begin(Mesh.PRIMITIVE_LINES, _material_sobre(COR_LINHAS, false))
-	var passos_x := largura * DIVISOES_CASA
-	var passos_z := altura * DIVISOES_CASA
-	for i in range(largura + 1):
-		var x := origem.x + i * casa_m
-		for k in passos_z:
-			im.surface_add_vertex(_no_chao(x, origem.y + tam.y * k / passos_z, LEVANTA_M))
-			im.surface_add_vertex(_no_chao(x, origem.y + tam.y * (k + 1) / passos_z, LEVANTA_M))
-	for j in range(altura + 1):
-		var z := origem.y + j * casa_m
-		for k in passos_x:
-			im.surface_add_vertex(_no_chao(origem.x + tam.x * k / passos_x, z, LEVANTA_M))
-			im.surface_add_vertex(_no_chao(origem.x + tam.x * (k + 1) / passos_x, z, LEVANTA_M))
-	im.surface_end()
+	var im := CampoDaMesa.linhas_grelha(origem, casa_m, largura, altura, _material_sobre(COR_LINHAS, false), LEVANTA_M)
 	var linhas := MeshInstance3D.new()
 	linhas.name = "Linhas"
 	linhas.mesh = im
@@ -230,21 +214,7 @@ func _garantir_mapa(zona: Rect2) -> void:
 	if mapa != null and is_instance_valid(mapa):
 		remove_child(mapa)
 		mapa.free()
-	mapa = CampoFloresta.new()
-	mapa.name = "Mapa"
-	mapa.no_ambiente = ^"../Ambiente"
-	mapa.no_sol = ^"../Sol"
-	mapa.no_camera = ^"../Camera"
-	mapa.vistas_por_tecla = false
-	mapa.mostrar_medicao = false
-	mapa.zona_jogo = zona
-	add_child(mapa)
-	move_child(mapa, 0)
-	# Ordem 42 + clima (Ordens 40/41): o chão que molha e branqueia é o do mapa (a zona fina e a larga).
-	for caminho in [^"Arena/Terreno", ^"Fundo/TerrenoLargo"]:
-		var chao := mapa.get_node_or_null(caminho)
-		if chao != null:
-			chao.add_to_group(Clima.GRUPO_CHAO)
+	mapa = CampoDaMesa.montar_mapa(self, zona, ^"../Ambiente", ^"../Sol", ^"../Camera")
 	if _perfis.atual != "":
 		_ao_perfil_aplicado(_perfis.atual)
 
@@ -254,41 +224,7 @@ func _garantir_mapa(zona: Rect2) -> void:
 ## do mapa (menires, santuário, lanternas, tronco tombado, rochas, árvores — mapa.obstaculos), os mais
 ## perto da zona. Cada abrigo é uma caixa invisível com a medida do obstáculo (o módulo lê a caixa da malha).
 func _ligar_clima_ao_mapa(zona: Rect2) -> void:
-	clima.altura_do_chao = altura_chao
-	# A zona jogável do mapa não tem muros: a neve da nevasca não se junta nas bordas dela (um quadrado
-	# branco à volta do campo), junta-se contra os obstáculos reais.
-	clima.bordas_abrigo = 0.0
-	clima.definir_bacias(BaciasRelevo.achar(zona))
-	var raiz := Node3D.new()
-	raiz.name = "AbrigosDoMapa"
-	_grelha.add_child(raiz)
-	var lista: Array = []
-	for o: Dictionary in mapa.obstaculos:
-		var c: Vector3 = o["c"]
-		var m: Vector3 = o["m"]
-		var caixa := Rect2(c.x - m.x, c.z - m.z, m.x * 2.0, m.z * 2.0)
-		var dx := maxf(maxf(zona.position.x - caixa.end.x, caixa.position.x - zona.end.x), 0.0)
-		var dz := maxf(maxf(zona.position.y - caixa.end.y, caixa.position.y - zona.end.y), 0.0)
-		lista.append([sqrt(dx * dx + dz * dz), o])
-	lista.sort_custom(func(a, b): return float(a[0]) < float(b[0]))
-	for e: Array in lista.slice(0, ABRIGOS_DO_MAPA):
-		var o: Dictionary = e[1]
-		var m: Vector3 = o["m"]
-		var mi := MeshInstance3D.new()
-		mi.name = "Abrigo_" + String(o["nome"]).replace(" ", "_")
-		var caixa := BoxMesh.new()
-		caixa.size = Vector3(m.x * 2.0, m.y, m.z * 2.0)
-		mi.mesh = caixa
-		mi.position = (o["c"] as Vector3) + Vector3(0.0, m.y * 0.5, 0.0)
-		mi.visible = false  # só a medida: o que se vê é o obstáculo do mapa
-		mi.add_to_group(Clima.GRUPO_OBSTACULO)
-		raiz.add_child(mi)
-	# As malhas reais dos obstáculos vestem a camada do clima (neve em cima, gelo): registadas à mão, depois
-	# das caixas — o módulo só dá abrigo aos 8 primeiros, por isso estas não roubam lugar às medidas.
-	for caminho in ["Arena/Pedras", "Arena/MarcoMadeira", "Arena/MarcoSantuario", "Arena/Troncos0", "Arena/Troncos1", "Arena/Troncos2", "Arena/Troncos3"]:
-		var no := mapa.get_node_or_null(caminho)
-		if no != null:
-			clima.registar_obstaculo(no)
+	CampoDaMesa.ligar_clima(clima, mapa, zona, _grelha, altura_chao)
 
 
 ## A altura do chão do mapa em (x, z) do mundo: a altura final única (malha = colisão = consulta).
@@ -322,35 +258,7 @@ func _nova_camada(nome: String, prioridade: int) -> MeshInstance3D:
 ## Uma malha com um remendo por casa: (DIVISOES_CASA + 1)² vértices por casa, cada um à altura do
 ## relevo + `levanta`. `casas` = [[Vector2i, Color], ...]; `escala` = fracção da casa coberta.
 func _malha_casas(casas: Array, escala: float, levanta: float) -> ArrayMesh:
-	if casas.is_empty():
-		return null
-	var n := DIVISOES_CASA
-	var v := PackedVector3Array()
-	var cores := PackedColorArray()
-	var idx := PackedInt32Array()
-	var lado := casa_m * escala
-	for e: Array in casas:
-		var c: Vector2i = e[0]
-		var cor: Color = e[1]
-		var x0 := origem.x + (c.x + 0.5) * casa_m - lado * 0.5
-		var z0 := origem.y + (c.y + 0.5) * casa_m - lado * 0.5
-		var base := v.size()
-		for j in n + 1:
-			for i in n + 1:
-				v.append(_no_chao(x0 + lado * i / n, z0 + lado * j / n, levanta))
-				cores.append(cor)
-		for j in n:
-			for i in n:
-				var a := base + j * (n + 1) + i
-				idx.append_array([a, a + 1, a + n + 1, a + 1, a + n + 2, a + n + 1])
-	var arr := []
-	arr.resize(Mesh.ARRAY_MAX)
-	arr[Mesh.ARRAY_VERTEX] = v
-	arr[Mesh.ARRAY_COLOR] = cores
-	arr[Mesh.ARRAY_INDEX] = idx
-	var malha := ArrayMesh.new()
-	malha.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
-	return malha
+	return CampoDaMesa.malha_casas(origem, casa_m, casas, escala, levanta)
 
 
 func dentro(c: Vector2i) -> bool:
@@ -389,30 +297,7 @@ func casa_em_tela(p: Vector2) -> Vector2i:
 
 ## O primeiro ponto onde o raio (o, d) toca o chão do mapa, ou null.
 func ponto_no_chao(o: Vector3, d: Vector3):
-	if d.y > -0.0005:
-		return null
-	# começa onde o raio desce abaixo dos 12 m (o relevo da arena do mapa fica muito abaixo disso)
-	var t := maxf((o.y - 12.0) / -d.y, 0.0)
-	var passo := 0.25
-	var antes := t
-	for i in 4000:
-		var q := o + d * t
-		if q.y <= Relevo.altura(q.x, q.z):
-			var a := antes
-			var b := t
-			for k in 14:
-				var m := (a + b) * 0.5
-				var qm := o + d * m
-				if qm.y <= Relevo.altura(qm.x, qm.z):
-					b = m
-				else:
-					a = m
-			return o + d * b
-		if q.y < -40.0:
-			return null
-		antes = t
-		t += passo
-	return null
+	return CampoDaMesa.ponto_no_chao(o, d)
 
 
 ## Posição na tela da cabeça de uma figura (para os números de dano), ou null.

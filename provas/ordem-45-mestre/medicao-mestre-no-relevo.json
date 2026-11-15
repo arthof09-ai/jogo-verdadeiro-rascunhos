@@ -1,0 +1,3933 @@
+{
+ "20x20 de 1.5 m": {
+  "bloqueadas": {
+   "jogador": 0,
+   "mestre": 0,
+   "servidor": 0
+  },
+  "camadas": {
+   "ContornosDestaques": {
+    "acima_max_m": 0.0450000592960957,
+    "acima_min_m": 0.0449999415668563,
+    "vertices": 12800
+   },
+   "Destaques": {
+    "acima_max_m": 0.0400000984398787,
+    "acima_min_m": 0.0399999289320494,
+    "vertices": 10000
+   },
+   "Fogo": {
+    "acima_max_m": 0.0350003470275624,
+    "acima_min_m": 0.0349996352915696,
+    "vertices": 50
+   },
+   "Linhas": {
+    "acima_max_m": 0.0300000309944153,
+    "acima_min_m": 0.0299999713897705,
+    "vertices": 6720
+   }
+  },
+  "centro_menos_relevo_m": 0.0,
+  "centro_mestre_menos_jogador_m": 0.0,
+  "centro_mestre_menos_servidor_m": 0.0000000000000000555111512312578,
+  "ceu": {
+   "directionallight": 1,
+   "fundo": "BG_SKY",
+   "worldenvironment": 1
+  },
+  "linhas_mestre_menos_jogador_m": 0.0,
+  "pe": {
+   "casas": [
+    {
+     "anel": {
+      "enterraM": 0.00417676087960217,
+      "flutuaM": 0.00685774308073839,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00415235757827848,
+      "flutuaM": 0.00569987641388536,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 35.7,
+     "peM": 1.18231821060181,
+     "pegada": {
+      "enterraM": 0.00411982494498009,
+      "flutuaM": 0.00415604056092267,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.0453206518275557,
+      "flutuaM": 0.0239347219467163,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0337581339470958,
+      "flutuaM": 0.0239347219467163,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 6.4,
+     "peM": -0.524369120597839,
+     "pegada": {
+      "enterraM": 0.0245272756744273,
+      "flutuaM": 0.0239347219467163,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.00708098631400844,
+      "flutuaM": 0.00422859191894531,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00586924484514384,
+      "flutuaM": 0.00422859191894531,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.1,
+     "peM": -0.501633644104004,
+     "pegada": {
+      "enterraM": 0.00425359082328214,
+      "flutuaM": 0.00422859191894531,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.00818335203819842,
+      "flutuaM": 0.00490999221801758,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00678049369321709,
+      "flutuaM": 0.00490999221801758,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.5,
+     "peM": -0.436898559331894,
+     "pegada": {
+      "enterraM": 0.00491001437469762,
+      "flutuaM": 0.00490999221801758,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.00487163662910461,
+      "flutuaM": 0.00811942725087178,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00487163662910461,
+      "flutuaM": 0.00672752717815095,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.5,
+     "peM": -0.297980576753616,
+     "pegada": {
+      "enterraM": 0.00487163662910461,
+      "flutuaM": 0.00487166046860565,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.0124895647168159,
+      "flutuaM": 0.0208159473720297,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": true,
+     "contacto": {
+      "enterraM": 0.0124895647168159,
+      "flutuaM": 0.0172474983364242,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 7.2,
+     "peM": -0.0530274994671345,
+     "pegada": {
+      "enterraM": 0.0124895647168159,
+      "flutuaM": 0.0124895660163873,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.00551092594196234,
+      "flutuaM": 0.00574792716783179,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00495857497056273,
+      "flutuaM": 0.00509398182233278,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 22.2,
+     "peM": -0.803144752979279,
+     "pegada": {
+      "enterraM": 0.004222101655462,
+      "flutuaM": 0.00422205163687162,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.0356640152300116,
+      "flutuaM": 0.0209777387610472,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.024968062477754,
+      "flutuaM": 0.0200279874594477,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.6,
+     "peM": -0.545095920562744,
+     "pegada": {
+      "enterraM": 0.0190350257848261,
+      "flutuaM": 0.0187616514494664,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.00792560689955379,
+      "flutuaM": 0.00464546680450439,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00657870611168454,
+      "flutuaM": 0.00464546680450439,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.1,
+     "peM": -0.503333151340485,
+     "pegada": {
+      "enterraM": 0.00478283758623266,
+      "flutuaM": 0.00464546680450439,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.00737155509924037,
+      "flutuaM": 0.0111730045542006,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00718919187784201,
+      "flutuaM": 0.00936844928174452,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.5,
+     "peM": -0.331364512443542,
+     "pegada": {
+      "enterraM": 0.00694604255365056,
+      "flutuaM": 0.00696237630294883,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.0105516407603758,
+      "flutuaM": 0.0100448425901192,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00933965730170411,
+      "flutuaM": 0.00905005913227791,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.1,
+     "peM": -0.286039531230927,
+     "pegada": {
+      "enterraM": 0.00772368040620702,
+      "flutuaM": 0.00772368086055758,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.00341211298702504,
+      "flutuaM": 0.00538536607167117,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00336366022626572,
+      "flutuaM": 0.00449123233556736,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.5,
+     "peM": -0.156247779726982,
+     "pegada": {
+      "enterraM": 0.00329905407835157,
+      "flutuaM": 0.00329905530636043,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.0153325577235215,
+      "flutuaM": 0.00919954478740692,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0127041182792816,
+      "flutuaM": 0.00919954478740692,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.1,
+     "peM": -0.139270290732384,
+     "pegada": {
+      "enterraM": 0.00919953069105972,
+      "flutuaM": 0.00919954478740692,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.0168287754058838,
+      "flutuaM": 0.0280479639233844,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0168287754058838,
+      "flutuaM": 0.0232397412056773,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.1,
+     "peM": 0.0824292525649071,
+     "pegada": {
+      "enterraM": 0.0168287754058838,
+      "flutuaM": 0.0168287766859458,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.00672110076320109,
+      "flutuaM": 0.00449260332926826,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00564283596114012,
+      "flutuaM": 0.00436939795811953,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.7,
+     "peM": -0.529345154762268,
+     "pegada": {
+      "enterraM": 0.00420515207255789,
+      "flutuaM": 0.004205123354038,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.0034091040870976,
+      "flutuaM": 0.00560793454055286,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00339722377248108,
+      "flutuaM": 0.00465370346152483,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.2,
+     "peM": -0.282727628946304,
+     "pegada": {
+      "enterraM": 0.00338138358316087,
+      "flutuaM": 0.00338139490388656,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.00506542886800432,
+      "flutuaM": 0.00596130446343324,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": true,
+     "contacto": {
+      "enterraM": 0.0046666845491726,
+      "flutuaM": 0.00517861358821398,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.5,
+     "peM": -0.169976457953453,
+     "pegada": {
+      "enterraM": 0.0041350247336247,
+      "flutuaM": 0.00413502417139361,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.00301572680473328,
+      "flutuaM": 0.00502621744574672,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00301572680473328,
+      "flutuaM": 0.00416458044569779,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.2,
+     "peM": -0.110145278275013,
+     "pegada": {
+      "enterraM": 0.00301572680473328,
+      "flutuaM": 0.00301573080832274,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.00440774817522649,
+      "flutuaM": 0.00442226143864222,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00393782307704279,
+      "flutuaM": 0.00394611479714514,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.1,
+     "peM": -0.055688563734293,
+     "pegada": {
+      "enterraM": 0.00331125568936693,
+      "flutuaM": 0.00331125236271969,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.00343761847881385,
+      "flutuaM": 0.00195176154375076,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00272757115054684,
+      "flutuaM": 0.00195176154375076,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.6,
+     "peM": -0.0463495701551437,
+     "pegada": {
+      "enterraM": 0.00197887861966727,
+      "flutuaM": 0.00195176154375076,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.00453411150522387,
+      "flutuaM": 0.00504000722127389,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00407639156012168,
+      "flutuaM": 0.00417622278627866,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.6,
+     "peM": 0.0118137327954173,
+     "pegada": {
+      "enterraM": 0.00346609805717668,
+      "flutuaM": 0.00346609794746083,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.00719034671783447,
+      "flutuaM": 0.0119838854496273,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00719034671783447,
+      "flutuaM": 0.00992950454263181,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 6.2,
+     "peM": -0.322493195533752,
+     "pegada": {
+      "enterraM": 0.00719034671783447,
+      "flutuaM": 0.0071903283859065,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.00428679585456848,
+      "flutuaM": 0.00727832992173036,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00428679585456848,
+      "flutuaM": 0.00603920934024593,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.1,
+     "peM": -0.0687554851174355,
+     "pegada": {
+      "enterraM": 0.00428679585456848,
+      "flutuaM": 0.00438704776984791,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.00495803537043749,
+      "flutuaM": 0.00681335950415907,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00472499585400026,
+      "flutuaM": 0.00578517826711376,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.2,
+     "peM": -0.0752332806587219,
+     "pegada": {
+      "enterraM": 0.00441427643882235,
+      "flutuaM": 0.00441426928198929,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.00946872755081785,
+      "flutuaM": 0.00622351448381231,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0079326695305777,
+      "flutuaM": 0.00607826064030334,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.3,
+     "peM": -0.0985657200217247,
+     "pegada": {
+      "enterraM": 0.00588459132728048,
+      "flutuaM": 0.00588458944317136,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.00585818383842707,
+      "flutuaM": 0.00976364063569257,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00585818383842707,
+      "flutuaM": 0.00808987409217011,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.7,
+     "peM": 0.0101174833253026,
+     "pegada": {
+      "enterraM": 0.00585818383842707,
+      "flutuaM": 0.0058581837880568,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.00593868643045425,
+      "flutuaM": 0.0100285778706256,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00593868643045425,
+      "flutuaM": 0.00831779939869054,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.8,
+     "peM": 0.119719736278057,
+     "pegada": {
+      "enterraM": 0.00593868643045425,
+      "flutuaM": 0.00603676143364257,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.00333988943888031,
+      "flutuaM": 0.00363376117431713,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": true,
+     "contacto": {
+      "enterraM": 0.0030292711356748,
+      "flutuaM": 0.00319720134288207,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.8,
+     "peM": 0.15617361664772,
+     "pegada": {
+      "enterraM": 0.00261511448929141,
+      "flutuaM": 0.00261512259988095,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.00492321650707339,
+      "flutuaM": 0.00523861082706389,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00444642059160794,
+      "flutuaM": 0.00462664042909935,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.4,
+     "peM": -0.238387316465378,
+     "pegada": {
+      "enterraM": 0.0038106892088976,
+      "flutuaM": 0.00381067985445796,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.00419770201550444,
+      "flutuaM": 0.00368265505314458,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00366517284419379,
+      "flutuaM": 0.00337086104587581,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.0,
+     "peM": -0.0346485003829002,
+     "pegada": {
+      "enterraM": 0.00295513348835588,
+      "flutuaM": 0.00295513465456754,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.0100509733177956,
+      "flutuaM": 0.00597455818206072,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00825058065268195,
+      "flutuaM": 0.00597455818206072,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.3,
+     "peM": -0.0101218139752746,
+     "pegada": {
+      "enterraM": 0.0059745579395335,
+      "flutuaM": 0.00597455818206072,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.00871718699252799,
+      "flutuaM": 0.00892960657735475,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00781734070430198,
+      "flutuaM": 0.00793872463206453,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.2,
+     "peM": 0.0521232560276985,
+     "pegada": {
+      "enterraM": 0.00661754536291884,
+      "flutuaM": 0.00661754921993669,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.00988690743723986,
+      "flutuaM": 0.00593214482069016,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00819200759423161,
+      "flutuaM": 0.00593214482069016,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.0,
+     "peM": 0.0617163255810738,
+     "pegada": {
+      "enterraM": 0.00593214225827943,
+      "flutuaM": 0.00593214482069016,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.00577745254376083,
+      "flutuaM": 0.00765264952148925,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00545980517442035,
+      "flutuaM": 0.00653135745475691,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.5,
+     "peM": 0.286133527755737,
+     "pegada": {
+      "enterraM": 0.00503627517112082,
+      "flutuaM": 0.00503630140858274,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.00830937615078398,
+      "flutuaM": 0.00734242861182111,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00726368092000507,
+      "flutuaM": 0.00671114524205529,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.7,
+     "peM": 0.3703892827034,
+     "pegada": {
+      "enterraM": 0.00586941943089792,
+      "flutuaM": 0.00586943331824352,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.00564644482248866,
+      "flutuaM": 0.00915403484631838,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00560518881926925,
+      "flutuaM": 0.00760952507456159,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 6.5,
+     "peM": -0.270038485527039,
+     "pegada": {
+      "enterraM": 0.00555018137319735,
+      "flutuaM": 0.00555017956782455,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.00246864529903656,
+      "flutuaM": 0.00293810938996986,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00227960131802898,
+      "flutuaM": 0.00254786262909581,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.8,
+     "peM": -0.0279301200062037,
+     "pegada": {
+      "enterraM": 0.00202753405081313,
+      "flutuaM": 0.00202753396837887,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.00602228994109666,
+      "flutuaM": 0.00361337512731552,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00498989597822087,
+      "flutuaM": 0.00361337512731552,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.2,
+     "peM": 0.119778037071228,
+     "pegada": {
+      "enterraM": 0.00361337293456288,
+      "flutuaM": 0.00361337512731552,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.00529851019382477,
+      "flutuaM": 0.00883083821807773,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": true,
+     "contacto": {
+      "enterraM": 0.00529851019382477,
+      "flutuaM": 0.00731698101582004,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.3,
+     "peM": 0.186733812093735,
+     "pegada": {
+      "enterraM": 0.00529851019382477,
+      "flutuaM": 0.00529850212950933,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.00488921096965811,
+      "flutuaM": 0.00810582923057623,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00488232433175045,
+      "flutuaM": 0.00672039059200907,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.8,
+     "peM": 0.284597903490067,
+     "pegada": {
+      "enterraM": 0.00487314225983343,
+      "flutuaM": 0.00487313695447611,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.00598070190972777,
+      "flutuaM": 0.00358840823173523,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00495544013877725,
+      "flutuaM": 0.00358840823173523,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.2,
+     "peM": 0.347309589385986,
+     "pegada": {
+      "enterraM": 0.00358842458380471,
+      "flutuaM": 0.00358840823173523,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.0112833874444789,
+      "flutuaM": 0.00677004456520081,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00934909107666221,
+      "flutuaM": 0.00677004456520081,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.8,
+     "peM": 0.456430315971375,
+     "pegada": {
+      "enterraM": 0.00677002867101351,
+      "flutuaM": 0.00677004456520081,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.00877441525229372,
+      "flutuaM": 0.00857426745179524,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00780213375886274,
+      "flutuaM": 0.00768776206920538,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.7,
+     "peM": -0.214713975787163,
+     "pegada": {
+      "enterraM": 0.00650575740906523,
+      "flutuaM": 0.00650575385831029,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.0128916311430785,
+      "flutuaM": 0.0106439953065118,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0111491578087833,
+      "flutuaM": 0.00986479409039011,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.3,
+     "peM": -0.0308849643915892,
+     "pegada": {
+      "enterraM": 0.00882585971447951,
+      "flutuaM": 0.00882585985321728,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.00278442484407625,
+      "flutuaM": 0.00180429343219402,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00216308462568274,
+      "flutuaM": 0.00173216939273597,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.2,
+     "peM": 0.115964815020561,
+     "pegada": {
+      "enterraM": 0.00163600854347479,
+      "flutuaM": 0.00163600259593721,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.00972351021586715,
+      "flutuaM": 0.00631371986740703,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00816177190535861,
+      "flutuaM": 0.00615718339880317,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.4,
+     "peM": 0.240072831511498,
+     "pegada": {
+      "enterraM": 0.00607945338921378,
+      "flutuaM": 0.00594846751236616,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.00250481700653182,
+      "flutuaM": 0.00287466565484706,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00229470924629521,
+      "flutuaM": 0.0025069706017255,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 0.2,
+     "peM": 0.428455084562302,
+     "pegada": {
+      "enterraM": 0.00201670037715357,
+      "flutuaM": 0.00201671038155737,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.00498098134994507,
+      "flutuaM": 0.00830171116211176,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00498098134994507,
+      "flutuaM": 0.00687856595780323,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.6,
+     "peM": 0.635216176509857,
+     "pegada": {
+      "enterraM": 0.00498098134994507,
+      "flutuaM": 0.00498103758251744,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.00868109605796974,
+      "flutuaM": 0.00701612274576746,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00748338364064682,
+      "flutuaM": 0.00653199058535836,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.3,
+     "peM": 0.613209843635559,
+     "pegada": {
+      "enterraM": 0.00588643407838407,
+      "flutuaM": 0.00588648056134389,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.0101774708191442,
+      "flutuaM": 0.00983782629859675,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": true,
+     "contacto": {
+      "enterraM": 0.00903245309988576,
+      "flutuaM": 0.00883835429875179,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 33.2,
+     "peM": 0.434107154607773,
+     "pegada": {
+      "enterraM": 0.00750574303871487,
+      "flutuaM": 0.00750574470589882,
+      "raioM": 0.42
+     },
+     "x": 1,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.0269245640133953,
+      "flutuaM": 0.0132153481245041,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0182497817508127,
+      "flutuaM": 0.0132153481245041,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 26.1,
+     "peM": -0.190406277775764,
+     "pegada": {
+      "enterraM": 0.0132153621079372,
+      "flutuaM": 0.0132153481245041,
+      "raioM": 0.42
+     },
+     "x": 2,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.0123309353083316,
+      "flutuaM": 0.00633258733449082,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00833352192034909,
+      "flutuaM": 0.00619439273398603,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 34.9,
+     "peM": 0.405408382415771,
+     "pegada": {
+      "enterraM": 0.00619329366385002,
+      "flutuaM": 0.00601015226435919,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 1
+    },
+    {
+     "anel": {
+      "enterraM": 0.032724243393762,
+      "flutuaM": 0.018601610511066,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0221676799275866,
+      "flutuaM": 0.0178288709932168,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 26.1,
+     "peM": -0.204541087150574,
+     "pegada": {
+      "enterraM": 0.0167985538611397,
+      "flutuaM": 0.0167985447418424,
+      "raioM": 0.42
+     },
+     "x": 1,
+     "y": 1
+    },
+    {
+     "anel": {
+      "enterraM": 0.038195543243841,
+      "flutuaM": 0.0190381109714508,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0271460230166234,
+      "flutuaM": 0.0190381109714508,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 25.4,
+     "peM": -0.269402354955673,
+     "pegada": {
+      "enterraM": 0.0197565647841948,
+      "flutuaM": 0.0190381109714508,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 2
+    }
+   ],
+   "em_casas_bloqueadas": 0,
+   "figuras": 54,
+   "fundo_do_corpo_menos_plano_m": 0.000000303983824778697,
+   "pe_mestre_menos_jogador_m": 0.0,
+   "pe_mestre_menos_servidor_m": 0.0000000000000000555111512312578,
+   "pior_bloqueadas": {
+    "anel": [
+     0.0,
+     0.0
+    ],
+    "contacto": [
+     0.0,
+     0.0
+    ],
+    "pegada": [
+     0.0,
+     0.0
+    ]
+   },
+   "pior_outras": {
+    "anel": [
+     0.0453206518275557,
+     0.0280479639233844
+    ],
+    "contacto": [
+     0.0337581339470958,
+     0.0239347219467163
+    ],
+    "pegada": [
+     0.0245272756744273,
+     0.0239347219467163
+    ]
+   },
+   "pior_seis_da_encosta": {
+    "anel": [
+     0.038195543243841,
+     0.0190381109714508
+    ],
+    "contacto": [
+     0.0271460230166234,
+     0.0190381109714508
+    ],
+    "pegada": [
+     0.0197565647841948,
+     0.0190381109714508
+    ]
+   }
+  },
+  "toque": {
+   "0": {
+    "jogador": {
+     "certas": 340,
+     "erradas": [],
+     "tapadas": 0,
+     "vistas": 340
+    },
+    "mestre": {
+     "certas": 301,
+     "erradas": [],
+     "tapadas": 0,
+     "vistas": 301
+    }
+   },
+   "1": {
+    "jogador": {
+     "certas": 400,
+     "erradas": [],
+     "tapadas": 0,
+     "vistas": 400
+    },
+    "mestre": {
+     "certas": 400,
+     "erradas": [],
+     "tapadas": 0,
+     "vistas": 400
+    }
+   },
+   "2": {
+    "jogador": {
+     "certas": 400,
+     "erradas": [],
+     "tapadas": 0,
+     "vistas": 400
+    },
+    "mestre": {
+     "certas": 400,
+     "erradas": [],
+     "tapadas": 0,
+     "vistas": 400
+    }
+   }
+  }
+ },
+ "30x30 de 1.5 m": {
+  "bloqueadas": {
+   "jogador": 43,
+   "mestre": 43,
+   "servidor": 43
+  },
+  "camadas": {
+   "ContornosDestaques": {
+    "acima_max_m": 0.0450002383962183,
+    "acima_min_m": 0.0449997635259933,
+    "vertices": 28800
+   },
+   "Destaques": {
+    "acima_max_m": 0.0400018679476073,
+    "acima_min_m": 0.0399973562998541,
+    "vertices": 22500
+   },
+   "Fogo": {
+    "acima_max_m": 0.0350003470275624,
+    "acima_min_m": 0.0349996352915696,
+    "vertices": 50
+   },
+   "Linhas": {
+    "acima_max_m": 0.0300002098083496,
+    "acima_min_m": 0.0299998819828033,
+    "vertices": 14880
+   }
+  },
+  "centro_menos_relevo_m": 0.0,
+  "centro_mestre_menos_jogador_m": 0.0,
+  "centro_mestre_menos_servidor_m": 0.000000000000000444089209850063,
+  "ceu": {
+   "directionallight": 1,
+   "fundo": "BG_SKY",
+   "worldenvironment": 1
+  },
+  "linhas_mestre_menos_jogador_m": 0.0,
+  "pe": {
+   "casas": [
+    {
+     "anel": {
+      "enterraM": 0.00525022818561638,
+      "flutuaM": 0.00528632802894435,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00469352801640843,
+      "flutuaM": 0.00471411149192136,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.0,
+     "peM": 2.47079396247864,
+     "pegada": {
+      "enterraM": 0.00395126137595048,
+      "flutuaM": 0.00395115601682505,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.0202233791351318,
+      "flutuaM": 0.0337054295957842,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0202233791351318,
+      "flutuaM": 0.0279273430171538,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.6,
+     "peM": 2.66959285736084,
+     "pegada": {
+      "enterraM": 0.0202233791351318,
+      "flutuaM": 0.0202232242497757,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.0119074583053589,
+      "flutuaM": 0.0198456556893802,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0119074583053589,
+      "flutuaM": 0.0164435434735606,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 30.9,
+     "peM": 1.30164837837219,
+     "pegada": {
+      "enterraM": 0.0119074583053589,
+      "flutuaM": 0.0119073781350494,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.00617354614750099,
+      "flutuaM": 0.0078933296425916,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00578849017620092,
+      "flutuaM": 0.00677122113605344,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.2,
+     "peM": -0.476325660943985,
+     "pegada": {
+      "enterraM": 0.00527508197788867,
+      "flutuaM": 0.00527507570576924,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.00494843721389771,
+      "flutuaM": 0.00824743059554223,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00494843721389771,
+      "flutuaM": 0.0068335874940324,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 0.6,
+     "peM": -0.346627026796341,
+     "pegada": {
+      "enterraM": 0.00494843721389771,
+      "flutuaM": 0.00494846294536089,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.00628373026847839,
+      "flutuaM": 0.0104729109015871,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": true,
+     "contacto": {
+      "enterraM": 0.00628373026847839,
+      "flutuaM": 0.00867755570957846,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.7,
+     "peM": -0.279993504285812,
+     "pegada": {
+      "enterraM": 0.00628373026847839,
+      "flutuaM": 0.00628374911069685,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.00873210312440109,
+      "flutuaM": 0.00519216060638428,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00724021734743852,
+      "flutuaM": 0.00519216060638428,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.1,
+     "peM": -0.646775007247925,
+     "pegada": {
+      "enterraM": 0.00525103612148869,
+      "flutuaM": 0.00519216060638428,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.00849163895354366,
+      "flutuaM": 0.0106312316734432,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00792570662735748,
+      "flutuaM": 0.00914827982584754,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 17.3,
+     "peM": -1.01612460613251,
+     "pegada": {
+      "enterraM": 0.00717112638464812,
+      "flutuaM": 0.00717101728582392,
+      "raioM": 0.42
+     },
+     "x": 21,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.0126216553741756,
+      "flutuaM": 0.00757288932800293,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0104579483910552,
+      "flutuaM": 0.00757288932800293,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 13.4,
+     "peM": -2.22120094299316,
+     "pegada": {
+      "enterraM": 0.00757301734228122,
+      "flutuaM": 0.00757288932800293,
+      "raioM": 0.42
+     },
+     "x": 24,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.0120690519686946,
+      "flutuaM": 0.00724148750305176,
+      "raioM": 0.56
+     },
+     "bloqueada": true,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0100000686943531,
+      "flutuaM": 0.00724148750305176,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 6.7,
+     "peM": -2.80096364021301,
+     "pegada": {
+      "enterraM": 0.007241420157726,
+      "flutuaM": 0.00724148750305176,
+      "raioM": 0.42
+     },
+     "x": 27,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.00583423136211536,
+      "flutuaM": 0.00741533862964161,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00546320399618594,
+      "flutuaM": 0.00636676947275783,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.6,
+     "peM": 2.56586480140686,
+     "pegada": {
+      "enterraM": 0.00496850075163024,
+      "flutuaM": 0.00496867664618117,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.00624465942382813,
+      "flutuaM": 0.0104076299247708,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00624465942382813,
+      "flutuaM": 0.00862345639882278,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.0,
+     "peM": 2.75287961959839,
+     "pegada": {
+      "enterraM": 0.00624465942382813,
+      "flutuaM": 0.00624455712647887,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.0148017406463623,
+      "flutuaM": 0.0246695074099146,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0148017406463623,
+      "flutuaM": 0.0204404421704156,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 27.7,
+     "peM": 1.58934640884399,
+     "pegada": {
+      "enterraM": 0.0148017406463623,
+      "flutuaM": 0.0148016816404066,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.0379492542373114,
+      "flutuaM": 0.0227695107460022,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0314436716337996,
+      "flutuaM": 0.0227695107460022,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.0,
+     "peM": -0.500618815422058,
+     "pegada": {
+      "enterraM": 0.0227695603670321,
+      "flutuaM": 0.0227695107460022,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.00737620663412741,
+      "flutuaM": 0.00572234066668642,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00632010167464614,
+      "flutuaM": 0.005375030140082,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.7,
+     "peM": -0.379594415426254,
+     "pegada": {
+      "enterraM": 0.00491196093111412,
+      "flutuaM": 0.00491194882353929,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.0074790787707073,
+      "flutuaM": 0.0123586555888906,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00746197254435782,
+      "flutuaM": 0.0102502901290437,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 0.2,
+     "peM": -0.320988446474075,
+     "pegada": {
+      "enterraM": 0.00743916422535901,
+      "flutuaM": 0.00743913547396602,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.00709320023399096,
+      "flutuaM": 0.00425592064857483,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": true,
+     "contacto": {
+      "enterraM": 0.00587722242852401,
+      "flutuaM": 0.00425592064857483,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.6,
+     "peM": -0.435127526521683,
+     "pegada": {
+      "enterraM": 0.00425591960621752,
+      "flutuaM": 0.00425592064857483,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.00816440582275391,
+      "flutuaM": 0.0137041725494566,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00816440582275391,
+      "flutuaM": 0.0113611154620337,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 19.5,
+     "peM": -0.544257044792175,
+     "pegada": {
+      "enterraM": 0.00816440582275391,
+      "flutuaM": 0.00823702054574721,
+      "raioM": 0.42
+     },
+     "x": 21,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.00879061410834936,
+      "flutuaM": 0.00549753280185428,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00731953976294664,
+      "flutuaM": 0.00543775161107352,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 17.2,
+     "peM": -1.87014424800873,
+     "pegada": {
+      "enterraM": 0.00535806548968765,
+      "flutuaM": 0.00535804163053388,
+      "raioM": 0.42
+     },
+     "x": 24,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.00724967345732352,
+      "flutuaM": 0.00434994697570801,
+      "raioM": 0.56
+     },
+     "bloqueada": true,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00600685557455405,
+      "flutuaM": 0.00434994697570801,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 10.0,
+     "peM": -2.51991939544678,
+     "pegada": {
+      "enterraM": 0.00434976858755931,
+      "flutuaM": 0.00434994697570801,
+      "raioM": 0.42
+     },
+     "x": 27,
+     "y": 3
+    },
+    {
+     "anel": {
+      "enterraM": 0.017106294631958,
+      "flutuaM": 0.0285102893689952,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.017106294631958,
+      "flutuaM": 0.0236227985336566,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 25.5,
+     "peM": 2.11987662315369,
+     "pegada": {
+      "enterraM": 0.017106294631958,
+      "flutuaM": 0.0171061349276158,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.0129156112670898,
+      "flutuaM": 0.0227683330530084,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0129156112670898,
+      "flutuaM": 0.0182601268544289,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 31.0,
+     "peM": 1.74997866153717,
+     "pegada": {
+      "enterraM": 0.0129156112670898,
+      "flutuaM": 0.0132720110679014,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.032724243393762,
+      "flutuaM": 0.018601610511066,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0221676799275866,
+      "flutuaM": 0.0178288709932168,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 26.1,
+     "peM": -0.204541087150574,
+     "pegada": {
+      "enterraM": 0.0167985538611397,
+      "flutuaM": 0.0167985447418424,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.00800029746535813,
+      "flutuaM": 0.00858933441637078,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00723779201507568,
+      "flutuaM": 0.00757437928890181,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.1,
+     "peM": -0.505213797092438,
+     "pegada": {
+      "enterraM": 0.00622111795332359,
+      "flutuaM": 0.00622110582501034,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.00726359770909824,
+      "flutuaM": 0.00435814261436462,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00601841185950991,
+      "flutuaM": 0.00435814261436462,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.5,
+     "peM": -0.464914619922638,
+     "pegada": {
+      "enterraM": 0.00435816201049022,
+      "flutuaM": 0.00435814261436462,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.0107404853560666,
+      "flutuaM": 0.0064443051815033,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00889925797397484,
+      "flutuaM": 0.0064443051815033,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.1,
+     "peM": -0.407102972269058,
+     "pegada": {
+      "enterraM": 0.00644428698349486,
+      "flutuaM": 0.0064443051815033,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.005369579959833,
+      "flutuaM": 0.00704854744686045,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00506410126884776,
+      "flutuaM": 0.00602351260992387,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 0.9,
+     "peM": -0.244241863489151,
+     "pegada": {
+      "enterraM": 0.00465679601050556,
+      "flutuaM": 0.00465679923992882,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.0240148082375526,
+      "flutuaM": 0.040024686742253,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": true,
+     "contacto": {
+      "enterraM": 0.0240148082375526,
+      "flutuaM": 0.0331633127004396,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.9,
+     "peM": 0.0886500626802444,
+     "pegada": {
+      "enterraM": 0.0240148082375526,
+      "flutuaM": 0.0240148097165961,
+      "raioM": 0.42
+     },
+     "x": 21,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.0100250698424044,
+      "flutuaM": 0.00601500272750854,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00830648461062289,
+      "flutuaM": 0.00601500272750854,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 21.5,
+     "peM": -0.84432190656662,
+     "pegada": {
+      "enterraM": 0.0060150456107948,
+      "flutuaM": 0.00601500272750854,
+      "raioM": 0.42
+     },
+     "x": 24,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.00982533124081963,
+      "flutuaM": 0.00585424900054932,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00814537693490336,
+      "flutuaM": 0.00585424900054932,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 15.1,
+     "peM": -1.40279722213745,
+     "pegada": {
+      "enterraM": 0.00590543593922033,
+      "flutuaM": 0.00585424900054932,
+      "raioM": 0.42
+     },
+     "x": 27,
+     "y": 6
+    },
+    {
+     "anel": {
+      "enterraM": 0.0317230613447648,
+      "flutuaM": 0.0276747267705773,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0276735238730897,
+      "flutuaM": 0.0253602042794229,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 26.3,
+     "peM": -0.442522138357162,
+     "pegada": {
+      "enterraM": 0.0222741499249312,
+      "flutuaM": 0.0222741739755713,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.0368850676092762,
+      "flutuaM": 0.022131085395813,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0305619090795518,
+      "flutuaM": 0.022131085395813,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 11.1,
+     "peM": -0.578017711639404,
+     "pegada": {
+      "enterraM": 0.0221310269531686,
+      "flutuaM": 0.022131085395813,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.00803359458662811,
+      "flutuaM": 0.0103880372944924,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00752936272571481,
+      "flutuaM": 0.00891852309624142,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.8,
+     "peM": -0.491104125976563,
+     "pegada": {
+      "enterraM": 0.00685705327493358,
+      "flutuaM": 0.00695916987367196,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.00423624101873799,
+      "flutuaM": 0.00397559229480038,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00374047548860085,
+      "flutuaM": 0.00359152001328766,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.7,
+     "peM": -0.397391021251678,
+     "pegada": {
+      "enterraM": 0.00307945217785033,
+      "flutuaM": 0.00307942335815525,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.00594176352024078,
+      "flutuaM": 0.00990293573741496,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00594176352024078,
+      "flutuaM": 0.00820529155628449,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.8,
+     "peM": -0.23221980035305,
+     "pegada": {
+      "enterraM": 0.00594176352024078,
+      "flutuaM": 0.00594175988285883,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.00568623525678902,
+      "flutuaM": 0.00649068412160858,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00520628473411,
+      "flutuaM": 0.00566596413652112,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.0,
+     "peM": -0.17000986635685,
+     "pegada": {
+      "enterraM": 0.00456635074403045,
+      "flutuaM": 0.00456633802882925,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.00612122192978859,
+      "flutuaM": 0.0102020347992737,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00612122192978859,
+      "flutuaM": 0.00845311397296836,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.8,
+     "peM": -0.0617129355669022,
+     "pegada": {
+      "enterraM": 0.00612122192978859,
+      "flutuaM": 0.00612122021821149,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.0118096108942209,
+      "flutuaM": 0.00725367007927069,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00981209216267795,
+      "flutuaM": 0.00720869625608142,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.5,
+     "peM": -0.0624942444264889,
+     "pegada": {
+      "enterraM": 0.00714872953944745,
+      "flutuaM": 0.00714873195421881,
+      "raioM": 0.42
+     },
+     "x": 21,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.0125040835347967,
+      "flutuaM": 0.0199725143485523,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": true,
+     "contacto": {
+      "enterraM": 0.0123646420737108,
+      "flutuaM": 0.0166323196441926,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.8,
+     "peM": 0.11686535179615,
+     "pegada": {
+      "enterraM": 0.012178720712455,
+      "flutuaM": 0.0121787256724986,
+      "raioM": 0.42
+     },
+     "x": 24,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.0135329365730286,
+      "flutuaM": 0.0225548818390993,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0135329365730286,
+      "flutuaM": 0.0186883305414594,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 13.1,
+     "peM": 0.28697469830513,
+     "pegada": {
+      "enterraM": 0.0135329365730286,
+      "flutuaM": 0.0135329271702211,
+      "raioM": 0.42
+     },
+     "x": 27,
+     "y": 9
+    },
+    {
+     "anel": {
+      "enterraM": 0.0063728485770298,
+      "flutuaM": 0.00357604026794434,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00493845478238808,
+      "flutuaM": 0.00357604026794434,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.3,
+     "peM": -1.01347815990448,
+     "pegada": {
+      "enterraM": 0.00357613481641295,
+      "flutuaM": 0.00357604026794434,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.00648299053766266,
+      "flutuaM": 0.00976165010344232,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00631530458728458,
+      "flutuaM": 0.00818883891527844,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.8,
+     "peM": -0.679629683494568,
+     "pegada": {
+      "enterraM": 0.0060917224733168,
+      "flutuaM": 0.00609175735439504,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.00711903131313107,
+      "flutuaM": 0.00419110059738159,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00580448356279817,
+      "flutuaM": 0.00419110059738159,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.3,
+     "peM": -0.40076357126236,
+     "pegada": {
+      "enterraM": 0.00420519185822843,
+      "flutuaM": 0.00419110059738159,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.00594695900396403,
+      "flutuaM": 0.00356817245483398,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00492748056557005,
+      "flutuaM": 0.00356817245483398,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.1,
+     "peM": -0.227019160985947,
+     "pegada": {
+      "enterraM": 0.00356817657792874,
+      "flutuaM": 0.00356817245483398,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.00874049445729064,
+      "flutuaM": 0.00524429976940155,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00724212305374236,
+      "flutuaM": 0.00524429976940155,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.3,
+     "peM": -0.150271579623222,
+     "pegada": {
+      "enterraM": 0.00524429554335448,
+      "flutuaM": 0.00524429976940155,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.00520357383815284,
+      "flutuaM": 0.0054575386600284,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0037044794190022,
+      "flutuaM": 0.00461381883943213,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.0,
+     "peM": -0.0909701436758041,
+     "pegada": {
+      "enterraM": 0.00349851351849194,
+      "flutuaM": 0.00348885832797308,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.0042772451415658,
+      "flutuaM": 0.00712874273839659,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0042772451415658,
+      "flutuaM": 0.00590667252739269,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.8,
+     "peM": 0.012710296548903,
+     "pegada": {
+      "enterraM": 0.0042772451415658,
+      "flutuaM": 0.00427724520135059,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.0052142199614873,
+      "flutuaM": 0.0047184871406678,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00457588207466891,
+      "flutuaM": 0.00429260699699325,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.0,
+     "peM": -0.0329773724079132,
+     "pegada": {
+      "enterraM": 0.00372476347835571,
+      "flutuaM": 0.00372476664138039,
+      "raioM": 0.42
+     },
+     "x": 21,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.010499582381075,
+      "flutuaM": 0.00629974901676178,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00869965399574224,
+      "flutuaM": 0.00629974901676178,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.4,
+     "peM": 0.024790121242404,
+     "pegada": {
+      "enterraM": 0.0062997486191001,
+      "flutuaM": 0.00629974901676178,
+      "raioM": 0.42
+     },
+     "x": 24,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.0136428107725663,
+      "flutuaM": 0.00871193816067617,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": true,
+     "contacto": {
+      "enterraM": 0.0113886236441421,
+      "flutuaM": 0.00857097593446596,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.2,
+     "peM": 0.202112704515457,
+     "pegada": {
+      "enterraM": 0.00838303621218017,
+      "flutuaM": 0.00838302382419404,
+      "raioM": 0.42
+     },
+     "x": 27,
+     "y": 12
+    },
+    {
+     "anel": {
+      "enterraM": 0.0138901289651781,
+      "flutuaM": 0.00822508335113525,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0115206412632518,
+      "flutuaM": 0.00822508335113525,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.3,
+     "peM": -0.904447555541992,
+     "pegada": {
+      "enterraM": 0.00836132491313824,
+      "flutuaM": 0.00822508335113525,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.00340151786804199,
+      "flutuaM": 0.00581954255705364,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00340151786804199,
+      "flutuaM": 0.00483175458230534,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.9,
+     "peM": -0.571808815002441,
+     "pegada": {
+      "enterraM": 0.00340151786804199,
+      "flutuaM": 0.00351442984416173,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.00666868006478794,
+      "flutuaM": 0.00731766878019613,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00605847748617325,
+      "flutuaM": 0.00642933386067551,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.6,
+     "peM": -0.193743482232094,
+     "pegada": {
+      "enterraM": 0.00524487517425651,
+      "flutuaM": 0.00524488653759531,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.00335608990438896,
+      "flutuaM": 0.00173790752887726,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00241636112742558,
+      "flutuaM": 0.00173790752887726,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.1,
+     "peM": -0.075686015188694,
+     "pegada": {
+      "enterraM": 0.00175167822401789,
+      "flutuaM": 0.00173790752887726,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.00441190786659718,
+      "flutuaM": 0.0073531818743795,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00441190786659718,
+      "flutuaM": 0.00609263746825252,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.0,
+     "peM": -0.0202098339796066,
+     "pegada": {
+      "enterraM": 0.00441190786659718,
+      "flutuaM": 0.00441190926988955,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.00925763864689166,
+      "flutuaM": 0.00555458664894104,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00767061476495162,
+      "flutuaM": 0.00555458664894104,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.2,
+     "peM": -0.0794915333390236,
+     "pegada": {
+      "enterraM": 0.00555458119855778,
+      "flutuaM": 0.00555458664894104,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.00460386523054801,
+      "flutuaM": 0.00577230162976239,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00429837902386992,
+      "flutuaM": 0.00496605620649303,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.8,
+     "peM": 0.0783615559339523,
+     "pegada": {
+      "enterraM": 0.00389106455984527,
+      "flutuaM": 0.00389106197564448,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.00892016076775332,
+      "flutuaM": 0.00515712797641754,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00716524345929059,
+      "flutuaM": 0.00515712797641754,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.6,
+     "peM": 0.142935037612915,
+     "pegada": {
+      "enterraM": 0.0051936636097262,
+      "flutuaM": 0.00515712797641754,
+      "raioM": 0.42
+     },
+     "x": 21,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.005474263107768,
+      "flutuaM": 0.00509690140016694,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00482708836595228,
+      "flutuaM": 0.00461145087244419,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 5.1,
+     "peM": 0.2564916908741,
+     "pegada": {
+      "enterraM": 0.00396418922349609,
+      "flutuaM": 0.00396418327597026,
+      "raioM": 0.42
+     },
+     "x": 24,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.00823837632335511,
+      "flutuaM": 0.00752115014097043,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00704295638526475,
+      "flutuaM": 0.00596457820312979,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.7,
+     "peM": 0.311185508966446,
+     "pegada": {
+      "enterraM": 0.00544906182263816,
+      "flutuaM": 0.00547726854629405,
+      "raioM": 0.42
+     },
+     "x": 27,
+     "y": 15
+    },
+    {
+     "anel": {
+      "enterraM": 0.0100063312022118,
+      "flutuaM": 0.00574880838394165,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": true,
+     "contacto": {
+      "enterraM": 0.00793880908383157,
+      "flutuaM": 0.00574880838394165,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 16.5,
+     "peM": -0.290667831897736,
+     "pegada": {
+      "enterraM": 0.00574879150741836,
+      "flutuaM": 0.00574880838394165,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.0199039924622966,
+      "flutuaM": 0.0172291649282741,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0173415370547876,
+      "flutuaM": 0.015813067585744,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.0,
+     "peM": -0.459147065877914,
+     "pegada": {
+      "enterraM": 0.0139249275506685,
+      "flutuaM": 0.0139249375597868,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.00654210895299912,
+      "flutuaM": 0.0109035149248022,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00654210895299912,
+      "flutuaM": 0.00903433672774996,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 5.4,
+     "peM": -0.103739000856876,
+     "pegada": {
+      "enterraM": 0.00654210895299912,
+      "flutuaM": 0.00654210622398566,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.00459964178633498,
+      "flutuaM": 0.00695127989113686,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00448476546443997,
+      "flutuaM": 0.005828557536006,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.2,
+     "peM": 0.0652046501636505,
+     "pegada": {
+      "enterraM": 0.00433159695218065,
+      "flutuaM": 0.00433159459201529,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.0059633917870503,
+      "flutuaM": 0.0058856454077887,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00528099602935883,
+      "flutuaM": 0.00516354243033267,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.5,
+     "peM": 0.0973975956439972,
+     "pegada": {
+      "enterraM": 0.00437113675040912,
+      "flutuaM": 0.00440227543869454,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.0048874244093895,
+      "flutuaM": 0.00814571321862623,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0048874244093895,
+      "flutuaM": 0.00674930656528559,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.5,
+     "peM": 0.118720903992653,
+     "pegada": {
+      "enterraM": 0.0048874244093895,
+      "flutuaM": 0.00488742873106851,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.011372970189063,
+      "flutuaM": 0.00682377815246582,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00942331779867267,
+      "flutuaM": 0.00682377815246582,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.1,
+     "peM": 0.179305598139763,
+     "pegada": {
+      "enterraM": 0.00682378250640703,
+      "flutuaM": 0.00682377815246582,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.00200409558495096,
+      "flutuaM": 0.00319381698918519,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00198058038949983,
+      "flutuaM": 0.00266041205574313,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.9,
+     "peM": 0.33768966794014,
+     "pegada": {
+      "enterraM": 0.0019492275373027,
+      "flutuaM": 0.00194920574222479,
+      "raioM": 0.42
+     },
+     "x": 21,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.00595169156470376,
+      "flutuaM": 0.00701665700283627,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00548517021040118,
+      "flutuaM": 0.00609371176901602,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.7,
+     "peM": 0.483040243387222,
+     "pegada": {
+      "enterraM": 0.00486314185478653,
+      "flutuaM": 0.00486311911673454,
+      "raioM": 0.42
+     },
+     "x": 24,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.00907337665557861,
+      "flutuaM": 0.0151223682532944,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00907337665557861,
+      "flutuaM": 0.0125299686588887,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.8,
+     "peM": 0.646246731281281,
+     "pegada": {
+      "enterraM": 0.00907337665557861,
+      "flutuaM": 0.00907343306091235,
+      "raioM": 0.42
+     },
+     "x": 27,
+     "y": 18
+    },
+    {
+     "anel": {
+      "enterraM": 0.0526895523071289,
+      "flutuaM": 0.088002297348476,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0526895523071289,
+      "flutuaM": 0.0727618481431178,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 19.3,
+     "peM": 1.35586559772491,
+     "pegada": {
+      "enterraM": 0.0526895523071289,
+      "flutuaM": 0.052689614691154,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 21
+    },
+    {
+     "anel": {
+      "enterraM": 0.0231964767222835,
+      "flutuaM": 0.0138197541236877,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": true,
+     "contacto": {
+      "enterraM": 0.0190844597251572,
+      "flutuaM": 0.0138197541236877,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.2,
+     "peM": -0.675999760627747,
+     "pegada": {
+      "enterraM": 0.0138197844471222,
+      "flutuaM": 0.0138197541236877,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 21
+    },
+    {
+     "anel": {
+      "enterraM": 0.00128968880498448,
+      "flutuaM": 0.00175321554156938,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00122600297133127,
+      "flutuaM": 0.00149087637809933,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.7,
+     "peM": -0.188448935747147,
+     "pegada": {
+      "enterraM": 0.00114108857229014,
+      "flutuaM": 0.00114108937857793,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 21
+    },
+    {
+     "anel": {
+      "enterraM": 0.00516449156525312,
+      "flutuaM": 0.00710148461520166,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00492245507969832,
+      "flutuaM": 0.00602931001534051,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.2,
+     "peM": 0.0594527535140514,
+     "pegada": {
+      "enterraM": 0.00459973968811531,
+      "flutuaM": 0.00459974314295042,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 21
+    },
+    {
+     "anel": {
+      "enterraM": 0.00487150165110606,
+      "flutuaM": 0.00778603424160984,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00481796233604362,
+      "flutuaM": 0.00648340788015808,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.0,
+     "peM": 0.148601159453392,
+     "pegada": {
+      "enterraM": 0.00474657750692201,
+      "flutuaM": 0.00474657426857128,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 21
+    },
+    {
+     "anel": {
+      "enterraM": 0.00657960433981941,
+      "flutuaM": 0.010979882770941,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00657316452513146,
+      "flutuaM": 0.00910494907368786,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.3,
+     "peM": 0.273628890514374,
+     "pegada": {
+      "enterraM": 0.00656457725816284,
+      "flutuaM": 0.0066050369792473,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 21
+    },
+    {
+     "anel": {
+      "enterraM": 0.00414693355560303,
+      "flutuaM": 0.00691158237699124,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00414693355560303,
+      "flutuaM": 0.00572673957467362,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.4,
+     "peM": 0.415819615125656,
+     "pegada": {
+      "enterraM": 0.00414693355560303,
+      "flutuaM": 0.00414695154791467,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 21
+    },
+    {
+     "anel": {
+      "enterraM": 0.00692627517885214,
+      "flutuaM": 0.0074286117747846,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00626491222149522,
+      "flutuaM": 0.0065519513251881,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.8,
+     "peM": 0.470834165811539,
+     "pegada": {
+      "enterraM": 0.00538309440097962,
+      "flutuaM": 0.00538307084144901,
+      "raioM": 0.42
+     },
+     "x": 21,
+     "y": 21
+    },
+    {
+     "anel": {
+      "enterraM": 0.013506647092079,
+      "flutuaM": 0.00810399651527405,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0111912208935339,
+      "flutuaM": 0.00810399651527405,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.6,
+     "peM": 0.492095857858658,
+     "pegada": {
+      "enterraM": 0.00810398413734248,
+      "flutuaM": 0.00810399651527405,
+      "raioM": 0.42
+     },
+     "x": 24,
+     "y": 21
+    },
+    {
+     "anel": {
+      "enterraM": 0.00287747383117676,
+      "flutuaM": 0.00479585094593915,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00287747383117676,
+      "flutuaM": 0.00397370731732349,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.8,
+     "peM": 0.772266626358032,
+     "pegada": {
+      "enterraM": 0.00287747383117676,
+      "flutuaM": 0.0028775178268603,
+      "raioM": 0.42
+     },
+     "x": 27,
+     "y": 21
+    },
+    {
+     "anel": {
+      "enterraM": 0.0419849157333374,
+      "flutuaM": 0.071417607194614,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0419849157333374,
+      "flutuaM": 0.057979125043242,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 38.2,
+     "peM": 1.73549675941467,
+     "pegada": {
+      "enterraM": 0.0419849157333374,
+      "flutuaM": 0.0419848660026929,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 24
+    },
+    {
+     "anel": {
+      "enterraM": 0.0097369156140914,
+      "flutuaM": 0.00598027053658967,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00808993106087058,
+      "flutuaM": 0.00594327102104858,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 6.9,
+     "peM": -0.289092987775803,
+     "pegada": {
+      "enterraM": 0.00589395212893024,
+      "flutuaM": 0.00589393861575532,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 24
+    },
+    {
+     "anel": {
+      "enterraM": 0.00400001487583523,
+      "flutuaM": 0.00224591046571732,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": true,
+     "contacto": {
+      "enterraM": 0.00310262618657609,
+      "flutuaM": 0.00224591046571732,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 5.7,
+     "peM": -0.0819154307246208,
+     "pegada": {
+      "enterraM": 0.00224686146144308,
+      "flutuaM": 0.00224591046571732,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 24
+    },
+    {
+     "anel": {
+      "enterraM": 0.0064808960585383,
+      "flutuaM": 0.00708708228849808,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.005883937104476,
+      "flutuaM": 0.00623033009469501,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.5,
+     "peM": 0.0752528086304665,
+     "pegada": {
+      "enterraM": 0.00508799054213416,
+      "flutuaM": 0.0050879925041504,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 24
+    },
+    {
+     "anel": {
+      "enterraM": 0.00322028994560242,
+      "flutuaM": 0.00551024654990467,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00322028994560242,
+      "flutuaM": 0.00457483162916783,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 2.4,
+     "peM": 0.21337679028511,
+     "pegada": {
+      "enterraM": 0.00322028994560242,
+      "flutuaM": 0.00332761193747869,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 24
+    },
+    {
+     "anel": {
+      "enterraM": 0.00201526149017184,
+      "flutuaM": 0.0012139861328464,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00167056887100137,
+      "flutuaM": 0.00121268630027782,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.7,
+     "peM": 0.313575208187103,
+     "pegada": {
+      "enterraM": 0.00121097886101273,
+      "flutuaM": 0.00121095565588913,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 24
+    },
+    {
+     "anel": {
+      "enterraM": 0.00482952597882275,
+      "flutuaM": 0.00284665822982788,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00400707861073712,
+      "flutuaM": 0.00284665822982788,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.1,
+     "peM": 0.51187652349472,
+     "pegada": {
+      "enterraM": 0.00291047991507426,
+      "flutuaM": 0.00284665822982788,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 24
+    },
+    {
+     "anel": {
+      "enterraM": 0.00631231069564819,
+      "flutuaM": 0.0105204476935512,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00631231069564819,
+      "flutuaM": 0.00871693862096856,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.1,
+     "peM": 0.716003656387329,
+     "pegada": {
+      "enterraM": 0.00631231069564819,
+      "flutuaM": 0.00631225718390738,
+      "raioM": 0.42
+     },
+     "x": 21,
+     "y": 24
+    },
+    {
+     "anel": {
+      "enterraM": 0.0038222074508667,
+      "flutuaM": 0.00651779024948607,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0038222074508667,
+      "flutuaM": 0.00540993210064478,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.4,
+     "peM": 0.792295396327972,
+     "pegada": {
+      "enterraM": 0.0038222074508667,
+      "flutuaM": 0.0039327892584553,
+      "raioM": 0.42
+     },
+     "x": 24,
+     "y": 24
+    },
+    {
+     "anel": {
+      "enterraM": 0.303562164306641,
+      "flutuaM": 0.515286392204048,
+      "raioM": 0.56
+     },
+     "bloqueada": true,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.303562164306641,
+      "flutuaM": 0.427552634608927,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 55.1,
+     "peM": 4.17335844039917,
+     "pegada": {
+      "enterraM": 0.303562164306641,
+      "flutuaM": 0.310574210167004,
+      "raioM": 0.42
+     },
+     "x": 27,
+     "y": 24
+    },
+    {
+     "anel": {
+      "enterraM": 0.0334120557629092,
+      "flutuaM": 0.0206774599006678,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0277855694293971,
+      "flutuaM": 0.0205086320638659,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 34.3,
+     "peM": 1.17354679107666,
+     "pegada": {
+      "enterraM": 0.0202835934781399,
+      "flutuaM": 0.0202835283224803,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 27
+    },
+    {
+     "anel": {
+      "enterraM": 0.0105691301812352,
+      "flutuaM": 0.00633981823921204,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00875498362511788,
+      "flutuaM": 0.00633981823921204,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 7.5,
+     "peM": 0.0978474542498589,
+     "pegada": {
+      "enterraM": 0.0063398130925334,
+      "flutuaM": 0.00633981823921204,
+      "raioM": 0.42
+     },
+     "x": 3,
+     "y": 27
+    },
+    {
+     "anel": {
+      "enterraM": 0.00171348452568054,
+      "flutuaM": 0.00285578514522405,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00171348452568054,
+      "flutuaM": 0.00236622013329879,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 5.9,
+     "peM": 0.412958413362503,
+     "pegada": {
+      "enterraM": 0.00171348452568054,
+      "flutuaM": 0.00171346644760462,
+      "raioM": 0.42
+     },
+     "x": 6,
+     "y": 27
+    },
+    {
+     "anel": {
+      "enterraM": 0.00853112418933932,
+      "flutuaM": 0.00776081977787513,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": true,
+     "contacto": {
+      "enterraM": 0.00749327366550806,
+      "flutuaM": 0.00705310329794873,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 6.5,
+     "peM": 0.268588542938232,
+     "pegada": {
+      "enterraM": 0.00610947671370515,
+      "flutuaM": 0.00610948138668188,
+      "raioM": 0.42
+     },
+     "x": 9,
+     "y": 27
+    },
+    {
+     "anel": {
+      "enterraM": 0.00929662014419996,
+      "flutuaM": 0.00945202442528448,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00804156075837456,
+      "flutuaM": 0.00719919351438492,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.8,
+     "peM": 0.230754613876343,
+     "pegada": {
+      "enterraM": 0.00636814793064566,
+      "flutuaM": 0.00643408464195863,
+      "raioM": 0.42
+     },
+     "x": 12,
+     "y": 27
+    },
+    {
+     "anel": {
+      "enterraM": 0.00915743474205044,
+      "flutuaM": 0.00549447536468506,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.0075875866486349,
+      "flutuaM": 0.00549447536468506,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.0,
+     "peM": 0.318118453025818,
+     "pegada": {
+      "enterraM": 0.00549445803231663,
+      "flutuaM": 0.00549447536468506,
+      "raioM": 0.42
+     },
+     "x": 15,
+     "y": 27
+    },
+    {
+     "anel": {
+      "enterraM": 0.00700971570381626,
+      "flutuaM": 0.00424057325544425,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00581363309174798,
+      "flutuaM": 0.00423126854002465,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.6,
+     "peM": 0.610846161842346,
+     "pegada": {
+      "enterraM": 0.00421885485718598,
+      "flutuaM": 0.00421886170135355,
+      "raioM": 0.42
+     },
+     "x": 18,
+     "y": 27
+    },
+    {
+     "anel": {
+      "enterraM": 0.0103720030429741,
+      "flutuaM": 0.0113899104782149,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00942431902512919,
+      "flutuaM": 0.0100059610170623,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 0.7,
+     "peM": 0.817954123020172,
+     "pegada": {
+      "enterraM": 0.00816074007895662,
+      "flutuaM": 0.00816069468568992,
+      "raioM": 0.42
+     },
+     "x": 21,
+     "y": 27
+    },
+    {
+     "anel": {
+      "enterraM": 0.287472486495972,
+      "flutuaM": 0.481873567896688,
+      "raioM": 0.56
+     },
+     "bloqueada": true,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.287472486495972,
+      "flutuaM": 0.399443556698401,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 67.3,
+     "peM": 3.49067354202271,
+     "pegada": {
+      "enterraM": 0.287472486495972,
+      "flutuaM": 0.289536995372847,
+      "raioM": 0.42
+     },
+     "x": 24,
+     "y": 27
+    },
+    {
+     "anel": {
+      "enterraM": 0.00347141923589334,
+      "flutuaM": 0.00210342984325962,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00287954020313919,
+      "flutuaM": 0.00209800386801362,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 0.9,
+     "peM": 4.50019598007202,
+     "pegada": {
+      "enterraM": 0.00209036818966979,
+      "flutuaM": 0.00209076862682878,
+      "raioM": 0.42
+     },
+     "x": 27,
+     "y": 27
+    },
+    {
+     "anel": {
+      "enterraM": 0.00536025729786616,
+      "flutuaM": 0.00329154695418765,
+      "raioM": 0.56
+     },
+     "bloqueada": true,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00445350370421238,
+      "flutuaM": 0.00327132176607847,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.5,
+     "peM": 2.5146267414093,
+     "pegada": {
+      "enterraM": 0.00324449775314406,
+      "flutuaM": 0.00324435535162593,
+      "raioM": 0.42
+     },
+     "x": 1,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.00518963230233727,
+      "flutuaM": 0.00304150581359863,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00419991143402365,
+      "flutuaM": 0.00304150581359863,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 4.5,
+     "peM": 2.5738832950592,
+     "pegada": {
+      "enterraM": 0.00304128319315566,
+      "flutuaM": 0.00304150581359863,
+      "raioM": 0.42
+     },
+     "x": 2,
+     "y": 0
+    },
+    {
+     "anel": {
+      "enterraM": 0.00251894639302463,
+      "flutuaM": 0.00244047038177087,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00223646565185254,
+      "flutuaM": 0.00219158699777244,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.0,
+     "peM": 2.4653844833374,
+     "pegada": {
+      "enterraM": 0.00185982463928758,
+      "flutuaM": 0.00185973838415521,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 1
+    },
+    {
+     "anel": {
+      "enterraM": 0.00765396813693542,
+      "flutuaM": 0.00545888258704963,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": false,
+     "contacto": {
+      "enterraM": 0.00648115109652281,
+      "flutuaM": 0.00522675109095871,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 1.3,
+     "peM": 2.50812101364136,
+     "pegada": {
+      "enterraM": 0.00491739493324417,
+      "flutuaM": 0.00491724244494662,
+      "raioM": 0.42
+     },
+     "x": 1,
+     "y": 1
+    },
+    {
+     "anel": {
+      "enterraM": 0.0108207123832926,
+      "flutuaM": 0.00649237632751465,
+      "raioM": 0.56
+     },
+     "bloqueada": false,
+     "caida": true,
+     "contacto": {
+      "enterraM": 0.00896573982549853,
+      "flutuaM": 0.00649237632751465,
+      "raioM": 0.5
+     },
+     "inclinacao_graus": 3.7,
+     "peM": 2.48957800865173,
+     "pegada": {
+      "enterraM": 0.00649244001419902,
+      "flutuaM": 0.00649237632751465,
+      "raioM": 0.42
+     },
+     "x": 0,
+     "y": 2
+    }
+   ],
+   "em_casas_bloqueadas": 5,
+   "figuras": 105,
+   "fundo_do_corpo_menos_plano_m": 0.000000945696228882298,
+   "pe_mestre_menos_jogador_m": 0.0,
+   "pe_mestre_menos_servidor_m": 0.000000000000000222044604925031,
+   "pior_bloqueadas": {
+    "anel": [
+     0.303562164306641,
+     0.515286392204048
+    ],
+    "contacto": [
+     0.303562164306641,
+     0.427552634608927
+    ],
+    "pegada": [
+     0.303562164306641,
+     0.310574210167004
+    ]
+   },
+   "pior_outras": {
+    "anel": [
+     0.0526895523071289,
+     0.088002297348476
+    ],
+    "contacto": [
+     0.0526895523071289,
+     0.0727618481431178
+    ],
+    "pegada": [
+     0.0526895523071289,
+     0.052689614691154
+    ]
+   },
+   "pior_seis_da_encosta": {
+    "anel": [
+     0.0,
+     0.0
+    ],
+    "contacto": [
+     0.0,
+     0.0
+    ],
+    "pegada": [
+     0.0,
+     0.0
+    ]
+   }
+  },
+  "toque": {
+   "0": {
+    "jogador": {
+     "certas": 637,
+     "erradas": [],
+     "tapadas": 0,
+     "vistas": 637
+    },
+    "mestre": {
+     "certas": 467,
+     "erradas": [],
+     "tapadas": 0,
+     "vistas": 467
+    }
+   },
+   "1": {
+    "jogador": {
+     "certas": 892,
+     "erradas": [
+      "(0,6)→(-1,-1)",
+      "(24,27)→(-1,-1)",
+      "(24,28)→(-1,-1)"
+     ],
+     "tapadas": 5,
+     "vistas": 895
+    },
+    "mestre": {
+     "certas": 892,
+     "erradas": [
+      "(0,6)→(-1,-1)",
+      "(24,27)→(-1,-1)",
+      "(24,28)→(-1,-1)"
+     ],
+     "tapadas": 5,
+     "vistas": 895
+    }
+   },
+   "2": {
+    "jogador": {
+     "certas": 900,
+     "erradas": [],
+     "tapadas": 0,
+     "vistas": 900
+    },
+    "mestre": {
+     "certas": 900,
+     "erradas": [],
+     "tapadas": 0,
+     "vistas": 900
+    }
+   }
+  }
+ }
+}

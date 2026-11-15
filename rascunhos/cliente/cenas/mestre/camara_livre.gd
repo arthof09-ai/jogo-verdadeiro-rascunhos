@@ -6,6 +6,8 @@ extends Camera3D
 ## multiplicador 1×/2×/4× · dt preso a 0,08 · perspectiva 50° (0,1–400) · entrada à beira sul da arena, olhos a
 ## 1,6 do chão, a olhar para o centro (a 1,3) · bordas = arena + 3 de cada lado · altura entre chão + 0,4 e 12.
 ## Sem colisão, de propósito (como no site).
+## Ordem 45: o chão é o relevo do mapa da floresta (`altura_em`, a altura única do Relevo): os olhos, o «chão + 0,4»
+## e o tecto contam-se a partir dele, ponto a ponto. Sem `altura_em`, o chão é plano a 0, como antes.
 ##
 ## Só o ecrã do Mestre a constrói (arena_mestre.gd); a vista da Party nem a constrói. A câmara da mesa
 ## (camera_mesa.gd) fica congelada enquanto esta está activa, por isso sair é exacto por construção.
@@ -41,6 +43,8 @@ var teclas: Dictionary = {}
 var px_por_unidade := 1.0
 var _min := Vector2(-FOLGA_BORDA, -FOLGA_BORDA)
 var _max := Vector2(FOLGA_BORDA, FOLGA_BORDA)
+## Ordem 45: a altura do chão em (x, z) (Callable (x, z) -> float); sem ela, 0.
+var altura_em: Callable = Callable()
 
 
 func _init() -> void:
@@ -55,8 +59,9 @@ func _init() -> void:
 func entrar(centro: Vector3, tamanho: Vector2) -> void:
 	_min = Vector2(centro.x - tamanho.x * 0.5 - FOLGA_BORDA, centro.z - tamanho.y * 0.5 - FOLGA_BORDA)
 	_max = Vector2(centro.x + tamanho.x * 0.5 + FOLGA_BORDA, centro.z + tamanho.y * 0.5 + FOLGA_BORDA)
-	position = Vector3(centro.x, OLHOS_M, centro.z + tamanho.y * 0.5)
-	var d := Vector3(centro.x - position.x, OLHAR_ALVO_Y - position.y, centro.z - position.z).normalized()
+	var zs := centro.z + tamanho.y * 0.5
+	position = Vector3(centro.x, chao(centro.x, zs) + OLHOS_M, zs)
+	var d := Vector3(centro.x - position.x, chao(centro.x, centro.z) + OLHAR_ALVO_Y - position.y, centro.z - position.z).normalized()
 	pitch = asin(clampf(d.y, -1.0, 1.0))
 	yaw = atan2(-d.x, -d.z)
 	joy = Vector2.ZERO
@@ -129,9 +134,15 @@ func passo(dt: float) -> void:
 	var su := sobe + (1 if (t.has("e") or t.has("pageup")) else 0) - (1 if (t.has("q") or t.has("pagedown")) else 0)
 	if su != 0:
 		p.y += su * VERTICAL_U_S * vel * dt
-	p.y = clampf(p.y, FOLGA_CHAO, TECTO)  # o chão da arena do Mestre é plano, a 0
+	var h := chao(p.x, p.z)
+	p.y = clampf(p.y, h + FOLGA_CHAO, h + TECTO)  # ordem 45: o chão é o relevo, ponto a ponto
 	position = p
 	_aplicar()
+
+
+## A altura do chão em (x, z): o relevo do mapa (ordem 45) ou 0.
+func chao(x: float, z: float) -> float:
+	return float(altura_em.call(x, z)) if altura_em.is_valid() else 0.0
 
 
 func direcao() -> Vector3:

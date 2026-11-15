@@ -417,9 +417,11 @@ func _camara_livre(c) -> void:
 	_ok(a.camara_livre_ativa() and cam.current, "entrar: a câmara livre passa a ser a câmara da arena")
 	_ok(ctl.manipulo.visible and ctl.sair_botao.visible and ctl.sobe_botao.visible and ctl.desce_botao.visible and ctl.vel_caixa.visible,
 		"dentro: manípulo, ▲▼, 1×/2×/4× e «Voltar à câmera do jogo»")
-	_ok(is_equal_approx(cam.position.y, 1.6), "entra com os olhos a 1,6 do chão (site)")
+	# Ordem 45: o chão é o relevo do mapa e a grelha começa na origem dela no mapa (não em 0).
+	_ok(is_equal_approx(cam.position.y, cam.chao(cam.position.x, cam.position.z) + 1.6) and absf(cam.chao(cam.position.x, cam.position.z) - a.altura_chao(cam.position.x, cam.position.z)) < 0.000001,
+		"entra com os olhos a 1,6 do chão (site; o chão é o relevo do mapa, ordem 45)")
 	var tam := Vector2(a.largura * a.casa_m, a.altura * a.casa_m)
-	_ok(is_equal_approx(cam.position.z, tam.y), "entra à beira sul da arena")
+	_ok(is_equal_approx(cam.position.z, a.origem.y + tam.y), "entra à beira sul da arena")
 	var frente: Vector3 = cam.direcao()
 	_ok(frente.z < 0.0, "entra a olhar para o centro")
 	# Andar em frente 1 s com o manípulo (joyY = −1): 4,2 u/s, em passos de 0,08 (o dt máximo do site).
@@ -451,19 +453,20 @@ func _camara_livre(c) -> void:
 	_ok(is_equal_approx(cam.position.y, y0 + 0.15), "▲ sobe 3,0 u/s")
 	for i in 100:
 		cam.passo(0.08)
-	_ok(is_equal_approx(cam.position.y, 12.0), "o tecto é 12")
+	_ok(is_equal_approx(cam.position.y, cam.chao(cam.position.x, cam.position.z) + 12.0), "o tecto é 12 acima do chão")
 	cam.definir_sobe(-1)
 	for i in 100:
 		cam.passo(0.08)
 	cam.definir_sobe(0)
-	_ok(is_equal_approx(cam.position.y, 0.4), "o chão empurra: nunca abaixo de 0,4")
+	_ok(is_equal_approx(cam.position.y, cam.chao(cam.position.x, cam.position.z) + 0.4), "o chão empurra: nunca abaixo de 0,4 do relevo")
 	# Bordas: arena + 3.
 	cam.definir_joy(Vector2(0.0, -1.0))
 	for i in 400:
 		cam.passo(0.08)
 	cam.definir_joy(Vector2.ZERO)
-	_ok(cam.position.z >= -3.0 - 0.001 and cam.position.z <= tam.y + 3.0 + 0.001 and cam.position.x >= -3.0 - 0.001 \
-		and cam.position.x <= tam.x + 3.0 + 0.001, "presa às bordas da arena + 3")
+	var o: Vector2 = a.origem
+	_ok(cam.position.z >= o.y - 3.0 - 0.001 and cam.position.z <= o.y + tam.y + 3.0 + 0.001 and cam.position.x >= o.x - 3.0 - 0.001 \
+		and cam.position.x <= o.x + tam.x + 3.0 + 0.001, "presa às bordas da arena + 3")
 	# Olhar: 0,0045 rad por px real; o pitch fica em ±1,45.
 	cam.px_por_unidade = 1.0
 	var yaw0: float = cam.yaw
@@ -883,7 +886,7 @@ func _nomes_juntos(c, vista: Dictionary) -> void:
 	var a = c._arena
 	a.aplicar_vista(vista)
 	a.camera.definir_modo(a.camera.Modo.FIXA)
-	a.camera.focar(Vector3(2.5 * a.casa_m, 0.0, 3.5 * a.casa_m))
+	a.camera.focar(a.centro_da_casa(Vector2i(2, 3)))
 	a.camera.definir_zoom(4.0)
 	a.camera._saltar()
 	await _quadros(3)
@@ -900,7 +903,7 @@ func _nomes_juntos(c, vista: Dictionary) -> void:
 		var r: Label3D = no.get_node("Rotulo")
 		if r.position.y > float(r.get_meta("nome_base_y")) + 0.001:
 			subiram += 1
-		posicoes_ok = posicoes_ok and is_equal_approx(no.position.y, 0.0)
+		posicoes_ok = posicoes_ok and is_equal_approx(no.position.y, a.pe_figura(a.casa_de_ponto(no.position)).y)
 	_ok(subiram >= 1 and posicoes_ok, "subiu o nome de %d figura(s); as figuras ficam na casa" % subiram)
 
 
@@ -1193,7 +1196,8 @@ func _clima(c) -> void:
 	for n in get_nodes_in_group(&"clima_figura"):
 		if a.is_ancestor_of(n):
 			figuras.append(n)
-	_ok(chao.size() == 1 and figuras.size() == a.figuras_desenhadas(), "o chão (1) e as figuras (%d) estão nos grupos do clima" % figuras.size())
+	# Ordem 45: o chão é o do mapa (a zona fina e a larga), como na arena do jogador.
+	_ok(chao.size() == 2 and figuras.size() == a.figuras_desenhadas(), "o chão do mapa (2) e as figuras (%d) estão nos grupos do clima" % figuras.size())
 	var tam := Vector2(a.largura * a.casa_m, a.altura * a.casa_m)
 	_ok(cl.caixa_minimo().x <= 0.0 and cl.caixa_minimo().z <= 0.0 and cl.caixa_tamanho().x >= tam.x and cl.caixa_tamanho().z >= tam.y,
 		"a caixa do clima cobre o campo inteiro (%d×%d m)" % [int(tam.x), int(tam.y)])
