@@ -1,0 +1,14 @@
+Unicode parsing error, some characters were replaced with � (U+FFFD): Unexpected NUL character
+== 20x20 · Fixa: jogador 340/340 (0 tapadas) · Mestre 301/301 (0 tapadas)
+== 20x20 · Panorama: jogador 400/400 (0 tapadas) · Mestre 400/400 (0 tapadas)
+== 20x20 · 360° rasante: jogador 400/400 (0 tapadas) · Mestre 400/400 (0 tapadas)
+== 30x30 · Fixa: jogador 637/637 (0 tapadas) · Mestre 467/467 (0 tapadas)
+== 30x30 · Panorama: jogador 900/900 (0 tapadas) · Mestre 900/900 (0 tapadas)
+== 30x30 · 360° rasante: jogador 892/895 (5 tapadas) · Mestre 892/895 (5 tapadas)
+   FALHA jogador casa (0,6) → (-1,-1) · folga mínima do raio junto ao centro -0.00000 m (raio a 0.00000 m do centro) · o raio devolveu (-33.224, -0.788, -8.940) (relevo ali -0.788) · chão de referência (-33.230, -0.790, -8.938) → casa (-8,9)
+   FALHA jogador casa (24,27) → (-1,-1) · folga mínima do raio junto ao centro -0.00000 m (raio a 0.00000 m do centro) · o raio devolveu (9.952, 0.613, 32.109) (relevo ali 0.613) · chão de referência (9.951, 0.612, 32.113) → casa (21,36)
+   FALHA jogador casa (24,28) → (-1,-1) · folga mínima do raio junto ao centro -0.00000 m (raio a 0.00000 m do centro) · o raio devolveu (9.363, 0.673, 35.909) (relevo ali 0.673) · chão de referência (9.362, 0.672, 35.913) → casa (21,38)
+   FALHA Mestre  casa (0,6) → (-1,-1) · folga mínima do raio junto ao centro -0.00000 m (raio a 0.00000 m do centro) · o raio devolveu (-33.224, -0.788, -8.940) (relevo ali -0.788) · chão de referência (-33.230, -0.790, -8.938) → casa (-8,9)
+   FALHA Mestre  casa (24,27) → (-1,-1) · folga mínima do raio junto ao centro 0.00000 m (raio a 0.00000 m do centro) · o raio devolveu (9.952, 0.613, 32.109) (relevo ali 0.613) · chão de referência (9.951, 0.612, 32.113) → casa (21,36)
+   FALHA Mestre  casa (24,28) → (-1,-1) · folga mínima do raio junto ao centro 0.00000 m (raio a 0.00001 m do centro) · o raio devolveu (9.363, 0.673, 35.909) (relevo ali 0.673) · chão de referência (9.362, 0.672, 35.913) → casa (21,38)
+6 FALHAS
