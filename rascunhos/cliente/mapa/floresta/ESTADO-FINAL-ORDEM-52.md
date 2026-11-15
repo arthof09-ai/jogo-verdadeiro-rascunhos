@@ -105,7 +105,7 @@ O que se conta:
 Antes de mexer, corri as mesmas suites numa cópia de `8cd941d`. Os números foram os mesmos: 176, 119, 236, 32, 22,
 57 e 10. Nenhuma suite teve SCRIPT ERROR.
 
-CI: está na secção «CI» no fim deste documento, preenchida depois do push.
+CI: ver a secção «CI» no fim.
 
 ## Resíduos nomeados
 
@@ -133,3 +133,12 @@ CI: está na secção «CI» no fim deste documento, preenchida depois do push.
    tem o conserto do raio da Ordem 51. Juntar os dois ramos é trabalho de integração.
 
 ## CI
+
+Confirmado pela API do GitHub (`gh api .../actions/runs/<id>/jobs`). O push foi um ramo novo, sem `--force`.
+`origin/main` ficou em `2383737`, antes e depois. Nenhum ficheiro de workflow foi tocado.
+
+- **Ponta `490d036`:**
+  - «Testes dos rascunhos», run **43709778922**, **verde nos 9 jobs**: `servidor`, `validador-glb`, `motor-real`,
+    `protocolo`, `cliente`, `godot-cliente`, `ponta-a-ponta` (motor falso e VLAB real), `retoma-pc` e `foto-mestre`.
+  - «Sonda de privacidade», run **43709778912**: verde.
+- O commit deste parágrafo e o das listas refeitas a seguir têm o seu próprio run, conferido no fim da sessão.
