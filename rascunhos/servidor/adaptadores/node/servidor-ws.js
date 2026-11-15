@@ -853,6 +853,8 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
 //    "terreno":"../dados/terreno-floresta.json"}
 // Ordem 44: com "terreno", a sala conhece o relevo e os obstáculos do mapa (o pacote que o cliente gera com
 // cliente/cenas/arena/ferramentas/exportar_terreno.gd). Pacote com forma desconhecida → a sala não abre.
+// Ordem 48: o pacote é o mapa inteiro e a sala recorta dele a grelha do tamanho que tiver; um tamanho que não caiba
+// no mapa → a sala não abre (TERRENO_GRELHA_FORA_DO_MAPA), em vez de ficar com todas as casas pisáveis.
 // Ordem 16: com "journal", o adaptador grava o journal nesse ficheiro a cada commit (o ficheiro inteiro,
 // trocado de uma vez) e, ao arrancar, restaura a partir dele. Forma desconhecida → a sala não abre.
 // TODO(JV1.x): carregar o pacote privado do Mestre (carregarPacote) em vez de um JSON solto.

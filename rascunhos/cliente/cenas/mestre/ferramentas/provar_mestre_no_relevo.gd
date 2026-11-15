@@ -2,7 +2,8 @@ extends SceneTree
 ## provar_mestre_no_relevo.gd — Ordem 45. A PROVA do terreno e da grelha no ECRÃ DO MESTRE (cenas/mestre/mestre.tscn,
 ## a arena 3D do SubViewport), sem janela. Mede o que a Ordem 42 mediu na arena do jogador
 ## (cenas/arena/ferramentas/provar_assentamento.gd) e compara, casa a casa, com a arena do jogador e com o terreno
-## que o servidor lê (servidor/dados/terreno-floresta.json, Ordem 44):
+## que o servidor julga (Ordem 44; desde a Ordem 48 pergunta-se ao servidor de verdade — servidor/ferramentas/
+## juizo-terreno.mjs, que recorta a grelha do mapa inteiro — e as alturas comparam-se pelos bits do double):
 ##   1. a grelha no mesmo sítio do mapa: a origem e cada centro de casa contra o relevo, contra a arena do jogador
 ##      e contra a `alturaM` do servidor;
 ##   2. cada vértice das camadas coladas ao chão (linhas, destaques, contornos, fogo) contra o relevo;
@@ -25,6 +26,7 @@ const GrelhaMapa := preload("res://mapa/floresta/grelha_floresta.gd")
 const Assentamento := preload("res://cenas/arena/assentamento.gd")
 ## As 6 casas da encosta do outeiro na grelha 20 × 20 de 1,5 m (Ordens 42 e 44).
 const CampoDaMesa := preload("res://cenas/arena/campo_da_mesa.gd")
+const ProvaTerreno := preload("res://cenas/arena/ferramentas/provar_terreno_servidor.gd")
 const SEIS := [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(0, 2)]
 
 var _falhas := 0
@@ -102,10 +104,8 @@ func _vista(base: Dictionary, w: int, h: int, casa: float) -> Dictionary:
 func _correr() -> void:
 	var p := ProjectSettings.globalize_path("res://").path_join("../servidor/dados-exemplo/mesa-mestre.json")
 	var fx = JSON.parse_string(FileAccess.get_file_as_string(p))
-	var pt := ProjectSettings.globalize_path("res://").path_join("../servidor/dados/terreno-floresta.json")
-	var terreno = JSON.parse_string(FileAccess.get_file_as_string(pt))
-	if not (fx is Dictionary) or not (terreno is Dictionary):
-		printerr("sem a fixture do Mestre ou sem o terreno do servidor")
+	if not (fx is Dictionary):
+		printerr("sem a fixture do Mestre")
 		quit(1)
 		return
 	var rede := root.get_node("Rede")
@@ -120,7 +120,7 @@ func _correr() -> void:
 	await _quadros(2)
 	var a = m._arena
 	for grelha in [[20, 20, 1.5], [30, 30, 1.5]]:
-		await _medir_grelha(m, a, fx["mestre"]["vista"], terreno, grelha[0], grelha[1], grelha[2])
+		await _medir_grelha(m, a, fx["mestre"]["vista"], grelha[0], grelha[1], grelha[2])
 	m.queue_free()
 	await _quadros(2)
 
@@ -137,7 +137,21 @@ func _correr() -> void:
 	quit(1 if _falhas > 0 else 0)
 
 
-func _medir_grelha(m, a, base: Dictionary, terreno: Dictionary, w: int, h: int, casa: float) -> void:
+## Ordem 48: o que o servidor de verdade julga desta grelha (juizo-terreno.mjs), na forma {alturaM, peM, bloqueadas}
+## casa a casa (linha a linha); as alturas lidas dos bits do double. {} se o Node falhar.
+static func _do_servidor(w: int, h: int, casa: float) -> Dictionary:
+	var sv := ProvaTerreno.juizo_do_servidor(w, h, casa, "")
+	if not sv.get("juizo") is Dictionary or (sv["juizo"]["casas"] as Array).size() != w * h:
+		return {}
+	var r := {"alturaM": [], "peM": [], "bloqueadas": []}
+	for c in sv["juizo"]["casas"]:
+		r["alturaM"].append(String(c["alturaBits"]).hex_decode().to_float64_array()[0])
+		r["peM"].append(String(c["peBits"]).hex_decode().to_float64_array()[0])
+		r["bloqueadas"].append(0 if bool(c["passavel"]) else 1)
+	return r
+
+
+func _medir_grelha(m, a, base: Dictionary, w: int, h: int, casa: float) -> void:
 	var nome := "%dx%d de %s m" % [w, h, str(casa)]
 	print("== Ordem 45: o ecrã do Mestre no relevo — grelha %s ==" % nome)
 	var vista := _vista(base, w, h, casa)
@@ -156,11 +170,8 @@ func _medir_grelha(m, a, base: Dictionary, terreno: Dictionary, w: int, h: int, 
 	var jog = (load(CENA_ARENA) as PackedScene).instantiate()
 	root.add_child(jog)
 	await _quadros(3)
-	var srv: Dictionary = {}
-	for g in terreno["grelhas"]:
-		if int(g["largura"]) == w and int(g["altura"]) == h and is_equal_approx(float(g["casaM"]), casa):
-			srv = g
-	_ok(not srv.is_empty(), "o servidor tem esta grelha no pacote do terreno")
+	var srv := _do_servidor(w, h, casa)
+	_ok(not srv.is_empty(), "o servidor de verdade julga esta grelha (recortada do mapa inteiro)")
 
 	# 1. a grelha no mesmo sítio
 	var tam := Vector2(w * casa, h * casa)
@@ -181,7 +192,7 @@ func _medir_grelha(m, a, base: Dictionary, terreno: Dictionary, w: int, h: int, 
 				d_srv = maxf(d_srv, absf(q.y - float(srv["alturaM"][y * w + x])))
 	_ok(d_relevo == 0.0, "centro de casa − relevo: maior %.6f m (%d casas)" % [d_relevo, w * h])
 	_ok(d_jog == 0.0, "centro de casa Mestre − jogador: maior %.6f m (%d casas)" % [d_jog, w * h])
-	_ok(d_srv < 1e-9, "centro de casa Mestre − alturaM do servidor: maior %s m" % str(d_srv))
+	_ok(d_srv == 0.0, "centro de casa Mestre − alturaM do servidor (bits do double): maior %s m" % str(d_srv))
 	reg["centro_menos_relevo_m"] = d_relevo
 	reg["centro_mestre_menos_jogador_m"] = d_jog
 	reg["centro_mestre_menos_servidor_m"] = d_srv
@@ -283,7 +294,7 @@ func _medir_grelha(m, a, base: Dictionary, terreno: Dictionary, w: int, h: int, 
 	var n_fig: int = vista["mestre"]["figuras"].size()
 	_ok(fora == 0 and a.figuras_desenhadas() == n_fig, "as %d figuras estão no pé da casa; anel e sombra de contacto no plano da encosta; corpo de pé a prumo" % n_fig)
 	_ok(d_pe_jog == 0.0, "pé das figuras Mestre − jogador (pe_figura): maior %.6f m" % d_pe_jog)
-	_ok(d_pe_srv < 1e-9, "pé das figuras Mestre − peM do servidor: maior %s m" % str(d_pe_srv))
+	_ok(d_pe_srv == 0.0, "pé das figuras Mestre − peM do servidor (bits do double): maior %s m" % str(d_pe_srv))
 	_ok(plano_corpo < 0.0001, "fundo do corpo de pé − plano da base: maior %.6f m (o cilindro assenta inteiro no plano)" % plano_corpo)
 	for k in ["pegada", "contacto", "anel"]:
 		print("        régua do plano contra o relevo, raio %s: enterra %.3f / flutua %.3f m (casas que se pisam)%s%s" % [k, pior[k][0], pior[k][1],

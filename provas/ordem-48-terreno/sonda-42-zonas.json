@@ -1,0 +1,648 @@
+{
+ "bordaCoberturaM": 1.35,
+ "ordem": 48,
+ "referencia": {
+  "altura": 56,
+  "casaM": 1.5,
+  "largura": 56
+ },
+ "sonda": "cliente/cenas/arena/ferramentas/sondar_zonas_terreno.gd",
+ "totais": {
+  "borda": 4799,
+  "bordaDiferente": 79,
+  "casas": 43010
+ },
+ "zonas": [
+  {
+   "altura": 50,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 2500,
+   "casasNaFaixaDaBorda": 196,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 50,
+   "motivoDiferente": 0,
+   "origemM": [
+    -37.5,
+    -37.5
+   ]
+  },
+  {
+   "altura": 20,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 400,
+   "casasNaFaixaDaBorda": 76,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 1,
+   "largura": 20,
+   "motivoDiferente": 0,
+   "origemM": [
+    -15.0,
+    -15.0
+   ]
+  },
+  {
+   "altura": 25,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 625,
+   "casasNaFaixaDaBorda": 91,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 2,
+   "largura": 25,
+   "motivoDiferente": 0,
+   "origemM": [
+    -18.0,
+    -18.0
+   ]
+  },
+  {
+   "altura": 30,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 900,
+   "casasNaFaixaDaBorda": 99,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 1,
+   "largura": 30,
+   "motivoDiferente": 0,
+   "origemM": [
+    -22.5,
+    -22.5
+   ]
+  },
+  {
+   "altura": 10,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 100,
+   "casasNaFaixaDaBorda": 36,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 10,
+   "motivoDiferente": 0,
+   "origemM": [
+    -7.5,
+    -7.5
+   ]
+  },
+  {
+   "altura": 12,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 144,
+   "casasNaFaixaDaBorda": 44,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 12,
+   "motivoDiferente": 0,
+   "origemM": [
+    -9.0,
+    -9.0
+   ]
+  },
+  {
+   "altura": 16,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 256,
+   "casasNaFaixaDaBorda": 60,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 1,
+   "largura": 16,
+   "motivoDiferente": 0,
+   "origemM": [
+    -12.0,
+    -12.0
+   ]
+  },
+  {
+   "altura": 40,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 1600,
+   "casasNaFaixaDaBorda": 145,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 1,
+   "largura": 40,
+   "motivoDiferente": 0,
+   "origemM": [
+    -30.0,
+    -30.0
+   ]
+  },
+  {
+   "altura": 49,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 2401,
+   "casasNaFaixaDaBorda": 192,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 49,
+   "motivoDiferente": 0,
+   "origemM": [
+    -36.0,
+    -36.0
+   ]
+  },
+  {
+   "altura": 25,
+   "bloqueioDiferente": 0,
+   "casaM": 1.0,
+   "casas": 625,
+   "casasNaFaixaDaBorda": 184,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 2,
+   "largura": 25,
+   "motivoDiferente": 0,
+   "origemM": [
+    -12.5,
+    -12.5
+   ]
+  },
+  {
+   "altura": 25,
+   "bloqueioDiferente": 0,
+   "casaM": 2.0,
+   "casas": 625,
+   "casasNaFaixaDaBorda": 42,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 3,
+   "largura": 25,
+   "motivoDiferente": 0,
+   "origemM": [
+    -25.0,
+    -25.0
+   ]
+  },
+  {
+   "altura": 20,
+   "bloqueioDiferente": 0,
+   "casaM": 1.0,
+   "casas": 400,
+   "casasNaFaixaDaBorda": 76,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 4,
+   "largura": 20,
+   "motivoDiferente": 0,
+   "origemM": [
+    -10.0,
+    -10.0
+   ]
+  },
+  {
+   "altura": 30,
+   "bloqueioDiferente": 0,
+   "casaM": 2.0,
+   "casas": 900,
+   "casasNaFaixaDaBorda": 107,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 30,
+   "motivoDiferente": 0,
+   "origemM": [
+    -30.0,
+    -30.0
+   ]
+  },
+  {
+   "altura": 17,
+   "bloqueioDiferente": 0,
+   "casaM": 1.0,
+   "casas": 357,
+   "casasNaFaixaDaBorda": 87,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 21,
+   "motivoDiferente": 0,
+   "origemM": [
+    -10.5,
+    -8.5
+   ]
+  },
+  {
+   "altura": 27,
+   "bloqueioDiferente": 0,
+   "casaM": 2.0,
+   "casas": 891,
+   "casasNaFaixaDaBorda": 112,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 4,
+   "largura": 33,
+   "motivoDiferente": 0,
+   "origemM": [
+    -33.0,
+    -27.0
+   ]
+  },
+  {
+   "altura": 37,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 1369,
+   "casasNaFaixaDaBorda": 134,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 1,
+   "largura": 37,
+   "motivoDiferente": 0,
+   "origemM": [
+    -27.0,
+    -27.0
+   ]
+  },
+  {
+   "altura": 15,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 225,
+   "casasNaFaixaDaBorda": 56,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 1,
+   "largura": 15,
+   "motivoDiferente": 0,
+   "origemM": [
+    -10.5,
+    -10.5
+   ]
+  },
+  {
+   "altura": 60,
+   "bloqueioDiferente": 0,
+   "casaM": 1.0,
+   "casas": 3600,
+   "casasNaFaixaDaBorda": 319,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 2,
+   "largura": 60,
+   "motivoDiferente": 0,
+   "origemM": [
+    -30.0,
+    -30.0
+   ]
+  },
+  {
+   "altura": 37,
+   "bloqueioDiferente": 0,
+   "casaM": 2.0,
+   "casas": 1369,
+   "casasNaFaixaDaBorda": 73,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 37,
+   "motivoDiferente": 0,
+   "origemM": [
+    -37.0,
+    -37.0
+   ]
+  },
+  {
+   "altura": 11,
+   "bloqueioDiferente": 0,
+   "casaM": 1.0,
+   "casas": 121,
+   "casasNaFaixaDaBorda": 40,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 11,
+   "motivoDiferente": 0,
+   "origemM": [
+    -5.5,
+    -5.5
+   ]
+  },
+  {
+   "altura": 8,
+   "bloqueioDiferente": 0,
+   "casaM": 2.0,
+   "casas": 64,
+   "casasNaFaixaDaBorda": 28,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 8,
+   "motivoDiferente": 0,
+   "origemM": [
+    -8.0,
+    -8.0
+   ]
+  },
+  {
+   "altura": 29,
+   "bloqueioDiferente": 0,
+   "casaM": 1.0,
+   "casas": 377,
+   "casasNaFaixaDaBorda": 134,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 13,
+   "motivoDiferente": 0,
+   "origemM": [
+    -6.5,
+    -14.5
+   ]
+  },
+  {
+   "altura": 45,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 2025,
+   "casasNaFaixaDaBorda": 176,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 5,
+   "largura": 45,
+   "motivoDiferente": 0,
+   "origemM": [
+    -33.0,
+    -33.0
+   ]
+  },
+  {
+   "altura": 51,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 2500,
+   "casasNaFaixaDaBorda": 99,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 51,
+   "motivoDiferente": 0,
+   "origemM": [
+    -39.0,
+    -39.0
+   ]
+  },
+  {
+   "altura": 70,
+   "bloqueioDiferente": 0,
+   "casaM": 1.0,
+   "casas": 4900,
+   "casasNaFaixaDaBorda": 544,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 7,
+   "largura": 70,
+   "motivoDiferente": 0,
+   "origemM": [
+    -35.0,
+    -35.0
+   ]
+  },
+  {
+   "altura": 44,
+   "bloqueioDiferente": 0,
+   "casaM": 2.0,
+   "casas": 1444,
+   "casasNaFaixaDaBorda": 0,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 44,
+   "motivoDiferente": 0,
+   "origemM": [
+    -44.0,
+    -44.0
+   ]
+  },
+  {
+   "altura": 23,
+   "bloqueioDiferente": 0,
+   "casaM": 1.0,
+   "casas": 529,
+   "casasNaFaixaDaBorda": 88,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 4,
+   "largura": 23,
+   "motivoDiferente": 0,
+   "origemM": [
+    -11.5,
+    -11.5
+   ]
+  },
+  {
+   "altura": 19,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 513,
+   "casasNaFaixaDaBorda": 84,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 1,
+   "largura": 27,
+   "motivoDiferente": 0,
+   "origemM": [
+    -19.5,
+    -13.5
+   ]
+  },
+  {
+   "altura": 35,
+   "bloqueioDiferente": 0,
+   "casaM": 2.0,
+   "casas": 1225,
+   "casasNaFaixaDaBorda": 136,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 35,
+   "motivoDiferente": 0,
+   "origemM": [
+    -35.0,
+    -35.0
+   ]
+  },
+  {
+   "altura": 18,
+   "bloqueioDiferente": 0,
+   "casaM": 2.0,
+   "casas": 324,
+   "casasNaFaixaDaBorda": 67,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 1,
+   "largura": 18,
+   "motivoDiferente": 0,
+   "origemM": [
+    -18.0,
+    -18.0
+   ]
+  },
+  {
+   "altura": 5,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 25,
+   "casasNaFaixaDaBorda": 16,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 5,
+   "motivoDiferente": 0,
+   "origemM": [
+    -3.0,
+    -3.0
+   ]
+  },
+  {
+   "altura": 1,
+   "bloqueioDiferente": 0,
+   "casaM": 1.0,
+   "casas": 1,
+   "casasNaFaixaDaBorda": 1,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 1,
+   "motivoDiferente": 0,
+   "origemM": [
+    -0.5,
+    -0.5
+   ]
+  },
+  {
+   "altura": 46,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 2116,
+   "casasNaFaixaDaBorda": 180,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 46,
+   "motivoDiferente": 0,
+   "origemM": [
+    -34.5,
+    -34.5
+   ]
+  },
+  {
+   "altura": 41,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 1681,
+   "casasNaFaixaDaBorda": 152,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 1,
+   "largura": 41,
+   "motivoDiferente": 0,
+   "origemM": [
+    -30.0,
+    -30.0
+   ]
+  },
+  {
+   "altura": 20,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 880,
+   "casasNaFaixaDaBorda": 120,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 3,
+   "largura": 44,
+   "motivoDiferente": 0,
+   "origemM": [
+    -33.0,
+    -15.0
+   ]
+  },
+  {
+   "altura": 26,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 676,
+   "casasNaFaixaDaBorda": 92,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 2,
+   "largura": 26,
+   "motivoDiferente": 0,
+   "origemM": [
+    -19.5,
+    -19.5
+   ]
+  },
+  {
+   "altura": 24,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 576,
+   "casasNaFaixaDaBorda": 89,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 2,
+   "largura": 24,
+   "motivoDiferente": 0,
+   "origemM": [
+    -18.0,
+    -18.0
+   ]
+  },
+  {
+   "altura": 22,
+   "bloqueioDiferente": 0,
+   "casaM": 1.5,
+   "casas": 484,
+   "casasNaFaixaDaBorda": 81,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 2,
+   "largura": 22,
+   "motivoDiferente": 0,
+   "origemM": [
+    -16.5,
+    -16.5
+   ]
+  },
+  {
+   "altura": 28,
+   "bloqueioDiferente": 0,
+   "casaM": 1.0,
+   "casas": 784,
+   "casasNaFaixaDaBorda": 208,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 13,
+   "largura": 28,
+   "motivoDiferente": 0,
+   "origemM": [
+    -14.0,
+    -14.0
+   ]
+  },
+  {
+   "altura": 34,
+   "bloqueioDiferente": 0,
+   "casaM": 1.0,
+   "casas": 1156,
+   "casasNaFaixaDaBorda": 247,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 13,
+   "largura": 34,
+   "motivoDiferente": 0,
+   "origemM": [
+    -17.0,
+    -17.0
+   ]
+  },
+  {
+   "altura": 31,
+   "bloqueioDiferente": 0,
+   "casaM": 2.0,
+   "casas": 961,
+   "casasNaFaixaDaBorda": 55,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 0,
+   "largura": 31,
+   "motivoDiferente": 0,
+   "origemM": [
+    -31.0,
+    -31.0
+   ]
+  },
+  {
+   "altura": 19,
+   "bloqueioDiferente": 0,
+   "casaM": 2.0,
+   "casas": 361,
+   "casasNaFaixaDaBorda": 33,
+   "coberturaAfirmadaDiferente": 0,
+   "faixaDaBordaClienteDiferente": 2,
+   "largura": 19,
+   "motivoDiferente": 0,
+   "origemM": [
+    -19.0,
+    -19.0
+   ]
+  }
+ ],
+ "zonasQueContradizem": 0
+}

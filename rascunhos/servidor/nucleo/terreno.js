@@ -1,46 +1,37 @@
-// terreno.js — Ordem 44 (parte A): o TERRENO DO MAPA no servidor.
+// terreno.js — Ordens 44 e 48: o TERRENO DO MAPA no servidor, para QUALQUER tamanho de grelha.
 //
-// O servidor passa a conhecer o relevo e os obstáculos do mapa da floresta, casa a casa. Os números NÃO se
-// escrevem aqui nem à mão: vêm do pacote `dados/terreno-floresta.json`, que o cliente gera com as mesmas funções
-// com que desenha (cliente/cenas/arena/ferramentas/exportar_terreno.gd → assentamento.gd, Relevo, grelha do mapa).
-// Uma só fonte de verdade: o cliente desenha, o exportador escreve, o servidor lê.
+// O servidor conhece o relevo e os obstáculos do mapa da floresta, casa a casa. Os números NÃO se escrevem aqui nem
+// à mão: vêm do pacote `dados/terreno-floresta.json`, que o cliente gera com as mesmas funções com que desenha
+// (cliente/cenas/arena/ferramentas/exportar_terreno.gd → assentamento.gd, Relevo, grelha do mapa).
+// Uma só fonte de verdade: o cliente desenha, o exportador escreve, o servidor lê e RECORTA.
 //
-// O pacote tem uma grelha por tamanho e escala (largura × altura × casaM). Por casa (linha a linha, de cima para
-// baixo, x a crescer para leste):
-//   alturaM     altura do relevo no centro da casa (m)
-//   peM         altura da base de uma figura nessa casa (m; a base inclinada da Ordem 44, parte B)
-//   bloqueadas  1 = a casa não se pisa nem se ocupa (menir, santuário, rocha, tronco, água funda, escarpa…)
-//   cobertura   0 nenhuma, 1 meia, 2 total
-//   motivos     "x,y" → o que bloqueia
+// Ordem 48: o pacote leva o MAPA INTEIRO, não grelhas feitas (formato terreno/2):
+//   escalas   por escala (1 / 1,5 / 2 m), a origem no mapa (canto NO) da grelha de 1, 2, 3, … casas de lado — a regra
+//             da arena tabelada. Um lado maior do que a tabela não cabe no mapa.
+//   redes     as alturas das maiores grelhas que cabem no mapa (uma por escala e por «fase» da origem). Toda a grelha
+//             que cabe é um recorte exacto de uma rede: os mesmos centros de casa, os mesmos doubles. Por casa
+//             alturaM (o relevo no centro) e peM (a base de uma figura, Ordem 44 parte B), em base64 dos doubles; por
+//             coluna e por linha, a casa do mapa (50 × 50 de 1,5 m) que contém o centro.
+//   mapa      as 50 × 50 casas do mapa: bloqueadas (0/1), cobertura (0/1/2), motivos ("coluna,linha" → o que bloqueia),
+//             lidos do mapa construído para uma zona maior do que ele (nada do que a zona tira chega lá).
+// O que bloqueia uma casa DENTRO da zona jogável não depende da zona (ver o exportador): recorta-se. A COBERTURA de uma
+// casa perto da borda pode vir de coisas que o cliente planta FORA da zona, e essas dependem da zona: nas casas cuja
+// casa do mapa tem o centro a `bordaCoberturaM` ou menos da borda, o servidor só afirma a cobertura total (2: no mapa a
+// cobertura só sobe) e, abaixo disso, diz que não sabe (null) — nunca um número errado. Fora da faixa é a do cliente.
 //
-// O núcleo não importa node:* (o adaptador lê o ficheiro e passa o objecto já lido).
+// FALHA FECHADO, SEMPRE COM NOME:
+//   - um pacote com forma desconhecida não se prepara (TypeError: a sala não abre com um terreno a meias);
+//   - uma grelha que o pacote não consegue servir (lado maior do que o mapa, escala sem tabela) NÃO vira «tudo se pisa»:
+//     `motivoSemGrelha` diz porquê (TERRENO_GRELHA_FORA_DO_MAPA / TERRENO_ESCALA_SEM_TABELA) e `para` lança esse erro.
+//
+// O núcleo não importa node:* (o adaptador lê o ficheiro e passa o objecto já lido); o base64 lê-se com `atob`.
 
-const FORMATO = 'terreno/1';
+const FORMATO = 'terreno/2';
+export const TERRENO_GRELHA_FORA_DO_MAPA = 'TERRENO_GRELHA_FORA_DO_MAPA';
+export const TERRENO_ESCALA_SEM_TABELA = 'TERRENO_ESCALA_SEM_TABELA';
 
 function erro(texto) {
   return new TypeError('terreno: ' + texto);
-}
-
-function conferirGrelha(g, i) {
-  const onde = `grelhas[${i}]`;
-  if (!g || typeof g !== 'object') throw erro(`${onde} não é um objecto`);
-  const { largura, altura, casaM } = g;
-  if (!Number.isInteger(largura) || largura < 1 || !Number.isInteger(altura) || altura < 1) throw erro(`${onde}: largura/altura inválidas`);
-  if (typeof casaM !== 'number' || !(casaM > 0)) throw erro(`${onde}: casaM inválida`);
-  const n = largura * altura;
-  for (const campo of ['alturaM', 'peM', 'bloqueadas', 'cobertura']) {
-    if (!Array.isArray(g[campo]) || g[campo].length !== n) throw erro(`${onde}.${campo} tem de ter ${n} casas`);
-  }
-  for (const campo of ['alturaM', 'peM']) {
-    if (!g[campo].every((v) => typeof v === 'number' && Number.isFinite(v))) throw erro(`${onde}.${campo}: número inválido`);
-  }
-  if (!g.bloqueadas.every((v) => v === 0 || v === 1)) throw erro(`${onde}.bloqueadas: só 0 ou 1`);
-  if (!g.cobertura.every((v) => v === 0 || v === 1 || v === 2)) throw erro(`${onde}.cobertura: só 0, 1 ou 2`);
-  const motivos = g.motivos && typeof g.motivos === 'object' ? g.motivos : {};
-  for (let k = 0; k < n; k++) {
-    const chave = `${k % largura},${Math.floor(k / largura)}`;
-    if (g.bloqueadas[k] === 1 && typeof motivos[chave] !== 'string') throw erro(`${onde}: casa ${chave} bloqueada sem motivo`);
-  }
 }
 
 /** Mesma escala (as escalas valem 1 / 1,5 / 2 m; a comparação aceita o arredondamento do JSON). */
@@ -48,46 +39,195 @@ function mesmaEscala(a, b) {
   return Math.abs(a - b) < 1e-9;
 }
 
+/** Os doubles (IEEE-754, little-endian) de um texto base64; null se o texto não for base64 de doubles. */
+function doubles(b64) {
+  if (typeof b64 !== 'string') return null;
+  let bin;
+  try {
+    bin = atob(b64);
+  } catch {
+    return null;
+  }
+  if (bin.length % 8 !== 0) return null;
+  const vista = new DataView(new ArrayBuffer(bin.length));
+  for (let i = 0; i < bin.length; i++) vista.setUint8(i, bin.charCodeAt(i));
+  const r = new Float64Array(bin.length / 8);
+  for (let i = 0; i < r.length; i++) r[i] = vista.getFloat64(i * 8, true);
+  return r;
+}
+
+const inteiroEntre = (v, lo, hi) => Number.isInteger(v) && v >= lo && v < hi;
+
+function prepararMapa(m, cab) {
+  const casas = cab.casasDoMapa;
+  if (!casas || !Number.isInteger(casas.lado) || casas.lado < 1 || !(casas.casaM > 0) || !Array.isArray(casas.origemM) || casas.origemM.length !== 2) {
+    throw erro('cabecalho.casasDoMapa inválido');
+  }
+  if (!(typeof cab.bordaCoberturaM === 'number' && cab.bordaCoberturaM >= 0)) throw erro('cabecalho.bordaCoberturaM inválida');
+  const lado = casas.lado;
+  const n = lado * lado;
+  if (!m || typeof m !== 'object' || m.lado !== lado) throw erro(`mapa: tem de ter ${lado} × ${lado} casas`);
+  for (const campo of ['bloqueadas', 'cobertura']) {
+    if (!Array.isArray(m[campo]) || m[campo].length !== n) throw erro(`mapa.${campo} tem de ter ${n} casas`);
+  }
+  if (!m.bloqueadas.every((v) => v === 0 || v === 1)) throw erro('mapa.bloqueadas: só 0 ou 1');
+  if (!m.cobertura.every((v) => v === 0 || v === 1 || v === 2)) throw erro('mapa.cobertura: só 0, 1 ou 2');
+  const motivos = m.motivos && typeof m.motivos === 'object' ? m.motivos : {};
+  for (let k = 0; k < n; k++) {
+    const chave = `${k % lado},${Math.floor(k / lado)}`;
+    if (m.bloqueadas[k] === 1 && typeof motivos[chave] !== 'string') throw erro(`mapa: casa ${chave} bloqueada sem motivo`);
+  }
+  return Object.freeze({
+    lado, casaM: casas.casaM, origemM: Object.freeze([...casas.origemM]), borda: cab.bordaCoberturaM,
+    bloq: Uint8Array.from(m.bloqueadas), cob: Uint8Array.from(m.cobertura), motivos: Object.freeze({ ...motivos }),
+  });
+}
+
+function prepararRede(r, i, lado) {
+  const onde = `redes[${i}]`;
+  if (!r || typeof r !== 'object') throw erro(`${onde} não é um objecto`);
+  const { largura, altura, casaM } = r;
+  if (!Number.isInteger(largura) || largura < 1 || !Number.isInteger(altura) || altura < 1) throw erro(`${onde}: largura/altura inválidas`);
+  if (typeof casaM !== 'number' || !(casaM > 0)) throw erro(`${onde}: casaM inválida`);
+  if (!Array.isArray(r.origemM) || r.origemM.length !== 2 || !r.origemM.every(Number.isFinite)) throw erro(`${onde}: origemM inválida`);
+  if (!Array.isArray(r.colunaMapa) || r.colunaMapa.length !== largura || !r.colunaMapa.every((v) => inteiroEntre(v, 0, lado))) {
+    throw erro(`${onde}.colunaMapa tem de ter ${largura} casas do mapa`);
+  }
+  if (!Array.isArray(r.linhaMapa) || r.linhaMapa.length !== altura || !r.linhaMapa.every((v) => inteiroEntre(v, 0, lado))) {
+    throw erro(`${onde}.linhaMapa tem de ter ${altura} casas do mapa`);
+  }
+  const n = largura * altura;
+  const campos = {};
+  for (const campo of ['alturaM', 'peM']) {
+    const v = doubles(r[campo]);
+    if (!v || v.length !== n) throw erro(`${onde}.${campo} tem de ter ${n} casas (base64 de doubles)`);
+    if (!v.every(Number.isFinite)) throw erro(`${onde}.${campo}: número inválido`);
+    campos[campo] = v;
+  }
+  return Object.freeze({
+    largura, altura, casaM, origemM: Object.freeze([...r.origemM]), colunaMapa: Object.freeze([...r.colunaMapa]),
+    linhaMapa: Object.freeze([...r.linhaMapa]), alturaM: campos.alturaM, peM: campos.peM,
+  });
+}
+
+/** Onde uma grelha de `n` casas com origem `o` encaixa na rede (eixo x ou z): o deslocamento em casas, ou -1. */
+function encaixe(o, n, oRede, nRede, casaM) {
+  const k = (o - oRede) / casaM;
+  return Number.isInteger(k) && k >= 0 && k + n <= nRede ? k : -1;
+}
+
 /**
  * Prepara o pacote do terreno (o objecto lido de dados/terreno-floresta.json). Falha fechado: um pacote com forma
- * desconhecida lança TypeError (a sala não abre com um terreno a meias).
- * Devolve { formato, mapa, fontes, grelhas: [{largura, altura, casaM}], para(largura, altura, casaM) → grelha | null }.
+ * desconhecida lança TypeError (a sala não abre com um terreno a meias) — incluindo um pacote cuja tabela promete uma
+ * grelha que nenhuma rede serve.
+ * Devolve { formato, mapa, fontes, escalas: [{casaM, ladoMax}], motivoSemGrelha(l, a, casaM) → null | texto,
+ *           para(l, a, casaM) → grelha (lança TypeError nomeado se não houver) }.
  */
 export function prepararTerreno(pacote) {
   if (!pacote || typeof pacote !== 'object') throw erro('pacote em falta');
   const cab = pacote.cabecalho;
   if (!cab || cab.formato !== FORMATO) throw erro(`formato desconhecido (esperado ${FORMATO})`);
-  if (!Array.isArray(pacote.grelhas) || !pacote.grelhas.length) throw erro('sem grelhas');
-  pacote.grelhas.forEach(conferirGrelha);
-  const grelhas = pacote.grelhas.map((g) => Object.freeze(criarGrelha(g)));
+  const mapa = prepararMapa(pacote.mapa, cab);
+  if (!Array.isArray(pacote.escalas) || !pacote.escalas.length) throw erro('sem escalas');
+  const escalas = pacote.escalas.map((e, i) => {
+    if (!e || !(typeof e.casaM === 'number' && e.casaM > 0)) throw erro(`escalas[${i}]: casaM inválida`);
+    if (!Array.isArray(e.origensM) || !e.origensM.length || !e.origensM.every(Number.isFinite)) throw erro(`escalas[${i}].origensM inválidas`);
+    return Object.freeze({ casaM: e.casaM, origensM: Object.freeze([...e.origensM]) });
+  });
+  if (!Array.isArray(pacote.redes) || !pacote.redes.length) throw erro('sem redes');
+  const redes = pacote.redes.map((r, i) => prepararRede(r, i, mapa.lado));
+
+  const escalaDe = (casaM) => escalas.find((e) => mesmaEscala(e.casaM, casaM)) ?? null;
+  /** A rede e o deslocamento onde a grelha encaixa, ou null. */
+  function achar(l, a, casaM) {
+    const e = escalaDe(casaM);
+    if (!e || !Number.isInteger(l) || !Number.isInteger(a) || l < 1 || a < 1 || l > e.origensM.length || a > e.origensM.length) return null;
+    const ox = e.origensM[l - 1];
+    const oz = e.origensM[a - 1];
+    for (const r of redes) {
+      if (!mesmaEscala(r.casaM, casaM)) continue;
+      const kx = encaixe(ox, l, r.origemM[0], r.largura, r.casaM);
+      const kz = encaixe(oz, a, r.origemM[1], r.altura, r.casaM);
+      if (kx >= 0 && kz >= 0) return { rede: r, kx, kz, ox, oz, casaM: r.casaM };
+    }
+    return null;
+  }
+  function motivoSemGrelha(l, a, casaM) {
+    const e = escalaDe(casaM);
+    if (!e) {
+      return `${TERRENO_ESCALA_SEM_TABELA}: o terreno do mapa não tem a escala de ${casaM} m por casa (tem ${escalas.map((x) => x.casaM).join(' / ')} m)`;
+    }
+    if (achar(l, a, casaM)) return null;
+    const max = e.origensM.length;
+    return `${TERRENO_GRELHA_FORA_DO_MAPA}: a grelha ${l}x${a} de ${e.casaM} m não cabe no mapa da floresta`
+      + ` (${mapa.lado} x ${mapa.lado} casas de ${mapa.casaM} m); nesta escala cabem até ${max}x${max}`;
+  }
+  // Falha fechado já ao preparar: cada grelha que a tabela promete (todos os pares de lados) tem de encaixar numa rede.
+  for (const e of escalas) {
+    const max = e.origensM.length;
+    for (let l = 1; l <= max; l++) {
+      for (let a = 1; a <= max; a++) if (!achar(l, a, e.casaM)) throw erro(`a grelha ${l}x${a} de ${e.casaM} m não encaixa em nenhuma rede`);
+    }
+  }
+
+  const feitas = new Map();
   return Object.freeze({
     formato: cab.formato,
     mapa: typeof cab.mapa === 'string' ? cab.mapa : null,
     fontes: Object.freeze({ ...(cab.fontes ?? {}) }),
-    grelhas: Object.freeze(grelhas.map((g) => Object.freeze({ largura: g.largura, altura: g.altura, casaM: g.casaM }))),
-    /** A grelha deste tamanho e escala, ou null se o pacote não a tem. */
-    para(largura, altura, casaM) {
-      return grelhas.find((g) => g.largura === largura && g.altura === altura && mesmaEscala(g.casaM, casaM)) ?? null;
+    escalas: Object.freeze(escalas.map((e) => Object.freeze({ casaM: e.casaM, ladoMax: e.origensM.length }))),
+    /** null se o pacote serve esta grelha; senão o porquê, nomeado. */
+    motivoSemGrelha,
+    /** A grelha deste tamanho e escala, recortada do mapa inteiro. Lança TypeError nomeado se não couber: nunca null. */
+    para(l, a, casaM) {
+      const chave = `${l}x${a}@${casaM}`;
+      if (!feitas.has(chave)) {
+        const e = achar(l, a, casaM);
+        if (!e) throw erro(motivoSemGrelha(l, a, casaM));
+        feitas.set(chave, Object.freeze(recortar(mapa, e, l, a)));
+      }
+      return feitas.get(chave);
     },
   });
 }
 
-function criarGrelha(g) {
-  const { largura, altura, casaM } = g;
-  const alturaM = Float64Array.from(g.alturaM);
-  const peM = Float64Array.from(g.peM);
-  const bloq = Uint8Array.from(g.bloqueadas);
-  const cob = Uint8Array.from(g.cobertura);
-  const motivos = Object.freeze({ ...(g.motivos ?? {}) });
-  const origemM = Array.isArray(g.origemM) ? Object.freeze(g.origemM.slice(0, 2)) : null;
-  const indice = (x, y) => (Number.isInteger(x) && Number.isInteger(y) && x >= 0 && y >= 0 && x < largura && y < altura ? y * largura + x : -1);
+/** A grelha viva (l × a) recortada da rede `e.rede` no deslocamento (e.kx, e.kz), com o bloqueio do mapa. */
+function recortar(mapa, e, largura, altura) {
+  const { rede, kx, kz, ox, oz, casaM } = e;
+  const fimX = ox + largura * casaM;
+  const fimZ = oz + altura * casaM;
+  const indice = (x, y) => (Number.isInteger(x) && Number.isInteger(y) && x >= 0 && y >= 0 && x < largura && y < altura ? (kz + y) * rede.largura + kx + x : -1);
+  /** A casa do mapa debaixo do centro da casa (x, y) do jogo, como índice no mapa, ou -1. */
+  const casaMapa = (x, y) => (indice(x, y) < 0 ? -1 : rede.linhaMapa[kz + y] * mapa.lado + rede.colunaMapa[kx + x]);
+  const bloqueada = (x, y) => { const k = casaMapa(x, y); return k >= 0 && mapa.bloq[k] === 1; };
+  /** O centro da casa do mapa `k` está a mais de bordaCoberturaM da borda da zona? (a cobertura é a do cliente) */
+  const longeDaBorda = (k) => {
+    const mx = mapa.origemM[0] + ((k % mapa.lado) + 0.5) * mapa.casaM;
+    const mz = mapa.origemM[1] + (Math.floor(k / mapa.lado) + 0.5) * mapa.casaM;
+    return Math.min(mx - ox, fimX - mx, mz - oz, fimZ - mz) > mapa.borda;
+  };
+  let bloqueadas = 0;
+  for (let y = 0; y < altura; y++) for (let x = 0; x < largura; x++) bloqueadas += bloqueada(x, y) ? 1 : 0;
   return {
-    largura, altura, casaM, origemM,
-    alturaM: (x, y) => { const k = indice(x, y); return k < 0 ? null : alturaM[k]; },
-    peM: (x, y) => { const k = indice(x, y); return k < 0 ? null : peM[k]; },
-    bloqueada: (x, y) => { const k = indice(x, y); return k >= 0 && bloq[k] === 1; },
-    motivo: (x, y) => (indice(x, y) >= 0 ? motivos[`${x},${y}`] ?? null : null),
-    cobertura: (x, y) => { const k = indice(x, y); return k < 0 ? 0 : cob[k]; },
-    casasBloqueadas: () => bloq.reduce((a, v) => a + v, 0),
+    largura, altura, casaM, origemM: Object.freeze([ox, oz]),
+    alturaM: (x, y) => { const k = indice(x, y); return k < 0 ? null : rede.alturaM[k]; },
+    peM: (x, y) => { const k = indice(x, y); return k < 0 ? null : rede.peM[k]; },
+    bloqueada,
+    motivo: (x, y) => {
+      const k = casaMapa(x, y);
+      return k >= 0 && mapa.bloq[k] === 1 ? mapa.motivos[`${k % mapa.lado},${Math.floor(k / mapa.lado)}`] ?? null : null;
+    },
+    /**
+     * 0 nenhuma, 1 meia, 2 total. Na faixa da borda o que o cliente planta fora da zona pode SUBIR a cobertura (nunca a
+     * baixa: no mapa a cobertura só sobe), logo 2 é 2; abaixo de 2 o servidor não sabe: null. null fora da grelha.
+     */
+    cobertura: (x, y) => {
+      const k = casaMapa(x, y);
+      if (k < 0) return null;
+      return longeDaBorda(k) || mapa.cob[k] === 2 ? mapa.cob[k] : null;
+    },
+    /** A casa do mapa (coluna, linha) debaixo do centro da casa do jogo, ou null fora da grelha. */
+    casaDoMapa: (x, y) => { const k = casaMapa(x, y); return k < 0 ? null : { coluna: k % mapa.lado, linha: Math.floor(k / mapa.lado) }; },
+    casasBloqueadas: () => bloqueadas,
   };
 }

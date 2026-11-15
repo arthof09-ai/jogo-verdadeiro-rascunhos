@@ -18,6 +18,7 @@ const IntegradorVento := preload("res://arte/clima/integrador_vento.gd")
 ## Ordem 44: o terreno do mapa que o servidor lê (gerado pelo exportador, a partir da arena).
 const ExportarTerreno := preload("res://cenas/arena/ferramentas/exportar_terreno.gd")
 const Assentamento := preload("res://cenas/arena/assentamento.gd")
+const GrelhaMapa := preload("res://mapa/floresta/grelha_floresta.gd")
 
 var _total := 0
 var _falhas := 0
@@ -771,12 +772,15 @@ func _teste_clima_modulo() -> void:
 # ---------------------------------------------------------------- Ordem 44: o terreno no servidor e o pé na encosta
 
 ## O pacote do terreno que o servidor lê (servidor/dados/terreno-floresta.json) foi gerado a partir das fontes de
-## HOJE: o SHA de cada ficheiro de que o terreno depende (relevo, grelha do mapa, campo, formas, regra do assentamento)
-## tem de ser o que vai no pacote. Se alguém mudar o relevo ou a regra sem correr o exportador, fica vermelho aqui.
+## HOJE: o SHA de cada ficheiro de que o terreno depende (relevo, grelha do mapa, campo, formas, regra do assentamento
+## e o próprio exportador) tem de ser o que vai no pacote. Se alguém mudar o relevo, a regra ou o exportador sem correr
+## o exportador, fica vermelho aqui (a conferência completa, que refaz o pacote, é servidor/ferramentas/conferir-terreno.mjs).
+## Ordem 48: o pacote é o mapa inteiro (terreno/2) e a tabela das origens é a regra da arena, lado a lado.
 func _teste_terreno_do_servidor_em_dia() -> void:
 	var texto := FileAccess.get_file_as_string(ExportarTerreno.caminho_saida())
 	var pacote = JSON.parse_string(texto)
-	_ok(pacote is Dictionary and pacote.get("cabecalho", {}).get("formato") == "terreno/1", "o pacote do terreno do servidor lê-se (terreno/1)")
+	_ok(pacote is Dictionary and pacote.get("cabecalho", {}).get("formato") == ExportarTerreno.FORMATO,
+		"o pacote do terreno do servidor lê-se (%s)" % ExportarTerreno.FORMATO)
 	if not pacote is Dictionary:
 		return
 	var no_pacote: Dictionary = pacote["cabecalho"].get("fontes", {})
@@ -787,10 +791,20 @@ func _teste_terreno_do_servidor_em_dia() -> void:
 			diferentes.append(f)
 	_ok(diferentes.is_empty() and no_pacote.size() == hoje.size(),
 		"o terreno do servidor está em dia com as fontes do cliente (refazer com exportar_terreno.gd): %s" % (", ".join(diferentes) if diferentes else "%d fontes iguais" % hoje.size()))
-	var tamanhos: Array = []
-	for g in pacote.get("grelhas", []):
-		tamanhos.append("%dx%d@%s" % [int(g["largura"]), int(g["altura"]), g["casaM"]])
-	_ok(tamanhos.has("20x20@1.5") and tamanhos.has("30x30@1.5"), "o pacote tem a grelha de sempre e a maior (%s)" % ", ".join(tamanhos))
+	var tabela_ok := 0
+	var lados: Array = []
+	for e in pacote.get("escalas", []):
+		var s := float(e["casaM"])
+		var tab: Array = e["origensM"]
+		lados.append("%s m: 1–%d" % [s, tab.size()])
+		if tab == ExportarTerreno.origens(s):
+			tabela_ok += 1
+	_ok(tabela_ok == ExportarTerreno.ESCALAS.size() and (pacote.get("escalas", []) as Array).size() == ExportarTerreno.ESCALAS.size(),
+		"as origens do pacote são as da arena, nas %d escalas (%s casas de lado)" % [tabela_ok, ", ".join(lados)])
+	var mapa: Dictionary = pacote.get("mapa", {})
+	_ok(int(mapa.get("lado", 0)) == GrelhaMapa.LADO and (mapa.get("bloqueadas", []) as Array).size() == GrelhaMapa.LADO * GrelhaMapa.LADO
+		and (pacote.get("redes", []) as Array).size() == 9,
+		"o pacote leva o mapa inteiro (%d × %d casas) e %d redes" % [GrelhaMapa.LADO, GrelhaMapa.LADO, (pacote.get("redes", []) as Array).size()])
 
 
 ## A regra do pé (assentamento.gd): num chão plano a base fica no chão e direita; numa encosta inclina-se com ela

@@ -282,6 +282,9 @@ function joinBemFormado(msg) {
  * @param {Object} [p.terreno]  ordem 44: o pacote do terreno do mapa (dados/terreno-floresta.json, já lido), gerado pelo
  *        cliente. Sem ele a sala é como antes (todas as casas se pisam). Com ele, a grelha do tamanho e da escala vivos
  *        diz que casas estão bloqueadas (não se pisam, não se ocupam, não se atravessam) e a altura de cada casa.
+ *        Ordem 48: a grelha recorta-se do mapa inteiro, para qualquer tamanho que caiba no mapa. Um tamanho que não
+ *        caiba NÃO volta a «tudo se pisa»: a sala não abre (TypeError com TERRENO_GRELHA_FORA_DO_MAPA) e o Mestre não
+ *        consegue mudar para uma escala em que a grelha deixe de caber (recusa com o mesmo nome).
  */
 export function criarSala({
   motores, fichas, rng, rngSemente, agora, hash = sha256Hex, config = {}, restaurarDe = null, chaveJournal = null,
@@ -306,6 +309,13 @@ export function criarSala({
   const lugaresConfig = Array.isArray(config.lugares) ? config.lugares : [];
   const largura = Number.isInteger(config.mapa?.largura) ? config.mapa.largura : 20; // v1: ≥ 20×20
   const altura = Number.isInteger(config.mapa?.altura) ? config.mapa.altura : 20;
+  // Ordem 48: com terreno, a grelha com que a sala nasce tem de caber no mapa — senão a sala não abre, com o porquê.
+  // (Antes, um tamanho fora do pacote caía em silêncio em «todas as casas se pisam» enquanto o cliente desenhava os
+  // marcos.) Uma sala restaurada confere-se com o journal lido (abaixo).
+  if (terrenos && restaurarDe == null) {
+    const semGrelha = terrenos.motivoSemGrelha(largura, altura, CASA_M);
+    if (semGrelha) throw new TypeError('criarSala: ' + semGrelha);
+  }
   const motoresInfo = Object.freeze({
     vlabSha: motores.MOTOR_SHA256 ?? null,
     dmgVersao: motores.DMG_VERSAO ?? null,
@@ -374,6 +384,12 @@ export function criarSala({
       },
     });
     roomId = journal.estado.roomId;
+    // Ordem 48: a grelha restaurada (tamanho e escala gravados) tem de caber no mapa do terreno: senão não abre.
+    if (terrenos) {
+      const mr = journal.estado.mapa;
+      const semGrelha = terrenos.motivoSemGrelha(mr?.largura, mr?.altura, casaDe(journal.estado));
+      if (semGrelha) throw new TypeError('criarSala: ' + semGrelha);
+    }
   } else {
     journal = criarJournal({ estadoInicial: construirEstadoInicial(), hash });
   }
@@ -595,8 +611,9 @@ export function criarSala({
     return colocadas(m).some((f) => f.x === x && f.y === y);
   }
   /**
-   * Ordem 44: a grelha do terreno do mapa para o tamanho e a escala vivos (ou null: sem pacote, ou o pacote não tem
-   * esta grelha — e então a sala é como antes, todas as casas se pisam).
+   * Ordem 44: a grelha do terreno do mapa para o tamanho e a escala vivos (null só sem pacote: a sala é como antes).
+   * Ordem 48: com pacote, nunca null — a grelha recorta-se do mapa inteiro; se não couber, lança o erro nomeado
+   * (TERRENO_GRELHA_FORA_DO_MAPA). A criação e a mudança de escala já o recusam antes de chegar aqui.
    */
   function terrenoDe(m) {
     return terrenos ? terrenos.para(m.mapa.largura, m.mapa.altura, casaDe(m)) : null;
@@ -2939,6 +2956,10 @@ export function criarSala({
     }
     const antes = casaDe(m);
     if (Math.abs(antes - casaM) < EPS) throw new ErroRecusa('acao_invalida'); // nada a mudar
+    // Ordem 48: com terreno, a grelha tem de caber no mapa na escala nova (ex.: 40 × 40 cabe com 1,5 m, não com 2 m).
+    // Recusa nomeada ao Mestre; a sala fica na escala em que estava.
+    const semGrelha = terrenos ? terrenos.motivoSemGrelha(m.mapa.largura, m.mapa.altura, casaM) : null;
+    if (semGrelha) throw new ErroRecusa('acao_invalida', semGrelha);
     m.mapa.casaM = casaM;
     tx.emitir('escala', {}, {
       casaMAntes: antes, casaM,
