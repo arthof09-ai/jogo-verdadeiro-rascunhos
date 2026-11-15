@@ -26,9 +26,11 @@ A medição de antes da sessão morta (`_tmp/o59/antes/`, sobre `ac2676b`) ficou
 | commit | o quê |
 |---|---|
 | `1bbc811` | **Parte 1, a medição de antes.** A ferramenta, a prova alargada e `provas/ordem-59-fronteira/antes-*`. |
-| *(parte 2)* | **A correcção.** `nucleo/terreno.js`, `folgaFonteCoberturaM` no exportador e no pacote (refeito pela ferramenta), testes `ordem59-fronteira-cobertura.test.mjs`, provas de depois, documentação. |
-| *(listas)* | Listas da retoma e MANIFESTO refeitos pelo gerador. |
-| *(este)* | Este ESTADO FINAL, e a seguir as listas outra vez. |
+| `ba3b115` | **Parte 2, a correcção.** `nucleo/terreno.js`, `folgaFonteCoberturaM` no exportador e no pacote (refeito pela ferramenta), testes `ordem59-fronteira-cobertura.test.mjs`, provas de depois, documentação. |
+| `f6d2684` | Listas da retoma e MANIFESTO refeitos pelo gerador (a parte 2 já trazia este ESTADO). Ponta do ramo `fable/fronteira-59`. |
+| `06371c1` | **Parte final.** A fusão em `fable/integracao-50` (secção 4). |
+| `1f1ede3` | Listas refeitas sobre a fusão. |
+| *(este)* | A secção 4 deste ESTADO, na linha, e a seguir as listas outra vez. |
 
 ## 1. A medição de antes: a reserva reproduz-se
 
@@ -137,6 +139,55 @@ uma figura em cada casa bloqueada, todas são recusadas, e o motivo é o que o c
 | arranque `--quit-after 600` | «pronto» |
 
 (O `provar_pes_bloqueadas` é da Ordem 58 e ainda não existe neste ramo: corre-se na linha fundida, secção 4.)
+
+**CI do ramo.** O run `43746469667` (commit `f6d2684`) deu verdes os 9 jobs, e a sonda de privacidade
+(`43746469760`) também. O run do commit da parte 1 (`1bbc811`) falhou só no `retoma-pc`, porque esse commit não
+refez as listas da retoma. As listas entraram em `f6d2684`.
+
+## 4. A fusão em `fable/integracao-50`
+
+**A ponta da linha mexeu-se.** O ramo nasceu de `ac2676b`. No fetch antes da fusão, a linha estava em **`b7e352b`**:
+tinham entrado as Ordens 57 (relógio), 58 e 60 (recusa no ecrã). Fundi sobre essa ponta nova. O ramo
+`fable/integracao-50` está aberto no clone `fable-mapaepo`, em que não toco. Por isso fiz a fusão nesta
+worktree, num ramo local `fable/integracao-50-o59` nascido de `origin/fable/integracao-50`, e publiquei com
+`git push origin HEAD:refs/heads/fable/integracao-50` (avanço rápido, sem force, com outro fetch logo antes).
+
+**Antes de fundir, conferi que o argumento da fronteira continua a valer na linha.** Entre `ac2676b` e `b7e352b`,
+das fontes do terreno só mudou o `campo_floresta.gd` (o relógio). Nenhuma linha acrescentada ou tirada toca em
+cobertura, `_na_zona`, `casa_em`, troncos, rochas ou bloqueios. O pacote da linha só diferia no cabeçalho
+(o SHA dessa fonte).
+
+**Conflitos (3), todos de ficheiros gerados:**
+- `servidor/dados/terreno-floresta.json`: refiz o pacote com o exportador sobre a árvore fundida. Fica com a folga
+  da Ordem 59 e o SHA do `campo_floresta.gd` da linha. Escalas, mapa e redes são iguais aos dos dois lados.
+- `MANIFESTO-SHA256.txt` e `retoma-i0004/depois.txt`: ficaram as da linha na fusão, e o gerador refê-las em
+  `1f1ede3` (402 ficheiros no MANIFESTO, `depois.txt` com 353). Uma segunda passagem dá 0 novos e 0 tirados.
+
+**Presenças dos dois lados, provadas na árvore fundida** (`1f1ede3`):
+- **Da Ordem 59:** o JSON de `provar_terreno_servidor.gd --json=` é **igual byte a byte** a
+  `provas/ordem-59-fronteira/depois-provar-terreno.json` (a faixa da fronteira servida, desvio 0). Os testes
+  `ordem59-fronteira-cobertura` passam.
+- **Da linha:** o `medir_toque_rasante.gd --json=` é igual byte a byte a `provas/ordem-51-toque/depois.json`. O
+  `pecas_mestre` dá 276 e o `hud_acoes` 50 (os números da Ordem 60). O retrato do molde tem 188 linhas (Ordem 57).
+  As provas `provar_pes_bloqueadas` (Ordem 58) e `provar_recusa_no_ecra` (Ordem 60) dão TUDO PASSOU.
+
+**Suites na árvore fundida** (sem janela, Godot 4.7.2; Node 26):
+
+| suite | resultado |
+|---|---|
+| servidor (`--permission --allow-net`) | 365 testes: 354 passam, 10 saltados, 1 falha local da fixture, só por fim de linha (reserva 5; regenerada, `git diff` vazio) |
+| protocolo + `conferir-schemas.py` · validador GLB | 364/365 (a mesma fixture) e schemas com saída 0 · 31 passam, 0 falham |
+| `conferir-terreno.mjs` / `exportar_terreno --conferir` | TERRENO EM DIA |
+| `abrir_scripts` | 83 scripts, 0 falhas |
+| `rodar_testes` · `pecas_mestre` · `hud_acoes` | 177/177 · 276/276 · 50/50 |
+| `abrir_mestre` · `abrir_clareira` · `canario_privacidade` · `clima_forte` | 67/67 · 22/22 · 10/10 · 119/119 |
+| `medir_mestre` · `medir_painel_config` | 0 falhas |
+| `provar_assentamento` · `provar_terreno_servidor` · `provar_mestre_no_relevo` · `provar_pes_bloqueadas` · `provar_recusa_no_ecra` | TUDO PASSOU |
+| `provar_molde_54` | 0 falhas; retrato com 188 linhas, igual ao construído de raiz |
+| `medir_toque_rasante` · `medir_perfil_mestre_52` | saída 0 |
+| arranque `--quit-after 600` | «pronto» |
+
+**CI.** Este ESTADO e as listas refeitas são o último commit da ordem. O CI dele corre no push do fecho.
 
 ## Reservas, sem rodeios
 
