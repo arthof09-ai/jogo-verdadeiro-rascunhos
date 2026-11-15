@@ -1,0 +1,10 @@
+A) mudança de escala numa 30 × 30, uma criatura de 2 em 2 casas
+  1.5 → 2 m: 215 figuras, 0 em casas bloqueadas antes · recibo ROOM_RECEIPT APLICADA · escala viva 2 m · em casas bloqueadas depois: 7 ["(6,4) menir","(22,4) água funda","(24,4) água funda","(24,6) água funda","(22,22) escarpa","(28,24) escarpa","(6,28) tronco tombado"]
+  1.5 → 1 m: 215 figuras, 0 em casas bloqueadas antes · recibo ROOM_RECEIPT APLICADA · escala viva 1 m · em casas bloqueadas depois: 0
+  1 → 1.5 m: 225 figuras, 0 em casas bloqueadas antes · recibo ROOM_RECEIPT APLICADA · escala viva 1.5 m · em casas bloqueadas depois: 10 ["(26,0) água funda","(28,0) água funda","(26,2) água funda","(28,2) água funda","(0,4) menir","(2,4) menir","(26,24) escarpa","(24,26) escarpa","(24,28) escarpa","(28,28) santuário"]
+  1 → 2 m: 225 figuras, 0 em casas bloqueadas antes · recibo ROOM_RECEIPT APLICADA · escala viva 2 m · em casas bloqueadas depois: 8 ["(6,4) menir","(22,4) água funda","(24,4) água funda","(24,6) água funda","(22,22) escarpa","(28,24) escarpa","(6,28) tronco tombado","(24,28) escarpa"]
+  2 → 1.5 m: 217 figuras, 0 em casas bloqueadas antes · recibo ROOM_RECEIPT APLICADA · escala viva 1.5 m · em casas bloqueadas depois: 9 ["(26,0) água funda","(28,0) água funda","(26,2) água funda","(28,2) água funda","(0,4) menir","(2,4) menir","(26,24) escarpa","(24,26) escarpa","(28,28) santuário"]
+  2 → 1 m: 217 figuras, 0 em casas bloqueadas antes · recibo ROOM_RECEIPT APLICADA · escala viva 1 m · em casas bloqueadas depois: 0
+B) a escala muda com as figuras em casas livres; depois «Recomeçar»
+  mover (6,4)→(7,4): APLICADA · escala 2 m: APLICADA (em bloqueadas: 0) · recomeçar: ROOM_RECEIPT APLICADA · em casas bloqueadas depois: 1 ["(6,4) menir"]
+TOTAL de figuras deixadas em casas bloqueadas: 35
