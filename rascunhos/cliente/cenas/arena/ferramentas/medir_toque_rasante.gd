@@ -93,8 +93,10 @@ func _medir(m, a, base: Dictionary, w: int, h: int, casa: float) -> void:
 		# as duas câmaras têm ecrãs diferentes (o Mestre vê pelo SubViewport): compara-se o que falha, não o que se vê
 		var igual: bool = rm["falhas"].map(func(f): return f["casa"]) == rj["falhas"].map(func(f): return f["casa"])
 		_falhas += rm["falhas"].size() + rj["falhas"].size() + (0 if igual else 1)
-		print("== %s · %s: jogador %d/%d (%d tapadas) · Mestre %d/%d (%d tapadas)%s" % [nome, NOMES[modo[0]],
-			rj["certas"], rj["vistas"], rj["tapadas"], rm["certas"], rm["vistas"], rm["tapadas"], "" if igual else " · AS ARENAS DIFEREM"])
+		_falhas += rm["ja_acertavam_e_mudaram"].size() + rj["ja_acertavam_e_mudaram"].size()
+		print("== %s · %s: jogador %d/%d (%d tapadas) · Mestre %d/%d (%d tapadas) · toques que já acertavam e mudaram: jogador %d, Mestre %d%s" % [nome, NOMES[modo[0]],
+			rj["certas"], rj["vistas"], rj["tapadas"], rm["certas"], rm["vistas"], rm["tapadas"],
+			rj["ja_acertavam_e_mudaram"].size(), rm["ja_acertavam_e_mudaram"].size(), "" if igual else " · AS ARENAS DIFEREM"])
 		for f in rj["falhas"]:
 			print("   FALHA jogador %s" % _texto(f))
 		for f in rm["falhas"]:
@@ -110,6 +112,33 @@ static func _texto(f: Dictionary) -> String:
 		f["casa"], f["deu"], f["folga_minima_junto_ao_centro_m"], f["distancia_raio_centro_m"], f["raio_devolveu"], f["relevo_no_ponto"], f["chao_referencia"], f["casa_referencia"]]
 
 
+## O raio como estava ANTES da Ordem 51 (só para medir; o produto usa CampoDaMesa.ponto_no_chao): serve para provar
+## que o conserto não mexe nos toques que já acertavam (o mesmo ponto, ao milímetro).
+static func _raio_antes(o: Vector3, d: Vector3):
+	if d.y > -0.0005:
+		return null
+	var t := maxf((o.y - 12.0) / -d.y, 0.0)
+	var antes := t
+	for i in 4000:
+		var q := o + d * t
+		if q.y <= Relevo.altura(q.x, q.z):
+			var a := antes
+			var b := t
+			for k in 14:
+				var m := (a + b) * 0.5
+				var qm := o + d * m
+				if qm.y <= Relevo.altura(qm.x, qm.z):
+					b = m
+				else:
+					a = m
+			return o + d * b
+		if q.y < -40.0:
+			return null
+		antes = t
+		t += 0.25
+	return null
+
+
 func _toque(arena, cam, modo: Array, w: int, h: int) -> Dictionary:
 	cam.definir_modo(modo[0])
 	if modo[0] == 1:
@@ -122,6 +151,7 @@ func _toque(arena, cam, modo: Array, w: int, h: int) -> Dictionary:
 	var vistas := 0
 	var tapadas := 0
 	var falhas: Array = []
+	var mudaram: Array = []
 	for y in h:
 		for x in w:
 			var c := Vector2i(x, y)
@@ -136,11 +166,20 @@ func _toque(arena, cam, modo: Array, w: int, h: int) -> Dictionary:
 			vistas += 1
 			var ecra: Vector2 = cam.unproject_position(q)
 			var t: Vector2i = arena.casa_em_tela(ecra)
+			var ro: Vector3 = cam.project_ray_origin(ecra)
+			var rd: Vector3 = cam.project_ray_normal(ecra)
+			var r_antes = _raio_antes(ro, rd)
+			var r_agora = CampoDaMesa.ponto_no_chao(ro, rd)
+			var c_antes := Vector2i(-1, -1)
+			if r_antes != null:
+				c_antes = Vector2i(floori((r_antes.x - arena.origem.x) / arena.casa_m), floori((r_antes.z - arena.origem.y) / arena.casa_m))
+			if c_antes == c:
+				# um toque que já acertava antes do conserto: tem de dar o mesmo ponto
+				if r_agora == null or r_agora.distance_to(r_antes) > 0.001:
+					mudaram.append("(%d,%d)" % [x, y])
 			if t == c:
 				certas += 1
 				continue
-			var ro: Vector3 = cam.project_ray_origin(ecra)
-			var rd: Vector3 = cam.project_ray_normal(ecra)
 			var r = CampoDaMesa.ponto_no_chao(ro, rd)
 			var ref = _chao_de_referencia(ro, rd)
 			var cref := Vector2i(-1, -1)
@@ -159,4 +198,4 @@ func _toque(arena, cam, modo: Array, w: int, h: int) -> Dictionary:
 				"raio_devolveu": "null" if r == null else "%.3v" % r,
 				"relevo_no_ponto": "-" if r == null else "%.3f" % Relevo.altura(r.x, r.z),
 				"chao_referencia": "null" if ref == null else "%.3v" % ref, "casa_referencia": "(%d,%d)" % [cref.x, cref.y]})
-	return {"certas": certas, "vistas": vistas, "tapadas": tapadas, "falhas": falhas}
+	return {"certas": certas, "vistas": vistas, "tapadas": tapadas, "falhas": falhas, "ja_acertavam_e_mudaram": mudaram}
