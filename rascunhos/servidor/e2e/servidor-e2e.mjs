@@ -61,5 +61,36 @@ const sala = criarSala({
     ],
   },
 });
-const servidor = criarServidor({ sala, registo: (t) => console.log('[servidor]', t) });
+// Ordem 49 (B): a fuga plantada, SÓ para provar a jogadora (jogadora-e2e.mjs). Com E2E_FUGA=voltar|fim|recomeco, a
+// primeira mensagem dessa fase que vai a um lugar que não é o do Mestre (o snapshot do «voltar», o evento fim, o
+// snapshot do «Recomeçar») leva um canário do Mestre num campo a mais. Sem a variável (o CI) a sala é a de sempre.
+const FUGA = process.env.E2E_FUGA || null;
+function comFuga(salaReal, fase) {
+  const mestres = new Set();
+  let viuEvento = false;
+  let plantou = false;
+  const alvo = (msg) => (fase === 'fim'
+    ? msg.type === 'ROOM_EVENT' && msg.tipo === 'fim'
+    : msg.type === 'ROOM_SNAPSHOT' && viuEvento);
+  const evento = fase === 'voltar' ? 'revertido' : 'recomeco';
+  const plantar = (saidas) => saidas.map((s) => {
+    if (s.msg?.type === 'ROOM_EVENT' && s.msg.tipo === evento) viuEvento = true;
+    if (plantou || mestres.has(s.seatId) || !alvo(s.msg)) return s;
+    plantou = true;
+    console.log(`[servidor] FUGA PLANTADA na fase ${fase}: ${s.msg.type}${s.msg.tipo ? ' ' + s.msg.tipo : ''}`);
+    return { ...s, msg: { ...s.msg, fugaPlantada: 'Orc Verdadeiro' } };
+  });
+  return Object.freeze({
+    get roomId() { return salaReal.roomId; },
+    ...Object.fromEntries(Object.entries(salaReal).filter(([k]) => k !== 'roomId')),
+    entrar: (msg, ctx) => {
+      const r = salaReal.entrar(msg, ctx);
+      if (r.ok && msg?.papel === 'mestre') mestres.add(r.seatId);
+      return r;
+    },
+    receber: (seatId, msg) => plantar(salaReal.receber(seatId, msg)),
+  });
+}
+if (FUGA && !['voltar', 'fim', 'recomeco'].includes(FUGA)) throw new Error(`E2E_FUGA desconhecida: ${FUGA}`);
+const servidor = criarServidor({ sala: FUGA ? comFuga(sala, FUGA) : sala, registo: (t) => console.log('[servidor]', t) });
 servidor.listen(porta, '127.0.0.1', () => console.log(`pronto-e2e ${porta}`));

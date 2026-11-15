@@ -18,6 +18,8 @@ As mensagens que ENTRAM e falham são contadas à parte: os testes mandam entrad
 (o servidor recusa-as); servem para ver que o schema também as recusa. Só as que SAEM fazem falhar.
 
 Precisa de `jsonschema` (>= 4.18) e `referencing`. Sai com código 1 se houver falhas.
+Ordem 49 (B, achado M7 da Ordem 36): o tráfego vazio é FALHA (TRAFEGO-VAZIO), não sucesso calado — um ficheiro
+sem nenhuma mensagem, ou sem nenhuma que SAIA do servidor (as únicas que fazem falhar), não confere nada.
 Os intentId/cmdId de teste (\"it-1\", \"cmd-1\") não são UUID v4: essas falhas contam-se à parte
 (ARTEFACTO-DE-TESTE) e não fazem falhar a conferência.
 """
@@ -97,6 +99,8 @@ def main(caminho):
     artefactos = 0
     with open(caminho, encoding='utf-8') as fh:
         for linha in fh:
+            if not linha.strip():
+                continue
             reg = json.loads(linha)
             msg = reg['msg']
             tipo = msg.get('type', '?')
@@ -151,6 +155,13 @@ def main(caminho):
         falhas += 1
     nao_vistos = sorted(set(por_tipo) - {t for (_, t) in vistos})
     print('Schemas sem nenhuma mensagem no tráfego:', ', '.join(nao_vistos) or '(nenhum)')
+    total = sum(vistos.values())
+    saem = sum(n for (sentido, _), n in vistos.items() if sentido == 'sai')
+    if saem == 0:
+        # Ordem 49 (B, M7): sem mensagens que saem não há nada conferido; antes isto saía com 0.
+        falhas += 1
+        porque = 'a recolha não correu ou não escreveu nada' if total == 0 else 'só entradas: nada do servidor a conferir'
+        print(f'\nFALHA TRAFEGO-VAZIO: {total} mensagens no tráfego, {saem} que saem do servidor, em {caminho} ({porque})')
     if os.environ.get('CONFERIR_EXEMPLOS'):
         for (tipo, chave), msg in exemplo.items():
             print(f'\n--- {tipo} | {chave}\n{json.dumps(msg, ensure_ascii=False)[:1500]}')
