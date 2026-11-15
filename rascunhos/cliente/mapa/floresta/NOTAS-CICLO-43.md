@@ -190,7 +190,48 @@ var v_local: Vector3 = vento.vetor_em(posicao)
 
 ## Os vídeos
 
-FILMES_AQUI
+Os filmes ficam **fora do repositório** (como o filme da Ordem 38; o do vento passa os 100 MB do
+GitHub), em `C:\Users\txcga\fable-ciclo\filmes\`:
+
+| filme | o quê | ficheiro | sha256 |
+|---|---|---|---|
+| (a) um dia completo | 05:00 → 07:00 do dia seguinte (26 h) em **65,0 s**, 1950 quadros a 30 q/s, 1920×1080 H.264 (1 s de filme = 24 min do mundo); câmara fixa na clareira a olhar para norte; a hora, a fase, o sol e a lua (az/elev), o vento e o encaixe «o céu por cima da clareira» (câmara ao zénite, norte em cima) escritos no ecrã | `ordem43_dia.mp4` (89 166 838 bytes) | `84b05ebb…325da589` |
+| (b) o vento | 05:00 → 05:00 (24 h) em **120,0 s**, 3600 quadros; as horas a 720×, mas **as rajadas em tempo real**; câmara à altura dos olhos sobre o relvado; a hora, o rumo (de onde sopra), a força, km/h, a rajada, a rosa do vento e o gráfico da força dos últimos 20 s (com a curva do dia por baixo) | `ordem43_vento.mp4` (162 140 495 bytes) | `7fa94e5d…736ab71b` |
+
+Refazem-se com (na pasta `rascunhos/cliente`):
+
+```
+godot --path . --resolution 1920x1080 -s res://mapa/floresta/ferramentas/filmar_dia.gd -- --dia   --quadros=<pasta>/dia
+godot --path . --resolution 1920x1080 -s res://mapa/floresta/ferramentas/filmar_dia.gd -- --vento --quadros=<pasta>/vento
+ffmpeg -framerate 30 -i q%05d.jpg -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -movflags +faststart filme.mp4
+```
+
+O relógio e o vento ficam parados e são avançados quadro a quadro pela ferramenta: o filme sai
+igual seja qual for a velocidade da máquina. Os registos (hora, força, rumo, rajada, 1 amostra por
+segundo de filme) estão em `capturas/ciclo43/registo_dia.json` e `registo_vento.json`. As folhas
+de contacto estão em `capturas/ciclo43/_folha_filme_dia.jpg`, `_folha_filme_vento.jpg` e
+`_folha_horas.jpg` (as 10 capturas).
+
+**Vistos com os olhos nesta sessão (folhas de contacto, quadros soltos e 1 quadro de cada MP4):**
+o sol nasce a leste às 06:00, sobe, culmina a sul e põe-se a oeste às 19:00, e no encaixe vê-se o
+disco a atravessar o céu. A lua nasce a leste quando o sol se põe e atravessa a noite. As sombras
+das árvores rodam e alongam (curtas às 13:00, compridas pela clareira às 16:00–17:00). A noite
+lê-se azul, com a Árvore e as janelas acesas; a madrugada é rosa e o pôr do sol laranja/vermelho.
+No filme do vento a relva deita-se forte à tarde e quase pára de madrugada, e a rosa do vento roda
+com as horas. **Os MP4 não foram vistos a correr de ponta a ponta num leitor**: foram vistos pelos
+quadros (as folhas cobrem cada 2 h do dia) e pelas medidas abaixo.
+
+**Medido nos quadros** (ferramentas em `C:\Users\txcga\fable-ciclo\ferr\`, fora do repositório):
+
+- *saltos*: a diferença média entre quadros seguidos, só na cena (sem o painel). No filme do dia,
+  média **0,69**, p99 **2,62**, máximo **3,59** níveis (0–255). Antes da correcção da sombra da lua
+  o máximo era 6,42 (05:37 e 19:22); agora os maiores saltos estão ao nível do movimento da relva
+  ao vento a meio da tarde (3,1). Nenhum degrau.
+- *o vento vê-se*: o movimento da relva (diferença em 5 quadros, normalizada pelo brilho) contra a
+  força registada dá correlação **0,71 de dia** (08–18 h). Movimento médio por força:
+  0,3–0,6 → 1,4 % · 0,6–0,9 → 3,0 % · 0,9–1,2 → 4,3 % · ≥ 1,2 → 6,4 %. De noite e de madrugada a
+  medida é baralhada pela luz a mudar a 720× e pelo ruído do JPEG nos quadros escuros: no dia
+  inteiro a correlação é só 0,35. Fica dito, não escondido.
 
 ## O que ficou por fazer
 
