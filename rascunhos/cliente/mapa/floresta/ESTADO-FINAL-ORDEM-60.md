@@ -148,7 +148,47 @@ Nenhuma suite deu SCRIPT ERROR, Parse Error nem Compile Error. O servidor não m
 
 ## 4. A fusão em `fable/integracao-50`
 
-*(a preencher no fecho da parte B: a fusão.)*
+A Ordem 57 já tinha aterrado: o ESTADO FINAL dela está no log de `fable/integracao-50` (`69f4498`) e a ponta era
+`9b97066`. Fiz o fetch da linha antes de fundir e outra vez antes do push. A ponta não mexeu: as ordens visuais da
+conta 1 (grama e água) ainda não tinham fundido.
+
+**Onde se fez.** O ramo `fable/integracao-50` está aberto na árvore do clone `fable-mapaepo`, em que não toco. Por
+isso fiz a fusão nesta worktree, num ramo local `fable/integracao-50-o60` que nasceu de `origin/fable/integracao-50`
+(`9b97066`). Publiquei-o como `fable/integracao-50`, sem force: é um avanço rápido da ponta remota.
+
+| commit | o quê |
+|---|---|
+| `fec411d` | A fusão: `fable/recusa-60` (`91f645d`) em `fable/integracao-50` (`9b97066`). A linha já trazia a Ordem 58 (`ae1e574` é a base comum), por isso só entram os commits da Ordem 60. |
+| `b58f131` | As listas da retoma e o MANIFESTO refeitos pelo gerador. Os únicos conflitos da fusão foram nestas listas: ficaram as da linha, e o gerador refê-las (399 ficheiros no MANIFESTO). |
+| *(este)* | Esta secção do ESTADO, com as listas. |
+
+**Presenças dos dois lados, provadas na árvore fundida.**
+
+- **Da linha (Ordem 57, o relógio do mundo):** o `ESTADO-FINAL-ORDEM-57.md`; o relógio nos scripts do mapa, do Estado
+  e do HUD; e as provas que contam a lua à parte (`provar_assentamento`, `provar_mestre_no_relevo`). O `pecas_mestre`
+  traz as 4 verificações da Ordem 57 (268 → 272) e o retrato do molde continua com 188 linhas, igual ao construído de
+  raiz.
+- **Da Ordem 60:** `marcar_recusas` e `aviso_das_recusas` no `campo_da_mesa.gd`, o sinal `recusas_novas` ligado aos
+  alertas do Mestre, `hud.mostrar_aviso`, `Textos.NAO_DE_PE`, a prova `provar_recusa_no_ecra.gd` e as 8 guardas.
+
+**Suites na árvore fundida** (`b58f131`, sem janela, Godot 4.7.2):
+
+| suite | resultado |
+|---|---|
+| `abrir_scripts` | 83 scripts, 0 falhas (os 82 da linha mais a prova nova) |
+| `rodar_testes` | 177/177 |
+| `pecas_mestre` | **276/276** (os 272 da linha mais as 4 da Ordem 60) |
+| `hud_acoes` | **50/50** (os 46 da linha mais as 4 da Ordem 60) |
+| `abrir_mestre` · `abrir_clareira` · `canario_privacidade` · `clima_forte` | 67/67 · 22/22 · 10/10 · 119/119 |
+| `medir_mestre` · `medir_painel_config` | saída 0 |
+| `provar_assentamento` · `provar_terreno_servidor` · `provar_mestre_no_relevo` · `provar_pes_bloqueadas` · `provar_recusa_no_ecra` | TUDO PASSOU |
+| `exportar_terreno --conferir` | o terreno do servidor está EM DIA |
+| `provar_molde_54` | 0 falhas; o retrato do mapa vestido é igual ao construído de raiz (188 linhas) |
+| arranque `--quit-after 600` | «pronto», 0 erros |
+
+**CI.** No ramo `fable/recusa-60`, o run `43733614374` (commit `91f645d`) deu verdes os 9 jobs: `servidor`,
+`retoma-pc`, `validador-glb`, `protocolo`, `motor-real`, `godot-cliente`, `ponta-a-ponta`, `cliente` e
+`foto-mestre`. A sonda de privacidade também deu verde. O CI do push da linha regista-se no commit seguinte.
 
 ## Reservas, sem rodeios
 
