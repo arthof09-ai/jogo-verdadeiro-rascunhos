@@ -273,7 +273,10 @@ func _teste_uma_tabela_de_perfis() -> void:
 	var arena := FileAccess.get_file_as_string("res://cenas/arena/arena.gd")
 	_ok(not arena.contains("msaa_3d") and not arena.contains("scaling_3d_scale"), "a arena não tem números de perfil próprios")
 	var hud := FileAccess.get_file_as_string("res://hud/hud.gd")
-	_ok(hud.contains('const PERFIS := ["baixo", "medio", "alto"]'), "a ⚙ do HUD oferece as mesmas três chaves")
+	# Ordem 52: a lista da ⚙ vive em arte/perfis/escolha_perfil.gd (partilhada com o ecrã do Mestre); o HUD usa-a.
+	var escolha := FileAccess.get_file_as_string("res://arte/perfis/escolha_perfil.gd")
+	_ok(hud.contains("const PERFIS := EscolhaPerfil.PERFIS")
+			and escolha.contains('const PERFIS: Array[String] = ["baixo", "medio", "alto"]'), "a ⚙ do HUD oferece as mesmas três chaves")
 
 
 ## I0004 (08/11): frases IGUAIS às do site vivo (jogo.js REF_25: vlabFraseDesgraca, relógio de morte, fim).

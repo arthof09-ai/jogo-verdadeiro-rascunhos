@@ -8,7 +8,8 @@ extends RefCounted
 ##   - `ligar_clima`        o clima sobre o mapa: bacias do relevo real, abrigos dos obstáculos reais;
 ##   - `malha_casas`        os remendos por casa que seguem o relevo (destaques, fogo, cursor);
 ##   - `linhas_grelha`      as linhas da grelha amostradas no relevo;
-##   - `ponto_no_chao`      o raio do toque contra o relevo.
+##   - `ponto_no_chao`      o raio do toque contra o relevo;
+##   - `ligar_perfil`       (Ordem 52) o perfil gráfico do AplicadorPerfil chega à relva do mapa e ao clima.
 ## Só apresentação e geometria: não lê Estado, Rede nem nada do Mestre (canario_privacidade.gd).
 
 const CampoFloresta := preload("res://mapa/floresta/campo_floresta.gd")
@@ -92,6 +93,32 @@ static func ligar_clima(clima: Clima, mapa: Node3D, zona: Rect2, pai: Node3D, al
 		var no := mapa.get_node_or_null(caminho)
 		if no != null:
 			clima.registar_obstaculo(no)
+
+
+## Ordem 52: o perfil gráfico nas duas arenas, pelo MESMO caminho. Quando o AplicadorPerfil `perfis` aplica um
+## perfil (perfil_aplicado), o clima passa às contagens desse perfil (clima.definir_perfil) e a relva do mapa à
+## densidade da folhagem desse perfil. A relva do mapa tem LOD próprio, por isso a densidade passa-se ao mapa e não
+## pelo grupo «folhagem_densa». `mapa_de` dá o mapa de agora (Callable () -> Node3D), porque o mapa refaz-se quando
+## a grelha muda de tamanho. Até à Ordem 51 isto vivia só em arena.gd (Ordem 42); saiu de lá sem mudar uma conta.
+static func ligar_perfil(perfis: AplicadorPerfil, clima: Clima, mapa_de: Callable) -> void:
+	perfis.perfil_aplicado.connect(func(nome: String) -> void: perfil_no_mapa(perfis, mapa_de.call(), nome))
+	perfis.perfil_aplicado.connect(clima.definir_perfil)
+
+
+## A densidade da relva do perfil `nome` passa ao mapa. O número é o da tabela do AplicadorPerfil (ou da tabela
+## que lhe puseram); as arenas não têm números próprios. Sem mapa não faz nada.
+static func perfil_no_mapa(perfis: AplicadorPerfil, mapa: Node3D, nome: String) -> void:
+	if mapa == null or not is_instance_valid(mapa):
+		return
+	mapa.definir_densidade_relva(densidade_do_perfil(perfis, nome))
+
+
+## A densidade da folhagem do perfil `nome` na tabela do AplicadorPerfil (a do Médio se faltar).
+static func densidade_do_perfil(perfis: AplicadorPerfil, nome: String) -> float:
+	var fonte: Dictionary = perfis.tabela if not perfis.tabela.is_empty() else AplicadorPerfil.PERFIS
+	var cfg: Dictionary = fonte.get(nome, fonte.get("medio", {}))
+	var base: Dictionary = AplicadorPerfil.PERFIS["medio"]
+	return float(cfg.get("folhagem_densidade", base["folhagem_densidade"]))
 
 
 ## Ordem 42 (parte 2): a relva do mapa responde ao clima (afoga nas bolsas, enterra-se na neve). Chamar a cada

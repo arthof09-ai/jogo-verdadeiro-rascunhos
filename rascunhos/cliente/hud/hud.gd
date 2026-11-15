@@ -16,8 +16,11 @@ signal acao_pedida(acao: Dictionary)
 signal preferencia_mudou(chave: String, valor: Variant)
 
 const Arena := preload("res://cenas/arena/arena.gd")
+## Ordem 52: a escolha do perfil gráfico (lista, nomes, ficheiro, linha «Gráficos») vive num só sítio, partilhado
+## com o ecrã do Mestre (aba Sala). Os valores são os de antes.
+const EscolhaPerfil := preload("res://arte/perfis/escolha_perfil.gd")
 
-const ARQ_PREF := "user://preferencias.cfg"
+const ARQ_PREF := EscolhaPerfil.ARQ
 const LARGURA_BASE := 1920.0
 const ALTURA_BASE := 1080.0
 const FONTE_BASE := 22
@@ -25,8 +28,8 @@ const FONTE_MIN_PX_REAIS := 13.0  # acima dos 12 px pedidos
 const MARGEM_BASE := 24.0
 const OPACIDADE_PAINEL := 0.55
 const LIMIAR_TELA_VERMELHA := 0.25
-const PERFIS := ["baixo", "medio", "alto"]
-const NOMES_PERFIS := ["Baixo", "Médio", "Alto"]
+const PERFIS := EscolhaPerfil.PERFIS
+const NOMES_PERFIS := EscolhaPerfil.NOMES
 const CAMERAS := ["fixa", "360", "panorama"]
 const NOMES_CAMERAS := ["Fixa", "360°", "Panorama"]
 ## PROVISÓRIO: a paleta final é da V1.2 (Plano B). As chaves "cortante" e "perfurante"
@@ -280,9 +283,7 @@ func _montar_config() -> void:
 	titulo.text = "Configurações"
 	caixa.add_child(titulo)
 
-	_op_perfil = OptionButton.new()
-	for i in NOMES_PERFIS.size():
-		_op_perfil.add_item(NOMES_PERFIS[i], i)
+	_op_perfil = EscolhaPerfil.seletor()
 	_op_perfil.select(maxi(0, PERFIS.find(pref["perfil"])))
 	_op_perfil.item_selected.connect(_ao_perfil)
 	caixa.add_child(_linha("Gráficos", _op_perfil))

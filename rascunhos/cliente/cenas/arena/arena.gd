@@ -120,11 +120,12 @@ func _process(_delta: float) -> void:
 func _ready() -> void:
 	# Ordem 42: o Sol já não se roda aqui — a direcção é a da luz pintada do mapa (paleta).
 	camera.altura_em = altura_chao
-	_perfis.perfil_aplicado.connect(_ao_perfil_aplicado)
 	clima = Clima.new()
 	clima.name = "Clima"
 	add_child(clima)
-	_perfis.perfil_aplicado.connect(clima.definir_perfil)  # as contagens do clima seguem o perfil gráfico
+	# Ordem 52: a relva do mapa e as contagens do clima seguem o perfil gráfico, pelo código partilhado com o ecrã
+	# do Mestre (as mesmas duas ligações de antes, pela mesma ordem).
+	CampoDaMesa.ligar_perfil(_perfis, clima, func() -> Node3D: return mapa)
 	_construir_grelha(largura_padrao, altura_padrao, casa_m_padrao)
 	camera.toque.connect(_ao_toque)
 	Estado.snapshot_aplicado.connect(_ao_snapshot)
@@ -743,14 +744,10 @@ func _aplicar_perfil(perfil: String) -> void:
 
 ## Ordem 42: o perfil chega também ao mapa — a relva do mapa tem LOD próprio, por isso a densidade da
 ## folhagem do perfil passa-se ao mapa (não pelo grupo «folhagem_densa»). O número é o da tabela do
-## AplicadorPerfil; a arena não tem números próprios.
+## AplicadorPerfil; a arena não tem números próprios. Ordem 52: a conta vive em campo_da_mesa.gd (a mesma no
+## ecrã do Mestre); aqui fica só o reaplicar quando o mapa se refaz.
 func _ao_perfil_aplicado(nome: String) -> void:
-	if mapa == null or not is_instance_valid(mapa):
-		return
-	var fonte: Dictionary = _perfis.tabela if not _perfis.tabela.is_empty() else AplicadorPerfil.PERFIS
-	var cfg: Dictionary = fonte.get(nome, fonte.get("medio", {}))
-	var base: Dictionary = AplicadorPerfil.PERFIS["medio"]
-	mapa.definir_densidade_relva(float(cfg.get("folhagem_densidade", base["folhagem_densidade"])))
+	CampoDaMesa.perfil_no_mapa(_perfis, mapa, nome)
 
 
 static func _num_ou(v, padrao: int) -> int:
