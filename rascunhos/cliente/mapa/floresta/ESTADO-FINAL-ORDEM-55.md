@@ -78,11 +78,20 @@ As medidas, os números e as tabelas estão em `NOTAS-CICLO-55.md`.
 - `36a1e32`: `NOTAS-CICLO-55.md`. Em `NOTAS-CICLO-43.md`, a linha da API das fases e a reserva da
   lua dada por feita, a apontar para as notas novas.
 - `c49149d`: `ESTADO-FINAL-ORDEM-55.md`.
-- (este commit): os hashes refeitos e o passo do CI que não entrou (acima); o mesmo em
-  `NOTAS-CICLO-55.md`.
+- `d542885`: os hashes refeitos e o passo do CI que não entrou (acima); o mesmo em
+  `NOTAS-CICLO-55.md`. **Push do fecho: `d7b9e6c..d542885`, sem force.**
+- (este commit): o resultado do CI desse push.
 
-**Onde parou:** tudo o que a ordem pede está feito e commitado, com o push feito no fecho (sem
-force). Faltava ver o CI quando este ficheiro foi escrito; o resultado fica no commit seguinte.
+**CI do push do fecho (`d542885`): VERDE.**
+
+- «Testes dos rascunhos», run `43721158043`: 9 de 9 jobs verdes. São eles servidor,
+  validador-glb, motor-real, protocolo, cliente, godot-cliente, ponta-a-ponta, foto-mestre e
+  retoma-pc. O job `cliente` abre (compila) todos os scripts, os novos incluídos.
+- «Sonda de privacidade», run `43721157929`: verde.
+- Este commit volta a disparar os dois; só traz este parágrafo.
+
+**Onde parou:** tudo o que a ordem pede está feito, commitado e com push (sem force), e o CI está
+verde.
 
 **Próximo passo:** a conferência do coordenador e do Mestre:
 
