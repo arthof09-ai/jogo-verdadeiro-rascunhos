@@ -1,0 +1,91 @@
+extends SceneTree
+## Ordem 60 — fotos (com janela): a recusa do pé no ecrã das duas arenas. A jogadora «Lia» numa escarpa (27,24) da
+## 30 × 30 de 1,5 m; o «Corvo» de pé na (29,24), que se pisa.
+##   godot --path cliente -s <este> -- --saida=<pasta>
+
+var _saida := ""
+
+
+func _init() -> void:
+	process_frame.connect(_correr, CONNECT_ONE_SHOT)
+
+
+func _quadros(n: int) -> void:
+	for i in n:
+		await process_frame
+
+
+func _foto(nome: String) -> void:
+	await RenderingServer.frame_post_draw
+	var img := root.get_texture().get_image()
+	img.save_png(_saida.path_join(nome))
+	print("foto %s %dx%d" % [nome, img.get_width(), img.get_height()])
+
+
+func _correr() -> void:
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--saida="):
+			_saida = arg.trim_prefix("--saida=")
+	DirAccess.make_dir_recursive_absolute(_saida)
+	root.size = Vector2i(1600, 900)
+	var rede := root.get_node("Rede")
+	rede.persistir = false
+	rede._ativo = true
+	var est := root.get_node("Estado")
+	var figs := [
+		{"id": "lia", "nomePublico": "Lia", "x": 27, "y": 24, "lado": "jogadora", "visivel": "de_pe"},
+		{"id": "corvo", "nomePublico": "Corvo", "x": 29, "y": 24, "lado": "criatura", "visivel": "de_pe"},
+	]
+	# 1. a jogadora
+	rede.papel = "jogador"
+	est.aplicar_snapshot({"v": 2, "type": "ROOM_SNAPSHOT", "roomId": "foto-60", "seq": 1, "revision": 1, "fase": "combate",
+		"mapa": {"largura": 30, "altura": 30, "casaM": 1.5}, "figuras": figs, "vezId": null, "ambiente": {},
+		"propria": {"figuraId": "lia"}})
+	var jog = (load("res://cenas/arena/arena.tscn") as PackedScene).instantiate()
+	root.add_child(jog)
+	await _quadros(5)
+	jog.camera.focar(jog.centro_casa(Vector2i(28, 24)))
+	jog.camera.definir_zoom(jog.camera.zoom_max)
+	await _quadros(90)
+	print("jogadora: recusas %s · aviso visível %s «%s»" % [jog.pes_recusados(), jog.hud._aviso.visible, jog.hud._aviso.text])
+	await _foto("jogadora-lia-na-escarpa.png")
+	jog.queue_free()
+	await _quadros(3)
+	# 2. o Mestre
+	var p := ProjectSettings.globalize_path("res://").path_join("../servidor/dados-exemplo/mesa-mestre.json")
+	var fx = JSON.parse_string(FileAccess.get_file_as_string(p))
+	rede.papel = "mestre"
+	var m = (load("res://cenas/mestre/mestre.tscn") as PackedScene).instantiate()
+	m.enviar_fn = func(_t, _c, _r): return ""
+	m.pedir_vista_fn = func(): pass
+	root.add_child(m)
+	await _quadros(3)
+	var v: Dictionary = (fx["mestre"]["vista"] as Dictionary).duplicate(true)
+	v["mapa"] = {"largura": 30, "altura": 30, "casaM": 1.5}
+	var molde: Dictionary = {}
+	for f in v["mestre"]["figuras"]:
+		if f.get("colocada") == true:
+			molde = f
+			break
+	var fm: Array = []
+	for k in 2:
+		var f: Dictionary = molde.duplicate(true)
+		f["id"] = ["lia", "corvo"][k]
+		f["nome"] = ["Lia", "Corvo"][k]
+		f["x"] = [27, 29][k]
+		f["y"] = 24
+		f["colocada"] = true
+		f["vivo"] = true
+		f["caido"] = false
+		fm.append(f)
+	v["mestre"]["figuras"] = fm
+	v["vezId"] = "corvo"
+	m.aplicar_vista(v)
+	await _quadros(5)
+	m._arena.camera.focar(m._arena.centro_da_casa(Vector2i(28, 24)))
+	await _quadros(90)
+	print("mestre: recusas %s · alertas %s" % [m._arena.pes_recusados(), m.alertas])
+	await _foto("mestre-lia-na-escarpa.png")
+	m.queue_free()
+	await _quadros(3)
+	quit(0)

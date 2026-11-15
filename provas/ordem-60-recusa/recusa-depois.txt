@@ -1,0 +1,98 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Unicode parsing error, some characters were replaced with � (U+FFFD): Unexpected NUL character
+== Ordem 60: a recusa do pé vê-se no ecrã (as duas arenas) ==
+-- grelha 30x30 de 1.5 m, o conjunto da Ordem 45 --
+  ok    o servidor de verdade julga a grelha 30x30 de 1.5 m
+pronto
+  ok    mestre: de pé em casas bloqueadas 0 de 5 (a regra da Ordem 58 fica)
+  ok    mestre: figuras recusadas VISÍVEIS na arena 3D, na casa delas: 5 de 5 com marca, 5 de 5 com o nome e o motivo
+  ok    mestre: recusas avisadas NO ECRÃ (os alertas da coluna 1) com o nome e o motivo: 5 de 5
+  ok    mestre: a linha da folha (aba Figuras) diz porque não está de pé: 5 de 5
+  ok    mestre: 100 figuras nas casas que se pisam: nenhuma marcada como recusada (0), nenhuma no aviso (0)
+  ok    mestre: as 100 nas casas que se pisam estão de pé (100)
+  ok    mestre: posição igual à da medição de antes, bit a bit: 100 de 100
+  ok    mestre: linha da folha igual à de antes: 100 de 100
+  ok    mestre: as casas bloqueadas com figura são as 5 da Ordem 58 [(27, 0), (27, 3), (27, 24), (24, 27), (1, 0)]
+        (27,0) água funda «P9 (Heroína Teste)»: não está de pé · na arena: 1 malha(s), rótulos ["✕ P9 (Heroína Teste)\nnão fica de pé: água funda"] · no ecrã: AVISADA · folha «P9 (Heroína Teste) · jogadora · vida 5150/5150 · PA 4040/4040 · oculta · ✕ não está de pé: água funda (o mapa bloqueia a casa)»
+        (27,3) água funda «P19 (Heroína Teste)»: não está de pé · na arena: 1 malha(s), rótulos ["✕ P19 (Heroína Teste)\nnão fica de pé: água funda"] · no ecrã: AVISADA · folha «P19 (Heroína Teste) · jogadora · vida 5150/5150 · PA 4040/4040 · oculta · ✕ não está de pé: água funda (o mapa bloqueia a casa)»
+        (27,24) escarpa «P89 (Heroína Teste)»: não está de pé · na arena: 1 malha(s), rótulos ["✕ P89 (Heroína Teste)\nnão fica de pé: escarpa"] · no ecrã: AVISADA · folha «P89 (Heroína Teste) · jogadora · vida 5150/5150 · PA 4040/4040 · oculta · ✕ não está de pé: escarpa (o mapa bloqueia a casa)»
+        (24,27) escarpa «P98 (Heroína Teste)»: não está de pé · na arena: 1 malha(s), rótulos ["✕ P98 (Heroína Teste)\nnão fica de pé: escarpa"] · no ecrã: AVISADA · folha «P98 (Heroína Teste) · jogadora · vida 5150/5150 · PA 4040/4040 · oculta · ✕ não está de pé: escarpa (o mapa bloqueia a casa)»
+        (1,0) menir «P100 (Heroína Teste)»: não está de pé · na arena: 1 malha(s), rótulos ["✕ P100 (Heroína Teste)\nnão fica de pé: menir"] · no ecrã: AVISADA · folha «P100 (Heroína Teste) · jogadora · vida 5150/5150 · PA 4040/4040 · oculta · ✕ não está de pé: menir (o mapa bloqueia a casa)»
+        o aviso da coluna 1: «Alertas: 1 ⏎ 5 figuras não ficam de pé — o mapa bloqueia as casas delas: «P9 (Heroína Teste)» (27,0) água funda; «P19 (Heroína Teste)» (27,3) água funda; «P89 (Heroína Teste)» (27,24) escarpa; «P98 (Heroína Teste)» (24,27) escarpa; «P100 (Heroína Teste)» (1,0) menir. Ficam marcadas no mapa.»
+  ok    jogador: de pé em casas bloqueadas 0 de 5 (a regra da Ordem 58 fica)
+  ok    jogador: figuras recusadas VISÍVEIS na arena 3D, na casa delas: 5 de 5 com marca, 5 de 5 com o nome e o motivo
+  ok    jogador: recusas avisadas NO ECRÃ (o «Aviso» do HUD) com o nome e o motivo: 5 de 5
+  ok    jogador: 100 figuras nas casas que se pisam: nenhuma marcada como recusada (0), nenhuma no aviso (0)
+  ok    jogador: as 100 nas casas que se pisam estão de pé (100)
+  ok    jogador: posição igual à da medição de antes, bit a bit: 100 de 100
+  ok    jogador: as casas bloqueadas com figura são as 5 da Ordem 58 [(27, 0), (27, 3), (27, 24), (24, 27), (1, 0)]
+        (27,0) água funda «P9»: não está de pé · na arena: 1 malha(s), rótulos ["✕ P9\nnão fica de pé: água funda"] · no ecrã: AVISADA
+        (27,3) água funda «P19»: não está de pé · na arena: 1 malha(s), rótulos ["✕ P19\nnão fica de pé: água funda"] · no ecrã: AVISADA
+        (27,24) escarpa «P89»: não está de pé · na arena: 1 malha(s), rótulos ["✕ P89\nnão fica de pé: escarpa"] · no ecrã: AVISADA
+        (24,27) escarpa «P98»: não está de pé · na arena: 1 malha(s), rótulos ["✕ P98\nnão fica de pé: escarpa"] · no ecrã: AVISADA
+        (1,0) menir «P100»: não está de pé · na arena: 1 malha(s), rótulos ["✕ P100\nnão fica de pé: menir"] · no ecrã: AVISADA
+        o aviso do HUD: «5 figuras não ficam de pé — o mapa bloqueia as casas delas: «P9» água funda; «P19» água funda; «P89» escarpa; «P98» escarpa; «P100» menir. Ficam marcadas no mapa.»
+  ok    a mesma vista outra vez: nenhum aviso novo (Mestre +0 alertas; jogadora: aviso escondido)
+-- grelha 20x20 de 1.5 m, o conjunto da Ordem 45 --
+  ok    o servidor de verdade julga a grelha 20x20 de 1.5 m
+  ok    mestre: de pé em casas bloqueadas 0 de 0 (a regra da Ordem 58 fica)
+  ok    mestre: figuras recusadas VISÍVEIS na arena 3D, na casa delas: 0 de 0 com marca, 0 de 0 com o nome e o motivo
+  ok    mestre: recusas avisadas NO ECRÃ (os alertas da coluna 1) com o nome e o motivo: 0 de 0
+  ok    mestre: a linha da folha (aba Figuras) diz porque não está de pé: 0 de 0
+  ok    mestre: sem casas bloqueadas, nenhum alerta novo (0)
+  ok    mestre: 54 figuras nas casas que se pisam: nenhuma marcada como recusada (0), nenhuma no aviso (0)
+  ok    mestre: as 54 nas casas que se pisam estão de pé (54)
+  ok    mestre: posição igual à da medição de antes, bit a bit: 54 de 54
+  ok    mestre: linha da folha igual à de antes: 54 de 54
+  ok    jogador: de pé em casas bloqueadas 0 de 0 (a regra da Ordem 58 fica)
+  ok    jogador: figuras recusadas VISÍVEIS na arena 3D, na casa delas: 0 de 0 com marca, 0 de 0 com o nome e o motivo
+  ok    jogador: recusas avisadas NO ECRÃ (o «Aviso» do HUD) com o nome e o motivo: 0 de 0
+  ok    jogador: sem casas bloqueadas, nenhum aviso no HUD («»)
+  ok    jogador: 54 figuras nas casas que se pisam: nenhuma marcada como recusada (0), nenhuma no aviso (0)
+  ok    jogador: as 54 nas casas que se pisam estão de pé (54)
+  ok    jogador: posição igual à da medição de antes, bit a bit: 54 de 54
+  ok    a mesma vista outra vez: nenhum aviso novo (Mestre +0 alertas; jogadora: aviso escondido)
+-- grelha 30x30 de 1.5 m, uma figura em cada casa --
+  ok    o servidor de verdade julga a grelha 30x30 de 1.5 m
+  ok    mestre: de pé em casas bloqueadas 0 de 43 (a regra da Ordem 58 fica)
+  ok    mestre: figuras recusadas VISÍVEIS na arena 3D, na casa delas: 43 de 43 com marca, 43 de 43 com o nome e o motivo
+  ok    mestre: recusas avisadas NO ECRÃ (os alertas da coluna 1) com o nome e o motivo: 43 de 43
+  ok    mestre: a linha da folha (aba Figuras) diz porque não está de pé: 43 de 43
+  ok    mestre: 857 figuras nas casas que se pisam: nenhuma marcada como recusada (0), nenhuma no aviso (0)
+  ok    mestre: as 857 nas casas que se pisam estão de pé (857)
+  ok    mestre: posição igual à da medição de antes, bit a bit: 857 de 857
+  ok    mestre: linha da folha igual à de antes: 857 de 857
+  ok    jogador: de pé em casas bloqueadas 0 de 43 (a regra da Ordem 58 fica)
+  ok    jogador: figuras recusadas VISÍVEIS na arena 3D, na casa delas: 43 de 43 com marca, 43 de 43 com o nome e o motivo
+  ok    jogador: recusas avisadas NO ECRÃ (o «Aviso» do HUD) com o nome e o motivo: 43 de 43
+  ok    jogador: 857 figuras nas casas que se pisam: nenhuma marcada como recusada (0), nenhuma no aviso (0)
+  ok    jogador: as 857 nas casas que se pisam estão de pé (857)
+  ok    jogador: posição igual à da medição de antes, bit a bit: 857 de 857
+  ok    a mesma vista outra vez: nenhum aviso novo (Mestre +0 alertas; jogadora: aviso escondido)
+-- grelha 25x25 de 1.0 m, uma figura em cada casa --
+  ok    o servidor de verdade julga a grelha 25x25 de 1.0 m
+  ok    mestre: de pé em casas bloqueadas 0 de 0 (a regra da Ordem 58 fica)
+  ok    mestre: figuras recusadas VISÍVEIS na arena 3D, na casa delas: 0 de 0 com marca, 0 de 0 com o nome e o motivo
+  ok    mestre: recusas avisadas NO ECRÃ (os alertas da coluna 1) com o nome e o motivo: 0 de 0
+  ok    mestre: a linha da folha (aba Figuras) diz porque não está de pé: 0 de 0
+  ok    mestre: sem casas bloqueadas, nenhum alerta novo (0)
+  ok    mestre: 625 figuras nas casas que se pisam: nenhuma marcada como recusada (0), nenhuma no aviso (0)
+  ok    mestre: as 625 nas casas que se pisam estão de pé (625)
+  ok    mestre: posição igual à da medição de antes, bit a bit: 625 de 625
+  ok    mestre: linha da folha igual à de antes: 625 de 625
+  ok    jogador: de pé em casas bloqueadas 0 de 0 (a regra da Ordem 58 fica)
+  ok    jogador: figuras recusadas VISÍVEIS na arena 3D, na casa delas: 0 de 0 com marca, 0 de 0 com o nome e o motivo
+  ok    jogador: recusas avisadas NO ECRÃ (o «Aviso» do HUD) com o nome e o motivo: 0 de 0
+  ok    jogador: sem casas bloqueadas, nenhum aviso no HUD («»)
+  ok    jogador: 625 figuras nas casas que se pisam: nenhuma marcada como recusada (0), nenhuma no aviso (0)
+  ok    jogador: as 625 nas casas que se pisam estão de pé (625)
+  ok    jogador: posição igual à da medição de antes, bit a bit: 625 de 625
+  ok    a mesma vista outra vez: nenhum aviso novo (Mestre +0 alertas; jogadora: aviso escondido)
+-- uma figura entra numa casa bloqueada e outra sai dela (30x30 de 1.5 m) --
+  ok    mestre: Alfa (Heroína Teste) na escarpa (27,24) marcada e avisada (««Alfa (Heroína Teste)» não fica de pé em (27,24): escarpa — o mapa bloqueia a casa. Fica marcada no mapa.»); Bravo (Heroína Teste) de pé em (29, 24), sem marca nem aviso
+  ok    jogador: Alfa na escarpa (27,24) marcada e avisada (««Alfa» não fica de pé nesta casa: escarpa — o mapa bloqueia a casa. Fica marcada no mapa.»); Bravo de pé em (29, 24), sem marca nem aviso
+  ok    mestre: Bravo (Heroína Teste) na escarpa (27,24) marcada e avisada (««Bravo (Heroína Teste)» não fica de pé em (27,24): escarpa — o mapa bloqueia a casa. Fica marcada no mapa.»); Alfa (Heroína Teste) de pé em (29, 24), sem marca nem aviso
+  ok    jogador: Bravo na escarpa (27,24) marcada e avisada (««Bravo» não fica de pé nesta casa: escarpa — o mapa bloqueia a casa. Fica marcada no mapa.»); Alfa de pé em (29, 24), sem marca nem aviso
+medição escrita em C:/Users/txcga/fable-mapa/_tmp/o60/recusa-depois.json
+TUDO PASSOU

@@ -1,0 +1,86 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Unicode parsing error, some characters were replaced with � (U+FFFD): Unexpected NUL character
+== Ordem 60: a recusa do pé vê-se no ecrã (as duas arenas) ==
+-- grelha 30x30 de 1.5 m, o conjunto da Ordem 45 --
+  ok    o servidor de verdade julga a grelha 30x30 de 1.5 m
+pronto
+  ok    mestre: de pé em casas bloqueadas 0 de 5 (a regra da Ordem 58 fica)
+  FALHA mestre: figuras recusadas VISÍVEIS na arena 3D, na casa delas: 0 de 5 com marca, 0 de 5 com o nome e o motivo · mal: (27,0) sem marca sem rótulo sem aviso folha sem motivo, (27,3) sem marca sem rótulo sem aviso folha sem motivo, (27,24) sem marca sem rótulo sem aviso folha sem motivo, (24,27) sem marca sem rótulo sem aviso folha sem motivo, (1,0) sem marca sem rótulo sem aviso folha sem motivo
+  FALHA mestre: recusas avisadas NO ECRÃ (os alertas da coluna 1) com o nome e o motivo: 0 de 5
+  FALHA mestre: a linha da folha (aba Figuras) diz porque não está de pé: 0 de 5
+  ok    mestre: 100 figuras nas casas que se pisam: nenhuma marcada como recusada (0), nenhuma no aviso (0)
+  ok    mestre: as 100 nas casas que se pisam estão de pé (100)
+  ok    mestre: as casas bloqueadas com figura são as 5 da Ordem 58 [(27, 0), (27, 3), (27, 24), (24, 27), (1, 0)]
+        (27,0) água funda «P9 (Heroína Teste)»: não está de pé · na arena: 0 malha(s), rótulos [] · no ecrã: nada · folha «P9 (Heroína Teste) · jogadora · vida 5150/5150 · PA 4040/4040 · oculta»
+        (27,3) água funda «P19 (Heroína Teste)»: não está de pé · na arena: 0 malha(s), rótulos [] · no ecrã: nada · folha «P19 (Heroína Teste) · jogadora · vida 5150/5150 · PA 4040/4040 · oculta»
+        (27,24) escarpa «P89 (Heroína Teste)»: não está de pé · na arena: 0 malha(s), rótulos [] · no ecrã: nada · folha «P89 (Heroína Teste) · jogadora · vida 5150/5150 · PA 4040/4040 · oculta»
+        (24,27) escarpa «P98 (Heroína Teste)»: não está de pé · na arena: 0 malha(s), rótulos [] · no ecrã: nada · folha «P98 (Heroína Teste) · jogadora · vida 5150/5150 · PA 4040/4040 · oculta»
+        (1,0) menir «P100 (Heroína Teste)»: não está de pé · na arena: 0 malha(s), rótulos [] · no ecrã: nada · folha «P100 (Heroína Teste) · jogadora · vida 5150/5150 · PA 4040/4040 · oculta»
+        o aviso da coluna 1: «»
+  ok    jogador: de pé em casas bloqueadas 0 de 5 (a regra da Ordem 58 fica)
+  FALHA jogador: figuras recusadas VISÍVEIS na arena 3D, na casa delas: 0 de 5 com marca, 0 de 5 com o nome e o motivo · mal: (27,0) sem marca sem rótulo sem aviso, (27,3) sem marca sem rótulo sem aviso, (27,24) sem marca sem rótulo sem aviso, (24,27) sem marca sem rótulo sem aviso, (1,0) sem marca sem rótulo sem aviso
+  FALHA jogador: recusas avisadas NO ECRÃ (o «Aviso» do HUD) com o nome e o motivo: 0 de 5
+  ok    jogador: 100 figuras nas casas que se pisam: nenhuma marcada como recusada (0), nenhuma no aviso (0)
+  ok    jogador: as 100 nas casas que se pisam estão de pé (100)
+  ok    jogador: as casas bloqueadas com figura são as 5 da Ordem 58 [(27, 0), (27, 3), (27, 24), (24, 27), (1, 0)]
+        (27,0) água funda «P9»: não está de pé · na arena: 0 malha(s), rótulos [] · no ecrã: nada
+        (27,3) água funda «P19»: não está de pé · na arena: 0 malha(s), rótulos [] · no ecrã: nada
+        (27,24) escarpa «P89»: não está de pé · na arena: 0 malha(s), rótulos [] · no ecrã: nada
+        (24,27) escarpa «P98»: não está de pé · na arena: 0 malha(s), rótulos [] · no ecrã: nada
+        (1,0) menir «P100»: não está de pé · na arena: 0 malha(s), rótulos [] · no ecrã: nada
+        o aviso do HUD: «»
+  ok    a mesma vista outra vez: nenhum aviso novo (Mestre +0 alertas; jogadora: aviso escondido)
+-- grelha 20x20 de 1.5 m, o conjunto da Ordem 45 --
+  ok    o servidor de verdade julga a grelha 20x20 de 1.5 m
+  ok    mestre: de pé em casas bloqueadas 0 de 0 (a regra da Ordem 58 fica)
+  ok    mestre: figuras recusadas VISÍVEIS na arena 3D, na casa delas: 0 de 0 com marca, 0 de 0 com o nome e o motivo
+  ok    mestre: recusas avisadas NO ECRÃ (os alertas da coluna 1) com o nome e o motivo: 0 de 0
+  ok    mestre: a linha da folha (aba Figuras) diz porque não está de pé: 0 de 0
+  ok    mestre: sem casas bloqueadas, nenhum alerta novo (0)
+  ok    mestre: 54 figuras nas casas que se pisam: nenhuma marcada como recusada (0), nenhuma no aviso (0)
+  ok    mestre: as 54 nas casas que se pisam estão de pé (54)
+  ok    jogador: de pé em casas bloqueadas 0 de 0 (a regra da Ordem 58 fica)
+  ok    jogador: figuras recusadas VISÍVEIS na arena 3D, na casa delas: 0 de 0 com marca, 0 de 0 com o nome e o motivo
+  ok    jogador: recusas avisadas NO ECRÃ (o «Aviso» do HUD) com o nome e o motivo: 0 de 0
+  ok    jogador: sem casas bloqueadas, nenhum aviso no HUD («»)
+  ok    jogador: 54 figuras nas casas que se pisam: nenhuma marcada como recusada (0), nenhuma no aviso (0)
+  ok    jogador: as 54 nas casas que se pisam estão de pé (54)
+  ok    a mesma vista outra vez: nenhum aviso novo (Mestre +0 alertas; jogadora: aviso escondido)
+-- grelha 30x30 de 1.5 m, uma figura em cada casa --
+  ok    o servidor de verdade julga a grelha 30x30 de 1.5 m
+  ok    mestre: de pé em casas bloqueadas 0 de 43 (a regra da Ordem 58 fica)
+  FALHA mestre: figuras recusadas VISÍVEIS na arena 3D, na casa delas: 0 de 43 com marca, 0 de 43 com o nome e o motivo · mal: (1,0) sem marca sem rótulo sem aviso folha sem motivo, (25,0) sem marca sem rótulo sem aviso folha sem motivo, (26,0) sem marca sem rótulo sem aviso folha sem motivo, (27,0) sem marca sem rótulo sem aviso folha sem motivo, (28,0) sem marca sem rótulo sem aviso folha sem motivo, (29,0) sem marca sem rótulo sem aviso folha sem motivo
+  FALHA mestre: recusas avisadas NO ECRÃ (os alertas da coluna 1) com o nome e o motivo: 0 de 43
+  FALHA mestre: a linha da folha (aba Figuras) diz porque não está de pé: 0 de 43
+  ok    mestre: 857 figuras nas casas que se pisam: nenhuma marcada como recusada (0), nenhuma no aviso (0)
+  ok    mestre: as 857 nas casas que se pisam estão de pé (857)
+  ok    jogador: de pé em casas bloqueadas 0 de 43 (a regra da Ordem 58 fica)
+  FALHA jogador: figuras recusadas VISÍVEIS na arena 3D, na casa delas: 0 de 43 com marca, 0 de 43 com o nome e o motivo · mal: (1,0) sem marca sem rótulo sem aviso, (25,0) sem marca sem rótulo sem aviso, (26,0) sem marca sem rótulo sem aviso, (27,0) sem marca sem rótulo sem aviso, (28,0) sem marca sem rótulo sem aviso, (29,0) sem marca sem rótulo sem aviso
+  FALHA jogador: recusas avisadas NO ECRÃ (o «Aviso» do HUD) com o nome e o motivo: 0 de 43
+  ok    jogador: 857 figuras nas casas que se pisam: nenhuma marcada como recusada (0), nenhuma no aviso (0)
+  ok    jogador: as 857 nas casas que se pisam estão de pé (857)
+  ok    a mesma vista outra vez: nenhum aviso novo (Mestre +0 alertas; jogadora: aviso escondido)
+-- grelha 25x25 de 1.0 m, uma figura em cada casa --
+  ok    o servidor de verdade julga a grelha 25x25 de 1.0 m
+  ok    mestre: de pé em casas bloqueadas 0 de 0 (a regra da Ordem 58 fica)
+  ok    mestre: figuras recusadas VISÍVEIS na arena 3D, na casa delas: 0 de 0 com marca, 0 de 0 com o nome e o motivo
+  ok    mestre: recusas avisadas NO ECRÃ (os alertas da coluna 1) com o nome e o motivo: 0 de 0
+  ok    mestre: a linha da folha (aba Figuras) diz porque não está de pé: 0 de 0
+  ok    mestre: sem casas bloqueadas, nenhum alerta novo (0)
+  ok    mestre: 625 figuras nas casas que se pisam: nenhuma marcada como recusada (0), nenhuma no aviso (0)
+  ok    mestre: as 625 nas casas que se pisam estão de pé (625)
+  ok    jogador: de pé em casas bloqueadas 0 de 0 (a regra da Ordem 58 fica)
+  ok    jogador: figuras recusadas VISÍVEIS na arena 3D, na casa delas: 0 de 0 com marca, 0 de 0 com o nome e o motivo
+  ok    jogador: recusas avisadas NO ECRÃ (o «Aviso» do HUD) com o nome e o motivo: 0 de 0
+  ok    jogador: sem casas bloqueadas, nenhum aviso no HUD («»)
+  ok    jogador: 625 figuras nas casas que se pisam: nenhuma marcada como recusada (0), nenhuma no aviso (0)
+  ok    jogador: as 625 nas casas que se pisam estão de pé (625)
+  ok    a mesma vista outra vez: nenhum aviso novo (Mestre +0 alertas; jogadora: aviso escondido)
+-- uma figura entra numa casa bloqueada e outra sai dela (30x30 de 1.5 m) --
+  FALHA mestre: Alfa (Heroína Teste) na escarpa (27,24) marcada e avisada («»); Bravo (Heroína Teste) de pé em (29, 24), sem marca nem aviso
+  FALHA jogador: Alfa na escarpa (27,24) marcada e avisada («»); Bravo de pé em (29, 24), sem marca nem aviso
+  FALHA mestre: Bravo (Heroína Teste) na escarpa (27,24) marcada e avisada («»); Alfa (Heroína Teste) de pé em (29, 24), sem marca nem aviso
+  FALHA jogador: Bravo na escarpa (27,24) marcada e avisada («»); Alfa de pé em (29, 24), sem marca nem aviso
+medição escrita em C:/Users/txcga/fable-mapa/_tmp/o60/recusa-antes.json
+14 FALHAS
