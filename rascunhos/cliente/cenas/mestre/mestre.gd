@@ -35,6 +35,12 @@ const LINHAS_CARTAO := 6
 const LINHAS_TITULO := 2
 const ARQ_CFG := "user://mestre.cfg"
 const ESPERA_VISTA_S := 0.25
+## Ordem 49 (A): o tecto da nova tentativa do pedido da vista — 40 pedidos que não saem, de ESPERA_VISTA_S em
+## ESPERA_VISTA_S (40 × 0,25 s = 10 s). Chega para o limite de 10 envios/s do aparelho (a janela é de 1 s); a ligação
+## que cai e volta arma um pedido novo (`_ao_ligacao`), com a conta do zero.
+const TENTATIVAS_VISTA_MAX := 40
+## O nome da falha ao fim do tecto (vai ao registo do Godot; o alerta do Mestre é Textos.ALERTA["vista_sem_pedido"]).
+const FALHA_VISTA := "vista_sem_pedido"
 
 ## Ficou recusado (papel que não é o do Mestre). Os testes lêem-no.
 var recusado := false
@@ -57,6 +63,9 @@ var alertas: Array[String] = []
 var mortes: Dictionary = {}
 var narracao: Array[String] = []
 var som_ligado := true
+## Ordem 49 (A): a falha nomeada do pedido da vista (FALHA_VISTA) ao fim do tecto, ou "" (os testes lêem-na). Limpa-se
+## quando um pedido sai e quando a conta recomeça.
+var falha_vista := ""
 
 ## O aviso da primeira entrada já foi visto nesta execução (vale também quando não se escreve em disco).
 static var _aviso_visto_sessao := false
@@ -68,6 +77,8 @@ var _encolhida := false
 var _em_voo := {}  # id do comando -> true
 var _armado := ""  # acção à espera do segundo toque
 var _espera_vista := -1.0
+## Ordem 49 (A): pedidos da vista que não saíram, seguidos, desde o último pedido novo (o tecto é TENTATIVAS_VISTA_MAX).
+var _vista_nao_saiu := 0
 var _repassar := false
 
 var _tabuleiro: SubViewportContainer
@@ -183,21 +194,49 @@ func _process(delta: float) -> void:
 	if _espera_vista >= 0.0:
 		_espera_vista -= delta
 		if _espera_vista < 0.0:
-			_pedir_vista_agora()
+			_tentar_vista()
 
 
 ## Ordem 35 (trabalho 2): o pedido que não saiu (`false`: o limite de 10 envios/s do aparelho, ou fora da mesa) volta
 ## a ser feito daqui a ESPERA_VISTA_S, até sair. Antes perdia-se calado: depois de uma rajada de toques (ex.: o
 ## «Voltar até aqui» logo a seguir a «Confirmar»), a vista ficava a do instante antigo até chegar outro evento.
 ## Quem não diz (`null`, as funções dos testes de ecrã) conta como saído.
+## Ordem 49 (A): com tecto. Ao fim de TENTATIVAS_VISTA_MAX pedidos que não saem, seguidos, pára e nomeia a falha
+## (`falha_vista`, o alerta uma vez e uma linha no registo do Godot) em vez de tentar para sempre. Só recomeçam a
+## conta o abrir, o «Atualizar» e a ligação que volta à mesa; um evento ou recibo arma o pedido mas não a recomeça
+## (senão um fluxo de eventos com o pedido sempre a falhar voltava a ser um ciclo sem fim): depois do tecto, cada
+## evento dá-lhe uma tentativa, sem alerta novo.
 func _pedir_vista_agora() -> void:
-	if pedir_vista_fn.call() == false:
-		_pedir_vista_em_breve()
+	_recomecar_conta_vista()
+	_tentar_vista()
+
+
+func _recomecar_conta_vista() -> void:
+	_vista_nao_saiu = 0
+	falha_vista = ""
 
 
 func _pedir_vista_em_breve() -> void:
 	if _espera_vista < 0.0:
 		_espera_vista = ESPERA_VISTA_S
+
+
+func _tentar_vista() -> void:
+	if pedir_vista_fn.call() != false:
+		_vista_nao_saiu = 0
+		falha_vista = ""
+		return
+	_vista_nao_saiu += 1
+	if _vista_nao_saiu < TENTATIVAS_VISTA_MAX:
+		_pedir_vista_em_breve()
+		return
+	_espera_vista = -1.0
+	if falha_vista != "":
+		return  # já nomeada neste episódio
+	falha_vista = FALHA_VISTA
+	push_warning("MASTER_VIEW: %s — o pedido não saiu %d vezes seguidas (%.0f s); parei" % [FALHA_VISTA,
+		_vista_nao_saiu, TENTATIVAS_VISTA_MAX * ESPERA_VISTA_S])
+	_juntar_alerta(Textos.ALERTA[FALHA_VISTA] % TENTATIVAS_VISTA_MAX)
 
 
 # ---------------------------------------------------------------- entrada
@@ -547,6 +586,7 @@ func _ao_ligacao(_e: int) -> void:
 		_juntar_alerta(Textos.ALERTA["ligacao"])
 	else:
 		_consultar_em_voo()
+		_recomecar_conta_vista()  # Ordem 49 (A): de volta à mesa, a conta do tecto recomeça
 		_pedir_vista_em_breve()
 
 

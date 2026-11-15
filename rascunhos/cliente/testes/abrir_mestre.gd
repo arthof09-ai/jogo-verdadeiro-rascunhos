@@ -342,6 +342,60 @@ func _correr() -> void:
 	_ok(c3._espera_vista < 0.0, "e pára quando sai")
 	c3.queue_free()
 
+	# Ordem 49 (A, achado leve da Ordem 35): a nova tentativa não tinha tecto — com o pedido a falhar sempre, voltava
+	# a pedir para sempre, de 0,25 s em 0,25 s. Agora pára ao fim de TENTATIVAS_VISTA_MAX com a falha nomeada. O relógio
+	# anda à mão (`_process` chamado aqui, com o do quadro desligado), para não esperar 10 s de verdade.
+	print("== o pedido da vista tem tecto e, ao fim dele, uma falha nomeada (ordem 49) ==")
+	var tecto := int((load("res://cenas/mestre/mestre.gd") as Script).get_script_constant_map().get("TENTATIVAS_VISTA_MAX", -1))
+	_ok(tecto == 40, "o tecto é de 40 tentativas (40 × 0,25 s = 10 s): %d" % tecto)
+	var nunca := [0]
+	var c4 = ps.instantiate()
+	c4.enviar_fn = _capturar
+	c4.pedir_vista_fn = func():
+		nunca[0] += 1
+		return false  # falha permanente: o limite (ou fora da mesa) nunca deixa sair
+	root.add_child(c4)  # o _ready faz o 1.º pedido
+	c4.set_process(false)
+	var alertas_antes: int = c4.alertas.size()
+	for i in 200:  # 50 s de relógio
+		c4._process(0.26)
+	_ok(nunca[0] == 40, "falha permanente: a nova tentativa pára no tecto (%d pedidos; sem tecto seriam 201)" % nunca[0])
+	_ok(c4._espera_vista < 0.0, "ao fim do tecto não fica nenhum pedido à espera (nem ciclo)")
+	_ok(c4.get("falha_vista") == "vista_sem_pedido", "ao fim do tecto a falha tem nome: «%s»" % c4.get("falha_vista"))
+	var texto_falha = Textos.ALERTA.get("vista_sem_pedido")
+	_ok(texto_falha != null and c4.alertas.size() == alertas_antes + 1 and c4.alertas[-1] == texto_falha % 40,
+		"e vai ao Mestre num alerta, um só: %s" % [c4.alertas.slice(alertas_antes)])
+	nunca[0] = 0
+	c4._pedir_vista_em_breve()  # um evento depois do tecto
+	for i in 20:
+		c4._process(0.26)
+	_ok(nunca[0] == 1 and c4.alertas.size() == alertas_antes + 1,
+		"depois do tecto, um evento dá-lhe uma tentativa só e nenhum alerta novo (%d pedidos)" % nunca[0])
+	nunca[0] = 0
+	c4._pedir_vista_agora()  # «Atualizar»: a conta recomeça
+	for i in 200:
+		c4._process(0.26)
+	_ok(nunca[0] == 40 and c4.alertas.size() == alertas_antes + 2,
+		"«Atualizar» recomeça a conta: outra vez 40 pedidos e o alerta (%d pedidos)" % nunca[0])
+	c4.pedir_vista_fn = func():
+		nunca[0] += 1
+		return nunca[0] >= 40  # sai mesmo no último antes do tecto
+	nunca[0] = 0
+	c4._pedir_vista_agora()
+	for i in 200:
+		c4._process(0.26)
+	_ok(nunca[0] == 40 and c4.get("falha_vista") == "" and c4._espera_vista < 0.0 and c4.alertas.size() == alertas_antes + 2,
+		"o pedido que sai na 40.ª tentativa chega: sem falha, sem alerta (%d pedidos)" % nunca[0])
+	c4.pedir_vista_fn = func():
+		nunca[0] += 1
+		return true
+	nunca[0] = 0
+	c4._pedir_vista_agora()
+	for i in 20:
+		c4._process(0.26)
+	_ok(nunca[0] == 1 and c4.get("falha_vista") == "", "o pedido que sai à 1.ª: um pedido só, sem falha (%d)" % nunca[0])
+	c4.queue_free()
+
 	var saida := OS.get_environment("MESTRE_COMANDOS")
 	if saida != "":
 		var f := FileAccess.open(saida, FileAccess.WRITE)
