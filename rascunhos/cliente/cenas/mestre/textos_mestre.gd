@@ -226,6 +226,9 @@ const ALERTA := {
 	"ligacao": "A ligação caiu; a tentar de novo.",
 	"pausa": "Sala em pausa.",
 	"recusa": "O servidor não aceitou: %s",
+	# Ordem 62: a escala (ou o «Recomeçar») deixava figuras em casas que o mapa bloqueia (a regra da colocação).
+	"escala_bloqueada": "A escala não mudou — o mapa bloqueia, na escala nova, a casa de: %s. Primeiro, tire do caminho quem lá está.",
+	"recomeco_bloqueado": "«Recomeçar» não se fez — nesta escala o mapa bloqueia a casa de colocação de: %s.",
 	"sem_envio": "Sem ligação: o comando não saiu.",
 	# Ordem 21 (N18-2): servidor restaurado no fim com um motor de outra versão.
 	"aviso_motor": "Sala restaurada com outra versão do motor: «Recomeçar» não vai funcionar.",

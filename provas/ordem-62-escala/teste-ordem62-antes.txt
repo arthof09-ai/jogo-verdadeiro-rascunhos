@@ -1,0 +1,117 @@
+✖ a sonda da Ordem 58 (1,5 → 2 m): a escala é recusada, nenhuma figura fica numa casa bloqueada, e cada uma vai nomeada ao Mestre (87.8604ms)
+✖ as 6 mudanças de escala: nenhuma deixa figuras em casas bloqueadas; as que não deixam passam como antes (79.0145ms)
+✖ tirada a figura do caminho, a escala muda (a recusa não prende o Mestre) (5.9403ms)
+✔ a Party não vê o porquê nem a lista (só o recibo fixo de sempre) (69.5328ms)
+✖ «Recomeçar» depois de a escala bloquear uma casa de colocação: recusado com o nome, ninguém volta à casa bloqueada (15.4444ms)
+✔ sem terreno a escala é como sempre (nenhum mapa a respeitar) (3.0922ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 2
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 356.4306
+
+✖ failing tests:
+
+test at testes\ordem62-escala-bloqueadas.test.mjs:44:1
+✖ a sonda da Ordem 58 (1,5 → 2 m): a escala é recusada, nenhuma figura fica numa casa bloqueada, e cada uma vai nomeada ao Mestre (87.8604ms)
+  AssertionError [ERR_ASSERTION]: a mudança é recusada
+  + actual - expected
+  
+  + 'ROOM_RECEIPT'
+  - 'ROOM_REJECT'
+            ^
+  
+      at TestContext.<anonymous> (file:///<clone>/rascunhos/servidor/testes/ordem62-escala-bloqueadas.test.mjs:49:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'ROOM_RECEIPT',
+    expected: 'ROOM_REJECT',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at testes\ordem62-escala-bloqueadas.test.mjs:69:1
+✖ as 6 mudanças de escala: nenhuma deixa figuras em casas bloqueadas; as que não deixam passam como antes (79.0145ms)
+  AssertionError [ERR_ASSERTION]: 1.5 → 2 m: nenhuma figura numa casa bloqueada
+  + actual - expected
+  
+  + [
+  +   '(6,4) menir',
+  +   '(22,4) água funda',
+  +   '(24,4) água funda',
+  +   '(24,6) água funda',
+  +   '(22,22) escarpa',
+  +   '(28,24) escarpa',
+  +   '(6,28) tronco tombado'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///<clone>/rascunhos/servidor/testes/ordem62-escala-bloqueadas.test.mjs:74:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ '(6,4) menir', '(22,4) água funda', '(24,4) água funda', '(24,6) água funda', '(22,22) escarpa', '(28,24) escarpa', '(6,28) tronco tombado' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at testes\ordem62-escala-bloqueadas.test.mjs:86:1
+✖ tirada a figura do caminho, a escala muda (a recusa não prende o Mestre) (5.9403ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'ROOM_RECEIPT'
+  - 'ROOM_REJECT'
+            ^
+  
+      at TestContext.<anonymous> (file:///<clone>/rascunhos/servidor/testes/ordem62-escala-bloqueadas.test.mjs:91:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'ROOM_RECEIPT',
+    expected: 'ROOM_REJECT',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at testes\ordem62-escala-bloqueadas.test.mjs:107:1
+✖ «Recomeçar» depois de a escala bloquear uma casa de colocação: recusado com o nome, ninguém volta à casa bloqueada (15.4444ms)
+  AssertionError [ERR_ASSERTION]: antes desta ordem: APLICADA, com a heroína no menir
+  + actual - expected
+  
+  + 'ROOM_RECEIPT'
+  - 'ROOM_REJECT'
+            ^
+  
+      at TestContext.<anonymous> (file:///<clone>/rascunhos/servidor/testes/ordem62-escala-bloqueadas.test.mjs:116:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'ROOM_RECEIPT',
+    expected: 'ROOM_REJECT',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

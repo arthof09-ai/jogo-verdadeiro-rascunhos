@@ -25,6 +25,13 @@ O pacote é o **mapa inteiro**; o servidor (`nucleo/terreno.js`) recorta dele a 
   mudança para uma escala em que a grelha deixe de caber é recusada ao Mestre com o mesmo nome, e uma sala
   restaurada nessas condições também não abre. As salas nascem com casas de 1,5 m: com terreno, o tamanho tem
   de caber a 1,5 m (até 50 × 50).
+- **Ordem 62: a mudança de escala não deixa figuras em casas bloqueadas.** As posições ficam em casas, mas cada
+  figura colocada é conferida contra os bloqueios da grelha nova, com a regra da colocação. Se alguma ficava numa
+  casa bloqueada, a mudança é recusada inteira e a sala fica na escala em que estava. O porquê vai ao Mestre
+  (`ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS: … — <figura> CASA_BLOQUEADA: (x,y) motivo; …`), com a lista em
+  `soMestre.figuras` (`figuraId`, `x`, `y`, `motivo`), que o ecrã do Mestre mostra nos alertas. O «Recomeçar» que
+  devolvia uma figura a uma casa de colocação bloqueada na escala viva é recusado da mesma maneira
+  (`RECOMECAR_SEM_CASA: …`). Ninguém é mudado de casa pelo servidor.
 - **A cobertura na faixa da borda** (casas cuja casa do mapa tem o centro a 1,35 m ou menos da borda da zona) pode
   vir de árvores e rochas que o cliente planta fora da zona, e essas mudam com a zona. Aí o servidor só afirma a
   cobertura total (2) e devolve `null` no resto — nunca um número errado. Fora da faixa, a cobertura é a do cliente.

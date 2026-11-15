@@ -1,0 +1,14 @@
+✔ a sonda da Ordem 58 (1,5 → 2 m): a escala é recusada, nenhuma figura fica numa casa bloqueada, e cada uma vai nomeada ao Mestre (78.4947ms)
+✔ as 6 mudanças de escala: nenhuma deixa figuras em casas bloqueadas; as que não deixam passam como antes (376.0028ms)
+✔ tirada a figura do caminho, a escala muda (a recusa não prende o Mestre) (5.2399ms)
+✔ a Party não vê o porquê nem a lista (só o recibo fixo de sempre) (57.5369ms)
+✔ «Recomeçar» depois de a escala bloquear uma casa de colocação: recusado com o nome, ninguém volta à casa bloqueada (14.3808ms)
+✔ sem terreno a escala é como sempre (nenhum mapa a respeitar) (2.3918ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 608.1303

@@ -18,6 +18,7 @@ const MarcadorFig := preload("res://cenas/comum/marcador_figura.gd")
 const ArenaMestre := preload("res://cenas/mestre/arena_mestre.gd")
 const CENA := "res://cenas/mestre/mestre.tscn"
 const Textos := preload("res://cenas/mestre/textos_mestre.gd")
+const Modelo := preload("res://cenas/mestre/modelo_mestre.gd")
 
 ## Os autoloads (Rede, Estado) não são identificadores num script -s: chegam pela árvore no 1.º quadro.
 var _rede: Node
@@ -377,6 +378,7 @@ func _correr() -> void:
 	_exportar(c)
 	_join_sem_sala()
 	await _aviso_motor(c)
+	await _figuras_bloqueadas(c)
 	await _fila_alertas(c)
 	await _recibo_perdido(c, fx["mestre"]["cartoes"]["ia"])
 	await _nomes_juntos(c, fx["mestre"]["vista"])
@@ -1044,6 +1046,51 @@ func _aviso_motor(c) -> void:
 	var t3: String = c.alertas.back() if c.alertas.size() > n3 + 2 else ""
 	_ok(c.alertas.size() == n3 + 3 and t3.contains("o motor (VLAB) mudou") and t3.contains("a versão de dano mudou")
 		and t3.contains("a versão de subida de nível mudou"), "N27-2: os três de uma vez (veio «%s»)" % t3)
+
+
+## Ordem 62: o servidor recusa a mudança de escala (ou o «Recomeçar») que deixava figuras em casas bloqueadas, com a
+## lista no evento `recusa` (soMestre.figuras). O ecrã do Mestre diz quem, onde e porquê, nos alertas, uma vez por evento;
+## nada técnico (nem o código da recusa nem CASA_BLOQUEADA). Uma recusa sem lista (ESCALA_INVALIDA…) não dá este alerta.
+func _figuras_bloqueadas(c) -> void:
+	print("== Recusa da escala com figuras em casas bloqueadas (ordem 62) ==")
+	var figs: Array = Modelo.figuras(c.vista)
+	_ok(not figs.is_empty(), "Ordem 62: a vista tem figuras para nomear")
+	if figs.is_empty():
+		return
+	var f0: Dictionary = figs[0]
+	var nome0: String = Modelo.nome_mestre(f0)
+	var n: int = c.alertas.size()
+	var ev := {"v": 2, "type": "ROOM_EVENT", "roomId": "sala-teste", "seq": 1001, "revision": 9, "ts": "2026-11-15T12:00:00.000Z",
+		"tipo": "recusa", "dados": {"journalSeq": 90, "seatId": "mestre", "soMestre": {"id": "c-62", "motivo": "acao_invalida",
+		"detalhe": "ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS: 2 figuras ficavam em casas que o mapa bloqueia com 2 m por casa — %s CASA_BLOQUEADA: (6,4) menir; f-sem-vista CASA_BLOQUEADA: (22,4) água funda" % str(f0.get("id", "")),
+		"figuras": [{"figuraId": str(f0.get("id", "")), "x": 6, "y": 4, "motivo": "menir"},
+			{"figuraId": "f-sem-vista", "x": 22, "y": 4, "motivo": "água funda"}]}}}
+	c._ao_evento(ev)
+	await _quadros(1)
+	var t: String = c.alertas.back() if c.alertas.size() > n else ""
+	_ok(c.alertas.size() == n + 1 and t.begins_with("A escala não mudou"), "Ordem 62: a escala recusada vai aos alertas (veio «%s»)" % t)
+	_ok(t.contains("«%s» (6,4) menir" % nome0) and t.contains("«f-sem-vista» (22,4) água funda"),
+		"Ordem 62: o alerta nomeia cada figura, a casa e o motivo")
+	_ok(not t.contains("CASA_BLOQUEADA") and not t.contains("ESCALA_DEIXA"), "Ordem 62: nada técnico no alerta")
+	_ok(c._alerta.text.contains(nome0), "Ordem 62: o alerta vê-se no rótulo dos alertas")
+	c._ao_evento(ev.duplicate(true))
+	await _quadros(1)
+	_ok(c.alertas.size() == n + 1, "Ordem 62: o mesmo evento repetido no fio não repete o alerta")
+	var sem := ev.duplicate(true)
+	sem["seq"] = 1002
+	sem["dados"]["soMestre"] = {"id": "c-62b", "motivo": "acao_invalida", "detalhe": "ESCALA_INVALIDA: 3 m por casa; só valem 1 / 1.5 / 2 m"}
+	c._ao_evento(sem)
+	await _quadros(1)
+	_ok(c.alertas.size() == n + 1, "Ordem 62: uma recusa sem figuras não dá este alerta")
+	var rec := ev.duplicate(true)
+	rec["seq"] = 1003
+	rec["dados"]["soMestre"]["detalhe"] = "RECOMECAR_SEM_CASA: 1 figura voltava a uma casa de colocação que o mapa bloqueia com 2 m por casa — %s CASA_BLOQUEADA: (6,4) menir" % str(f0.get("id", ""))
+	rec["dados"]["soMestre"]["figuras"] = [{"figuraId": str(f0.get("id", "")), "x": 6, "y": 4, "motivo": "menir"}]
+	c._ao_evento(rec)
+	await _quadros(1)
+	var t2: String = c.alertas.back() if c.alertas.size() > n + 1 else ""
+	_ok(c.alertas.size() == n + 2 and t2.begins_with("«Recomeçar» não se fez") and t2.contains("«%s» (6,4) menir" % nome0),
+		"Ordem 62: o «Recomeçar» recusado diz quem e onde (veio «%s»)" % t2)
 
 
 ## Ordem 34 (N32-1): os avisos que o Mestre perdeu chegam num só bloco (MASTER_ALERTAS, com a MASTER_VIEW): «perdidos

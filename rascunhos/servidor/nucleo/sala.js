@@ -146,11 +146,14 @@ const EVENTOS_COM_SNAPSHOT = Object.freeze(['revertido', 'recomeco', 'escala']);
 
 /** Recusa terminal de uma intenção (E-C5): fica gravada como recibo RECUSADA. */
 export class ErroRecusa extends Error {
-  constructor(motivo, detalhe = null) {
+  constructor(motivo, detalhe = null, figuras = null) {
     super(motivo);
     this.name = 'ErroRecusa';
     this.motivo = motivo;
     this.detalhe = detalhe; // só para o Mestre (evento interno `recusa`)
+    // Ordem 62: as figuras que a recusa nomeia ([{figuraId, x, y, motivo}]), só para o Mestre (o mesmo `recusa`):
+    // o ecrã dele diz quem ficava em que casa bloqueada. Só existe quando há figuras a nomear.
+    this.figuras = figuras;
   }
 }
 
@@ -627,9 +630,31 @@ export function criarSala({
   function recusaCasa(m, casa) {
     const t = terrenoDe(m);
     if (t && dentro(m, casa.x, casa.y) && t.bloqueada(casa.x, casa.y)) {
-      return new ErroRecusa('acao_invalida', `CASA_BLOQUEADA: (${casa.x},${casa.y}) ${t.motivo(casa.x, casa.y)}`);
+      return new ErroRecusa('acao_invalida', casaBloqueada(t, casa));
     }
     return new ErroRecusa('acao_invalida');
+  }
+  /** O porquê nomeado de uma casa bloqueada pelo terreno `t` (o mesmo texto do MASTER_PLACE desde a Ordem 44). */
+  function casaBloqueada(t, casa) {
+    return `CASA_BLOQUEADA: (${casa.x},${casa.y}) ${t.motivo(casa.x, casa.y)}`;
+  }
+  /**
+   * Ordem 62: a regra da colocação (nenhuma figura de pé numa casa bloqueada) aplicada a casas que ainda não valem —
+   * as da grelha `t` da escala nova, ou as casas de chegada do «Recomeçar». `casas` = [[figura, {x, y}]]. Devolve as
+   * que caem numa casa bloqueada, pela ordem de leitura do mapa: {figuraId, x, y, motivo, texto}.
+   */
+  function casasBloqueadasDe(t, casas) {
+    if (!t) return [];
+    return casas
+      .filter(([, c]) => t.bloqueada(c.x, c.y))
+      .sort(([a, ca], [b, cb]) => ca.y - cb.y || ca.x - cb.x || (a.id < b.id ? -1 : 1))
+      .map(([f, c]) => ({ figuraId: f.id, x: c.x, y: c.y, motivo: t.motivo(c.x, c.y), texto: `${f.id} ${casaBloqueada(t, c)}` }));
+  }
+  /** Ordem 62: a recusa nomeada, com o porquê de cada figura (detalhe) e a lista (figuras), só para o Mestre. */
+  function recusaFigurasBloqueadas(nome, frase, bloq) {
+    const n = bloq.length === 1 ? '1 figura' : `${bloq.length} figuras`;
+    return new ErroRecusa('acao_invalida', `${nome}: ${n} ${frase} — ${bloq.map((b) => b.texto).join('; ')}`,
+      bloq.map(({ figuraId, x, y, motivo }) => ({ figuraId, x, y, motivo })));
   }
   function saoInimigos(a, b) {
     // TODO(JV1.x): NPC aliado. Hoje todo NPC é do lado das criaturas.
@@ -2289,7 +2314,11 @@ export function criarSala({
       if (!(e instanceof ErroRecusa) && depurar) throw e;
       const erro = e instanceof ErroRecusa ? e : new ErroRecusa('acao_invalida', 'EXCECAO:' + (e?.message ?? String(e)));
       saidas.push(...transacao((tx) => {
-        if (erro.detalhe) tx.emitir('recusa', { seatId: meta.seatId }, { id: meta.id, motivo: erro.motivo, detalhe: erro.detalhe });
+        if (erro.detalhe) {
+          tx.emitir('recusa', { seatId: meta.seatId }, {
+            id: meta.id, motivo: erro.motivo, detalhe: erro.detalhe, ...(erro.figuras ? { figuras: erro.figuras } : {}),
+          });
+        }
         if (aoRecusar) aoRecusar(tx, erro);
         tx.recibos.push({ chave: meta.chave, recibo: novoRecibo(meta, 'RECUSADA', erro.motivo), enviar: true });
         if (erro.motivo === 'revisao_antiga') tx.opcoesForcadas.add(meta.seatId); // §4: nunca fica preso
@@ -2865,6 +2894,7 @@ export function criarSala({
    * Casos que a regra não cobre (N34-2, sem regra inventada): nenhuma casa livre alcançável; duas figuras que voltam a
    * querer a mesma casa (a escolha dependeria da ordem); duas colocadas na mesma casa sem ordem de colocação gravada
    * (journal de antes desta ordem). Nesses casos o «Recomeçar» é recusado sem mexer em nada; o porquê vai só ao Mestre.
+   * Ordem 62: e uma casa de colocação que o mapa bloqueia na escala viva (a escala mudou depois da colocação).
    * Devolve Map figuraId → {x, y}.
    */
   function destinosDoRecomeco(m) {
@@ -2892,6 +2922,14 @@ export function criarSala({
       }
       destinos.set(ultimas[0].id, { x: c.x, y: c.y });
       for (const f of lista) if (f !== ultimas[0]) voltam.push(f);
+    }
+    // Ordem 62: a casa de colocação foi validada na escala em que a figura foi colocada; se a escala mudou desde então,
+    // pode estar bloqueada na escala viva. A D-1 não cobre o caso (a casa não está ocupada: o mapa bloqueia-a); como os
+    // outros (N34-2), o «Recomeçar» é recusado sem mexer em nada, com o nome de cada figura ao Mestre.
+    const bloq = casasBloqueadasDe(terrenoDe(m), [...destinos].map(([id, d]) => [m.figuras[id], d]));
+    if (bloq.length) {
+      throw recusaFigurasBloqueadas('RECOMECAR_SEM_CASA',
+        `voltava${bloq.length === 1 ? '' : 'm'} a uma casa de colocação que o mapa bloqueia com ${casaDe(m)} m por casa`, bloq);
     }
     if (!voltam.length) return destinos;
     const tomadas = new Set([...destinos.values()].map((d) => chaveCasa(d.x, d.y)));
@@ -2938,7 +2976,8 @@ export function criarSala({
   /**
    * Ordem 8 do CM-000009, item 8 (desempate do Mestre 09/11 08:18): MUDAR A ESCALA a meio da batalha.
    *  - acção só do Mestre (MASTER_SUPERVISOR op 'escala'), SEM CUSTO: não toca na vez, na acção, no PA nem na reacção;
-   *  - as posições guardam-se em CASAS: nenhuma figura mexe (x, y ficam);
+   *  - as posições guardam-se em CASAS: nenhuma figura mexe (x, y ficam); Ordem 62: se alguma ficava assim numa casa
+   *    que a grelha nova bloqueia, a mudança é recusada (ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS, nomeada ao Mestre);
    *  - o movimento já gasto na volta conta em METROS: a reserva (reservaM) e o andado (andouM) da vez ficam em metros
    *    e as casas que a reserva ainda paga contam-se na escala nova (floor(reservaM / casaM)). Ex.: 9 m de base, andou
    *    2 casas a 1,5 (3 m) → sobram 6 m; a 3 m por casa, sobram 2 casas;
@@ -2960,6 +2999,16 @@ export function criarSala({
     // Recusa nomeada ao Mestre; a sala fica na escala em que estava.
     const semGrelha = terrenos ? terrenos.motivoSemGrelha(m.mapa.largura, m.mapa.altura, casaM) : null;
     if (semGrelha) throw new ErroRecusa('acao_invalida', semGrelha);
+    // Ordem 62 (reserva 2 da Ordem 58): as posições ficam em casas, mas cada figura colocada é conferida contra os
+    // bloqueios da grelha NOVA, com a regra da colocação (MASTER_PLACE → CASA_BLOQUEADA). Se alguma ficava numa casa
+    // bloqueada, a mudança é recusada inteira, com o nome de cada uma ao Mestre; a sala fica na escala em que estava
+    // (como a grelha que não cabe, Ordem 48). Ninguém muda de casa: a posição é do servidor e só o jogo a muda.
+    const bloq = casasBloqueadasDe(terrenos ? terrenos.para(m.mapa.largura, m.mapa.altura, casaM) : null,
+      colocadas(m).map((f) => [f, f]));
+    if (bloq.length) {
+      throw recusaFigurasBloqueadas('ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS',
+        `ficava${bloq.length === 1 ? '' : 'm'} em casas que o mapa bloqueia com ${casaM} m por casa`, bloq);
+    }
     m.mapa.casaM = casaM;
     tx.emitir('escala', {}, {
       casaMAntes: antes, casaM,

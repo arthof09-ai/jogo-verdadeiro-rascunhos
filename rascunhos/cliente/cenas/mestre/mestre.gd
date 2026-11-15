@@ -405,6 +405,7 @@ func _ao_evento(msg: Dictionary) -> void:
 	_narrar_caida(msg)
 	_narrar_ambiente(msg)
 	_avisar_motor(msg)
+	_avisar_figuras_bloqueadas(msg)
 	if str(msg.get("tipo", "")) == "cartao_fechado":
 		var d = msg.get("dados")
 		if d is Dictionary and not cartao.is_empty() and d.get("cartaoId") == cartao.get("cartaoId"):
@@ -414,6 +415,44 @@ func _ao_evento(msg: Dictionary) -> void:
 			_aba_agir.editar("")
 			_desenhar_cartao()
 	_pedir_vista_em_breve()
+
+
+## Ordem 62: o servidor recusou a mudança de escala (ou o «Recomeçar») porque deixava figuras em casas que o mapa
+## bloqueia — a regra da colocação (CASA_BLOQUEADA). O evento `recusa` (só ao Mestre) traz a lista em
+## soMestre.figuras; vai aos alertas com o nome, a casa e o motivo de cada figura, como a recusa do pé da Ordem 60, para
+## o Mestre saber quem tirar do caminho. O recibo recusado já dá o alerta genérico («O servidor não aceitou…»); este
+## diz porquê. Um alerta por evento (o mesmo seq repetido no fio não o repete).
+func _avisar_figuras_bloqueadas(msg: Dictionary) -> void:
+	if str(msg.get("tipo", "")) != "recusa":
+		return
+	var d = msg.get("dados")
+	var so = d.get("soMestre") if d is Dictionary else null
+	var texto := texto_figuras_bloqueadas(so if so is Dictionary else {}, vista)
+	var chave := "bloqueadas:seq:" + str(msg.get("seq", ""))
+	if texto == "" or _amb_narrados.has(chave):
+		return
+	_amb_narrados[chave] = true
+	_juntar_alerta(texto)
+
+
+## Ordem 62: o texto do alerta de uma recusa com figuras em casas bloqueadas ("" se a recusa não traz figuras). Os
+## nomes vêm da vista (o nome do Mestre); uma figura que a vista ainda não tem fica com o id.
+static func texto_figuras_bloqueadas(so: Dictionary, vista_atual: Dictionary) -> String:
+	var lista = so.get("figuras")
+	if not (lista is Array) or lista.is_empty():
+		return ""
+	var partes: Array[String] = []
+	for e in lista:
+		if not (e is Dictionary):
+			continue
+		var id := str(e.get("figuraId", ""))
+		var f: Dictionary = Modelo.figura(vista_atual, id)
+		var nome: String = Modelo.nome_mestre(f) if not f.is_empty() else id
+		partes.append("«%s» (%d,%d) %s" % [nome if nome != "" else id, int(e.get("x", 0)), int(e.get("y", 0)), str(e.get("motivo", ""))])
+	if partes.is_empty():
+		return ""
+	var chave := "recomeco_bloqueado" if str(so.get("detalhe", "")).begins_with("RECOMECAR") else "escala_bloqueada"
+	return Textos.ALERTA[chave] % "; ".join(partes)
 
 
 ## Ordem 21 (N18-2, decisão do Mestre): o servidor restaurou a sala no fim com um motor de outra versão; o «Recomeçar»
