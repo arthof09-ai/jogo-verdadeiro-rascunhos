@@ -52,11 +52,23 @@ const CASOS := [
 	[50, 50, 1.5, "auto"],
 	[50, 50, 1.0, "auto"],
 	[37, 37, 2.0, "auto"],
+	# Ordem 59: grelhas que tocam a FRONTEIRA DO MAPA só nalguns lados (a 50 × 50 de 1,5 m e a 37 × 37 de 2 m, acima,
+	# tocam nos quatro).
+	[49, 49, 1.5, "auto"],
+	[50, 20, 1.5, "auto"],
+	[20, 50, 1.5, "auto"],
+	[49, 30, 1.5, "auto"],
+	[37, 20, 2.0, "auto"],
+	[35, 37, 2.0, "auto"],
 ]
 
 var _falhas := 0
 ## A cobertura do mapa de referência (a do pacote), para dizer porque é que o servidor não a afirma na borda.
 var _ref_cobertura: Array = []
+## Ordem 59: a faixa da borda (bordaCoberturaM) e a folga até à fronteira do mapa abaixo da qual um lado da zona está
+## «fechado» (folgaFonteCoberturaM; um pacote anterior à Ordem 59 não a tem: 0,70 m, o mesmo número).
+var _borda_m := 1.35
+var _folga_fonte_m := 0.70
 
 
 ## Os 8 bytes do double (little-endian) em hexadecimal, como os escreve o servidor (juizo-terreno.mjs `bits`).
@@ -126,6 +138,9 @@ func _correr() -> void:
 		ProjectSettings.globalize_path("res://").path_join("../servidor/dados/terreno-floresta.json")))
 	if pacote is Dictionary and pacote.get("mapa") is Dictionary:
 		_ref_cobertura = pacote["mapa"]["cobertura"]
+		var cab: Dictionary = pacote.get("cabecalho", {})
+		_borda_m = float(cab.get("bordaCoberturaM", _borda_m))
+		_folga_fonte_m = float(cab.get("folgaFonteCoberturaM", _folga_fonte_m))
 	for caso in CASOS:
 		var lw: int = caso[0]
 		var lh: int = caso[1]
@@ -171,6 +186,21 @@ func _correr() -> void:
 		var cob_nula_diferente := 0  # … e onde o cliente tem mesmo outra cobertura que a do mapa de referência
 		var bloq_srv := 0
 		var casas_rel: Array = []
+		# Ordem 59: a faixa da FRONTEIRA — casas da faixa da borda em que todos os lados da zona a bordaCoberturaM ou
+		# menos estão na fronteira do mapa (folga até ela de no máximo folgaFonteCoberturaM).
+		var ini := arena.origem as Vector2
+		var fim := ini + Vector2(lw, lh) * cm
+		var folgas := [ini.x + GrelhaMapa.MEIO, GrelhaMapa.MEIO - fim.x, ini.y + GrelhaMapa.MEIO, GrelhaMapa.MEIO - fim.y]
+		var fechado := folgas.map(func(f): return float(f) <= _folga_fonte_m)
+		var lados_fronteira: Array = []
+		for i in 4:
+			if fechado[i]:
+				lados_fronteira.append(["oeste", "este", "norte", "sul"][i])
+		var fr_casas := 0              # casas da faixa da fronteira
+		var fr_afirmada := 0           # … em que o servidor afirma a cobertura
+		var fr_afirmada_diferente := 0 # … e o cliente tem outra
+		var fr_nula := 0               # … em que o servidor diz null
+		var fr_nula_diferente := 0     # … e o cliente tem outra que a do mapa de referência
 		for c in juizo["casas"]:
 			var cc := Vector2i(int(c["x"]), int(c["y"]))
 			var p: Vector3 = arena.centro_casa(cc)
@@ -196,6 +226,24 @@ func _correr() -> void:
 					cob_nula_diferente += 1
 			elif g.cobertura(cmapa) != int(c["cobertura"]):
 				difere_cob += 1
+			var mc := GrelhaMapa.canto(cmapa) + Vector2(0.75, 0.75)
+			var dist := [mc.x - ini.x, fim.x - mc.x, mc.y - ini.y, fim.y - mc.y]
+			var na_faixa := false
+			var so_fronteira := true
+			for i in 4:
+				if float(dist[i]) <= _borda_m:
+					na_faixa = true
+					so_fronteira = so_fronteira and bool(fechado[i])
+			if na_faixa and so_fronteira:
+				fr_casas += 1
+				if c["cobertura"] == null:
+					fr_nula += 1
+					if not _ref_cobertura.is_empty() and g.cobertura(cmapa) != int(_ref_cobertura[GrelhaMapa.indice(cmapa)]):
+						fr_nula_diferente += 1
+				else:
+					fr_afirmada += 1
+					if g.cobertura(cmapa) != int(c["cobertura"]):
+						fr_afirmada_diferente += 1
 			if lw == 25 and lh == 25:  # o detalhe casa a casa só na prova da ordem (as 25 × 25)
 				casas_rel.append({"x": cc.x, "y": cc.y, "zona": "dentro" if k == 0 else "fora",
 					"cliente": {"alturaM": p.y, "peM": pe.y, "bloqueada": bloq_cli, "motivo": g.motivo_bloqueio(cmapa) if bloq_cli else null,
@@ -208,6 +256,9 @@ func _correr() -> void:
 		_ok(difere_bloq == 0 and difere_motivo == 0 and difere_cob == 0,
 			"casas bloqueadas: %d no servidor, %d com juízo diferente; motivos diferentes %d; cobertura afirmada diferente %d (não afirmada na borda: %d casas, %d com a do cliente ≠ a do mapa de referência)" % [
 				bloq_srv, difere_bloq, difere_motivo, difere_cob, cob_nula, cob_nula_diferente])
+		if fr_casas > 0:
+			print("  ..    faixa da fronteira do mapa (lados %s): %d casas; cobertura afirmada %d (%d diferentes do cliente), null %d (%d com a do cliente ≠ a do mapa de referência)" % [
+				", ".join(lados_fronteira), fr_casas, fr_afirmada, fr_afirmada_diferente, fr_nula, fr_nula_diferente])
 
 		# 3b. as figuras desenhadas
 		var d_fig := 0.0
@@ -281,6 +332,9 @@ func _correr() -> void:
 			"desvioMaxAlturaM": {"dentro": d_alt[0], "fora": d_alt[1]}, "desvioMaxPeM": {"dentro": d_pe[0], "fora": d_pe[1]},
 			"desvioMaxFigurasM": d_fig, "casasBloqueadas": bloq_srv, "juizoDiferente": difere_bloq, "motivosDiferentes": difere_motivo,
 			"coberturaAfirmadaDiferente": difere_cob, "coberturaNaoAfirmada": cob_nula, "coberturaNaoAfirmadaClienteDifereDaReferencia": cob_nula_diferente,
+			"faixaFronteira": {"lados": lados_fronteira, "folgasM": folgas, "casas": fr_casas, "coberturaAfirmada": fr_afirmada,
+				"coberturaAfirmadaDiferente": fr_afirmada_diferente, "coberturaNaoAfirmada": fr_nula,
+				"coberturaNaoAfirmadaClienteDifereDaReferencia": fr_nula_diferente},
 			"recusas": sv["recusas"], "moverOferecidas": (sv["mover"] as Array).size(), "moverBloqueadas": mover_bloq,
 			"figuras": fig_rel, "marcos": marcos_rel, "casas": casas_rel})
 
@@ -290,7 +344,7 @@ func _correr() -> void:
 			saida = a.trim_prefix("--json=")
 	if saida != "":
 		var f := FileAccess.open(saida, FileAccess.WRITE)
-		f.store_string(JSON.stringify({"ordem": 48, "prova": "cliente/cenas/arena/ferramentas/provar_terreno_servidor.gd",
+		f.store_string(JSON.stringify({"ordem": 59, "prova": "cliente/cenas/arena/ferramentas/provar_terreno_servidor.gd",
 			"servidor": "servidor/ferramentas/juizo-terreno.mjs (núcleo sala.js + dados/terreno-floresta.json)",
 			"zonaLivre": "x e z em [−15, 15] m (a grelha 20 × 20 de 1,5 m da Ordem 42)", "grelhas": relatorio}, " ", false, true))
 		f.close()
