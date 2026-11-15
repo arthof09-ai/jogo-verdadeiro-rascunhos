@@ -68,8 +68,8 @@ As medidas, os números e as tabelas estão em `NOTAS-CICLO-56.md`.
 | `provar_altura.gd` | maior 0,00002 m (igual sobre `0435aa7`) |
 | `provar_costura.gd` | **VERMELHA, 67/255**, igual linha a linha à ponta `0435aa7`. Não se lhe mexeu (decisão do coordenador) |
 
-- CI: corre no push do fecho. O resultado fica no commit seguinte a este. Os workflows não foram
-  tocados: o passo da prova nova fica em texto nas notas («Para o CI»).
+- CI: os workflows não foram tocados; o passo da prova nova fica em texto nas notas («Para o CI»).
+  O resultado está na «Passagem», abaixo.
 
 ## ESTADO FINAL — Passagem
 
@@ -93,10 +93,22 @@ As medidas, os números e as tabelas estão em `NOTAS-CICLO-56.md`.
   `2-verao`, `3-outono` e `4-inverno`, mais `_folha_estacoes.jpg` e `medicao_estacoes.json`.
 - `9cad015`: `NOTAS-CICLO-56.md`. Em `NOTAS-CICLO-43.md`, a linha da API e a reserva das estações
   dada por feita.
-- (este commit): `ESTADO-FINAL-ORDEM-56.md`.
+- `027745e`: `ESTADO-FINAL-ORDEM-56.md`. **Push do fecho: `f96fade..027745e`, sem force.**
+- (este commit): o resultado do CI.
 
-**Onde parou:** tudo o que a ordem pede está construído e commitado. Push no fecho. A prova nova
-tem uma verificação vermelha, de propósito e explicada (abaixo).
+**CI: VERDE nos dois pushes.**
+
+- Push do fim da 1.ª parte (`f96fade`): «Testes dos rascunhos», run `43727676489`, verde; «Sonda
+  de privacidade», run `43727676602`, verde.
+- Push do fecho (`027745e`): «Testes dos rascunhos», run `43728112829`, **9 de 9 jobs verdes**
+  (servidor, validador-glb, motor-real, protocolo, cliente, godot-cliente, ponta-a-ponta,
+  foto-mestre, retoma-pc). O job `cliente` compila os scripts, os novos incluídos. «Sonda de
+  privacidade», run `43728112806`, verde.
+- Este commit volta a disparar os dois; só traz este parágrafo.
+
+**Onde parou:** tudo o que a ordem pede está construído, commitado e com push (sem force), e o CI
+está verde. A prova nova tem uma verificação vermelha, de propósito e explicada (abaixo); não está
+no CI.
 
 **Próximo passo:** a conferência do coordenador e do Mestre:
 
