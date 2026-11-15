@@ -1,4 +1,4 @@
-// juizo-terreno.mjs — Ordem 44 (parte A). O que o SERVIDOR julga do terreno, para a prova do cliente comparar
+// juizo-terreno.mjs — Ordens 44 (parte A) e 48. O que o SERVIDOR julga do terreno, para a prova do cliente comparar
 // com o que a arena desenha (cliente/cenas/arena/ferramentas/provar_terreno_servidor.gd).
 //
 //   node ferramentas/juizo-terreno.mjs <largura> <altura> [--heroina=x,y] [--figuras=x,y;x,y;...] [--escala=2]
@@ -10,6 +10,9 @@
 //   figuras   as figuras colocadas, onde o servidor as pôs (x, y) e com que pé (peM da casa)
 //   recusas   as casas que o servidor recusou, com o porquê que vai ao Mestre
 //   mover     as casas que o servidor oferece à heroína (ROOM_OPTIONS.mover)
+// Ordem 48: qualquer tamanho que caiba no mapa (a sala recorta a grelha do mapa inteiro). A sala nasce com casas de
+// 1,5 m: um tamanho que não caiba nessa escala não abre (o erro nomeado sai no stderr, código ≠ 0). Na faixa da borda
+// a cobertura pode vir null (o servidor não a afirma: ver nucleo/terreno.js).
 // Só fichas fictícias; nada do Mestre real.
 import { readFileSync } from 'node:fs';
 import { montarMesa, recibo } from '../testes/ajudantes.mjs';

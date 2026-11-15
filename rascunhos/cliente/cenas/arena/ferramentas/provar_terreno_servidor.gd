@@ -1,6 +1,12 @@
 extends SceneTree
-## provar_terreno_servidor.gd — Ordem 44 (parte A). A PROVA de que o cliente e o servidor vêem o MESMO terreno,
+## provar_terreno_servidor.gd — Ordens 44 e 48. A PROVA de que o cliente e o servidor vêem o MESMO terreno,
 ## numa grelha MAIOR do que a zona livre (30 × 30 de 1,5 m, e também 30 × 30 de 2 m) e na de sempre (20 × 20).
+## Ordem 48: o servidor recorta a grelha viva do mapa inteiro, para QUALQUER tamanho que caiba no mapa. A prova
+## junta a 25 × 25 (o tamanho que até aqui caía em «tudo se pisa») nas três escalas, grelhas não quadradas e o mapa
+## todo (50 × 50 de 1,5 m, 75 × 75 de 1 m, 37 × 37 de 2 m). Nos casos «auto», as figuras pedidas são TODAS as casas
+## que o servidor julga bloqueadas (cada uma tem de ser recusada com o motivo que o cliente desenha) e 9 casas livres.
+## A cobertura compara-se onde o servidor a afirma; na faixa da borda (bordaCoberturaM do pacote) ele pode dizer
+## null — conta-se quantas, e quantas delas o cliente tem diferente da do mapa de referência (o porquê do null).
 ##
 ## Para cada grelha:
 ##   1. chama o SERVIDOR de verdade (servidor/ferramentas/juizo-terreno.mjs: núcleo sala.js com o pacote
@@ -13,7 +19,7 @@ extends SceneTree
 ##        altura do centro da casa (arena.centro_casa)        vs  alturaM
 ##        pé da figura na casa (arena.pe_figura)               vs  peM
 ##        a posição de cada figura desenhada (nó da figura)    vs  peM da casa onde o servidor a pôs
-##        casa bloqueada pelo mapa (e o motivo, a cobertura)   vs  passavel / motivo / cobertura
+##        casa bloqueada pelo mapa (e o motivo, a cobertura)   vs  passavel / motivo / cobertura (onde afirmada)
 ##        cada marco do mapa (menir, santuário, lanterna, …)   vs  a casa dele bloqueada no servidor, com o mesmo nome
 ##        as recusas do servidor                               vs  casas bloqueadas no cliente
 ##        as casas do mover                                    vs  nenhuma bloqueada no cliente
@@ -32,13 +38,25 @@ const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
 const ZONA_M := 15.0
 
 ## [largura, altura, casaM, figuras pedidas]: dentro da zona, as 6 casas da encosta, o anel de fora e marcos.
+## Ordem 48: «auto» = todas as casas bloqueadas e 9 livres (cantos, meios das bordas e o centro, ou a livre seguinte).
 const CASOS := [
 	[30, 30, 1.5, "5,5;6,5;7,5;5,6;6,6;5,7;15,15;10,20;24,24;0,10;29,0;12,28;28,12;0,29;1,0;3,2;28,28"],
 	[30, 30, 2.0, "8,8;15,15;20,10;0,0;29,29;0,15;15,0;29,15;15,29"],
 	[20, 20, 1.5, "0,0;1,0;2,0;0,1;1,1;0,2;10,10;19,19;5,15"],
+	[25, 25, 1.5, "auto"],
+	[25, 25, 1.0, "auto"],
+	[25, 25, 2.0, "auto"],
+	[21, 17, 1.0, "auto"],
+	[33, 27, 2.0, "auto"],
+	[44, 20, 1.5, "auto"],
+	[50, 50, 1.5, "auto"],
+	[50, 50, 1.0, "auto"],
+	[37, 37, 2.0, "auto"],
 ]
 
 var _falhas := 0
+## A cobertura do mapa de referência (a do pacote), para dizer porque é que o servidor não a afirma na borda.
+var _ref_cobertura: Array = []
 
 
 ## Os 8 bytes do double (little-endian) em hexadecimal, como os escreve o servidor (juizo-terreno.mjs `bits`).
@@ -47,6 +65,27 @@ static func bits(v: float) -> String:
 	if b.size() != 8:
 		return ""
 	return b.hex_encode()
+
+
+## Ordem 48: as figuras pedidas num caso «auto» — todas as casas que o servidor julga bloqueadas e 9 livres (os
+## cantos, os meios das bordas e o centro; se a casa estiver bloqueada, a livre seguinte na mesma linha).
+static func figuras_auto(sv: Dictionary, lw: int, lh: int) -> String:
+	var casas: Array[String] = []
+	var livres := {}
+	if sv.get("juizo") is Dictionary:
+		for c in sv["juizo"]["casas"]:
+			if not bool(c["passavel"]):
+				casas.append("%d,%d" % [int(c["x"]), int(c["y"])])
+			else:
+				livres["%d,%d" % [int(c["x"]), int(c["y"])]] = true
+	for q in [Vector2i(0, 0), Vector2i(lw - 1, 0), Vector2i(0, lh - 1), Vector2i(lw - 1, lh - 1), Vector2i(lw / 2, 0),
+			Vector2i(0, lh / 2), Vector2i(lw - 1, lh / 2), Vector2i(lw / 2, lh - 1), Vector2i(lw / 2, lh / 2)]:
+		for d in lw:
+			var chave := "%d,%d" % [(q.x + d) % lw, q.y]
+			if livres.has(chave) and not casas.has(chave):
+				casas.append(chave)
+				break
+	return ";".join(casas)
 
 
 func _init() -> void:
@@ -82,12 +121,19 @@ func _correr() -> void:
 	var arena: Node = null
 	var relatorio: Array = []
 	var seq := 0
-	print("== Ordem 44: o terreno do mapa no cliente e no servidor ==")
+	print("== Ordens 44 e 48: o terreno do mapa no cliente e no servidor ==")
+	var pacote = JSON.parse_string(FileAccess.get_file_as_string(
+		ProjectSettings.globalize_path("res://").path_join("../servidor/dados/terreno-floresta.json")))
+	if pacote is Dictionary and pacote.get("mapa") is Dictionary:
+		_ref_cobertura = pacote["mapa"]["cobertura"]
 	for caso in CASOS:
 		var lw: int = caso[0]
 		var lh: int = caso[1]
 		var cm: float = caso[2]
-		var sv := juizo_do_servidor(lw, lh, cm, caso[3])
+		var pedidas: String = caso[3]
+		if pedidas == "auto":
+			pedidas = figuras_auto(juizo_do_servidor(lw, lh, cm, ""), lw, lh)
+		var sv := juizo_do_servidor(lw, lh, cm, pedidas)
 		if sv.is_empty() or sv.get("juizo") == null:
 			_ok(false, "grelha %d×%d de %s m: o servidor não devolveu juízo do terreno" % [lw, lh, cm])
 			continue
@@ -121,6 +167,8 @@ func _correr() -> void:
 		var difere_bloq := 0
 		var difere_motivo := 0
 		var difere_cob := 0
+		var cob_nula := 0            # casas da faixa da borda onde o servidor não afirma a cobertura (null)
+		var cob_nula_diferente := 0  # … e onde o cliente tem mesmo outra cobertura que a do mapa de referência
 		var bloq_srv := 0
 		var casas_rel: Array = []
 		for c in juizo["casas"]:
@@ -142,16 +190,24 @@ func _correr() -> void:
 				difere_bloq += 1
 			if bloq_cli and g.motivo_bloqueio(cmapa) != String(c["motivo"] if c["motivo"] != null else ""):
 				difere_motivo += 1
-			if g.cobertura(cmapa) != int(c["cobertura"]):
+			if c["cobertura"] == null:
+				cob_nula += 1
+				if not _ref_cobertura.is_empty() and g.cobertura(cmapa) != int(_ref_cobertura[GrelhaMapa.indice(cmapa)]):
+					cob_nula_diferente += 1
+			elif g.cobertura(cmapa) != int(c["cobertura"]):
 				difere_cob += 1
-			casas_rel.append({"x": cc.x, "y": cc.y, "zona": "dentro" if k == 0 else "fora",
-				"cliente": {"alturaM": p.y, "peM": pe.y, "bloqueada": bloq_cli},
-				"servidor": {"alturaM": c["alturaM"], "peM": c["peM"], "bloqueada": not bool(c["passavel"]), "motivo": c["motivo"]},
-				"desvioAlturaM": da, "desvioPeM": dp})
+			if lw * lh <= 900:
+				casas_rel.append({"x": cc.x, "y": cc.y, "zona": "dentro" if k == 0 else "fora",
+					"cliente": {"alturaM": p.y, "peM": pe.y, "bloqueada": bloq_cli, "motivo": g.motivo_bloqueio(cmapa) if bloq_cli else null,
+						"cobertura": g.cobertura(cmapa)},
+					"servidor": {"alturaM": c["alturaM"], "peM": c["peM"], "alturaBits": c["alturaBits"], "peBits": c["peBits"],
+						"bloqueada": not bool(c["passavel"]), "motivo": c["motivo"], "cobertura": c["cobertura"]},
+					"desvioAlturaM": da, "desvioPeM": dp})
 		_ok(d_alt[0] == 0.0 and d_alt[1] == 0.0, "altura do centro da casa: desvio cliente−servidor %s m nas %d casas dentro da zona livre, %s m nas %d fora" % [d_alt[0], n_casas[0], d_alt[1], n_casas[1]])
 		_ok(d_pe[0] == 0.0 and d_pe[1] == 0.0, "pé da figura: desvio cliente−servidor %s m dentro, %s m fora" % [d_pe[0], d_pe[1]])
 		_ok(difere_bloq == 0 and difere_motivo == 0 and difere_cob == 0,
-			"casas bloqueadas: %d no servidor, %d com juízo diferente; motivos diferentes %d; cobertura diferente %d" % [bloq_srv, difere_bloq, difere_motivo, difere_cob])
+			"casas bloqueadas: %d no servidor, %d com juízo diferente; motivos diferentes %d; cobertura afirmada diferente %d (não afirmada na borda: %d casas, %d com a do cliente ≠ a do mapa de referência)" % [
+				bloq_srv, difere_bloq, difere_motivo, difere_cob, cob_nula, cob_nula_diferente])
 
 		# 3b. as figuras desenhadas
 		var d_fig := 0.0
@@ -223,7 +279,8 @@ func _correr() -> void:
 		relatorio.append({"grelha": {"largura": lw, "altura": lh, "casaM": cm, "origemM": [arena.origem.x, arena.origem.y]},
 			"casasDentroZonaLivre": n_casas[0], "casasFora": n_casas[1],
 			"desvioMaxAlturaM": {"dentro": d_alt[0], "fora": d_alt[1]}, "desvioMaxPeM": {"dentro": d_pe[0], "fora": d_pe[1]},
-			"desvioMaxFigurasM": d_fig, "casasBloqueadas": bloq_srv, "juizoDiferente": difere_bloq,
+			"desvioMaxFigurasM": d_fig, "casasBloqueadas": bloq_srv, "juizoDiferente": difere_bloq, "motivosDiferentes": difere_motivo,
+			"coberturaAfirmadaDiferente": difere_cob, "coberturaNaoAfirmada": cob_nula, "coberturaNaoAfirmadaClienteDifereDaReferencia": cob_nula_diferente,
 			"recusas": sv["recusas"], "moverOferecidas": (sv["mover"] as Array).size(), "moverBloqueadas": mover_bloq,
 			"figuras": fig_rel, "marcos": marcos_rel, "casas": casas_rel})
 
@@ -233,7 +290,7 @@ func _correr() -> void:
 			saida = a.trim_prefix("--json=")
 	if saida != "":
 		var f := FileAccess.open(saida, FileAccess.WRITE)
-		f.store_string(JSON.stringify({"ordem": 44, "prova": "cliente/cenas/arena/ferramentas/provar_terreno_servidor.gd",
+		f.store_string(JSON.stringify({"ordem": 48, "prova": "cliente/cenas/arena/ferramentas/provar_terreno_servidor.gd",
 			"servidor": "servidor/ferramentas/juizo-terreno.mjs (núcleo sala.js + dados/terreno-floresta.json)",
 			"zonaLivre": "x e z em [−15, 15] m (a grelha 20 × 20 de 1,5 m da Ordem 42)", "grelhas": relatorio}, " ", false, true))
 		f.close()
