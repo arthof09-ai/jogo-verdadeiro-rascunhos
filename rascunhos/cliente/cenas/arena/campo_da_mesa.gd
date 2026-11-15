@@ -4,7 +4,8 @@ extends RefCounted
 ## Ordem 44 isto vivia só em arena.gd (Ordem 42); a Ordem 45 tirou-o de lá, sem mudar uma conta, para o ecrã do
 ## Mestre usar o MESMO código em vez de uma cópia.
 ##
-##   - `montar_mapa`        o mapa da floresta como chão da arena, com o céu e o sol dela (um só céu);
+##   - `montar_mapa`        o mapa da floresta como chão da arena, com o céu e o sol dela (um só céu); da Ordem 54,
+##                          a mesma zona constrói-se uma vez e os mapas seguintes nascem do molde dela;
 ##   - `ligar_clima`        o clima sobre o mapa: bacias do relevo real, abrigos dos obstáculos reais;
 ##   - `malha_casas`        os remendos por casa que seguem o relevo (destaques, fogo, cursor);
 ##   - `linhas_grelha`      as linhas da grelha amostradas no relevo;
@@ -42,6 +43,8 @@ static func montar_mapa(dono: Node3D, zona: Rect2, ambiente: NodePath, sol: Node
 	mapa.vistas_por_tecla = false
 	mapa.mostrar_medicao = false
 	mapa.zona_jogo = zona
+	# Ordem 54: a mesma zona não se constrói duas vezes; o mapa seguinte nasce do molde do primeiro (molde_floresta.gd).
+	mapa.reutilizar_molde = true
 	dono.add_child(mapa)
 	dono.move_child(mapa, 0)
 	# Ordem 42 + clima (Ordens 40/41): o chão que molha e branqueia é o do mapa (a zona fina e a larga).

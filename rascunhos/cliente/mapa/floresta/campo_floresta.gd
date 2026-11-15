@@ -36,6 +36,8 @@ const Grelha := preload("res://mapa/floresta/grelha_floresta.gd")
 const Erros := preload("res://mapa/floresta/erros_floresta.gd")
 const Ancestral := preload("res://mapa/floresta/arvore_ancestral.gd")
 const RelvaFloresta := preload("res://mapa/floresta/relva_floresta.gd")
+## Ordem 54: o mapa construído uma vez por chave e reutilizado (molde_floresta.gd).
+const MoldeFloresta := preload("res://mapa/floresta/molde_floresta.gd")
 
 const SH_TERRENO := preload("res://mapa/floresta/shaders/terreno.gdshader")
 const SH_RELVA := preload("res://mapa/floresta/shaders/relva.gdshader")
@@ -107,6 +109,11 @@ const VISTAS: Array = [
 @export var zona_jogo: Rect2 = Rect2()
 ## A relva dentro da zona jogável fica a esta fracção da altura (pisada; continua a mexer).
 @export_range(0.1, 1.0) var relva_no_campo: float = 0.38
+## ORDEM 54 — reutilizar o que já está construído. Ligado (as arenas: campo_da_mesa.montar_mapa), o primeiro mapa de
+## cada chave (semente, zona jogável, relva no campo, densidade) guarda um molde intacto de si acabado de construir, e
+## os seguintes com a mesma chave nascem de uma cópia dele em vez de se construírem outra vez: o mesmo mapa, sem o
+## custo (molde_floresta.gd). Desligado (o mapa sozinho, campo_floresta.tscn), constrói-se sempre.
+@export var reutilizar_molde: bool = false
 
 @onready var _ambiente: WorldEnvironment = get_node(no_ambiente)
 @onready var _sol: DirectionalLight3D = get_node(no_sol)
@@ -142,6 +149,14 @@ var _t_rotulo := 0.0
 
 func _ready() -> void:
 	var t0 := Time.get_ticks_msec()
+	var chave := MoldeFloresta.chave(self) if reutilizar_molde else ""
+	if chave != "" and MoldeFloresta.vestir(self, chave):
+		# Ordem 54: vestido de uma cópia do molde (a Arena, o Fundo, a grelha, os materiais, o estado): falta só o
+		# céu, a névoa e a luz, que se montam no Ambiente, no Sol e na Câmara DESTE dono.
+		_montar_ambiente()
+		_fim_da_carga(t0)
+		return
+	var erros_antes := Erros.contagem()
 	_rng.seed = semente
 	arena = Node3D.new()
 	arena.name = "Arena"
@@ -172,6 +187,15 @@ func _ready() -> void:
 	_criar_anel_longe()
 	_criar_ancestral()
 	_escrever_materiais()
+	# Ordem 54: o molde guarda-se aqui, acabado de construir e antes de alguém lhe mexer. Só de uma construção
+	# limpa: se esta registou erros, o mapa seguinte constrói-se (e regista-os) outra vez.
+	if chave != "" and Erros.contagem() == erros_antes:
+		MoldeFloresta.guardar(self, [arena, fundo] as Array[Node], chave)
+	_fim_da_carga(t0)
+
+
+## O fim do _ready, igual nos dois caminhos (construído ou vestido do molde).
+func _fim_da_carga(t0: int) -> void:
 	if vistas_por_tecla:
 		ir_para_vista(0)
 	if _rotulo != null:
