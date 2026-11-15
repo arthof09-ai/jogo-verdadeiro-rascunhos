@@ -221,18 +221,9 @@ func livre_mais_proxima(casa: Vector2i) -> Vector2i:
 	return FORA
 
 
-# ------------------------------------------------------------------ para o servidor / para a prova
+# ------------------------------------------------------------------ para o servidor
 
-## O terreno em dados simples (para o servidor montar o ROOM_SNAPSHOT.mapa e para a prova).
-func exportar_terreno() -> Dictionary:
-	var alturas: Array = []
-	var bloq: Array = []
-	var cob: Array = []
-	for l in LADO:
-		for c in LADO:
-			var casa := Vector2i(c, l)
-			alturas.append(snappedf(altura_casa(casa), 0.01))
-			bloq.append(_bloqueio[indice(casa)])
-			cob.append(_cobertura[indice(casa)])
-	return {"largura": LADO, "altura": LADO, "casaM": CASA_M, "origem": "NO", "alturas": alturas,
-		"bloqueadas": bloq, "cobertura": cob}
+## O terreno que o servidor lê NÃO sai daqui: sai de cenas/arena/ferramentas/exportar_terreno.gd, que mede as casas
+## DO JOGO com as funções com que a arena desenha (alturas em precisão inteira, o pé da Ordem 44) e escreve o mapa
+## inteiro (Ordem 48). A antiga exportar_terreno() desta grelha (Ordem 38: alturas ao centímetro, casas do mapa) foi
+## apagada na Ordem 48 — ninguém a chamava e dava números que não eram os do jogo.
