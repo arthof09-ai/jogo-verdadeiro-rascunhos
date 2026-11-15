@@ -159,6 +159,9 @@ func _construir_grelha(w: int, h: int, c: float) -> void:
 	altura = maxi(1, h)
 	casa_m = c if c > 0.0 else 1.5
 	for n in _grelha.get_children():
+		# Ordem 49 (C), como o ecrã do Mestre (arena_mestre.gd, Ordem 45): sai já da árvore. Só com o queue_free o
+		# velho ficava até ao fim do quadro e o «Linhas» novo (e o Fogo, os Destaques, o Cursor) nascia com outro nome.
+		_grelha.remove_child(n)
 		n.queue_free()
 	var tam := Vector2(largura * casa_m, altura * casa_m)
 	origem = _origem_no_mapa(tam)

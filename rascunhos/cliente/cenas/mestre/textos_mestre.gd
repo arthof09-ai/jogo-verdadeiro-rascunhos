@@ -227,6 +227,8 @@ const ALERTA := {
 	"aviso_motor": "Sala restaurada com outra versão do motor: «Recomeçar» não vai funcionar.",
 	# Ordem 34 (N27-2): o mesmo aviso, a dizer qual versão mudou (as frases de MOTOR_MUDOU, juntas).
 	"aviso_motor_qual": "Sala restaurada com outra versão do motor — %s. «Recomeçar» não vai funcionar.",
+	# Ordem 49 (A): o pedido da vista não saiu até ao tecto (mestre.gd, TENTATIVAS_VISTA_MAX).
+	"vista_sem_pedido": "A vista da mesa não se pediu (%d tentativas). Toque em «Atualizar».",
 }
 
 ## Ordem 34 (N27-2, sentença da bancada): cada nome de `quaisDiferem` em palavra simples (o hash nunca vai ao ecrã).

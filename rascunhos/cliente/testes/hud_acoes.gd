@@ -178,6 +178,7 @@ func _correr() -> void:
 	hud.queue_free()
 	await _quadros(1)
 	await _teste_seguranca_na_arena()
+	await _teste_grelha_refeita_guarda_os_nomes()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -248,6 +249,74 @@ func _sair_com_seguranca_para_2_3(arena) -> void:
 	arena.hud.sair_com_seguranca = true
 	arena.definir_modo(Modo.MOVER)
 	arena._escolher_casa(Vector2i(2, 3))
+
+
+## Ordem 49 (C): o defeito latente das «Linhas» na arena do jogador (reserva 9 da Ordem 45). Ao refazer a grelha, os
+## filhos velhos da Grelha só saíam na fila de libertação: o «Linhas» novo (e os outros) nascia com outro nome
+## («@MeshInstance3D@…») e `Grelha/Linhas` dava o velho até ao fim do quadro e nada depois. O ecrã do Mestre já tirava
+## os velhos da árvore antes (arena_mestre.gd); a arena do jogador passa a fazer o mesmo.
+func _teste_grelha_refeita_guarda_os_nomes() -> void:
+	print("== ordem 49: a grelha refeita da arena do jogador guarda os nomes (Linhas, Fogo, Destaques, Cursor) ==")
+	_rede._ativo = true  # como acima: sem ir ao lobby
+	var arena = (load("res://cenas/arena/arena.tscn") as PackedScene).instantiate()
+	root.add_child(arena)
+	await _quadros(2)
+	var nomes := ["Linhas", "Fogo", "Destaques", "Cursor"]
+	var velhos := {}
+	for nome in nomes:
+		velhos[nome] = arena.get_node_or_null("Grelha/" + nome)
+	_ok(nomes.all(func(n): return velhos[n] != null), "a grelha de arranque tem os quatro nós %s" % [velhos.values()])
+	# Os nomes dados pela arena, antes de refazer (o rótulo do custo nunca teve nome: fica «@Label3D@…» desde o início).
+	var dados_antes := _nomes_dados(arena.get_node("Grelha"))
+	var sem_nome_antes: int = arena.get_node("Grelha").get_child_count() - dados_antes.size()
+	var mapa_antes: Dictionary = _estado.mapa.duplicate()
+	# O caminho de verdade: um snapshot com outro tamanho refaz a grelha (arena.gd, _ao_snapshot).
+	_estado.mapa = {"largura": 24, "altura": 22, "casaM": 1.5}
+	arena._ao_snapshot()
+	_ok(arena.largura == 24 and arena.altura == 22, "o snapshot refez a grelha em 24 × 22 (%d × %d)" % [arena.largura, arena.altura])
+	var ja: Node = arena.get_node_or_null("Grelha/Linhas")
+	_ok(ja != null and ja != velhos["Linhas"], "no mesmo quadro, «Grelha/Linhas» já é o nó novo, não o velho à espera de sair")
+	await _quadros(2)
+	var linhas: Node = arena.get_node_or_null("Grelha/Linhas")
+	_ok(linhas is MeshInstance3D and linhas == ja, "depois da fila de libertação, «Grelha/Linhas» continua lá e é o mesmo nó")
+	var g: Node = arena.get_node("Grelha")
+	var dados_depois := _nomes_dados(g)
+	var sem_nome_depois: int = g.get_child_count() - dados_depois.size()
+	var de_linhas: Array = g.get_children().filter(func(n): return str(n.name) == "Linhas" or (n is MeshInstance3D and (n as MeshInstance3D).mesh is ImmediateMesh))
+	_ok(dados_depois == dados_antes and sem_nome_depois == sem_nome_antes,
+		"a Grelha refeita tem os mesmos nomes de antes %s, e nenhum nome inventado a mais (%d → %d)" % [dados_depois, sem_nome_antes, sem_nome_depois])
+	_ok(de_linhas.size() == 1, "uma só malha de linhas na Grelha (%d)" % de_linhas.size())
+	var proprios := {"Fogo": arena._fogo, "Destaques": arena._destaques, "Cursor": arena._marcador}
+	for nome in proprios:
+		var n: Node = arena.get_node_or_null("Grelha/" + nome)
+		_ok(n != null and n == proprios[nome], "«Grelha/%s» é a camada nova que a arena usa" % nome)
+	if linhas is MeshInstance3D and (linhas as MeshInstance3D).mesh != null:
+		var v: PackedVector3Array = (linhas as MeshInstance3D).mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+		var lo := Vector2(INF, INF)
+		var hi := Vector2(-INF, -INF)
+		for q in v:
+			lo = Vector2(minf(lo.x, q.x), minf(lo.y, q.z))
+			hi = Vector2(maxf(hi.x, q.x), maxf(hi.y, q.z))
+		var o: Vector2 = arena.origem
+		var fim := o + Vector2(24, 22) * 1.5
+		_ok(lo.distance_to(o) < 0.001 and hi.distance_to(fim) < 0.001,
+			"as linhas desse nó cobrem a grelha nova: (%.2f, %.2f)–(%.2f, %.2f), esperado (%.2f, %.2f)–(%.2f, %.2f)"
+			% [lo.x, lo.y, hi.x, hi.y, o.x, o.y, fim.x, fim.y])
+	else:
+		_ok(false, "as linhas desse nó cobrem a grelha nova (sem malha)")
+	_estado.mapa = mapa_antes
+	arena.queue_free()
+	await _quadros(2)
+
+
+## Os nomes dos filhos que não foram inventados pelo Godot (os «@Tipo@n»), por ordem.
+func _nomes_dados(no: Node) -> Array:
+	var r: Array = []
+	for n in no.get_children():
+		if not str(n.name).begins_with("@"):
+			r.append(str(n.name))
+	r.sort()
+	return r
 
 
 func _teste_seguranca_na_arena() -> void:
