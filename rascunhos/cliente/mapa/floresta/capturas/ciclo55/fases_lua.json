@@ -1,0 +1,478 @@
+{
+	"a_noite_por_fase": {
+		"01:00": {
+			"cheia": {
+				"cor_luz": "6a7999",
+				"lua_energia": 0.36,
+				"luz_chave_luminancia_linear": 0.1892,
+				"ressalto": 0.184,
+				"sombra_forca": 0.62
+			},
+			"crescente": {
+				"cor_luz": "4c576f",
+				"lua_energia": 0.18,
+				"luz_chave_luminancia_linear": 0.0946,
+				"ressalto": 0.112,
+				"sombra_forca": 0.62
+			},
+			"minguante": {
+				"cor_luz": "4c576f",
+				"lua_energia": 0.18,
+				"luz_chave_luminancia_linear": 0.0946,
+				"ressalto": 0.112,
+				"sombra_forca": 0.62
+			},
+			"nova": {
+				"cor_luz": "081028",
+				"lua_energia": 0.0,
+				"luz_chave_luminancia_linear": 0.0058,
+				"ressalto": 0.04,
+				"sombra_forca": 0.0
+			}
+		},
+		"04:00": {
+			"cheia": {
+				"cor_luz": "6c7b9d",
+				"lua_energia": 0.3775,
+				"luz_chave_luminancia_linear": 0.1984,
+				"ressalto": 0.191,
+				"sombra_forca": 0.62
+			},
+			"crescente": {
+				"cor_luz": "4d5972",
+				"lua_energia": 0.1888,
+				"luz_chave_luminancia_linear": 0.0992,
+				"ressalto": 0.1155,
+				"sombra_forca": 0.62
+			},
+			"minguante": {
+				"cor_luz": "4d5972",
+				"lua_energia": 0.1888,
+				"luz_chave_luminancia_linear": 0.0992,
+				"ressalto": 0.1155,
+				"sombra_forca": 0.62
+			},
+			"nova": {
+				"cor_luz": "081028",
+				"lua_energia": 0.0,
+				"luz_chave_luminancia_linear": 0.0058,
+				"ressalto": 0.04,
+				"sombra_forca": 0.0
+			}
+		},
+		"19:45": {
+			"cheia": {
+				"cor_luz": "7788ac",
+				"lua_energia": 0.4667,
+				"luz_chave_luminancia_linear": 0.2452,
+				"ressalto": 0.2474,
+				"sombra_forca": 0.6105
+			},
+			"crescente": {
+				"cor_luz": "56627e",
+				"lua_energia": 0.2334,
+				"luz_chave_luminancia_linear": 0.1226,
+				"ressalto": 0.1541,
+				"sombra_forca": 0.6105
+			},
+			"minguante": {
+				"cor_luz": "56627e",
+				"lua_energia": 0.2334,
+				"luz_chave_luminancia_linear": 0.1226,
+				"ressalto": 0.1541,
+				"sombra_forca": 0.6105
+			},
+			"nova": {
+				"cor_luz": "121632",
+				"lua_energia": 0.0,
+				"luz_chave_luminancia_linear": 0.0095,
+				"ressalto": 0.0607,
+				"sombra_forca": 0.0
+			}
+		},
+		"22:00": {
+			"cheia": {
+				"cor_luz": "6a7999",
+				"lua_energia": 0.36,
+				"luz_chave_luminancia_linear": 0.1892,
+				"ressalto": 0.184,
+				"sombra_forca": 0.62
+			},
+			"crescente": {
+				"cor_luz": "4c576f",
+				"lua_energia": 0.18,
+				"luz_chave_luminancia_linear": 0.0946,
+				"ressalto": 0.112,
+				"sombra_forca": 0.62
+			},
+			"minguante": {
+				"cor_luz": "4c576f",
+				"lua_energia": 0.18,
+				"luz_chave_luminancia_linear": 0.0946,
+				"ressalto": 0.112,
+				"sombra_forca": 0.62
+			},
+			"nova": {
+				"cor_luz": "081028",
+				"lua_energia": 0.0,
+				"luz_chave_luminancia_linear": 0.0058,
+				"ressalto": 0.04,
+				"sombra_forca": 0.0
+			}
+		}
+	},
+	"ancora_ordem43": {
+		"diferencas": 0,
+		"minutos": 1440,
+		"referencia": "C:/Users/txcga/fable-ciclo/ref55/ciclo_dia_ordem43.gd",
+		"saidas": 40
+	},
+	"continuidade_maior_passo_por_minuto": {
+		"cheia": {
+			"cor_luz": 0.0557,
+			"lua_energia": 0.0297,
+			"ressalto": 0.0268,
+			"sombra_forca": 0.097
+		},
+		"crescente": {
+			"cor_luz": 0.0557,
+			"lua_energia": 0.0149,
+			"ressalto": 0.0268,
+			"sombra_forca": 0.097
+		},
+		"minguante": {
+			"cor_luz": 0.0557,
+			"lua_energia": 0.0149,
+			"ressalto": 0.0268,
+			"sombra_forca": 0.097
+		},
+		"nova": {
+			"cor_luz": 0.0557,
+			"lua_energia": 0.0,
+			"ressalto": 0.0268,
+			"sombra_forca": 0.097
+		}
+	},
+	"fraccao_iluminada": {
+		"cheia": 1.0,
+		"crescente": 0.5,
+		"minguante": 0.5,
+		"nova": 0.0
+	},
+	"o_que_muda_com_a_fase": [
+		"lua_idade",
+		"lua_fase",
+		"lua_iluminada",
+		"lua_terminador",
+		"lua_lado",
+		"lua_energia",
+		"cor_luz",
+		"sombra_forca",
+		"ressalto"
+	],
+	"os_28_dias": {
+		"colunas": [
+			"idade",
+			"fase",
+			"iluminada"
+		],
+		"dias": [
+			[
+				0,
+				"nova",
+				0.0
+			],
+			[
+				1,
+				"nova",
+				0.013
+			],
+			[
+				2,
+				"nova",
+				0.05
+			],
+			[
+				3,
+				"nova",
+				0.109
+			],
+			[
+				4,
+				"crescente",
+				0.188
+			],
+			[
+				5,
+				"crescente",
+				0.283
+			],
+			[
+				6,
+				"crescente",
+				0.389
+			],
+			[
+				7,
+				"crescente",
+				0.5
+			],
+			[
+				8,
+				"crescente",
+				0.611
+			],
+			[
+				9,
+				"crescente",
+				0.717
+			],
+			[
+				10,
+				"crescente",
+				0.812
+			],
+			[
+				11,
+				"cheia",
+				0.891
+			],
+			[
+				12,
+				"cheia",
+				0.95
+			],
+			[
+				13,
+				"cheia",
+				0.987
+			],
+			[
+				14,
+				"cheia",
+				1.0
+			],
+			[
+				15,
+				"cheia",
+				0.987
+			],
+			[
+				16,
+				"cheia",
+				0.95
+			],
+			[
+				17,
+				"cheia",
+				0.891
+			],
+			[
+				18,
+				"minguante",
+				0.812
+			],
+			[
+				19,
+				"minguante",
+				0.717
+			],
+			[
+				20,
+				"minguante",
+				0.611
+			],
+			[
+				21,
+				"minguante",
+				0.5
+			],
+			[
+				22,
+				"minguante",
+				0.389
+			],
+			[
+				23,
+				"minguante",
+				0.283
+			],
+			[
+				24,
+				"minguante",
+				0.188
+			],
+			[
+				25,
+				"nova",
+				0.109
+			],
+			[
+				26,
+				"nova",
+				0.05
+			],
+			[
+				27,
+				"nova",
+				0.013
+			]
+		]
+	},
+	"relogio_28_dias": {
+		"sinais": [
+			"minguante",
+			"nova",
+			"crescente",
+			"cheia",
+			"nova"
+		],
+		"viradas": [
+			[
+				1,
+				"12:31",
+				15.0
+			],
+			[
+				2,
+				"12:31",
+				16.0
+			],
+			[
+				3,
+				"12:31",
+				17.0
+			],
+			[
+				4,
+				"12:31",
+				18.0
+			],
+			[
+				5,
+				"12:31",
+				19.0
+			],
+			[
+				6,
+				"12:31",
+				20.0
+			],
+			[
+				7,
+				"12:31",
+				21.0
+			],
+			[
+				8,
+				"12:31",
+				22.0
+			],
+			[
+				9,
+				"12:31",
+				23.0
+			],
+			[
+				10,
+				"12:31",
+				24.0
+			],
+			[
+				11,
+				"12:31",
+				25.0
+			],
+			[
+				12,
+				"12:31",
+				26.0
+			],
+			[
+				13,
+				"12:31",
+				27.0
+			],
+			[
+				14,
+				"12:31",
+				0.0
+			],
+			[
+				15,
+				"12:31",
+				1.0
+			],
+			[
+				16,
+				"12:31",
+				2.0
+			],
+			[
+				17,
+				"12:31",
+				3.0
+			],
+			[
+				18,
+				"12:31",
+				4.0
+			],
+			[
+				19,
+				"12:31",
+				5.0
+			],
+			[
+				20,
+				"12:31",
+				6.0
+			],
+			[
+				21,
+				"12:31",
+				7.0
+			],
+			[
+				22,
+				"12:31",
+				8.0
+			],
+			[
+				23,
+				"12:31",
+				9.0
+			],
+			[
+				24,
+				"12:31",
+				10.0
+			],
+			[
+				25,
+				"12:31",
+				11.0
+			],
+			[
+				26,
+				"12:31",
+				12.0
+			],
+			[
+				27,
+				"12:31",
+				13.0
+			],
+			[
+				28,
+				"12:31",
+				14.0
+			]
+		]
+	},
+	"troca": {
+		"hora": "12:30",
+		"lua_elevacao": -52.0,
+		"sol_elevacao": 61.5
+	}
+}

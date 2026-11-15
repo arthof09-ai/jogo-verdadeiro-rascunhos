@@ -1,0 +1,120 @@
+{
+	"enquadramento": {
+		"az": -11.0,
+		"fov": 62.0,
+		"incl": 2.0,
+		"olhos_m": 2.3,
+		"x": 5.0,
+		"z": 27.0
+	},
+	"fases": [
+		{
+			"chamadas": 80,
+			"cor_luz": "081028",
+			"disco_claro_%": 0.0,
+			"fase": "nova",
+			"ficheiro": "c55_22h00_1-nova.jpg",
+			"fps_sem_vsync": 1266.2,
+			"hora": "22:00",
+			"idade_dias": 0.0,
+			"lua": [
+				128.7,
+				38.7
+			],
+			"lua_energia": 0.0,
+			"lua_iluminada": 0.0,
+			"luma_da_cena": {
+				"estourado_%": 0.0,
+				"media_0_255": 9.7,
+				"quase_preto_%": 47.87
+			},
+			"luz_da_lua_visivel": false,
+			"primitivas": 1197363,
+			"ressalto": 0.04,
+			"sombra_forca": 0.0
+		},
+		{
+			"chamadas": 80,
+			"cor_luz": "4c576f",
+			"disco_claro_%": 14.78,
+			"fase": "crescente",
+			"ficheiro": "c55_22h00_2-crescente.jpg",
+			"fps_sem_vsync": 1238.3,
+			"hora": "22:00",
+			"idade_dias": 7.0,
+			"lua": [
+				128.7,
+				38.7
+			],
+			"lua_energia": 0.18,
+			"lua_iluminada": 0.5,
+			"luma_da_cena": {
+				"estourado_%": 0.0,
+				"media_0_255": 25.2,
+				"quase_preto_%": 35.63
+			},
+			"luz_da_lua_visivel": true,
+			"primitivas": 1197363,
+			"ressalto": 0.112,
+			"sombra_forca": 0.62
+		},
+		{
+			"chamadas": 80,
+			"cor_luz": "6a7999",
+			"disco_claro_%": 30.26,
+			"fase": "cheia",
+			"ficheiro": "c55_22h00_3-cheia.jpg",
+			"fps_sem_vsync": 1235.5,
+			"hora": "22:00",
+			"idade_dias": 14.0,
+			"lua": [
+				128.7,
+				38.7
+			],
+			"lua_energia": 0.36,
+			"lua_iluminada": 1.0,
+			"luma_da_cena": {
+				"estourado_%": 0.0,
+				"media_0_255": 32.7,
+				"quase_preto_%": 33.87
+			},
+			"luz_da_lua_visivel": true,
+			"primitivas": 1197363,
+			"ressalto": 0.184,
+			"sombra_forca": 0.62
+		},
+		{
+			"chamadas": 80,
+			"cor_luz": "4c576f",
+			"disco_claro_%": 14.55,
+			"fase": "minguante",
+			"ficheiro": "c55_22h00_4-minguante.jpg",
+			"fps_sem_vsync": 1240.1,
+			"hora": "22:00",
+			"idade_dias": 21.0,
+			"lua": [
+				128.7,
+				38.7
+			],
+			"lua_energia": 0.18,
+			"lua_iluminada": 0.5,
+			"luma_da_cena": {
+				"estourado_%": 0.0,
+				"media_0_255": 25.2,
+				"quase_preto_%": 35.63
+			},
+			"luz_da_lua_visivel": true,
+			"primitivas": 1197363,
+			"ressalto": 0.112,
+			"sombra_forca": 0.62
+		}
+	],
+	"metodo": "gl_compatibility",
+	"motor": "4.7.2-stable (official)",
+	"nota": "a mesma hora (relógio parado), o mesmo enquadramento e o mesmo vento (parado depois de 6 s) nas 4: só muda a idade da lua. Luma e FPS medidos SÓ na cena (sem o painel nem os encaixes). disco_claro_% = píxeis claros no encaixe ampliado da lua.",
+	"placa": "NVIDIA GeForce RTX 4060",
+	"resolucao_da_prova": [
+		1920,
+		1080
+	]
+}

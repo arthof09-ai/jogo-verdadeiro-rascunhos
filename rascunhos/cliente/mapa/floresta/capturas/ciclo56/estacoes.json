@@ -1,0 +1,684 @@
+{
+	"ancora": {
+		"amplitude": 24.8246963326512,
+		"declinacao": 9.5,
+		"dia_de_referencia": 21.0,
+		"estacao": "primavera"
+	},
+	"ancora_ordem43": {
+		"diferencas": 0,
+		"minutos": 1440,
+		"referencia": "C:/Users/txcga/fable-ciclo/ref55/ciclo_dia_ordem43.gd",
+		"saidas": 40
+	},
+	"ancora_ordem55": {
+		"diferencas_na_cheia": 0,
+		"diferencas_outras_idades": 0,
+		"minutos": 1440,
+		"referencia": "C:/Users/txcga/fable-ciclo/o56/ciclo_dia_ordem55.gd",
+		"saidas": 45
+	},
+	"continuidade": {
+		"dia_de_referencia": {
+			"arrebol": 0.02928,
+			"ceu_luz": 0.01291,
+			"cor_arrebol": 0.0159,
+			"cor_baixo": 0.02871,
+			"cor_ceu": 0.01475,
+			"cor_clarao": 0.03922,
+			"cor_disco": 0.02941,
+			"cor_horizonte": 0.02252,
+			"cor_luz": 0.05573,
+			"cor_luz_sol": 0.01961,
+			"cor_meio": 0.01884,
+			"cor_sombra": 0.00704,
+			"cor_zenite": 0.01097,
+			"dir_lua": 0.00436,
+			"dir_luz": 0.21395,
+			"dir_sol": 0.0043,
+			"estrelas": 0.03101,
+			"lua_elevacao": 0.197,
+			"lua_energia": 0.02971,
+			"lua_idade": 0.0,
+			"lua_iluminada": 0.0,
+			"lua_lado": 0.0,
+			"lua_noite": 0.02605,
+			"lua_terminador": 0.0,
+			"lume": 0.05231,
+			"luz_elevacao": 12.28202,
+			"manha": 0.15625,
+			"nevoa_fim": 0.23911,
+			"nevoa_inicio": 0.15216,
+			"nevoa_tecto": 0.00076,
+			"noite": 0.03131,
+			"nuvem_luz": 0.02606,
+			"nuvem_sombra": 0.01744,
+			"peso_sol": 0.07145,
+			"ressalto": 0.02676,
+			"sol_elevacao": 0.197,
+			"sol_energia": 0.03299,
+			"sol_visivel": 0.08948,
+			"sombra_forca": 0.09696
+		},
+		"dias_acima_da_referencia": "0–20, 24, 60, 64–86, 110–111",
+		"nota": "maior passo por minuto do mundo de cada saída (a régua da Ordem 43: cores 0–1 pelo maior canal; direcções, distância de vectores unitários; números, a diferença), com o dia do ano congelado e a lua cheia.",
+		"o_ano_a_andar": {
+			"a_parte_do_ano_no_maior_minuto_em_fraccao_da_referencia": 0.00492,
+			"em": "sol_elevacao",
+			"em_quem": "cor_luz",
+			"maior_passo_do_ano_a_correr_em_fraccao_da_referencia": 1.0857
+		},
+		"o_maior_do_ano": {
+			"arrebol": 0.0307,
+			"ceu_luz": 0.01328,
+			"cor_arrebol": 0.01667,
+			"cor_baixo": 0.0301,
+			"cor_ceu": 0.01521,
+			"cor_clarao": 0.03922,
+			"cor_disco": 0.02941,
+			"cor_horizonte": 0.02361,
+			"cor_luz": 0.05959,
+			"cor_luz_sol": 0.01961,
+			"cor_meio": 0.01938,
+			"cor_sombra": 0.00738,
+			"cor_zenite": 0.01128,
+			"dir_lua": 0.00436,
+			"dir_luz": 0.2236,
+			"dir_sol": 0.00436,
+			"estrelas": 0.03282,
+			"lua_elevacao": 0.197,
+			"lua_energia": 0.02998,
+			"lua_idade": 0.0,
+			"lua_iluminada": 0.0,
+			"lua_lado": 0.0,
+			"lua_noite": 0.02686,
+			"lua_terminador": 0.0,
+			"lume": 0.05369,
+			"luz_elevacao": 12.79499,
+			"manha": 0.15625,
+			"nevoa_fim": 0.23911,
+			"nevoa_inicio": 0.15216,
+			"nevoa_tecto": 0.00076,
+			"noite": 0.03281,
+			"nuvem_luz": 0.02732,
+			"nuvem_sombra": 0.01794,
+			"peso_sol": 0.0738,
+			"ressalto": 0.02734,
+			"sol_elevacao": 0.19701,
+			"sol_energia": 0.03371,
+			"sol_visivel": 0.09219,
+			"sombra_forca": 0.09933
+		},
+		"pior_razao_por_estacao": {
+			"inverno": {
+				"arrebol": 1.001,
+				"cor_arrebol": 1.0142,
+				"cor_baixo": 1.001,
+				"cor_horizonte": 1.001,
+				"estrelas": 1.0193,
+				"noite": 1.0012,
+				"nuvem_luz": 1.001
+			},
+			"outono": {
+				"arrebol": 1.0484,
+				"ceu_luz": 1.0287,
+				"cor_arrebol": 1.0485,
+				"cor_baixo": 1.0484,
+				"cor_ceu": 1.0312,
+				"cor_horizonte": 1.0484,
+				"cor_luz": 1.0692,
+				"cor_meio": 1.0287,
+				"cor_sombra": 1.0473,
+				"cor_zenite": 1.0287,
+				"dir_luz": 1.0451,
+				"dir_sol": 1.0139,
+				"estrelas": 1.0582,
+				"lua_energia": 1.0088,
+				"lua_noite": 1.0311,
+				"lume": 1.0264,
+				"luz_elevacao": 1.0418,
+				"noite": 1.048,
+				"nuvem_luz": 1.0484,
+				"nuvem_sombra": 1.0287,
+				"peso_sol": 1.0329,
+				"ressalto": 1.0217,
+				"sol_energia": 1.0218,
+				"sol_visivel": 1.0302,
+				"sombra_forca": 1.0244
+			},
+			"primavera": {
+				"arrebol": 1.0484,
+				"ceu_luz": 1.0287,
+				"cor_arrebol": 1.0485,
+				"cor_baixo": 1.0484,
+				"cor_ceu": 1.0312,
+				"cor_horizonte": 1.0484,
+				"cor_luz": 1.0692,
+				"cor_meio": 1.0287,
+				"cor_sombra": 1.0473,
+				"cor_zenite": 1.0287,
+				"dir_luz": 1.0451,
+				"dir_sol": 1.0139,
+				"estrelas": 1.0582,
+				"lua_energia": 1.0088,
+				"lua_noite": 1.0311,
+				"lume": 1.0264,
+				"luz_elevacao": 1.0418,
+				"noite": 1.048,
+				"nuvem_luz": 1.0484,
+				"nuvem_sombra": 1.0287,
+				"peso_sol": 1.0329,
+				"ressalto": 1.0217,
+				"sol_energia": 1.0218,
+				"sol_visivel": 1.0302,
+				"sombra_forca": 1.0244
+			}
+		},
+		"pior_razao_por_saida": {
+			"arrebol": [
+				1.0484,
+				72
+			],
+			"ceu_luz": [
+				1.0287,
+				12
+			],
+			"cor_arrebol": [
+				1.0485,
+				12
+			],
+			"cor_baixo": [
+				1.0484,
+				72
+			],
+			"cor_ceu": [
+				1.0312,
+				13
+			],
+			"cor_horizonte": [
+				1.0484,
+				72
+			],
+			"cor_luz": [
+				1.0692,
+				71
+			],
+			"cor_meio": [
+				1.0287,
+				12
+			],
+			"cor_sombra": [
+				1.0473,
+				11
+			],
+			"cor_zenite": [
+				1.0287,
+				12
+			],
+			"dir_luz": [
+				1.0451,
+				72
+			],
+			"dir_sol": [
+				1.0139,
+				70
+			],
+			"estrelas": [
+				1.0582,
+				74
+			],
+			"lua_energia": [
+				1.0088,
+				64
+			],
+			"lua_noite": [
+				1.0311,
+				13
+			],
+			"lume": [
+				1.0264,
+				14
+			],
+			"luz_elevacao": [
+				1.0418,
+				13
+			],
+			"noite": [
+				1.048,
+				11
+			],
+			"nuvem_luz": [
+				1.0484,
+				72
+			],
+			"nuvem_sombra": [
+				1.0287,
+				12
+			],
+			"peso_sol": [
+				1.0329,
+				72
+			],
+			"ressalto": [
+				1.0217,
+				14
+			],
+			"sol_energia": [
+				1.0218,
+				70
+			],
+			"sol_visivel": [
+				1.0302,
+				72
+			],
+			"sombra_forca": [
+				1.0244,
+				71
+			]
+		}
+	},
+	"duracao_do_dia": {
+		"maior_variacao_de_um_dia_para_o_seguinte_h": 0.1451,
+		"mais_curto": [
+			98.0,
+			9.17506373079666
+		],
+		"mais_longo": [
+			42.0,
+			14.8249362692033
+		],
+		"meios": {
+			"inverno": 9.17506373079666,
+			"outono": 12.0,
+			"primavera": 12.0,
+			"verão": 14.8249362692033
+		}
+	},
+	"estacoes": {
+		"inverno (dia 105)": {
+			"declinacao": -22.935,
+			"duracao_do_dia_h": 9.426,
+			"estacao": "inverno",
+			"minutos_de_sol_contados": 566,
+			"nasce": "07:47",
+			"nasce_azimute": 119.6,
+			"poe_se": "17:13",
+			"poe_se_azimute": 240.4,
+			"sol_ao_meio_dia_elev": 29.1,
+			"sol_as_18h_elev": -8.3
+		},
+		"inverno (dia 98)": {
+			"declinacao": -24.825,
+			"duracao_do_dia_h": 9.175,
+			"estacao": "inverno",
+			"minutos_de_sol_contados": 550,
+			"nasce": "07:55",
+			"nasce_azimute": 122.2,
+			"poe_se": "17:05",
+			"poe_se_azimute": 237.8,
+			"sol_ao_meio_dia_elev": 27.2,
+			"sol_as_18h_elev": -9.5
+		},
+		"outono (dia 70)": {
+			"declinacao": 0.0,
+			"duracao_do_dia_h": 12.0,
+			"estacao": "outono",
+			"minutos_de_sol_contados": 720,
+			"nasce": "06:30",
+			"nasce_azimute": 90.0,
+			"poe_se": "18:30",
+			"poe_se_azimute": 270.0,
+			"sol_ao_meio_dia_elev": 52.0,
+			"sol_as_18h_elev": 5.9
+		},
+		"outono (dia 77)": {
+			"declinacao": -9.5,
+			"duracao_do_dia_h": 10.998,
+			"estacao": "outono",
+			"minutos_de_sol_contados": 660,
+			"nasce": "07:00",
+			"nasce_azimute": 102.1,
+			"poe_se": "18:00",
+			"poe_se_azimute": 257.9,
+			"sol_ao_meio_dia_elev": 42.5,
+			"sol_as_18h_elev": 0.0
+		},
+		"primavera (dia 14)": {
+			"declinacao": 0.0,
+			"duracao_do_dia_h": 12.0,
+			"estacao": "primavera",
+			"minutos_de_sol_contados": 720,
+			"nasce": "06:30",
+			"nasce_azimute": 90.0,
+			"poe_se": "18:30",
+			"poe_se_azimute": 270.0,
+			"sol_ao_meio_dia_elev": 52.0,
+			"sol_as_18h_elev": 5.9
+		},
+		"primavera (dia 21)": {
+			"declinacao": 9.5,
+			"duracao_do_dia_h": 13.002,
+			"estacao": "primavera",
+			"minutos_de_sol_contados": 780,
+			"nasce": "06:00",
+			"nasce_azimute": 77.9,
+			"poe_se": "19:00",
+			"poe_se_azimute": 282.1,
+			"sol_ao_meio_dia_elev": 61.5,
+			"sol_as_18h_elev": 11.7
+		},
+		"verão (dia 42)": {
+			"declinacao": 24.825,
+			"duracao_do_dia_h": 14.825,
+			"estacao": "verão",
+			"minutos_de_sol_contados": 890,
+			"nasce": "05:05",
+			"nasce_azimute": 57.8,
+			"poe_se": "19:55",
+			"poe_se_azimute": 302.2,
+			"sol_ao_meio_dia_elev": 76.8,
+			"sol_as_18h_elev": 20.6
+		},
+		"verão (dia 49)": {
+			"declinacao": 22.935,
+			"duracao_do_dia_h": 14.574,
+			"estacao": "verão",
+			"minutos_de_sol_contados": 874,
+			"nasce": "05:13",
+			"nasce_azimute": 60.4,
+			"poe_se": "19:47",
+			"poe_se_azimute": 299.6,
+			"sol_ao_meio_dia_elev": 74.9,
+			"sol_as_18h_elev": 19.6
+		}
+	},
+	"o_que_muda_com_o_ano": [
+		"sol_azimute",
+		"sol_elevacao",
+		"dir_sol",
+		"ano_dia",
+		"sol_declinacao",
+		"dia_duracao",
+		"estacao",
+		"cor_zenite",
+		"cor_meio",
+		"cor_baixo",
+		"cor_horizonte",
+		"cor_arrebol",
+		"arrebol",
+		"nuvem_luz",
+		"nuvem_sombra",
+		"ceu_luz",
+		"cor_sombra",
+		"cor_ceu",
+		"ressalto",
+		"estrelas",
+		"noite",
+		"sombra_forca",
+		"lua_noite",
+		"lua_energia",
+		"cor_luz",
+		"peso_sol",
+		"dir_luz",
+		"luz_azimute",
+		"luz_elevacao",
+		"cor_disco",
+		"cor_clarao",
+		"sol_visivel",
+		"cor_luz_sol",
+		"lume",
+		"luz_e_sol",
+		"sol_energia"
+	],
+	"o_sol_por_estacao": {
+		"inverno (dia 105)": {
+			"12:30": {
+				"cor_luz": "ffe6b4",
+				"cor_luz_sol": "ffe6b4",
+				"fase": "tarde",
+				"lume": 0.0,
+				"sol_elev": 29.1,
+				"sol_energia": 0.999
+			},
+			"16:15": {
+				"cor_luz": "dfa669",
+				"cor_luz_sol": "ffbe79",
+				"fase": "tarde",
+				"lume": 0.0,
+				"sol_elev": 9.4,
+				"sol_energia": 0.738
+			},
+			"18:00": {
+				"cor_luz": "131733",
+				"cor_luz_sol": "ff6a30",
+				"fase": "noite",
+				"lume": 1.0,
+				"sol_elev": -8.3,
+				"sol_energia": 0.0
+			}
+		},
+		"inverno (dia 98)": {
+			"12:30": {
+				"cor_luz": "fee4b1",
+				"cor_luz_sol": "ffe5b2",
+				"fase": "tarde",
+				"lume": 0.0,
+				"sol_elev": 27.2,
+				"sol_energia": 0.988
+			},
+			"16:15": {
+				"cor_luz": "d99a5c",
+				"cor_luz_sol": "ffb66d",
+				"fase": "tarde",
+				"lume": 0.0,
+				"sol_elev": 8.0,
+				"sol_energia": 0.691
+			},
+			"18:00": {
+				"cor_luz": "111632",
+				"cor_luz_sol": "ff6a30",
+				"fase": "noite",
+				"lume": 1.0,
+				"sol_elev": -9.5,
+				"sol_energia": 0.0
+			}
+		},
+		"outono (dia 70)": {
+			"12:30": {
+				"cor_luz": "f4e7cd",
+				"cor_luz_sol": "fff2d7",
+				"fase": "dia",
+				"lume": 0.0,
+				"sol_elev": 52.0,
+				"sol_energia": 0.904
+			},
+			"16:15": {
+				"cor_luz": "fce1ad",
+				"cor_luz_sol": "ffe3af",
+				"fase": "tarde",
+				"lume": 0.0,
+				"sol_elev": 26.0,
+				"sol_energia": 0.978
+			},
+			"18:00": {
+				"cor_luz": "d4925b",
+				"cor_luz_sol": "ffb066",
+				"fase": "entardecer",
+				"lume": 0.0,
+				"sol_elev": 5.9,
+				"sol_energia": 0.66
+			}
+		},
+		"outono (dia 77)": {
+			"12:30": {
+				"cor_luz": "f8e4be",
+				"cor_luz_sol": "ffebc4",
+				"fase": "dia",
+				"lume": 0.0,
+				"sol_elev": 42.5,
+				"sol_energia": 0.935
+			},
+			"16:15": {
+				"cor_luz": "f3cf96",
+				"cor_luz_sol": "ffd99e",
+				"fase": "tarde",
+				"lume": 0.0,
+				"sol_elev": 19.3,
+				"sol_energia": 0.896
+			},
+			"18:00": {
+				"cor_luz": "6e3452",
+				"cor_luz_sol": "ff8038",
+				"fase": "entardecer",
+				"lume": 0.185,
+				"sol_elev": 0.0,
+				"sol_energia": 0.156
+			}
+		},
+		"primavera (dia 14)": {
+			"12:30": {
+				"cor_luz": "f4e7cd",
+				"cor_luz_sol": "fff2d7",
+				"fase": "dia",
+				"lume": 0.0,
+				"sol_elev": 52.0,
+				"sol_energia": 0.904
+			},
+			"16:15": {
+				"cor_luz": "fce1ad",
+				"cor_luz_sol": "ffe3af",
+				"fase": "tarde",
+				"lume": 0.0,
+				"sol_elev": 26.0,
+				"sol_energia": 0.978
+			},
+			"18:00": {
+				"cor_luz": "d4925b",
+				"cor_luz_sol": "ffb066",
+				"fase": "entardecer",
+				"lume": 0.0,
+				"sol_elev": 5.9,
+				"sol_energia": 0.66
+			}
+		},
+		"primavera (dia 21)": {
+			"12:30": {
+				"cor_luz": "efe4d0",
+				"cor_luz_sol": "fff4de",
+				"fase": "dia",
+				"lume": 0.0,
+				"sol_elev": 61.5,
+				"sol_energia": 0.86
+			},
+			"16:15": {
+				"cor_luz": "ffe6b4",
+				"cor_luz_sol": "ffe6b5",
+				"fase": "dia",
+				"lume": 0.0,
+				"sol_elev": 32.2,
+				"sol_energia": 0.996
+			},
+			"18:00": {
+				"cor_luz": "eabc80",
+				"cor_luz_sol": "ffce8c",
+				"fase": "tarde",
+				"lume": 0.0,
+				"sol_elev": 11.7,
+				"sol_energia": 0.82
+			}
+		},
+		"verão (dia 42)": {
+			"12:30": {
+				"cor_luz": "efe4d0",
+				"cor_luz_sol": "fff4de",
+				"fase": "dia",
+				"lume": 0.0,
+				"sol_elev": 76.8,
+				"sol_energia": 0.86
+			},
+			"16:15": {
+				"cor_luz": "f8e4bc",
+				"cor_luz_sol": "ffeac1",
+				"fase": "dia",
+				"lume": 0.0,
+				"sol_elev": 41.0,
+				"sol_energia": 0.942
+			},
+			"18:00": {
+				"cor_luz": "f5d29a",
+				"cor_luz_sol": "ffdba1",
+				"fase": "tarde",
+				"lume": 0.0,
+				"sol_elev": 20.6,
+				"sol_energia": 0.912
+			}
+		},
+		"verão (dia 49)": {
+			"12:30": {
+				"cor_luz": "efe4d0",
+				"cor_luz_sol": "fff4de",
+				"fase": "dia",
+				"lume": 0.0,
+				"sol_elev": 74.9,
+				"sol_energia": 0.86
+			},
+			"16:15": {
+				"cor_luz": "f9e4ba",
+				"cor_luz_sol": "ffeabf",
+				"fase": "dia",
+				"lume": 0.0,
+				"sol_elev": 40.0,
+				"sol_energia": 0.948
+			},
+			"18:00": {
+				"cor_luz": "f3d097",
+				"cor_luz_sol": "ffda9e",
+				"fase": "tarde",
+				"lume": 0.0,
+				"sol_elev": 19.6,
+				"sol_energia": 0.899
+			}
+		}
+	},
+	"relogio_um_ano": {
+		"dia_do_ano_no_fim": 21.0000000001632,
+		"excesso_na_virada_por_virada": [
+			0.0,
+			0.0,
+			0.0,
+			0.0
+		],
+		"sinais": [
+			"verão",
+			"outono",
+			"inverno",
+			"primavera"
+		],
+		"viradas": [
+			[
+				7,
+				"16:15",
+				28.0,
+				"verão"
+			],
+			[
+				35,
+				"16:16",
+				56.0007,
+				"outono"
+			],
+			[
+				63,
+				"16:16",
+				84.0007,
+				"inverno"
+			],
+			[
+				91,
+				"16:15",
+				0.0,
+				"primavera"
+			]
+		]
+	}
+}

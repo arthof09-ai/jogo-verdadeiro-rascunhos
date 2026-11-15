@@ -41,7 +41,9 @@ class _RefNo:
 		caminho = c
 
 
-## Um valor de fora do mapa (o Ambiente, o Sol, a Câmara da arena): o mapa vestido fica com o seu.
+## Um valor de fora do mapa (o Ambiente, o Sol, a Câmara da arena): o mapa vestido fica com o seu. (Ordem 57) Também
+## os nós do próprio mapa que a construção NÃO pendurou nas raízes guardadas (a Lua de _montar_ambiente, o relógio
+## do mundo, o vento, o forno das sombras): nascem de novo em cada mapa, nos dois caminhos — o vestido fica com os seus.
 class _Fora:
 	extends RefCounted
 
@@ -64,6 +66,7 @@ class _Molde:
 class _Copia:
 	extends RefCounted
 	var mapa: Node                    # o mapa de onde (guardar) ou para onde (vestir) se copia
+	var raizes: Array[Node] = []      # (ao guardar) as raízes que o molde leva: só os nós debaixo delas são do molde
 	var a_guardar := true
 	var molde: _Molde
 	var feitos: Dictionary = {}        # objecto de origem -> cópia
@@ -105,7 +108,7 @@ class _Copia:
 		if o is Node:
 			if a_guardar:
 				var n := o as Node
-				if n == mapa or mapa.is_ancestor_of(n):
+				if n == mapa or _nas_raizes(n):
 					return _RefNo.new(mapa.get_path_to(n))
 				return _Fora.new()
 			return o  # (ao vestir, os nós já vêm resolvidos)
@@ -132,6 +135,12 @@ class _Copia:
 				novo.set(nome, valor(o.get(nome)))
 			return novo
 		return o  # malhas, texturas, formas, shaders: não mudam depois de construídos — partilham-se
+
+	func _nas_raizes(n: Node) -> bool:
+		for r in raizes:
+			if n == r or r.is_ancestor_of(n):
+				return true
+		return false
 
 	## A MultiMesh: o mesmo formato, a mesma malha, o mesmo número de instâncias, os mesmos dados (pelo buffer).
 	## A do molde fica VAZIA (sem instâncias: não ocupa a placa); os números e os dados ficam em molde.dados_mm.
@@ -183,6 +192,7 @@ static func guardar(mapa: Node, raizes: Array[Node], c: String) -> void:
 	var cp := _Copia.new()
 	cp.mapa = mapa
 	cp.molde = m
+	cp.raizes = raizes
 	for raiz in raizes:
 		var d := raiz.duplicate(Node.DUPLICATE_GROUPS | Node.DUPLICATE_SCRIPTS)
 		var auto: Array[int] = []

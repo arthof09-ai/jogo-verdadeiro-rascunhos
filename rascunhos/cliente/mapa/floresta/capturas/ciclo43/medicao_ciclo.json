@@ -1,0 +1,435 @@
+{
+	"enquadramento": {
+		"az": -11.0,
+		"fov": 62.0,
+		"incl": 2.0,
+		"olhos_m": 2.3,
+		"x": 5.0,
+		"z": 27.0
+	},
+	"horas": [
+		{
+			"ceu_luz": 0.402,
+			"chamadas": 80,
+			"chamadas_servidor": 81,
+			"chamadas_sombras_lua": 0,
+			"fase": "madrugada",
+			"ficheiro": "c43_05h30_madrugada.jpg",
+			"forno_pinturas_em_2s": 12,
+			"fps_sem_vsync": 1154.4,
+			"hora": "05:30",
+			"lua": [
+				-99.4,
+				11.8
+			],
+			"lua_energia": 0.394,
+			"luma": {
+				"estourado_%": 0.32,
+				"media_0_255": 38.7,
+				"quase_preto_%": 10.17
+			},
+			"lume": 1.0,
+			"luz_de": "lua",
+			"nevoa": [
+				29.0,
+				123.2,
+				0.912
+			],
+			"primitivas": 1197363,
+			"sol": [
+				73.2,
+				-5.7
+			],
+			"sol_energia": 0.0,
+			"vento_de": "E",
+			"vento_kmh": 5.0
+		},
+		{
+			"ceu_luz": 0.924,
+			"chamadas": 80,
+			"chamadas_servidor": 81,
+			"chamadas_sombras_lua": 0,
+			"fase": "manhã",
+			"ficheiro": "c43_07h00_manha.jpg",
+			"forno_pinturas_em_2s": 12,
+			"fps_sem_vsync": 1242.2,
+			"hora": "07:00",
+			"lua": [
+				-85.4,
+				-5.9
+			],
+			"lua_energia": 0.0,
+			"luma": {
+				"estourado_%": 0.3,
+				"media_0_255": 75.3,
+				"quase_preto_%": 0.27
+			},
+			"lume": 0.0,
+			"luz_de": "sol",
+			"nevoa": [
+				29.9,
+				124.1,
+				0.91
+			],
+			"primitivas": 1197363,
+			"sol": [
+				87.0,
+				11.7
+			],
+			"sol_energia": 0.82,
+			"vento_de": "SE",
+			"vento_kmh": 6.7
+		},
+		{
+			"ceu_luz": 1.0,
+			"chamadas": 80,
+			"chamadas_servidor": 81,
+			"chamadas_sombras_lua": 0,
+			"fase": "dia",
+			"ficheiro": "c43_10h00_dia.jpg",
+			"forno_pinturas_em_2s": 12,
+			"fps_sem_vsync": 1252.2,
+			"hora": "10:00",
+			"lua": [
+				-51.3,
+				-38.7
+			],
+			"lua_energia": 0.0,
+			"luma": {
+				"estourado_%": 0.29,
+				"media_0_255": 119.5,
+				"quase_preto_%": 0.26
+			},
+			"lume": 0.0,
+			"luz_de": "sol",
+			"nevoa": [
+				45.2,
+				146.5,
+				0.821
+			],
+			"primitivas": 1197363,
+			"sol": [
+				120.4,
+				45.9
+			],
+			"sol_energia": 0.929,
+			"vento_de": "SSO",
+			"vento_kmh": 15.3
+		},
+		{
+			"ceu_luz": 1.0,
+			"chamadas": 80,
+			"chamadas_servidor": 81,
+			"chamadas_sombras_lua": 0,
+			"fase": "dia",
+			"ficheiro": "c43_13h00_dia.jpg",
+			"forno_pinturas_em_2s": 12,
+			"fps_sem_vsync": 1258.5,
+			"hora": "13:00",
+			"lua": [
+				12.1,
+				-51.4
+			],
+			"lua_energia": 0.0,
+			"luma": {
+				"estourado_%": 0.28,
+				"media_0_255": 122.7,
+				"quase_preto_%": 0.29
+			},
+			"lume": 0.0,
+			"luz_de": "sol",
+			"nevoa": [
+				48.0,
+				150.0,
+				0.8
+			],
+			"primitivas": 1197363,
+			"sol": [
+				-164.7,
+				60.7
+			],
+			"sol_energia": 0.861,
+			"vento_de": "OSO",
+			"vento_kmh": 27.5
+		},
+		{
+			"ceu_luz": 1.0,
+			"chamadas": 80,
+			"chamadas_servidor": 81,
+			"chamadas_sombras_lua": 0,
+			"fase": "dia",
+			"ficheiro": "c43_16h00_dia.jpg",
+			"forno_pinturas_em_2s": 12,
+			"fps_sem_vsync": 1262.6,
+			"hora": "16:00",
+			"lua": [
+				64.7,
+				-28.7
+			],
+			"lua_energia": 0.0,
+			"luma": {
+				"estourado_%": 0.28,
+				"media_0_255": 100.6,
+				"quase_preto_%": 0.32
+			},
+			"lume": 0.0,
+			"luz_de": "sol",
+			"nevoa": [
+				48.0,
+				150.0,
+				0.8
+			],
+			"primitivas": 1197363,
+			"sol": [
+				-107.0,
+				35.1
+			],
+			"sol_energia": 0.981,
+			"vento_de": "ONO",
+			"vento_kmh": 23.4
+		},
+		{
+			"ceu_luz": 0.82,
+			"chamadas": 80,
+			"chamadas_servidor": 81,
+			"chamadas_sombras_lua": 0,
+			"fase": "entardecer",
+			"ficheiro": "c43_18h30_entardecer.jpg",
+			"forno_pinturas_em_2s": 12,
+			"fps_sem_vsync": 1270.5,
+			"hora": "18:30",
+			"lua": [
+				90.0,
+				0.0
+			],
+			"lua_energia": 0.0,
+			"luma": {
+				"estourado_%": 0.32,
+				"media_0_255": 61.8,
+				"quase_preto_%": 0.37
+			},
+			"lume": 0.0,
+			"luz_de": "sol",
+			"nevoa": [
+				44.0,
+				145.0,
+				0.825
+			],
+			"primitivas": 1197363,
+			"sol": [
+				-82.5,
+				5.8
+			],
+			"sol_energia": 0.659,
+			"vento_de": "NNO",
+			"vento_kmh": 26.1
+		},
+		{
+			"ceu_luz": 0.304,
+			"chamadas": 80,
+			"chamadas_servidor": 81,
+			"chamadas_sombras_lua": 0,
+			"fase": "noite",
+			"ficheiro": "c43_19h45_noite.jpg",
+			"forno_pinturas_em_2s": 12,
+			"fps_sem_vsync": 1224.5,
+			"hora": "19:45",
+			"lua": [
+				101.8,
+				14.7
+			],
+			"lua_energia": 0.467,
+			"luma": {
+				"estourado_%": 0.28,
+				"media_0_255": 24.7,
+				"quase_preto_%": 28.1
+			},
+			"lume": 1.0,
+			"luz_de": "lua",
+			"nevoa": [
+				39.9,
+				140.0,
+				0.85
+			],
+			"primitivas": 1197363,
+			"sol": [
+				-70.8,
+				-8.5
+			],
+			"sol_energia": 0.0,
+			"vento_de": "NNO",
+			"vento_kmh": 9.4
+		},
+		{
+			"ceu_luz": 0.2,
+			"chamadas": 80,
+			"chamadas_servidor": 81,
+			"chamadas_sombras_lua": 0,
+			"fase": "noite",
+			"ficheiro": "c43_22h00_noite.jpg",
+			"forno_pinturas_em_2s": 12,
+			"fps_sem_vsync": 1223.2,
+			"hora": "22:00",
+			"lua": [
+				128.7,
+				38.7
+			],
+			"lua_energia": 0.36,
+			"luma": {
+				"estourado_%": 0.29,
+				"media_0_255": 35.1,
+				"quase_preto_%": 33.08
+			},
+			"lume": 1.0,
+			"luz_de": "lua",
+			"nevoa": [
+				38.0,
+				140.0,
+				0.86
+			],
+			"primitivas": 1197363,
+			"sol": [
+				-44.5,
+				-31.0
+			],
+			"sol_energia": 0.0,
+			"vento_de": "N",
+			"vento_kmh": 10.8
+		},
+		{
+			"ceu_luz": 0.2,
+			"chamadas": 80,
+			"chamadas_servidor": 81,
+			"chamadas_sombras_lua": 0,
+			"fase": "noite",
+			"ficheiro": "c43_01h00_noite.jpg",
+			"forno_pinturas_em_2s": 12,
+			"fps_sem_vsync": 1181.8,
+			"hora": "01:00",
+			"lua": [
+				-167.9,
+				51.4
+			],
+			"lua_energia": 0.36,
+			"luma": {
+				"estourado_%": 0.28,
+				"media_0_255": 38.8,
+				"quase_preto_%": 34.51
+			},
+			"lume": 1.0,
+			"luz_de": "lua",
+			"nevoa": [
+				37.5,
+				139.0,
+				0.863
+			],
+			"primitivas": 1197363,
+			"sol": [
+				10.0,
+				-42.0
+			],
+			"sol_energia": 0.0,
+			"vento_de": "NE",
+			"vento_kmh": 9.7
+		},
+		{
+			"ceu_luz": 0.2,
+			"chamadas": 80,
+			"chamadas_servidor": 81,
+			"chamadas_sombras_lua": 0,
+			"fase": "noite",
+			"ficheiro": "c43_04h00_noite.jpg",
+			"forno_pinturas_em_2s": 12,
+			"fps_sem_vsync": 1183.6,
+			"hora": "04:00",
+			"lua": [
+				-115.3,
+				28.7
+			],
+			"lua_energia": 0.378,
+			"luma": {
+				"estourado_%": 0.28,
+				"media_0_255": 28.8,
+				"quase_preto_%": 36.55
+			},
+			"lume": 1.0,
+			"luz_de": "lua",
+			"nevoa": [
+				34.1,
+				132.3,
+				0.879
+			],
+			"primitivas": 1197363,
+			"sol": [
+				57.4,
+				-21.8
+			],
+			"sol_energia": 0.0,
+			"vento_de": "ENE",
+			"vento_kmh": 7.0
+		}
+	],
+	"medidas_da_cena": {
+		"agua_tri": 540,
+		"ancestral_altura_m": 260.0,
+		"ancestral_cimo_medido_m": 259.8,
+		"ancestral_dist_m": 580.0,
+		"ancestral_largura_medida_m": 412.3,
+		"ancestral_outeiro_tri": 22820,
+		"ancestral_pagodes": 42,
+		"ancestral_pagodes_no_ar": 0,
+		"ancestral_partes": {
+			"construcao": 15368,
+			"folha": 57720,
+			"luz": 2160,
+			"madeira": 17069
+		},
+		"ancestral_tri": 92317,
+		"anel_arvores": 720,
+		"anel_longe_tri": 6912,
+		"anel_tri": 167624,
+		"arvores_arena": 24,
+		"arvores_orla": 244,
+		"arvores_tri": 227744,
+		"carga_ms": 1520,
+		"casas": 2500,
+		"casas_bloqueadas": 208,
+		"casas_livres": 2292,
+		"casas_livres_isoladas": 0,
+		"centro_livre": true,
+		"erros": 0,
+		"estrato_arbustos": 96,
+		"estrato_fetos": 240,
+		"estrato_folhaslargas": 210,
+		"estrato_silvados": 44,
+		"estrato_tri": 166528,
+		"hastes_espiga": 1408,
+		"hastes_flor": 883,
+		"hastes_junco": 85,
+		"hastes_tri": 42222,
+		"mapa_chao_cozeduras": 1,
+		"marcos_tri": 2116,
+		"relva_blocos": 50,
+		"relva_tri": 802620,
+		"relva_tufos": 44590,
+		"rochas": 118,
+		"rochas_tri": 23520,
+		"sombra_lancadores": 2068,
+		"terreno_fino_tri": 25088,
+		"terreno_largo_tri": 12376
+	},
+	"metodo": "gl_compatibility",
+	"modo_prova_3s": {
+		"forno_pinturas": 263,
+		"fps_sem_vsync": 1213.8,
+		"hora_inicial": "15:00",
+		"quadros": 3642
+	},
+	"motor": "4.7.2-stable (official)",
+	"nota": "FPS e chamadas medidos SÓ na cena (sem o encaixe do céu nem o painel), com o relógio a andar ao ritmo do jogo (dia de 24 min)",
+	"placa": "NVIDIA GeForce RTX 4060",
+	"resolucao_da_prova": [
+		1920,
+		1080
+	]
+}

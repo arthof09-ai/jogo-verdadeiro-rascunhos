@@ -1,0 +1,140 @@
+{
+	"enquadramento": {
+		"az": -11.0,
+		"fov": 62.0,
+		"incl": 2.0,
+		"olhos_m": 2.3,
+		"x": 5.0,
+		"z": 27.0
+	},
+	"estacoes": [
+		{
+			"ceu_luz": 0.9243,
+			"chamadas": 80,
+			"cor_luz": "eabc80",
+			"cor_luz_sol": "ffce8c",
+			"declinacao": 9.5,
+			"dia_do_ano": 21.0,
+			"duracao_do_dia_h": 13.002,
+			"estacao": "primavera",
+			"fase_do_dia": "tarde",
+			"ficheiro": "c56_18h00_1-primavera.jpg",
+			"fps_sem_vsync": 1271.8,
+			"hora": "18:00",
+			"lua_energia": 0.0,
+			"luma_da_cena": {
+				"estourado_%": 0.0,
+				"media_0_255": 72.3,
+				"quase_preto_%": 0.0
+			},
+			"lume": 0.0,
+			"nasce": "06:00",
+			"poe_se": "19:00",
+			"primitivas": 1197363,
+			"sol": [
+				273.0,
+				11.7
+			],
+			"sol_ao_meio_dia_elev": 61.5,
+			"sol_energia": 0.8204
+		},
+		{
+			"ceu_luz": 0.9639,
+			"chamadas": 80,
+			"cor_luz": "f3d097",
+			"cor_luz_sol": "ffda9e",
+			"declinacao": 22.935,
+			"dia_do_ano": 49.0,
+			"duracao_do_dia_h": 14.574,
+			"estacao": "verão",
+			"fase_do_dia": "tarde",
+			"ficheiro": "c56_18h00_2-verao.jpg",
+			"fps_sem_vsync": 1283.1,
+			"hora": "18:00",
+			"lua_energia": 0.0,
+			"luma_da_cena": {
+				"estourado_%": 0.0,
+				"media_0_255": 86.5,
+				"quase_preto_%": 0.0
+			},
+			"lume": 0.0,
+			"nasce": "05:13",
+			"poe_se": "19:47",
+			"primitivas": 1197363,
+			"sol": [
+				284.3,
+				19.6
+			],
+			"sol_ao_meio_dia_elev": 74.9,
+			"sol_energia": 0.8989
+		},
+		{
+			"ceu_luz": 0.62,
+			"chamadas": 80,
+			"cor_luz": "6e3452",
+			"cor_luz_sol": "ff8038",
+			"declinacao": -9.5,
+			"dia_do_ano": 77.0,
+			"duracao_do_dia_h": 10.998,
+			"estacao": "outono",
+			"fase_do_dia": "entardecer",
+			"ficheiro": "c56_18h00_3-outono.jpg",
+			"fps_sem_vsync": 1285.4,
+			"hora": "18:00",
+			"lua_energia": 0.0,
+			"luma_da_cena": {
+				"estourado_%": 0.0,
+				"media_0_255": 51.8,
+				"quase_preto_%": 1.23
+			},
+			"lume": 0.185,
+			"nasce": "07:00",
+			"poe_se": "18:00",
+			"primitivas": 1197363,
+			"sol": [
+				257.9,
+				0.0
+			],
+			"sol_ao_meio_dia_elev": 42.5,
+			"sol_energia": 0.1558
+		},
+		{
+			"ceu_luz": 0.3065,
+			"chamadas": 80,
+			"cor_luz": "131733",
+			"cor_luz_sol": "ff6a30",
+			"declinacao": -22.935,
+			"dia_do_ano": 105.0,
+			"duracao_do_dia_h": 9.426,
+			"estacao": "inverno",
+			"fase_do_dia": "noite",
+			"ficheiro": "c56_18h00_4-inverno.jpg",
+			"fps_sem_vsync": 1281.5,
+			"hora": "18:00",
+			"lua_energia": 0.0,
+			"luma_da_cena": {
+				"estourado_%": 0.0,
+				"media_0_255": 12.6,
+				"quase_preto_%": 39.43
+			},
+			"lume": 1.0,
+			"nasce": "07:47",
+			"poe_se": "17:13",
+			"primitivas": 1197363,
+			"sol": [
+				247.3,
+				-8.3
+			],
+			"sol_ao_meio_dia_elev": 29.1,
+			"sol_energia": 0.0
+		}
+	],
+	"metodo": "gl_compatibility",
+	"motor": "4.7.2-stable (official)",
+	"nota": "a mesma hora (relógio parado), a lua cheia, o mesmo enquadramento e o mesmo vento (parado depois de 6 s) nas 4: só muda o dia do ano (o 21.º de cada estação). Luma e FPS medidos SÓ na cena (sem o painel nem o encaixe).",
+	"placa": "NVIDIA GeForce RTX 4060",
+	"resolucao_da_prova": [
+		1920,
+		1080
+	]
+}

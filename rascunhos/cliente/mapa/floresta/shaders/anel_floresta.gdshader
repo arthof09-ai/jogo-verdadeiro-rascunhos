@@ -9,12 +9,12 @@ shader_type spatial;
 render_mode unshaded, cull_back, world_vertex_coords;
 
 #include "luz_floresta.gdshaderinc"
+#include "vento_floresta.gdshaderinc"
 
 uniform vec3 cor_ouro : source_color = vec3(0.66, 0.61, 0.34);
 uniform vec3 cor_musgo : source_color = vec3(0.37, 0.45, 0.27);
-uniform vec2 vento_dir = vec2(0.86, 0.51);
-uniform float vento_forca : hint_range(0.0, 1.5) = 0.20;
-uniform float vento_vel : hint_range(0.0, 4.0) = 1.0;
+// Ordem 43: o vento é o do MUNDO (vento_floresta.gdshaderinc).
+uniform float vento_amplitude : hint_range(0.0, 1.5) = 0.20;
 
 varying vec3 v_pos;
 varying vec3 v_n;
@@ -23,11 +23,11 @@ varying float v_tronco;
 void vertex() {
 	v_tronco = step(1.5, UV.x);
 	float peso = UV.y * (1.0 - v_tronco);
-	vec2 dv = normalize(vento_dir);
-	float t = TIME * vento_vel;
+	vec2 dv = vento_dir;
+	float empurra = vento_dobra(vento_local(VERTEX.xz)) * 2.0 * vento_amplitude;
 	float fase = UV.x * 6.2832 + dot(VERTEX.xz, dv) * 0.12;
-	float balanco = sin(t * 0.9 + fase) * 0.6 + sin(t * 0.37 + fase * 1.7) * 0.4;
-	VERTEX.xz += dv * balanco * vento_forca * peso;
+	float balanco = sin(vento_fase * 0.9 + fase) * 0.6 + sin(vento_fase * 0.37 + fase * 1.7) * 0.4;
+	VERTEX.xz += dv * (0.40 + 0.80 * balanco) * empurra * peso;
 	v_pos = VERTEX;
 	v_n = NORMAL;
 }
@@ -52,7 +52,7 @@ void fragment() {
 		vec3 amb = cor_ceu * (0.26 + 0.20 * n.y) + ressalto_chao(n) * 1.25;
 		cor = alb * (amb + mix(cor_sombra * 0.45, cor_sol, k * ao));
 		cor = mix(cor, cor_ouro * cor_sol * 1.15, smoothstep(0.62, 0.85, ndl) * 0.26 * ao);
-		cor *= mix(0.72, 1.0, ao);
+		cor = olho_noite(cor * mix(0.72, 1.0, ao));
 	}
 	ALBEDO = cor;
 }

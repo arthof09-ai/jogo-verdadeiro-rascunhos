@@ -6,6 +6,11 @@
 shader_type spatial;
 render_mode unshaded, cull_disabled, fog_disabled;
 
+// Ordem 43 (ciclo do dia): a tinta foi cozida para o ar da tarde (COR_HORIZONTE da paleta).
+// `grau` = horizonte de agora ÷ horizonte da paleta (em luz): a base de cada silhueta continua
+// a ser EXACTAMENTE a cor do horizonte (a da névoa e da faixa baixa do céu) a todas as horas.
+uniform vec3 grau = vec3(1.0);
+
 void fragment() {
-	ALBEDO = COLOR.rgb;
+	ALBEDO = COLOR.rgb * grau;
 }

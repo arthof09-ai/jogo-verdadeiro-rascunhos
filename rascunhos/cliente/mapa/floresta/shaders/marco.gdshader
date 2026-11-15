@@ -7,6 +7,9 @@ render_mode unshaded, cull_back, world_vertex_coords;
 #include "luz_floresta.gdshaderinc"
 #include "recorte_vista.gdshaderinc"
 
+// Ordem 43: 0 = apagado (de dia: o papel e o ouro só levam a luz do mapa) · 1 = aceso (de noite)
+uniform float lume : hint_range(0.0, 1.0) = 0.0;
+
 varying vec3 v_pos;
 varying vec3 v_n;
 
@@ -24,5 +27,8 @@ void fragment() {
 	vec3 alb = COLOR.rgb * (0.86 + 0.28 * r);
 	float vis = smoothstep(0.30, 0.70, ler_mapa(v_pos.xz).b);
 	vec3 cor = luz_pintada(alb, n, vis);
-	ALBEDO = mix(COLOR.rgb * (0.95 + 0.25 * r), cor, step(0.5, COLOR.a));
+	// luz própria (janelas e lume): apagada é só papel à luz do dia; acesa é ouro quente
+	vec3 apagado = luz_pintada(COLOR.rgb * (0.50 + 0.14 * r), n, vis);
+	vec3 aceso = COLOR.rgb * (1.02 + 0.30 * r);
+	ALBEDO = mix(mix(apagado, aceso, lume), cor, step(0.5, COLOR.a));
 }

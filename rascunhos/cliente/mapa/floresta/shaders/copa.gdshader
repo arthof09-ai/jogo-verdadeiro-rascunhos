@@ -8,22 +8,25 @@ render_mode unshaded, cull_back, world_vertex_coords;
 
 #include "luz_floresta.gdshaderinc"
 #include "recorte_vista.gdshaderinc"
+#include "vento_floresta.gdshaderinc"
 
 uniform vec3 cor_ouro : source_color = vec3(0.70, 0.65, 0.27);
-uniform vec2 vento_dir = vec2(0.85, 0.5);
-uniform float vento_forca : hint_range(0.0, 1.5) = 0.22;
-uniform float vento_vel : hint_range(0.0, 4.0) = 1.0;
+// Ordem 43: o vento é o do MUNDO (vento_floresta.gdshaderinc). Aqui só fica o balanço (m)
+// desta família de copa com a tarde forte.
+uniform float vento_amplitude : hint_range(0.0, 1.5) = 0.22;
 
 varying vec3 v_pos;
 varying vec3 v_n;
 
 void vertex() {
-	vec2 dv = normalize(vento_dir);
-	float t = TIME * vento_vel;
+	// (Ordem 43) a copa verga para onde o vento sopra (a pressão) e balança à volta disso
+	vec2 dv = vento_dir;
+	float vl = vento_local(VERTEX.xz);
+	float empurra = vento_dobra(vl) * 2.0 * vento_amplitude;
 	float fase = UV.x * 6.2832 + dot(VERTEX.xz, dv) * 0.12;
-	float balanco = sin(t * 0.9 + fase) * 0.6 + sin(t * 0.37 + fase * 1.7) * 0.4;
-	float trem = sin(t * 4.3 + VERTEX.x * 1.9 + VERTEX.y * 2.3 + VERTEX.z * 1.3);
-	VERTEX.xz += dv * (balanco * vento_forca + trem * 0.035) * UV.y;
+	float balanco = sin(vento_fase * 0.9 + fase) * 0.6 + sin(vento_fase * 0.37 + fase * 1.7) * 0.4;
+	float trem = sin(vento_tremor * 4.3 + VERTEX.x * 1.9 + VERTEX.y * 2.3 + VERTEX.z * 1.3) * min(vl, 1.6);
+	VERTEX.xz += dv * ((0.40 + 0.80 * balanco) * empurra + trem * 0.035) * UV.y;
 	VERTEX.y += trem * 0.03 * UV.y;
 	v_pos = VERTEX;
 	v_n = NORMAL;
@@ -51,5 +54,5 @@ void fragment() {
 	float orla = 1.0 - max(dot(n, vw), 0.0);
 	float contra = max(dot(-vw, dir_luz), 0.0);
 	cor = mix(cor, cor_ouro * cor_sol * 1.2, orla * orla * (0.06 + 0.9 * contra * contra) * 0.42);
-	ALBEDO = cor * mix(0.72, 1.0, ao);
+	ALBEDO = olho_noite(cor * mix(0.72, 1.0, ao));
 }
