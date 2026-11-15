@@ -1,0 +1,138 @@
+{
+ "20x20": {
+  "360° rasante": {
+   "jogador": {
+    "certas": 400,
+    "falhas": [],
+    "ja_acertavam_e_mudaram": [],
+    "tapadas": 0,
+    "vistas": 400
+   },
+   "mestre": {
+    "certas": 400,
+    "falhas": [],
+    "ja_acertavam_e_mudaram": [],
+    "tapadas": 0,
+    "vistas": 400
+   },
+   "modo": [
+    1,
+    135.0,
+    20.0,
+    0.6
+   ]
+  },
+  "Fixa": {
+   "jogador": {
+    "certas": 340,
+    "falhas": [],
+    "ja_acertavam_e_mudaram": [],
+    "tapadas": 0,
+    "vistas": 340
+   },
+   "mestre": {
+    "certas": 301,
+    "falhas": [],
+    "ja_acertavam_e_mudaram": [],
+    "tapadas": 0,
+    "vistas": 301
+   },
+   "modo": [
+    0,
+    0.0,
+    55.0,
+    1.5
+   ]
+  },
+  "Panorama": {
+   "jogador": {
+    "certas": 400,
+    "falhas": [],
+    "ja_acertavam_e_mudaram": [],
+    "tapadas": 0,
+    "vistas": 400
+   },
+   "mestre": {
+    "certas": 400,
+    "falhas": [],
+    "ja_acertavam_e_mudaram": [],
+    "tapadas": 0,
+    "vistas": 400
+   },
+   "modo": [
+    2,
+    0.0,
+    78.0,
+    1.5
+   ]
+  }
+ },
+ "30x30": {
+  "360° rasante": {
+   "jogador": {
+    "certas": 895,
+    "falhas": [],
+    "ja_acertavam_e_mudaram": [],
+    "tapadas": 5,
+    "vistas": 895
+   },
+   "mestre": {
+    "certas": 895,
+    "falhas": [],
+    "ja_acertavam_e_mudaram": [],
+    "tapadas": 5,
+    "vistas": 895
+   },
+   "modo": [
+    1,
+    135.0,
+    20.0,
+    0.6
+   ]
+  },
+  "Fixa": {
+   "jogador": {
+    "certas": 637,
+    "falhas": [],
+    "ja_acertavam_e_mudaram": [],
+    "tapadas": 0,
+    "vistas": 637
+   },
+   "mestre": {
+    "certas": 467,
+    "falhas": [],
+    "ja_acertavam_e_mudaram": [],
+    "tapadas": 0,
+    "vistas": 467
+   },
+   "modo": [
+    0,
+    0.0,
+    55.0,
+    1.5
+   ]
+  },
+  "Panorama": {
+   "jogador": {
+    "certas": 900,
+    "falhas": [],
+    "ja_acertavam_e_mudaram": [],
+    "tapadas": 0,
+    "vistas": 900
+   },
+   "mestre": {
+    "certas": 900,
+    "falhas": [],
+    "ja_acertavam_e_mudaram": [],
+    "tapadas": 0,
+    "vistas": 900
+   },
+   "modo": [
+    2,
+    0.0,
+    78.0,
+    1.5
+   ]
+  }
+ }
+}

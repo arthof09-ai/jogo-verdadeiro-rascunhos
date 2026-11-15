@@ -1,0 +1,236 @@
+{
+ "20x20": {
+  "360° rasante": {
+   "jogador": {
+    "certas": 400,
+    "falhas": [],
+    "tapadas": 0,
+    "vistas": 400
+   },
+   "mestre": {
+    "certas": 400,
+    "falhas": [],
+    "tapadas": 0,
+    "vistas": 400
+   },
+   "modo": [
+    1,
+    135.0,
+    20.0,
+    0.6
+   ]
+  },
+  "Fixa": {
+   "jogador": {
+    "certas": 340,
+    "falhas": [],
+    "tapadas": 0,
+    "vistas": 340
+   },
+   "mestre": {
+    "certas": 301,
+    "falhas": [],
+    "tapadas": 0,
+    "vistas": 301
+   },
+   "modo": [
+    0,
+    0.0,
+    55.0,
+    1.5
+   ]
+  },
+  "Panorama": {
+   "jogador": {
+    "certas": 400,
+    "falhas": [],
+    "tapadas": 0,
+    "vistas": 400
+   },
+   "mestre": {
+    "certas": 400,
+    "falhas": [],
+    "tapadas": 0,
+    "vistas": 400
+   },
+   "modo": [
+    2,
+    0.0,
+    78.0,
+    1.5
+   ]
+  }
+ },
+ "30x30": {
+  "360° rasante": {
+   "jogador": {
+    "certas": 892,
+    "falhas": [
+     {
+      "camera": "(29.901, 15.305, -29.901)",
+      "casa": "(0,6)",
+      "casa_referencia": "(-8,9)",
+      "chao_referencia": "(-33.230, -0.790, -8.938)",
+      "deu": "(-1,-1)",
+      "direcao": "(-0.9224, -0.2352, 0.3063)",
+      "distancia_raio_centro_m": "0.00000",
+      "folga_minima_junto_ao_centro_m": "-0.00000",
+      "modo": [
+       1,
+       135.0,
+       20.0,
+       0.6
+      ],
+      "raio_devolveu": "(-33.224, -0.788, -8.940)",
+      "relevo_no_ponto": "-0.788"
+     },
+     {
+      "camera": "(29.901, 15.305, -29.901)",
+      "casa": "(24,27)",
+      "casa_referencia": "(21,36)",
+      "chao_referencia": "(9.951, 0.612, 32.113)",
+      "deu": "(-1,-1)",
+      "direcao": "(-0.2987, -0.2200, 0.9286)",
+      "distancia_raio_centro_m": "0.00000",
+      "folga_minima_junto_ao_centro_m": "-0.00000",
+      "modo": [
+       1,
+       135.0,
+       20.0,
+       0.6
+      ],
+      "raio_devolveu": "(9.952, 0.613, 32.109)",
+      "relevo_no_ponto": "0.613"
+     },
+     {
+      "camera": "(29.901, 15.305, -29.901)",
+      "casa": "(24,28)",
+      "casa_referencia": "(21,38)",
+      "chao_referencia": "(9.362, 0.672, 35.913)",
+      "deu": "(-1,-1)",
+      "direcao": "(-0.2914, -0.2076, 0.9338)",
+      "distancia_raio_centro_m": "0.00000",
+      "folga_minima_junto_ao_centro_m": "-0.00000",
+      "modo": [
+       1,
+       135.0,
+       20.0,
+       0.6
+      ],
+      "raio_devolveu": "(9.363, 0.673, 35.909)",
+      "relevo_no_ponto": "0.673"
+     }
+    ],
+    "tapadas": 5,
+    "vistas": 895
+   },
+   "mestre": {
+    "certas": 892,
+    "falhas": [
+     {
+      "camera": "(29.901, 15.305, -29.901)",
+      "casa": "(0,6)",
+      "casa_referencia": "(-8,9)",
+      "chao_referencia": "(-33.230, -0.790, -8.938)",
+      "deu": "(-1,-1)",
+      "direcao": "(-0.9224, -0.2352, 0.3063)",
+      "distancia_raio_centro_m": "0.00000",
+      "folga_minima_junto_ao_centro_m": "-0.00000",
+      "modo": [
+       1,
+       135.0,
+       20.0,
+       0.6
+      ],
+      "raio_devolveu": "(-33.224, -0.788, -8.940)",
+      "relevo_no_ponto": "-0.788"
+     },
+     {
+      "camera": "(29.901, 15.305, -29.901)",
+      "casa": "(24,27)",
+      "casa_referencia": "(21,36)",
+      "chao_referencia": "(9.951, 0.612, 32.113)",
+      "deu": "(-1,-1)",
+      "direcao": "(-0.2987, -0.2200, 0.9286)",
+      "distancia_raio_centro_m": "0.00000",
+      "folga_minima_junto_ao_centro_m": "0.00000",
+      "modo": [
+       1,
+       135.0,
+       20.0,
+       0.6
+      ],
+      "raio_devolveu": "(9.952, 0.613, 32.109)",
+      "relevo_no_ponto": "0.613"
+     },
+     {
+      "camera": "(29.901, 15.305, -29.901)",
+      "casa": "(24,28)",
+      "casa_referencia": "(21,38)",
+      "chao_referencia": "(9.362, 0.672, 35.913)",
+      "deu": "(-1,-1)",
+      "direcao": "(-0.2914, -0.2076, 0.9338)",
+      "distancia_raio_centro_m": "0.00001",
+      "folga_minima_junto_ao_centro_m": "0.00000",
+      "modo": [
+       1,
+       135.0,
+       20.0,
+       0.6
+      ],
+      "raio_devolveu": "(9.363, 0.673, 35.909)",
+      "relevo_no_ponto": "0.673"
+     }
+    ],
+    "tapadas": 5,
+    "vistas": 895
+   },
+   "modo": [
+    1,
+    135.0,
+    20.0,
+    0.6
+   ]
+  },
+  "Fixa": {
+   "jogador": {
+    "certas": 637,
+    "falhas": [],
+    "tapadas": 0,
+    "vistas": 637
+   },
+   "mestre": {
+    "certas": 467,
+    "falhas": [],
+    "tapadas": 0,
+    "vistas": 467
+   },
+   "modo": [
+    0,
+    0.0,
+    55.0,
+    1.5
+   ]
+  },
+  "Panorama": {
+   "jogador": {
+    "certas": 900,
+    "falhas": [],
+    "tapadas": 0,
+    "vistas": 900
+   },
+   "mestre": {
+    "certas": 900,
+    "falhas": [],
+    "tapadas": 0,
+    "vistas": 900
+   },
+   "modo": [
+    2,
+    0.0,
+    78.0,
+    1.5
+   ]
+  }
+ }
+}

@@ -168,6 +168,11 @@ static func no_chao(x: float, z: float, levanta: float) -> Vector3:
 
 ## O primeiro ponto onde o raio (o, d) toca o chão do mapa, ou null. O raio desce até ao primeiro ponto abaixo
 ## do relevo (passos de 0,25 m) e afina-se por bisseção.
+## Ordem 51: o raio que só RASA um cimo do relevo (tangente, a ver o centro de uma casa no horizonte do chão)
+## cabe entre dois passos e não fica abaixo do relevo em nenhum: cada mínimo da folga (altura do raio − relevo)
+## entre passos afina-se por secção áurea, e uma folga de até TOQUE_RASANTE_M conta como toque nesse ponto.
+const TOQUE_RASANTE_M := 0.001
+
 static func ponto_no_chao(o: Vector3, d: Vector3):
 	if d.y > -0.0005:
 		return null
@@ -175,9 +180,12 @@ static func ponto_no_chao(o: Vector3, d: Vector3):
 	var t := maxf((o.y - 12.0) / -d.y, 0.0)
 	var passo := 0.25
 	var antes := t
+	var folga_2 := INF  # a folga dois passos atrás
+	var folga_1 := INF  # a folga no passo anterior (em `antes`)
 	for i in 4000:
 		var q := o + d * t
-		if q.y <= Relevo.altura(q.x, q.z):
+		var folga := q.y - Relevo.altura(q.x, q.z)
+		if folga <= 0.0:
 			var a := antes
 			var b := t
 			for k in 14:
@@ -188,8 +196,44 @@ static func ponto_no_chao(o: Vector3, d: Vector3):
 				else:
 					a = m
 			return o + d * b
+		# a folga desceu e voltou a subir: o raio passou rente a um cimo entre t − 2·passo e t
+		if folga_1 < folga_2 and folga_1 <= folga and folga_1 < passo:
+			var tr = _rasante(o, d, maxf(antes - passo, 0.0), t)
+			if tr != null:
+				return o + d * tr
 		if q.y < -40.0:
 			return null
+		folga_2 = folga_1
+		folga_1 = folga
 		antes = t
 		t += passo
 	return null
+
+
+## O t do ponto de folga mínima do raio em [a, b] (secção áurea), se essa folga for ≤ TOQUE_RASANTE_M; senão null.
+static func _rasante(o: Vector3, d: Vector3, a: float, b: float):
+	const R := 0.6180339887
+	var c := b - (b - a) * R
+	var e := a + (b - a) * R
+	var fc := _folga(o, d, c)
+	var fe := _folga(o, d, e)
+	for k in 40:
+		if fc < fe:
+			b = e
+			e = c
+			fe = fc
+			c = b - (b - a) * R
+			fc = _folga(o, d, c)
+		else:
+			a = c
+			c = e
+			fc = fe
+			e = a + (b - a) * R
+			fe = _folga(o, d, e)
+	var tm := (a + b) * 0.5
+	return tm if _folga(o, d, tm) <= TOQUE_RASANTE_M else null
+
+
+static func _folga(o: Vector3, d: Vector3, t: float) -> float:
+	var q := o + d * t
+	return q.y - Relevo.altura(q.x, q.z)
