@@ -188,7 +188,9 @@ isso fiz a fusão nesta worktree, num ramo local `fable/integracao-50-o60` que n
 
 **CI.** No ramo `fable/recusa-60`, o run `43733614374` (commit `91f645d`) deu verdes os 9 jobs: `servidor`,
 `retoma-pc`, `validador-glb`, `protocolo`, `motor-real`, `godot-cliente`, `ponta-a-ponta`, `cliente` e
-`foto-mestre`. A sonda de privacidade também deu verde. O CI do push da linha regista-se no commit seguinte.
+`foto-mestre`. A sonda de privacidade também deu verde. Na linha, o push `9b97066..123dccb` (fetch antes, sem force) correu o run
+`43734136474`, com os mesmos 9 jobs verdes, e a sonda de privacidade `43734136490` também verde. Este parágrafo e
+as listas refeitas são o último commit da ordem; o CI dele corre no push do fecho.
 
 ## Reservas, sem rodeios
 
