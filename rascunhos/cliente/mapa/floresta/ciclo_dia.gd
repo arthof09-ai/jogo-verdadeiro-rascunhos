@@ -81,7 +81,7 @@ const SOMBRA_T: Array[String] = ["2c4484", "3a4484", "5c5890", "6a6294", "5e6490
 const AMBIENTE_M: Array[String] = ["4e6cc0", "5870c0", "7c88c0", "a8a8c4", "b0b0be", "a8b4be", "a3b4bd"]
 const AMBIENTE_T: Array[String] = ["4e6cc0", "5c6ab8", "8880b4", "b49ea8", "b6a8ac", "a8b2ba", "a3b4bd"]
 ## Quanta luz o céu dá (1 = dia). De noite nunca chega a zero: noite jogável, nunca breu.
-const CEU_LUZ: Array[float] = [0.20, 0.26, 0.42, 0.62, 0.82, 0.95, 1.0]
+const CEU_LUZ: Array[float] = [0.20, 0.30, 0.44, 0.62, 0.82, 0.95, 1.0]
 
 const COR_LUA := Color("#a9c0f2")
 const LUA_ENERGIA := 0.36
@@ -301,7 +301,11 @@ static func calcular(h: float) -> Dictionary:
 	# de frente: sem isto estourava)
 	var sol_energia := curva([[-1.5, 0.0], [2.0, 0.40], [6.0, 0.66], [14.0, 0.86], [30.0, 1.0], [45.0, 0.93], [62.0, 0.86]], e)
 	# a lua só conta com o sol bem posto, e sobe com a elevação dela
-	var lua_energia := LUA_ENERGIA * (1.0 - _suave(-7.0, -2.2, e)) * _suave(0.0, 12.0, l.y)
+	# (sessão 3) com a lua baixa a luz rasante quase não toca o chão plano: o crepúsculo (19:45)
+	# ficava MAIS escuro que a noite cerrada. A lua baixa ganha força até 1,35× (a 8°) e volta a
+	# 1× aos 35° — a noite lê-se igual de ponta a ponta, sem quebra
+	var lua_baixa := lerpf(1.35, 1.0, _suave(8.0, 35.0, l.y))
+	var lua_energia := LUA_ENERGIA * lua_baixa * (1.0 - _suave(-7.0, -2.2, e)) * _suave(0.0, 12.0, l.y)
 	var ceu_luz := _num(CEU_LUZ, onde)
 	var de_sol := sol_energia > 0.0 or lua_energia <= 0.0
 	d["luz_e_sol"] = de_sol

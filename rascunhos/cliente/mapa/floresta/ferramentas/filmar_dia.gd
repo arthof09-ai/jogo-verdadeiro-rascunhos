@@ -324,18 +324,18 @@ func _desenhar() -> void:
 	var kmh := float(v["velocidade_ms"]) * 3.6
 	var y0 := 250.0
 	var alto_vento := 300.0 if _modo == "vento" else 112.0
-	_painel.draw_rect(Rect2(20, y0, 470, alto_vento), fundo)
+	_painel.draw_rect(Rect2(20, y0, 580, alto_vento), fundo)
 	_texto(Vector2(36, y0 + 36), "VENTO de %s (de %03.0f°)" % [de, fposmod(float(v["azimute_de"]), 360.0)], 28, Color("#c8f0d0"))
 	_texto(Vector2(36, y0 + 72), "%.1f km/h · força %.2f · rajada %3.0f %%" % [kmh, float(v["forca"]), float(v["rajada"]) * 100.0], 24)
 	_texto(Vector2(36, y0 + 100), "curva do dia: força-base %.2f" % float(_vento.get("forca_base")), 20, Color(1, 1, 1, 0.8))
-	_bussola(Vector2(420, y0 + 58), 40.0, float(v["azimute_para"]), float(v["forca"]))
+	_bussola(Vector2(540, y0 + 58), 40.0, float(v["azimute_para"]), float(v["forca"]))
 	if _modo == "vento":
-		_grafico(Rect2(36, y0 + 118, 438, 166))
+		_grafico(Rect2(36, y0 + 118, 548, 166))
 	# ---- o encaixe do céu
 	var r := Rect2(LARGURA - ENCAIXE - 20, 62, ENCAIXE, ENCAIXE)
 	_painel.draw_rect(r.grow(4), Color(0, 0, 0, 0.7))
 	_painel.draw_texture_rect(_vp_ceu.get_texture(), r, false)
-	var meio := r.get_center()
+
 	for rumo: Array in [["N", 0.0], ["L", 90.0], ["S", 180.0], ["O", 270.0]]:
 		var a := deg_to_rad(float(rumo[1]))
 		var dir := Vector3(sin(a) * cos(deg_to_rad(22.0)), sin(deg_to_rad(22.0)), -cos(a) * cos(deg_to_rad(22.0)))
@@ -343,7 +343,7 @@ func _desenhar() -> void:
 		p = r.position + p
 		_texto(p + Vector2(-8, 9), rumo[0], 24, Color("#fff4c0"))
 	_texto(Vector2(r.position.x, r.end.y + 30), "o céu por cima da clareira (olhar para o zénite)", 18)
-	_ = meio
+
 
 
 ## A rosa do vento: a seta aponta PARA ONDE o vento sopra (norte em cima, como no encaixe).
@@ -365,7 +365,7 @@ func _grafico(r: Rect2) -> void:
 	_painel.draw_rect(r, Color(0, 0, 0, 0.35))
 	_texto(r.position + Vector2(6, 20), "força nos últimos 20 s (— força com rajadas · ·· curva do dia)", 16, Color(1, 1, 1, 0.85))
 	var topo := 1.6
-	for k in [0.5, 1.0, 1.5]:
+	for k: float in [0.5, 1.0, 1.5]:
 		var y := r.end.y - r.size.y * k / topo
 		_painel.draw_line(Vector2(r.position.x, y), Vector2(r.end.x, y), Color(1, 1, 1, 0.12), 1.0)
 		_texto(Vector2(r.end.x - 34, y - 3), "%.1f" % k, 14, Color(1, 1, 1, 0.5))
