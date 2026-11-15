@@ -17,6 +17,12 @@ extends SceneTree
 ##                      vento corre 6 s antes da 1.ª e fica parado): a fase é a única diferença. Em
 ##                      capturas/ciclo55/ (c55_22h00_N-fase.jpg, _folha_fases.jpg, medicao_fases.json),
 ##                      com um encaixe AMPLIADO do disco da lua (uma 3.ª câmara a olhar para a lua).
+##   --estacoes         (Ordem 56) as 4 ESTAÇÕES à MESMA hora (HORA_ESTACOES, 18:00 — onde a duração do
+##                      dia se vê) e no MESMO dia de cada estação (o 21.º dia de cada uma: 21, 49, 77,
+##                      105 do ano; o da primavera é o dia de referência, o mundo da Ordem 43), com a
+##                      lua cheia, o MESMO enquadramento das fases e o MESMO vento (corre 6 s antes da
+##                      1.ª e fica parado): o dia do ano é a única diferença. Em capturas/ciclo56/
+##                      (c56_18h00_N-estacao.jpg, _folha_estacoes.jpg, medicao_estacoes.json).
 ##   --quadros=PASTA    onde gravar os quadros JPEG dos filmes (q00000.jpg …; o MP4 faz-se depois
 ##                      com o ffmpeg — ver NOTAS-CICLO-43.md). Sem isto, grava em capturas/_ensaio.
 ##   --amostras         nos filmes: só 1 quadro em cada 150 (para conferir o enquadramento).
@@ -52,6 +58,9 @@ const HORA_FASES := 22.0
 const FASES_LUA := [["nova", 0.0], ["crescente", 7.0], ["cheia", 14.0], ["minguante", 21.0]]
 const ENCAIXE_LUA := 300
 const ENCAIXE_LUA_FOV := 6.0
+## (Ordem 56) as estações: a hora e o dia do ano de cada uma (o 21.º dia de cada estação).
+const HORA_ESTACOES := 18.0
+const ESTACOES_DIAS := [["primavera", 21.0], ["verao", 49.0], ["outono", 77.0], ["inverno", 105.0]]
 
 var _vp: SubViewport
 var _vp_ceu: SubViewport
@@ -86,11 +95,11 @@ func _arg(nome: String, omissao: String) -> String:
 
 func _correr() -> void:
 	var args := OS.get_cmdline_user_args()
-	for m in ["--horas", "--dia", "--vento", "--fases"]:
+	for m in ["--horas", "--dia", "--vento", "--fases", "--estacoes"]:
 		if args.has(m):
 			_modo = m.trim_prefix("--")
 	if _modo == "":
-		push_error("[ciclo] diz o modo: --horas, --dia, --vento ou --fases")
+		push_error("[ciclo] diz o modo: --horas, --dia, --vento, --fases ou --estacoes")
 		quit(1)
 		return
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
@@ -152,6 +161,8 @@ func _correr() -> void:
 			await _fazer_horas()
 		"fases":
 			await _fazer_fases()
+		"estacoes":
+			await _fazer_estacoes()
 		"dia":
 			_titulo = "ORDEM 43 · UM DIA COMPLETO (timelapse: 1 s de filme = 24 min do mundo) · câmara fixa na clareira, a olhar para norte"
 			await _filmar(5.0, 26.0, 65.0)
@@ -382,6 +393,81 @@ func _fazer_fases() -> void:
 	print("[fases] medicao_fases.json e _folha_fases.jpg gravados em %s" % pasta)
 
 
+# ------------------------------------------------------------------ (Ordem 56) as estações
+
+func _fazer_estacoes() -> void:
+	var pasta := ProjectSettings.globalize_path(_arg("--pasta", "res://mapa/floresta/capturas/ciclo56"))
+	DirAccess.make_dir_recursive_absolute(pasta)
+	_titulo = "ORDEM 56 · as estações · %s, lua cheia, o mesmo enquadramento e o mesmo vento: só o dia do ano muda" % Ciclo.texto_de(HORA_ESTACOES)
+	_ciclo.call("definir_idade_da_lua", Ciclo.LUA_CHEIA)
+	_ciclo.call("definir_hora", HORA_ESTACOES)
+	# o vento corre 6 s UMA vez (como nas fases) e depois fica parado
+	for i in int(6.0 * QPS):
+		_vento.call("avancar", 1.0 / QPS)
+	var linhas: Array = []
+	var imagens: Array[Image] = []
+	for k in ESTACOES_DIAS.size():
+		var nome_est: String = ESTACOES_DIAS[k][0]
+		var dia: float = ESTACOES_DIAS[k][1]
+		_ciclo.call("definir_dia_do_ano", dia)
+		_cena.call("aplicar_ciclo")
+		_painel.visible = true
+		_vp_ceu.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+		_painel.queue_redraw()
+		await _quadros(8)
+		var e: Dictionary = _ciclo.call("estado")
+		var nome := "c56_%s_%d-%s.jpg" % [Ciclo.texto_de(HORA_ESTACOES).replace(":", "h"), k + 1, nome_est]
+		var img := _vp.get_texture().get_image()
+		img.save_jpg(pasta.path_join(nome), 0.95)
+		imagens.append(img)
+		# ---- só a cena (sem painel nem encaixe): a luma e a medida
+		_painel.visible = false
+		_vp_ceu.render_target_update_mode = SubViewport.UPDATE_DISABLED
+		await _quadros(6)
+		var so_cena := _vp.get_texture().get_image()
+		var t0 := Time.get_ticks_usec()
+		var n := 0
+		while Time.get_ticks_usec() - t0 < 2000000:
+			await process_frame
+			n += 1
+		var np := Ciclo.nascer_e_por_de(dia)
+		var m := {"estacao": String(e["estacao"]), "dia_do_ano": dia, "ficheiro": nome, "hora": Ciclo.texto_de(HORA_ESTACOES),
+			"declinacao": snappedf(float(e["sol_declinacao"]), 0.001), "duracao_do_dia_h": snappedf(float(e["dia_duracao"]), 0.001),
+			"nasce": Ciclo.texto_de(np.x), "poe_se": Ciclo.texto_de(np.y), "fase_do_dia": String(_ciclo.call("fase")),
+			"sol": [snappedf(fposmod(float(e["sol_azimute"]), 360.0), 0.1), snappedf(float(e["sol_elevacao"]), 0.1)],
+			"sol_ao_meio_dia_elev": snappedf(Ciclo.sol(Ciclo.SOL_CULMINA, dia).y, 0.1),
+			"sol_energia": snappedf(float(e["sol_energia"]), 0.0001), "cor_luz_sol": (e["cor_luz_sol"] as Color).to_html(false),
+			"cor_luz": (e["cor_luz"] as Color).to_html(false), "ceu_luz": snappedf(float(e["ceu_luz"]), 0.0001),
+			"lume": snappedf(float(e["lume"]), 0.001), "lua_energia": snappedf(float(e["lua_energia"]), 0.0001),
+			"luma_da_cena": _luma(so_cena),
+			"fps_sem_vsync": snappedf(float(n) * 1000000.0 / float(Time.get_ticks_usec() - t0), 0.1),
+			"chamadas": _vp.get_render_info(Viewport.RENDER_INFO_TYPE_VISIBLE, Viewport.RENDER_INFO_DRAW_CALLS_IN_FRAME),
+			"primitivas": _vp.get_render_info(Viewport.RENDER_INFO_TYPE_VISIBLE, Viewport.RENDER_INFO_PRIMITIVES_IN_FRAME)}
+		linhas.append(m)
+		print("[estacoes] %s" % JSON.stringify(m))
+	# ---- a folha de contacto 2×2 (primavera, verão / outono, inverno)
+	var folha := Image.create_empty(LARGURA, ALTURA, false, Image.FORMAT_RGB8)
+	for k in imagens.size():
+		var im: Image = imagens[k].duplicate()
+		im.convert(Image.FORMAT_RGB8)
+		im.resize(LARGURA / 2, ALTURA / 2, Image.INTERPOLATE_LANCZOS)
+		folha.blit_rect(im, Rect2i(0, 0, LARGURA / 2, ALTURA / 2), Vector2i((k % 2) * LARGURA / 2, (k / 2) * ALTURA / 2))
+	folha.save_jpg(pasta.path_join("_folha_estacoes.jpg"), 0.9)
+	var saida := {
+		"resolucao_da_prova": [LARGURA, ALTURA],
+		"placa": RenderingServer.get_video_adapter_name(),
+		"metodo": str(ProjectSettings.get_setting("rendering/renderer/rendering_method")),
+		"motor": Engine.get_version_info()["string"],
+		"enquadramento": {"x": VISTA_DIA[0], "z": VISTA_DIA[1], "olhos_m": VISTA_DIA[2], "az": VISTA_DIA[3], "incl": VISTA_DIA[4], "fov": VISTA_DIA[5]},
+		"nota": "a mesma hora (relógio parado), a lua cheia, o mesmo enquadramento e o mesmo vento (parado depois de 6 s) nas 4: só muda o dia do ano (o 21.º de cada estação). Luma e FPS medidos SÓ na cena (sem o painel nem o encaixe).",
+		"estacoes": linhas,
+	}
+	var f := FileAccess.open(pasta.path_join("medicao_estacoes.json"), FileAccess.WRITE)
+	f.store_string(JSON.stringify(saida, "\t"))
+	f.close()
+	print("[estacoes] medicao_estacoes.json e _folha_estacoes.jpg gravados em %s" % pasta)
+
+
 ## % de píxeis claros (luma > 0,55) no encaixe da lua: quanto do disco está iluminado.
 func _disco_claro(img: Image) -> float:
 	var n := 0
@@ -444,6 +530,13 @@ func _desenhar() -> void:
 		_painel.draw_rect(Rect2(20, 380, 580, 120), fundo)
 		_texto(Vector2(36, 430), "LUA %s" % String(e["lua_fase"]).to_upper(), 40, Color("#dfe8ff"))
 		_texto(Vector2(36, 476), "idade %d dias · %3.0f %% iluminada · luz da lua %.3f" % [int(e["lua_idade"]), float(e["lua_iluminada"]) * 100.0, float(e["lua_energia"])], 22, Color("#b8ccff"))
+	if _modo == "estacoes":
+		# (Ordem 56) a estação, o dia do ano e o dia de sol
+		var np := Ciclo.nascer_e_por_de(float(e["ano_dia"]))
+		_painel.draw_rect(Rect2(20, 380, 580, 150), fundo)
+		_texto(Vector2(36, 430), "%s · dia %d do ano" % [String(e["estacao"]).to_upper(), int(e["ano_dia"])], 40, Color("#e8f4d0"))
+		_texto(Vector2(36, 474), "nasce %s · põe-se %s · %.1f h de sol" % [Ciclo.texto_de(np.x), Ciclo.texto_de(np.y), float(e["dia_duracao"])], 24, Color("#ffd27a"))
+		_texto(Vector2(36, 510), "declinação %+.1f° · sol ao meio-dia a %.1f°" % [float(e["sol_declinacao"]), Ciclo.sol(Ciclo.SOL_CULMINA, float(e["ano_dia"])).y], 22, Color(1, 1, 1, 0.85))
 	# ---- o vento
 	var de := Vento.rumo(float(v["azimute_de"]))
 	var kmh := float(v["velocidade_ms"]) * 3.6
