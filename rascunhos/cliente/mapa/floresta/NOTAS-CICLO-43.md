@@ -15,6 +15,7 @@ Os números desta nota saem de dois ficheiros, gravados pelas ferramentas (não 
 | peça | ficheiro | API |
 |---|---|---|
 | relógio do mundo | `ciclo_dia.gd` (grupo `relogio_mundo`) | `hora_do_mundo()` 0–24 contínua · `hora_texto()` · `fase()` · `estado()` · sinal `fase_mudou` |
+| (Ordem 55) as fases da lua | `ciclo_dia.gd` — ver `NOTAS-CICLO-55.md` | `idade_da_lua()` · `fase_da_lua()` · `lua_iluminada()` · `definir_idade_da_lua(d)` · sinal `fase_da_lua_mudou` |
 | vento do mundo | `vento_mundo.gd` (grupo `vento_mundo`) | `vento_actual()` · `vento_em(pos)` · `vetor()` · `vetor_em(pos)` · `curva_do_dia(h)` (pura) |
 | forno vivo das sombras | `sombras_floresta.gd` | repinta o mapa das sombras quando a luz roda mais de 0,04° |
 | céu vivo | `shaders/ceu_ciclo.gdshader` + `ceu/ceu_camadas_v1.png` | um céu só, que muda (nunca troca de céu) |
@@ -237,6 +238,8 @@ quadros (as folhas cobrem cada 2 h do dia) e pelas medidas abaixo.
 
 - O olho do Mestre e a bancada: nenhuma destas notas aprova nada.
 - A lua é sempre cheia (oposta ao sol). Fases da lua não entraram (não foram pedidas).
+  **(Ordem 55: feito.** A lua tem fases (28 dias do mundo); a lua cheia é exactamente a desta
+  ordem. Continua oposta ao sol. Ver `NOTAS-CICLO-55.md` e `ESTADO-FINAL-ORDEM-55.md`.)
 - O dia não tem estações: a declinação do sol é fixa (9,5°).
 - A luz-chave, na passagem lua↔sol, roda pelo zénite durante ~20 min do mundo com a luz directa
   no mínimo. Nos vídeos não se vê; com figuras de jogo no meio da clareira, merece um olhar.
