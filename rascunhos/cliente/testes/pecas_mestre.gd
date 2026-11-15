@@ -660,6 +660,8 @@ func _ambiente(c, vista_base: Dictionary) -> void:
 	_ok(juntas.contains("(2,2) mais 4") and juntas.contains("(2,3) mais 1"), "o combustível de cada casa, só no ecrã do Mestre")
 	_ok(juntas.contains(Textos.A_ARDER % nome_her), "quem arde, com o nome verdadeiro")
 	_ok(c._arena.casas_a_arder().size() == 2, "a arena do Mestre pinta as 2 casas a arder")
+	# Ordem 45: o clima de jogo que o Mestre escolhe chove (ou neva) no ecrã dele — só apresentação.
+	_ok(c._arena.clima.tipo == "chuva" and c._arena.clima.intensidade == "forte", "ordem 45: a tempestade chove forte na arena do Mestre")
 	_ok(not c._raio_agora.disabled and c._raios.text == Textos.DESLIGAR_RAIOS, "«⚡ Raio agora» aceso; o botão dos raios diz «Desligar»")
 
 	c.pedir_raio()
@@ -1204,6 +1206,10 @@ func _clima(c) -> void:
 	var comandos_antes := _comandos.size()
 	var destaques_antes: int = a.casas_destacadas().size()
 	var desenhadas_antes: int = a.figuras_desenhadas()
+	# Ordem 45: a aba Ambiente (teste anterior) já ligou e desligou a chuva neste ecrã; o módulo procura os alvos de
+	# 0,5 em 0,5 s, e esse relógio ficou a meio. Começa-se do zero para os 4 quadros chegarem (sem janela o passo de
+	# tempo é curto e varia de máquina para máquina).
+	cl._ate_procurar = 0.0
 	_ok(cl.definir("neve", "forte"), "neve forte: liga sem reiniciar a cena")
 	await _quadros(4)
 	var vestidos: Array[Node] = cl.vestidos()

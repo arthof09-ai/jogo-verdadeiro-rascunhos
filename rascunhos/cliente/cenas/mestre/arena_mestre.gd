@@ -18,7 +18,8 @@ extends Node3D
 ## (assentamento.gd `origem_no_mapa`), as linhas, os destaques, o fogo e o anel da vez colam-se ao relevo, o
 ## toque vai contra o relevo, e o pé de cada figura segue a regra da base inclinada da Ordem 44 (a mesma
 ## `Assentamento.pegada`: a altura é o `peM` do servidor). O céu e o sol são os do mapa, os mesmos da arena do
-## jogador (um só céu). Só apresentação, como antes.
+## jogador (um só céu). O clima (Ordens 40–42) assenta no mapa como na arena do jogador: as bacias do relevo
+## real, os abrigos dos obstáculos reais, a relva a responder. Só apresentação, como antes.
 
 signal casa_tocada(casa: Vector2i)
 
@@ -53,6 +54,10 @@ const LEVANTA_DESTAQUE := 0.04
 const LEVANTA_CONTORNO := 0.045
 ## Raio (m) do cilindro câmara → foco onde as copas e os marcos do mapa somem (o da arena do jogador).
 const RAIO_RECORTE_M := 5.0
+## Ordem 45: o clima de jogo que o Mestre escolhe na aba Ambiente (vista.mestre.ambiente.clima) → o clima que
+## o ecrã dele desenha (os nomes da preferência «clima» da arena do jogador). O que não está aqui não chove
+## nem neva (limpo, nublado, nevoeiro). Só apresentação: a regra do clima é do servidor.
+const CLIMA_DO_AMBIENTE := {"chuva": "chuva-fraca", "tempestade": "chuva-forte", "neve": "neve-forte"}
 
 var largura := 0
 var altura := 0
@@ -77,6 +82,8 @@ var _anel: MeshInstance3D
 var _nos: Dictionary = {}  # figuraId -> Node3D
 var _entradas := 0  # ordem de entrada das figuras: a cor do anel (cena.js `units.size % 5`)
 var _casas_destacadas: Array[Vector2i] = []
+var _clima_do_ambiente := ""  # o último clima de jogo visto na vista (só se segue quando muda)
+var _relva_com_clima := false
 
 
 func _ready() -> void:
@@ -140,6 +147,7 @@ func _process(_delta: float) -> void:
 	if mapa != null and is_instance_valid(mapa):
 		var raio := RAIO_RECORTE_M if camera.is_processing() else 0.0
 		mapa.definir_recorte_vista(camera.foco_atual() + Vector3(0.0, 1.0, 0.0), raio)
+		_relva_com_clima = CampoDaMesa.relva_segue_clima(clima, mapa, _relva_com_clima)
 	arrumar_nomes()
 
 
@@ -176,6 +184,7 @@ func construir_grelha(w: int, h: int, c: float) -> void:
 	camera.configurar_arena(centro, tam)
 	clima.configurar_area(centro, tam)
 	clima.definir_grelha(Vector3(origem.x, centro.y, origem.y), casa_m)
+	CampoDaMesa.ligar_clima(clima, mapa, zona, _grelha, altura_chao)
 	# Os destaques e o fogo da grelha velha voltam a assentar na nova (as figuras, na vista que se segue).
 	destacar(_casas_destacadas.filter(func(k): return dentro(k)))
 	_desenhar_casas_fogo()
@@ -232,6 +241,7 @@ func aplicar_vista(vista: Dictionary) -> void:
 		var cv := casa_de_ponto((_nos[vez] as Node3D).position)
 		var pg := pegada_figura(cv)
 		_anel.transform = Transform3D(_inclinacao(pg), (_nos[vez] as Node3D).position + (pg["normal"] as Vector3) * 0.045)
+	_seguir_clima_do_ambiente(vista)
 
 
 # ---------------------------------------------------------------- o pé das figuras (Ordem 44, parte B)
@@ -289,6 +299,28 @@ func _inclinacao(pg: Dictionary) -> Basis:
 ## O cisalhamento vertical do plano y = gx·x + gz·z: (x, y, z) → (x, y + gx·x + gz·z, z).
 static func _cisalha(g: Vector2) -> Basis:
 	return Basis(Vector3(1.0, g.x, 0.0), Vector3(0.0, 1.0, 0.0), Vector3(0.0, g.y, 1.0))
+
+
+# ---------------------------------------------------------------- clima (Ordens 40–42; Ordem 45)
+
+## Liga o clima do ecrã do Mestre pelo nome da preferência «clima» da arena do jogador («nenhum», «chuva-fraca»,
+## «chuva-forte», «neve-fraca», «neve-forte»). Só apresentação.
+func definir_clima(nome: String) -> bool:
+	return clima.definir_por_nome(nome)
+
+
+## O clima de jogo que o Mestre escolheu (aba Ambiente → servidor → vista) passa ao ecrã dele quando muda.
+## Entre mudanças, o que se ligou à mão (definir_clima) fica.
+func _seguir_clima_do_ambiente(vista: Dictionary) -> void:
+	var a := Modelo.painel_ambiente(vista)
+	var nome := str(a.get("clima")) if a.get("clima") is String else ""
+	if nome == _clima_do_ambiente:
+		return
+	_clima_do_ambiente = nome
+	var alvo := str(CLIMA_DO_AMBIENTE.get(nome, "nenhum"))
+	if alvo == "nenhum" and clima.tipo == "nenhum":
+		return  # já não chove nem neva: não se acorda o módulo para nada
+	definir_clima(alvo)
 
 
 # ---------------------------------------------------------------- câmara livre (decisão 10; site REF_29)

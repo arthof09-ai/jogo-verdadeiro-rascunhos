@@ -140,3 +140,34 @@ O desvio grelha-relevo no ecrã do Mestre é **0 m**, como a Ordem 42 mediu no d
 dão o mesmo número em tudo o que se compara (é o mesmo código). Os 3 toques que falham na 30 × 30 em 360° rasante
 — (0,6), (24,27) e (24,28), o raio sai da grelha — falham **igual** na arena do jogador: são do raio partilhado
 (`ponto_no_chao`), em casas fora da zona livre, não do Mestre (ver as reservas no ESTADO FINAL).
+
+## Parte 2: o clima no ecrã do Mestre (feito)
+
+**O que mudou.**
+
+- `arena_mestre.gd`: o clima assenta no mapa pelo **mesmo** `CampoDaMesa.ligar_clima` da arena do jogador — as
+  bacias de `BaciasRelevo.achar(zona)` (os mesmos dados de `definir_bacias()`), os abrigos dos 8 obstáculos reais
+  mais perto da zona, as malhas reais a vestir a neve, `bordas_abrigo = 0`, a altura do chão do relevo; a relva do
+  mapa responde ao clima (`relva_segue_clima`), como no jogador.
+- **Como se liga no ecrã do Mestre.** O clima de jogo que o Mestre escolhe na aba Ambiente (`MASTER_AMBIENTE` →
+  servidor → `vista.mestre.ambiente.clima`) passa ao ecrã dele quando muda: «Chuva» → chuva fraca, «Tempestade» →
+  chuva forte (o alagamento), «Neve» → neve forte (a nevasca); «Limpo», «Nublado» e «Nevoeiro» não chovem nem
+  nevam. A tabela é uma (`CLIMA_DO_AMBIENTE`). Também há `definir_clima(nome)` com os nomes da preferência
+  «clima» do jogador. Só apresentação: a arena não manda nada ao servidor e não muda regra nenhuma (o teste do
+  clima do `pecas_mestre` confere: nenhum comando sai, casas, destaques e figuras ficam).
+- **Um só céu.** O fundo 353b48, o ambiente 96b4df e o sol ffb16b do site saíram já na Parte 1: o Ambiente e o Sol
+  do Mestre são os do mapa, iguais aos do jogador (a prova compara o céu, a névoa e o sol).
+- **O ciclo do dia e o vento (Ordem 43) não foram tocados.** O ponto de ligação fica limpo: a Ordem 43 constrói o
+  sol, a lua, o céu e o vento dentro do mapa (`campo_floresta`); como o Mestre monta agora o mesmo mapa com o
+  Ambiente e o Sol dele (`CampoDaMesa.montar_mapa`), o que ela fizer no mapa chega aos dois ecrãs sem mexer nas
+  arenas. O vento do clima continua a ser o do módulo (`clima.definir_vento`, intocado); a hora do servidor
+  (`ambiente.hora`) não se liga a nada.
+- `pecas_mestre.gd`: +1 verificação (a «Tempestade» da aba Ambiente chove forte no ecrã do Mestre); o teste do
+  clima começa o relógio de procura do módulo do zero (a aba Ambiente, no teste anterior, já tinha ligado e
+  desligado a chuva). 236/236.
+- `provar_mestre_no_relevo.gd`: a secção 7 (as bacias e os abrigos do Mestre são os do jogador).
+- `capturar_mestre_45.gd` (novo) e `provas/ordem-45-mestre/` (17 capturas rotuladas, as medições, o README).
+
+**Medição.** Bacias: Mestre 8 = jogador 8, as mesmas, nível incluído (20 × 20 e 30 × 30). Abrigos da nevasca:
+Mestre 8 = jogador 8, os mesmos. Alagamento no ecrã do Mestre com as bolsas cheias: 13,5 m² de água na zona,
+4,3 cm de fundo — os números da Ordem 42 no jogador. Nevasca aos 38 s: neve 0,81, aglomerado 0,84, gelo 0,52.

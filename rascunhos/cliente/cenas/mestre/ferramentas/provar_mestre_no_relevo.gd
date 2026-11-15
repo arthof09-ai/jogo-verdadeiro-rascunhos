@@ -13,6 +13,7 @@ extends SceneTree
 ##   4. o toque: o centro de cada casa, visto pela câmara da mesa do Mestre, volta à MESMA casa;
 ##   5. as casas do jogo que o mapa bloqueia (0, como na arena do jogador);
 ##   6. um céu só no mundo do Mestre, e é o do mapa;
+##   7. o clima: as bacias e os abrigos do Mestre são os mesmos da arena do jogador.
 ##
 ##   godot --headless --path cliente -s res://cenas/mestre/ferramentas/provar_mestre_no_relevo.gd [-- --json=caminho]
 ## Sai com 0 se tudo passa, 1 se algo falha.
@@ -340,6 +341,23 @@ func _medir_grelha(m, a, base: Dictionary, terreno: Dictionary, w: int, h: int, 
 	_ok(a.mapa.medidas.get("erros", -1) == 0, "o mapa do Mestre construiu-se com 0 erros")
 	reg["ceu"] = {"worldenvironment": amb.size(), "directionallight": sois.size(), "fundo": "BG_SKY" if env.background_mode == Environment.BG_SKY else str(env.background_mode)}
 
+	# 7. o clima: as mesmas bacias e os mesmos abrigos
+	var bm: Array = a.clima.bacias()
+	var bj: Array = jog.clima.bacias()
+	_ok(bm.size() > 0 and bm == bj and a.clima.bacias_nivel() == jog.clima.bacias_nivel(), "bacias do relevo real: Mestre %d = jogador %d (as mesmas, nível incluído)" % [bm.size(), bj.size()])
+	# os abrigos juntam-se no primeiro quadro com clima: liga-se a neve forte nas duas e compara-se
+	a.definir_clima("neve-forte")
+	jog.clima.definir_por_nome("neve-forte")
+	a.clima._ate_procurar = 0.0
+	jog.clima._ate_procurar = 0.0
+	await _quadros(3)
+	var am: Array = a.clima.abrigos()
+	var aj: Array = jog.clima.abrigos()
+	_ok(am.size() > 0 and am == aj, "abrigos da nevasca (os obstáculos reais do mapa): Mestre %d = jogador %d (os mesmos)" % [am.size(), aj.size()])
+	a.definir_clima("nenhum")
+	jog.clima.definir_por_nome("nenhum")
+	reg["clima"] = {"bacias": bm.size(), "abrigos_mestre": am.size(), "abrigos_jogador": aj.size(),
+		"bacias_xz_raio_fundura": bm.map(func(b): return [b.x, b.y, b.z, b.w])}
 	jog.queue_free()
 	await _quadros(2)
 	_json[nome] = reg
