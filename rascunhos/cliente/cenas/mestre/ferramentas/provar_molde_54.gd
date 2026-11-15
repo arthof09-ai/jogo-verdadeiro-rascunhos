@@ -48,6 +48,9 @@ func _correr() -> void:
 	rede.papel = "mestre"
 	root.size = Vector2i(1920, 1080)
 	Engine.time_scale = 0.0
+	# (Ordem 57) o quadro em que o time_scale muda ainda corre com um passo de tempo (medido: 1/15 s, sem escala). Antes
+	# ninguém o lia; agora o relógio do mundo (Ordem 43) anda com ele — e só a 1.ª abertura o apanhava. Deixa-se passar.
+	await _quadros(2)
 	var fotos: Array[Image] = []
 	var retratos: Array[PackedStringArray] = []
 	var nomes := ["1-construido-sem-molde", "2-construido-guarda-o-molde", "3-vestido-do-molde"]
