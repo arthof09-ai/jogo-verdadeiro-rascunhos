@@ -1,0 +1,192 @@
+== Ordens 44 e 48: o terreno do mapa no cliente e no servidor ==
+  ok    grelha 30×30 de 1.5 m: o servidor julga esta grelha
+pronto
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-22.5, -22.5), servidor (-22.5, -22.5)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 400 casas dentro da zona livre, 0.0 m nas 500 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 43 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 99 casas, 1 com a do cliente ≠ a do mapa de referência)
+  ok    as 14 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 4, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ((29,0) água, (1,0) menir, (3,2) menir, (28,28) santuário)
+  ok    mover: o servidor oferece 41 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 6, 6 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 30×30 de 2.0 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-30.0, -30.0), servidor (-30.0, -30.0)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 196 casas dentro da zona livre, 0.0 m nas 704 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 42 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 107 casas, 0 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 0, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ()
+  ok    mover: o servidor oferece 30 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 4, 4 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 20×20 de 1.5 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-15.0, -15.0), servidor (-15.0, -15.0)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 400 casas dentro da zona livre, 0.0 m nas 0 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 0 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 76 casas, 1 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 0, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ()
+  ok    mover: o servidor oferece 47 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 0, 0 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 25×25 de 1.5 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-18.0, -18.0), servidor (-18.0, -18.0)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 400 casas dentro da zona livre, 0.0 m nas 225 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 10 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 91 casas, 2 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 10, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ((23,0) água, (24,0) água, (24,20) escarpa, (22,21) escarpa, (23,21) escarpa, (24,21) escarpa, (21,22) escarpa, (22,22) escarpa, (21,23) escarpa, (21,24) escarpa)
+  ok    mover: o servidor oferece 51 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 0, 0 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 25×25 de 1.0 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-12.5, -12.5), servidor (-12.5, -12.5)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 625 casas dentro da zona livre, 0.0 m nas 0 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 0 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 184 casas, 2 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 0, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ()
+  ok    mover: o servidor oferece 91 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 0, 0 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 25×25 de 2.0 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-25.0, -25.0), servidor (-25.0, -25.0)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 225 casas dentro da zona livre, 0.0 m nas 400 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 41 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 42 casas, 3 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 41, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ((21,0) água, (22,0) água, (23,0) água, (2,1) menir, (20,1) água, (21,1) água, (22,1) água, (23,1) água, (3,2) menir, (20,2) água, (21,2) água, (22,2) água, (23,2) água, (21,3) água, (22,3) água, (1,4) menir, (24,4) tronco, (21,18) escarpa, (22,18) escarpa, (23,18) escarpa, (24,18) escarpa, (20,19) escarpa, (21,19) escarpa, (24,19) lanterna, (19,20) escarpa, (20,20) escarpa, (19,21) escarpa, (22,21) santuário, (23,21) santuário, (19,22) escarpa, (21,22) santuário, (22,22) santuário, (23,22) santuário, (18,23) escarpa, (19,23) escarpa, (21,23) santuário, (22,23) santuário, (23,23) santuário, (3,24) tronco, (4,24) tronco, (18,24) escarpa)
+  ok    mover: o servidor oferece 21 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 5, 5 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 21×17 de 1.0 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-10.5, -8.5), servidor (-10.5, -8.5)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 357 casas dentro da zona livre, 0.0 m nas 0 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 0 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 87 casas, 0 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 0, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ()
+  ok    mover: o servidor oferece 90 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 0, 0 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 33×27 de 2.0 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-33.0, -27.0), servidor (-33.0, -27.0)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 225 casas dentro da zona livre, 0.0 m nas 666 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 48 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 112 casas, 4 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 48, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ((25,1) água, (26,1) água, (27,1) água, (6,2) menir, (24,2) água, (25,2) água, (26,2) água, (27,2) água, (7,3) menir, (24,3) água, (25,3) água, (26,3) água, (27,3) água, (25,4) água, (26,4) água, (5,5) menir, (28,5) tronco, (31,17) lanterna, (25,19) escarpa, (26,19) escarpa, (27,19) escarpa, (28,19) escarpa, (24,20) escarpa, (25,20) escarpa, (28,20) lanterna, (23,21) escarpa, (24,21) escarpa, (23,22) escarpa, (26,22) santuário, (27,22) santuário, (30,22) escarpa, (23,23) escarpa, (25,23) santuário, (26,23) santuário, (27,23) santuário, (30,23) escarpa, (22,24) escarpa, (23,24) escarpa, (25,24) santuário, (26,24) santuário, (27,24) santuário, (31,24) escarpa, (7,25) tronco, (8,25) tronco, (22,25) escarpa, (7,26) tronco, (8,26) tronco, (25,26) lanterna)
+  ok    mover: o servidor oferece 30 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 7, 7 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 44×20 de 1.5 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-33.0, -15.0), servidor (-33.0, -15.0)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 400 casas dentro da zona livre, 0.0 m nas 480 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 11 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 120 casas, 3 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 11, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ((42,15) lanterna, (38,17) escarpa, (34,18) escarpa, (35,18) escarpa, (36,18) escarpa, (37,18) escarpa, (38,18) escarpa, (32,19) escarpa, (33,19) escarpa, (34,19) escarpa, (38,19) lanterna)
+  ok    mover: o servidor oferece 52 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 2, 2 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 50×50 de 1.5 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-37.5, -37.5), servidor (-37.5, -37.5)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 400 casas dentro da zona livre, 0.0 m nas 2100 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 88 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 0 casas, 0 com a do cliente ≠ a do mapa de referência)
+  ..    faixa da fronteira do mapa (lados oeste, este, norte, sul): 196 casas; cobertura afirmada 196 (0 diferentes do cliente), null 0 (0 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 88, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ((36,9) água, (37,9) água, (38,9) água, (39,9) água, (11,10) menir, (35,10) água, (36,10) água, (37,10) água, (38,10) água, (39,10) água, (13,11) menir, (35,11) água, (36,11) água, (37,11) água, (38,11) água, (39,11) água, (9,12) menir, (13,12) menir, (36,12) água, (37,12) água, (38,12) água, (39,12) água, (36,13) água, (37,13) água, (38,13) água, (10,14) menir, (12,14) menir, (41,14) tronco, (45,30) lanterna, (41,32) escarpa, (37,33) escarpa, (38,33) escarpa, (39,33) escarpa, (40,33) escarpa, (41,33) escarpa, (35,34) escarpa, (36,34) escarpa, (37,34) escarpa, (41,34) lanterna, (34,35) escarpa, (35,35) escarpa, (34,36) escarpa, (43,36) lanterna, (44,36) escarpa, (34,37) escarpa, (38,37) santuário, (39,37) santuário, (43,37) escarpa, (44,37) escarpa, (34,38) escarpa, (37,38) santuário, (38,38) santuário, (39,38) santuário, (40,38) santuário, (43,38) escarpa, (44,38) escarpa, (33,39) escarpa, (34,39) escarpa, (37,39) santuário, (38,39) santuário, (39,39) santuário, (40,39) santuário, (44,39) escarpa, (45,39) escarpa, (33,40) escarpa, (34,40) lanterna, (38,40) santuário, (39,40) santuário, (13,41) tronco, (14,41) tronco, (33,41) escarpa, (13,42) tronco, (14,42) tronco, (37,42) lanterna, (13,43) tronco, (14,43) tronco, (37,43) escarpa, (38,43) escarpa, (39,43) escarpa, (13,44) tronco, (14,44) tronco, (36,44) escarpa, (37,44) escarpa, (39,44) escarpa, (13,45) tronco, (14,45) tronco, (31,45) lanterna, (40,45) escarpa)
+  ok    mover: o servidor oferece 52 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 14, 14 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 50×50 de 1.0 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-25.0, -25.0), servidor (-25.0, -25.0)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 900 casas dentro da zona livre, 0.0 m nas 1600 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 133 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 184 casas, 4 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 133, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ((41,1) água, (42,1) água, (43,1) água, (44,1) água, (45,1) água, (46,1) água, (4,2) menir, (40,2) água, (41,2) água, (42,2) água, (43,2) água, (44,2) água, (45,2) água, (46,2) água, (4,3) menir, (40,3) água, (41,3) água, (42,3) água, (43,3) água, (44,3) água, (45,3) água, (46,3) água, (7,4) menir, (40,4) água, (41,4) água, (42,4) água, (43,4) água, (44,4) água, (45,4) água, (46,4) água, (1,5) menir, (7,5) menir, (41,5) água, (42,5) água, (43,5) água, (44,5) água, (45,5) água, (46,5) água, (1,6) menir, (7,6) menir, (41,6) água, (42,6) água, (43,6) água, (44,6) água, (45,6) água, (46,6) água, (41,7) água, (42,7) água, (43,7) água, (44,7) água, (45,7) água, (2,8) menir, (3,8) menir, (5,8) menir, (6,8) menir, (49,8) tronco, (2,9) menir, (3,9) menir, (5,9) menir, (6,9) menir, (49,9) tronco, (49,35) escarpa, (49,36) escarpa, (43,37) escarpa, (44,37) escarpa, (45,37) escarpa, (46,37) escarpa, (47,37) escarpa, (48,37) escarpa, (49,37) escarpa, (40,38) escarpa, (41,38) escarpa, (42,38) escarpa, (43,38) escarpa, (49,38) lanterna, (40,39) escarpa, (41,39) escarpa, (42,39) escarpa, (43,39) escarpa, (49,39) lanterna, (38,40) escarpa, (39,40) escarpa, (40,40) escarpa, (38,41) escarpa, (39,41) escarpa, (38,42) escarpa, (39,42) escarpa, (38,43) escarpa, (39,43) escarpa, (44,43) santuário, (45,43) santuário, (46,43) santuário, (38,44) escarpa, (39,44) escarpa, (43,44) santuário, (44,44) santuário, (45,44) santuário, (46,44) santuário, (47,44) santuário, (48,44) santuário, (38,45) escarpa, (39,45) escarpa, (43,45) santuário, (44,45) santuário, (45,45) santuário, (46,45) santuário, (47,45) santuário, (48,45) santuário, (37,46) escarpa, (38,46) escarpa, (39,46) escarpa, (43,46) santuário, (44,46) santuário, (45,46) santuário, (46,46) santuário, (47,46) santuário, (48,46) santuário, (37,47) escarpa, (38,47) lanterna, (39,47) lanterna, (44,47) santuário, (45,47) santuário, (46,47) santuário, (37,48) escarpa, (38,48) lanterna, (39,48) lanterna, (44,48) santuário, (45,48) santuário, (46,48) santuário, (7,49) tronco, (8,49) tronco, (9,49) tronco, (37,49) escarpa)
+  ok    mover: o servidor oferece 69 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 9, 9 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 37×37 de 2.0 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-37.0, -37.0), servidor (-37.0, -37.0)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 225 casas dentro da zona livre, 0.0 m nas 1144 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 56 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 0 casas, 0 com a do cliente ≠ a do mapa de referência)
+  ..    faixa da fronteira do mapa (lados oeste, este, norte, sul): 73 casas; cobertura afirmada 73 (0 diferentes do cliente), null 0 (0 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 56, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ((27,6) água, (28,6) água, (29,6) água, (8,7) menir, (26,7) água, (27,7) água, (28,7) água, (29,7) água, (9,8) menir, (26,8) água, (27,8) água, (28,8) água, (29,8) água, (27,9) água, (28,9) água, (7,10) menir, (30,10) tronco, (33,22) lanterna, (27,24) escarpa, (28,24) escarpa, (29,24) escarpa, (30,24) escarpa, (26,25) escarpa, (27,25) escarpa, (30,25) lanterna, (25,26) escarpa, (26,26) escarpa, (25,27) escarpa, (28,27) santuário, (29,27) santuário, (32,27) escarpa, (25,28) escarpa, (27,28) santuário, (28,28) santuário, (29,28) santuário, (32,28) escarpa, (24,29) escarpa, (25,29) escarpa, (27,29) santuário, (28,29) santuário, (29,29) santuário, (33,29) escarpa, (9,30) tronco, (10,30) tronco, (24,30) escarpa, (9,31) tronco, (10,31) tronco, (27,31) lanterna, (9,32) tronco, (10,32) tronco, (27,32) escarpa, (28,32) escarpa, (29,32) escarpa, (9,33) tronco, (10,33) tronco, (23,33) lanterna)
+  ok    mover: o servidor oferece 31 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 9, 9 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 49×49 de 1.5 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-36.0, -36.0), servidor (-36.0, -36.0)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 400 casas dentro da zona livre, 0.0 m nas 2001 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 88 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 97 casas, 0 com a do cliente ≠ a do mapa de referência)
+  ..    faixa da fronteira do mapa (lados este, sul): 95 casas; cobertura afirmada 95 (0 diferentes do cliente), null 0 (0 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 88, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ((35,8) água, (36,8) água, (37,8) água, (38,8) água, (10,9) menir, (34,9) água, (35,9) água, (36,9) água, (37,9) água, (38,9) água, (12,10) menir, (34,10) água, (35,10) água, (36,10) água, (37,10) água, (38,10) água, (8,11) menir, (12,11) menir, (35,11) água, (36,11) água, (37,11) água, (38,11) água, (35,12) água, (36,12) água, (37,12) água, (9,13) menir, (11,13) menir, (40,13) tronco, (44,29) lanterna, (40,31) escarpa, (36,32) escarpa, (37,32) escarpa, (38,32) escarpa, (39,32) escarpa, (40,32) escarpa, (34,33) escarpa, (35,33) escarpa, (36,33) escarpa, (40,33) lanterna, (33,34) escarpa, (34,34) escarpa, (33,35) escarpa, (42,35) lanterna, (43,35) escarpa, (33,36) escarpa, (37,36) santuário, (38,36) santuário, (42,36) escarpa, (43,36) escarpa, (33,37) escarpa, (36,37) santuário, (37,37) santuário, (38,37) santuário, (39,37) santuário, (42,37) escarpa, (43,37) escarpa, (32,38) escarpa, (33,38) escarpa, (36,38) santuário, (37,38) santuário, (38,38) santuário, (39,38) santuário, (43,38) escarpa, (44,38) escarpa, (32,39) escarpa, (33,39) lanterna, (37,39) santuário, (38,39) santuário, (12,40) tronco, (13,40) tronco, (32,40) escarpa, (12,41) tronco, (13,41) tronco, (36,41) lanterna, (12,42) tronco, (13,42) tronco, (36,42) escarpa, (37,42) escarpa, (38,42) escarpa, (12,43) tronco, (13,43) tronco, (35,43) escarpa, (36,43) escarpa, (38,43) escarpa, (12,44) tronco, (13,44) tronco, (30,44) lanterna, (39,44) escarpa)
+  ok    mover: o servidor oferece 52 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 14, 14 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 50×20 de 1.5 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-37.5, -15.0), servidor (-37.5, -15.0)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 400 casas dentro da zona livre, 0.0 m nas 600 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 11 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 96 casas, 1 com a do cliente ≠ a do mapa de referência)
+  ..    faixa da fronteira do mapa (lados oeste, este): 36 casas; cobertura afirmada 36 (0 diferentes do cliente), null 0 (0 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 11, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ((45,15) lanterna, (41,17) escarpa, (37,18) escarpa, (38,18) escarpa, (39,18) escarpa, (40,18) escarpa, (41,18) escarpa, (35,19) escarpa, (36,19) escarpa, (37,19) escarpa, (41,19) lanterna)
+  ok    mover: o servidor oferece 52 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 2, 2 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 20×50 de 1.5 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-15.0, -37.5), servidor (-15.0, -37.5)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 400 casas dentro da zona livre, 0.0 m nas 600 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 10 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 88 casas, 0 com a do cliente ≠ a do mapa de referência)
+  ..    faixa da fronteira do mapa (lados norte, sul): 36 casas; cobertura afirmada 36 (0 diferentes do cliente), null 0 (0 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 10, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ((19,35) escarpa, (19,36) escarpa, (19,37) escarpa, (19,38) escarpa, (18,39) escarpa, (19,39) escarpa, (18,40) escarpa, (19,40) lanterna, (18,41) escarpa, (16,45) lanterna)
+  ok    mover: o servidor oferece 52 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 2, 2 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 49×30 de 1.5 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-36.0, -22.5), servidor (-36.0, -22.5)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 400 casas dentro da zona livre, 0.0 m nas 1070 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 60 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 112 casas, 1 com a do cliente ≠ a do mapa de referência)
+  ..    faixa da fronteira do mapa (lados este): 28 casas; cobertura afirmada 28 (0 diferentes do cliente), null 0 (0 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 60, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ((10,0) menir, (34,0) água, (35,0) água, (36,0) água, (37,0) água, (38,0) água, (12,1) menir, (34,1) água, (35,1) água, (36,1) água, (37,1) água, (38,1) água, (8,2) menir, (12,2) menir, (35,2) água, (36,2) água, (37,2) água, (38,2) água, (35,3) água, (36,3) água, (37,3) água, (9,4) menir, (11,4) menir, (40,4) tronco, (44,20) lanterna, (40,22) escarpa, (36,23) escarpa, (37,23) escarpa, (38,23) escarpa, (39,23) escarpa, (40,23) escarpa, (34,24) escarpa, (35,24) escarpa, (36,24) escarpa, (40,24) lanterna, (33,25) escarpa, (34,25) escarpa, (33,26) escarpa, (42,26) lanterna, (43,26) escarpa, (33,27) escarpa, (37,27) santuário, (38,27) santuário, (42,27) escarpa, (43,27) escarpa, (33,28) escarpa, (36,28) santuário, (37,28) santuário, (38,28) santuário, (39,28) santuário, (42,28) escarpa, (43,28) escarpa, (32,29) escarpa, (33,29) escarpa, (36,29) santuário, (37,29) santuário, (38,29) santuário, (39,29) santuário, (43,29) escarpa, (44,29) escarpa)
+  ok    mover: o servidor oferece 51 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 10, 10 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 37×20 de 2.0 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-37.0, -20.0), servidor (-37.0, -20.0)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 210 casas dentro da zona livre, 0.0 m nas 530 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 20 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 65 casas, 1 com a do cliente ≠ a do mapa de referência)
+  ..    faixa da fronteira do mapa (lados oeste, este): 18 casas; cobertura afirmada 18 (0 diferentes do cliente), null 0 (0 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 20, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ((6,0) menir, (9,0) menir, (27,0) água, (28,0) água, (29,0) água, (27,1) água, (28,1) água, (30,15) escarpa, (27,16) escarpa, (28,16) escarpa, (29,16) escarpa, (30,16) escarpa, (25,17) escarpa, (26,17) escarpa, (25,18) escarpa, (32,18) lanterna, (25,19) escarpa, (28,19) santuário, (29,19) santuário, (32,19) escarpa)
+  ok    mover: o servidor oferece 31 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 3, 3 com a casa bloqueada no servidor e o mesmo nome
+  ok    grelha 35×37 de 2.0 m: o servidor julga esta grelha
+  ok    a arena abriu a mesma grelha
+  ok    origem no mapa: cliente (-35.0, -37.0), servidor (-35.0, -37.0)
+  ok    altura do centro da casa: desvio cliente−servidor 0.0 m nas 225 casas dentro da zona livre, 0.0 m nas 1070 fora
+  ok    pé da figura: desvio cliente−servidor 0.0 m dentro, 0.0 m fora
+  ok    casas bloqueadas: 56 no servidor, 0 com juízo diferente; motivos diferentes 0; cobertura afirmada diferente 0 (não afirmada na borda: 74 casas, 0 com a do cliente ≠ a do mapa de referência)
+  ..    faixa da fronteira do mapa (lados norte, sul): 33 casas; cobertura afirmada 33 (0 diferentes do cliente), null 0 (0 com a do cliente ≠ a do mapa de referência)
+  ok    as 10 figuras desenhadas: desvio da altura do pé contra o peM do servidor 0.0 m
+  ok    recusas do servidor: 56, todas em casas que o cliente desenha bloqueadas e com o mesmo motivo ((26,6) água, (27,6) água, (28,6) água, (7,7) menir, (25,7) água, (26,7) água, (27,7) água, (28,7) água, (8,8) menir, (25,8) água, (26,8) água, (27,8) água, (28,8) água, (26,9) água, (27,9) água, (6,10) menir, (29,10) tronco, (32,22) lanterna, (26,24) escarpa, (27,24) escarpa, (28,24) escarpa, (29,24) escarpa, (25,25) escarpa, (26,25) escarpa, (29,25) lanterna, (24,26) escarpa, (25,26) escarpa, (24,27) escarpa, (27,27) santuário, (28,27) santuário, (31,27) escarpa, (24,28) escarpa, (26,28) santuário, (27,28) santuário, (28,28) santuário, (31,28) escarpa, (23,29) escarpa, (24,29) escarpa, (26,29) santuário, (27,29) santuário, (28,29) santuário, (32,29) escarpa, (8,30) tronco, (9,30) tronco, (23,30) escarpa, (8,31) tronco, (9,31) tronco, (26,31) lanterna, (8,32) tronco, (9,32) tronco, (26,32) escarpa, (27,32) escarpa, (28,32) escarpa, (8,33) tronco, (9,33) tronco, (22,33) lanterna)
+  ok    mover: o servidor oferece 31 casas, 0 bloqueadas no cliente
+  ok    marcos do mapa na grelha (que bloqueiam): 9, 9 com a casa bloqueada no servidor e o mesmo nome
+medição escrita em C:/Users/txcga/fable-mapa/_tmp/o59/depois/provar-59.json
+TUDO PASSOU

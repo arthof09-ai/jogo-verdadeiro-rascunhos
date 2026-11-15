@@ -39,6 +39,15 @@ extends SceneTree
 ## alcance contra 0,9 × tam + 0,25 m de folga → até 1,35 m para dentro; árvore: 1,30 m; tronco tombado: 1,15 m).
 ## Nas casas da faixa da borda o servidor diz que não sabe (null), com nome — nunca um número errado.
 ##
+## A FRONTEIRA DO MAPA (Ordem 59). Um lado da zona que está na fronteira do mapa (a folga entre ele e a fronteira é
+## de no máximo FOLGA_FONTE_COBERTURA_M) não traz cobertura de fora: tudo o que dá cobertura e muda com a zona só
+## conta se estiver numa casa DO MAPA (árvore: `Grelha.casa_em != FORA`; rocha: idem; estrato: `dar_cobertura` só
+## dentro; a cobertura do tronco tombado não passa de x = −19,5 m nem de z = 32,4 m) e só sobrevive a mais de
+## FOLGA_FONTE_COBERTURA_M fora da zona (o menor raio de sobrevivência entre as fontes: rocha de 0,5 m,
+## 0,9 × 0,5 + 0,25 = 0,70 m; estrato 0,925 m; árvore raio + 0,75 m). Logo, do lado da fronteira, não há fonte:
+## a cobertura das casas cuja faixa só toca lados na fronteira é a do mapa de referência, como no interior.
+## O servidor só cala (null) a faixa dos lados ABERTOS (os que têm mapa para lá de FOLGA_FONTE_COBERTURA_M).
+##
 ## Nada se escreve à mão: os números saem das mesmas funções com que a arena desenha (cenas/arena/assentamento.gd,
 ## o Relevo e a grelha do mapa).
 ##
@@ -62,6 +71,9 @@ const REFERENCIA := [56, 56, 1.5]
 const FOLGA_REFERENCIA_M := 4.0
 ## A faixa da borda onde a cobertura não se serve (m, distância do centro da casa do mapa à borda da zona).
 const BORDA_COBERTURA_M := 1.35
+## Ordem 59: a folga (m) entre um lado da zona e a fronteira do mapa até à qual esse lado não traz cobertura de fora
+## (a menor distância a que uma fonte de cobertura sobrevive fora da zona: rocha de 0,5 m, 0,9 × 0,5 + 0,25).
+const FOLGA_FONTE_COBERTURA_M := 0.70
 ## Os ficheiros de que o terreno depende (o relevo, a grelha do mapa, o que o mapa põe e bloqueia, a regra do
 ## assentamento e este exportador, que decide a forma do pacote, a zona de referência e a faixa da borda). O SHA de
 ## cada um (texto com fins de linha LF) vai no pacote: se um mudar sem se refazer o terreno, o teste do cliente
@@ -196,11 +208,11 @@ func _correr() -> void:
 	partes["escalas"] = escalas
 	partes["redes"] = redes
 	var cab := {"formato": FORMATO, "mapa": "floresta",
-		"geradoPor": "cliente/cenas/arena/ferramentas/exportar_terreno.gd (Ordens 44 e 48)",
+		"geradoPor": "cliente/cenas/arena/ferramentas/exportar_terreno.gd (Ordens 44, 48 e 59)",
 		"nota": "Gerado: não editar à mão. Refazer com a ferramenta sempre que o relevo, o mapa ou a regra do assentamento mudarem; conferir com servidor/ferramentas/conferir-terreno.mjs.",
 		"casasDoMapa": {"lado": GrelhaMapa.LADO, "casaM": GrelhaMapa.CASA_M, "origemM": [-GrelhaMapa.MEIO, -GrelhaMapa.MEIO]},
 		"zonaReferenciaM": [zona_ref.position.x, zona_ref.position.y, zona_ref.size.x, zona_ref.size.y],
-		"bordaCoberturaM": BORDA_COBERTURA_M,
+		"bordaCoberturaM": BORDA_COBERTURA_M, "folgaFonteCoberturaM": FOLGA_FONTE_COBERTURA_M,
 		"codificacao": "redes[].alturaM e peM: base64 dos doubles IEEE-754 little-endian, linha a linha (de norte para sul, x a crescer para leste)",
 		"fontes": sha_fontes()}
 	var texto := montar_texto(cab, partes)
