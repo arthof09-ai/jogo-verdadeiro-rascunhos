@@ -12,6 +12,8 @@ extends RefCounted
 ##   - `ponto_no_chao`      o raio do toque contra o relevo;
 ##   - `ligar_perfil`       (Ordem 52) o perfil gráfico do AplicadorPerfil chega à relva do mapa e ao clima;
 ##   - `recusa_do_pe`       (Ordem 58) uma figura não fica de pé numa casa que o mapa bloqueia: recusa com nome.
+##   - `marcar_recusas`     (Ordem 60) e `aviso_das_recusas`: a recusa vê-se — a figura fica marcada na casa dela e
+##                          o ecrã de cada arena diz quem e porquê (o HUD da jogadora; os alertas do Mestre).
 ## Só apresentação e geometria: não lê Estado, Rede nem nada do Mestre (canario_privacidade.gd).
 
 const CampoFloresta := preload("res://mapa/floresta/campo_floresta.gd")
@@ -80,10 +82,106 @@ static func recusa_do_pe(mapa: Node3D, origem: Vector2, casa_m: float, c: Vector
 
 ## Ordem 58: guarda a recusa do pé de `id` em `agora` e avisa na consola (push_warning, uma vez) se ela é nova ou
 ## mudou desde `antes` — a recusa não cala, e não se repete a cada snapshot.
-static func anotar_recusa(antes: Dictionary, agora: Dictionary, id: String, texto: String) -> void:
+## Ordem 60: devolve true se a recusa é nova (ou mudou): é essa que a arena avisa NO ECRÃ (`aviso_das_recusas`).
+static func anotar_recusa(antes: Dictionary, agora: Dictionary, id: String, texto: String) -> bool:
 	agora[id] = texto
-	if str(antes.get(id, "")) != texto:
-		push_warning("figura %s não se põe de pé: %s" % [id, texto])
+	if str(antes.get(id, "")) == texto:
+		return false
+	push_warning("figura %s não se põe de pé: %s" % [id, texto])
+	return true
+
+
+# ---------------------------------------------------------------- a recusa no ecrã (Ordem 60)
+
+## Ordem 60: a cor da casa de uma figura recusada (o remendo por baixo da marca). Não é a do alvo, nem a do fogo,
+## nem a dos destaques: é a cor de «aqui não».
+const COR_RECUSA := Color(0.80, 0.10, 0.36, 0.60)
+## A marca fica à altura do fogo e dos destaques (por cima da relva, pelo shader dos remendos de cada arena).
+const LEVANTA_RECUSA := 0.042
+## O rótulo da marca fica por cima da casa, à altura da cabeça de uma figura de pé.
+const ALTURA_ROTULO_RECUSA := 1.6
+
+
+## Ordem 60: o motivo de uma recusa do pé («FLORESTA-E08-CASA-BLOQUEADA: (x,y) motivo» → «motivo»).
+static func motivo_da_recusa(recusa: String) -> String:
+	var i := recusa.find(") ")
+	return recusa.substr(i + 2) if i >= 0 else recusa
+
+
+## Ordem 60: o texto que as DUAS arenas mostram no ecrã quando uma ou mais figuras deixam de ficar de pé, onde cada
+## uma já mostra os seus avisos (o «Aviso» do HUD da jogadora; os alertas do Mestre). `novas` = [{nome, casa,
+## recusa}, ...] (só as recusas novas: `anotar_recusa`). `com_casa`: o Mestre lê a casa (x,y); a jogadora não (nada
+## técnico na tela dela: hud.gd). "" se não há nada novo.
+static func aviso_das_recusas(novas: Array, com_casa: bool) -> String:
+	if novas.is_empty():
+		return ""
+	var partes: Array = []
+	for e: Dictionary in novas:
+		var c: Vector2i = e["casa"]
+		partes.append("«%s»%s %s" % [e["nome"], (" (%d,%d)" % [c.x, c.y]) if com_casa else "", motivo_da_recusa(str(e["recusa"]))])
+	if novas.size() == 1:
+		var e: Dictionary = novas[0]
+		var c: Vector2i = e["casa"]
+		return "«%s» não fica de pé %s: %s — o mapa bloqueia a casa. Fica marcada no mapa." % [e["nome"],
+			("em (%d,%d)" % [c.x, c.y]) if com_casa else "nesta casa", motivo_da_recusa(str(e["recusa"]))]
+	return "%d figuras não ficam de pé — o mapa bloqueia as casas delas: %s. Ficam marcadas no mapa." % [novas.size(), "; ".join(partes)]
+
+
+## Ordem 60: a figura recusada NÃO desaparece da arena: fica marcada NA CASA DELA (a casa que o servidor lhe dá; não
+## se desenha noutra, pela razão da Ordem 58) — um remendo da casa na cor de recusa e um rótulo com o nome e o motivo
+## («✕ nome» / «não fica de pé: motivo»). Uma marca por figura, no nó «Recusas» de `dono` (a arena; fora do mapa; só
+## nasce na primeira recusa: sem recusas a árvore da arena fica como era). `marcas` = figuraId -> Node3D (o estado da
+## arena); `recusas` = figuraId -> {nome, casa, recusa}. Uma marca que não mudou fica como está; as que deixaram de
+## valer saem já da árvore. `material`: o material dos remendos da arena (cor da instância).
+static func marcar_recusas(dono: Node3D, marcas: Dictionary, recusas: Dictionary, origem: Vector2, casa_m: float, material: Material) -> void:
+	var pai := dono.get_node_or_null(^"Recusas") as Node3D
+	if pai == null:
+		if recusas.is_empty():
+			return
+		pai = Node3D.new()
+		pai.name = "Recusas"
+		dono.add_child(pai)
+	for id in marcas.keys():
+		var no: Node3D = marcas[id]
+		var e = recusas.get(id)
+		if e is Dictionary and is_instance_valid(no) and no.get_meta("chave", "") == _chave_marca(e, origem, casa_m):
+			continue
+		if is_instance_valid(no):
+			if no.get_parent() != null:
+				no.get_parent().remove_child(no)
+			no.queue_free()
+		marcas.erase(id)
+	for id in recusas:
+		if marcas.has(id):
+			continue
+		var e: Dictionary = recusas[id]
+		var c: Vector2i = e["casa"]
+		var no := Node3D.new()
+		no.name = "Recusa_%s" % str(id).validate_node_name()
+		no.set_meta("chave", _chave_marca(e, origem, casa_m))
+		var casa := MeshInstance3D.new()
+		casa.name = "Casa"
+		casa.mesh = malha_casas(origem, casa_m, [[c, COR_RECUSA]], 0.9, LEVANTA_RECUSA)
+		casa.material_override = material
+		casa.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		no.add_child(casa)
+		var rotulo := Label3D.new()
+		rotulo.name = "Rotulo"
+		rotulo.text = "✕ %s\nnão fica de pé: %s" % [e["nome"], motivo_da_recusa(str(e["recusa"]))]
+		rotulo.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		rotulo.no_depth_test = true
+		rotulo.font_size = 48
+		rotulo.outline_size = 12
+		rotulo.pixel_size = 0.005
+		rotulo.modulate = Color(1.0, 0.78, 0.84)
+		rotulo.position = Assentamento.centro_casa(origem, casa_m, c) + Vector3(0.0, ALTURA_ROTULO_RECUSA, 0.0)
+		no.add_child(rotulo)
+		pai.add_child(no)
+		marcas[id] = no
+
+
+static func _chave_marca(e: Dictionary, origem: Vector2, casa_m: float) -> String:
+	return "%s|%s|%s|%s|%s" % [e["casa"], e["nome"], e["recusa"], origem, casa_m]
 
 
 ## Ordem 42 (parte 2): o clima sobre o mapa. As bacias do alagamento são os pontos baixos REAIS do relevo

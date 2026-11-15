@@ -218,6 +218,8 @@ const FASE := {"lobby": "Sala: à espera de começar", "combate": "Sala: em comb
 	"pausa": "Sala: em pausa"}
 const RODADA_VEZ := "Rodada %d · vez de %s"
 const ALERTAS := "Alertas: %d"
+## Ordem 60: na folha (aba Figuras), a figura que o mapa não deixa pôr de pé (a recusa do pé, Ordem 58).
+const NAO_DE_PE := " · ✕ não está de pé: %s (o mapa bloqueia a casa)"
 const ALERTA := {
 	"bloqueio_join": "Muitas entradas erradas (%s).",
 	"segunda_ligacao": "%s abriu outra ligação.",

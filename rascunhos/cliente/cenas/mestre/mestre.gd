@@ -758,6 +758,10 @@ func _desenhar_figuras() -> void:
 		var l := Label.new()
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		l.text = Modelo.linha_figura(vista, f)
+		# Ordem 60: a figura que o mapa não deixa pôr de pé diz porquê na folha (a recusa do pé: arena_mestre.gd).
+		var motivo: String = _arena.motivo_do_pe_recusado(str(f.get("id", "")))
+		if motivo != "":
+			l.text += Textos.NAO_DE_PE % motivo
 		l.set_meta("figura", str(f.get("id", "")))
 		_lista_figuras.add_child(l)
 
@@ -971,6 +975,7 @@ func _montar() -> void:
 	_arena.name = "ArenaMestre"
 	sv.add_child(_arena)
 	_arena.casa_tocada.connect(casa_tocada)
+	_arena.recusas_novas.connect(_juntar_alerta)  # Ordem 60: a recusa do pé vê-se nos alertas
 	_livre = ControlosLivre.new()
 	add_child(_livre)
 	_livre.montar(_arena)

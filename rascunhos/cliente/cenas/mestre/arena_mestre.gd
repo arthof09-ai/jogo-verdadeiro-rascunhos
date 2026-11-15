@@ -22,6 +22,9 @@ extends Node3D
 ## real, os abrigos dos obstáculos reais, a relva a responder. Só apresentação, como antes.
 
 signal casa_tocada(casa: Vector2i)
+## Ordem 60: figuras que deixaram agora de ficar de pé (casa bloqueada pelo mapa): o texto do aviso, com o nome e o
+## motivo de cada uma (campo_da_mesa.gd `aviso_das_recusas`). O ecrã do Mestre junta-o aos alertas.
+signal recusas_novas(aviso: String)
 
 const CameraMesa := preload("res://camera/camera_mesa.gd")
 const Modelo := preload("res://cenas/mestre/modelo_mestre.gd")
@@ -84,6 +87,8 @@ var _contornos: MeshInstance3D
 var _anel: MeshInstance3D
 var _nos: Dictionary = {}  # figuraId -> Node3D
 var _pes_recusados: Dictionary = {}  # Ordem 58: figuraId -> recusa do pé (casa bloqueada pelo mapa)
+var _marcas_recusa: Dictionary = {}  # Ordem 60: figuraId -> a marca da figura recusada (campo_da_mesa.gd)
+var _mat_recusa: ShaderMaterial  # Ordem 60: o material das marcas (o dos remendos, cor da instância)
 var _entradas := 0  # ordem de entrada das figuras: a cor do anel (cena.js `units.size % 5`)
 var _casas_destacadas: Array[Vector2i] = []
 var _clima_do_ambiente := ""  # o último clima de jogo visto na vista (só se segue quando muda)
@@ -237,6 +242,8 @@ func aplicar_vista(vista: Dictionary) -> void:
 		construir_grelha(int(m.get("largura", 20)), int(m.get("altura", 20)), float(m.get("casaM", 1.5)))
 	var vistos := {}
 	var recusados := {}
+	var marcas := {}
+	var novas: Array = []
 	for f in Modelo.figuras(vista):
 		if not (f is Dictionary) or f.get("colocada") != true:
 			continue
@@ -244,9 +251,13 @@ func aplicar_vista(vista: Dictionary) -> void:
 		var c := Vector2i(int(f.get("x", 0)), int(f.get("y", 0)))
 		# Ordem 58: numa casa que o mapa bloqueia a figura não se põe de pé (recusa com nome: campo_da_mesa.gd),
 		# como na arena do jogador. A figura continua na folha do Mestre.
+		# Ordem 60: e não some em silêncio — fica marcada na casa dela, e a recusa nova vai aos alertas do Mestre.
 		var recusa := CampoDaMesa.recusa_do_pe(mapa, origem, casa_m, c)
 		if recusa != "":
-			CampoDaMesa.anotar_recusa(_pes_recusados, recusados, id, recusa)
+			var e := {"nome": Modelo.nome_mestre(f), "casa": c, "recusa": recusa}
+			marcas[id] = e
+			if CampoDaMesa.anotar_recusa(_pes_recusados, recusados, id, recusa):
+				novas.append(e)
 			continue
 		vistos[id] = true
 		var no: Node3D = _nos.get(id)
@@ -267,6 +278,12 @@ func aplicar_vista(vista: Dictionary) -> void:
 			(_nos[id] as Node).queue_free()
 			_nos.erase(id)
 	_pes_recusados = recusados
+	if _mat_recusa == null:
+		_mat_recusa = _material_sobre(Color.WHITE, true, 2)
+	CampoDaMesa.marcar_recusas(self, _marcas_recusa, marcas, origem, casa_m, _mat_recusa)
+	var aviso := CampoDaMesa.aviso_das_recusas(novas, true)
+	if aviso != "":
+		recusas_novas.emit(aviso)
 	desenhar_fogo(vista)
 	var vez := str(vista.get("vezId", "")) if vista.get("vezId") is String else ""
 	_anel.visible = _nos.has(vez)
@@ -389,6 +406,11 @@ func figuras_desenhadas() -> int:
 ## figuraId -> «FLORESTA-E08-CASA-BLOQUEADA: (x,y) motivo» (campo_da_mesa.gd `recusa_do_pe`).
 func pes_recusados() -> Dictionary:
 	return _pes_recusados.duplicate()
+
+
+## Ordem 60: o motivo por que a figura `id` não está de pé («escarpa», «água funda»…), ou "" se está (a folha).
+func motivo_do_pe_recusado(id: String) -> String:
+	return CampoDaMesa.motivo_da_recusa(str(_pes_recusados[id])) if _pes_recusados.has(id) else ""
 
 
 ## Centro da casa, em cima do chão do mapa (a altura do relevo nesse ponto), como na arena do jogador.

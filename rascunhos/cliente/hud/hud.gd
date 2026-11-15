@@ -882,6 +882,11 @@ func _ao_erro(codigo: String, _texto: String) -> void:
 	# Outros erros não aparecem: nada técnico na tela da jogadora.
 
 
+## Ordem 60: o Aviso do HUD, para a arena (a recusa do pé: arena.gd `_sincronizar_figuras`).
+func mostrar_aviso(texto: String, segundos: float = 3.5) -> void:
+	_mostrar_aviso(texto, segundos)
+
+
 func _mostrar_aviso(texto: String, segundos: float = 3.5) -> void:
 	_aviso.text = texto
 	_aviso.visible = true
