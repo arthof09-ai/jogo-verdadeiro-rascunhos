@@ -9,6 +9,12 @@ extends Node
 ##   relogio.fase()            -> "madrugada" | "manhã" | "dia" | "tarde" | "entardecer" | "noite"
 ##   relogio.estado()          -> Dictionary com TUDO o que sai da hora (astros, cores, luz, névoa)
 ##   sinal fase_mudou(fase)    -> quando a fase muda de nome
+##   (Ordem 55) A LUA TEM FASES:
+##   relogio.idade_da_lua()    -> float, 0–28: dias do mundo desde a lua nova (14 = cheia)
+##   relogio.fase_da_lua()     -> "nova" | "crescente" | "cheia" | "minguante"
+##   relogio.lua_iluminada()   -> float, 0–1: a fracção do disco iluminada (a «quantidade» de lua)
+##   sinal fase_da_lua_mudou(fase_da_lua) -> quando a fase da lua muda de nome
+##   (e no estado(): lua_idade, lua_fase, lua_iluminada, lua_terminador, lua_lado)
 ##
 ## A DURAÇÃO DO DIA configura-se num só sítio: DURACAO_DIA_S (segundos reais por dia do mundo;
 ## ou o export duracao_dia_s do nó). O MODO DE PROVA acelera-o: modo_prova = true (tecla T na
@@ -26,8 +32,19 @@ extends Node
 ##   · a luz-chave (a «luz pintada» dos shaders e a DirectionalLight do mundo) é o sol enquanto
 ##     ele está acima do horizonte e a lua de noite; entre os dois há um instante de crepúsculo
 ##     em que NENHUM dá luz directa (só céu): é aí que a direcção da luz troca, sem se ver.
+##   · (Ordem 55) AS FASES DA LUA: a idade da lua avança 1 dia por dia do mundo e as fases dão a
+##     volta em DIAS_FASES_LUA = 28 dias do mundo. A idade vira às 12:30 (LUA_TROCA_HORA, quando a
+##     lua está no ponto mais baixo, 52° debaixo do chão, com o sol a pino): a troca nunca se vê, e
+##     cada noite tem uma lua só. A fase MULTIPLICA a luz da lua pela fracção iluminada do disco,
+##     (1 − cos α)/2, com α = 360° × idade/28 — cheia 1 (exactamente a Ordem 43), quartos 0,5,
+##     nova 0 — e o disco do céu mostra a parte iluminada (o terminador é a elipse da esfera). A
+##     posição da lua NÃO anda com a fase (fica a da Ordem 43, oposta ao sol), e os botões da noite
+##     (lua_baixa, LUA_ENERGIA, o céu) ficam como estavam: a fase compõe-se com eles. O mundo abre
+##     na lua cheia (LUA_IDADE_INICIAL = LUA_CHEIA).
 
 signal fase_mudou(fase: String)
+## (Ordem 55) quando a fase da lua muda de nome ("nova" | "crescente" | "cheia" | "minguante").
+signal fase_da_lua_mudou(fase_da_lua: String)
 
 const Paleta := preload("res://mapa/floresta/paleta_floresta.gd")
 
@@ -86,6 +103,20 @@ const CEU_LUZ: Array[float] = [0.20, 0.30, 0.44, 0.62, 0.82, 0.95, 1.0]
 const COR_LUA := Color("#a9c0f2")
 const LUA_ENERGIA := 0.36
 
+# ---- (Ordem 55) as fases da lua
+## Dias do mundo por volta das fases (lua nova → lua nova).
+const DIAS_FASES_LUA := 28.0
+## As idades (dias desde a lua nova) das quatro fases.
+const LUA_NOVA := 0.0
+const LUA_CRESCENTE := 7.0
+const LUA_CHEIA := 14.0
+const LUA_MINGUANTE := 21.0
+## O mundo abre na lua cheia: a lua da Ordem 43.
+const LUA_IDADE_INICIAL := LUA_CHEIA
+## A hora a que a idade da lua vira: o ponto mais baixo da lua (12 h depois de culminar), com o
+## sol a pino — nem a luz nem o disco da lua se vêem nesse instante.
+const LUA_TROCA_HORA := LUA_CULMINA + 12.0
+
 # ---- a névoa por HORA (a madrugada tem bruma; o entardecer também, menos): hora, início (m),
 # fim (m), tecto (opacidade máxima)
 const NEVOA: Array = [
@@ -102,15 +133,20 @@ const NEVOA: Array = [
 
 var hora: float = HORA_INICIAL
 var dias: int = 0
+## (Ordem 55) a idade da lua: dias do mundo desde a lua nova, 0–28 (vira às LUA_TROCA_HORA).
+var idade_lua: float = LUA_IDADE_INICIAL
 
 var _estado: Dictionary = {}
 var _hora_do_estado := -1.0
+var _idade_do_estado := -1.0
 var _fase := ""
+var _fase_lua := ""
 
 
 func _ready() -> void:
 	add_to_group("relogio_mundo")
 	_fase = fase()
+	_fase_lua = fase_da_lua()
 
 
 func _process(delta: float) -> void:
@@ -149,11 +185,15 @@ func avancar(delta: float) -> void:
 
 
 func avancar_horas(dh: float) -> void:
+	# (Ordem 55) quantas vezes o relógio passa pela hora da troca da lua neste passo
+	var voltas_lua := floori((hora + dh - LUA_TROCA_HORA) / 24.0) - floori((hora - LUA_TROCA_HORA) / 24.0)
 	hora += dh
 	while hora >= 24.0:
 		hora -= 24.0
 		dias += 1
 	_ver_fase()
+	if voltas_lua != 0:
+		definir_idade_da_lua(idade_lua + float(voltas_lua))
 
 
 func fase() -> String:
@@ -173,10 +213,57 @@ static func fase_de(h: float) -> String:
 
 
 func estado() -> Dictionary:
-	if not is_equal_approx(hora, _hora_do_estado):
-		_estado = calcular(hora)
+	if not is_equal_approx(hora, _hora_do_estado) or idade_lua != _idade_do_estado:
+		_estado = calcular(hora, idade_lua)
 		_hora_do_estado = hora
+		_idade_do_estado = idade_lua
 	return _estado
+
+
+# ---- (Ordem 55) a fase da lua
+
+## Dias do mundo desde a lua nova, 0–28 (14 = cheia).
+func idade_da_lua() -> float:
+	return idade_lua
+
+
+## "nova" | "crescente" | "cheia" | "minguante".
+func fase_da_lua() -> String:
+	return fase_da_lua_de(idade_lua)
+
+
+## A fracção do disco da lua iluminada (0 = nova, 0,5 = quartos, 1 = cheia).
+func lua_iluminada() -> float:
+	return iluminada_de(idade_lua)
+
+
+## Põe a lua numa idade (dias desde a lua nova; dá a volta aos 28). A hora não muda.
+func definir_idade_da_lua(idade: float) -> void:
+	idade_lua = fposmod(idade, DIAS_FASES_LUA)
+	var f := fase_da_lua()
+	if f != _fase_lua:
+		_fase_lua = f
+		fase_da_lua_mudou.emit(f)
+
+
+## O nome da fase de uma idade: cada nome cobre os 7 dias à volta da sua idade (nova 24,5–3,5;
+## crescente 3,5–10,5; cheia 10,5–17,5; minguante 17,5–24,5).
+static func fase_da_lua_de(idade: float) -> String:
+	var q := int(floor(fposmod(idade + DIAS_FASES_LUA / 8.0, DIAS_FASES_LUA) / (DIAS_FASES_LUA / 4.0))) % 4
+	return ["nova", "crescente", "cheia", "minguante"][q]
+
+
+## O ângulo de fase α (graus) da idade: 0 na lua nova, 180 na cheia.
+static func angulo_de_fase(idade: float) -> float:
+	return 360.0 * fposmod(idade, DIAS_FASES_LUA) / DIAS_FASES_LUA
+
+
+## A fracção iluminada do disco: (1 − cos α)/2 — a área da parte clara de uma esfera vista com
+## o ângulo de fase α. Na cheia é EXACTAMENTE 1 (a âncora da Ordem 43).
+static func iluminada_de(idade: float) -> float:
+	if is_equal_approx(fposmod(idade, DIAS_FASES_LUA), LUA_CHEIA):
+		return 1.0
+	return clampf(0.5 * (1.0 - cos(deg_to_rad(angulo_de_fase(idade)))), 0.0, 1.0)
 
 
 func _ver_fase() -> void:
@@ -263,8 +350,9 @@ static func _max_luz(a: Color, b: Color) -> Color:
 
 # ------------------------------------------------------------------ tudo o que sai da hora
 
-## Função PURA: a mesma hora dá sempre o mesmo mundo.
-static func calcular(h: float) -> Dictionary:
+## Função PURA: a mesma hora (e a mesma idade da lua) dá sempre o mesmo mundo. Sem a idade, é a
+## lua cheia — exactamente o mundo da Ordem 43.
+static func calcular(h: float, idade_lua_dias: float = LUA_CHEIA) -> Dictionary:
 	h = fposmod(h, 24.0)
 	var s := sol(h)
 	var l := lua(h)
@@ -281,6 +369,15 @@ static func calcular(h: float) -> Dictionary:
 	d["dir_sol"] = Paleta.dir_de(s.x, e)
 	d["dir_lua"] = Paleta.dir_de(l.x, l.y)
 	d["manha"] = manha
+	# ---- (Ordem 55) a fase da lua. O terminador (a linha entre a parte clara e a escura do disco)
+	# é a elipse x = cos α · √(1 − y²), com x medido para o lado claro: claro onde x > terminador.
+	# Crescente: o lado claro é o do poente (oeste); minguante: o do nascente (leste).
+	var idade := fposmod(idade_lua_dias, DIAS_FASES_LUA)
+	d["lua_idade"] = idade
+	d["lua_fase"] = fase_da_lua_de(idade)
+	d["lua_iluminada"] = iluminada_de(idade)
+	d["lua_terminador"] = -1.0 if is_equal_approx(idade, LUA_CHEIA) else cos(deg_to_rad(angulo_de_fase(idade)))
+	d["lua_lado"] = -1.0 if idade < LUA_CHEIA else 1.0      # −1 = claro a oeste · +1 = claro a leste
 	# ---- céu
 	d["cor_zenite"] = _cor(ZENITE_M, ZENITE_T, onde, manha)
 	d["cor_meio"] = _cor(MEIO_M, MEIO_T, onde, manha)
@@ -305,7 +402,10 @@ static func calcular(h: float) -> Dictionary:
 	# ficava MAIS escuro que a noite cerrada. A lua baixa ganha força até 1,35× (a 8°) e volta a
 	# 1× aos 35° — a noite lê-se igual de ponta a ponta, sem quebra
 	var lua_baixa := lerpf(1.35, 1.0, _suave(8.0, 35.0, l.y))
-	var lua_energia := LUA_ENERGIA * lua_baixa * (1.0 - _suave(-7.0, -2.2, e)) * _suave(0.0, 12.0, l.y)
+	# (Ordem 55) a fase: a luz da lua × a fracção iluminada do disco (cheia = 1, a de sempre). O
+	# lua_baixa e o resto ficam: a fase multiplica-os, não os substitui
+	var iluminada := iluminada_de(idade_lua_dias)
+	var lua_energia := LUA_ENERGIA * lua_baixa * iluminada * (1.0 - _suave(-7.0, -2.2, e)) * _suave(0.0, 12.0, l.y)
 	var ceu_luz := _num(CEU_LUZ, onde)
 	# (sessão 3) QUEM é a luz-chave: um PESO contínuo (0 = lua, 1 = sol), não um interruptor. A
 	# passagem faz-se com o sol entre −5° e −1° (~20 min do mundo) — à volta da janela em que nenhum astro dá luz directa

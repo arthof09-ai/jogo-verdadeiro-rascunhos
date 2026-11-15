@@ -35,6 +35,10 @@ uniform float nuvens_opacidade = 0.90;
 uniform float nuvens_desloc = 0.0;                // as nuvens andam com o vento (em voltas)
 uniform float estrelas = 0.0;
 uniform float lua_noite = 0.0;                    // 0 = lua de dia (véu pálido) · 1 = lua da noite
+// (Ordem 55) a fase da lua (ciclo_dia.gd): os valores por omissão são a lua CHEIA da Ordem 43.
+uniform float lua_iluminada = 1.0;                // a fracção do disco iluminada (o halo segue-a)
+uniform float lua_terminador = -1.0;              // cos α: −1 cheia · 0 quartos · 1 nova
+uniform float lua_lado = 1.0;                     // −1 = claro à direita (oeste, crescente) · +1 = à esquerda (leste, minguante)
 uniform float sol_raio_graus = 2.875;
 uniform float lua_raio_graus = 1.95;
 uniform float faixa : hint_range(0.01, 0.5) = 0.15;
@@ -105,16 +109,18 @@ void sky() {
 	}
 
 	// ---------- lua (de dia um véu pálido; de noite o disco claro, com os mares e um halo)
+	// (Ordem 55) com FASES: o halo vem da parte iluminada; o disco só é claro do lado do
+	// terminador que dá para o sol; a parte escura deixa ver o céu de trás (tapa as estrelas).
 	{
 		vec3 l = normalize(dir_lua);
-		vec3 lx = normalize(cross(vec3(0.0, 1.0, 0.0), l));
+		vec3 lx = normalize(cross(vec3(0.0, 1.0, 0.0), l));   // a esquerda de quem olha a lua
 		vec3 ly = cross(l, lx);
 		float raio = radians(lua_raio_graus);
 		vec2 q = vec2(dot(d, lx), dot(d, ly)) / raio;
 		float rr = length(q);
 		float frente = step(0.0, dot(d, l));
 		float halo = (1.0 - smoothstep(1.0, 6.5, rr)) * frente;
-		cor = mix(cor, vec3(0.62, 0.72, 0.92), halo * halo * 0.30 * lua_noite);
+		cor = mix(cor, vec3(0.62, 0.72, 0.92), halo * halo * 0.30 * lua_noite * lua_iluminada);
 		if (frente > 0.5 && rr < 1.0) {
 			float mares = 0.0;
 			mares += 0.34 * (1.0 - smoothstep(0.0, 0.37, length(q - vec2(0.31, 0.46))));
@@ -128,7 +134,18 @@ void sky() {
 			vec3 dia = mix(cor, vec3(0.985, 0.975, 0.945), clamp(0.80 - mares * 0.55, 0.0, 1.0));
 			// de noite: disco de marfim, mares em cinza-azulado
 			vec3 noite = mix(vec3(0.99, 0.975, 0.93), vec3(0.60, 0.66, 0.78), mares * 1.1);
-			cor = mix(cor, mix(dia, noite, lua_noite), borda);
+			vec3 disco = mix(dia, noite, lua_noite);
+			// (Ordem 55) o terminador: claro onde s > cos α · √(1 − y²), s medido para o lado claro.
+			// Na cheia (cos α = −1) não se entra aqui: o disco é o da Ordem 43, píxel a píxel.
+			if (lua_terminador > -0.9999) {
+				float s = q.x * lua_lado;
+				float t = lua_terminador * sqrt(max(1.0 - q.y * q.y, 0.0));
+				float claro = smoothstep(t - 0.05, t + 0.05, s);
+				// a parte escura: o céu de trás, sem estrelas, com o halo que houver
+				vec3 escuro = mix(ceu_limpo, vec3(0.62, 0.72, 0.92), halo * halo * 0.30 * lua_noite * lua_iluminada);
+				disco = mix(escuro, disco, claro);
+			}
+			cor = mix(cor, disco, borda);
 		}
 	}
 

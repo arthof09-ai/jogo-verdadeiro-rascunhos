@@ -39,6 +39,8 @@ extends Node3D
 ##     que manda na relva, nas hastes, nas copas, no anel e na copa da Árvore Ancestral;
 ##   grupo «lua» (DirectionalLight3D): a luz da noite.
 ##   Teclas: T modo de prova (dia em 96 s) · P pára/anda o relógio · , e . recuam/avançam 1 hora.
+##   (Ordem 55) a LUA TEM FASES (ciclo.fase_da_lua(), também na raiz): U avança 1 dia da lua,
+##     Shift+U recua 1 dia (a hora não muda).
 
 const Paleta := preload("res://mapa/floresta/paleta_floresta.gd")
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
@@ -147,6 +149,7 @@ var _mats_grau: Array[ShaderMaterial] = []   # tinta cozida (anel longe, outeiro
 var _lanc := PackedFloat32Array()            # os lançadores de sombra (9 números cada)
 var _alturas := PackedFloat32Array()         # o relevo em RELEVO_N² (para a sombra viva do relevo)
 var _hora_aplicada := -1.0
+var _idade_lua_aplicada := -1.0
 var _nuvens_desloc := 0.0
 var _hora_nuvens := -1.0
 
@@ -200,8 +203,8 @@ func _process(delta: float) -> void:
 	if _t_rotulo >= 0.5:
 		_t_rotulo = 0.0
 		var v: Dictionary = vento.vento_actual()
-		_rotulo.text = "Floresta 43 | %s %s | vento de %s %.0f km/h | %d fps | %d chamadas | %d primitivas | relva %d tufos | 1-9 vistas, F fundo, L LOD, T prova, P pausa, , . hora" % [
-			ciclo.hora_texto(), ciclo.fase(), VentoMundo.rumo(v["azimute_de"]), float(v["velocidade_ms"]) * 3.6,
+		_rotulo.text = "Floresta 43 | %s %s | lua %s (dia %d) | vento de %s %.0f km/h | %d fps | %d chamadas | %d primitivas | relva %d tufos | 1-9 vistas, F fundo, L LOD, T prova, P pausa, , . hora, U lua" % [
+			ciclo.hora_texto(), ciclo.fase(), ciclo.fase_da_lua(), int(ciclo.idade_da_lua()), VentoMundo.rumo(v["azimute_de"]), float(v["velocidade_ms"]) * 3.6,
 			Engine.get_frames_per_second(),
 			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME),
 			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME),
@@ -230,6 +233,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		ciclo.definir_hora(ciclo.hora + 1.0)
 	elif k.keycode == KEY_COMMA:
 		ciclo.definir_hora(ciclo.hora - 1.0)
+	elif k.keycode == KEY_U:
+		ciclo.definir_idade_da_lua(ciclo.idade_da_lua() + (-1.0 if k.shift_pressed else 1.0))
 
 
 # ------------------------------------------------------------------ API
@@ -241,6 +246,11 @@ func altura_em(x: float, z: float) -> float:
 ## A hora do mundo (0–24 contínua). Só apresentação: nenhuma regra a lê.
 func hora_do_mundo() -> float:
 	return ciclo.hora_do_mundo()
+
+
+## (Ordem 55) A fase da lua agora: "nova" | "crescente" | "cheia" | "minguante". Só apresentação.
+func fase_da_lua() -> String:
+	return ciclo.fase_da_lua()
 
 
 ## O vento do mundo agora: { direcao, forca, velocidade_ms, azimute_para, azimute_de, rajada }.
@@ -396,8 +406,9 @@ func _ligar_ciclo_e_vento() -> void:
 ## chamam-na depois de definir_hora().
 func aplicar_ciclo() -> void:
 	var h := ciclo.hora_do_mundo()
-	if is_equal_approx(h, _hora_aplicada):
+	if is_equal_approx(h, _hora_aplicada) and ciclo.idade_da_lua() == _idade_lua_aplicada:
 		return
+	_idade_lua_aplicada = ciclo.idade_da_lua()
 	var e: Dictionary = ciclo.estado()
 	# ---- as nuvens andam com o vento (em horas do mundo: no modo de prova correm, como num
 	# filme acelerado)
@@ -447,6 +458,9 @@ func aplicar_ciclo() -> void:
 	_mat_ceu.set_shader_parameter("nuvens_desloc", _nuvens_desloc)
 	_mat_ceu.set_shader_parameter("estrelas", e["estrelas"])
 	_mat_ceu.set_shader_parameter("lua_noite", e["lua_noite"])
+	_mat_ceu.set_shader_parameter("lua_iluminada", e["lua_iluminada"])       # (Ordem 55) a fase
+	_mat_ceu.set_shader_parameter("lua_terminador", e["lua_terminador"])
+	_mat_ceu.set_shader_parameter("lua_lado", e["lua_lado"])
 	# ---- a névoa e a luz ambiente
 	var env := _ambiente.environment
 	env.fog_light_color = horizonte                                          # (b) a névoa
