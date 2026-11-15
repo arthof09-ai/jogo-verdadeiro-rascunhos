@@ -381,6 +381,7 @@ func _correr() -> void:
 	await _nomes_juntos(c, fx["mestre"]["vista"])
 	await _camara_livre(c)
 	await _clima(c)
+	await _perfil_grafico(c)
 
 	var todos: Array = []
 	_textos(c, todos)
@@ -1247,6 +1248,99 @@ func _clima(c) -> void:
 		if is_instance_valid(n) and (n as MeshInstance3D).material_overlay != null:
 			limpos = false
 	_ok(limpos and cl.parado() and not cl.is_processing(), "desligado e seco: a camada sai do chão e das figuras e o módulo dorme")
+
+
+## Ordem 52: o perfil gráfico no ecrã do Mestre. A escolha é a das definições (a mesma da ⚙ da jogadora:
+## arte/perfis/escolha_perfil.gd), o efeito é o do mesmo AplicadorPerfil pelo código das duas arenas
+## (campo_da_mesa.gd ligar_perfil). Sem escolha, a arena do Mestre fica como antes: relva a 1,0, clima no Médio.
+func _perfil_grafico(c) -> void:
+	print("== perfil gráfico (ordem 52) ==")
+	var EscolhaPerfil = load("res://arte/perfis/escolha_perfil.gd")
+	var a = c._arena
+	var cl = a.clima
+	cl.definir_por_nome("nenhum")
+	var real_existia := FileAccess.file_exists(EscolhaPerfil.ARQ)
+	var real_antes := FileAccess.get_file_as_string(EscolhaPerfil.ARQ) if real_existia else ""
+
+	# O mesmo caminho, sem cópia: as duas arenas ligam o perfil pelo código partilhado e não têm números próprios.
+	var cod_m := FileAccess.get_file_as_string("res://cenas/mestre/arena_mestre.gd")
+	var cod_j := FileAccess.get_file_as_string("res://cenas/arena/arena.gd")
+	var cod_hud := FileAccess.get_file_as_string("res://hud/hud.gd")
+	var cod_ecra := FileAccess.get_file_as_string("res://cenas/mestre/mestre.gd")
+	_ok(cod_m.contains("CampoDaMesa.ligar_perfil(") and cod_j.contains("CampoDaMesa.ligar_perfil("),
+		"as duas arenas ligam o perfil pelo mesmo código (campo_da_mesa.gd ligar_perfil)")
+	_ok(not cod_m.contains("folhagem_densidade") and not cod_m.contains("CONTAGEM") and not cod_ecra.contains("folhagem_densidade"),
+		"o ecrã do Mestre não tem números de perfil próprios")
+	_ok(cod_hud.contains("EscolhaPerfil.PERFIS") and cod_hud.contains("EscolhaPerfil.seletor()") and cod_ecra.contains("EscolhaPerfil.seletor()"),
+		"a ⚙ da jogadora e a do Mestre montam o mesmo seletor «Gráficos» da mesma lista")
+
+	# Sem escolha: como antes da ordem 52.
+	var relva = a.mapa.relva
+	relva.atualizar_lod(a.camera.global_position)
+	var tufos_sem: int = relva.tufos_ativos()
+	_ok(a.perfil_atual() == "" and is_equal_approx(a.mapa.densidade_relva, 1.0) and cl.perfil == "medio",
+		"sem escolha: nenhum perfil aplicado, relva a %.2f, clima «%s» (como antes)" % [a.mapa.densidade_relva, cl.perfil])
+	cl.definir_por_nome("chuva-forte")
+	var chuva_sem: int = cl.contagem_alvo("chuva")
+	cl.definir_por_nome("nenhum")
+	_ok(chuva_sem == 5000, "sem escolha: a chuva forte pede as 5000 gotas do Médio (%d)" % chuva_sem)
+	var op: OptionButton = c.find_child("Graficos", true, false)
+	_ok(op != null and op.item_count == 3 and op.selected == -1, "a aba Sala tem a linha «Gráficos», 3 perfis, nenhum marcado")
+	var nomes: Array = []
+	for i in (op.item_count if op != null else 0):
+		nomes.append(op.get_item_text(i))
+	_ok(nomes == Array(EscolhaPerfil.NOMES) and nomes == ["Baixo", "Médio", "Alto"], "os nomes da ⚙ da jogadora: %s" % [nomes])
+
+	# A escolha guardada: o mesmo ficheiro e a mesma chave da ⚙ (num ficheiro de prova, para não mexer no verdadeiro).
+	var arq := "user://prova-ordem52-perfil.cfg"
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(arq))
+	_ok(EscolhaPerfil.escolhido(arq) == "", "sem ficheiro: sem escolha")
+	var cfg := ConfigFile.new()
+	cfg.set_value("pref", "camera", "360")
+	cfg.save(arq)
+	_ok(EscolhaPerfil.escolhido(arq) == "", "ficheiro sem a chave do perfil: sem escolha")
+	_ok(EscolhaPerfil.guardar("Baixo", arq) and EscolhaPerfil.escolhido(arq) == "baixo", "guardar «Baixo» e lê-lo como «baixo»")
+	var cfg2 := ConfigFile.new()
+	cfg2.load(arq)
+	_ok(str(cfg2.get_value("pref", "camera", "")) == "360" and str(cfg2.get_value("pref", "perfil", "")) == "baixo",
+		"guardar escreve [pref] perfil e deixa as outras preferências")
+	cfg2.set_value("pref", "perfil", "ultra")
+	cfg2.save(arq)
+	_ok(EscolhaPerfil.escolhido(arq) == "" and not EscolhaPerfil.guardar("ultra", arq), "um nome que não é perfil não é escolha")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(arq))
+
+	# O Mestre escolhe «Baixo» na linha «Gráficos»: a arena obedece.
+	op.select(0)
+	op.item_selected.emit(0)
+	await _quadros(1)
+	relva.atualizar_lod(a.camera.global_position)
+	var tufos_baixo: int = relva.tufos_ativos()
+	_ok(a.perfil_atual() == "baixo" and a.perfis.atual == "baixo" and op.selected == 0, "«Baixo» na linha «Gráficos» aplica o perfil baixo")
+	_ok(is_equal_approx(a.mapa.densidade_relva, float(AplicadorPerfil.PERFIS["baixo"]["folhagem_densidade"])) and tufos_baixo < tufos_sem,
+		"baixo: relva a %.2f, %d tufos desenhados (sem escolha: %d)" % [a.mapa.densidade_relva, tufos_baixo, tufos_sem])
+	var alvos := {}
+	for nome in ["chuva-fraca", "chuva-forte", "neve-fraca", "neve-forte"]:
+		cl.definir_por_nome(nome)
+		alvos[nome] = [cl.contagem_alvo("chuva"), cl.contagem_alvo("neve"), cl.contagem_alvo("salpicos"), cl.contagem_alvo("veu")]
+	cl.definir_por_nome("nenhum")
+	_ok(cl.perfil == "baixo" and alvos == {"chuva-fraca": [900, 0, 0, 0], "chuva-forte": [2800, 0, 0, 0],
+		"neve-fraca": [0, 1000, 0, 0], "neve-forte": [0, 3000, 0, 0]}, "baixo: as contagens do clima descem às do Baixo %s" % [alvos])
+	_ok(FileAccess.file_exists(EscolhaPerfil.ARQ) == real_existia
+		and (FileAccess.get_file_as_string(EscolhaPerfil.ARQ) if real_existia else "") == real_antes,
+		"sem disco (Rede.persistir falso) a escolha não se escreve no ficheiro verdadeiro")
+
+	# O mapa refaz-se (outra grelha) e volta à densidade escolhida; depois a grelha de antes.
+	var w: int = a.largura
+	var h: int = a.altura
+	var casa: float = a.casa_m
+	a.construir_grelha(w + 2, h + 2, casa)
+	_ok(is_equal_approx(a.mapa.densidade_relva, 0.5), "o mapa refeito para outra grelha fica com a relva do perfil escolhido")
+	a.construir_grelha(w, h, casa)
+
+	# «Alto» e um nome estranho.
+	_ok(c.escolher_perfil("Alto", false) and is_equal_approx(a.mapa.densidade_relva, 1.0) and cl.perfil == "alto" and op.selected == 2,
+		"«Alto»: relva a 1,0 e clima no Alto")
+	_ok(not c.escolher_perfil("ultra", false) and a.perfil_atual() == "alto", "um nome que não é perfil não muda nada")
 
 
 func _textos(no: Node, saida: Array) -> void:
