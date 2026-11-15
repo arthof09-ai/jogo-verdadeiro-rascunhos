@@ -23,14 +23,15 @@ shader_type spatial;
 render_mode unshaded, cull_disabled, world_vertex_coords;
 
 #include "luz_floresta.gdshaderinc"
+#include "vento_floresta.gdshaderinc"
 
 uniform vec3 cor_base : source_color = vec3(0.34, 0.40, 0.21);
 uniform vec3 cor_ponta : source_color = vec3(0.70, 0.68, 0.42);
 uniform vec3 cor_seca : source_color = vec3(0.80, 0.73, 0.49);
 uniform vec3 cor_floresta : source_color = vec3(0.29, 0.42, 0.29);
-uniform vec2 vento_dir = vec2(0.86, 0.51);
-uniform float vento_forca : hint_range(0.0, 0.6) = 0.17;
-uniform float vento_vel : hint_range(0.0, 4.0) = 1.0;
+// Ordem 43: o vento é o do MUNDO (vento_floresta.gdshaderinc). Aqui só fica quanto a ponta
+// desvia no limite (m): com a tarde forte anda pelos 0,13 m de média e 0,30 m na rajada.
+uniform float vento_amplitude : hint_range(0.0, 0.8) = 0.36;
 uniform float lod_perto = 16.0;
 uniform float lod_longe = 90.0;
 uniform float lod_min = 0.10;
@@ -62,24 +63,26 @@ void vertex() {
 	p.xz = raiz.xz + (p.xz - raiz.xz) * alarga * fica;
 	p.y = raiz.y + (p.y - raiz.y) * fica * mix(1.0, 1.12, clamp(alarga - 1.0, 0.0, 1.0));
 	// ---- vento: onda que viaja (fase só da posição)
-	vec2 dv = normalize(vento_dir);
-	float t = TIME * vento_vel;
-	float raj = textureLod(ruido, raiz.xz * 0.011 - dv * t * 0.030, 0.0).r;
-	raj = smoothstep(0.30, 0.78, raj);
-	float fase = dot(raiz.xz, dv) * 0.24 - t * 1.35;
+	// (Ordem 43) o vento do mundo: a velocidade local (rajada que passa incluída) dá a pressão,
+	// a pressão dá a dobra; as ondas viajam na direcção do vento ao ritmo dele.
+	vec2 dv = vento_dir;
+	float vl = vento_local(raiz.xz);
+	float dobra = vento_dobra(vl);
+	float fase = dot(raiz.xz, dv) * 0.24 - vento_fase * 1.35;
 	vec2 dv2 = vec2(dv.y, -dv.x) * 0.5 + dv * 0.866;
-	float fase2 = dot(raiz.xz, dv2) * 0.61 - t * 2.3;
+	float fase2 = dot(raiz.xz, dv2) * 0.61 - vento_fase * 2.3;
 	float onda = 0.5 + 0.5 * sin(fase);
 	float onda2 = 0.5 + 0.5 * sin(fase2);
 	float peso = v_alt * v_alt;
-	float d = (0.18 + 0.42 * onda + 0.14 * onda2 + 0.50 * raj * (0.4 + 0.6 * onda)) * vento_forca * peso;
-	float trem = sin(t * 5.3 + raiz.x * 3.1 + raiz.z * 2.3) * 0.010 * peso;
+	float forma = 0.46 + 0.40 * onda + 0.14 * onda2;
+	float d = vento_amplitude * dobra * forma * peso;
+	float trem = sin(vento_tremor * 5.3 + raiz.x * 3.1 + raiz.z * 2.3) * 0.012 * min(vl, 1.6) * peso;
 	p.xz += dv * (d + trem);
 	p.y -= d * d * 1.2;
 	VERTEX = p;
 	v_pos = p;
 	v_mapa = ler_mapa_lod(raiz.xz);
-	v_dobra = d / max(vento_forca, 0.001);
+	v_dobra = forma * dobra * 2.0;
 	v_tom = vec3(INSTANCE_CUSTOM.g, INSTANCE_CUSTOM.b, COLOR.b);
 	vec2 nxz = COLOR.rg * 2.0 - 1.0;
 	v_nt = vec3(nxz.x, sqrt(max(1.0 - dot(nxz, nxz), 0.05)), nxz.y);

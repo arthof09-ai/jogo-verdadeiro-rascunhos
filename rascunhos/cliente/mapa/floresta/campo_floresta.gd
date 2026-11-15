@@ -18,7 +18,7 @@ extends Node3D
 ##       chão e com a mesma luz (defeito 1: nenhuma vista denuncia o palco);
 ##     o anel longe: duas silhuetas fechadas e a serra, com o ar na tinta;
 ##     a ÁRVORE ANCESTRAL (260 m, a norte): geometria verdadeira, opaca, com sombra e contacto;
-##     o céu: pintura, uma só hora nos 360°.
+##     o céu: pintura, uma só hora nos 360° — e, desde a Ordem 43, a hora ANDA (ver abaixo).
 ##
 ## SEM fogueira. SEM disco de terra no meio.
 ##
@@ -27,6 +27,18 @@ extends Node3D
 ##
 ## Para o jogo: `grelha` (contrato mundo↔casa, bloqueio, cobertura, ocupação), altura_em(x, z),
 ## grupo «sol» (DirectionalLight3D) e grupo «ambiente» (WorldEnvironment).
+##
+## ORDEM 43 — O CICLO DO DIA E O VENTO DO MUNDO (só apresentação; nenhuma regra os lê):
+##   `ciclo` (ciclo_dia.gd, grupo «relogio_mundo»): o relógio do mundo — hora_do_mundo() — e tudo
+##     o que sai da hora: sol e lua (astros a sério), o céu vivo (shaders/ceu_ciclo.gdshader), a
+##     luz pintada de todos os materiais, a luz ambiente, a névoa, as luzes artificiais
+##     (lanternas do santuário e janelas do palácio: acendem ao cair da noite);
+##   `sombras` (sombras_floresta.gd): o forno vivo — as sombras do mapa do chão rodam e
+##     alongam com o sol, e de noite são as da lua;
+##   `vento` (vento_mundo.gd, grupo «vento_mundo»): um vento só — vento_actual(), vento_em(p) —
+##     que manda na relva, nas hastes, nas copas, no anel e na copa da Árvore Ancestral;
+##   grupo «lua» (DirectionalLight3D): a luz da noite.
+##   Teclas: T modo de prova (dia em 96 s) · P pára/anda o relógio · , e . recuam/avançam 1 hora.
 
 const Paleta := preload("res://mapa/floresta/paleta_floresta.gd")
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
@@ -36,6 +48,9 @@ const Grelha := preload("res://mapa/floresta/grelha_floresta.gd")
 const Erros := preload("res://mapa/floresta/erros_floresta.gd")
 const Ancestral := preload("res://mapa/floresta/arvore_ancestral.gd")
 const RelvaFloresta := preload("res://mapa/floresta/relva_floresta.gd")
+const CicloDia := preload("res://mapa/floresta/ciclo_dia.gd")
+const VentoMundo := preload("res://mapa/floresta/vento_mundo.gd")
+const SombrasFloresta := preload("res://mapa/floresta/sombras_floresta.gd")
 
 const SH_TERRENO := preload("res://mapa/floresta/shaders/terreno.gdshader")
 const SH_RELVA := preload("res://mapa/floresta/shaders/relva.gdshader")
@@ -47,9 +62,12 @@ const SH_AGUA := preload("res://mapa/floresta/shaders/agua.gdshader")
 const SH_ANEL := preload("res://mapa/floresta/shaders/anel_floresta.gdshader")
 const SH_ANEL_LONGE := preload("res://mapa/floresta/shaders/anel_longe.gdshader")
 const SH_ANCESTRAL := preload("res://mapa/floresta/shaders/ancestral.gdshader")
-const SH_CEU := preload("res://mapa/floresta/shaders/ceu_panorama.gdshader")
+const SH_CEU := preload("res://mapa/floresta/shaders/ceu_ciclo.gdshader")
 
-const CEU_PNG := "res://mapa/floresta/ceu/ceu_floresta_v3.png"
+## As camadas do céu vivo (canal R = densidade das nuvens; ferramentas/cozer_camadas.gd).
+## A pintura de uma só hora da Ordem 38 (ceu_floresta_v3.png) fica no repositório, mas o jogo
+## já não a lê: o céu do ciclo pinta-se ao vivo com a mesma receita.
+const CEU_PNG := "res://mapa/floresta/ceu/ceu_camadas_v1.png"
 const CEU_ELEV_MIN := -6.0
 const MAPA_N := 512          # resolução do mapa do chão (luz / terra / copas / contacto)
 const MAPA_MEIO := 72.0      # o mapa do chão cobre [-72, 72] m
@@ -103,6 +121,11 @@ var fundo: Node3D
 var grelha: Grelha
 var relva: RelvaFloresta
 var medidas: Dictionary = {}
+## Ordem 43: o relógio do mundo, o vento do mundo e o forno vivo das sombras.
+var ciclo: CicloDia
+var vento: VentoMundo
+var sombras: SombrasFloresta
+var lua: DirectionalLight3D
 
 var _rng := RandomNumberGenerator.new()
 var _mats: Array[ShaderMaterial] = []
@@ -118,6 +141,14 @@ var _troncos: Array = []         # [Vector2, raio]: os troncos de dentro da aren
 var _rochas: Array = []          # [Vector3 centro, tamanho]
 var _lote_pedras := Lote.new()
 var _t_rotulo := 0.0
+var _ruido_img: Image
+var _mat_ceu: ShaderMaterial
+var _mats_grau: Array[ShaderMaterial] = []   # tinta cozida (anel longe, outeiro): seguem o horizonte
+var _lanc := PackedFloat32Array()            # os lançadores de sombra (9 números cada)
+var _alturas := PackedFloat32Array()         # o relevo em RELEVO_N² (para a sombra viva do relevo)
+var _hora_aplicada := -1.0
+var _nuvens_desloc := 0.0
+var _hora_nuvens := -1.0
 
 
 func _ready() -> void:
@@ -152,20 +183,25 @@ func _ready() -> void:
 	_criar_anel_longe()
 	_criar_ancestral()
 	_escrever_materiais()
+	_ligar_ciclo_e_vento()
 	ir_para_vista(0)
 	_rotulo.visible = mostrar_medicao
 	medidas["carga_ms"] = Time.get_ticks_msec() - t0
+	medidas["sombra_lancadores"] = sombras.lancadores
 	medidas["erros"] = Erros.contagem()
 	print("[floresta] pronta em %d ms | %s" % [medidas["carga_ms"], JSON.stringify(medidas)])
 
 
 func _process(delta: float) -> void:
+	aplicar_ciclo()
 	if not mostrar_medicao:
 		return
 	_t_rotulo += delta
 	if _t_rotulo >= 0.5:
 		_t_rotulo = 0.0
-		_rotulo.text = "Floresta 38 | %d fps | %d chamadas | %d primitivas | relva %d tufos | 1-9 vistas, F fundo, L LOD, WASD andar" % [
+		var v: Dictionary = vento.vento_actual()
+		_rotulo.text = "Floresta 43 | %s %s | vento de %s %.0f km/h | %d fps | %d chamadas | %d primitivas | relva %d tufos | 1-9 vistas, F fundo, L LOD, T prova, P pausa, , . hora" % [
+			ciclo.hora_texto(), ciclo.fase(), VentoMundo.rumo(v["azimute_de"]), float(v["velocidade_ms"]) * 3.6,
 			Engine.get_frames_per_second(),
 			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME),
 			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME),
@@ -186,12 +222,35 @@ func _unhandled_input(event: InputEvent) -> void:
 		relva.ligar_lod(not relva.lod_ligado)
 	elif k.keycode == KEY_M:
 		_rotulo.visible = not _rotulo.visible
+	elif k.keycode == KEY_T:
+		ciclo.modo_prova = not ciclo.modo_prova
+	elif k.keycode == KEY_P:
+		ciclo.parado = not ciclo.parado
+	elif k.keycode == KEY_PERIOD:
+		ciclo.definir_hora(ciclo.hora + 1.0)
+	elif k.keycode == KEY_COMMA:
+		ciclo.definir_hora(ciclo.hora - 1.0)
 
 
 # ------------------------------------------------------------------ API
 
 func altura_em(x: float, z: float) -> float:
 	return Relevo.altura(x, z)
+
+
+## A hora do mundo (0–24 contínua). Só apresentação: nenhuma regra a lê.
+func hora_do_mundo() -> float:
+	return ciclo.hora_do_mundo()
+
+
+## O vento do mundo agora: { direcao, forca, velocidade_ms, azimute_para, azimute_de, rajada }.
+func vento_actual() -> Dictionary:
+	return vento.vento_actual()
+
+
+## O vento num sítio (a rajada que lá está a passar).
+func vento_em(posicao: Vector3) -> Dictionary:
+	return vento.vento_em(posicao)
 
 
 ## Esconde a arena e deixa só o fundo (céu + anel de floresta + anel longe + Árvore Ancestral)
@@ -235,14 +294,19 @@ func _montar_ambiente() -> void:
 			tex = ImageTexture.create_from_image(img)
 	if tex == null:
 		Erros.erro(Erros.CEU_EM_FALTA, CEU_PNG)
-	mat_ceu.set_shader_parameter("pintura", tex)
-	mat_ceu.set_shader_parameter("cor_horizonte", Paleta.COR_HORIZONTE)      # (a) a faixa baixa do céu
+	mat_ceu.set_shader_parameter("camadas", tex)
+	mat_ceu.set_shader_parameter("cor_horizonte", _v3(Paleta.COR_HORIZONTE))  # (a) a faixa baixa do céu
 	mat_ceu.set_shader_parameter("faixa", Paleta.FAIXA_HORIZONTE)
 	mat_ceu.set_shader_parameter("elev_min_graus", CEU_ELEV_MIN)
+	mat_ceu.set_shader_parameter("sol_raio_graus", Paleta.SOL_DIAMETRO * 0.5)
+	mat_ceu.set_shader_parameter("lua_raio_graus", Paleta.LUA_DIAMETRO * 0.5)
+	_mat_ceu = mat_ceu
 	var sky := Sky.new()
 	sky.sky_material = mat_ceu
-	sky.radiance_size = Sky.RADIANCE_SIZE_64
-	sky.process_mode = Sky.PROCESS_MODE_QUALITY
+	# o céu muda todos os quadros com a hora e ninguém lê a radiância dele (a luz ambiente é uma
+	# cor; os materiais são pintados): radiância mínima, repartida por quadros
+	sky.radiance_size = Sky.RADIANCE_SIZE_32
+	sky.process_mode = Sky.PROCESS_MODE_INCREMENTAL
 	env.background_mode = Environment.BG_SKY
 	env.sky = sky
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
@@ -267,9 +331,24 @@ func _montar_ambiente() -> void:
 	_sol.light_color = Paleta.COR_SOL
 	_sol.light_energy = 1.1
 	_sol.shadow_enabled = false
+	# (Ordem 43) a lua: a luz direccional da noite — fraca, azulada, de sombra suave
+	lua = DirectionalLight3D.new()
+	lua.name = "Lua"
+	lua.add_to_group("lua")
+	lua.light_color = CicloDia.COR_LUA
+	lua.light_energy = 0.0
+	lua.shadow_enabled = true
+	lua.shadow_blur = 2.5
+	lua.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
+	lua.visible = false
+	add_child(lua)
 	# a Árvore Ancestral está longe: a câmara tem de a alcançar
 	_camera.far = CAMERA_LONGE
 	_camera.near = CAMERA_PERTO
+
+
+func _v3(c: Color) -> Vector3:
+	return Vector3(c.r, c.g, c.b)
 
 
 func _mat(sh: Shader) -> ShaderMaterial:
@@ -292,6 +371,103 @@ func _escrever_materiais() -> void:
 		m.set_shader_parameter("ruido", _ruido_tex)
 
 
+# ------------------------------------------------------------------ Ordem 43: ciclo do dia e vento
+
+## Cria o relógio do mundo, o vento do mundo e o forno vivo das sombras, e liga-os aos materiais.
+func _ligar_ciclo_e_vento() -> void:
+	sombras = SombrasFloresta.new()
+	sombras.montar(_lanc, _alturas, RELEVO_N, MAPA_MEIO)
+	add_child(sombras)
+	ciclo = CicloDia.new()
+	ciclo.name = "CicloDia"
+	add_child(ciclo)
+	vento = VentoMundo.new()
+	vento.name = "VentoMundo"
+	vento.relogio = ciclo
+	add_child(vento)
+	vento.ligar(_mats, _ruido_img)
+	for m in _mats:
+		m.set_shader_parameter("mapa_sombra", sombras.textura())
+		m.set_shader_parameter("sombra_viva", 1.0)
+	aplicar_ciclo()
+
+
+## Escreve no mundo tudo o que sai da hora (só quando a hora mudou). As ferramentas de filme
+## chamam-na depois de definir_hora().
+func aplicar_ciclo() -> void:
+	var h := ciclo.hora_do_mundo()
+	if is_equal_approx(h, _hora_aplicada):
+		return
+	var e: Dictionary = ciclo.estado()
+	# ---- as nuvens andam com o vento (em horas do mundo: no modo de prova correm, como num
+	# filme acelerado)
+	if _hora_nuvens >= 0.0:
+		var dh := fposmod(h - _hora_nuvens + 12.0, 24.0) - 12.0
+		_nuvens_desloc = fposmod(_nuvens_desloc + dh * 0.0035 * (0.3 + vento.forca_base), 1.0)
+	_hora_nuvens = h
+	_hora_aplicada = h
+	var dir_luz: Vector3 = e["dir_luz"]
+	var horizonte: Color = e["cor_horizonte"]
+	# ---- o forno vivo das sombras
+	sombras.definir_luz(dir_luz)
+	# ---- a luz pintada de todos os materiais
+	for m in _mats:
+		m.set_shader_parameter("dir_luz", dir_luz)
+		m.set_shader_parameter("cor_sol", e["cor_luz"])
+		m.set_shader_parameter("cor_sombra", e["cor_sombra"])
+		m.set_shader_parameter("cor_ceu", e["cor_ceu"])
+		m.set_shader_parameter("cor_horizonte", horizonte)                    # (c) o ar pintado
+		m.set_shader_parameter("sombra_forca", e["sombra_forca"])
+		m.set_shader_parameter("ressalto", e["ressalto"])
+		m.set_shader_parameter("noite", e["noite"])
+		m.set_shader_parameter("lume", e["lume"])
+		if m.shader == SH_AGUA:
+			m.set_shader_parameter("cor_reflexo", e["cor_meio"])
+	# a tinta cozida (anel longe, outeiro da Árvore): horizonte de agora ÷ horizonte da paleta
+	var ha := horizonte.srgb_to_linear()
+	var hp := Paleta.COR_HORIZONTE.srgb_to_linear()
+	var grau := Vector3(ha.r / hp.r, ha.g / hp.g, ha.b / hp.b)
+	for m in _mats_grau:
+		m.set_shader_parameter("grau", grau)
+	# ---- o céu (tintas sRGB «de pintor»)
+	_mat_ceu.set_shader_parameter("cor_horizonte", _v3(horizonte))            # (a) a faixa baixa do céu
+	_mat_ceu.set_shader_parameter("cor_baixo", _v3(e["cor_baixo"]))
+	_mat_ceu.set_shader_parameter("cor_meio", _v3(e["cor_meio"]))
+	_mat_ceu.set_shader_parameter("cor_zenite", _v3(e["cor_zenite"]))
+	_mat_ceu.set_shader_parameter("cor_arrebol", _v3(e["cor_arrebol"]))
+	_mat_ceu.set_shader_parameter("arrebol", e["arrebol"])
+	_mat_ceu.set_shader_parameter("dir_sol", e["dir_sol"])
+	_mat_ceu.set_shader_parameter("dir_lua", e["dir_lua"])
+	_mat_ceu.set_shader_parameter("dir_luz", dir_luz)
+	_mat_ceu.set_shader_parameter("cor_disco", _v3(e["cor_disco"]))
+	_mat_ceu.set_shader_parameter("cor_clarao", _v3(e["cor_clarao"]))
+	_mat_ceu.set_shader_parameter("sol_visivel", e["sol_visivel"])
+	_mat_ceu.set_shader_parameter("nuvem_luz", _v3(e["nuvem_luz"]))
+	_mat_ceu.set_shader_parameter("nuvem_sombra", _v3(e["nuvem_sombra"]))
+	_mat_ceu.set_shader_parameter("nuvens_desloc", _nuvens_desloc)
+	_mat_ceu.set_shader_parameter("estrelas", e["estrelas"])
+	_mat_ceu.set_shader_parameter("lua_noite", e["lua_noite"])
+	# ---- a névoa e a luz ambiente
+	var env := _ambiente.environment
+	env.fog_light_color = horizonte                                          # (b) a névoa
+	env.fog_depth_begin = e["nevoa_inicio"]
+	env.fog_depth_end = e["nevoa_fim"]
+	env.fog_density = e["nevoa_tecto"]
+	env.ambient_light_color = e["cor_ceu"]
+	# ---- as luzes direccionais do mundo (para as figuras): o sol É o sol, a lua é a lua
+	var ds: Vector3 = e["dir_sol"]
+	var dl: Vector3 = e["dir_lua"]
+	_sol.visible = float(e["sol_energia"]) > 0.001
+	if _sol.visible:
+		_sol.look_at_from_position(Vector3.ZERO, -ds, Vector3.UP)
+		_sol.light_color = e["cor_luz_sol"]
+		_sol.light_energy = 1.1 * float(e["sol_energia"])
+	lua.visible = float(e["lua_energia"]) > 0.001
+	if lua.visible:
+		lua.look_at_from_position(Vector3.ZERO, -dl, Vector3.UP)
+		lua.light_energy = float(e["lua_energia"])
+
+
 func _gerar_ruido() -> Texture2D:
 	var r := FastNoiseLite.new()
 	r.seed = semente + 5
@@ -299,6 +475,7 @@ func _gerar_ruido() -> Texture2D:
 	r.frequency = 0.035
 	r.fractal_octaves = 4
 	var img: Image = r.get_seamless_image(256, 256)
+	_ruido_img = img.duplicate()      # o campo de rajadas, para o vento o ler na CPU (vento_em)
 	img.generate_mipmaps()
 	return ImageTexture.create_from_image(img)
 
@@ -360,11 +537,13 @@ func _iniciar_mapa() -> void:
 		roda.append(Vector2(cos(TAU * k / 6.0), sin(TAU * k / 6.0)) * 2.4)
 	var dados := PackedFloat32Array()
 	dados.resize(n * n * 4)
+	_alturas.resize(n * n)
 	for j in n:
 		var z := -MAPA_MEIO + (float(j) + 0.5) * passo
 		for i in n:
 			var x := -MAPA_MEIO + (float(i) + 0.5) * passo
 			var h := Relevo.altura(x, z)
+			_alturas[j * n + i] = h
 			var tapa := 0.0
 			for s in range(1, 11):
 				var t := float(s) * 1.2
@@ -474,15 +653,29 @@ func _sombra_de(p: Vector3) -> Vector2:
 	return g
 
 
+## (Ordem 43) Regista um LANÇADOR DE SOMBRA para o forno vivo (sombras_floresta.gd): o ponto
+## `p` que faz sombra, o raio de través `rb`, a força, e o raio ao longo da luz
+## = a + b·cotg(elev) + c/sen(elev) (a: fixo · b: o alto que se deita · c: a esfera que estica).
+## `copa`: conta também para o canal «só copas». Os carimbos cozidos da Ordem 38 (para a luz da
+## tarde) continuam a fazer-se ao lado — é deles que a CPU lê o «debaixo das copas».
+func _lancar(p: Vector3, rb: float, forca: float, a: float, b: float, c: float, copa: bool) -> void:
+	if absf(p.x) > MAPA_MEIO + 40.0 or absf(p.z) > MAPA_MEIO + 40.0:
+		return
+	_lanc.append_array([p.x, maxf(p.y - Relevo.altura(p.x, p.z), 0.0), p.z, rb, forca, a, b, c, 1.0 if copa else 0.0])
+
+
 ## A sombra de uma coisa ALTA e estreita (tronco, menir, lanterna): carimbos ao longo da altura.
 func _sombra_alta(canais: Array, pe: Vector3, alto: float, raio: float, forca: float) -> void:
 	var l := Paleta.dir_luz()
 	var dir := Vector2(l.x, l.z).normalized()
 	var n := maxi(int(alto / maxf(raio * 1.2, 0.45)), 1)
 	for s in n + 1:
-		var g := _sombra_de(pe + Vector3(0, alto * float(s) / float(n), 0))
+		var ps := pe + Vector3(0, alto * float(s) / float(n), 0)
+		var g := _sombra_de(ps)
 		for canal: int in canais:
 			_carimbo_min(canal, g.x, g.y, raio * 1.5, raio * 1.2, dir, forca)
+		# cada troço do alto deita-se no chão: o carimbo estica com a cotangente da luz
+		_lancar(ps, raio * 1.2, forca, raio * 1.5, 0.62 * alto / float(n), 0.0, canais.has(2))
 
 
 ## O pé de qualquer coisa pousada: escurece o contacto (canal 3) — nada flutua.
@@ -698,6 +891,7 @@ func _marco_santuario(obra: Lote, r: RandomNumberGenerator) -> void:
 	for degrau: Array in [[0.8, 3.2], [2.4, 3.2], [3.6, 2.4], [4.8, 1.6], [5.8, 0.9]]:
 		var g := _sombra_de(Vector3(p.x, y + float(degrau[0]), p.y))
 		_carimbo_min(0, g.x, g.y, float(degrau[1]) * 1.25, float(degrau[1]), dir, 0.92)
+		_lancar(Vector3(p.x, y + float(degrau[0]), p.y), float(degrau[1]), 0.92, float(degrau[1]) * 1.25, 0.75, 0.0, false)
 	for lj in Grelha.LADO:
 		for ci in Grelha.LADO:
 			var casa := Vector2i(ci, lj)
@@ -750,6 +944,7 @@ func _marco_garganta(madeira: Lote) -> void:
 		_contacto(q.x, q.y, raio * 2.3, 0.62)
 		var g := _sombra_de(centro + Vector3(0, raio * 0.5, 0))
 		_carimbo_min(0, g.x, g.y, raio * 1.5, raio * 1.3, Vector2.RIGHT, 0.90)
+		_lancar(centro + Vector3(0, raio * 0.5, 0), raio * 1.3, 0.90, raio * 1.4, raio * 0.6, 0.0, false)
 	# o prato das raízes (na ponta sul) deita sombra alta
 	_sombra_alta([0], Vector3(a.x, ha, a.y), raio * 3.6, raio * 1.3, 0.85)
 	for lj in Grelha.LADO:
@@ -857,6 +1052,7 @@ func _arvore(lt: Lote, lc: Lote, x: float, z: float, h: float, familia: int, det
 			var g := _sombra_de(c)
 			_carimbo_min(0, g.x, g.y, rb * estica * 0.8, rb * 0.95, dir, 0.84)
 			_carimbo_min(2, g.x, g.y, rb * estica * 0.8, rb * 0.95, dir, 0.84)
+			_lancar(c, rb * 0.95, 0.84, 0.0, 0.0, rb * 0.8, true)
 		_sombra_alta([0, 2], pos, h * 0.45, raio * 1.1, 0.80)
 	else:
 		# na orla funda basta a mancha da copa inteira
@@ -869,6 +1065,7 @@ func _arvore(lt: Lote, lc: Lote, x: float, z: float, h: float, familia: int, det
 		# mais fraca que a das árvores da arena: debaixo da floresta a luz chega coada, em manchas
 		_carimbo_min(0, g2.x, g2.y, rc * estica * 0.8, rc, dir, 0.70)
 		_carimbo_min(2, g2.x, g2.y, rc * estica * 0.8, rc, dir, 0.70)
+		_lancar(meio, rc, 0.70, 0.0, 0.0, rc * 0.8, true)
 	# raízes: terra à mostra e contacto escuro em volta do pé
 	_carimbo_max(1, x, z, raio * 2.2 + 0.9, 0.95)
 	_contacto(x, z, raio * 3.0 + 1.2, 0.62)
@@ -1021,6 +1218,7 @@ func _registar_rocha(x: float, z: float, tam: float) -> void:
 	var l := Paleta.dir_luz()
 	var g := _sombra_de(c + Vector3(0, tam * 0.3, 0))
 	_carimbo_min(0, g.x, g.y, tam * 0.9 * (1.0 + 0.5 / l.y), tam * 0.95, Vector2(l.x, l.z).normalized(), 0.9)
+	_lancar(c + Vector3(0, tam * 0.3, 0), tam * 0.95, 0.9, tam * 0.9, 0.0, tam * 0.45, false)
 	_carimbo_max(1, x, z, tam * 1.2 + 0.2, 1.0)
 	_contacto(x, z, tam * 1.8 + 0.5, 0.62)
 
@@ -1088,6 +1286,7 @@ func _criar_estrato() -> void:
 				var g := _sombra_de(Vector3(x, Relevo.altura(x, z) + 0.6 * s, z))
 				var l := Paleta.dir_luz()
 				_carimbo_min(0, g.x, g.y, 1.3 * s, 0.9 * s, Vector2(l.x, l.z).normalized(), 0.8)
+				_lancar(Vector3(x, Relevo.altura(x, z) + 0.6 * s, z), 0.9 * s, 0.8, 1.0 * s, 0.5 * s, 0.0, false)
 				grelha.dar_cobertura(Grelha.casa_em(x, z), Grelha.COBERTURA_MEIA)
 			else:
 				_ocupar(_tudo, x, z, 0.15)
@@ -1096,7 +1295,7 @@ func _criar_estrato() -> void:
 		medidas["estrato_" + nomes[tipo].to_lower()] = postos
 	var m := _mat(SH_COPA)
 	m.set_shader_parameter("cor_ouro", Paleta.COPA_OURO)
-	m.set_shader_parameter("vento_forca", 0.09)
+	m.set_shader_parameter("vento_amplitude", 0.09)
 	var tri := 0
 	for tipo in 4:
 		var lote: Lote = malhas[tipo]
@@ -1333,6 +1532,7 @@ func _criar_anel_longe() -> void:
 				lt.idx.append_array([a + k, b + k, a + k + 1, b + k, b + k + 1, a + k + 1])
 	var mat := ShaderMaterial.new()
 	mat.shader = SH_ANEL_LONGE
+	_mats_grau.append(mat)
 	_instancia(fundo, lt.fechar(), mat, "AnelLonge")
 	medidas["anel_longe_tri"] = lt.triangulos()
 
@@ -1349,11 +1549,13 @@ func _criar_ancestral() -> void:
 	m.set_shader_parameter("cor_musgo", Paleta.ANCESTRAL_MUSGO)
 	m.set_shader_parameter("cor_folha_luz", Paleta.ANCESTRAL_FOLHA_LUZ)
 	m.set_shader_parameter("altura", Ancestral.ALTURA)
+	m.set_shader_parameter("dir_luz_cozida", Paleta.dir_luz())
 	var mi := _instancia(fundo, d["malha"], m, "ArvoreAncestral")
 	mi.position = pe
 	mi.rotation.y = ANCESTRAL_ROTACAO
 	var mat_monte := ShaderMaterial.new()
 	mat_monte.shader = SH_ANEL_LONGE
+	_mats_grau.append(mat_monte)
 	var monte := _instancia(fundo, d["outeiro"], mat_monte, "OuteiroAncestral")
 	monte.position = pe
 	medidas["ancestral_tri"] = d["tri"]

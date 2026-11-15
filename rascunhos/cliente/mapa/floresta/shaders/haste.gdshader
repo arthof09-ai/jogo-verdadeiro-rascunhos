@@ -7,11 +7,11 @@ shader_type spatial;
 render_mode unshaded, cull_disabled, world_vertex_coords;
 
 #include "luz_floresta.gdshaderinc"
+#include "vento_floresta.gdshaderinc"
 
 uniform vec3 cor_haste : source_color = vec3(0.37, 0.44, 0.28);
-uniform vec2 vento_dir = vec2(0.86, 0.51);
-uniform float vento_forca : hint_range(0.0, 0.6) = 0.20;
-uniform float vento_vel : hint_range(0.0, 4.0) = 1.0;
+// Ordem 43: o vento é o do MUNDO (vento_floresta.gdshaderinc).
+uniform float vento_amplitude : hint_range(0.0, 0.8) = 0.42;
 uniform float some_de = 34.0;
 uniform float some_ate = 60.0;
 
@@ -28,12 +28,11 @@ void vertex() {
 	float d_cam = distance(raiz.xz, CAMERA_POSITION_WORLD.xz);
 	float fica = 1.0 - smoothstep(some_de, some_ate, d_cam + INSTANCE_CUSTOM.r * 14.0);
 	p = raiz + (p - raiz) * fica;
-	vec2 dv = normalize(vento_dir);
-	float t = TIME * vento_vel;
-	float raj = smoothstep(0.30, 0.78, textureLod(ruido, raiz.xz * 0.011 - dv * t * 0.030, 0.0).r);
-	float fase = dot(raiz.xz, dv) * 0.24 - t * 1.35;
+	vec2 dv = vento_dir;
+	float dobra = vento_dobra(vento_local(raiz.xz));
+	float fase = dot(raiz.xz, dv) * 0.24 - vento_fase * 1.35;
 	float onda = 0.5 + 0.5 * sin(fase);
-	float d = (0.18 + 0.50 * onda + 0.50 * raj * (0.4 + 0.6 * onda)) * vento_forca * v_alt * v_alt;
+	float d = vento_amplitude * dobra * (0.46 + 0.54 * onda) * v_alt * v_alt;
 	p.xz += dv * d;
 	p.y -= d * d * 0.8;
 	VERTEX = p;
