@@ -36,8 +36,10 @@ const HORAS := [5.5, 7.0, 10.0, 13.0, 16.0, 18.5, 19.75, 22.0, 1.0, 4.0]
 ## a clareira, a orla e a Árvore Ancestral (a vista 13 da Ordem 38, «longe_vista-ref07», um
 ## pouco mais aberta).
 const VISTA_DIA := [5.0, 27.0, 2.3, -11.0, 2.0, 62.0]       # x, z, olhos, az, incl, fov
-## O enquadramento do vento: baixo, sobre a relva da clareira.
-const VISTA_VENTO := [-14.0, 14.0, 1.25, 40.0, -4.0, 60.0]
+## O enquadramento do vento: à altura dos olhos sobre o relvado aberto da clareira, a olhar para
+## norte e um pouco para baixo — para se ver a rajada a atravessar a relva (sessão 3: o de antes,
+## a 1,25 m, ficava dentro de um tufo).
+const VISTA_VENTO := [3.0, 24.0, 1.6, -11.0, -7.0, 60.0]
 const ENCAIXE := 420
 const ENCAIXE_FOV := 150.0
 

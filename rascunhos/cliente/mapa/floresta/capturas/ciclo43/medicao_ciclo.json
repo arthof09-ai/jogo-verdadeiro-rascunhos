@@ -16,7 +16,7 @@
 			"fase": "madrugada",
 			"ficheiro": "c43_05h30_madrugada.jpg",
 			"forno_pinturas_em_2s": 12,
-			"fps_sem_vsync": 1169.6,
+			"fps_sem_vsync": 1154.4,
 			"hora": "05:30",
 			"lua": [
 				-99.4,
@@ -25,8 +25,8 @@
 			"lua_energia": 0.394,
 			"luma": {
 				"estourado_%": 0.32,
-				"media_0_255": 36.4,
-				"quase_preto_%": 10.23
+				"media_0_255": 38.7,
+				"quase_preto_%": 10.17
 			},
 			"lume": 1.0,
 			"luz_de": "lua",
@@ -52,7 +52,7 @@
 			"fase": "manhã",
 			"ficheiro": "c43_07h00_manha.jpg",
 			"forno_pinturas_em_2s": 12,
-			"fps_sem_vsync": 1240.9,
+			"fps_sem_vsync": 1242.2,
 			"hora": "07:00",
 			"lua": [
 				-85.4,
@@ -88,7 +88,7 @@
 			"fase": "dia",
 			"ficheiro": "c43_10h00_dia.jpg",
 			"forno_pinturas_em_2s": 12,
-			"fps_sem_vsync": 1253.5,
+			"fps_sem_vsync": 1252.2,
 			"hora": "10:00",
 			"lua": [
 				-51.3,
@@ -124,7 +124,7 @@
 			"fase": "dia",
 			"ficheiro": "c43_13h00_dia.jpg",
 			"forno_pinturas_em_2s": 12,
-			"fps_sem_vsync": 1256.1,
+			"fps_sem_vsync": 1258.5,
 			"hora": "13:00",
 			"lua": [
 				12.1,
@@ -160,7 +160,7 @@
 			"fase": "dia",
 			"ficheiro": "c43_16h00_dia.jpg",
 			"forno_pinturas_em_2s": 12,
-			"fps_sem_vsync": 1263.7,
+			"fps_sem_vsync": 1262.6,
 			"hora": "16:00",
 			"lua": [
 				64.7,
@@ -196,7 +196,7 @@
 			"fase": "entardecer",
 			"ficheiro": "c43_18h30_entardecer.jpg",
 			"forno_pinturas_em_2s": 12,
-			"fps_sem_vsync": 1227.9,
+			"fps_sem_vsync": 1270.5,
 			"hora": "18:30",
 			"lua": [
 				90.0,
@@ -232,7 +232,7 @@
 			"fase": "noite",
 			"ficheiro": "c43_19h45_noite.jpg",
 			"forno_pinturas_em_2s": 12,
-			"fps_sem_vsync": 1224.7,
+			"fps_sem_vsync": 1224.5,
 			"hora": "19:45",
 			"lua": [
 				101.8,
@@ -241,7 +241,7 @@
 			"lua_energia": 0.467,
 			"luma": {
 				"estourado_%": 0.28,
-				"media_0_255": 24.6,
+				"media_0_255": 24.7,
 				"quase_preto_%": 28.1
 			},
 			"lume": 1.0,
@@ -268,7 +268,7 @@
 			"fase": "noite",
 			"ficheiro": "c43_22h00_noite.jpg",
 			"forno_pinturas_em_2s": 12,
-			"fps_sem_vsync": 1228.0,
+			"fps_sem_vsync": 1223.2,
 			"hora": "22:00",
 			"lua": [
 				128.7,
@@ -304,7 +304,7 @@
 			"fase": "noite",
 			"ficheiro": "c43_01h00_noite.jpg",
 			"forno_pinturas_em_2s": 12,
-			"fps_sem_vsync": 1188.4,
+			"fps_sem_vsync": 1181.8,
 			"hora": "01:00",
 			"lua": [
 				-167.9,
@@ -340,7 +340,7 @@
 			"fase": "noite",
 			"ficheiro": "c43_04h00_noite.jpg",
 			"forno_pinturas_em_2s": 12,
-			"fps_sem_vsync": 1188.7,
+			"fps_sem_vsync": 1183.6,
 			"hora": "04:00",
 			"lua": [
 				-115.3,
@@ -391,7 +391,7 @@
 		"arvores_arena": 24,
 		"arvores_orla": 244,
 		"arvores_tri": 227744,
-		"carga_ms": 1466,
+		"carga_ms": 1520,
 		"casas": 2500,
 		"casas_bloqueadas": 208,
 		"casas_livres": 2292,
@@ -421,9 +421,9 @@
 	"metodo": "gl_compatibility",
 	"modo_prova_3s": {
 		"forno_pinturas": 263,
-		"fps_sem_vsync": 1216.9,
+		"fps_sem_vsync": 1213.8,
 		"hora_inicial": "15:00",
-		"quadros": 3651
+		"quadros": 3642
 	},
 	"motor": "4.7.2-stable (official)",
 	"nota": "FPS e chamadas medidos SÓ na cena (sem o encaixe do céu nem o painel), com o relógio a andar ao ritmo do jogo (dia de 24 min)",
