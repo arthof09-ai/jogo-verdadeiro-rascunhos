@@ -1,0 +1,73 @@
+{
+  "camara": {
+    "distancia_m": 13.5,
+    "foco": [
+      -6.19999980926514,
+      0.600000023841858
+    ],
+    "inclinacao": 44.0,
+    "rumo": 0.0
+  },
+  "caminho_m": 29.0095098465681,
+  "chamadas_de_desenho": 83,
+  "duracao_s": 35.1000000000006,
+  "manchas": [
+    {
+      "altura_m": 0.3,
+      "x0": -9.0,
+      "x1": -3.40000009536743,
+      "z0": -5.0,
+      "z1": 5.0
+    },
+    {
+      "altura_m": 0.95,
+      "x0": -2.79999995231628,
+      "x1": 2.79999995231628,
+      "z0": -5.0,
+      "z1": 5.0
+    },
+    {
+      "altura_m": 1.4,
+      "x0": 3.40000009536743,
+      "x1": 9.0,
+      "z0": -5.0,
+      "z1": 5.0
+    }
+  ],
+  "modo": "baixa",
+  "pes_no_relevo": {
+    "folga_max_m": 0.041,
+    "folga_media_m": 0.019,
+    "folga_min_m": -0.006,
+    "o_que_e": "a altura do osso da planta do pé mais baixo acima do relevo, quadro a quadro, a andar",
+    "quadros": 921
+  },
+  "pontos_abertos_no_fim": 0,
+  "raio_de_quem_passa_m": 0.45,
+  "rastro_ativo_no_fim": true,
+  "sondas": [
+    {
+      "abertura_maxima": 1.0,
+      "abre_aos_s": 7.1,
+      "fechada_aos_s": 8.667,
+      "recuperacao_da_tabela_s": 0.9,
+      "recuperacao_medida_s": 0.899999999999999,
+      "sonda": "baixa (recta)",
+      "ultimo_maximo_aos_s": 7.767,
+      "x": -7.5,
+      "z": 0.0
+    },
+    {
+      "abertura_maxima": 0.0,
+      "abre_aos_s": -1.0,
+      "fechada_aos_s": -1.0,
+      "recuperacao_da_tabela_s": 0.9,
+      "recuperacao_medida_s": -1.0,
+      "sonda": "baixa (longe do caminho)",
+      "ultimo_maximo_aos_s": -1.0,
+      "x": -6.30000019073486,
+      "z": 2.0
+    }
+  ],
+  "velocidade_m_s": 0.945454545454545
+}

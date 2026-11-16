@@ -8,6 +8,7 @@ render_mode unshaded, cull_disabled, world_vertex_coords;
 
 #include "luz_floresta.gdshaderinc"
 #include "vento_floresta.gdshaderinc"
+#include "rastro_relva.gdshaderinc"
 
 uniform vec3 cor_haste : source_color = vec3(0.37, 0.44, 0.28);
 // Ordem 43: o vento é o do MUNDO (vento_floresta.gdshaderinc).
@@ -39,7 +40,16 @@ void vertex() {
 	vec3 p = VERTEX;
 	float d_cam = distance(raiz.xz, CAMERA_POSITION_WORLD.xz);
 	float fica = 1.0 - smoothstep(some_de, some_ate, d_cam + INSTANCE_CUSTOM.r * 14.0);
-	p = raiz + (p - raiz) * fica * mix(1.0, campo_alto, no_campo(raiz.xz));
+	float encolhe = fica * mix(1.0, campo_alto, no_campo(raiz.xz));
+	p = raiz + (p - raiz) * encolhe;
+	// Ordem GRAMA: a haste também se deita com o rastro de quem passa (o jeito sai da altura dela, em metros)
+	vec4 rastro = rastro_dobra(raiz.xz, length(MODEL_MATRIX[1].xyz) * 0.9 * encolhe);
+	if (rastro.z != 0.0) {
+		float h = p.y - raiz.y;
+		float dobra_r = rastro.z * mix(0.45, 1.0, v_alt);
+		p.xz += rastro.xy * sin(dobra_r) * h;
+		p.y = raiz.y + h * cos(dobra_r);
+	}
 	vec2 dv = vento_dir;
 	float dobra = vento_dobra(vento_local(raiz.xz));
 	float fase = dot(raiz.xz, dv) * 0.24 - vento_fase * 1.35;

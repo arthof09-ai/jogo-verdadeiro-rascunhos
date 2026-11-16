@@ -52,6 +52,10 @@ func semear(mat_relva: ShaderMaterial, mat_haste: ShaderMaterial, terra_em: Call
 	rng.seed = semente
 	var rn := Relevo.ruido()
 	var tufos: Array[ArrayMesh] = [Formas.tufo(false), Formas.tufo(true)]
+	# Ordem GRAMA: a altura da malha de cada tufo (em unidades dela) vai com a instância — o shader faz dela a
+	# altura do tufo em METROS (as manchas de altura e o jeito do rastro lêem-na).
+	var alto_malha: Array[float] = [tufos[0].get_aabb().end.y, tufos[1].get_aabb().end.y]
+	medidas["relva_alto_malha"] = alto_malha
 	var nb := int(ceil(2.0 * LIMITE / BLOCO))
 	var por_bloco := int(BLOCO / PASSO)
 	var total := 0
@@ -103,7 +107,7 @@ func semear(mat_relva: ShaderMaterial, mat_haste: ShaderMaterial, terra_em: Call
 					if largo:
 						seca *= 0.3
 					listas[1 if largo else 0].append([Transform3D(b, Vector3(x, Relevo.altura(x, z) - 0.04, z)),
-						Color(0.0, seca * 0.8, rng.randf(), 1.0),
+						Color(0.0, seca * 0.8, rng.randf(), alto_malha[1 if largo else 0]),
 						Color(nrm.x * 0.5 + 0.5, nrm.z * 0.5 + 0.5, coberto * smoothstep(-8.0, 4.0, f), 1.0)])
 					# as hastes por cima da relva (só dentro e à beira da arena, ao sol)
 					if f < 5.0 and coberto < 0.35 and terra < 0.2 and beira < 0.3:

@@ -43,6 +43,11 @@ extends Node3D
 ##     Shift+U recua 1 dia (a hora não muda).
 ##   (Ordem 56) O ANO E AS ESTAÇÕES (ciclo.estacao(), também na raiz): Y avança 7 dias do ano (¼ de
 ##     estação), Shift+Y recua 7 (a hora e a lua não mudam).
+##
+## ORDEM GRAMA — A RELVA QUE GUARDA A PASSAGEM (só apresentação; nenhuma regra a lê):
+##   `rastro` (rastro_relva.gd): quem atravessa a erva abre-a por onde passa e ela recupera sozinha, cada
+##     altura à sua maneira — rastro.seguir(nó, raio) põe um nó a deixar rastro; rastro.deixar(nó) tira-o;
+##   definir_manchas_relva([...]): até 4 manchas de erva a uma altura certa em metros (baixa, média, alta).
 
 const Paleta := preload("res://mapa/floresta/paleta_floresta.gd")
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
@@ -57,6 +62,7 @@ const MoldeFloresta := preload("res://mapa/floresta/molde_floresta.gd")
 const CicloDia := preload("res://mapa/floresta/ciclo_dia.gd")
 const VentoMundo := preload("res://mapa/floresta/vento_mundo.gd")
 const SombrasFloresta := preload("res://mapa/floresta/sombras_floresta.gd")
+const RastroRelva := preload("res://mapa/floresta/rastro_relva.gd")
 
 const SH_TERRENO := preload("res://mapa/floresta/shaders/terreno.gdshader")
 const SH_RELVA := preload("res://mapa/floresta/shaders/relva.gdshader")
@@ -155,6 +161,9 @@ var ciclo: CicloDia
 var vento: VentoMundo
 var sombras: SombrasFloresta
 var lua: DirectionalLight3D
+## Ordem GRAMA: o rastro de quem passa na relva (rastro_relva.gd) e as manchas de altura ([[Rect2, altura m]]).
+var rastro: RastroRelva
+var manchas_relva: Array = []
 
 var _rng := RandomNumberGenerator.new()
 var _mats: Array[ShaderMaterial] = []
@@ -237,6 +246,7 @@ func _ready() -> void:
 ## o vento e o forno vivo das sombras nascem aqui — o mesmo céu e o mesmo relógio nos dois.
 func _fim_da_carga(t0: int) -> void:
 	_ligar_ciclo_e_vento()
+	_ligar_rastro()
 	if vistas_por_tecla:
 		ir_para_vista(0)
 	if _rotulo != null:
@@ -362,6 +372,43 @@ func definir_densidade_relva(f: float) -> void:
 	relva.definir_densidade(densidade_relva)
 
 
+## Ordem GRAMA: as MANCHAS DE ALTURA da relva — até MANCHAS_MAX rectângulos do chão onde a erva fica a uma altura
+## certa em metros (as três da casa: RastroRelva.CLASSES — baixa 0,30 · média 0,95 · alta 1,40). `manchas` =
+## [{"rect": Rect2 (x, z no mundo), "altura": metros}, …]; uma lista vazia tira-as todas (a erva de sempre).
+## Só apresentação: não mexe em casas, custos nem bloqueios. Devolve quantas ficaram.
+const MANCHAS_MAX := 4
+
+func definir_manchas_relva(manchas: Array) -> int:
+	var rects := PackedVector4Array()
+	var alturas := PackedFloat32Array()
+	manchas_relva = []
+	for m: Dictionary in manchas:
+		if manchas_relva.size() >= MANCHAS_MAX:
+			Erros.erro(Erros.ARGUMENTO_INVALIDO, "definir_manchas_relva: %d manchas (cabem %d)" % [manchas.size(), MANCHAS_MAX])
+			break
+		var r: Rect2 = m["rect"]
+		var a := float(m["altura"])
+		if not r.has_area() or a <= 0.0:
+			continue
+		manchas_relva.append([r, a])
+		rects.append(Vector4(r.position.x, r.position.y, r.end.x, r.end.y))
+		alturas.append(a)
+	while rects.size() < MANCHAS_MAX:
+		rects.append(Vector4.ZERO)
+		alturas.append(0.0)
+	_mat_relva.set_shader_parameter("mancha_rect", rects)
+	_mat_relva.set_shader_parameter("mancha_altura", alturas)
+	if rastro != null:
+		rastro.manchas = manchas_relva.duplicate(true)
+	return manchas_relva.size()
+
+
+## Ordem GRAMA: a altura (m) da erva em (x, z), por zonas — a mancha que lá houver, a erva pisada da zona
+## jogável, ou a do mapa. É a que decide o jeito do rastro nesse sítio.
+func altura_relva_em(x: float, z: float) -> float:
+	return rastro.altura_da_erva(x, z)
+
+
 # ------------------------------------------------------------------ ambiente e materiais
 
 func _montar_ambiente() -> void:
@@ -475,6 +522,17 @@ func _ligar_ciclo_e_vento() -> void:
 		m.set_shader_parameter("mapa_sombra", sombras.textura())
 		m.set_shader_parameter("sombra_viva", 1.0)
 	aplicar_ciclo()
+
+
+## Ordem GRAMA: o rastro de quem passa. Nasce aqui, nos dois caminhos (construído ou vestido do molde), para
+## cada mapa o seu — como o relógio e o vento. Cobre a zona jogável e uma margem; sem zona, a arena do mapa.
+func _ligar_rastro() -> void:
+	rastro = RastroRelva.new()
+	rastro.name = "RastroRelva"
+	add_child(rastro)
+	rastro.altura_no_campo = 0.68 * relva_no_campo
+	rastro.ligar([_mat_relva, _mat_haste] as Array[ShaderMaterial], RastroRelva.zona_para(zona_jogo), zona_jogo)
+	rastro.manchas = manchas_relva.duplicate(true)
 
 
 ## Escreve no mundo tudo o que sai da hora (só quando a hora mudou). As ferramentas de filme
