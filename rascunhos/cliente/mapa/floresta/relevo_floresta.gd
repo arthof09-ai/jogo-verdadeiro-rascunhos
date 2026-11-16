@@ -63,9 +63,12 @@ const LAGO_ACIMA := 1.25           # o nível do lago acima do fundo da cova da 
 const LAGO_RAIO := 11.0            # o lago vive dentro deste raio à volta da COVA (a margem fecha antes)
 const LAGO_RASA_M := 0.48          # a fundura da RASA (m): a água pelo joelho de uma figura
 const LAGO_FUNDA_M := 2.0          # a fundura da FUNDA (m): não se faz pé
-const LAGO_FUNDA_CENTRO := Vector2(20.0, -21.5)   # o meio da funda (puxado a norte, onde o lago é mais comprido)
-const LAGO_FUNDA_RAIO := 3.0       # até aqui o fundo da funda é chão raso (m)
-const LAGO_TALUDE_M := 1.7         # largura do talude entre a funda e a rasa (m): o degrau que se lê no fundo
+# A FUNDA cabe dentro das casas que a grelha JÁ bloqueava como «água funda» (o quadrado de 4 × 4 casas de 1,5 m
+# com x de 16,5 a 22,5 e z de −24 a −18): onde não se faz pé é onde a regra já dizia que não se pisa. É um
+# quadrado de cantos redondos (norma 4) — enche esse bloco sem sair dele.
+const LAGO_FUNDA_CENTRO := Vector2(19.5, -21.0)
+const LAGO_FUNDA_RAIO := 2.05      # até aqui («raio» do quadrado redondo) o fundo da funda é chão raso (m)
+const LAGO_TALUDE_M := 0.90        # largura do talude entre a funda e a rasa (m): o degrau que se lê no fundo
 const LOMBO_A := Vector2(-25.0, 29.0)
 const LOMBO_B := Vector2(-22.0, 8.0)
 const LOMBO_ALTO := 2.3
@@ -228,7 +231,8 @@ static func _cozer() -> void:
 ## Ordem 66 — o LEITO do lago em (x, z), dado o relevo da Ordem 38 nesse ponto (`h38`). Em seco (h38 ≥ nível)
 ## devolve h38 sem lhe tocar: a linha de água é a curva de nível da cova antiga, e a margem não muda.
 ## Debaixo de água o fundo é desenhado: a RASA (entra-se devagar e fica-se com a água pelo joelho, LAGO_RASA_M,
-## com um ondulado leve de areia) e a FUNDA (uma bacia de LAGO_FUNDA_M à volta de LAGO_FUNDA_CENTRO), separadas
+## com um ondulado leve de areia) e a FUNDA (uma bacia de LAGO_FUNDA_M à volta de LAGO_FUNDA_CENTRO, dentro das
+## casas que a grelha já bloqueava), separadas
 ## por um TALUDE de LAGO_TALUDE_M — o degrau que se lê no fundo.
 static func _leito(x: float, z: float, h38: float) -> float:
 	var a := _nivel_lago - h38  # quanto a cova antiga ficava abaixo do nível: 0 na margem, cresce para o meio
@@ -237,8 +241,10 @@ static func _leito(x: float, z: float, h38: float) -> float:
 	var n := ruido()
 	var rasa := LAGO_RASA_M * tanh(a / 0.37)
 	rasa += 0.035 * n.get_noise_2d(x * 60.0 + 500.0, z * 60.0) * _ss(0.15, 0.45, a)
-	var d := Vector2(x - LAGO_FUNDA_CENTRO.x, z - LAGO_FUNDA_CENTRO.y).length()
-	d *= 1.0 + 0.12 * n.get_noise_2d(x * 11.0 - 300.0, z * 11.0 + 120.0)
+	var dx := x - LAGO_FUNDA_CENTRO.x
+	var dz := z - LAGO_FUNDA_CENTRO.y
+	var d := pow(dx * dx * dx * dx + dz * dz * dz * dz, 0.25)
+	d *= 1.0 + 0.05 * n.get_noise_2d(x * 14.0 - 300.0, z * 14.0 + 120.0)
 	var funda := (1.0 - _ss(LAGO_FUNDA_RAIO, LAGO_FUNDA_RAIO + LAGO_TALUDE_M, d)) * _ss(0.30, 0.62, a)
 	var bacia := LAGO_FUNDA_M * (0.88 + 0.12 * (1.0 - _ss(0.0, LAGO_FUNDA_RAIO, d)))  # mais funda no meio
 	return _nivel_lago - lerpf(rasa, bacia, funda)
