@@ -1,0 +1,648 @@
+{
+ "resolucao": [
+  1028,
+  749
+ ],
+ "gpu": "NVIDIA GeForce RTX 4060",
+ "renderer": "gl_compatibility",
+ "casos": [
+  {
+   "perfil": "baixo",
+   "clima": "nenhum",
+   "ms_mediana": 0.842,
+   "ms_runs": [
+    0.842,
+    0.835,
+    0.997
+   ],
+   "fps_mediana": 1187.6,
+   "draw_calls": [
+    120,
+    120,
+    120
+   ],
+   "primitivas": 928487,
+   "gotas": 0,
+   "salpicos": 0
+  },
+  {
+   "perfil": "medio",
+   "clima": "nenhum",
+   "ms_mediana": 0.936,
+   "ms_runs": [
+    0.936,
+    0.923,
+    1.078
+   ],
+   "fps_mediana": 1068.4,
+   "draw_calls": [
+    125,
+    125,
+    125
+   ],
+   "primitivas": 1063733,
+   "gotas": 0,
+   "salpicos": 0
+  },
+  {
+   "perfil": "alto",
+   "clima": "nenhum",
+   "ms_mediana": 1.09,
+   "ms_runs": [
+    1.09,
+    1.077,
+    1.126
+   ],
+   "fps_mediana": 917.4,
+   "draw_calls": [
+    125,
+    125,
+    125
+   ],
+   "primitivas": 1181614,
+   "gotas": 0,
+   "salpicos": 0
+  },
+  {
+   "perfil": "baixo",
+   "clima": "chuva-fraca",
+   "ms_mediana": 0.946,
+   "ms_runs": [
+    0.946,
+    0.949,
+    0.928
+   ],
+   "fps_mediana": 1057.1,
+   "draw_calls": [
+    135,
+    135,
+    135
+   ],
+   "primitivas": 1038954,
+   "gotas": 900,
+   "salpicos": 0
+  },
+  {
+   "perfil": "baixo",
+   "clima": "chuva-forte",
+   "ms_mediana": 1.311,
+   "ms_runs": [
+    1.311,
+    1.334,
+    0.943
+   ],
+   "fps_mediana": 762.8,
+   "draw_calls": [
+    135,
+    135,
+    135
+   ],
+   "primitivas": 1042763,
+   "gotas": 2800,
+   "salpicos": 0
+  },
+  {
+   "perfil": "medio",
+   "clima": "chuva-fraca",
+   "ms_mediana": 1.27,
+   "ms_runs": [
+    1.425,
+    1.27,
+    0.998
+   ],
+   "fps_mediana": 787.4,
+   "draw_calls": [
+    141,
+    141,
+    141
+   ],
+   "primitivas": 1193126,
+   "gotas": 1600,
+   "salpicos": 120
+  },
+  {
+   "perfil": "medio",
+   "clima": "chuva-forte",
+   "ms_mediana": 1.545,
+   "ms_runs": [
+    1.675,
+    1.545,
+    1.074
+   ],
+   "fps_mediana": 647.2,
+   "draw_calls": [
+    141,
+    141,
+    141
+   ],
+   "primitivas": 1200393,
+   "gotas": 5000,
+   "salpicos": 350
+  },
+  {
+   "perfil": "alto",
+   "clima": "chuva-fraca",
+   "ms_mediana": 1.46,
+   "ms_runs": [
+    1.46,
+    1.517,
+    1.383
+   ],
+   "fps_mediana": 684.9,
+   "draw_calls": [
+    141,
+    141,
+    141
+   ],
+   "primitivas": 1312769,
+   "gotas": 2400,
+   "salpicos": 200
+  },
+  {
+   "perfil": "alto",
+   "clima": "chuva-forte",
+   "ms_mediana": 1.379,
+   "ms_runs": [
+    1.379,
+    1.511,
+    1.344
+   ],
+   "fps_mediana": 725.2,
+   "draw_calls": [
+    141,
+    141,
+    141
+   ],
+   "primitivas": 1324767,
+   "gotas": 8000,
+   "salpicos": 600
+  }
+ ],
+ "corridas": [
+  [
+   {
+    "clima": "nenhum",
+    "draw_calls": 120,
+    "fps": 1187.2,
+    "gotas": 0,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 0.842,
+    "perfil": "baixo",
+    "primitivas": 928487,
+    "quadros": 3562,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 0
+   },
+   {
+    "clima": "nenhum",
+    "draw_calls": 125,
+    "fps": 1068.8,
+    "gotas": 0,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 0.936,
+    "perfil": "medio",
+    "primitivas": 1063733,
+    "quadros": 3207,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 0
+   },
+   {
+    "clima": "nenhum",
+    "draw_calls": 125,
+    "fps": 917.4,
+    "gotas": 0,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.09,
+    "perfil": "alto",
+    "primitivas": 1181614,
+    "quadros": 2753,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 0
+   },
+   {
+    "clima": "chuva-fraca",
+    "draw_calls": 135,
+    "fps": 1056.8,
+    "gotas": 900,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 0.946,
+    "perfil": "baixo",
+    "primitivas": 1038954,
+    "quadros": 3171,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 0
+   },
+   {
+    "clima": "chuva-forte",
+    "draw_calls": 135,
+    "fps": 762.6,
+    "gotas": 2800,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.311,
+    "perfil": "baixo",
+    "primitivas": 1042764,
+    "quadros": 2288,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 0
+   },
+   {
+    "clima": "chuva-fraca",
+    "draw_calls": 141,
+    "fps": 701.7,
+    "gotas": 1600,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.425,
+    "perfil": "medio",
+    "primitivas": 1193130,
+    "quadros": 2105,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 120
+   },
+   {
+    "clima": "chuva-forte",
+    "draw_calls": 141,
+    "fps": 597.1,
+    "gotas": 5000,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.675,
+    "perfil": "medio",
+    "primitivas": 1200397,
+    "quadros": 1793,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 350
+   },
+   {
+    "clima": "chuva-fraca",
+    "draw_calls": 141,
+    "fps": 684.8,
+    "gotas": 2400,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.46,
+    "perfil": "alto",
+    "primitivas": 1312769,
+    "quadros": 2055,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 200
+   },
+   {
+    "clima": "chuva-forte",
+    "draw_calls": 141,
+    "fps": 725.2,
+    "gotas": 8000,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.379,
+    "perfil": "alto",
+    "primitivas": 1324767,
+    "quadros": 2176,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 600
+   }
+  ],
+  [
+   {
+    "clima": "nenhum",
+    "draw_calls": 120,
+    "fps": 1198.2,
+    "gotas": 0,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 0.835,
+    "perfil": "baixo",
+    "primitivas": 928487,
+    "quadros": 3595,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 0
+   },
+   {
+    "clima": "nenhum",
+    "draw_calls": 125,
+    "fps": 1083.5,
+    "gotas": 0,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 0.923,
+    "perfil": "medio",
+    "primitivas": 1063732,
+    "quadros": 3251,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 0
+   },
+   {
+    "clima": "nenhum",
+    "draw_calls": 125,
+    "fps": 928.8,
+    "gotas": 0,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.077,
+    "perfil": "alto",
+    "primitivas": 1181614,
+    "quadros": 2787,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 0
+   },
+   {
+    "clima": "chuva-fraca",
+    "draw_calls": 135,
+    "fps": 1054.0,
+    "gotas": 900,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 0.949,
+    "perfil": "baixo",
+    "primitivas": 1038954,
+    "quadros": 3162,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 0
+   },
+   {
+    "clima": "chuva-forte",
+    "draw_calls": 135,
+    "fps": 749.4,
+    "gotas": 2800,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.334,
+    "perfil": "baixo",
+    "primitivas": 1042763,
+    "quadros": 2249,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 0
+   },
+   {
+    "clima": "chuva-fraca",
+    "draw_calls": 141,
+    "fps": 787.1,
+    "gotas": 1600,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.27,
+    "perfil": "medio",
+    "primitivas": 1193126,
+    "quadros": 2362,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 120
+   },
+   {
+    "clima": "chuva-forte",
+    "draw_calls": 141,
+    "fps": 647.2,
+    "gotas": 5000,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.545,
+    "perfil": "medio",
+    "primitivas": 1200393,
+    "quadros": 1943,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 350
+   },
+   {
+    "clima": "chuva-fraca",
+    "draw_calls": 141,
+    "fps": 659.2,
+    "gotas": 2400,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.517,
+    "perfil": "alto",
+    "primitivas": 1312769,
+    "quadros": 1978,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 200
+   },
+   {
+    "clima": "chuva-forte",
+    "draw_calls": 141,
+    "fps": 661.6,
+    "gotas": 8000,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.511,
+    "perfil": "alto",
+    "primitivas": 1324768,
+    "quadros": 1986,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 600
+   }
+  ],
+  [
+   {
+    "clima": "nenhum",
+    "draw_calls": 120,
+    "fps": 1003.3,
+    "gotas": 0,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 0.997,
+    "perfil": "baixo",
+    "primitivas": 928491,
+    "quadros": 3010,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 0
+   },
+   {
+    "clima": "nenhum",
+    "draw_calls": 125,
+    "fps": 927.8,
+    "gotas": 0,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.078,
+    "perfil": "medio",
+    "primitivas": 1063736,
+    "quadros": 2784,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 0
+   },
+   {
+    "clima": "nenhum",
+    "draw_calls": 125,
+    "fps": 888.5,
+    "gotas": 0,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.126,
+    "perfil": "alto",
+    "primitivas": 1181615,
+    "quadros": 2666,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 0
+   },
+   {
+    "clima": "chuva-fraca",
+    "draw_calls": 135,
+    "fps": 1077.6,
+    "gotas": 900,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 0.928,
+    "perfil": "baixo",
+    "primitivas": 1038953,
+    "quadros": 3233,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 0
+   },
+   {
+    "clima": "chuva-forte",
+    "draw_calls": 135,
+    "fps": 1060.2,
+    "gotas": 2800,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 0.943,
+    "perfil": "baixo",
+    "primitivas": 1042754,
+    "quadros": 3181,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 0
+   },
+   {
+    "clima": "chuva-fraca",
+    "draw_calls": 141,
+    "fps": 1001.8,
+    "gotas": 1600,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 0.998,
+    "perfil": "medio",
+    "primitivas": 1193119,
+    "quadros": 3006,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 120
+   },
+   {
+    "clima": "chuva-forte",
+    "draw_calls": 141,
+    "fps": 931.4,
+    "gotas": 5000,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.074,
+    "perfil": "medio",
+    "primitivas": 1200381,
+    "quadros": 2795,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 350
+   },
+   {
+    "clima": "chuva-fraca",
+    "draw_calls": 141,
+    "fps": 722.9,
+    "gotas": 2400,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.383,
+    "perfil": "alto",
+    "primitivas": 1312767,
+    "quadros": 2169,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 200
+   },
+   {
+    "clima": "chuva-forte",
+    "draw_calls": 141,
+    "fps": 744.3,
+    "gotas": 8000,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ms_por_quadro": 1.344,
+    "perfil": "alto",
+    "primitivas": 1324764,
+    "quadros": 2233,
+    "renderer": "gl_compatibility",
+    "resolucao": [
+     1028,
+     749
+    ],
+    "salpicos": 600
+   }
+  ]
+ ]
+}
