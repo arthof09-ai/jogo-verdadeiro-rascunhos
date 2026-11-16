@@ -114,6 +114,7 @@ bdd99009705dd1ff840218955d697e7de42e31a2a4fe62e0f4f27098d9ec86c8  rascunhos/clie
 8a0c33c87ba318c25ed263e59ae66e05a9ee337c9f1fe15da876c57300d59c06  rascunhos/cliente/mapa/floresta/ESTADO-FINAL-ORDEM-60.md
 edb6aba9e2de08b865a62fe39bf5efc4cf937dc2430d297bf3edcbf4a2b2cf2e  rascunhos/cliente/mapa/floresta/ESTADO-FINAL-ORDEM-61.md
 715cf99f33d332467d4936c5f31e7a48f106daaf16b6b9cdf6a6be2f425dcb5d  rascunhos/cliente/mapa/floresta/ESTADO-FINAL-ORDEM-62.md
+2ada6e9ac5ce57f115cf64f534065e19c86a0d75a373dedd6b908543668a94b9  rascunhos/cliente/mapa/floresta/ESTADO-FINAL-ORDEM-64.md
 46de7e52e9da26c2bba0db5bef2b2084b7b5a6858291378af9849691220da715  rascunhos/cliente/mapa/floresta/NOTAS-CICLO-43.md
 18560e6fdda7d296d11eb9da7cb3d10811610653c4ab260621c5dc89ec0e2480  rascunhos/cliente/mapa/floresta/NOTAS-CICLO-55.md
 81d7bcd78644dc1a5a08f8a40c610b0c038860824304e18318bf5b5588796ff6  rascunhos/cliente/mapa/floresta/NOTAS-CICLO-56.md
