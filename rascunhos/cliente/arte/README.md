@@ -11,9 +11,14 @@ Missão V1.1 do Plano B v1.1 (Notion `410c2b324ede8137b98bf7e75afa7e89`). Godot 
 | `shaders/toon_pintado.gdshader` | Material base: rampa por família, terminador quebrado por pincel, sombra colorida em `light()`, rim, especular mínimo |
 | `shaders/contorno_casca.gdshader` | Casca invertida (`cull_front, unshaded`), com espessura em píxeis de ecrã |
 | `shaders/folhagem_vento.gdshader` | Alpha scissor ou hash, vento no vértice, normais de volume e a mesma sombra colorida |
-| `shaders/ceu_pintado.gdshader` | `shader_type sky`: gradiente de 3 cores, sol suave e 4 horas |
-| `rampas/gerar_rampas.gd` | `@tool EditorScript` que gera `rampa_<familia>.png` (256×1) das 7 famílias |
-| `ambiente/color_script.gd` | `Resource` `ColorScript`: 4 horas em hex, `amostrar(hora)` e `aplicar(...)` |
+| `shaders/ceu_pintado.gdshader` | `shader_type sky`: gradiente de 3 cores partido em tons e pintado a pincel, sol suave e 4 horas |
+| `rampas/gerar_rampas.gd` | Gera `rampa_<familia>.png` (256×1) das 7 famílias: pele, tecido, metal, pedra, casca, folhagem e chao. Corre sem janela |
+| `rampas/rampa_<familia>.png` | As 7 rampas (com os `.png.import`: Lossless, sem mipmaps) |
+| `pincel/gerar_pincel.gd` | Pinta por programa as duas texturas do pincel. Corre sem janela |
+| `pincel/pincel_mascara.png` | Máscara de pincelada 256×256, repete nos dois eixos, 0,5 = neutro (toon, folhagem e céu) |
+| `pincel/ceu_pinceladas.png` | Textura de pinceladas do céu 1024×512, panorâmica (só o céu) |
+| `ambiente/color_script.gd` | `Resource` `ColorScript`: 4 horas em hex (a paleta da casa), `amostrar(hora)` e `aplicar(...)` |
+| `ferramentas/capturar_kit.gd` | Tira as capturas do kit (céu, Clareira, as 7 famílias e os próprios PNG) com etiqueta antes/depois |
 
 ## Como aplicar
 
@@ -21,11 +26,14 @@ Missão V1.1 do Plano B v1.1 (Notion `410c2b324ede8137b98bf7e75afa7e89`). Godot 
    - Renderizador `gl_compatibility`.
    - `rendering/shading/overrides/force_vertex_shading = false`. Com vertex shading, o `light()` não corre (doc do spatial shader) e a sombra colorida some.
    - Não ligar `vertex_lighting` nos materiais.
-2. **Rampas.** Abrir `rampas/gerar_rampas.gd` no Script Editor e fazer File > Run (Ctrl+Shift+X). Saem 7 PNG na mesma pasta. Importar cada PNG como **Lossless, sem mipmaps**: compressão VRAM em blocos 4×4 estraga uma textura de 1 px de altura.
+2. **Rampas.** Os 7 PNG estão em `rampas/`, já com os `.png.import` ao lado: **Lossless, sem mipmaps e sem «detect 3D»** (compressão VRAM em blocos 4×4 estraga uma textura de 1 px de altura; o «detect 3D» do editor voltava a ligá-la sozinho). Os `.import` estão no `.gitignore` da raiz: estes entram com `git add -f`.
+   - Só é preciso gerar outra vez se as tabelas mudarem: `godot --headless --path cliente -s res://arte/rampas/gerar_rampas.gd`.
+   - A luz parte-se em **degraus**: sombra → terminador (a tinta da família) → meia-tinta → luz. A largura da borda entre degraus é por família (`borda`).
 3. **Materiais (toon).** Um `ShaderMaterial` com `toon_pintado` por família:
    - `rampa` = PNG da família;
-   - `pincel` = máscara de pincelada em cinzento, com 0,5 neutro. Sem máscara, `forca_pincel = 0`.
+   - `pincel` = `pincel/pincel_mascara.png` (cinzento, 0,5 neutro, com mipmaps). Sem máscara, `forca_pincel = 0`.
    - Família metal: `metalico ≤ 0,3`, porque o motor reduz a difusa por (1 − METALLIC).
+   - Na Clareira de prova as 7 famílias estão aplicadas: chão (`chao`), troncos e tochas (`casca`), copas e arbustos (`folhagem`), rochas e Besta (`pedra`), corpos das figuras (`tecido`), cabeças (`pele`) e lâminas (`metal`).
 4. **Contorno (só figuras).** No material toon da figura, em **Next Pass**, um `ShaderMaterial` com `contorno_casca` e a mesma `textura_albedo`, `cor_albedo` e `escala_uv`.
    - Malhas com arestas duras: gravar as normais suavizadas na cor do vértice (RGB = n·0,5+0,5) e ligar `normal_suave_em_cor`.
    - Perfil Baixo: `material.next_pass = null`.
@@ -37,6 +45,9 @@ Missão V1.1 do Plano B v1.1 (Notion `410c2b324ede8137b98bf7e75afa7e89`). Godot 
    - `centro_copa` em espaço do **modelo** (o centro da massa da copa).
    - Baixo: `usar_alpha_hash = false` (scissor). Copas que tapam figuras: `usar_alpha_hash = true` e `set_instance_shader_parameter("opacidade_dither", x)` por árvore.
 6. **Céu.** WorldEnvironment > Environment > Sky > `ShaderMaterial` com `ceu_pintado`. A DirectionalLight3D do sol tem de ter **Sky Mode** a incluir o céu, para preencher `LIGHT0_*`.
+   - Pincel: `pinceladas` = `pincel/ceu_pinceladas.png`, `mascara_pincel` = `pincel/pincel_mascara.png` e `forca_pinceladas = 1`. Sem as texturas, `forca_pinceladas = 0` (gradiente liso).
+   - `tons` = em quantas tintas o gradiente se parte; `alcance_pinceladas` = quanto a pincelada empurra a borda dos tons.
+   - Para mudar o traço: `godot --headless --path cliente -s res://arte/pincel/gerar_pincel.gd` (semente fixa: sai sempre igual).
 7. **Color script.** Criar um `.tres` do tipo `ColorScript`.
    - No arranque: `preencher_ceu(material_ceu)`.
    - Ao mudar a hora: `aplicar(hora, sol, environment, materiais_luz, materiais_contorno, material_ceu)`.
@@ -46,16 +57,21 @@ Missão V1.1 do Plano B v1.1 (Notion `410c2b324ede8137b98bf7e75afa7e89`). Godot 
      - `cor_sombra`, `tinta_contorno` e `hora`.
    - O `ambient_light_source` e a neblina de altura ficam configurados na cena.
 
-## O que é PROVISÓRIO (fecha com o guia V0.1)
+## O que a Ordem 65 fechou
 
-- Todos os hex do `color_script.gd` e as cores padrão do `ceu_pintado` (iguais às do color script).
-- As horas-chave: 8 h, 15 h, 18,5 h e 22 h.
-- As paradas das 7 rampas em `gerar_rampas.gd`.
-- Os padrões das uniforms:
+- **Os hex do `color_script.gd` e as cores por omissão do `ceu_pintado`** (iguais às do color script): são a paleta da casa — cada hora-chave é uma amostra do ciclo do dia do mapa da floresta (`mapa/floresta/ciclo_dia.gd` e `paleta_floresta.gd`) nessa mesma hora. O cabeçalho do `color_script.gd` diz de onde vem cada campo. O guia V0.1 não chegou a existir como ficheiro: a fonte foi a paleta que já estava em jogo.
+- **As horas-chave:** 6,5 h, 15 h, 18,5 h e 22 h (a manhã passou das 8 h para as 6,5 h: às 8 h o sol da casa já vai a 23,5° e a manhã ficava igual à tarde).
+- **As 7 rampas** (`gerar_rampas.gd` e os 7 PNG): em degraus, com as tintas da repintura aprovada.
+- **A máscara de pincel e a textura de pinceladas do céu:** existem (`pincel/`) e estão aplicadas ao céu e aos materiais da Clareira de prova.
+
+## O que continua em aberto
+
+- Os padrões das uniforms (cada shader traz a sua marca no cabeçalho):
   - toon: `cor_sombra`, rim, especular, `forca_pincel`, `piso_sombra`;
   - contorno: `fator_escuro`, `saturacao`, tinta;
   - folhagem: vento, translucidez, variação.
-- A máscara de pincel e a textura de pinceladas do céu: **ainda não existem**. São pedido ao Muse/V0.1.
+- Os alvos dos perfis em `perfis/aplicar_perfil.gd` (fecham com a medição da V4.4 no aparelho).
+- As métricas B3 medidas no aparelho (lista no fim deste ficheiro).
 - O `docs/orcamento-perfis.md` (saída da V1.1) **não está neste rascunho**. Fica pendente, com dono único, o Claude.
 
 ## Riscos de desempenho no celular
@@ -80,6 +96,7 @@ Missão V1.1 do Plano B v1.1 (Notion `410c2b324ede8137b98bf7e75afa7e89`). Godot 
   - Mudar uma uniform do céu obriga a refazer o cubemap de radiance.
   - Atualizar `hora` em degraus (por exemplo, a cada 5–10 s de jogo, ou ao passar 0,1 h) e usar o Sky com `radiance_size` pequeno (64 ou 128).
   - O shader não usa `TIME`, de propósito.
+  - Com o pincel ligado, o céu lê 2 texturas por píxel (sem mipmaps: ver o comentário no shader). No Baixo, pode desligar-se com `forca_pinceladas = 0`.
 - **Precisão e LDR.**
   - O Compatibility é RGBA8, LDR e de precisão média. O céu limita a saída a ≤1.
   - O `TIME` grande perde precisão no `sin` do vento; o motor reinicia o TIME (time rollover). Verificar visualmente a costura.

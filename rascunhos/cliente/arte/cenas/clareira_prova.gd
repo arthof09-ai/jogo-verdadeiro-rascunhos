@@ -9,7 +9,7 @@ extends Node3D
 ## >>> Nada disto vai ao olho do Mestre: a V2.1 troca pelos assets FICA/LAPIDA, o T1 do chão,
 ## >>> a Besta Cristalina e os vagalumes da V2.0c. Sem chibi e sem marcador na entrega.
 ##
-## Teclas (só para a bancada): 1-4 = 8 h / 15 h / 18,5 h / 22 h; P = próximo perfil;
+## Teclas (só para a bancada): 1-4 = 6,5 h / 15 h / 18,5 h / 22 h; P = próximo perfil;
 ## C = liga/desliga o ciclo automático; M = imprime a medição (JSON) no console.
 ## No celular não há teclado: o ciclo corre sozinho e o rótulo mostra os números.
 
@@ -17,9 +17,19 @@ const LADO_CASAS := 20
 const CASA_M := 1.5
 const LADO_M := LADO_CASAS * CASA_M  # 30 m
 const ESCALA_FIGURA := 1.25  # regra dele: figuras ×1,25
-const HORAS_CHAVE: Array[float] = [8.0, 15.0, 18.5, 22.0]
+const HORAS_CHAVE: Array[float] = [6.5, 15.0, 18.5, 22.0]  # as do color script (Ordem 65)
 const PERFIS: Array[String] = ["baixo", "medio", "alto"]
 const AQUECIMENTO_S := 10.0  # B3: medir depois de 10 s
+## O sol da casa (os números do ciclo do dia do mapa): nasce às 6 h, culmina às 12,5 h a 61,5°,
+## põe-se às 19 h.
+const LATITUDE := 38.0
+const SOL_DECLINACAO := 9.5
+const SOL_CULMINA := 12.5
+## A máscara de pincelada da casa (arte/pincel/gerar_pincel.gd).
+const PINCEL := "res://arte/pincel/pincel_mascara.png"
+## Quanto a máscara quebra o terminador nos materiais da Clareira. Com a máscara da casa (traço
+## de alto contraste), 0,12 deixa ler os degraus da rampa e ainda esfiapa a borda como pincel.
+const FORCA_PINCEL := 0.12
 const JANELA_QUADROS := 1800  # ~60 s a 30 fps
 ## PONTO PARA O OLHO DO MESTRE (REF_23): pontilhado nas copas que tapam figuras. Desligado por defeito.
 const USAR_PONTILHADO_COPAS := false
@@ -126,16 +136,22 @@ func _escrever_hora(forcar: bool) -> void:
 	_posicionar_sol(h)
 
 
-## PROVISÓRIO: arco do sol das 6 h às 19,5 h; de noite a mesma luz faz de lua, alta e fria
-## (a cor e a energia vêm do color script). A V4.3 substitui por um arco contínuo.
+## O arco do sol é o da casa: a mesma conta do ciclo do dia do mapa (latitude, declinação e hora
+## da culminação), por isso em cada hora-chave o sol está onde a paleta dessa hora o espera.
+## Rasante, a geometria da luz fica presa nos 3°. De noite a mesma luz faz de lua, alta e fria
+## (a cor e a energia vêm do color script). A V4.3 substitui por um arco contínuo, com lua própria.
 func _posicionar_sol(h: float) -> void:
-	var elevacao := 38.0
-	var azimute := 150.0
-	if h >= 6.0 and h <= 19.5:
-		var t := (h - 6.0) / 13.5
-		elevacao = lerpf(6.0, 60.0, sin(t * PI))
-		azimute = lerpf(-110.0, 110.0, t)
-	_sol.rotation_degrees = Vector3(-elevacao, azimute, 0.0)
+	var ah := deg_to_rad((h - SOL_CULMINA) * 15.0)
+	var d := deg_to_rad(SOL_DECLINACAO)
+	var f := deg_to_rad(LATITUDE)
+	var elevacao := rad_to_deg(asin(clampf(sin(f) * sin(d) + cos(f) * cos(d) * cos(ah), -1.0, 1.0)))
+	# azimute a partir do norte (-Z), positivo para leste (+X): a convenção da paleta da casa
+	var azimute := rad_to_deg(atan2(-cos(d) * sin(ah), cos(f) * sin(d) - sin(f) * cos(d) * cos(ah)))
+	if elevacao < 0.0:
+		elevacao = 38.0
+		azimute = 30.0
+	# a luz viaja ao longo de -Z do nó: virar o nó de costas para o astro
+	_sol.rotation_degrees = Vector3(-maxf(elevacao, 3.0), 180.0 - azimute, 0.0)
 
 
 # ------------------------------------------------------------------ materiais
@@ -148,7 +164,7 @@ func _rampa(familia: String) -> Texture2D:
 	if ResourceLoader.exists(caminho):
 		tex = load(caminho) as Texture2D
 	if tex == null:
-		# PLACEHOLDER: rampa genérica até correr o gerar_rampas.gd (e depois a V0.1).
+		# Recurso: rampa genérica, só se o PNG da família faltar (arte/rampas/gerar_rampas.gd).
 		var g := Gradient.new()
 		g.offsets = PackedFloat32Array([0.0, 0.42, 0.56, 0.70, 1.0])
 		g.colors = PackedColorArray([Color.BLACK, Color.BLACK, Color(0.55, 0.48, 0.55), Color.WHITE, Color.WHITE])
@@ -160,8 +176,13 @@ func _rampa(familia: String) -> Texture2D:
 	return tex
 
 
-## PLACEHOLDER da máscara de pincelada (pedido ao Muse/V0.1): ruído contínuo em cinzento.
+## A máscara de pincelada da casa (arte/pincel/pincel_mascara.png): pinceladas com cerdas, 0,5 = neutro.
 func _gerar_pincel() -> Texture2D:
+	if ResourceLoader.exists(PINCEL):
+		var tex := load(PINCEL) as Texture2D
+		if tex != null:
+			return tex
+	# Recurso, só se o PNG faltar: ruído contínuo em cinzento.
 	var ruido := FastNoiseLite.new()
 	ruido.seed = semente + 1
 	ruido.frequency = 0.06
@@ -192,6 +213,7 @@ func _mat_toon(familia: String, cor: Color) -> ShaderMaterial:
 	m.set_shader_parameter("cor_albedo", cor)
 	m.set_shader_parameter("rampa", _rampa(familia))
 	m.set_shader_parameter("pincel", _pincel)
+	m.set_shader_parameter("forca_pincel", FORCA_PINCEL)
 	_mats_luz.append(m)
 	return m
 
@@ -214,6 +236,7 @@ func _mat_folhagem(cor: Color, altura_presa: float, faixa_presa: float) -> Shade
 	m.set_shader_parameter("cor_albedo", cor)
 	m.set_shader_parameter("rampa", _rampa("folhagem"))
 	m.set_shader_parameter("pincel", _pincel)
+	m.set_shader_parameter("forca_pincel", FORCA_PINCEL)
 	m.set_shader_parameter("fonte_peso", 0)  # sem cor de vértice: COLOR.r = 1; a altura manda
 	m.set_shader_parameter("centro_copa", Vector3.ZERO)
 	m.set_shader_parameter("altura_presa", altura_presa)
@@ -247,6 +270,9 @@ func _criar_chao() -> void:
 	var m := _mat_toon("chao", Color.WHITE)
 	m.set_shader_parameter("textura_albedo", _gerar_albedo_chao())
 	m.set_shader_parameter("escala_uv", Vector2(6.0, 6.0))
+	# Sem luz de contorno no chão: num plano visto de raspão o rim acendia o chão inteiro ao
+	# longe e estourava-o a branco (visto nas capturas da Ordem 65).
+	m.set_shader_parameter("forca_rim", 0.0)
 	var chao := _malha(pm, m, Vector3.ZERO, "Chao_PLACEHOLDER")
 	chao.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
@@ -350,6 +376,10 @@ func _criar_tochas() -> void:
 func _criar_figuras() -> void:
 	var cores: Array[Color] = [Color("#9c3b33"), Color("#3f5f9a"), Color("#5f7f3a"), Color("#b08a3e")]
 	var casas: Array[Vector2i] = [Vector2i(8, 12), Vector2i(10, 12), Vector2i(12, 13), Vector2i(9, 14)]
+	var pele := _mat_toon("pele", Color("#c79273"))
+	var metal := _mat_toon("metal", Color("#8d95a3"))
+	metal.set_shader_parameter("metalico", 0.25)  # <= 0,3: acima disso o motor come a difusa (README)
+	metal.set_shader_parameter("especular", 0.35)
 	for i in cores.size():
 		var cap := CapsuleMesh.new()
 		cap.radius = 0.3 * ESCALA_FIGURA
@@ -357,6 +387,27 @@ func _criar_figuras() -> void:
 		var mi := _malha(cap, _mat_figura("tecido", cores[i]), _casa(casas[i].x, casas[i].y) + Vector3(0, cap.height * 0.5, 0), "Figura%d_PLACEHOLDER" % i)
 		mi.add_to_group(&"figura")
 		_figuras.append(mi)
+		# As duas famílias que faltavam à Clareira (Ordem 65): a cabeça é «pele» e a lâmina é
+		# «metal». São filhas da figura (respiram com ela) e não levam contorno próprio.
+		var cabeca := SphereMesh.new()
+		cabeca.radius = 0.34 * ESCALA_FIGURA
+		cabeca.height = 0.68 * ESCALA_FIGURA
+		var mc := MeshInstance3D.new()
+		mc.name = "Cabeca_PLACEHOLDER"
+		mc.mesh = cabeca
+		mc.material_override = pele
+		mc.position = Vector3(0, cap.height * 0.5 - 0.12, 0)
+		mi.add_child(mc)
+		if i % 2 == 0:
+			var lamina := BoxMesh.new()
+			lamina.size = Vector3(0.09, 1.5, 0.22)
+			var ml := MeshInstance3D.new()
+			ml.name = "Lamina_PLACEHOLDER"
+			ml.mesh = lamina
+			ml.material_override = metal
+			ml.position = Vector3(0.52, 0.15, 0.0)
+			ml.rotation_degrees = Vector3(0, 0, -14)
+			mi.add_child(ml)
 	var corpo := BoxMesh.new()
 	corpo.size = Vector3(2.0, 2.2, 3.6)
 	var besta := _malha(corpo, _mat_figura("pedra", Color("#5e7fa8")), _casa(10, 6) + Vector3(0, 1.1, 0), "Besta_PLACEHOLDER")
