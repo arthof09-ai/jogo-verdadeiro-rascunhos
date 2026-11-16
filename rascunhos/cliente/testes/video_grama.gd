@@ -14,6 +14,8 @@ extends SceneTree
 ##   Cada corrida deixa em <pasta>: <modo>_fases.json (as fases do guião com os tempos, para a etiqueta do vídeo),
 ##   <modo>_medicao.json (os pés no relevo, a abertura da erva ao longo do tempo, os tempos de recuperação
 ##   medidos) e as capturas de apoio (<modo>_*.jpg).
+##   --res=854x480 (e --resolution igual) faz o filme mais pequeno — para máquinas sem GPU, onde o 1280×720
+##   demora demais; sem --res, o filme é 1280×720 como sempre. A cena, o guião e as contas não mudam.
 ##   MEDIÇÃO (FPS e chamadas de desenho por perfil, com e sem as três alturas e o rastro; tempo real, sem vsync):
 ##     godot --path cliente --resolution 1920x1080 --disable-vsync \
 ##       -s res://testes/video_grama.gd -- --modo=medir --saida=<pasta>
@@ -42,6 +44,7 @@ const NOMES := {"baixa": "BAIXA", "media": "MÉDIA", "alta": "ALTA"}
 
 var _modo := "tres"
 var _saida := ""
+var _res := Vector2i.ZERO   # --res=854x480: tamanho do filme (só modos de vídeo; por omissão 1280×720)
 var _arena: Node3D
 var _mapa: Node3D
 var _rastro: RastroRelva
@@ -73,6 +76,10 @@ func _init() -> void:
 			_modo = a.trim_prefix("--modo=")
 		elif a.begins_with("--saida="):
 			_saida = a.trim_prefix("--saida=")
+		elif a.begins_with("--res="):
+			var partes := a.trim_prefix("--res=").split("x")
+			if partes.size() == 2 and int(partes[0]) > 0 and int(partes[1]) > 0:
+				_res = Vector2i(int(partes[0]), int(partes[1]))
 	if _saida == "":
 		_saida = OS.get_user_data_dir().path_join("grama")
 	DirAccess.make_dir_recursive_absolute(_saida)
@@ -98,7 +105,7 @@ func _comecar() -> void:
 		return
 	root.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
 	root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
-	root.content_scale_size = Vector2i(1920, 1080) if _modo == "medir" else Vector2i(1280, 720)
+	root.content_scale_size = Vector2i(1920, 1080) if _modo == "medir" else (_res if _res != Vector2i.ZERO else Vector2i(1280, 720))
 	var rede = root.get_node("/root/Rede")
 	rede.persistir = false
 	rede._ativo = true
