@@ -34,7 +34,8 @@ Depois, em qualquer altura e **sem reiniciar a cena**:
 ```gdscript
 clima.definir("chuva", "forte")      # "nenhum" | "chuva" | "neve"   ×   "fraco" | "forte"
 clima.definir_por_nome("neve-fraca") # o mesmo, por nome ("nenhum", "chuva-fraca", "chuva-forte", "neve-fraca", "neve-forte")
-clima.definir_vento(20.0, 2.5)       # rumo em graus (0 = +X, 90 = +Z) e força em m/s — UM vento para os dois climas
+clima.definir_vento(20.0, 2.5)       # o vento MANUAL (o de recurso): rumo em graus (0 = +X, 90 = +Z) e força em m/s
+clima.seguir_vento(vento_do_mundo, ["chuva"])  # Ordem 64: a chuva cai com o vento do mundo (ver «A fonte do vento»)
 clima.desligar()                     # as partículas saem; o molhado seca e a neve derrete aos poucos
 clima.definir_acumulacao(0.0, 0.6)   # opcional: abrir a cena já molhada / já nevada (0..1)
 ```
@@ -49,6 +50,30 @@ debaixo de um nó (várias arenas na mesma árvore): `clima.raiz_alvos`.
 Onde está ligado hoje: `cenas/arena/arena.gd` (jogadora; a preferência `"clima"` do HUD chega a
 `clima.definir_por_nome`) e `cenas/mestre/arena_mestre.gd` (Mestre). Pela linha de comando, para a bancada:
 `godot --path cliente -- --clima=neve-forte --vento=30,3.5`.
+
+## A fonte do vento (Ordem 64): a chuva cai com o vento do mundo
+
+O clima não inventa um vento quando o mundo já tem um. `clima.seguir_vento(fonte, tipos)` liga os tipos de
+`tipos` («chuva», «neve») a uma **fonte**: um nó com `vetor() -> Vector3` (m/s no plano do chão, x leste,
+z sul, rajada incluída) — na arena integrada é o vento do mundo do mapa (`mapa/floresta/vento_mundo.gd`,
+Ordem 43: o mesmo que dobra a relva, as hastes e as copas). Para esses tipos, o vento de cada frame é o da
+fonte (direcção e força), lido **uma vez por frame** e integrado frame a frame como sempre: quando o vento do
+mundo roda com o dia ou dá uma rajada, a chuva segue-o sem saltar. As rajadas sintéticas do módulo
+(`rajadas`) não se somam por cima (as do mundo já lá vêm), e a chuva também não herda as rajadas da nevasca.
+
+- Onde se liga: `CampoDaMesa.ligar_clima` (as duas arenas, o mesmo caminho), com
+  `CampoDaMesa.TIPOS_COM_VENTO_DO_MUNDO = ["chuva"]`.
+- **A neve continua no vento manual** (`definir_vento`) até a frente da neve se ligar: basta pôr «neve» nessa
+  lista (`["chuva", "neve"]`). As rajadas da nevasca somam-se então por cima do vento do mundo.
+- Sem fonte (a bancada sem mapa, os testes), com `seguir_vento(null)` ou com a fonte apagada: volta o vento
+  manual, sem erro. Uma fonte sem `vetor()` é recusada.
+- API: `seguir_vento(fonte, tipos = ["chuva"])`, `fonte_do_vento()`, `segue_fonte(tipo)`,
+  `vento_do_frame(tipo = "")` (o vento desse tipo neste frame), `tipos_com_fonte`.
+- A força é a do mundo, sem escala: às 16:15 (a abertura da arena) o vento anda por 7–10 m/s e a chuva fraca
+  (queda 11 m/s) inclina ~35°, a forte (15 m/s) ~28°; de noite (~1,5 m/s) cai quase a direito, mas a andar.
+- Provas: `testes/rodar_testes.gd` (`_teste_chuva_vento_do_mundo`, com o `vento_mundo.gd` verdadeiro) e
+  `testes/pecas_mestre.gd` (na arena do Mestre, com o mapa); com render, `cenas/arena/ferramentas/chuva_no_mapa.gd`
+  (`provas/ordem-64-chuva/`).
 
 ## O clima forte (Ordem 41)
 

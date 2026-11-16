@@ -77,7 +77,9 @@ const BALANCO := {"chuva": 0.04, "neve": 0.32}
 const SEMENTE_CHUVA := 4001
 const SEMENTE_NEVE := 4085
 
-## Para onde o vento sopra, em graus à volta do Y: 0 = +X (leste), 90 = +Z (sul). Um só vento para os dois climas.
+## O VENTO MANUAL — o de recurso: o que vale para os tipos que não seguem a fonte do vento (seguir_vento), ou
+## quando a fonte falta (a bancada sem mapa, os testes). Na arena integrada a chuva segue o vento do mundo.
+## Para onde o vento sopra, em graus à volta do Y: 0 = +X (leste), 90 = +Z (sul).
 @export var vento_direcao_graus: float = 20.0
 ## Força do vento (m/s).
 @export var vento_forca: float = 2.5
@@ -177,6 +179,9 @@ var _mat_veu: ShaderMaterial
 var _n_veu := 0.0
 var _nevasca_vento := 0.0            # 0..1: o vento da nevasca levantado
 var _vento_lento := Vector2.ZERO     # o rumo do vento, alisado (os montes não rodam com cada rajada)
+var _fonte_vento: WeakRef = null     # Ordem 64: o vento do mundo (seguir_vento)
+## Ordem 64: os tipos cujo vento é o da fonte (seguir_vento). Os outros usam o vento manual.
+var tipos_com_fonte: Array[String] = []
 var _d_varre := 0.0                  # m que o vento andou, somados frame a frame (a neve rasteira anda com isto)
 var _bacias: Array[Vector4] = []     # x, z, raio, fundura
 ## Ordem 42: por bacia, o nível de transbordo (m, no mundo) das bacias do RELEVO; NAN = a taça da Ordem 41.
@@ -253,10 +258,47 @@ func desligar() -> void:
 	definir("nenhum")
 
 
-## O mesmo vento para a chuva e para a neve. Mudar o vento só muda o que os flocos andam DAQUI para a frente.
+## O vento manual (o de recurso; ver seguir_vento). Mudar o vento só muda o que os flocos andam DAQUI para a frente.
 func definir_vento(direcao_graus: float, forca_m_s: float) -> void:
 	vento_direcao_graus = direcao_graus
 	vento_forca = maxf(forca_m_s, 0.0)
+
+
+## Ordem 64 — A FONTE DO VENTO: o clima não tem vento seu quando há um vento no mundo. `fonte` é um nó com
+## `vetor() -> Vector3` (m/s no plano do chão, x leste, z sul, rajada incluída: mapa/floresta/vento_mundo.gd,
+## grupo «vento_mundo»). Para os tipos de `tipos` («chuva», «neve»), o vento de cada frame passa a ser o dela:
+## direcção e força, lidas UMA vez por frame e integradas frame a frame como sempre (nada salta quando o vento
+## do mundo roda ou dá uma rajada). As rajadas sintéticas do módulo (`rajadas`) não se somam por cima: as do
+## mundo já lá vêm. Os outros tipos, e todos se a fonte faltar ou sair da cena, ficam com o vento manual.
+## A arena integrada liga hoje só a chuva (CampoDaMesa.ligar_clima); a neve liga-se pondo «neve» na lista.
+## `seguir_vento(null)` desliga. Só apresentação: o vento não entra em regra nenhuma.
+func seguir_vento(fonte: Node, tipos: Array = ["chuva"]) -> void:
+	_fonte_vento = weakref(fonte) if fonte != null else null
+	tipos_com_fonte.clear()
+	if fonte == null:
+		return
+	if not fonte.has_method(&"vetor"):
+		push_warning("[clima] a fonte do vento não tem vetor(): fica o vento manual")
+		_fonte_vento = null
+		return
+	for t in tipos:
+		var s := str(t)
+		if TIPOS.has(s) and s != "nenhum" and not tipos_com_fonte.has(s):
+			tipos_com_fonte.append(s)
+
+
+## A fonte do vento, se ainda existe (null: o vento é o manual).
+func fonte_do_vento() -> Node:
+	if _fonte_vento == null:
+		return null
+	var no = _fonte_vento.get_ref()
+	return no if no != null and is_instance_valid(no) else null
+
+
+## Verdadeiro se o vento de `para_tipo` (vazio: o tipo de agora) é o da fonte.
+func segue_fonte(para_tipo: String = "") -> bool:
+	var t := para_tipo if para_tipo != "" else tipo
+	return tipos_com_fonte.has(t) and fonte_do_vento() != null
 
 
 ## O perfil gráfico da casa ("baixo", "medio"/"médio", "alto"): muda as contagens sem reiniciar.
@@ -385,14 +427,24 @@ func alaga() -> bool:
 	return tipo == "chuva" and intensidade == "forte"
 
 
-## O vento deste frame (m/s no chão: x, z), já com as rajadas.
-func vento_do_frame() -> Vector2:
+## O vento deste frame (m/s no chão: x, z), já com as rajadas. `para_tipo` (vazio: o tipo de agora) diz se é o
+## da fonte do vento (Ordem 64, seguir_vento) ou o manual.
+func vento_do_frame(para_tipo: String = "") -> Vector2:
 	var forca := vento_forca
 	var rumo := deg_to_rad(vento_direcao_graus)
-	if rajadas > 0.0:
+	var t := para_tipo if para_tipo != "" else tipo
+	var do_mundo := segue_fonte(t)
+	if do_mundo:
+		var v: Vector3 = fonte_do_vento().vetor()
+		forca = Vector2(v.x, v.z).length()
+		if forca > 1e-5:
+			rumo = atan2(v.z, v.x)
+	elif rajadas > 0.0:
 		forca *= 1.0 + rajadas * (0.6 * sin(0.37 * _tempo) + 0.4 * sin(0.83 * _tempo + 1.3))
 		rumo += deg_to_rad(10.0) * rajadas * sin(0.21 * _tempo + 0.5)
-	if _nevasca_vento > 0.0:
+	# Ordem 64: a chuva que segue o vento do mundo não herda as rajadas da nevasca que ainda se está a deitar
+	# (a nevasca é da neve; se a neve seguir o mundo, as rajadas dela somam-se por cima do vento do mundo).
+	if _nevasca_vento > 0.0 and not (do_mundo and t == "chuva"):
 		# A nevasca: o vento abranda na calma e dispara na rajada, e o rumo guina com ela. É o MESMO vento
 		# (o que a chuva usaria): só o que cada frame soma muda — nada salta (integrador_vento.gd).
 		var g := rajada_da_nevasca(_tempo)
@@ -471,10 +523,13 @@ func avancar(delta: float) -> void:
 	_n_veu = move_toward(_n_veu, float(contagem_alvo("veu")), passo * maxf(float(VEU[perfil]), 1.0))
 
 	# O deslocamento, integrado frame a frame com o vento DESTE frame (integrador_vento.gd).
+	# Ordem 64: cada nuvem com o vento do seu tipo (o da fonte, se o segue; senão o manual) — lido uma vez.
 	if _n_chuva > 0.0:
-		_integ_chuva.avancar(dt, vento, float(QUEDA["chuva"][intensidade]), float(BALANCO["chuva"]))
+		var v_chuva := vento if (tipo == "chuva" or segue_fonte("chuva") == segue_fonte()) else vento_do_frame("chuva")
+		_integ_chuva.avancar(dt, v_chuva, float(QUEDA["chuva"][intensidade]), float(BALANCO["chuva"]))
 	if _n_flocos > 0.0:
-		_integ_neve.avancar(dt, vento, float(QUEDA["neve"][intensidade]), float(BALANCO["neve"]))
+		var v_neve := vento if (tipo == "neve" or segue_fonte("neve") == segue_fonte()) else vento_do_frame("neve")
+		_integ_neve.avancar(dt, v_neve, float(QUEDA["neve"][intensidade]), float(BALANCO["neve"]))
 
 	# O que fica pousado: a chuva molha (e derrete a neve); a neve acumula (e o molhado seca).
 	match tipo:

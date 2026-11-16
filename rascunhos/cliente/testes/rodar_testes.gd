@@ -15,6 +15,7 @@ const Frases := preload("res://hud/frases_batalha.gd")
 ## Ordem 40: o clima (chuva e neve) — módulo de apresentação.
 const Clima := preload("res://arte/clima/clima.gd")
 const IntegradorVento := preload("res://arte/clima/integrador_vento.gd")
+const VentoMundo := preload("res://mapa/floresta/vento_mundo.gd")
 ## Ordem 44: o terreno do mapa que o servidor lê (gerado pelo exportador, a partir da arena).
 const ExportarTerreno := preload("res://cenas/arena/ferramentas/exportar_terreno.gd")
 const Assentamento := preload("res://cenas/arena/assentamento.gd")
@@ -50,6 +51,7 @@ func _initialize() -> void:
 	_teste_lobby_valida_antes_de_enviar()
 	_teste_clima_frame_a_frame()
 	_teste_clima_modulo()
+	_teste_chuva_vento_do_mundo()
 	_teste_terreno_do_servidor_em_dia()
 	_teste_pe_na_encosta()
 	print("")
@@ -770,6 +772,60 @@ func _teste_clima_modulo() -> void:
 			limpo = false
 	_ok(limpo, "o código do clima não toca no Estado nem na Rede (só apresentação)")
 	cena.free()
+
+
+# ---------------------------------------------------------------- Ordem 64: a chuva cai com o vento do mundo
+
+## A chuva da arena integrada não tem vento seu: segue o vento do mundo (Ordem 43, vento_mundo.gd) — direcção e
+## força dele, lidas uma vez por frame e integradas frame a frame. A neve fica no vento manual (a frente dela
+## liga-se depois). Sem fonte (ou com a fonte apagada) volta o vento manual.
+func _teste_chuva_vento_do_mundo() -> void:
+	print("Clima (ordem 64): a chuva segue o vento do mundo; a neve e a falta da fonte ficam no vento manual")
+	var vm = VentoMundo.new()
+	vm.parado = true
+	vm.hora_fixa = 16.25
+	for i in 20:
+		vm.avancar(0.1)
+	var c = Clima.new()
+	c.rajadas = 0.0
+	c.definir_vento(200.0, 1.0)  # o manual, de propósito longe do do mundo
+	c.configurar_area(Vector3(15.0, 0.0, 15.0), Vector2(30.0, 30.0))
+	c.seguir_vento(vm, ["chuva", "nenhum", "granizo"])
+	_ok(c.tipos_com_fonte == ["chuva"], "só os tipos que existem entram na lista (%s)" % str(c.tipos_com_fonte))
+	var w: Vector3 = vm.vetor()
+	_ok(w.length() > 3.0, "o vento do mundo às 16:15 sopra a sério (%.2f m/s)" % w.length())
+	var vc: Vector2 = c.vento_do_frame("chuva")
+	_ok(vc.is_equal_approx(Vector2(w.x, w.z)), "a chuva: o vento do frame é o do mundo — (%.3f, %.3f) = (%.3f, %.3f)" % [vc.x, vc.y, w.x, w.z])
+	var vn: Vector2 = c.vento_do_frame("neve")
+	_ok(vn.is_equal_approx(Vector2(cos(deg_to_rad(200.0)), sin(deg_to_rad(200.0)))), "a neve fica no vento manual (200°, 1 m/s)")
+	# Frame a frame: o vento do mundo roda e dá rajadas; cada frame da chuva soma o vento DESSE frame.
+	c.definir("chuva", "fraco")
+	var alinhados := 0
+	var quadros := 90
+	for i in quadros:
+		vm.avancar(1.0 / 30.0)
+		c.avancar(1.0 / 30.0)
+		var agora: Vector3 = vm.vetor()
+		var vv: Vector2 = c._integ_chuva.v_vento[0]
+		if vv.normalized().dot(Vector2(agora.x, agora.z).normalized()) > 0.9999:
+			alinhados += 1
+	_ok(alinhados == quadros, "3 s de chuva fraca: em %d de %d frames a gota anda com o vento do mundo desse frame" % [alinhados, quadros])
+	# A fonte com outro vento (o rumo roda 90°): a chuva roda com ela.
+	vm.azimute_para = wrapf(vm.azimute_para + 90.0, -180.0, 180.0)
+	var w2: Vector3 = vm.vetor()
+	_ok(c.vento_do_frame().is_equal_approx(Vector2(w2.x, w2.z)), "o vento do mundo roda 90°: a chuva roda com ele")
+	# Sem fonte: volta o vento manual.
+	c.seguir_vento(null)
+	_ok(not c.segue_fonte("chuva") and c.vento_do_frame("chuva").is_equal_approx(Vector2(cos(deg_to_rad(200.0)), sin(deg_to_rad(200.0)))), "seguir_vento(null): a chuva volta ao vento manual")
+	c.seguir_vento(vm)
+	_ok(c.segue_fonte("chuva"), "seguir_vento(fonte) sem lista: liga a chuva")
+	vm.free()
+	_ok(not c.segue_fonte("chuva") and c.vento_do_frame("chuva").is_equal_approx(Vector2(cos(deg_to_rad(200.0)), sin(deg_to_rad(200.0)))), "a fonte apagada: a chuva volta ao vento manual, sem erro")
+	var sem_vetor := Node.new()
+	c.seguir_vento(sem_vetor)
+	_ok(c.fonte_do_vento() == null and c.tipos_com_fonte.is_empty(), "uma fonte sem vetor() é recusada (fica o vento manual)")
+	sem_vetor.free()
+	c.free()
 
 
 # ---------------------------------------------------------------- Ordem 44: o terreno no servidor e o pé na encosta

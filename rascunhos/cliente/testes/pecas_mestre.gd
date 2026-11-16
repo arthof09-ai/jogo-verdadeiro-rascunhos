@@ -1277,6 +1277,13 @@ func _clima(c) -> void:
 	_ok(cl.definir("chuva", "fraco") and cl.tipo == "chuva", "troca para chuva fraca sem reiniciar")
 	await _quadros(4)
 	_ok(cl.molhado > 0.0 and cl.contagem_atual("chuva") > 0, "a chuva cai (%d gotas) e o chão começa a molhar" % cl.contagem_atual("chuva"))
+	# Ordem 64: a chuva cai com o vento do MUNDO (o do mapa, o que dobra a relva), não com um vento seu.
+	var vm = a.mapa.vento
+	var w: Vector3 = vm.vetor()
+	_ok(cl.fonte_do_vento() == vm and cl.segue_fonte("chuva") and not cl.segue_fonte("neve"),
+		"ordem 64: a chuva da arena do Mestre segue o vento do mundo do mapa; a neve fica no manual (a frente dela liga-se depois)")
+	_ok(cl.vento_do_frame("chuva").is_equal_approx(Vector2(w.x, w.z)) and w.length() > 0.0,
+		"ordem 64: o vento da chuva é o do mundo neste quadro (%.2f m/s)" % w.length())
 	_ok(_comandos.size() == comandos_antes and a.casas_destacadas().size() == destaques_antes and a.figuras_desenhadas() == desenhadas_antes,
 		"o clima não manda comando nenhum nem mexe em casas, destaques ou figuras (só apresentação)")
 	cl.desligar()

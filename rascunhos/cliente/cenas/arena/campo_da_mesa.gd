@@ -26,6 +26,8 @@ const Clima := preload("res://arte/clima/clima.gd")
 
 ## Quantos dos obstáculos reais do mapa (os mais perto da zona) dão abrigo à neve (o módulo aceita até 8).
 const ABRIGOS_DO_MAPA := 8
+## Ordem 64: os climas que caem com o vento do mundo (o do mapa). A neve entra aqui quando a frente dela o ligar.
+const TIPOS_COM_VENTO_DO_MUNDO: Array[String] = ["chuva"]
 ## Divisões por lado de cada remendo de casa (os vértices seguem o relevo).
 const DIVISOES_CASA := 4
 ## As malhas reais dos obstáculos do mapa que vestem a camada do clima (neve em cima, gelo).
@@ -191,6 +193,9 @@ static func _chave_marca(e: Dictionary, origem: Vector2, casa_m: float) -> Strin
 ## posta debaixo de `pai`. `altura_chao` é a altura única do relevo (Callable (x, z) -> float).
 static func ligar_clima(clima: Clima, mapa: Node3D, zona: Rect2, pai: Node3D, altura_chao: Callable) -> void:
 	clima.altura_do_chao = altura_chao
+	# Ordem 64: a chuva cai com o vento do MUNDO (o do mapa, Ordem 43: o mesmo que dobra a relva e as copas),
+	# não com um vento seu. A neve continua no vento manual até a frente dela se ligar (pôr "neve" na lista).
+	clima.seguir_vento(mapa.get("vento"), TIPOS_COM_VENTO_DO_MUNDO)
 	# A zona jogável do mapa não tem muros: a neve da nevasca não se junta nas bordas dela (um quadrado
 	# branco à volta do campo), junta-se contra os obstáculos reais.
 	clima.bordas_abrigo = 0.0
