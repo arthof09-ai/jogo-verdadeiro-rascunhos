@@ -16,6 +16,13 @@ extends "res://arte/clima/clima.gd"
 ##     varridas com manto mais fino e crosta fria esculpida pelo vento).
 ##   - Passa a luz e a sombra viva do `ciclo_dia.gd` e `sombras_floresta.gd` ao chão e aos obstáculos/figuras para
 ##     o branco nunca estourar o relevo ao meio-dia nem perder volume à noite.
+##
+## Fatia 3 — Congelamento gradual + dinâmica das transições + factor F ∈ [0,1]:
+##   - Bloco contíguo delimitado `congelamento` (geada/gelo nas bordas, obstáculos e humidade/covas da Ordem 42;
+##     fronteira com a Ordem 66: só o factor global `congelamento`, zero edição no lago).
+##   - Transições graduais sem cortes secos (`limpo` ↔ `neve_fraca` ↔ `nevasca` ↔ `chuva`), onde o derretimento
+##     da neve na chuva alimenta a humidade do chão.
+##   - Factor normalizado `F ∈ [0, 1]` imponível por parâmetro de teste (`impor_fator_f(F)`, `--f=F`, `--fator-f=F`).
 
 const SH_CHAO_ARENA: Shader = preload("res://cenas/arena/clima_chao_arena.gdshader")
 const SH_FIGURA_ARENA: Shader = preload("res://cenas/arena/clima_figura_arena.gdshader")
@@ -29,12 +36,51 @@ const SH_FIGURA_ARENA: Shader = preload("res://cenas/arena/clima_figura_arena.gd
 var _mapa_arena: WeakRef = null
 var _zona_arena: Rect2 = Rect2()
 
+# === INICIO BLOCO CONGELAMENTO (Ordem Neve — fronteira Ordem 66: so factor global) ===
+## Factor global normalizado de congelamento [0..1] (geada/gelo progressivo nas bordas do terreno, obstáculos e
+## humidade/covas da Ordem 42). Fronteira com a Ordem 66 (lago): SÓ o factor global é exposto aqui; zero edição
+## em ficheiros/shaders/nós do lago. A ligação do gelo às bordas da água fica registada nas Lacunas.
+var congelamento: float = 0.0
+var _fator_f_imposto: float = -1.0
+
+
+func fator_congelamento() -> float:
+	return congelamento
+
+
+func _avancar_congelamento(dt: float) -> void:
+	if _fator_f_imposto >= 0.0:
+		congelamento = _fator_f_imposto
+		gelo = _fator_f_imposto
+		return
+	var derrete := dt / maxf(segundos_derreter, 0.01)
+	if nevasca():
+		var acel_humidade := 1.0 + 0.25 * molhado
+		congelamento = minf(1.0, congelamento + acel_humidade * dt / maxf(segundos_gelar, 0.01))
+	elif tipo == "neve":
+		# Neve fraca: forma geada ligeira até 0,25 ou recua gradualmente se vinha de nevasca consolidada.
+		if congelamento < 0.25:
+			congelamento = minf(0.25, congelamento + 0.35 * dt / maxf(segundos_gelar, 0.01))
+		else:
+			congelamento = maxf(0.25, congelamento - 0.45 * derrete)
+	elif tipo == "chuva":
+		congelamento = maxf(0.0, congelamento - 2.5 * derrete)
+	else:
+		congelamento = maxf(0.0, congelamento - derrete)
+	gelo = congelamento
+# === FIM BLOCO CONGELAMENTO ===
+
 
 func _init() -> void:
 	# Nada de filtro de ecrã nem camada colada à câmara: desliga o véu de distância na arena integrada.
 	veu_forca = 0.0
 	nevasca_guinada_graus = 28.0
 	nevasca_rasto_s = 0.042
+
+
+func _ready() -> void:
+	super._ready()
+	_ler_fator_f_linha_de_comando()
 
 
 ## Liga a referência do mapa da floresta da arena integrada (para ler a luz do ciclo do dia e o relevo).
@@ -49,6 +95,48 @@ func mapa_da_arena() -> Node3D:
 		return null
 	var m = _mapa_arena.get_ref()
 	return m if m != null and is_instance_valid(m) else null
+
+
+## Factor F ∈ [0, 1] de acumulação/congelamento (imposto para provas determinísticas ou lido da curva natural).
+func fator_f() -> float:
+	if _fator_f_imposto >= 0.0:
+		return _fator_f_imposto
+	return clampf(0.40 * neve + 0.35 * aglomerado + 0.25 * congelamento, 0.0, 1.0)
+
+
+## Impõe deterministicamente o factor F ∈ [0, 1] (t0 = 0 · t1 = 0,5 · t2 = 1) sem esperar tempo real.
+## `aquecer_particulas = true` põe também a contagem de partículas da neve/chuva no regime alvo.
+func impor_fator_f(f: float, aquecer_particulas: bool = true) -> void:
+	_fator_f_imposto = clampf(f, 0.0, 1.0)
+	neve = _fator_f_imposto
+	aglomerado = _fator_f_imposto
+	congelamento = _fator_f_imposto
+	gelo = _fator_f_imposto
+	if nevasca():
+		_nevasca_vento = 1.0 if _fator_f_imposto > 0.0 else _nevasca_vento
+	if aquecer_particulas:
+		_n_flocos = float(contagem_alvo("neve"))
+		_n_chuva = float(contagem_alvo("chuva"))
+		_n_salpicos = float(contagem_alvo("salpicos"))
+	if _fator_f_imposto > 0.0 or tipo != "nenhum":
+		set_process(true)
+	_vestir_alvos()
+	_atualizar_particulas()
+	_empurrar_uniformes()
+
+
+## Liberta o factor F imposto, retomando a subida ou o derretimento gradual a partir do estado actual.
+func libertar_fator_f() -> void:
+	_fator_f_imposto = -1.0
+
+
+func definir_forte(novo_aglomerado: float, novo_gelo: float, nova_agua: float, nova_lama: float = -1.0) -> void:
+	congelamento = clampf(novo_gelo, 0.0, 1.0)
+	super.definir_forte(novo_aglomerado, novo_gelo, nova_agua, nova_lama)
+
+
+func parado() -> bool:
+	return super.parado() and congelamento <= 0.0 and _fator_f_imposto < 0.0
 
 
 ## Sem véu colado à câmara na arena integrada.
@@ -114,10 +202,6 @@ func definir_por_nome(nome: String) -> bool:
 
 
 ## O vento deste frame (m/s no chão: x, z).
-## - Para a chuva: exactamente o vetor() do vento do mundo (Ordem 64).
-## - Para a neve quando segue o vento do mundo: usa a direcção e a força do vento do mundo calibradas para a
-##   velocidade de queda dos flocos, somando na nevasca a modulação de calma/rajada e guinada para que a rajada
-##   mude visivelmente o ângulo e a força da queda dentro do mesmo plano.
 func vento_do_frame(para_tipo: String = "") -> Vector2:
 	var t := para_tipo if para_tipo != "" else tipo
 	if t != "neve" or not segue_fonte("neve"):
@@ -136,6 +220,23 @@ func vento_do_frame(para_tipo: String = "") -> Vector2:
 		rumo += deg_to_rad(nevasca_guinada_graus) * _nevasca_vento * osc
 	var forca := maxf(forca_mundo * escala, 0.0)
 	return Vector2(cos(rumo), sin(rumo)) * forca
+
+
+## Fatia 3: progressão e derretimento graduais nas transições entre estados, e respeito pelo factor F imposto.
+func avancar(delta: float) -> void:
+	var dt := clampf(delta, 0.0, Integrador.DT_MAXIMO)
+	var neve_antes := neve
+	super.avancar(dt)
+	# Quando a chuva derrete a neve acumulada, a água do degelo humedece gradualmente o chão (sem corte seco).
+	if tipo == "chuva" and neve_antes > neve:
+		molhado = minf(1.0, molhado + (neve_antes - neve) * 0.65)
+	_avancar_congelamento(dt)
+	if _fator_f_imposto >= 0.0:
+		neve = _fator_f_imposto
+		aglomerado = _fator_f_imposto
+		congelamento = _fator_f_imposto
+		gelo = _fator_f_imposto
+	_empurrar_uniformes()
 
 
 ## Fatia 2: acumulação direccional (cantos/bordas, barlavento e sotavento dos obstáculos e covas do relevo).
@@ -164,8 +265,10 @@ func abrigo_em(xz: Vector2, rumo: Vector2 = Vector2.ZERO) -> float:
 		var cauda := smoothstep(0.42, -0.22, d1) * (1.0 - f) * (1.0 - 0.65 * f)
 		soma += maxf(maxf(barla * 0.92, sota * 1.10), cauda * 1.05)
 	var y_rel := (float(altura_do_chao.call(xz.x, xz.y)) - _centro.y) if altura_do_chao.is_valid() else 0.0
-	var d_bacia := fundura_em(xz, 1.0, 0.45, y_rel)
-	var cova := smoothstep(-0.06, 0.04, d_bacia) * 0.55 + clampf((-y_rel - 0.15) * 0.35, 0.0, 0.45)
+	var cova := clampf((-y_rel - 0.15) * 0.35, 0.0, 0.45)
+	if _bacias_dadas:
+		var d_bacia := fundura_em(xz, 1.0, 0.45, y_rel)
+		cova += smoothstep(-0.06, 0.04, d_bacia) * 0.55
 	return clampf(soma + cova, 0.0, 1.85)
 
 
@@ -179,11 +282,11 @@ func neve_em(xz: Vector2) -> float:
 	var exposto := 1.0 - clampf(ab * 1.15, 0.0, 1.0)
 	var y_rel := (float(altura_do_chao.call(xz.x, xz.y)) - _centro.y) if altura_do_chao.is_valid() else 0.0
 	var crista := clampf((y_rel - 0.10) * 0.32, 0.0, 0.55) * exposto
-	return neve * (1.0 - aglomerado * exposto * 0.16) + aglomerado * (ab * 0.95 + (1.0 - crista) * 0.22)
+	return neve * (1.0 - aglomerado * exposto * 0.16) + aglomerado * (ab * 0.95 + (1.0 - crista) * 0.12)
 
 
 func _vestir_alvos() -> void:
-	var precisa := molhado > 0.0 or neve > 0.0 or tipo != "nenhum" or aglomerado > 0.0 or gelo > 0.0 or agua > 0.0 or lama > 0.0
+	var precisa := molhado > 0.0 or neve > 0.0 or tipo != "nenhum" or aglomerado > 0.0 or gelo > 0.0 or congelamento > 0.0 or agua > 0.0 or lama > 0.0
 	if precisa and _mat_chao == null:
 		_mat_chao = _material(SH_CHAO_ARENA, -20)
 		_mat_figura = _material(SH_FIGURA_ARENA, 0)
@@ -192,11 +295,15 @@ func _vestir_alvos() -> void:
 
 func empurrar_terreno_para(m: ShaderMaterial) -> void:
 	super.empurrar_terreno_para(m)
-	m.set_shader_parameter(&"clima_gelo", gelo)
+	m.set_shader_parameter(&"clima_gelo", maxf(gelo, congelamento))
 
 
 func _empurrar_uniformes() -> void:
 	super._empurrar_uniformes()
+	var cong := maxf(gelo, congelamento)
+	for mat in [_mat_chao, _mat_figura]:
+		if mat != null:
+			mat.set_shader_parameter(&"congelamento", cong)
 	var m := mapa_da_arena()
 	if m != null and m.get("ciclo") != null:
 		var e: Dictionary = m.ciclo.estado()
@@ -221,10 +328,17 @@ func _empurrar_uniformes() -> void:
 				mat.set_shader_parameter(&"cor_sombra_ciclo", cor_sombra)
 				mat.set_shader_parameter(&"cor_ceu_ciclo", cor_ceu)
 				mat.set_shader_parameter(&"noite_ciclo", noite_f)
-				mat.set_shader_parameter(&"congelamento", gelo)
 		if _mat_chao != null:
 			_mat_chao.set_shader_parameter(&"sombra_forca_ciclo", sombra_f)
 			var sombras_no = m.get("sombras")
 			if sombras_no != null and sombras_no.has_method(&"textura"):
 				_mat_chao.set_shader_parameter(&"mapa_sombra_arena", sombras_no.textura())
 				_mat_chao.set_shader_parameter(&"tem_mapa_sombra", 1.0)
+
+
+func _ler_fator_f_linha_de_comando() -> void:
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--f=") or a.begins_with("--fator-f="):
+			var s := a.get_slice("=", 1).replace(",", ".")
+			if s.is_valid_float():
+				impor_fator_f(float(s))

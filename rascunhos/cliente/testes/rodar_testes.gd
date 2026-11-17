@@ -870,6 +870,21 @@ func _teste_neve_arena_vento_e_estados() -> void:
 	var neve_canto: float = c.neve_em(Vector2(-14.2, -14.2))
 	_ok(neve_centro >= 0.85 and neve_canto > neve_centro + 0.25,
 		"Fatia 2 (correcção 14/11): centro coberto em F=1 (%.2f >= 0,85) e canto mais espesso (%.2f > %.2f)" % [neve_centro, neve_canto, neve_centro])
+	# Fatia 3: factor F imponível deterministicamente (t0=0, t1=0,5, t2=1) e transições graduais sem cortes secos.
+	c.impor_fator_f(0.0)
+	_ok(is_zero_approx(c.fator_f()) and is_zero_approx(c.neve) and is_zero_approx(c.aglomerado) and is_zero_approx(c.congelamento),
+		"Fatia 3: F = 0 imposto deterministicamente (t0)")
+	c.impor_fator_f(0.5)
+	_ok(is_equal_approx(c.fator_f(), 0.5) and is_equal_approx(c.neve, 0.5) and is_equal_approx(c.aglomerado, 0.5) and is_equal_approx(c.congelamento, 0.5),
+		"Fatia 3: F = 0,5 imposto deterministicamente (t1)")
+	c.impor_fator_f(1.0)
+	_ok(is_equal_approx(c.fator_f(), 1.0) and is_equal_approx(c.neve, 1.0) and is_equal_approx(c.aglomerado, 1.0) and is_equal_approx(c.congelamento, 1.0),
+		"Fatia 3: F = 1,0 imposto deterministicamente (t2)")
+	c.libertar_fator_f()
+	c.definir_por_nome("chuva")
+	c.avancar(1.0)
+	_ok(c.neve < 1.0 and c.neve > 0.85 and c.congelamento < 1.0 and c.congelamento > 0.85 and c.molhado > 0.0,
+		"Fatia 3: transição nevasca → chuva derrete neve/congelamento gradualmente sem corte seco (neve %.2f, cong %.2f, molhado %.2f)" % [c.neve, c.congelamento, c.molhado])
 	vm.free()
 	c.free()
 
