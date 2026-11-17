@@ -37,7 +37,7 @@ const PASSO_RASTO_M := 0.30
 const PULSO_PARADO_S := 1.6
 ## Quanto tempo vivem (s): o shader já os apagou antes disto.
 const VIDA_PULSO_S := 7.0
-const VIDA_RASTO_S := 12.5
+const VIDA_RASTO_S := 14.5
 
 var material: ShaderMaterial
 var tempo := 0.0

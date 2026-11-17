@@ -138,6 +138,8 @@ void fragment() {
 	// ---- a esteira: a faixa por onde o corpo passou (a distância ao fio e a idade no ponto mais perto)
 	float esteira = 0.0;
 	float esteira_k = 1.0;
+	float esteira_d = 9.0;   // a distância ao fio, em larguras da faixa
+	float esteira_f = 0.0;   // a força que resta (morre com a idade)
 	for (int i = 0; i < n_rasto - 1; i++) {
 		vec4 a = rasto[i];
 		vec4 b = rasto[i + 1];
@@ -149,15 +151,20 @@ void fragment() {
 		float dist = length(p - a.xy - ab * h);
 		float idade = t - mix(a.z, b.z, h);
 		float forca = mix(abs(a.w), abs(b.w), h);
-		float dura = mix(3.0, 12.0, forca);
+		float dura = mix(3.5, 14.0, forca);
 		float larg = mix(0.20, 0.30, forca) + (0.035 + 0.07 * forca) * idade;
 		float k = clamp(idade / dura, 0.0, 1.0);
 		float e = exp(-(dist * dist) / (larg * larg)) * (1.0 - k * k) * (0.40 + 0.60 * forca);
 		if (e > esteira) {
 			esteira = e;
 			esteira_k = k;
+			esteira_d = dist / larg;
+			esteira_f = forca * (1.0 - k);
 		}
 	}
+	// os dois BRAÇOS da esteira: as cristas que se afastam do fio, uma de cada lado, e morrem com a idade
+	float bracos = exp(-pow((esteira_d - 0.92) / 0.20, 2.0)) * esteira_f;
+	crista += bracos * (0.30 + 0.45 * texture(ruido, p * 1.9 + deriva).r);
 	// a água remexida da esteira: a ruga fina fica mais viva lá dentro
 	ruga *= 1.0 + 2.6 * esteira;
 	vec2 declive = g + ruga * (0.55 + 0.45 * vida) + g_reac * 0.75;
@@ -197,7 +204,8 @@ void fragment() {
 	float er = texture(ruido, p * 1.7 - deriva * 2.0).r * 0.62 + texture(ruido, p * 4.3 + vec2(t * 0.02, 0.4)).r * 0.38;
 	float lambe = prof - 0.035 - 0.03 * sin(t * 1.1 + ra * 9.0 + rb * 5.0);
 	float margem = smoothstep(0.09, 0.0, lambe) * smoothstep(-0.06, -0.01, lambe) * smoothstep(0.35, 0.60, er + 0.25 * sin(t * 0.8 + rb * 12.0));
-	float limiar = mix(0.26, 0.86, pow(esteira_k, 0.75));
+	// a espuma da esteira desfaz-se DEVAGAR: o limiar sobe a direito com a idade (aos 2/3 da vida ainda há flocos)
+	float limiar = mix(0.22, 0.84, esteira_k);
 	float esp_esteira = smoothstep(limiar, limiar + 0.13, er) * smoothstep(0.04, 0.30, esteira);
 	float esp_crista = smoothstep(0.10, 0.34, crista) * 0.75;
 	float esp_anel = anel * smoothstep(0.25, 0.55, er + 0.3);
@@ -205,6 +213,8 @@ void fragment() {
 	// as cristas dos anéis e a esteira lêem-se mesmo sem espuma: a água levantada apanha a luz
 	cor += (cor_sol * 0.5 + ceu * 0.5) * clamp(crista * 0.55 + esteira * 0.10, 0.0, 0.35) * mix(0.5, 1.0, vis);
 	vec3 branca = luz_pintada(cor_espuma, vec3(0.0, 1.0, 0.0), vis);
+	// a faixa remexida da esteira: a água fica mais clara (as bolhas) e volta à cor dela devagar
+	cor = mix(cor, branca, clamp(esteira * 0.34, 0.0, 0.34));
 	cor = mix(cor, branca, espuma * 0.92);
 
 	// ---- quanto se vê o fundo: a rasa deixa ver (o leito e as pernas), a funda fecha

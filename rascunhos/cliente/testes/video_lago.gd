@@ -266,8 +266,8 @@ func _guiao() -> void:
 		_titulo = "(a) ENTRAR NO LAGO E ANDAR NA RASA, COM A ÁGUA PELO JOELHO"
 		_angulo = "câmara a 3/4, da margem sul, a olhar para noroeste"
 		# da erva da margem oeste para dentro de água, ao longo da rasa para norte (em curva) e parar lá dentro
-		_recta(Vector2(9.2, -15.6), Vector2(13.6, -17.6))
-		_arco(Vector2(13.6, -20.3), 2.7, 90.0, -80.0)
+		_recta(Vector2(9.2, -15.6), Vector2(13.4, -17.4))
+		_arco(Vector2(13.4, -19.3), 1.9, 90.0, -90.0)
 		_espera_final = 9.0
 		_olhar(Vector3(17.6, nivel + 3.1, -11.6), Vector3(14.2, nivel + 0.25, -19.6), 50.0)
 		_capturas = [[1.0, "antes"], [5.5, "a-entrar"], [9.0, "na-rasa-1"], [13.0, "na-rasa-2"], [18.0, "na-rasa-3"], [22.0, "parado"], [27.0, "aneis-a-morrer"]]
@@ -279,9 +279,9 @@ func _guiao() -> void:
 		_arco(Vector2(19.5, -21.0), 2.0, 180.0, 450.0)
 		_recta(Vector2(19.5, -19.0), Vector2(19.5, -15.2))
 		_espera_inicial = 2.0
-		_espera_final = 12.0
+		_espera_final = 16.0
 		_olhar(Vector3(19.9, nivel + 6.4, -11.0), Vector3(19.4, nivel, -20.3), 50.0)
-		_capturas = [[1.0, "antes"], [6.0, "a-agua-sobe"], [10.0, "nado-1"], [15.0, "nado-2"], [20.0, "nado-3"], [25.0, "nado-4"], [30.0, "a-sair"], [34.0, "esteira-a-desfazer-1"], [39.0, "esteira-a-desfazer-2"], [44.0, "esteira-desfeita"]]
+		_capturas = [[1.0, "antes"], [6.0, "a-agua-sobe"], [10.0, "nado-1"], [15.0, "nado-2"], [20.0, "nado-3"], [25.0, "nado-4"], [30.0, "a-sair"], [34.0, "esteira-a-desfazer-1"], [38.0, "esteira-a-desfazer-2"], [42.0, "esteira-a-desfazer-3"], [45.0, "esteira-desfeita"]]
 
 
 ## Põe o manequim no ponto `d` do caminho: os pés no leito enquanto faz pé; na funda bóia com a água pelo peito.
@@ -430,7 +430,7 @@ func _fotos() -> void:
 		["lago-visto-de-fora_do-alto-da-margem-sul_margem-rasa-e-funda", Vector3(21.5, nivel + 9.5, -6.5), Vector3(19.3, nivel, -19.8), 55.0,
 			"O LAGO VISTO DE FORA · do alto da margem sul · a margem, a RASA (clara, vê-se o leito) e a FUNDA (escura, ao meio)"],
 		["lago-visto-de-cima_planta_rasa-e-funda", Vector3(19.5, nivel + 24.0, -19.4), Vector3(19.5, nivel, -19.5), 50.0,
-			"O LAGO EM PLANTA · de cima · a RASA à volta e a FUNDA ao meio (o quadrado redondo de 2 m de fundura)"],
+			"O LAGO EM PLANTA · de cima · a RASA à volta e a FUNDA ao meio (três bolhas fundidas, 2 m de fundura)"],
 		["lago-da-margem_altura-dos-olhos_de-oeste", Vector3(8.6, nivel + 2.1, -17.2), Vector3(19.5, nivel, -20.0), 55.0,
 			"O LAGO DA MARGEM · à altura dos olhos, de oeste · o céu espelhado e o brilho na ruga"],
 		["plano-da-superficie_rasante_de-perto", Vector3(15.2, nivel + 0.55, -15.4), Vector3(18.6, nivel, -19.6), 42.0,
