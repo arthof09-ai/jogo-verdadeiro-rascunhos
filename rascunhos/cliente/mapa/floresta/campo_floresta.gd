@@ -679,17 +679,19 @@ func _iniciar_mapa() -> void:
 		var z := -MAPA_MEIO + (float(j) + 0.5) * passo
 		for i in n:
 			var x := -MAPA_MEIO + (float(i) + 0.5) * passo
-			var h := Relevo.altura(x, z)
+			# (Ordem 66) sobre o lago, quem recebe e deita sombra é a SUPERFÍCIE da água, não o leito: o talude da
+			# funda não escurece a água por cima dele
+			var h := Relevo.altura_a_vista(x, z)
 			_alturas[j * n + i] = h
 			var tapa := 0.0
 			for s in range(1, 11):
 				var t := float(s) * 1.2
-				var a := Relevo.altura(x + d2.x * t, z + d2.y * t) - (h + 0.12 + sobe * t)
+				var a := Relevo.altura_a_vista(x + d2.x * t, z + d2.y * t) - (h + 0.12 + sobe * t)
 				if a > 0.0:
 					tapa = maxf(tapa, a / (0.20 + 0.10 * t))
 			var media := 0.0
 			for o in roda:
-				media += Relevo.altura(x + o.x, z + o.y)
+				media += Relevo.altura_a_vista(x + o.x, z + o.y)
 			var cova := clampf((media / 6.0 - h - 0.05) / 0.75, 0.0, 1.0)
 			var k4 := (j * n + i) * 4
 			dados[k4] = 1.0 - 0.88 * clampf(tapa, 0.0, 1.0)

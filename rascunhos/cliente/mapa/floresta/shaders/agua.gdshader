@@ -164,7 +164,7 @@ void fragment() {
 	vec3 n = normalize(vec3(-declive.x, 1.0, -declive.y));
 
 	// ---- a cor da água pela fundura (a rasa clara, a funda escura) e a luz pintada
-	float funda = smoothstep(0.10, 1.55, prof);
+	float funda = smoothstep(0.30, 1.80, prof);
 	vec3 agua = mix(cor_rasa, cor_funda, funda);
 	float vis = smoothstep(0.30, 0.70, ler_mapa(p).r);
 	vec3 cor = luz_pintada(agua, vec3(0.0, 1.0, 0.0), vis);
@@ -208,7 +208,7 @@ void fragment() {
 	cor = mix(cor, branca, espuma * 0.92);
 
 	// ---- quanto se vê o fundo: a rasa deixa ver (o leito e as pernas), a funda fecha
-	float alfa = mix(0.50, 0.965, smoothstep(0.03, 1.35, prof));
+	float alfa = mix(mix(0.46, 0.60, smoothstep(0.03, 0.50, prof)), 0.97, smoothstep(0.50, 1.15, prof));
 	alfa = max(alfa, espelho * 0.9);
 	alfa = max(alfa, espuma);
 	alfa = clamp(alfa + sol + cintila * 0.4, 0.0, 1.0);

@@ -63,12 +63,15 @@ const LAGO_ACIMA := 1.25           # o nível do lago acima do fundo da cova da 
 const LAGO_RAIO := 11.0            # o lago vive dentro deste raio à volta da COVA (a margem fecha antes)
 const LAGO_RASA_M := 0.48          # a fundura da RASA (m): a água pelo joelho de uma figura
 const LAGO_FUNDA_M := 2.0          # a fundura da FUNDA (m): não se faz pé
-# A FUNDA cabe dentro das casas que a grelha JÁ bloqueava como «água funda» (o quadrado de 4 × 4 casas de 1,5 m
-# com x de 16,5 a 22,5 e z de −24 a −18): onde não se faz pé é onde a regra já dizia que não se pisa. É um
-# quadrado de cantos redondos (norma 4) — enche esse bloco sem sair dele.
+# A FUNDA cabe dentro das casas que a grelha JÁ bloqueava como «água funda»: onde não se faz pé é onde a regra já
+# dizia que não se pisa. São três bolhas que se fundem — (x, z, raio de fora, expoente da norma): a do meio enche
+# o quadrado de 4 × 4 casas (x de 16,5 a 22,5 · z de −24 a −18); as outras duas são os lóbulos a oeste (as duas
+# casas x 15–16,5 · z −22,5 a −19,5) e a sul (a fila z −18 a −16,5 · x 16,5–21): a margem da funda não é um
+# quadrado, e não sai das casas bloqueadas.
 const LAGO_FUNDA_CENTRO := Vector2(19.5, -21.0)
-const LAGO_FUNDA_RAIO := 2.05      # até aqui («raio» do quadrado redondo) o fundo da funda é chão raso (m)
-const LAGO_TALUDE_M := 0.90        # largura do talude entre a funda e a rasa (m): o degrau que se lê no fundo
+const LAGO_FUNDA_BOLHAS: Array[Vector4] = [Vector4(19.5, -21.0, 2.85, 2.6), Vector4(16.6, -21.0, 1.45, 2.0),
+	Vector4(18.75, -18.2, 1.58, 2.0)]
+const LAGO_TALUDE_M := 1.25        # largura do talude entre a funda e a rasa (m): o degrau que se lê no fundo
 const LOMBO_A := Vector2(-25.0, 29.0)
 const LOMBO_B := Vector2(-22.0, 8.0)
 const LOMBO_ALTO := 2.3
@@ -231,9 +234,8 @@ static func _cozer() -> void:
 ## Ordem 66 — o LEITO do lago em (x, z), dado o relevo da Ordem 38 nesse ponto (`h38`). Em seco (h38 ≥ nível)
 ## devolve h38 sem lhe tocar: a linha de água é a curva de nível da cova antiga, e a margem não muda.
 ## Debaixo de água o fundo é desenhado: a RASA (entra-se devagar e fica-se com a água pelo joelho, LAGO_RASA_M,
-## com um ondulado leve de areia) e a FUNDA (uma bacia de LAGO_FUNDA_M à volta de LAGO_FUNDA_CENTRO, dentro das
-## casas que a grelha já bloqueava), separadas
-## por um TALUDE de LAGO_TALUDE_M — o degrau que se lê no fundo.
+## com um ondulado leve de areia) e a FUNDA (LAGO_FUNDA_M, dentro das casas que a grelha já bloqueava — ver
+## LAGO_FUNDA_BOLHAS), separadas por um TALUDE de LAGO_TALUDE_M — o degrau que se lê no fundo.
 static func _leito(x: float, z: float, h38: float) -> float:
 	var a := _nivel_lago - h38  # quanto a cova antiga ficava abaixo do nível: 0 na margem, cresce para o meio
 	if a <= 0.0:
@@ -241,13 +243,13 @@ static func _leito(x: float, z: float, h38: float) -> float:
 	var n := ruido()
 	var rasa := LAGO_RASA_M * tanh(a / 0.37)
 	rasa += 0.035 * n.get_noise_2d(x * 60.0 + 500.0, z * 60.0) * _ss(0.15, 0.45, a)
-	var dx := x - LAGO_FUNDA_CENTRO.x
-	var dz := z - LAGO_FUNDA_CENTRO.y
-	var d := pow(dx * dx * dx * dx + dz * dz * dz * dz, 0.25)
-	d *= 1.0 + 0.05 * n.get_noise_2d(x * 14.0 - 300.0, z * 14.0 + 120.0)
-	var funda := (1.0 - _ss(LAGO_FUNDA_RAIO, LAGO_FUNDA_RAIO + LAGO_TALUDE_M, d)) * _ss(0.30, 0.62, a)
-	var bacia := LAGO_FUNDA_M * (0.88 + 0.12 * (1.0 - _ss(0.0, LAGO_FUNDA_RAIO, d)))  # mais funda no meio
-	return _nivel_lago - lerpf(rasa, bacia, funda)
+	var funda := 0.0
+	var torce := 1.0 + 0.05 * n.get_noise_2d(x * 14.0 - 300.0, z * 14.0 + 120.0)
+	for b in LAGO_FUNDA_BOLHAS:
+		var d := pow(pow(absf(x - b.x), b.w) + pow(absf(z - b.y), b.w), 1.0 / b.w) * torce
+		funda = maxf(funda, 1.0 - _ss(b.z - LAGO_TALUDE_M, b.z, d))
+	funda *= _ss(0.30, 0.62, a)
+	return _nivel_lago - lerpf(rasa, LAGO_FUNDA_M, funda)
 
 
 ## A grelha fina cozida (N_FINO × N_FINO, linha a linha de norte para sul): a malha do chão e a
@@ -353,3 +355,12 @@ static func lago_fundura(x: float, z: float) -> float:
 	if Vector2(x - COVA.x, z - COVA.y).length_squared() >= LAGO_RAIO * LAGO_RAIO:
 		return 0.0
 	return maxf(nivel_lago() - altura(x, z), 0.0)
+
+
+## Ordem 66 — a altura do que se VÊ de cima em (x, z): a superfície da água sobre o lago, o chão no resto.
+## É a que a sombra do relevo usa (a sombra cai na água, não no leito).
+static func altura_a_vista(x: float, z: float) -> float:
+	var h := altura(x, z)
+	if Vector2(x - COVA.x, z - COVA.y).length_squared() < LAGO_RAIO * LAGO_RAIO:
+		return maxf(h, nivel_lago())
+	return h

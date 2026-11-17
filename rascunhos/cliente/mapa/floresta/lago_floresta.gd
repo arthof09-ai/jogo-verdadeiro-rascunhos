@@ -200,6 +200,14 @@ func deixar(no: Node3D) -> void:
 	_sujo = true
 
 
+## Este nó já está a mexer a água?
+func segue(no: Node3D) -> bool:
+	for s: Dictionary in _seguidos:
+		if s["no"] == no:
+			return true
+	return false
+
+
 func a_seguir() -> int:
 	return _seguidos.size()
 
