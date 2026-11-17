@@ -372,27 +372,44 @@ func _medir_janela(nome: String, segundos: float) -> Dictionary:
 
 
 func _correr_gpu() -> void:
+	# Janela fixa a 1920×1080, sem vsync, max_fps 0. Aquecimento de 8 s (compilação de shaders, relógios da GPU)
+	# antes de qualquer medida; os casos correm em duas voltas, a segunda em ordem inversa, para a deriva
+	# térmica/de relógio não favorecer nenhum caso.
+	DisplayServer.window_set_size(Vector2i(1920, 1080))
+	await _esperar_s(1.0)
+	var vs := root.get_visible_rect().size
+	_registo["janela_medida"] = [int(vs.x), int(vs.y)]
 	var c = _clima()
 	_vento().parado = false
+	await _esperar_s(8.0)
 	var casos: Array = []
-	c.definir_por_nome("limpo")
-	c.impor_fator_f(0.0)
-	casos.append(await _medir_janela("limpo_F0", 10.0))
-	c.definir_por_nome("neve_fraca")
-	c.impor_fator_f(0.35)
-	casos.append(await _medir_janela("neve_fraca_F0.35_3000_flocos", 10.0))
-	c.definir_por_nome("nevasca")
-	c.impor_fator_f(1.0)
-	await _esperar_s(2.0)
-	casos.append(await _medir_janela("nevasca_F1_9000_flocos", 10.0))
-	# O mesmo estado, sem os flocos: separa o custo das partículas do custo do chão.
-	c.set_process(false)
-	_nuvens_visiveis(false)
-	casos.append(await _medir_janela("nevasca_F1_so_chao_sem_flocos", 10.0))
+	casos.append(await _medir_janela("limpo_sem_camada_de_clima", 10.0))
+	var volta := ["nevasca_F1_9000_flocos", "nevasca_F1_so_chao_sem_flocos", "neve_fraca_F0.35_3000_flocos", "limpo_F0_camada_presa"]
+	for r in 2:
+		var ordem := volta.duplicate()
+		if r == 1:
+			ordem.reverse()
+		for caso in ordem:
+			c.set_process(true)
+			match caso:
+				"nevasca_F1_9000_flocos", "nevasca_F1_so_chao_sem_flocos":
+					c.definir_por_nome("nevasca")
+					c.impor_fator_f(1.0)
+				"neve_fraca_F0.35_3000_flocos":
+					c.definir_por_nome("neve_fraca")
+					c.impor_fator_f(0.35)
+				"limpo_F0_camada_presa":
+					c.definir_por_nome("limpo")
+					c.impor_fator_f(0.0)
+			await _esperar_s(2.0)
+			if caso == "nevasca_F1_so_chao_sem_flocos":
+				# O mesmo estado, sem os flocos: separa o custo das partículas do custo do chão.
+				c.set_process(false)
+				_nuvens_visiveis(false)
+			var m := await _medir_janela(caso, 10.0)
+			m["volta"] = r + 1
+			casos.append(m)
 	c.set_process(true)
 	_nuvens_visiveis(true)
-	c.definir_por_nome("limpo")
-	c.impor_fator_f(0.0)
-	casos.append(await _medir_janela("limpo_F0_de_novo", 10.0))
 	_registo["casos"] = casos
 	c.libertar_fator_f()
