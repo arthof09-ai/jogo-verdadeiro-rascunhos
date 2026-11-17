@@ -130,7 +130,8 @@ const ALTURAS_POR_TIPO := {
 
 # ================================================================ tamanhos da mesa (m)
 
-## O lado de uma casa da grelha (o do mapa da floresta e o das arenas).
+## O lado de uma casa da grelha das arenas e da Clareira. O MAPA (grelha_floresta.CASA_M, relevo_floresta.CASA_M)
+## guarda o seu próprio 1,5 m: esses dois ficheiros são fontes do terreno do servidor, conferidas por SHA (ver PENDENCIAS).
 const CASA_M := 1.5
 ## A grelha por omissão da arena da jogadora (o ROOM_SNAPSHOT.mapa manda).
 const GRELHA_LARGURA_PADRAO := 20
@@ -156,6 +157,7 @@ const ZOOM_PADRAO := 1.5  # palavra do Mestre
 const PENDENCIAS := [
 	"Paleta: os papéis bronze, ouro, sangue, lendário, raro e mágico não têm valor — a Ordem 65 fechou só a paleta do AMBIENTE (color_script) e nenhum desses papéis existe hoje no cliente. Sem hexadecimal inventado.",
 	"Casa: a ordem diz 1,0 m; o cliente usa 1,5 m (grelha_floresta, relevo_floresta, arena, arena_mestre, clareira_prova). Ficou 1,5 m.",
+	"Casa no mapa: grelha_floresta.CASA_M e relevo_floresta.CASA_M (1,5 m) ficam no mapa, sem ler da tabela — os dois ficheiros são fontes do terreno do servidor (servidor/dados/terreno-floresta.json, conferido por SHA no rodar_testes); religá-los obriga a refazer o terreno com exportar_terreno.gd. Fica para quando o terreno se refizer por outra razão.",
 	"Degrau: não há tamanho de apresentação de degrau no cliente; o degrau de uma casa é medido do relevo (grelha_floresta.degrau) e o limite de passagem é regra do servidor.",
 	"Alturas: não há passo de importação de GLB que escale modelos; só a altura por omissão dos marcadores (2,25 m). Alturas-alvo por tipo de modelo ficam por definir quando a importação existir.",
 	"CORES_DANO: marcadas PROVISÓRIO no HUD desde a V1.2 (Plano B).",

@@ -19,10 +19,8 @@ extends RefCounted
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
 const Erros := preload("res://mapa/floresta/erros_floresta.gd")
 
-## ORDEM DADOS DE APRESENTAÇÃO: o lado da casa vem da tabela única.
-const Apresentacao := preload("res://dados/apresentacao.gd")
 const LADO := 50
-const CASA_M := Apresentacao.CASA_M
+const CASA_M := 1.5
 const MEIO := 37.5
 const FORA := Vector2i(-1, -1)
 
