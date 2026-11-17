@@ -1,12 +1,17 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://arte/cenas/clareira_prova.gd" id="1_clareira"]
 [ext_resource type="Shader" path="res://arte/shaders/ceu_pintado.gdshader" id="2_ceu"]
 [ext_resource type="Script" path="res://camera/camera_mesa.gd" id="3_camera"]
 [ext_resource type="Script" path="res://arte/perfis/aplicar_perfil.gd" id="4_perfis"]
+[ext_resource type="Texture2D" path="res://arte/pincel/ceu_pinceladas.png" id="5_pinceladas"]
+[ext_resource type="Texture2D" path="res://arte/pincel/pincel_mascara.png" id="6_mascara"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ceu"]
 shader = ExtResource("2_ceu")
+shader_parameter/pinceladas = ExtResource("5_pinceladas")
+shader_parameter/mascara_pincel = ExtResource("6_mascara")
+shader_parameter/forca_pinceladas = 1.0
 
 [sub_resource type="Sky" id="Sky_clareira"]
 sky_material = SubResource("ShaderMaterial_ceu")
@@ -17,6 +22,7 @@ sky = SubResource("Sky_clareira")
 ambient_light_source = 2
 fog_enabled = true
 fog_density = 0.004
+fog_sky_affect = 0.0
 
 [node name="ClareiraProva" type="Node3D"]
 script = ExtResource("1_clareira")

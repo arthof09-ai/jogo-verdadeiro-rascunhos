@@ -1,6 +1,10 @@
-# SHA-256 no 9cbaca8 (antes) dos 32 ficheiros que o ramo muda. Formato do MANIFESTO.
+# SHA-256 no 9cbaca8 (antes) dos 36 ficheiros que o ramo muda. Formato do MANIFESTO.
 6cfe2067be7e314d47c4177140463fb51612de93092818ed92a1a166f2e2d332  rascunhos/cliente/README.md
+13281c5dc903d06af3ade77b46193a4f83d4053b7fd54c79bb6d39b73a4e486a  rascunhos/cliente/arte/README.md
+2bfa5a08db447e18b5dacd867f0c2740350fa97f91438d7f8cc00fa37bd9dfc6  rascunhos/cliente/arte/ambiente/color_script.gd
 32ccc3b31a161712a8ed3bb64388568ba98e107020f43443b6443e60e9a5316f  rascunhos/cliente/arte/cenas/clareira_prova.gd
+f2457e7a4d8bfa55ec6937d6dda024283e5556fb08d7525740840b3347ee1dfa  rascunhos/cliente/arte/rampas/gerar_rampas.gd
+86f375a16cc07ae29a024ef087d72b494d441b1bde384ecd396741ecd4fe3666  rascunhos/cliente/arte/shaders/ceu_pintado.gdshader
 6b918a5f1e30e17028eb27c0430ae230506df1020bb9c88e908f4abdc788ea73  rascunhos/cliente/camera/camera_mesa.gd
 f3f4a28720733f5e39d286ce39be05725d513ef413673982f34e21da7319c77d  rascunhos/cliente/cenas/arena/arena.gd
 7b760fecfe4c22c09bd8805799c812fc1ac88bcb0a1b898c52bf2cc3a09f89a1  rascunhos/cliente/cenas/arena/arena.tscn
