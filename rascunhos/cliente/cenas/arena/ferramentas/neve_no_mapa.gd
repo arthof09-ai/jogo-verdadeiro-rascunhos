@@ -1,35 +1,43 @@
 extends SceneTree
-## neve_no_mapa.gd — Ordem Neve (Fatia 4). A PROVA VISUAL DA NEVE E NEVASCA NA ARENA INTEGRADA:
-## - Modos:
-##   · `--modo=renders`: produz na MESMA câmara (meio + cantos/bordas + obstáculos no mesmo enquadramento),
-##     impondo deterministicamente o factor F ∈ [0, 1] (sem esperar tempo real):
-##       - `render_t0_inicio.png` (F = 0, hora 16:15)
-##       - `render_t1_meia_nevasca.png` (F = 0,5, nevasca, hora 16:15)
-##       - `render_t2_nevasca_consolidada.png` (F = 1,0, nevasca consolidada, hora 16:15)
-##       - `render_t2_luz2.png` (F = 1,0, nevasca consolidada numa 2.ª hora declarada do ciclo do dia: 07:00 manhã rasante / 21:30 noite)
-##   · `--modo=rajada`: vídeo curto da nevasca com mudança de direcção + rajada a meio (o ângulo e a força da
-##     queda mudam visivelmente dentro do mesmo plano).
-##   · `--modo=troca`: vídeo curto `limpo → neve_fraca → nevasca → chuva → limpo` contínuo sem reiniciar, conduzido
-##     por F com subida e derretimento graduais.
-##   · `--modo=fraca`: vídeo curto de `neve_fraca` na arena com deriva do vento do mundo.
+## neve_no_mapa.gd — Ordem Neve (correcções, 17/11). A bancada da neve na arena integrada, refeita depois da
+## sentença de 17/11 (nota 560): SEM legendas no ecrã, SEM encenação do vento e SEM F imposto quadro a quadro.
+##
+## Esta ferramenta só GRAVA imagens e o que o relógio diz; NÃO mede a cobertura. A medição é feita depois, por
+## outro guião (`medir_pixeis_neve.gd`), que só lê os PNG do disco com `Image.get_pixel` — nunca chama
+## `neve_em()`, `fator_f()` nem nenhuma função do clima. O que o clima declara de si próprio fica gravado à
+## parte, com a etiqueta «declarado_pelo_sistema», e não entra em conta nenhuma da prova.
+##
+## Modos (`--modo=`):
+##   · `renders`  — quadros fixos na mesma câmara (centro + cantos + obstáculos + lagoa), a 12:00 (meio-dia),
+##                  com F imposto UMA vez por quadro (é um retrato determinístico, não uma dinâmica): t0 (F 0),
+##                  fraca (neve fraca, F 0,35), t1 (nevasca, F 0,5), t2 (nevasca, F 1), t2_tarde (16:15) e
+##                  t2_noite (21:30). Cada quadro sai em PAR: `<nome>.png` (como se vê) e `<nome>_sem_flocos.png`
+##                  (o mesmo instante, clima congelado, só os flocos escondidos) — o par mede a precipitação e o
+##                  chão separadamente. Mais 6 pares da nevasca F=1 e da neve fraca em instantes diferentes
+##                  (`serie_*`), para os flocos não serem julgados por um instante escolhido.
+##   · `dinamica` — a curva NATURAL: o clima corre pelo seu `_process`, em tempo real (relógio de parede),
+##                  sem F imposto: limpo → nevasca → chuva (derrete) → limpo (seca). De 5 em 5 s grava um
+##                  quadro sem flocos/gotas (960×540) para a medição de píxeis e anota o relógio.
+##   · `rajada`   — a nevasca a correr sozinha (vento do mundo livre, rajadas do próprio sistema), com F
+##                  imposto uma vez (o chão fica parado; o que se observa é a queda). Pares com/sem flocos de
+##                  0,5 em 0,5 s durante 24 s — a medição da inclinação/alongamento dos flocos é feita nos
+##                  píxeis pelo `medir_pixeis_neve.gd`.
+##   · `gpu`      — custo real na janela (sem vsync): limpo, neve fraca, nevasca F=1 sem flocos, nevasca F=1
+##                  com os 9.000 flocos. Tempo de quadro por relógio de parede (`Time.get_ticks_usec`).
+##
+## Uso (na pasta do cliente, COM janela — o render é o da GPU):
+##   Godot --path . -s res://cenas/arena/ferramentas/neve_no_mapa.gd -- --modo=renders --saida=C:/caminho
 
 const CENA := "res://cenas/arena/arena.tscn"
-const VentoMundo := preload("res://mapa/floresta/vento_mundo.gd")
-const Clima := preload("res://arte/clima/clima.gd")
-const DT := 1.0 / 30.0
+const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
+const CampoDaMesa := preload("res://cenas/arena/campo_da_mesa.gd")
 
 var _modo := "renders"
 var _saida := ""
 var _perfil := "alto"
 var _arena: Node3D
-var _rotulo: Label
-var _seta: Control
-var _t := 0.0
-var _passos: Array = []
-var _feitos := 0
-var _fim := 0.0
-var _nota := ""
-var _medidas: Dictionary = {"renders": [], "amostras": []}
+var _registo: Dictionary = {"quadros": [], "declarado_pelo_sistema": []}
+var _t0_ms := 0
 
 
 func _init() -> void:
@@ -40,16 +48,10 @@ func _init() -> void:
 			_saida = a.trim_prefix("--saida=")
 		elif a.begins_with("--perfil="):
 			_perfil = a.trim_prefix("--perfil=")
-		elif a.begins_with("--qualidade="):
-			ProjectSettings.set_setting("editor/movie_writer/video_quality", float(a.trim_prefix("--qualidade=")))
 	if _saida == "":
-		_saida = ProjectSettings.globalize_path("res://../../../provas")
+		_saida = ProjectSettings.globalize_path("res://../../provas/ordem-neve")
 	DirAccess.make_dir_recursive_absolute(_saida)
 	process_frame.connect(_comecar, CONNECT_ONE_SHOT)
-
-
-func _n(v: float, casas: int = 2) -> String:
-	return (("%." + str(casas) + "f") % v).replace(".", ",")
 
 
 func _figura(id: String, nome: String, x: int, y: int, lado: String, ori: String = "N") -> Dictionary:
@@ -76,16 +78,8 @@ func _montar_combate() -> void:
 		"propria": {"figuraId": "fA", "paLivre": 40, "estadoMorte": null, "ficha": {}}})
 
 
-func _mostrar_mover() -> void:
-	var est = root.get_node("/root/Estado")
-	var movimentos: Array = []
-	for dx in range(-2, 3):
-		for dy in range(-2, 3):
-			if absi(dx) + absi(dy) in [1, 2]:
-				movimentos.append({"x": 9 + dx, "y": 10 + dy, "custoM": 1.5 * float(absi(dx) + absi(dy))})
-	est.receber_opcoes({"v": 2, "type": "ROOM_OPTIONS", "revision": 5, "vezId": "fA", "orcamentoM": 9.0,
-		"mover": movimentos, "ataques": [], "consumiveis": [], "acoes": ["encerrar"], "reacoes": []})
-	_arena.definir_modo(_arena.Modo.MOVER)
+func _clima() -> Node:
+	return _arena.clima
 
 
 func _vento() -> Node:
@@ -96,15 +90,8 @@ func _ciclo() -> Node:
 	return _arena.mapa.ciclo
 
 
-func _rumo_mundo() -> Vector2:
-	var w: Vector3 = _vento().vetor()
-	var d := Vector2(w.x, w.z)
-	return d.normalized() if d.length() > 1e-5 else Vector2.RIGHT
-
-
-## Câmara única dos renders determinísticos (F = 0, F = 0,5, F = 1,0 e 2.ª luz):
-## mostra simultaneamente o CENTRO da arena, os CANTOS/BORDAS (NO e SO) e os OBSTÁCULOS reais (tronco tombado,
-## menires, rochas e árvores da orla) no mesmo enquadramento.
+## A câmara única dos retratos (a mesma da primeira execução, para a comparação ser justa): centro da arena,
+## cantos/bordas, obstáculos reais e a lagoa no mesmo enquadramento.
 func _camera_enquadramento_unico() -> void:
 	var cam = _arena.camera
 	cam.definir_modo(1)
@@ -116,280 +103,296 @@ func _camera_enquadramento_unico() -> void:
 	cam._saltar()
 
 
-func _camera_de_lado(foco: Vector3, incl: float, zoom: float) -> void:
-	var w := _rumo_mundo()
-	var rumo := rad_to_deg(atan2(-w.y, w.x))
-	var cam = _arena.camera
-	cam.definir_modo(1)
-	cam.rumo = rumo
-	cam.inclinacao = incl
-	cam.foco = foco
-	cam._limitar()
-	cam.definir_zoom(zoom)
-	cam._saltar()
-
-
-func _estado_texto() -> String:
-	var c = _arena.clima
-	var vm = _vento()
-	var v: Dictionary = vm.vento_actual()
-	var t_vento := "chuva" if c.tipo == "chuva" else "neve"
-	var vc: Vector2 = c.vento_do_frame(t_vento)
-	var queda: float = float(Clima.QUEDA[t_vento][c.intensidade])
-	var incl := rad_to_deg(atan2(vc.length(), queda))
-	var est_nome: String = c.estado_clima().to_upper()
-	var f_val: float = c.fator_f()
-	var l1 := "ORDEM NEVE · estado: %s · F = %s (neve %s · aglom. %s · cong. %s · molhado %s) · hora %s (%s)" % [
-		est_nome, _n(f_val), _n(c.neve), _n(c.aglomerado), _n(c.congelamento), _n(c.molhado),
-		_ciclo().hora_texto(), _ciclo().fase()]
-	var l2 := "vento do MUNDO: sopra para %s (%s m/s, rajada %s) → queda: %s m/s, inclina %s° · flocos %d · gotas %d" % [
-		VentoMundo.rumo(float(v["azimute_para"])), _n(float(v["velocidade_ms"]), 1), _n(float(v["rajada"])),
-		_n(vc.length(), 2), _n(incl, 0), c.contagem_atual("neve"), c.contagem_atual("chuva")]
-	var l3 := _nota if _nota != "" else "DEMONSTRAÇÃO: câmara fixa (centro + cantos/bordas + obstáculos). Seta amarela = vento do mundo."
-	return l1 + "\n" + l2 + "\n" + l3
-
-
-func _desenhar_seta() -> void:
-	var cam: Camera3D = _arena.camera
-	if cam == null or _arena.mapa == null:
-		return
-	var w := _rumo_mundo()
-	var c3: Vector3 = _arena.centro_casa(Vector2i(13, 6)) + Vector3(0.0, 0.35, 0.0)
-	var p3 := c3 + Vector3(w.x, 0.0, w.y) * 3.2
-	if cam.is_position_behind(c3) or cam.is_position_behind(p3):
-		return
-	var a := cam.unproject_position(c3)
-	var b := cam.unproject_position(p3)
-	var d := (b - a)
-	if d.length() < 4.0:
-		return
-	var u := d.normalized()
-	var n := Vector2(-u.y, u.x)
-	var cor := Color(1.0, 0.86, 0.1, 0.95)
-	_seta.draw_line(a, b, Color(0, 0, 0, 0.7), 9.0, true)
-	_seta.draw_line(a, b, cor, 5.0, true)
-	_seta.draw_colored_polygon(PackedVector2Array([b + u * 16.0, b + n * 11.0, b - n * 11.0]), cor)
-
-
-func _avancar_mundo(segundos: float) -> void:
-	var n := maxi(1, int(round(segundos / DT)))
+func _esperar(n: int) -> void:
 	for i in n:
-		_vento().avancar(DT)
-		_arena.clima.avancar(DT)
-	CampoDaMesa.relva_segue_clima(_arena.clima, _arena.mapa, true)
+		await process_frame
 
 
-const CampoDaMesa := preload("res://cenas/arena/campo_da_mesa.gd")
+func _esperar_s(s: float) -> void:
+	var fim := Time.get_ticks_msec() + int(s * 1000.0)
+	while Time.get_ticks_msec() < fim:
+		await process_frame
 
 
-func _salvar_png(nome_ficheiro: String) -> void:
-	_rotulo.text = _estado_texto()
-	_seta.queue_redraw()
-	await process_frame
-	await process_frame
+## Congela/descongela o clima e o vento (para o par com/sem flocos ser o MESMO instante).
+func _congelar(sim: bool) -> void:
+	var m := Node.PROCESS_MODE_DISABLED if sim else Node.PROCESS_MODE_INHERIT
+	_clima().process_mode = m
+	_vento().process_mode = m
+
+
+func _nuvens_visiveis(sim: bool) -> void:
+	var c = _clima()
+	for nome in ["_flocos", "_chuva", "_salpicos", "_veu"]:
+		var n = c.get(nome)
+		if n != null and is_instance_valid(n):
+			if sim:
+				c._atualizar_particulas()  # devolve a visibilidade que o próprio clima decide
+			else:
+				n.visible = false
+
+
+func _gravar(nome: String, metade: bool = false) -> String:
+	await _esperar(2)
 	var img := root.get_texture().get_image()
-	var caminho := _saida.path_join(nome_ficheiro)
+	if metade:
+		img.resize(img.get_width() / 2, img.get_height() / 2, Image.INTERPOLATE_BILINEAR)
+	var caminho := _saida.path_join(nome)
 	img.save_png(caminho)
-	var c = _arena.clima
-	var w: Vector3 = _vento().vetor()
-	var reg := {
-		"ficheiro": nome_ficheiro,
-		"estado": c.estado_clima(),
-		"fator_f": c.fator_f(),
-		"neve": c.neve,
-		"aglomerado": c.aglomerado,
-		"congelamento": c.congelamento,
-		"molhado": c.molhado,
-		"neve_centro": snappedf(c.neve_em(Vector2.ZERO), 0.001),
-		"neve_canto_NO": snappedf(c.neve_em(Vector2(-14.2, -14.2)), 0.001),
-		"hora": _ciclo().hora_texto(),
-		"vento_mundo": [snappedf(w.x, 0.01), snappedf(w.z, 0.01)],
-	}
-	(_medidas["renders"] as Array).append(reg)
-	print("[neve] salvo: %s | %s" % [caminho, JSON.stringify(reg)])
+	return caminho
+
+
+## Grava o par do mesmo instante: como se vê, e sem as partículas (clima e vento congelados entre os dois).
+func _gravar_par(nome: String, extra: Dictionary = {}) -> void:
+	_congelar(true)
+	await _esperar(1)
+	await _gravar(nome + ".png")
+	_nuvens_visiveis(false)
+	await _gravar(nome + "_sem_flocos.png")
+	_nuvens_visiveis(true)
+	_congelar(false)
+	var q := {"nome": nome, "hora": _ciclo().hora_texto(), "ms_desde_inicio": Time.get_ticks_msec() - _t0_ms}
+	q.merge(extra)
+	(_registo["quadros"] as Array).append(q)
+	_declarar(nome)
+	print("[neve] par gravado: %s" % nome)
+
+
+## O que o clima diz de si próprio — guardado à parte, NUNCA usado como medição de cobertura.
+func _declarar(nome: String) -> void:
+	var c = _clima()
+	var vf: Vector2 = c.vento_do_frame("neve" if c.tipo == "neve" else "chuva")
+	(_registo["declarado_pelo_sistema"] as Array).append({
+		"quadro": nome, "ms_desde_inicio": Time.get_ticks_msec() - _t0_ms, "estado": c.estado_clima(),
+		"fator_f": snappedf(c.fator_f(), 0.001), "neve": snappedf(c.neve, 0.001), "aglomerado": snappedf(c.aglomerado, 0.001),
+		"congelamento": snappedf(c.congelamento, 0.001), "molhado": snappedf(c.molhado, 0.001),
+		"vento_queda_ms": [snappedf(vf.x, 0.01), snappedf(vf.y, 0.01)], "rajada_nevasca": snappedf(c.rajada_da_nevasca(c._tempo), 0.01),
+		"vento_mundo": _vento().vento_actual(),
+	})
+
+
+## Os píxeis do ecrã onde há ÁGUA da lagoa (fundura > 0,25 m pelo relevo), pela projecção da câmara — conta da
+## geometria e da câmara, não do clima. O medidor usa-os para ver se a lagoa mantém a cor dela.
+func _pixeis_da_lagoa() -> Array:
+	var cam: Camera3D = _arena.camera
+	var vs := root.get_visible_rect().size
+	var r: Array = []
+	var nivel := Relevo.nivel_lago()
+	var x := Relevo.COVA.x - Relevo.LAGO_RAIO
+	while x <= Relevo.COVA.x + Relevo.LAGO_RAIO:
+		var z := Relevo.COVA.y - Relevo.LAGO_RAIO
+		while z <= Relevo.COVA.y + Relevo.LAGO_RAIO:
+			if Relevo.lago_fundura(x, z) > 0.25:
+				var p := Vector3(x, nivel, z)
+				if not cam.is_position_behind(p):
+					var s := cam.unproject_position(p)
+					if s.x >= 0.0 and s.y >= 0.0 and s.x < vs.x and s.y < vs.y:
+						r.append([int(s.x), int(s.y)])
+			z += 0.35
+		x += 0.35
+	return r
 
 
 func _comecar() -> void:
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+	Engine.max_fps = 0
+	_t0_ms = Time.get_ticks_msec()
 	_montar_combate()
 	_arena = (load(CENA) as PackedScene).instantiate()
 	root.add_child(_arena)
-	var camada := CanvasLayer.new()
-	camada.layer = 100
-	root.add_child(camada)
-	_seta = Control.new()
-	_seta.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_seta.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_seta.draw.connect(_desenhar_seta)
-	camada.add_child(_seta)
-	_rotulo = Label.new()
-	var vs := root.get_visible_rect().size
-	_rotulo.position = Vector2(14, 0.14 * vs.y)
-	_rotulo.size = Vector2(vs.x - 28.0, 0.0)
-	_rotulo.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	var ls := LabelSettings.new()
-	ls.font_size = maxi(12, int(round(0.020 * vs.y)))
-	ls.outline_size = 5
-	ls.outline_color = Color(0, 0, 0, 0.9)
-	_rotulo.label_settings = ls
-	camada.add_child(_rotulo)
-	await process_frame
-	await process_frame
+	await _esperar(2)
 	_arena._aplicar_perfil(_perfil)
-	_mostrar_mover()
 	_ciclo().parado = true
-	_vento().parado = true
-	_ciclo().definir_hora(16.25)
+	_ciclo().definir_hora(12.0)
 	_arena.mapa.aplicar_ciclo()
-	for i in 20:
-		_vento().avancar(0.1)
+	_camera_enquadramento_unico()
+	await _esperar(3)
+	var vs := root.get_visible_rect().size
+	_registo["janela"] = [int(vs.x), int(vs.y)]
+	_registo["gpu"] = RenderingServer.get_video_adapter_name()
+	_registo["perfil"] = _perfil
+	_registo["lagoa_pixeis"] = _pixeis_da_lagoa()
+	match _modo:
+		"renders":
+			await _correr_renders()
+		"dinamica":
+			await _correr_dinamica()
+		"rajada":
+			await _correr_rajada()
+		"gpu":
+			await _correr_gpu()
+		_:
+			push_error("modo desconhecido: %s" % _modo)
+	var f := FileAccess.open(_saida.path_join("registo_%s.json" % _modo), FileAccess.WRITE)
+	f.store_string(JSON.stringify(_registo, "  "))
+	f.close()
+	print("[neve] fim %s" % _modo)
+	quit(0)
 
-	if _modo == "renders":
-		await _correr_renders()
-		quit(0)
-		return
 
-	_configurar_guiao_video()
-	process_frame.connect(_quadro_video)
+# ---------------------------------------------------------------- retratos (F imposto uma vez por retrato)
+
+func _retrato(nome: String, estado: String, f: float, hora: float) -> void:
+	var c = _clima()
+	_ciclo().definir_hora(hora)
+	_arena.mapa.aplicar_ciclo()
+	c.definir_por_nome(estado)
+	c.impor_fator_f(f)
+	CampoDaMesa.relva_segue_clima(c, _arena.mapa, true)
+	await _esperar_s(1.2)
+	await _gravar_par(nome, {"estado": estado, "f_imposto": f, "hora_pedida": hora})
 
 
 func _correr_renders() -> void:
-	var c = _arena.clima
-	_camera_enquadramento_unico()
-	await process_frame
-	await process_frame
+	_vento().parado = true
+	for i in 20:
+		_vento().avancar(0.1)
+	await _retrato("t0_limpo", "limpo", 0.0, 12.0)
+	await _retrato("fraca", "neve_fraca", 0.35, 12.0)
+	await _retrato("t1_meia_nevasca", "nevasca", 0.5, 12.0)
+	await _retrato("t2_nevasca", "nevasca", 1.0, 12.0)
+	await _retrato("t2_tarde", "nevasca", 1.0, 16.25)
+	await _retrato("t2_noite", "nevasca", 1.0, 21.5)
+	# Referências sem neve às mesmas horas (a lagoa e o chão compara-se à MESMA luz).
+	await _retrato("t0_tarde", "limpo", 0.0, 16.25)
+	await _retrato("t0_noite", "limpo", 0.0, 21.5)
+	# Séries: os flocos em 6 instantes (de 1,9 em 1,9 s) na nevasca F=1 e na neve fraca, ao meio-dia.
+	for qual in [["serie_nevasca", "nevasca", 1.0], ["serie_fraca", "neve_fraca", 0.35]]:
+		_ciclo().definir_hora(12.0)
+		_arena.mapa.aplicar_ciclo()
+		_clima().definir_por_nome(qual[1])
+		_clima().impor_fator_f(qual[2])
+		await _esperar_s(1.5)
+		for k in 6:
+			await _gravar_par("%s_%d" % [qual[0], k], {"estado": qual[1], "f_imposto": qual[2], "hora_pedida": 12.0})
+			await _esperar_s(1.9)
+	_clima().libertar_fator_f()
 
-	# 1. t0: F = 0 (início, sem acumulação)
+
+# ---------------------------------------------------------------- a curva natural (sem F imposto)
+
+func _correr_dinamica() -> void:
+	var c = _clima()
+	_vento().parado = false
+	c.libertar_fator_f()
+	c.definir_por_nome("limpo")
+	c.definir_acumulacao(0.0, 0.0)
+	var guiao := [[0.0, "limpo"], [5.0, "nevasca"], [115.0, "chuva"], [165.0, "limpo"], [215.0, ""]]
+	_registo["guiao_s"] = guiao
+	var inicio := Time.get_ticks_msec()
+	var proximo_quadro := 0.0
+	var passo := 0
+	var n := 0
+	while true:
+		var t := float(Time.get_ticks_msec() - inicio) / 1000.0
+		if passo < guiao.size() and t >= float(guiao[passo][0]):
+			var e: String = guiao[passo][1]
+			if e == "":
+				break
+			c.definir_por_nome(e)
+			(_registo["quadros"] as Array).append({"troca_para": e, "t_s": snappedf(t, 0.01)})
+			passo += 1
+		if t >= proximo_quadro:
+			_congelar(true)
+			_nuvens_visiveis(false)
+			var nome := "dinamica_%03d.png" % n
+			await _gravar(nome, true)
+			_nuvens_visiveis(true)
+			_congelar(false)
+			(_registo["quadros"] as Array).append({"nome": nome, "t_s": snappedf(t, 0.01), "estado_pedido": c.estado_clima()})
+			_declarar(nome)
+			n += 1
+			proximo_quadro += 5.0
+		CampoDaMesa.relva_segue_clima(c, _arena.mapa, true)
+		await process_frame
+	_registo["duracao_parede_s"] = float(Time.get_ticks_msec() - inicio) / 1000.0
+
+
+# ---------------------------------------------------------------- a rajada que o sistema faz sozinho
+
+func _correr_rajada() -> void:
+	var c = _clima()
+	_vento().parado = false
+	c.definir_por_nome("nevasca")
+	c.impor_fator_f(1.0)  # uma vez: o chão consolidado; a queda e o vento correm livres
+	await _esperar_s(5.0)  # o vento da nevasca levanta-se (segundos_levantar = 4 s)
+	var inicio := Time.get_ticks_msec()
+	var k := 0
+	while float(Time.get_ticks_msec() - inicio) / 1000.0 < 24.0:
+		await _gravar_par("rajada_%02d" % k, {"t_s": snappedf(float(Time.get_ticks_msec() - inicio) / 1000.0, 0.01)})
+		k += 1
+		await _esperar_s(0.5)
+	c.libertar_fator_f()
+
+
+# ---------------------------------------------------------------- custo na GPU
+
+func _medir_janela(nome: String, segundos: float) -> Dictionary:
+	await _esperar_s(2.0)
+	var tempos: Array[float] = []
+	var antes := Time.get_ticks_usec()
+	var fim := antes + int(segundos * 1e6)
+	var vp_rid := root.get_viewport_rid()
+	RenderingServer.viewport_set_measure_render_time(vp_rid, true)
+	var gpu_ms: Array[float] = []
+	var cpu_ms: Array[float] = []
+	while Time.get_ticks_usec() < fim:
+		await process_frame
+		var agora := Time.get_ticks_usec()
+		tempos.append(float(agora - antes) / 1000.0)
+		antes = agora
+		gpu_ms.append(RenderingServer.viewport_get_measured_render_time_gpu(vp_rid))
+		cpu_ms.append(RenderingServer.viewport_get_measured_render_time_cpu(vp_rid))
+	var ord := tempos.duplicate()
+	ord.sort()
+	var soma := 0.0
+	for x in tempos:
+		soma += x
+	var media := soma / float(tempos.size())
+	var g := 0.0
+	for x in gpu_ms:
+		g += x
+	var cp := 0.0
+	for x in cpu_ms:
+		cp += x
+	var r := {
+		"caso": nome, "quadros": tempos.size(), "ms_media": snappedf(media, 0.001),
+		"ms_p50": snappedf(ord[ord.size() / 2], 0.001), "ms_p95": snappedf(ord[int(ord.size() * 0.95)], 0.001),
+		"ms_p99": snappedf(ord[int(ord.size() * 0.99)], 0.001), "ms_max": snappedf(ord[ord.size() - 1], 0.001),
+		"fps_media": snappedf(1000.0 / media, 0.1),
+		"render_gpu_ms_media": snappedf(g / float(gpu_ms.size()), 0.001),
+		"render_cpu_ms_media": snappedf(cp / float(cpu_ms.size()), 0.001),
+		"chamadas_desenho": RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME),
+		"primitivas": RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME),
+		"flocos_visiveis": _clima().contagem_atual("neve"),
+		"vsync": DisplayServer.window_get_vsync_mode(),
+	}
+	print("[neve] gpu %s" % JSON.stringify(r))
+	return r
+
+
+func _correr_gpu() -> void:
+	var c = _clima()
+	_vento().parado = false
+	var casos: Array = []
 	c.definir_por_nome("limpo")
 	c.impor_fator_f(0.0)
-	_avancar_mundo(0.2)
-	_nota = "t0 (F = 0,0) · Início antes da nevasca · Mesma câmara (centro + cantos/bordas + obstáculos)"
-	await _salvar_png("render_t0_inicio.png")
-
-	# 2. t1: F = 0,5 (meia nevasca: queda viva com o vento, acumulação em curso nos obstáculos/covas, centro a cobrir-se)
-	c.definir_por_nome("nevasca")
-	c.impor_fator_f(0.5)
-	_avancar_mundo(1.2)
-	_nota = "t1 (F = 0,5) · Meia nevasca · Queda com o vento do mundo, acumulação direccional e geada em progresso"
-	await _salvar_png("render_t1_meia_nevasca.png")
-
-	# 3. t2: F = 1,0 (nevasca consolidada, 16:15 tarde: centro coberto sem véu liso, covas/obstáculos espessos × zonas varridas finas)
+	casos.append(await _medir_janela("limpo_F0", 10.0))
+	c.definir_por_nome("neve_fraca")
+	c.impor_fator_f(0.35)
+	casos.append(await _medir_janela("neve_fraca_F0.35_3000_flocos", 10.0))
 	c.definir_por_nome("nevasca")
 	c.impor_fator_f(1.0)
-	_avancar_mundo(1.5)
-	_nota = "t2 (F = 1,0) · Nevasca consolidada (16:15) · Centro coberto sem véu liso; covas/obstáculos densos × zonas varridas finas"
-	await _salvar_png("render_t2_nevasca_consolidada.png")
-
-	# 4. t2_luz2: F = 1,0 numa segunda hora declarada do ciclo do dia (21:30 noite de lua cheia: volume e relevo legíveis)
-	_ciclo().definir_hora(21.5)
-	_arena.mapa.aplicar_ciclo()
-	c.impor_fator_f(1.0)
-	_avancar_mundo(0.5)
-	_nota = "t2_luz2 (F = 1,0) · Nevasca consolidada na 2.ª luz declarada (21:30 noite de lua cheia) · Volume 3D preservado"
-	await _salvar_png("render_t2_luz2.png")
-
-	var f := FileAccess.open(_saida.path_join("medicao_renders_neve.json"), FileAccess.WRITE)
-	f.store_string(JSON.stringify(_medidas, "  "))
-	f.close()
-
-
-func _configurar_guiao_video() -> void:
-	var c = _arena.clima
-	match _modo:
-		"rajada":
-			_camera_enquadramento_unico()
-			c.definir_por_nome("nevasca")
-			c.impor_fator_f(0.75)
-			c._tempo = 1.0
-			_passos = [
-				[0.0, func():
-					c._tempo = 1.0
-					_nota = "NEVASCA (calma inicial): flocos caem com inclinação moderada (~32°)"],
-				[1.8, func():
-					_vento().azimute_para = wrapf(_vento().azimute_para + 42.0, -180.0, 180.0)
-					_vento().forca = 1.50
-					c._tempo = 3.5
-					c.impor_fator_f(0.92)
-					_nota = "RAJADA + MUDANÇA DE DIRECÇÃO: o ângulo (~75°) e a força da queda aumentam visivelmente no mesmo plano"],
-				[4.2, func():
-					_vento().forca = 0.85
-					c._tempo = 1.1
-					c.impor_fator_f(1.0)
-					_nota = "PÓS-RAJADA (nevasca consolidada F = 1,0): o vento amaina e o manto consolidado lê-se em todo o campo"],
-			]
-			_fim = 5.5
-		"troca":
-			_camera_enquadramento_unico()
-			c.definir_por_nome("limpo")
-			c.impor_fator_f(0.0)
-			_passos = [
-				[0.0, func():
-					c.definir_por_nome("limpo")
-					c.impor_fator_f(0.0)
-					_nota = "1/5 LIMPO (F = 0,0) → transição viva sem reiniciar"],
-				[0.9, func():
-					c.definir_por_nome("neve_fraca")
-					_nota = "2/5 NEVE FRACA: precipitação suave com o vento do mundo, subida gradual de F"],
-				[2.2, func():
-					c.definir_por_nome("nevasca")
-					c._tempo = 3.8
-					_nota = "3/5 NEVASCA: aglomeração direccional, centro coberto e congelamento gradual até F = 1,0"],
-				[3.7, func():
-					c.libertar_fator_f()
-					c.definir_por_nome("chuva")
-					_nota = "4/5 CHUVA: troca sem reiniciar; a neve e o gelo derretem gradualmente enquanto o chão molha"],
-				[5.0, func():
-					c.definir_por_nome("limpo")
-					_nota = "5/5 LIMPO: a chuva pára e o manto/humidade recuam gradualmente sem corte seco"],
-			]
-			_fim = 6.0
-		"fraca":
-			_camera_enquadramento_unico()
-			c.definir_por_nome("neve_fraca")
-			c.impor_fator_f(0.35)
-			_nota = "NEVE FRACA NA ARENA: deriva suave com o vento do mundo, terreno e grelha táctica legíveis"
-			_fim = 4.5
-
-
-func _quadro_video() -> void:
-	_t += DT
-	var c = _arena.clima
-	while _feitos < _passos.size() and _t >= float(_passos[_feitos][0]):
-		var fn: Callable = _passos[_feitos][1]
-		_feitos += 1
-		fn.call()
-	if _modo == "troca":
-		if _t >= 0.9 and _t < 2.2:
-			var u := (_t - 0.9) / 1.3
-			c.impor_fator_f(lerpf(0.0, 0.45, u))
-		elif _t >= 2.2 and _t < 3.7:
-			var u := (_t - 2.2) / 1.5
-			c.impor_fator_f(lerpf(0.45, 1.0, u))
-		elif _t >= 3.7 and _t < 5.0:
-			var u := (_t - 3.7) / 1.3
-			var f_desc := lerpf(1.0, 0.28, u)
-			c.impor_fator_f(f_desc, false)
-			c.molhado = lerpf(0.15, 0.90, u)
-		elif _t >= 5.0:
-			var u := clampf((_t - 5.0) / 1.0, 0.0, 1.0)
-			var f_desc := lerpf(0.28, 0.05, u)
-			c.impor_fator_f(f_desc, false)
-			c.molhado = lerpf(0.90, 0.40, u)
-	_vento().avancar(DT)
-	c.avancar(DT)
-	CampoDaMesa.relva_segue_clima(c, _arena.mapa, true)
-	_rotulo.text = _estado_texto()
-	_seta.queue_redraw()
-	if int(round(_t * 30.0)) % 15 == 0:
-		var vc: Vector2 = c.vento_do_frame("neve" if c.tipo == "neve" else "chuva")
-		(_medidas["amostras"] as Array).append({
-			"t": snappedf(_t, 0.01), "estado": c.estado_clima(), "f": snappedf(c.fator_f(), 0.01),
-			"vento_queda_ms": snappedf(vc.length(), 0.01), "molhado": snappedf(c.molhado, 0.01)
-		})
-	if _t >= _fim:
-		process_frame.disconnect(_quadro_video)
-		var f := FileAccess.open(_saida.path_join("medicao_video_%s.json" % _modo), FileAccess.WRITE)
-		f.store_string(JSON.stringify(_medidas, "  "))
-		f.close()
-		print("[neve] fim video %s" % _modo)
-		quit(0)
+	await _esperar_s(2.0)
+	casos.append(await _medir_janela("nevasca_F1_9000_flocos", 10.0))
+	# O mesmo estado, sem os flocos: separa o custo das partículas do custo do chão.
+	c.set_process(false)
+	_nuvens_visiveis(false)
+	casos.append(await _medir_janela("nevasca_F1_so_chao_sem_flocos", 10.0))
+	c.set_process(true)
+	_nuvens_visiveis(true)
+	c.definir_por_nome("limpo")
+	c.impor_fator_f(0.0)
+	casos.append(await _medir_janela("limpo_F0_de_novo", 10.0))
+	_registo["casos"] = casos
+	c.libertar_fator_f()

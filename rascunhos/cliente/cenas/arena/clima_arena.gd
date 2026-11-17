@@ -5,7 +5,15 @@ extends "res://arte/clima/clima.gd"
 ## Fatia 1 — Precipitação + vento do mundo + troca viva dos 4 estados:
 ##   - Liga `neve_fraca` e `nevasca` ao vento do mundo (Ordem 43/64, `vento_mundo.gd`), com acoplamento calibrado
 ##     para a velocidade terminal dos flocos: na neve fraca deriva suavemente com o rumo do mundo; na nevasca
-##     alterna entre calma e rajada mudando visivelmente o ângulo e a força da queda.
+##     alterna entre calma e rajada.
+##   - RAJADA (correcção 2, 17/11): a rajada é variação CONTÍNUA do vento pelo mesmo canal que move os flocos —
+##     `vento_do_frame()` soma a força do vento do mundo (com as rajadas dele) e o pulso contínuo da nevasca
+##     (`rajada_da_nevasca(_tempo)`, sin² de 7 s e 11 s); o integrador desloca os flocos com esse vento, quadro a
+##     quadro, e o rasto do floco estica-se com ele. Nada salta: nem o rumo, nem a força, nem o relógio. A
+##     encenação da primeira execução (azimute +42° instantâneo, força 1,5 e salto do relógio) vivia só na
+##     ferramenta de prova e foi retirada. O que os píxeis mostram (área de floco e coerência dos traços sobem
+##     nas janelas de rajada) está em ESTADO-NEVE.md; a força visual em quadro parado é subtil — o juízo é do
+##     olho do Mestre.
 ##   - Sem filtro de ecrã nem véu colado à câmara (`veu_forca = 0`): a precipitação pertence ao espaço 3D da
 ##     arena e a cor dos flocos lê a luz do ciclo do dia (`ciclo_dia.gd`).
 ##   - Garante a troca viva dos 4 estados (`limpo` ↔ `neve_fraca` ↔ `nevasca` ↔ `chuva`) sem erro nem reinício.
@@ -34,7 +42,7 @@ const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
 @export var flocos_nevasca_px_minimo: float = 2.4
 
 ## Escala do vento do mundo (7–10 m/s à tarde) para a queda da neve (1,2–1,8 m/s): evita que a neve fraca se
-## deite a 85° na horizontal e garante que na nevasca a rajada mude visivelmente o ângulo (~32° → ~74°) e a força.
+## deite a 85° na horizontal; na nevasca a escala vai da calma ao pico com o pulso da rajada (sem saltos).
 @export var escala_vento_neve_fraca: float = 0.24
 @export var escala_vento_nevasca_calma: float = 0.16
 @export var escala_vento_nevasca_pico: float = 0.84
