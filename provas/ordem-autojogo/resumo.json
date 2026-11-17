@@ -1,0 +1,93 @@
+{
+  "formato": "autojogo-resumo/1",
+  "partidas": 3,
+  "conferidas": 3,
+  "sementes": [
+    1,
+    2,
+    3
+  ],
+  "vitorias": {
+    "heroinas": 3,
+    "criaturas": 0,
+    "nenhum": 0
+  },
+  "turnosMedios": 17,
+  "rodadasMedias": 5,
+  "figuras": [
+    {
+      "fichaId": "arqueira-bancada",
+      "figura": "Arqueira de Bancada",
+      "lado": "jogadora",
+      "vidaTotal": 22,
+      "vidaPerdidaMedia": 18.333333333333332,
+      "danoCausadoMedio": 24,
+      "danoSofridoMedio": 25.666666666666668,
+      "ataquesMedios": 4,
+      "caidas": 1,
+      "mortes": 0
+    },
+    {
+      "fichaId": "espadachim-bancada",
+      "figura": "Espadachim de Bancada",
+      "lado": "jogadora",
+      "vidaTotal": 30,
+      "vidaPerdidaMedia": 15,
+      "danoCausadoMedio": 28.666666666666668,
+      "danoSofridoMedio": 15,
+      "ataquesMedios": 3.6666666666666665,
+      "caidas": 0,
+      "mortes": 0
+    },
+    {
+      "fichaId": "bruto-bancada",
+      "figura": "Bruto de Bancada",
+      "lado": "criatura",
+      "vidaTotal": 34,
+      "vidaPerdidaMedia": 34,
+      "danoCausadoMedio": 24.666666666666668,
+      "danoSofridoMedio": 34.666666666666664,
+      "ataquesMedios": 3.3333333333333335,
+      "caidas": 3,
+      "mortes": 3
+    },
+    {
+      "fichaId": "lobo-bancada",
+      "figura": "Lobo de Bancada",
+      "lado": "criatura",
+      "vidaTotal": 16,
+      "vidaPerdidaMedia": 16,
+      "danoCausadoMedio": 16,
+      "danoSofridoMedio": 18,
+      "ataquesMedios": 4,
+      "caidas": 3,
+      "mortes": 3
+    }
+  ],
+  "porPartida": [
+    {
+      "semente": 1,
+      "ficheiro": "s1.jsonl",
+      "vencedor": "heroinas",
+      "turnos": 14,
+      "rodadas": 4,
+      "problemas": []
+    },
+    {
+      "semente": 2,
+      "ficheiro": "s2.jsonl",
+      "vencedor": "heroinas",
+      "turnos": 22,
+      "rodadas": 6,
+      "problemas": []
+    },
+    {
+      "semente": 3,
+      "ficheiro": "s3.jsonl",
+      "vencedor": "heroinas",
+      "turnos": 15,
+      "rodadas": 5,
+      "problemas": []
+    }
+  ]
+}
