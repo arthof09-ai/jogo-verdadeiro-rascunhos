@@ -1,0 +1,70 @@
+{
+  "motor": "4.7.2-stable (official)",
+  "perfis": {
+    "alto": {
+      "com": {
+        "chamadas_de_desenho": 96.1,
+        "densidade_relva": 1.0,
+        "fps": 165.0,
+        "ms_por_quadro": 6.06,
+        "primitivas": 1220285,
+        "rastro_ativo": true,
+        "tufos_desenhados": 32557
+      },
+      "sem": {
+        "chamadas_de_desenho": 92.1,
+        "densidade_relva": 1.0,
+        "fps": 165.0,
+        "ms_por_quadro": 6.06,
+        "primitivas": 1191061,
+        "rastro_ativo": false,
+        "tufos_desenhados": 32557
+      }
+    },
+    "baixo": {
+      "com": {
+        "chamadas_de_desenho": 92.1,
+        "densidade_relva": 0.5,
+        "fps": 165.0,
+        "ms_por_quadro": 6.06,
+        "primitivas": 958311,
+        "rastro_ativo": true,
+        "tufos_desenhados": 16292
+      },
+      "sem": {
+        "chamadas_de_desenho": 90.1,
+        "densidade_relva": 0.5,
+        "fps": 165.0,
+        "ms_por_quadro": 6.06,
+        "primitivas": 943699,
+        "rastro_ativo": false,
+        "tufos_desenhados": 16292
+      }
+    },
+    "medio": {
+      "com": {
+        "chamadas_de_desenho": 96.1,
+        "densidade_relva": 0.75,
+        "fps": 165.0,
+        "ms_por_quadro": 6.06,
+        "primitivas": 1100135,
+        "rastro_ativo": true,
+        "tufos_desenhados": 24430
+      },
+      "sem": {
+        "chamadas_de_desenho": 92.1,
+        "densidade_relva": 0.75,
+        "fps": 165.0,
+        "ms_por_quadro": 6.06,
+        "primitivas": 1070922,
+        "rastro_ativo": false,
+        "tufos_desenhados": 24430
+      }
+    }
+  },
+  "quadro": [
+    1920,
+    1080
+  ],
+  "render": "NVIDIA GeForce RTX 4060"
+}
