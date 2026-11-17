@@ -23,16 +23,20 @@ const Erros := preload("res://mapa/floresta/erros_floresta.gd")
 ## Ordem 42 (parte 2): os pontos baixos REAIS do relevo, para o alagamento do clima.
 const BaciasRelevo := preload("res://cenas/arena/bacias_do_relevo.gd")
 const Clima := preload("res://arte/clima/clima.gd")
+const ClimaArena := preload("res://cenas/arena/clima_arena.gd")
 
 ## Quantos dos obstáculos reais do mapa (os mais perto da zona) dão abrigo à neve (o módulo aceita até 8).
 const ABRIGOS_DO_MAPA := 8
-## Ordem 64: os climas que caem com o vento do mundo (o do mapa). A neve entra aqui quando a frente dela o ligar.
-const TIPOS_COM_VENTO_DO_MUNDO: Array[String] = ["chuva"]
+## Ordem 64 + Ordem Neve: os climas que caem com o vento do mundo (o do mapa).
+const TIPOS_COM_VENTO_DO_MUNDO: Array[String] = ["chuva", "neve"]
 ## Divisões por lado de cada remendo de casa (os vértices seguem o relevo).
 const DIVISOES_CASA := 4
 ## As malhas reais dos obstáculos do mapa que vestem a camada do clima (neve em cima, gelo).
 const MALHAS_OBSTACULO := ["Arena/Pedras", "Arena/MarcoMadeira", "Arena/MarcoSantuario", "Arena/Troncos0",
 	"Arena/Troncos1", "Arena/Troncos2", "Arena/Troncos3"]
+## As copas e o anel de árvores que também recebem cobertura de neve e geada no próprio shader de folhagem.
+const MALHAS_COPA_CLIMA := ["Arena/Copas0", "Arena/Copas1", "Arena/Copas2", "Arena/Copas3",
+	"Fundo/AnelFloresta0", "Fundo/AnelFloresta1", "Fundo/AnelFloresta2", "Fundo/AnelFloresta3"]
 ## O chão do mapa que molha e branqueia (a zona fina e a larga).
 const CHAO_DO_MAPA := [^"Arena/Terreno", ^"Fundo/TerrenoLargo"]
 
@@ -191,14 +195,19 @@ static func _chave_marca(e: Dictionary, origem: Vector2, casa_m: float) -> Strin
 ## do mapa (menires, santuário, lanternas, tronco tombado, rochas, árvores — mapa.obstaculos), os mais
 ## perto da zona. Cada abrigo é uma caixa invisível com a medida do obstáculo (o módulo lê a caixa da malha),
 ## posta debaixo de `pai`. `altura_chao` é a altura única do relevo (Callable (x, z) -> float).
+static func criar_clima() -> Clima:
+	return ClimaArena.new()
+
+
 static func ligar_clima(clima: Clima, mapa: Node3D, zona: Rect2, pai: Node3D, altura_chao: Callable) -> void:
 	clima.altura_do_chao = altura_chao
-	# Ordem 64: a chuva cai com o vento do MUNDO (o do mapa, Ordem 43: o mesmo que dobra a relva e as copas),
-	# não com um vento seu. A neve continua no vento manual até a frente dela se ligar (pôr "neve" na lista).
+	# Ordem 64 + Ordem Neve: a chuva e a neve caem com o vento do MUNDO (o do mapa, Ordem 43: o mesmo que dobra a
+	# relva e as copas), não com um vento separado.
 	clima.seguir_vento(mapa.get("vento"), TIPOS_COM_VENTO_DO_MUNDO)
-	# A zona jogável do mapa não tem muros: a neve da nevasca não se junta nas bordas dela (um quadrado
-	# branco à volta do campo), junta-se contra os obstáculos reais.
-	clima.bordas_abrigo = 0.0
+	if clima.has_method(&"ligar_mapa_arena"):
+		clima.call(&"ligar_mapa_arena", mapa, zona)
+	# Ordem Neve (Fatia 2): as bordas e cantos do relevo da arena juntam neve de forma orgânica ao lado dos 8 obstáculos reais.
+	clima.bordas_abrigo = 0.65
 	clima.definir_bacias(BaciasRelevo.achar(zona))
 	var raiz := Node3D.new()
 	raiz.name = "AbrigosDoMapa"
@@ -261,12 +270,21 @@ static func densidade_do_perfil(perfis: AplicadorPerfil, nome: String) -> float:
 ## Ordem 42 (parte 2): a relva do mapa responde ao clima (afoga nas bolsas, enterra-se na neve). Chamar a cada
 ## quadro; `com_clima` é o estado do quadro anterior (para limpar uma vez quando o clima acaba). Devolve o novo.
 static func relva_segue_clima(clima: Clima, mapa: Node3D, com_clima: bool) -> bool:
-	if clima == null or not (clima.neve > 0.0 or clima.aglomerado > 0.0 or clima.agua > 0.0 or clima.lama > 0.0 or com_clima):
+	if clima == null or not (clima.neve > 0.0 or clima.aglomerado > 0.0 or clima.gelo > 0.0 or clima.agua > 0.0 or clima.lama > 0.0 or com_clima):
 		return com_clima
-	var agora := clima.neve > 0.0 or clima.aglomerado > 0.0 or clima.agua > 0.0 or clima.lama > 0.0
-	var m: ShaderMaterial = mapa.materiais_relva()[0]
-	if m != null:
-		clima.empurrar_terreno_para(m)
+	var agora := clima.neve > 0.0 or clima.aglomerado > 0.0 or clima.gelo > 0.0 or clima.agua > 0.0 or clima.lama > 0.0
+	for m: ShaderMaterial in mapa.materiais_relva():
+		if m != null:
+			clima.empurrar_terreno_para(m)
+	var rumo_ab := clima._vento_lento.normalized() if clima._vento_lento != Vector2.ZERO else Vector2.RIGHT
+	for caminho in MALHAS_COPA_CLIMA:
+		var mi := mapa.get_node_or_null(caminho) as MeshInstance3D
+		if mi != null and mi.material_override is ShaderMaterial:
+			var mc := mi.material_override as ShaderMaterial
+			mc.set_shader_parameter(&"vento_abrigo", rumo_ab)
+			mc.set_shader_parameter(&"clima_neve", clima.neve)
+			mc.set_shader_parameter(&"clima_aglomerado", clima.aglomerado)
+			mc.set_shader_parameter(&"clima_gelo", clima.gelo)
 	return agora
 
 

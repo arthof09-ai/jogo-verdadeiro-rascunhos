@@ -20,6 +20,9 @@ uniform float some_ate = 60.0;
 // casas, os destaques e o pé das figuras se lerem — e continua a mexer com o mesmo vento.
 uniform vec4 campo_rect = vec4(0.0);   // (x0, z0, x1, z1) no mundo; vazia = nenhuma (o mapa sozinho)
 uniform float campo_alto = 1.0;        // fracção da altura que a erva tem lá dentro
+uniform float clima_neve = 0.0;
+uniform float clima_aglomerado = 0.0;
+uniform float clima_gelo = 0.0;
 float no_campo(vec2 xz) {
 	if (campo_rect.z <= campo_rect.x) {
 		return 0.0;
@@ -40,7 +43,8 @@ void vertex() {
 	vec3 p = VERTEX;
 	float d_cam = distance(raiz.xz, CAMERA_POSITION_WORLD.xz);
 	float fica = 1.0 - smoothstep(some_de, some_ate, d_cam + INSTANCE_CUSTOM.r * 14.0);
-	float encolhe = fica * mix(1.0, campo_alto, no_campo(raiz.xz));
+	float cobertura_neve = clamp(clima_neve + 0.55 * clima_aglomerado, 0.0, 1.0);
+	float encolhe = fica * mix(1.0, campo_alto, no_campo(raiz.xz)) * (1.0 - 0.84 * cobertura_neve);
 	p = raiz + (p - raiz) * encolhe;
 	// Ordem GRAMA: a haste também se deita com o rastro de quem passa (o jeito sai da altura dela, em metros)
 	vec4 rastro = rastro_dobra(raiz.xz, length(MODEL_MATRIX[1].xyz) * 0.9 * encolhe);
@@ -67,5 +71,11 @@ void fragment() {
 	float vis = smoothstep(0.30, 0.70, v_mapa.r);
 	// a cabeça é palha ou pétala, não um espelho: luz contida e tecto de cor (defeito 5)
 	vec3 cor = luz_pintada(alb, vec3(0.0, 1.0, 0.0), vis) * mix(1.0, 0.74, v_cabeca);
-	ALBEDO = min(cor, vec3(0.90, 0.86, 0.74));
+	cor = min(cor, vec3(0.90, 0.86, 0.74));
+	float f_neve = clamp(clima_neve + 0.45 * clima_aglomerado + 0.35 * clima_gelo, 0.0, 1.0);
+	if (f_neve > 0.001) {
+		vec3 c_neve = luz_pintada(vec3(0.84, 0.89, 0.95), vec3(0.0, 1.0, 0.0), vis);
+		cor = mix(cor, min(c_neve, vec3(0.90, 0.92, 0.95)), f_neve * mix(0.70, 0.96, v_alt));
+	}
+	ALBEDO = cor;
 }

@@ -1,0 +1,393 @@
+{
+  "cobertura_base": 0.001,
+  "cobertura_topo": 0.8821,
+  "curva": [
+    {
+      "cobertura_centro": 0.001,
+      "cobertura_periferia": 0.021,
+      "lum_centro": 0.6622,
+      "modulacao_centro": 0.0172,
+      "nome": "dinamica_000.png",
+      "t_s": 0.0
+    },
+    {
+      "cobertura_centro": 0.001,
+      "cobertura_periferia": 0.0209,
+      "lum_centro": 0.6618,
+      "modulacao_centro": 0.0175,
+      "nome": "dinamica_001.png",
+      "t_s": 5.0
+    },
+    {
+      "cobertura_centro": 0.0038,
+      "cobertura_periferia": 0.0299,
+      "lum_centro": 0.6601,
+      "modulacao_centro": 0.018,
+      "nome": "dinamica_002.png",
+      "t_s": 10.0
+    },
+    {
+      "cobertura_centro": 0.0277,
+      "cobertura_periferia": 0.1524,
+      "lum_centro": 0.6587,
+      "modulacao_centro": 0.0182,
+      "nome": "dinamica_003.png",
+      "t_s": 15.0
+    },
+    {
+      "cobertura_centro": 0.4321,
+      "cobertura_periferia": 0.7027,
+      "lum_centro": 0.6596,
+      "modulacao_centro": 0.0209,
+      "nome": "dinamica_004.png",
+      "t_s": 20.0
+    },
+    {
+      "cobertura_centro": 0.751,
+      "cobertura_periferia": 0.8042,
+      "lum_centro": 0.664,
+      "modulacao_centro": 0.0211,
+      "nome": "dinamica_005.png",
+      "t_s": 25.0
+    },
+    {
+      "cobertura_centro": 0.7972,
+      "cobertura_periferia": 0.8209,
+      "lum_centro": 0.6668,
+      "modulacao_centro": 0.0245,
+      "nome": "dinamica_006.png",
+      "t_s": 30.0
+    },
+    {
+      "cobertura_centro": 0.7921,
+      "cobertura_periferia": 0.8174,
+      "lum_centro": 0.6677,
+      "modulacao_centro": 0.0299,
+      "nome": "dinamica_007.png",
+      "t_s": 35.01
+    },
+    {
+      "cobertura_centro": 0.8042,
+      "cobertura_periferia": 0.8283,
+      "lum_centro": 0.6727,
+      "modulacao_centro": 0.0349,
+      "nome": "dinamica_008.png",
+      "t_s": 40.0
+    },
+    {
+      "cobertura_centro": 0.834,
+      "cobertura_periferia": 0.8409,
+      "lum_centro": 0.6783,
+      "modulacao_centro": 0.0358,
+      "nome": "dinamica_009.png",
+      "t_s": 45.0
+    },
+    {
+      "cobertura_centro": 0.8814,
+      "cobertura_periferia": 0.8489,
+      "lum_centro": 0.6863,
+      "modulacao_centro": 0.0374,
+      "nome": "dinamica_010.png",
+      "t_s": 50.0
+    },
+    {
+      "cobertura_centro": 0.874,
+      "cobertura_periferia": 0.8435,
+      "lum_centro": 0.6783,
+      "modulacao_centro": 0.0388,
+      "nome": "dinamica_011.png",
+      "t_s": 55.0
+    },
+    {
+      "cobertura_centro": 0.8715,
+      "cobertura_periferia": 0.8424,
+      "lum_centro": 0.6781,
+      "modulacao_centro": 0.0424,
+      "nome": "dinamica_012.png",
+      "t_s": 60.0
+    },
+    {
+      "cobertura_centro": 0.8821,
+      "cobertura_periferia": 0.8616,
+      "lum_centro": 0.6871,
+      "modulacao_centro": 0.0405,
+      "nome": "dinamica_013.png",
+      "t_s": 65.0
+    },
+    {
+      "cobertura_centro": 0.8699,
+      "cobertura_periferia": 0.8423,
+      "lum_centro": 0.6776,
+      "modulacao_centro": 0.0393,
+      "nome": "dinamica_014.png",
+      "t_s": 70.0
+    },
+    {
+      "cobertura_centro": 0.8692,
+      "cobertura_periferia": 0.8419,
+      "lum_centro": 0.6802,
+      "modulacao_centro": 0.0399,
+      "nome": "dinamica_015.png",
+      "t_s": 75.0
+    },
+    {
+      "cobertura_centro": 0.8706,
+      "cobertura_periferia": 0.8453,
+      "lum_centro": 0.6819,
+      "modulacao_centro": 0.0398,
+      "nome": "dinamica_016.png",
+      "t_s": 80.0
+    },
+    {
+      "cobertura_centro": 0.8703,
+      "cobertura_periferia": 0.8413,
+      "lum_centro": 0.6792,
+      "modulacao_centro": 0.039,
+      "nome": "dinamica_017.png",
+      "t_s": 85.01
+    },
+    {
+      "cobertura_centro": 0.8669,
+      "cobertura_periferia": 0.8422,
+      "lum_centro": 0.6766,
+      "modulacao_centro": 0.0404,
+      "nome": "dinamica_018.png",
+      "t_s": 90.0
+    },
+    {
+      "cobertura_centro": 0.8715,
+      "cobertura_periferia": 0.8445,
+      "lum_centro": 0.6793,
+      "modulacao_centro": 0.0386,
+      "nome": "dinamica_019.png",
+      "t_s": 95.0
+    },
+    {
+      "cobertura_centro": 0.8806,
+      "cobertura_periferia": 0.8634,
+      "lum_centro": 0.6867,
+      "modulacao_centro": 0.0389,
+      "nome": "dinamica_020.png",
+      "t_s": 100.0
+    },
+    {
+      "cobertura_centro": 0.8763,
+      "cobertura_periferia": 0.8463,
+      "lum_centro": 0.685,
+      "modulacao_centro": 0.0371,
+      "nome": "dinamica_021.png",
+      "t_s": 105.01
+    },
+    {
+      "cobertura_centro": 0.87,
+      "cobertura_periferia": 0.8423,
+      "lum_centro": 0.6811,
+      "modulacao_centro": 0.039,
+      "nome": "dinamica_022.png",
+      "t_s": 110.0
+    },
+    {
+      "cobertura_centro": 0.8682,
+      "cobertura_periferia": 0.8433,
+      "lum_centro": 0.6784,
+      "modulacao_centro": 0.0382,
+      "nome": "dinamica_023.png",
+      "t_s": 115.01
+    },
+    {
+      "cobertura_centro": 0.849,
+      "cobertura_periferia": 0.8368,
+      "lum_centro": 0.6561,
+      "modulacao_centro": 0.0389,
+      "nome": "dinamica_024.png",
+      "t_s": 120.0
+    },
+    {
+      "cobertura_centro": 0.8395,
+      "cobertura_periferia": 0.8309,
+      "lum_centro": 0.6448,
+      "modulacao_centro": 0.0345,
+      "nome": "dinamica_025.png",
+      "t_s": 125.01
+    },
+    {
+      "cobertura_centro": 0.8243,
+      "cobertura_periferia": 0.8081,
+      "lum_centro": 0.6394,
+      "modulacao_centro": 0.0322,
+      "nome": "dinamica_026.png",
+      "t_s": 130.0
+    },
+    {
+      "cobertura_centro": 0.7225,
+      "cobertura_periferia": 0.7447,
+      "lum_centro": 0.6324,
+      "modulacao_centro": 0.037,
+      "nome": "dinamica_027.png",
+      "t_s": 135.0
+    },
+    {
+      "cobertura_centro": 0.0556,
+      "cobertura_periferia": 0.2374,
+      "lum_centro": 0.614,
+      "modulacao_centro": 0.0449,
+      "nome": "dinamica_028.png",
+      "t_s": 140.0
+    },
+    {
+      "cobertura_centro": 0.0052,
+      "cobertura_periferia": 0.0968,
+      "lum_centro": 0.6124,
+      "modulacao_centro": 0.0451,
+      "nome": "dinamica_029.png",
+      "t_s": 145.0
+    },
+    {
+      "cobertura_centro": 0.0049,
+      "cobertura_periferia": 0.0961,
+      "lum_centro": 0.614,
+      "modulacao_centro": 0.0453,
+      "nome": "dinamica_030.png",
+      "t_s": 150.0
+    },
+    {
+      "cobertura_centro": 0.0043,
+      "cobertura_periferia": 0.0963,
+      "lum_centro": 0.6143,
+      "modulacao_centro": 0.045,
+      "nome": "dinamica_031.png",
+      "t_s": 155.0
+    },
+    {
+      "cobertura_centro": 0.0051,
+      "cobertura_periferia": 0.0968,
+      "lum_centro": 0.6143,
+      "modulacao_centro": 0.0456,
+      "nome": "dinamica_032.png",
+      "t_s": 160.0
+    },
+    {
+      "cobertura_centro": 0.0049,
+      "cobertura_periferia": 0.0962,
+      "lum_centro": 0.613,
+      "modulacao_centro": 0.045,
+      "nome": "dinamica_033.png",
+      "t_s": 165.0
+    },
+    {
+      "cobertura_centro": 0.0016,
+      "cobertura_periferia": 0.0714,
+      "lum_centro": 0.6142,
+      "modulacao_centro": 0.0381,
+      "nome": "dinamica_034.png",
+      "t_s": 170.0
+    },
+    {
+      "cobertura_centro": 0.0017,
+      "cobertura_periferia": 0.0532,
+      "lum_centro": 0.6172,
+      "modulacao_centro": 0.0317,
+      "nome": "dinamica_035.png",
+      "t_s": 175.0
+    },
+    {
+      "cobertura_centro": 0.0016,
+      "cobertura_periferia": 0.0342,
+      "lum_centro": 0.6237,
+      "modulacao_centro": 0.0271,
+      "nome": "dinamica_036.png",
+      "t_s": 180.0
+    },
+    {
+      "cobertura_centro": 0.0015,
+      "cobertura_periferia": 0.0219,
+      "lum_centro": 0.6322,
+      "modulacao_centro": 0.0254,
+      "nome": "dinamica_037.png",
+      "t_s": 185.0
+    },
+    {
+      "cobertura_centro": 0.0013,
+      "cobertura_periferia": 0.0218,
+      "lum_centro": 0.6401,
+      "modulacao_centro": 0.0224,
+      "nome": "dinamica_038.png",
+      "t_s": 190.0
+    },
+    {
+      "cobertura_centro": 0.0013,
+      "cobertura_periferia": 0.0214,
+      "lum_centro": 0.6455,
+      "modulacao_centro": 0.02,
+      "nome": "dinamica_039.png",
+      "t_s": 195.01
+    },
+    {
+      "cobertura_centro": 0.0012,
+      "cobertura_periferia": 0.0216,
+      "lum_centro": 0.6538,
+      "modulacao_centro": 0.0185,
+      "nome": "dinamica_040.png",
+      "t_s": 200.0
+    },
+    {
+      "cobertura_centro": 0.0008,
+      "cobertura_periferia": 0.0215,
+      "lum_centro": 0.6608,
+      "modulacao_centro": 0.017,
+      "nome": "dinamica_041.png",
+      "t_s": 205.0
+    },
+    {
+      "cobertura_centro": 0.0012,
+      "cobertura_periferia": 0.0206,
+      "lum_centro": 0.6614,
+      "modulacao_centro": 0.0171,
+      "nome": "dinamica_042.png",
+      "t_s": 210.0
+    }
+  ],
+  "definicoes": {
+    "branco_neve": "max>=0.55 e sat<=0.20",
+    "centro": [
+      0.379999995231628,
+      0.379999995231628,
+      0.620000004768372,
+      0.620000004768372
+    ],
+    "floco": "|dL|>=0.06 no par com/sem flocos",
+    "fonte": "Image.get_pixel sobre os PNG; nenhuma chamada ao clima",
+    "ladrilho_px": 24,
+    "periferia": [
+      0.0500000007450581,
+      0.300000011920929,
+      0.949999988079071,
+      0.900000035762787
+    ]
+  },
+  "duracao_parede_s": 215.001,
+  "marcos": {
+    "desce_a_10%_do_topo_t_s": 140.0,
+    "desce_a_50%_do_topo_t_s": 140.0,
+    "sobe_50%_do_topo_t_s": 25.0,
+    "sobe_90%_do_topo_t_s": 30.0
+  },
+  "trocas": [
+    {
+      "t_s": 0.0,
+      "troca_para": "limpo"
+    },
+    {
+      "t_s": 5.0,
+      "troca_para": "nevasca"
+    },
+    {
+      "t_s": 115.01,
+      "troca_para": "chuva"
+    },
+    {
+      "t_s": 165.0,
+      "troca_para": "limpo"
+    }
+  ]
+}

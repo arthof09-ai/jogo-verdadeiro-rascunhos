@@ -52,6 +52,7 @@ func _initialize() -> void:
 	_teste_clima_frame_a_frame()
 	_teste_clima_modulo()
 	_teste_chuva_vento_do_mundo()
+	_teste_neve_arena_vento_e_estados()
 	_teste_terreno_do_servidor_em_dia()
 	_teste_pe_na_encosta()
 	print("")
@@ -825,6 +826,82 @@ func _teste_chuva_vento_do_mundo() -> void:
 	c.seguir_vento(sem_vetor)
 	_ok(c.fonte_do_vento() == null and c.tipos_com_fonte.is_empty(), "uma fonte sem vetor() é recusada (fica o vento manual)")
 	sem_vetor.free()
+	c.free()
+
+
+## Ordem Neve (Fatia 1): neve_fraca e nevasca seguem o vento do mundo na arena integrada e trocam entre os 4 estados
+## (limpo ↔ neve_fraca ↔ nevasca ↔ chuva) sem erro nem reinício.
+func _teste_neve_arena_vento_e_estados() -> void:
+	print("Clima (Ordem Neve, Fatia 1): neve_fraca e nevasca com o vento do mundo + troca viva dos 4 estados")
+	var CampoDaMesa = load("res://cenas/arena/campo_da_mesa.gd")
+	var vm = VentoMundo.new()
+	vm.parado = true
+	vm.hora_fixa = 16.25
+	for i in 20:
+		vm.avancar(0.1)
+	var c = CampoDaMesa.criar_clima()
+	c.configurar_area(Vector3(0.0, 0.0, 0.0), Vector2(30.0, 30.0))
+	c.seguir_vento(vm, CampoDaMesa.TIPOS_COM_VENTO_DO_MUNDO)
+	_ok(c.segue_fonte("chuva") and c.segue_fonte("neve"), "CampoDaMesa liga tanto a chuva como a neve ao vento do mundo")
+	_ok(c.definir_por_nome("neve_fraca") and c.estado_clima() == "neve_fraca", "estado neve_fraca liga sem reiniciar")
+	var w: Vector3 = vm.vetor()
+	var vn_fraca: Vector2 = c.vento_do_frame("neve")
+	_ok(vn_fraca.normalized().dot(Vector2(w.x, w.z).normalized()) > 0.999 and vn_fraca.length() > 0.5,
+		"neve_fraca deriva exactamente no rumo do vento do mundo (%.2f m/s)" % vn_fraca.length())
+	_ok(c.definir_por_nome("nevasca") and c.nevasca() and c.estado_clima() == "nevasca", "troca viva neve_fraca → nevasca")
+	for i in 130:
+		c.avancar(1.0 / 30.0)
+	var f_min := INF
+	var f_max := 0.0
+	var salto_max := 0.0
+	var v_antes: Vector2 = c.vento_do_frame("neve")
+	for i in 360:
+		c.avancar(1.0 / 30.0)
+		var vv: Vector2 = c.vento_do_frame("neve")
+		var vf: float = vv.length()
+		f_min = minf(f_min, vf)
+		f_max = maxf(f_max, vf)
+		salto_max = maxf(salto_max, (vv - v_antes).length())
+		v_antes = vv
+	# Correcção 2 (17/11): a rajada é variação CONTÍNUA pelo canal dos flocos (vento_do_frame) — nada de saltos.
+	# (A força VISUAL da rajada mede-se nos píxeis dos renders, não aqui: ver ferramentas/medir_pixeis_neve.gd.)
+	_ok(f_max > f_min * 2.2 and salto_max < 0.25,
+		"na nevasca o vento da queda varia de forma contínua entre calma e rajada (%.2f → %.2f m/s; maior passo por quadro %.3f m/s)" % [f_min, f_max, salto_max])
+	_ok(c.definir_por_nome("chuva") and c.estado_clima() == "chuva", "troca viva nevasca → chuva sem reiniciar")
+	_ok(c.definir_por_nome("limpo") and c.estado_clima() == "limpo", "troca viva chuva → limpo sem reiniciar")
+	# Fatia 2: correcção de 14/11 — na nevasca consolidada (neve=1, aglomerado=1) o centro está coberto a sério
+	# (>= 0,85, nunca 0,33) e os cantos/abrigos têm manto mais espesso (> centro).
+	c.bordas_abrigo = 0.65
+	c.definir_acumulacao(0.0, 1.0)
+	c.definir_forte(1.0, 1.0, 0.0)
+	var neve_centro: float = c.neve_em(Vector2.ZERO)
+	var neve_canto: float = c.neve_em(Vector2(-14.2, -14.2))
+	_ok(neve_centro >= 0.85 and neve_canto > neve_centro + 0.25,
+		"Fatia 2: a FÓRMULA neve_em dá centro >= 0,85 em F=1 e canto mais espesso (%.2f; %.2f) — teste da fórmula, não medição visual" % [neve_centro, neve_canto])
+	# Fatia 3: factor F imponível deterministicamente (t0=0, t1=0,5, t2=1) e transições graduais sem cortes secos.
+	c.impor_fator_f(0.0)
+	_ok(is_zero_approx(c.fator_f()) and is_zero_approx(c.neve) and is_zero_approx(c.aglomerado) and is_zero_approx(c.congelamento),
+		"Fatia 3: F = 0 imposto deterministicamente (t0)")
+	c.impor_fator_f(0.5)
+	_ok(is_equal_approx(c.fator_f(), 0.5) and is_equal_approx(c.neve, 0.5) and is_equal_approx(c.aglomerado, 0.5) and is_equal_approx(c.congelamento, 0.5),
+		"Fatia 3: F = 0,5 imposto deterministicamente (t1)")
+	c.impor_fator_f(1.0)
+	_ok(is_equal_approx(c.fator_f(), 1.0) and is_equal_approx(c.neve, 1.0) and is_equal_approx(c.aglomerado, 1.0) and is_equal_approx(c.congelamento, 1.0),
+		"Fatia 3: F = 1,0 imposto deterministicamente (t2)")
+	c.libertar_fator_f()
+	c.definir_por_nome("chuva")
+	c.avancar(1.0)
+	_ok(c.neve < 1.0 and c.neve > 0.85 and c.congelamento < 1.0 and c.congelamento > 0.85 and c.molhado > 0.0,
+		"Fatia 3: transição nevasca → chuva derrete neve/congelamento gradualmente sem corte seco (neve %.2f, cong %.2f, molhado %.2f)" % [c.neve, c.congelamento, c.molhado])
+	# Correcção 1c (17/11, decisão do coordenador): o chão recebe a geometria da lagoa para não pintar neve debaixo de
+	# água (a água fica com o comportamento dela; o gelo da água é trabalho futuro).
+	c.impor_fator_f(1.0)
+	var Relevo = load("res://mapa/floresta/relevo_floresta.gd")
+	var lcr = c._mat_chao.get_shader_parameter(&"lago_centro_raio") if c._mat_chao != null else null
+	_ok(lcr is Vector3 and is_equal_approx(lcr.z, Relevo.LAGO_RAIO) and is_equal_approx(float(c._mat_chao.get_shader_parameter(&"lago_nivel")), Relevo.nivel_lago()),
+		"Correcção 1c: o chão da neve recebe a cova e o nível da lagoa (máscara da água)")
+	c.libertar_fator_f()
+	vm.free()
 	c.free()
 
 

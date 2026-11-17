@@ -15,6 +15,10 @@ uniform vec3 cor_ouro : source_color = vec3(0.66, 0.61, 0.34);
 uniform vec3 cor_musgo : source_color = vec3(0.37, 0.45, 0.27);
 // Ordem 43: o vento é o do MUNDO (vento_floresta.gdshaderinc).
 uniform float vento_amplitude : hint_range(0.0, 1.5) = 0.20;
+uniform float clima_neve = 0.0;
+uniform float clima_aglomerado = 0.0;
+uniform float clima_gelo = 0.0;
+uniform vec2 vento_abrigo = vec2(1.0, 0.0);
 
 varying vec3 v_pos;
 varying vec3 v_n;
@@ -53,6 +57,12 @@ void fragment() {
 		cor = alb * (amb + mix(cor_sombra * 0.45, cor_sol, k * ao));
 		cor = mix(cor, cor_ouro * cor_sol * 1.15, smoothstep(0.62, 0.85, ndl) * 0.26 * ao);
 		cor = olho_noite(cor * mix(0.72, 1.0, ao));
+		if (clima_neve > 0.001 || clima_aglomerado > 0.001 || clima_gelo > 0.001) {
+			float lim = mix(0.85, 0.12, clamp(clima_neve * 0.70 + clima_aglomerado * 0.55, 0.0, 1.0));
+			float m_copa = smoothstep(lim, lim + 0.25, n.y + (pinc - 0.5) * 0.35) * clamp((clima_neve + clima_aglomerado) * 1.25, 0.0, 0.88);
+			vec3 luz_c = olho_noite(clamp(amb + mix(cor_sombra * 0.52, cor_sol * 1.0, k * ao), vec3(0.24, 0.30, 0.44), vec3(0.91, 0.93, 0.96)));
+			cor = mix(cor, vec3(0.86, 0.90, 0.96) * luz_c, m_copa);
+		}
 	}
 	ALBEDO = cor;
 }
