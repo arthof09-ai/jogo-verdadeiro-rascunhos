@@ -7,7 +7,7 @@ extends Node3D
 ## batida, rocha a pique, água, pé dos troncos.
 ##
 ## FAMÍLIAS (defeito 6): tufo fino (prado ao sol), tufo largo (sombra e beira-água), e por cima
-## as hastes — espigas no prado, flores por quadrante (cada quadrante a sua cor), juncos no charco.
+## as hastes — espigas no prado, flores por quadrante (cada quadrante a sua cor), juncos na margem do lago.
 ##
 ## LOD POR ANÉIS DE DISTÂNCIA (defeito 10): cada bloco de 25 m guarda os tufos baralhados; o
 ## tufo de ordem k/n fica enquanto k/n ≤ manter(distância). A cada passo da câmara a CPU corta o
@@ -72,13 +72,14 @@ func semear(mat_relva: ShaderMaterial, mat_haste: ShaderMaterial, terra_em: Call
 					var f := Relevo.fora(x, z)
 					if f > Relevo.ORLA_FORA + 1.0:
 						continue
+					# Ordem 66: dentro do LAGO não há relva; na água baixa junto à margem crescem juncos, em moitas
+					var lago := Relevo.lago_fundura(x, z)
+					if lago > 0.0:
+						if lago > 0.04 and lago < 0.36 and rn.get_noise_2d(x * 20.0 - 70.0, z * 20.0 + 40.0) > 0.10 and rng.randf() < 0.55:
+							hastes["junco"].append([x, z, Paleta.JUNCO_CABECA, rng.randf_range(1.1, 1.7)])
+						continue
 					var terra: float = terra_em.call(x, z)
 					if terra > 0.55:
-						continue
-					var agua := Relevo.agua(x, z)
-					if agua > 0.10:
-						if agua < 0.45 and rng.randf() < 0.55:
-							hastes["junco"].append([x, z, Paleta.JUNCO_CABECA, rng.randf_range(1.1, 1.7)])
 						continue
 					var nrm := Relevo.normal(x, z)
 					if nrm.y < 0.80:

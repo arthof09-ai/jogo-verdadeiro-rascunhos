@@ -64,6 +64,7 @@ const VentoMundo := preload("res://mapa/floresta/vento_mundo.gd")
 const SombrasFloresta := preload("res://mapa/floresta/sombras_floresta.gd")
 const RastroRelva := preload("res://mapa/floresta/rastro_relva.gd")
 
+const LagoFloresta := preload("res://mapa/floresta/lago_floresta.gd")
 const SH_TERRENO := preload("res://mapa/floresta/shaders/terreno.gdshader")
 const SH_RELVA := preload("res://mapa/floresta/shaders/relva.gdshader")
 const SH_HASTE := preload("res://mapa/floresta/shaders/haste.gdshader")
@@ -180,6 +181,10 @@ var _rochas: Array = []          # [Vector3 centro, tamanho]
 var _lote_pedras := Lote.new()
 var _mat_relva: ShaderMaterial
 var _mat_haste: ShaderMaterial
+## Ordem 66: o LAGO (lago_floresta.gd) — a superfície da água da cova do NE e a reacção dela a quem lá anda:
+## lago.seguir(nó, raio) põe um nó a mexer a água; lago.deixar(nó) tira-o. Só apresentação.
+var lago: LagoFloresta
+var _mat_agua: ShaderMaterial
 var _t_rotulo := 0.0
 var _ruido_img: Image
 var _mat_ceu: ShaderMaterial
@@ -224,6 +229,7 @@ func _ready() -> void:
 	_semear_rochas()
 	_riscar_trilho()
 	_criar_estrato()
+	_carimbar_leito_do_lago()
 	# ---- …e só depois se coze, UMA vez
 	_cozer_mapa_chao()
 	_criar_terreno()
@@ -251,6 +257,7 @@ func _fim_da_carga(t0: int) -> void:
 		ir_para_vista(0)
 	if _rotulo != null:
 		_rotulo.visible = mostrar_medicao
+	_ligar_lago()
 	medidas["carga_ms"] = Time.get_ticks_msec() - t0
 	medidas["sombra_lancadores"] = sombras.lancadores
 	medidas["erros"] = Erros.contagem()
@@ -524,6 +531,35 @@ func _ligar_ciclo_e_vento() -> void:
 	aplicar_ciclo()
 
 
+## Ordem 66: o LAGO. Nasce aqui, nos dois caminhos (construído ou vestido do molde), para cada mapa o seu — como
+## o relógio e o vento: a malha da superfície e a fundura cozida saem do relevo; o material é o da construção.
+func _ligar_lago() -> void:
+	lago = LagoFloresta.new()
+	lago.name = "Lago"
+	add_child(lago)
+	lago.montar(_mat_agua)
+	medidas.merge(lago.medidas, true)
+
+
+## Ordem 66: o LEITO do lago no mapa do chão — debaixo de água e na faixa molhada da margem o chão é lodo, não
+## relva. Carimba-se DEPOIS do estrato (que decide com a terra e gasta a semente do mapa): o que cresce fora do
+## lago fica exactamente onde estava.
+func _carimbar_leito_do_lago() -> void:
+	var c := Relevo.COVA
+	var nivel := Relevo.nivel_lago()
+	var passo := 0.5
+	var n := int(ceil(Relevo.LAGO_RAIO / passo))
+	for j in range(-n, n + 1):
+		for i in range(-n, n + 1):
+			var x := c.x + i * passo
+			var z := c.y + j * passo
+			if Vector2(x - c.x, z - c.y).length() >= Relevo.LAGO_RAIO:
+				continue
+			var acima := Relevo.altura(x, z) - nivel
+			if acima < 0.10:
+				_carimbo_max(1, x, z, 0.85, 0.95 if acima < 0.0 else 0.72)
+
+
 ## Ordem GRAMA: o rastro de quem passa. Nasce aqui, nos dois caminhos (construído ou vestido do molde), para
 ## cada mapa o seu — como o relógio e o vento. Cobre a zona jogável e uma margem; sem zona, a arena do mapa.
 func _ligar_rastro() -> void:
@@ -701,17 +737,19 @@ func _iniciar_mapa() -> void:
 		var z := -MAPA_MEIO + (float(j) + 0.5) * passo
 		for i in n:
 			var x := -MAPA_MEIO + (float(i) + 0.5) * passo
-			var h := Relevo.altura(x, z)
+			# (Ordem 66) sobre o lago, quem recebe e deita sombra é a SUPERFÍCIE da água, não o leito: o talude da
+			# funda não escurece a água por cima dele
+			var h := Relevo.altura_a_vista(x, z)
 			_alturas[j * n + i] = h
 			var tapa := 0.0
 			for s in range(1, 11):
 				var t := float(s) * 1.2
-				var a := Relevo.altura(x + d2.x * t, z + d2.y * t) - (h + 0.12 + sobe * t)
+				var a := Relevo.altura_a_vista(x + d2.x * t, z + d2.y * t) - (h + 0.12 + sobe * t)
 				if a > 0.0:
 					tapa = maxf(tapa, a / (0.20 + 0.10 * t))
 			var media := 0.0
 			for o in roda:
-				media += Relevo.altura(x + o.x, z + o.y)
+				media += Relevo.altura_a_vista(x + o.x, z + o.y)
 			var cova := clampf((media / 6.0 - h - 0.05) / 0.75, 0.0, 1.0)
 			var k4 := (j * n + i) * 4
 			dados[k4] = 1.0 - 0.88 * clampf(tapa, 0.0, 1.0)
@@ -1133,41 +1171,15 @@ func _marco_garganta(madeira: Lote) -> void:
 				grelha.dar_cobertura(casa, Grelha.COBERTURA_TOTAL)
 
 
-## NE — a COVA DO CHARCO: água parada no fundo (quem atravessa fica em baixo e à vista) e a
-## árvore seca na margem.
+## NE — a COVA DO LAGO (Ordem 66; até aqui, o charco): a água enche a cova até à margem — uma RASA pelo joelho e
+## uma FUNDA de nadar (o leito é do relevo; a superfície e a reacção são do nó `lago`, ligado em _ligar_lago) — e
+## a árvore seca na margem.
 func _marco_charco(madeira: Lote, r: RandomNumberGenerator) -> void:
 	var c := Relevo.COVA
-	var nivel := Relevo.nivel_agua()
-	var l := Lote.new()
-	var na := 36
-	var nr := 8
-	l.v.append(Vector3(c.x, nivel, c.y))
-	l.n.append(Vector3.UP)
-	l.c.append(Color(1, 1, 1, clampf(Relevo.agua(c.x, c.y) / Relevo.AGUA_ABAIXO, 0.0, 1.0)))
-	l.uv.append(Vector2.ZERO)
-	for j in range(1, nr + 1):
-		var rho := 6.6 * float(j) / float(nr)
-		for i in na:
-			var ang := TAU * float(i) / float(na)
-			var x := c.x + cos(ang) * rho
-			var z := c.y + sin(ang) * rho
-			l.v.append(Vector3(x, nivel, z))
-			l.n.append(Vector3.UP)
-			l.c.append(Color(1, 1, 1, clampf(Relevo.agua(x, z) / Relevo.AGUA_ABAIXO, 0.0, 1.0)))
-			l.uv.append(Vector2.ZERO)
-	for i in na:
-		l.idx.append_array([0, 1 + i, 1 + (i + 1) % na])
-	for j in range(1, nr):
-		for i in na:
-			var d0 := 1 + (j - 1) * na + i
-			var d1 := 1 + (j - 1) * na + (i + 1) % na
-			l.idx.append_array([d0, d0 + na, d1 + na, d0, d1 + na, d1])
-	var ma := _mat(SH_AGUA)
-	ma.set_shader_parameter("cor_funda", Paleta.AGUA)
-	ma.set_shader_parameter("cor_rasa", Paleta.AGUA_RASA)
-	ma.set_shader_parameter("cor_reflexo", Paleta.CEU_MEIO)
-	_instancia(arena, l.fechar(), ma, "Charco")
-	medidas["agua_tri"] = l.triangulos()
+	_mat_agua = _mat(SH_AGUA)
+	_mat_agua.set_shader_parameter("cor_funda", Paleta.AGUA)
+	_mat_agua.set_shader_parameter("cor_rasa", Paleta.AGUA_RASA)
+	_mat_agua.set_shader_parameter("cor_reflexo", Paleta.CEU_MEIO)
 	# a margem: lodo à mostra numa faixa estreita à volta da água
 	for i in 40:
 		var ang := TAU * float(i) / 40.0
@@ -1436,7 +1448,8 @@ func _criar_estrato() -> void:
 			var f := Relevo.fora(x, z)
 			if f > Relevo.ORLA_FORA - 3.0 or Vector2(x, z).length() < 15.0:
 				continue
-			if Relevo.agua(x, z) > 0.02 or Relevo.normal(x, z).y < 0.82 or _terra_em(x, z) > 0.5:
+			# (Ordem 66) decide-se no relevo da Ordem 38, como sempre: o lago não muda o que a semente gasta
+			if Relevo.agua(x, z) > 0.02 or Relevo.normal_38(x, z).y < 0.82 or _terra_em(x, z) > 0.5:
 				continue
 			var coberto := _coberto_em(x, z)
 			var beira := 1.0 - smoothstep(0.0, 4.0, Vector2(x - cova.x, z - cova.y).length() - 5.4)
@@ -1470,6 +1483,15 @@ func _criar_estrato() -> void:
 			var cor_e := Color(tom, tom * _rf(0.96, 1.04), tom * _rf(0.92, 1.0), 1.0)
 			if _na_zona(x, z, 0.9 * s):
 				_contar_tirado("estrato")   # Ordem 42: fora da zona jogável (a semente gastou-se igual)
+				postos += 1
+				continue
+			if Relevo.lago_fundura(x, z) > 0.0:
+				# Ordem 66: dentro de água não cresce. Ocupa e carimba a terra como se crescesse (e a semente já
+				# se gastou igual): o resto do estrato fica exactamente onde estava. Não dá sombra nem cobertura.
+				_ocupar(_tudo, x, z, 0.55 * s if tipo < 2 else 0.15)
+				if tipo < 2:
+					_carimbo_max(1, x, z, 0.75 * s, 0.7)
+				medidas["lago_estrato_tirado"] = int(medidas.get("lago_estrato_tirado", 0)) + 1
 				postos += 1
 				continue
 			(listas[tipo][(0 if x < 0.0 else 1) + (0 if z < 0.0 else 2)] as Array).append(
