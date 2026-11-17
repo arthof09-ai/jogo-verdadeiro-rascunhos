@@ -1,0 +1,5405 @@
+{
+  "declarado_pelo_sistema": [
+    {
+      "aglomerado": 0.0,
+      "congelamento": 0.0,
+      "estado": "limpo",
+      "fator_f": 0.0,
+      "molhado": 0.0,
+      "ms_desde_inicio": 2046,
+      "neve": 0.0,
+      "quadro": "dinamica_000.png",
+      "rajada_nevasca": 0.13,
+      "vento_mundo": {
+        "azimute_de": -64.2900433567156,
+        "azimute_para": 115.709956643284,
+        "direcao": "(0.901002, 0.0, 0.433816)",
+        "forca": 1.26124690982409,
+        "rajada": 0.670874628260925,
+        "velocidade_ms": 9.4593518236807
+      },
+      "vento_queda_ms": [
+        8.52,
+        4.1
+      ]
+    },
+    {
+      "aglomerado": 0.0,
+      "congelamento": 0.0,
+      "estado": "nevasca",
+      "fator_f": 0.0,
+      "molhado": 0.0,
+      "ms_desde_inicio": 7056,
+      "neve": 0.0,
+      "quadro": "dinamica_001.png",
+      "rajada_nevasca": 0.13,
+      "vento_mundo": {
+        "azimute_de": -143.91901974234,
+        "azimute_para": 36.0809802576602,
+        "direcao": "(0.588928, 0.0, -0.808185)",
+        "forca": 1.16902085665988,
+        "rajada": 0.822266909236352,
+        "velocidade_ms": 8.76765642494908
+      },
+      "vento_queda_ms": [
+        1.24,
+        -1.7
+      ]
+    },
+    {
+      "aglomerado": 0.107,
+      "congelamento": 0.071,
+      "estado": "nevasca",
+      "fator_f": 0.1,
+      "molhado": 0.0,
+      "ms_desde_inicio": 12053,
+      "neve": 0.111,
+      "quadro": "dinamica_002.png",
+      "rajada_nevasca": 0.32,
+      "vento_mundo": {
+        "azimute_de": -139.056331969296,
+        "azimute_para": 40.943668030704,
+        "direcao": "(0.655317, 0.0, -0.755354)",
+        "forca": 0.858357696072894,
+        "rajada": 0.450536827769895,
+        "velocidade_ms": 6.43768272054671
+      },
+      "vento_queda_ms": [
+        1.95,
+        -1.45
+      ]
+    },
+    {
+      "aglomerado": 0.15,
+      "congelamento": 0.143,
+      "estado": "nevasca",
+      "fator_f": 0.177,
+      "molhado": 0.0,
+      "ms_desde_inicio": 17056,
+      "neve": 0.222,
+      "quadro": "dinamica_003.png",
+      "rajada_nevasca": 0.29,
+      "vento_mundo": {
+        "azimute_de": -132.682500590922,
+        "azimute_para": 47.3174994090779,
+        "direcao": "(0.735122, 0.0, -0.677935)",
+        "forca": 1.0752811724371,
+        "rajada": 0.703663563753066,
+        "velocidade_ms": 8.06460879327826
+      },
+      "vento_queda_ms": [
+        1.97,
+        -2.13
+      ]
+    },
+    {
+      "aglomerado": 0.264,
+      "congelamento": 0.214,
+      "estado": "nevasca",
+      "fator_f": 0.279,
+      "molhado": 0.0,
+      "ms_desde_inicio": 22068,
+      "neve": 0.333,
+      "quadro": "dinamica_004.png",
+      "rajada_nevasca": 0.0,
+      "vento_mundo": {
+        "azimute_de": -135.122804912977,
+        "azimute_para": 44.877195087023,
+        "direcao": "(0.70559, 0.0, -0.708621)",
+        "forca": 0.685608707170848,
+        "rajada": 0.240012994278007,
+        "velocidade_ms": 5.14206530378136
+      },
+      "vento_queda_ms": [
+        0.41,
+        -0.71
+      ]
+    },
+    {
+      "aglomerado": 0.341,
+      "congelamento": 0.285,
+      "estado": "nevasca",
+      "fator_f": 0.368,
+      "molhado": 0.0,
+      "ms_desde_inicio": 27070,
+      "neve": 0.444,
+      "quadro": "dinamica_005.png",
+      "rajada_nevasca": 0.0,
+      "vento_mundo": {
+        "azimute_de": -141.208649037357,
+        "azimute_para": 38.7913509626432,
+        "direcao": "(0.626486, 0.0, -0.779433)",
+        "forca": 0.785874757389932,
+        "rajada": 0.35999933424084,
+        "velocidade_ms": 5.89406068042449
+      },
+      "vento_queda_ms": [
+        0.47,
+        -0.82
+      ]
+    },
+    {
+      "aglomerado": 0.434,
+      "congelamento": 0.356,
+      "estado": "nevasca",
+      "fator_f": 0.463,
+      "molhado": 0.0,
+      "ms_desde_inicio": 32079,
+      "neve": 0.554,
+      "quadro": "dinamica_006.png",
+      "rajada_nevasca": 1.0,
+      "vento_mundo": {
+        "azimute_de": -135.375777176868,
+        "azimute_para": 44.6242228231322,
+        "direcao": "(0.702454, 0.0, -0.711729)",
+        "forca": 0.91263776312006,
+        "rajada": 0.5215735904619,
+        "velocidade_ms": 6.84478322340045
+      },
+      "vento_queda_ms": [
+        4.9,
+        -2.99
+      ]
+    },
+    {
+      "aglomerado": 0.498,
+      "congelamento": 0.428,
+      "estado": "nevasca",
+      "fator_f": 0.547,
+      "molhado": 0.0,
+      "ms_desde_inicio": 37080,
+      "neve": 0.665,
+      "quadro": "dinamica_007.png",
+      "rajada_nevasca": 0.0,
+      "vento_mundo": {
+        "azimute_de": -138.294524146428,
+        "azimute_para": 41.7054758535715,
+        "direcao": "(0.665302, 0.0, -0.746575)",
+        "forca": 0.867774036847668,
+        "rajada": 0.464144646248474,
+        "velocidade_ms": 6.50830527635751
+      },
+      "vento_queda_ms": [
+        0.87,
+        -0.57
+      ]
+    },
+    {
+      "aglomerado": 0.59,
+      "congelamento": 0.499,
+      "estado": "nevasca",
+      "fator_f": 0.642,
+      "molhado": 0.0,
+      "ms_desde_inicio": 42075,
+      "neve": 0.776,
+      "quadro": "dinamica_008.png",
+      "rajada_nevasca": 0.66,
+      "vento_mundo": {
+        "azimute_de": -139.86849705416,
+        "azimute_para": 40.1315029458402,
+        "direcao": "(0.644544, 0.0, -0.764567)",
+        "forca": 0.65880316397209,
+        "rajada": 0.206954228425716,
+        "velocidade_ms": 4.94102372979068
+      },
+      "vento_queda_ms": [
+        2.3,
+        -1.94
+      ]
+    },
+    {
+      "aglomerado": 0.678,
+      "congelamento": 0.57,
+      "estado": "nevasca",
+      "fator_f": 0.735,
+      "molhado": 0.0,
+      "ms_desde_inicio": 47062,
+      "neve": 0.887,
+      "quadro": "dinamica_009.png",
+      "rajada_nevasca": 0.39,
+      "vento_mundo": {
+        "azimute_de": -129.703144232899,
+        "azimute_para": 50.2968557671007,
+        "direcao": "(0.769364, 0.0, -0.63881)",
+        "forca": 1.15637314938645,
+        "rajada": 0.802939380483153,
+        "velocidade_ms": 8.6727986203984
+      },
+      "vento_queda_ms": [
+        2.13,
+        -3.02
+      ]
+    },
+    {
+      "aglomerado": 0.738,
+      "congelamento": 0.641,
+      "estado": "nevasca",
+      "fator_f": 0.818,
+      "molhado": 0.0,
+      "ms_desde_inicio": 52077,
+      "neve": 0.998,
+      "quadro": "dinamica_010.png",
+      "rajada_nevasca": 0.67,
+      "vento_mundo": {
+        "azimute_de": -127.910023881982,
+        "azimute_para": 52.0899761180183,
+        "direcao": "(0.788977, 0.0, -0.614423)",
+        "forca": 0.968323280141406,
+        "rajada": 0.583275432087035,
+        "velocidade_ms": 7.26242460106054
+      },
+      "vento_queda_ms": [
+        3.14,
+        -3.18
+      ]
+    },
+    {
+      "aglomerado": 0.822,
+      "congelamento": 0.713,
+      "estado": "nevasca",
+      "fator_f": 0.866,
+      "molhado": 0.0,
+      "ms_desde_inicio": 57069,
+      "neve": 1.0,
+      "quadro": "dinamica_011.png",
+      "rajada_nevasca": 0.0,
+      "vento_mundo": {
+        "azimute_de": -134.16315586401,
+        "azimute_para": 45.8368441359905,
+        "direcao": "(0.717359, 0.0, -0.696704)",
+        "forca": 0.727774265829019,
+        "rajada": 0.293106709077544,
+        "velocidade_ms": 5.45830699371764
+      },
+      "vento_queda_ms": [
+        0.63,
+        -0.61
+      ]
+    },
+    {
+      "aglomerado": 0.928,
+      "congelamento": 0.784,
+      "estado": "nevasca",
+      "fator_f": 0.921,
+      "molhado": 0.0,
+      "ms_desde_inicio": 62068,
+      "neve": 1.0,
+      "quadro": "dinamica_012.png",
+      "rajada_nevasca": 0.08,
+      "vento_mundo": {
+        "azimute_de": -133.339069084098,
+        "azimute_para": 46.6609309159025,
+        "direcao": "(0.727305, 0.0, -0.686314)",
+        "forca": 1.30130121295828,
+        "rajada": 0.978237498428849,
+        "velocidade_ms": 9.75975909718709
+      },
+      "vento_queda_ms": [
+        1.83,
+        -0.99
+      ]
+    },
+    {
+      "aglomerado": 1.0,
+      "congelamento": 0.855,
+      "estado": "nevasca",
+      "fator_f": 0.964,
+      "molhado": 0.0,
+      "ms_desde_inicio": 67078,
+      "neve": 1.0,
+      "quadro": "dinamica_013.png",
+      "rajada_nevasca": 0.98,
+      "vento_mundo": {
+        "azimute_de": -134.178506707115,
+        "azimute_para": 45.8214932928849,
+        "direcao": "(0.717172, 0.0, -0.696896)",
+        "forca": 1.2141157737269,
+        "rajada": 0.875710816168484,
+        "velocidade_ms": 9.10586830295177
+      },
+      "vento_queda_ms": [
+        5.42,
+        -5.27
+      ]
+    },
+    {
+      "aglomerado": 1.0,
+      "congelamento": 0.927,
+      "estado": "nevasca",
+      "fator_f": 0.982,
+      "molhado": 0.0,
+      "ms_desde_inicio": 72077,
+      "neve": 1.0,
+      "quadro": "dinamica_014.png",
+      "rajada_nevasca": 0.0,
+      "vento_mundo": {
+        "azimute_de": -135.769307060213,
+        "azimute_para": 44.2306929397869,
+        "direcao": "(0.697549, 0.0, -0.716537)",
+        "forca": 0.988399165303709,
+        "rajada": 0.607123722290376,
+        "velocidade_ms": 7.41299373977782
+      },
+      "vento_queda_ms": [
+        0.75,
+        -0.91
+      ]
+    },
+    {
+      "aglomerado": 1.0,
+      "congelamento": 0.998,
+      "estado": "nevasca",
+      "fator_f": 0.999,
+      "molhado": 0.0,
+      "ms_desde_inicio": 77077,
+      "neve": 1.0,
+      "quadro": "dinamica_015.png",
+      "rajada_nevasca": 0.0,
+      "vento_mundo": {
+        "azimute_de": -137.867888528913,
+        "azimute_para": 42.1321114710874,
+        "direcao": "(0.670842, 0.0, -0.7416)",
+        "forca": 0.792591418530856,
+        "rajada": 0.372065642642285,
+        "velocidade_ms": 5.94443563898142
+      },
+      "vento_queda_ms": [
+        0.43,
+        -0.85
+      ]
+    },
+    {
+      "aglomerado": 1.0,
+      "congelamento": 1.0,
+      "estado": "nevasca",
+      "fator_f": 1.0,
+      "molhado": 0.0,
+      "ms_desde_inicio": 82075,
+      "neve": 1.0,
+      "quadro": "dinamica_016.png",
+      "rajada_nevasca": 0.46,
+      "vento_mundo": {
+        "azimute_de": -141.428066841109,
+        "azimute_para": 38.5719331588912,
+        "direcao": "(0.623497, 0.0, -0.781826)",
+        "forca": 1.15222802985014,
+        "rajada": 0.797822879766084,
+        "velocidade_ms": 8.64171022387606
+      },
+      "vento_queda_ms": [
+        2.43,
+        -3.29
+      ]
+    },
+    {
+      "aglomerado": 1.0,
+      "congelamento": 1.0,
+      "estado": "nevasca",
+      "fator_f": 1.0,
+      "molhado": 0.0,
+      "ms_desde_inicio": 87080,
+      "neve": 1.0,
+      "quadro": "dinamica_017.png",
+      "rajada_nevasca": 0.17,
+      "vento_mundo": {
+        "azimute_de": -138.250303064683,
+        "azimute_para": 41.7496969353168,
+        "direcao": "(0.665878, 0.0, -0.746061)",
+        "forca": 0.931637122914325,
+        "rajada": 0.531112973952868,
+        "velocidade_ms": 6.98727842185744
+      },
+      "vento_queda_ms": [
+        1.43,
+        -1.26
+      ]
+    },
+    {
+      "aglomerado": 1.0,
+      "congelamento": 1.0,
+      "estado": "nevasca",
+      "fator_f": 1.0,
+      "molhado": 0.0,
+      "ms_desde_inicio": 92064,
+      "neve": 1.0,
+      "quadro": "dinamica_018.png",
+      "rajada_nevasca": 0.0,
+      "vento_mundo": {
+        "azimute_de": -137.691749442965,
+        "azimute_para": 42.3082505570352,
+        "direcao": "(0.673119, 0.0, -0.739534)",
+        "forca": 0.75379507519589,
+        "rajada": 0.320716032827425,
+        "velocidade_ms": 5.65346306396918
+      },
+      "vento_queda_ms": [
+        0.76,
+        -0.49
+      ]
+    },
+    {
+      "aglomerado": 1.0,
+      "congelamento": 1.0,
+      "estado": "nevasca",
+      "fator_f": 1.0,
+      "molhado": 0.0,
+      "ms_desde_inicio": 97075,
+      "neve": 1.0,
+      "quadro": "dinamica_019.png",
+      "rajada_nevasca": 0.72,
+      "vento_mundo": {
+        "azimute_de": -140.214459242401,
+        "azimute_para": 39.7855407575992,
+        "direcao": "(0.639916, 0.0, -0.768445)",
+        "forca": 0.911494203038889,
+        "rajada": 0.507245977068489,
+        "velocidade_ms": 6.83620652279166
+      },
+      "vento_queda_ms": [
+        2.51,
+        -3.64
+      ]
+    },
+    {
+      "aglomerado": 1.0,
+      "congelamento": 1.0,
+      "estado": "nevasca",
+      "fator_f": 1.0,
+      "molhado": 0.0,
+      "ms_desde_inicio": 102063,
+      "neve": 1.0,
+      "quadro": "dinamica_020.png",
+      "rajada_nevasca": 0.96,
+      "vento_mundo": {
+        "azimute_de": -138.205743202256,
+        "azimute_para": 41.7942567977443,
+        "direcao": "(0.666458, 0.0, -0.745543)",
+        "forca": 1.21775552389271,
+        "rajada": 0.883593395285932,
+        "velocidade_ms": 9.13316642919534
+      },
+      "vento_queda_ms": [
+        4.89,
+        -5.58
+      ]
+    },
+    {
+      "aglomerado": 1.0,
+      "congelamento": 1.0,
+      "estado": "nevasca",
+      "fator_f": 1.0,
+      "molhado": 0.0,
+      "ms_desde_inicio": 107066,
+      "neve": 1.0,
+      "quadro": "dinamica_021.png",
+      "rajada_nevasca": 0.61,
+      "vento_mundo": {
+        "azimute_de": -145.903782138369,
+        "azimute_para": 34.0962178616309,
+        "direcao": "(0.560584, 0.0, -0.828097)",
+        "forca": 1.08027970481798,
+        "rajada": 0.7142285599897,
+        "velocidade_ms": 8.10209778613483
+      },
+      "vento_queda_ms": [
+        1.08,
+        -4.54
+      ]
+    },
+    {
+      "aglomerado": 1.0,
+      "congelamento": 1.0,
+      "estado": "nevasca",
+      "fator_f": 1.0,
+      "molhado": 0.0,
+      "ms_desde_inicio": 112073,
+      "neve": 1.0,
+      "quadro": "dinamica_022.png",
+      "rajada_nevasca": 0.0,
+      "vento_mundo": {
+        "azimute_de": -139.071661476611,
+        "azimute_para": 40.9283385233891,
+        "direcao": "(0.655115, 0.0, -0.75553)",
+        "forca": 0.89265355648564,
+        "rajada": 0.487491947792978,
+        "velocidade_ms": 6.6949016736423
+      },
+      "vento_queda_ms": [
+        0.72,
+        -0.8
+      ]
+    },
+    {
+      "aglomerado": 1.0,
+      "congelamento": 1.0,
+      "estado": "chuva",
+      "fator_f": 1.0,
+      "molhado": 0.0,
+      "ms_desde_inicio": 117082,
+      "neve": 1.0,
+      "quadro": "dinamica_023.png",
+      "rajada_nevasca": 0.53,
+      "vento_mundo": {
+        "azimute_de": -140.769436112405,
+        "azimute_para": 39.2305638875947,
+        "direcao": "(0.632443, 0.0, -0.774607)",
+        "forca": 0.971035912157158,
+        "rajada": 0.58276403651515,
+        "velocidade_ms": 7.28276934117869
+      },
+      "vento_queda_ms": [
+        4.61,
+        -5.64
+      ]
+    },
+    {
+      "aglomerado": 0.835,
+      "congelamento": 0.794,
+      "estado": "chuva",
+      "fator_f": 0.825,
+      "molhado": 0.313,
+      "ms_desde_inicio": 122080,
+      "neve": 0.835,
+      "quadro": "dinamica_024.png",
+      "rajada_nevasca": 0.09,
+      "vento_mundo": {
+        "azimute_de": -139.478656924463,
+        "azimute_para": 40.5213430755366,
+        "direcao": "(0.649731, 0.0, -0.760164)",
+        "forca": 0.651277617241752,
+        "rajada": 0.203805508080259,
+        "velocidade_ms": 4.88458212931314
+      },
+      "vento_queda_ms": [
+        3.17,
+        -3.71
+      ]
+    },
+    {
+      "aglomerado": 0.669,
+      "congelamento": 0.587,
+      "estado": "chuva",
+      "fator_f": 0.649,
+      "molhado": 0.628,
+      "ms_desde_inicio": 127077,
+      "neve": 0.669,
+      "quadro": "dinamica_025.png",
+      "rajada_nevasca": 0.0,
+      "vento_mundo": {
+        "azimute_de": -139.930872197532,
+        "azimute_para": 40.0691278024679,
+        "direcao": "(0.643711, 0.0, -0.765268)",
+        "forca": 0.893306506577984,
+        "rajada": 0.486262847498178,
+        "velocidade_ms": 6.69979879933488
+      },
+      "vento_queda_ms": [
+        4.31,
+        -5.13
+      ]
+    },
+    {
+      "aglomerado": 0.503,
+      "congelamento": 0.379,
+      "estado": "chuva",
+      "fator_f": 0.472,
+      "molhado": 0.944,
+      "ms_desde_inicio": 132060,
+      "neve": 0.503,
+      "quadro": "dinamica_026.png",
+      "rajada_nevasca": 0.0,
+      "vento_mundo": {
+        "azimute_de": -140.692733473385,
+        "azimute_para": 39.3072665266151,
+        "direcao": "(0.633479, 0.0, -0.77376)",
+        "forca": 1.25419395694234,
+        "rajada": 0.922685311825968,
+        "velocidade_ms": 9.40645467706755
+      },
+      "vento_queda_ms": [
+        5.96,
+        -7.28
+      ]
+    },
+    {
+      "aglomerado": 0.337,
+      "congelamento": 0.171,
+      "estado": "chuva",
+      "fator_f": 0.295,
+      "molhado": 1.0,
+      "ms_desde_inicio": 137071,
+      "neve": 0.337,
+      "quadro": "dinamica_027.png",
+      "rajada_nevasca": 0.9,
+      "vento_mundo": {
+        "azimute_de": -135.458992148809,
+        "azimute_para": 44.5410078511914,
+        "direcao": "(0.70142, 0.0, -0.712749)",
+        "forca": 0.664969862228371,
+        "rajada": 0.220280631456551,
+        "velocidade_ms": 4.98727396671278
+      },
+      "vento_queda_ms": [
+        3.5,
+        -3.55
+      ]
+    },
+    {
+      "aglomerado": 0.17,
+      "congelamento": 0.0,
+      "estado": "chuva",
+      "fator_f": 0.128,
+      "molhado": 1.0,
+      "ms_desde_inicio": 142064,
+      "neve": 0.17,
+      "quadro": "dinamica_028.png",
+      "rajada_nevasca": 0.21,
+      "vento_mundo": {
+        "azimute_de": -139.057680282544,
+        "azimute_para": 40.9423197174557,
+        "direcao": "(0.655299, 0.0, -0.75537)",
+        "forca": 0.66795149407558,
+        "rajada": 0.219068767698945,
+        "velocidade_ms": 5.00963620556685
+      },
+      "vento_queda_ms": [
+        3.28,
+        -3.78
+      ]
+    },
+    {
+      "aglomerado": 0.004,
+      "congelamento": 0.0,
+      "estado": "chuva",
+      "fator_f": 0.003,
+      "molhado": 1.0,
+      "ms_desde_inicio": 147047,
+      "neve": 0.004,
+      "quadro": "dinamica_029.png",
+      "rajada_nevasca": 0.0,
+      "vento_mundo": {
+        "azimute_de": -141.938915533185,
+        "azimute_para": 38.0610844668151,
+        "direcao": "(0.616501, 0.0, -0.787354)",
+        "forca": 0.64840937910483,
+        "rajada": 0.196410924968396,
+        "velocidade_ms": 4.86307034328622
+      },
+      "vento_queda_ms": [
+        3.0,
+        -3.83
+      ]
+    },
+    {
+      "aglomerado": 0.0,
+      "congelamento": 0.0,
+      "estado": "chuva",
+      "fator_f": 0.0,
+      "molhado": 1.0,
+      "ms_desde_inicio": 152046,
+      "neve": 0.0,
+      "quadro": "dinamica_030.png",
+      "rajada_nevasca": 0.77,
+      "vento_mundo": {
+        "azimute_de": -140.975957011701,
+        "azimute_para": 39.0240429882988,
+        "direcao": "(0.629646, 0.0, -0.776882)",
+        "forca": 0.91438803818904,
+        "rajada": 0.511510175906361,
+        "velocidade_ms": 6.8579102864178
+      },
+      "vento_queda_ms": [
+        4.32,
+        -5.33
+      ]
+    },
+    {
+      "aglomerado": 0.0,
+      "congelamento": 0.0,
+      "estado": "chuva",
+      "fator_f": 0.0,
+      "molhado": 1.0,
+      "ms_desde_inicio": 157058,
+      "neve": 0.0,
+      "quadro": "dinamica_031.png",
+      "rajada_nevasca": 0.05,
+      "vento_mundo": {
+        "azimute_de": -137.01827450785,
+        "azimute_para": 42.9817254921504,
+        "direcao": "(0.681765, 0.0, -0.731571)",
+        "forca": 1.12076053991005,
+        "rajada": 0.768150011449001,
+        "velocidade_ms": 8.40570404932538
+      },
+      "vento_queda_ms": [
+        5.73,
+        -6.15
+      ]
+    },
+    {
+      "aglomerado": 0.0,
+      "congelamento": 0.0,
+      "estado": "chuva",
+      "fator_f": 0.0,
+      "molhado": 1.0,
+      "ms_desde_inicio": 162059,
+      "neve": 0.0,
+      "quadro": "dinamica_032.png",
+      "rajada_nevasca": 0.51,
+      "vento_mundo": {
+        "azimute_de": -138.112858168138,
+        "azimute_para": 41.8871418318615,
+        "direcao": "(0.667665, 0.0, -0.744461)",
+        "forca": 1.21507286941834,
+        "rajada": 0.872931855130761,
+        "velocidade_ms": 9.11304652063754
+      },
+      "vento_queda_ms": [
+        6.08,
+        -6.78
+      ]
+    },
+    {
+      "aglomerado": 0.0,
+      "congelamento": 0.0,
+      "estado": "limpo",
+      "fator_f": 0.0,
+      "molhado": 1.0,
+      "ms_desde_inicio": 167061,
+      "neve": 0.0,
+      "quadro": "dinamica_033.png",
+      "rajada_nevasca": 0.0,
+      "vento_mundo": {
+        "azimute_de": -141.468790911507,
+        "azimute_para": 38.5312090884933,
+        "direcao": "(0.622941, 0.0, -0.782269)",
+        "forca": 0.628834575710735,
+        "rajada": 0.17517669826879,
+        "velocidade_ms": 4.71625931783051
+      },
+      "vento_queda_ms": [
+        2.94,
+        -3.69
+      ]
+    },
+    {
+      "aglomerado": 0.0,
+      "congelamento": 0.0,
+      "estado": "limpo",
+      "fator_f": 0.0,
+      "molhado": 0.875,
+      "ms_desde_inicio": 172058,
+      "neve": 0.0,
+      "quadro": "dinamica_034.png",
+      "rajada_nevasca": 0.85,
+      "vento_mundo": {
+        "azimute_de": -140.690133591565,
+        "azimute_para": 39.3098664084346,
+        "direcao": "(0.633514, 0.0, -0.773731)",
+        "forca": 0.843797584231441,
+        "rajada": 0.424208900142126,
+        "velocidade_ms": 6.32848188173581
+      },
+      "vento_queda_ms": [
+        4.01,
+        -4.9
+      ]
+    },
+    {
+      "aglomerado": 0.0,
+      "congelamento": 0.0,
+      "estado": "limpo",
+      "fator_f": 0.0,
+      "molhado": 0.751,
+      "ms_desde_inicio": 177064,
+      "neve": 0.0,
+      "quadro": "dinamica_035.png",
+      "rajada_nevasca": 0.0,
+      "vento_mundo": {
+        "azimute_de": -139.196372133394,
+        "azimute_para": 40.8036278666058,
+        "direcao": "(0.653469, 0.0, -0.756954)",
+        "forca": 0.703168039362602,
+        "rajada": 0.262769968672503,
+        "velocidade_ms": 5.27376029521951
+      },
+      "vento_queda_ms": [
+        3.45,
+        -3.99
+      ]
+    },
+    {
+      "aglomerado": 0.0,
+      "congelamento": 0.0,
+      "estado": "limpo",
+      "fator_f": 0.0,
+      "molhado": 0.626,
+      "ms_desde_inicio": 182060,
+      "neve": 0.0,
+      "quadro": "dinamica_036.png",
+      "rajada_nevasca": 0.0,
+      "vento_mundo": {
+        "azimute_de": -136.674885419033,
+        "azimute_para": 43.3251145809674,
+        "direcao": "(0.686137, 0.0, -0.727472)",
+        "forca": 0.868227641837019,
+        "rajada": 0.464712058856279,
+        "velocidade_ms": 6.51170731377764
+      },
+      "vento_queda_ms": [
+        4.47,
+        -4.74
+      ]
+    },
+    {
+      "aglomerado": 0.0,
+      "congelamento": 0.0,
+      "estado": "limpo",
+      "fator_f": 0.0,
+      "molhado": 0.501,
+      "ms_desde_inicio": 187046,
+      "neve": 0.0,
+      "quadro": "dinamica_037.png",
+      "rajada_nevasca": 0.72,
+      "vento_mundo": {
+        "azimute_de": -132.142392710391,
+        "azimute_para": 47.8576072896089,
+        "direcao": "(0.74148, 0.0, -0.670975)",
+        "forca": 1.14093939642429,
+        "rajada": 0.787207704702539,
+        "velocidade_ms": 8.55704547318216
+      },
+      "vento_queda_ms": [
+        6.34,
+        -5.74
+      ]
+    },
+    {
+      "aglomerado": 0.0,
+      "congelamento": 0.0,
+      "estado": "limpo",
+      "fator_f": 0.0,
+      "molhado": 0.376,
+      "ms_desde_inicio": 192060,
+      "neve": 0.0,
+      "quadro": "dinamica_038.png",
+      "rajada_nevasca": 0.02,
+      "vento_mundo": {
+        "azimute_de": -131.799755661766,
+        "azimute_para": 48.2002443382343,
+        "direcao": "(0.745479, 0.0, -0.666529)",
+        "forca": 1.20229250580988,
+        "rajada": 0.85905287142524,
+        "velocidade_ms": 9.01719379357413
+      },
+      "vento_queda_ms": [
+        6.72,
+        -6.01
+      ]
+    },
+    {
+      "aglomerado": 0.0,
+      "congelamento": 0.0,
+      "estado": "limpo",
+      "fator_f": 0.0,
+      "molhado": 0.251,
+      "ms_desde_inicio": 197061,
+      "neve": 0.0,
+      "quadro": "dinamica_039.png",
+      "rajada_nevasca": 0.27,
+      "vento_mundo": {
+        "azimute_de": -138.433985498032,
+        "azimute_para": 41.5660145019683,
+        "direcao": "(0.663483, 0.0, -0.748192)",
+        "forca": 0.7203036540437,
+        "rajada": 0.286353242640253,
+        "velocidade_ms": 5.40227740532775
+      },
+      "vento_queda_ms": [
+        3.58,
+        -4.04
+      ]
+    },
+    {
+      "aglomerado": 0.0,
+      "congelamento": 0.0,
+      "estado": "limpo",
+      "fator_f": 0.0,
+      "molhado": 0.127,
+      "ms_desde_inicio": 202049,
+      "neve": 0.0,
+      "quadro": "dinamica_040.png",
+      "rajada_nevasca": 0.0,
+      "vento_mundo": {
+        "azimute_de": -137.785791939887,
+        "azimute_para": 42.2142080601126,
+        "direcao": "(0.671904, 0.0, -0.740638)",
+        "forca": 1.00342197104079,
+        "rajada": 0.620072176949779,
+        "velocidade_ms": 7.52566478280592
+      },
+      "vento_queda_ms": [
+        5.06,
+        -5.57
+      ]
+    },
+    {
+      "aglomerado": 0.0,
+      "congelamento": 0.0,
+      "estado": "limpo",
+      "fator_f": 0.0,
+      "molhado": 0.002,
+      "ms_desde_inicio": 207047,
+      "neve": 0.0,
+      "quadro": "dinamica_041.png",
+      "rajada_nevasca": 0.8,
+      "vento_mundo": {
+        "azimute_de": -135.557229001433,
+        "azimute_para": 44.4427709985669,
+        "direcao": "(0.700197, 0.0, -0.71395)",
+        "forca": 0.760965220698489,
+        "rajada": 0.330235818669093,
+        "velocidade_ms": 5.70723915523867
+      },
+      "vento_queda_ms": [
+        4.0,
+        -4.07
+      ]
+    },
+    {
+      "aglomerado": 0.0,
+      "congelamento": 0.0,
+      "estado": "limpo",
+      "fator_f": 0.0,
+      "molhado": 0.0,
+      "ms_desde_inicio": 212059,
+      "neve": 0.0,
+      "quadro": "dinamica_042.png",
+      "rajada_nevasca": 0.86,
+      "vento_mundo": {
+        "azimute_de": -129.97400920669,
+        "azimute_para": 50.0259907933099,
+        "direcao": "(0.766336, 0.0, -0.64244)",
+        "forca": 0.887014538348533,
+        "rajada": 0.484551753165376,
+        "velocidade_ms": 6.65260903761399
+      },
+      "vento_queda_ms": [
+        5.1,
+        -4.27
+      ]
+    }
+  ],
+  "duracao_parede_s": 215.001,
+  "gpu": "NVIDIA GeForce RTX 4060",
+  "guiao_s": [
+    [
+      0.0,
+      "limpo"
+    ],
+    [
+      5.0,
+      "nevasca"
+    ],
+    [
+      115.0,
+      "chuva"
+    ],
+    [
+      165.0,
+      "limpo"
+    ],
+    [
+      215.0,
+      ""
+    ]
+  ],
+  "janela": [
+    1920,
+    1398
+  ],
+  "lagoa_pixeis": [
+    [
+      97,
+      743
+    ],
+    [
+      111,
+      740
+    ],
+    [
+      125,
+      736
+    ],
+    [
+      138,
+      733
+    ],
+    [
+      152,
+      730
+    ],
+    [
+      165,
+      726
+    ],
+    [
+      178,
+      723
+    ],
+    [
+      191,
+      720
+    ],
+    [
+      56,
+      748
+    ],
+    [
+      71,
+      744
+    ],
+    [
+      85,
+      741
+    ],
+    [
+      99,
+      737
+    ],
+    [
+      112,
+      734
+    ],
+    [
+      126,
+      731
+    ],
+    [
+      139,
+      728
+    ],
+    [
+      153,
+      724
+    ],
+    [
+      166,
+      721
+    ],
+    [
+      179,
+      718
+    ],
+    [
+      192,
+      715
+    ],
+    [
+      204,
+      712
+    ],
+    [
+      217,
+      709
+    ],
+    [
+      30,
+      749
+    ],
+    [
+      44,
+      746
+    ],
+    [
+      58,
+      742
+    ],
+    [
+      72,
+      739
+    ],
+    [
+      86,
+      735
+    ],
+    [
+      100,
+      732
+    ],
+    [
+      114,
+      729
+    ],
+    [
+      127,
+      726
+    ],
+    [
+      140,
+      722
+    ],
+    [
+      154,
+      719
+    ],
+    [
+      167,
+      716
+    ],
+    [
+      180,
+      713
+    ],
+    [
+      192,
+      710
+    ],
+    [
+      205,
+      707
+    ],
+    [
+      218,
+      704
+    ],
+    [
+      230,
+      701
+    ],
+    [
+      3,
+      750
+    ],
+    [
+      18,
+      747
+    ],
+    [
+      32,
+      744
+    ],
+    [
+      46,
+      740
+    ],
+    [
+      60,
+      737
+    ],
+    [
+      74,
+      734
+    ],
+    [
+      88,
+      730
+    ],
+    [
+      102,
+      727
+    ],
+    [
+      115,
+      724
+    ],
+    [
+      128,
+      721
+    ],
+    [
+      142,
+      717
+    ],
+    [
+      155,
+      714
+    ],
+    [
+      168,
+      711
+    ],
+    [
+      180,
+      708
+    ],
+    [
+      193,
+      705
+    ],
+    [
+      206,
+      702
+    ],
+    [
+      218,
+      699
+    ],
+    [
+      230,
+      696
+    ],
+    [
+      243,
+      693
+    ],
+    [
+      255,
+      690
+    ],
+    [
+      5,
+      745
+    ],
+    [
+      20,
+      742
+    ],
+    [
+      34,
+      738
+    ],
+    [
+      48,
+      735
+    ],
+    [
+      62,
+      732
+    ],
+    [
+      76,
+      728
+    ],
+    [
+      90,
+      725
+    ],
+    [
+      103,
+      722
+    ],
+    [
+      116,
+      719
+    ],
+    [
+      130,
+      716
+    ],
+    [
+      143,
+      712
+    ],
+    [
+      156,
+      709
+    ],
+    [
+      169,
+      706
+    ],
+    [
+      181,
+      703
+    ],
+    [
+      194,
+      700
+    ],
+    [
+      206,
+      697
+    ],
+    [
+      219,
+      694
+    ],
+    [
+      231,
+      692
+    ],
+    [
+      243,
+      689
+    ],
+    [
+      255,
+      686
+    ],
+    [
+      267,
+      683
+    ],
+    [
+      8,
+      740
+    ],
+    [
+      22,
+      736
+    ],
+    [
+      36,
+      733
+    ],
+    [
+      50,
+      730
+    ],
+    [
+      64,
+      726
+    ],
+    [
+      78,
+      723
+    ],
+    [
+      91,
+      720
+    ],
+    [
+      104,
+      717
+    ],
+    [
+      118,
+      714
+    ],
+    [
+      131,
+      711
+    ],
+    [
+      144,
+      708
+    ],
+    [
+      157,
+      704
+    ],
+    [
+      169,
+      701
+    ],
+    [
+      182,
+      699
+    ],
+    [
+      195,
+      696
+    ],
+    [
+      207,
+      693
+    ],
+    [
+      219,
+      690
+    ],
+    [
+      231,
+      687
+    ],
+    [
+      243,
+      684
+    ],
+    [
+      255,
+      681
+    ],
+    [
+      267,
+      679
+    ],
+    [
+      279,
+      676
+    ],
+    [
+      10,
+      734
+    ],
+    [
+      24,
+      731
+    ],
+    [
+      38,
+      728
+    ],
+    [
+      52,
+      724
+    ],
+    [
+      66,
+      721
+    ],
+    [
+      79,
+      718
+    ],
+    [
+      93,
+      715
+    ],
+    [
+      106,
+      712
+    ],
+    [
+      119,
+      709
+    ],
+    [
+      132,
+      706
+    ],
+    [
+      145,
+      703
+    ],
+    [
+      158,
+      700
+    ],
+    [
+      170,
+      697
+    ],
+    [
+      183,
+      694
+    ],
+    [
+      195,
+      691
+    ],
+    [
+      207,
+      688
+    ],
+    [
+      220,
+      685
+    ],
+    [
+      232,
+      682
+    ],
+    [
+      243,
+      680
+    ],
+    [
+      255,
+      677
+    ],
+    [
+      267,
+      674
+    ],
+    [
+      279,
+      672
+    ],
+    [
+      290,
+      669
+    ],
+    [
+      301,
+      666
+    ],
+    [
+      12,
+      729
+    ],
+    [
+      26,
+      726
+    ],
+    [
+      40,
+      722
+    ],
+    [
+      54,
+      719
+    ],
+    [
+      67,
+      716
+    ],
+    [
+      81,
+      713
+    ],
+    [
+      94,
+      710
+    ],
+    [
+      107,
+      707
+    ],
+    [
+      120,
+      704
+    ],
+    [
+      133,
+      701
+    ],
+    [
+      146,
+      698
+    ],
+    [
+      159,
+      695
+    ],
+    [
+      171,
+      692
+    ],
+    [
+      184,
+      689
+    ],
+    [
+      196,
+      686
+    ],
+    [
+      208,
+      684
+    ],
+    [
+      220,
+      681
+    ],
+    [
+      232,
+      678
+    ],
+    [
+      244,
+      675
+    ],
+    [
+      255,
+      673
+    ],
+    [
+      267,
+      670
+    ],
+    [
+      279,
+      667
+    ],
+    [
+      290,
+      665
+    ],
+    [
+      301,
+      662
+    ],
+    [
+      312,
+      659
+    ],
+    [
+      1,
+      727
+    ],
+    [
+      15,
+      724
+    ],
+    [
+      28,
+      721
+    ],
+    [
+      42,
+      717
+    ],
+    [
+      56,
+      714
+    ],
+    [
+      69,
+      711
+    ],
+    [
+      83,
+      708
+    ],
+    [
+      96,
+      705
+    ],
+    [
+      109,
+      702
+    ],
+    [
+      122,
+      699
+    ],
+    [
+      134,
+      696
+    ],
+    [
+      147,
+      693
+    ],
+    [
+      160,
+      690
+    ],
+    [
+      172,
+      688
+    ],
+    [
+      184,
+      685
+    ],
+    [
+      197,
+      682
+    ],
+    [
+      209,
+      679
+    ],
+    [
+      221,
+      676
+    ],
+    [
+      232,
+      674
+    ],
+    [
+      244,
+      671
+    ],
+    [
+      256,
+      668
+    ],
+    [
+      267,
+      666
+    ],
+    [
+      279,
+      663
+    ],
+    [
+      290,
+      660
+    ],
+    [
+      301,
+      658
+    ],
+    [
+      312,
+      655
+    ],
+    [
+      323,
+      653
+    ],
+    [
+      3,
+      722
+    ],
+    [
+      17,
+      719
+    ],
+    [
+      31,
+      716
+    ],
+    [
+      44,
+      712
+    ],
+    [
+      58,
+      709
+    ],
+    [
+      71,
+      706
+    ],
+    [
+      84,
+      703
+    ],
+    [
+      97,
+      700
+    ],
+    [
+      110,
+      697
+    ],
+    [
+      123,
+      694
+    ],
+    [
+      136,
+      692
+    ],
+    [
+      148,
+      689
+    ],
+    [
+      161,
+      686
+    ],
+    [
+      173,
+      683
+    ],
+    [
+      185,
+      680
+    ],
+    [
+      197,
+      677
+    ],
+    [
+      209,
+      675
+    ],
+    [
+      221,
+      672
+    ],
+    [
+      233,
+      669
+    ],
+    [
+      244,
+      667
+    ],
+    [
+      256,
+      664
+    ],
+    [
+      267,
+      661
+    ],
+    [
+      279,
+      659
+    ],
+    [
+      290,
+      656
+    ],
+    [
+      301,
+      654
+    ],
+    [
+      312,
+      651
+    ],
+    [
+      323,
+      649
+    ],
+    [
+      334,
+      646
+    ],
+    [
+      5,
+      717
+    ],
+    [
+      19,
+      714
+    ],
+    [
+      33,
+      711
+    ],
+    [
+      46,
+      708
+    ],
+    [
+      59,
+      704
+    ],
+    [
+      73,
+      701
+    ],
+    [
+      86,
+      699
+    ],
+    [
+      99,
+      696
+    ],
+    [
+      111,
+      693
+    ],
+    [
+      124,
+      690
+    ],
+    [
+      137,
+      687
+    ],
+    [
+      149,
+      684
+    ],
+    [
+      162,
+      681
+    ],
+    [
+      174,
+      679
+    ],
+    [
+      186,
+      676
+    ],
+    [
+      198,
+      673
+    ],
+    [
+      210,
+      670
+    ],
+    [
+      221,
+      668
+    ],
+    [
+      233,
+      665
+    ],
+    [
+      245,
+      663
+    ],
+    [
+      256,
+      660
+    ],
+    [
+      267,
+      657
+    ],
+    [
+      279,
+      655
+    ],
+    [
+      290,
+      652
+    ],
+    [
+      301,
+      650
+    ],
+    [
+      312,
+      647
+    ],
+    [
+      322,
+      645
+    ],
+    [
+      333,
+      642
+    ],
+    [
+      344,
+      640
+    ],
+    [
+      7,
+      712
+    ],
+    [
+      21,
+      709
+    ],
+    [
+      35,
+      706
+    ],
+    [
+      48,
+      703
+    ],
+    [
+      61,
+      700
+    ],
+    [
+      74,
+      697
+    ],
+    [
+      87,
+      694
+    ],
+    [
+      100,
+      691
+    ],
+    [
+      113,
+      688
+    ],
+    [
+      125,
+      685
+    ],
+    [
+      138,
+      682
+    ],
+    [
+      150,
+      680
+    ],
+    [
+      162,
+      677
+    ],
+    [
+      175,
+      674
+    ],
+    [
+      187,
+      672
+    ],
+    [
+      198,
+      669
+    ],
+    [
+      210,
+      666
+    ],
+    [
+      222,
+      664
+    ],
+    [
+      233,
+      661
+    ],
+    [
+      245,
+      658
+    ],
+    [
+      256,
+      656
+    ],
+    [
+      267,
+      653
+    ],
+    [
+      279,
+      651
+    ],
+    [
+      290,
+      648
+    ],
+    [
+      301,
+      646
+    ],
+    [
+      311,
+      643
+    ],
+    [
+      322,
+      641
+    ],
+    [
+      333,
+      639
+    ],
+    [
+      343,
+      636
+    ],
+    [
+      10,
+      707
+    ],
+    [
+      23,
+      704
+    ],
+    [
+      37,
+      701
+    ],
+    [
+      50,
+      698
+    ],
+    [
+      63,
+      695
+    ],
+    [
+      76,
+      692
+    ],
+    [
+      89,
+      689
+    ],
+    [
+      101,
+      686
+    ],
+    [
+      114,
+      684
+    ],
+    [
+      127,
+      681
+    ],
+    [
+      139,
+      678
+    ],
+    [
+      151,
+      675
+    ],
+    [
+      163,
+      673
+    ],
+    [
+      175,
+      670
+    ],
+    [
+      187,
+      667
+    ],
+    [
+      199,
+      665
+    ],
+    [
+      211,
+      662
+    ],
+    [
+      222,
+      659
+    ],
+    [
+      234,
+      657
+    ],
+    [
+      245,
+      654
+    ],
+    [
+      256,
+      652
+    ],
+    [
+      268,
+      649
+    ],
+    [
+      279,
+      647
+    ],
+    [
+      290,
+      644
+    ],
+    [
+      300,
+      642
+    ],
+    [
+      311,
+      640
+    ],
+    [
+      322,
+      637
+    ],
+    [
+      332,
+      635
+    ],
+    [
+      343,
+      633
+    ],
+    [
+      353,
+      630
+    ],
+    [
+      12,
+      702
+    ],
+    [
+      25,
+      699
+    ],
+    [
+      38,
+      696
+    ],
+    [
+      52,
+      693
+    ],
+    [
+      65,
+      690
+    ],
+    [
+      77,
+      688
+    ],
+    [
+      90,
+      685
+    ],
+    [
+      103,
+      682
+    ],
+    [
+      115,
+      679
+    ],
+    [
+      128,
+      676
+    ],
+    [
+      140,
+      674
+    ],
+    [
+      152,
+      671
+    ],
+    [
+      164,
+      668
+    ],
+    [
+      176,
+      666
+    ],
+    [
+      188,
+      663
+    ],
+    [
+      200,
+      660
+    ],
+    [
+      211,
+      658
+    ],
+    [
+      223,
+      655
+    ],
+    [
+      234,
+      653
+    ],
+    [
+      245,
+      650
+    ],
+    [
+      257,
+      648
+    ],
+    [
+      268,
+      645
+    ],
+    [
+      279,
+      643
+    ],
+    [
+      290,
+      641
+    ],
+    [
+      300,
+      638
+    ],
+    [
+      311,
+      636
+    ],
+    [
+      322,
+      633
+    ],
+    [
+      332,
+      631
+    ],
+    [
+      342,
+      629
+    ],
+    [
+      353,
+      627
+    ],
+    [
+      1,
+      700
+    ],
+    [
+      14,
+      697
+    ],
+    [
+      27,
+      694
+    ],
+    [
+      40,
+      692
+    ],
+    [
+      53,
+      689
+    ],
+    [
+      66,
+      686
+    ],
+    [
+      79,
+      683
+    ],
+    [
+      92,
+      680
+    ],
+    [
+      104,
+      677
+    ],
+    [
+      117,
+      675
+    ],
+    [
+      129,
+      672
+    ],
+    [
+      141,
+      669
+    ],
+    [
+      153,
+      667
+    ],
+    [
+      165,
+      664
+    ],
+    [
+      177,
+      661
+    ],
+    [
+      189,
+      659
+    ],
+    [
+      200,
+      656
+    ],
+    [
+      212,
+      654
+    ],
+    [
+      223,
+      651
+    ],
+    [
+      234,
+      649
+    ],
+    [
+      246,
+      646
+    ],
+    [
+      257,
+      644
+    ],
+    [
+      268,
+      642
+    ],
+    [
+      279,
+      639
+    ],
+    [
+      289,
+      637
+    ],
+    [
+      300,
+      634
+    ],
+    [
+      311,
+      632
+    ],
+    [
+      321,
+      630
+    ],
+    [
+      332,
+      627
+    ],
+    [
+      342,
+      625
+    ],
+    [
+      352,
+      623
+    ],
+    [
+      3,
+      696
+    ],
+    [
+      16,
+      693
+    ],
+    [
+      29,
+      690
+    ],
+    [
+      42,
+      687
+    ],
+    [
+      55,
+      684
+    ],
+    [
+      68,
+      681
+    ],
+    [
+      81,
+      679
+    ],
+    [
+      93,
+      676
+    ],
+    [
+      106,
+      673
+    ],
+    [
+      118,
+      670
+    ],
+    [
+      130,
+      668
+    ],
+    [
+      142,
+      665
+    ],
+    [
+      154,
+      663
+    ],
+    [
+      166,
+      660
+    ],
+    [
+      178,
+      657
+    ],
+    [
+      189,
+      655
+    ],
+    [
+      201,
+      652
+    ],
+    [
+      212,
+      650
+    ],
+    [
+      224,
+      647
+    ],
+    [
+      235,
+      645
+    ],
+    [
+      246,
+      642
+    ],
+    [
+      257,
+      640
+    ],
+    [
+      268,
+      638
+    ],
+    [
+      279,
+      635
+    ],
+    [
+      289,
+      633
+    ],
+    [
+      300,
+      631
+    ],
+    [
+      311,
+      628
+    ],
+    [
+      321,
+      626
+    ],
+    [
+      331,
+      624
+    ],
+    [
+      342,
+      622
+    ],
+    [
+      352,
+      619
+    ],
+    [
+      362,
+      617
+    ],
+    [
+      5,
+      691
+    ],
+    [
+      18,
+      688
+    ],
+    [
+      31,
+      685
+    ],
+    [
+      44,
+      682
+    ],
+    [
+      57,
+      680
+    ],
+    [
+      70,
+      677
+    ],
+    [
+      82,
+      674
+    ],
+    [
+      95,
+      672
+    ],
+    [
+      107,
+      669
+    ],
+    [
+      119,
+      666
+    ],
+    [
+      131,
+      664
+    ],
+    [
+      143,
+      661
+    ],
+    [
+      155,
+      658
+    ],
+    [
+      167,
+      656
+    ],
+    [
+      178,
+      653
+    ],
+    [
+      190,
+      651
+    ],
+    [
+      201,
+      648
+    ],
+    [
+      213,
+      646
+    ],
+    [
+      224,
+      643
+    ],
+    [
+      235,
+      641
+    ],
+    [
+      246,
+      639
+    ],
+    [
+      257,
+      636
+    ],
+    [
+      268,
+      634
+    ],
+    [
+      279,
+      632
+    ],
+    [
+      289,
+      629
+    ],
+    [
+      300,
+      627
+    ],
+    [
+      310,
+      625
+    ],
+    [
+      321,
+      622
+    ],
+    [
+      331,
+      620
+    ],
+    [
+      341,
+      618
+    ],
+    [
+      351,
+      616
+    ],
+    [
+      361,
+      614
+    ],
+    [
+      7,
+      686
+    ],
+    [
+      20,
+      684
+    ],
+    [
+      33,
+      681
+    ],
+    [
+      46,
+      678
+    ],
+    [
+      59,
+      675
+    ],
+    [
+      71,
+      673
+    ],
+    [
+      84,
+      670
+    ],
+    [
+      96,
+      667
+    ],
+    [
+      108,
+      665
+    ],
+    [
+      120,
+      662
+    ],
+    [
+      132,
+      659
+    ],
+    [
+      144,
+      657
+    ],
+    [
+      156,
+      654
+    ],
+    [
+      168,
+      652
+    ],
+    [
+      179,
+      649
+    ],
+    [
+      191,
+      647
+    ],
+    [
+      202,
+      644
+    ],
+    [
+      213,
+      642
+    ],
+    [
+      224,
+      640
+    ],
+    [
+      235,
+      637
+    ],
+    [
+      246,
+      635
+    ],
+    [
+      257,
+      633
+    ],
+    [
+      268,
+      630
+    ],
+    [
+      279,
+      628
+    ],
+    [
+      289,
+      626
+    ],
+    [
+      300,
+      623
+    ],
+    [
+      310,
+      621
+    ],
+    [
+      320,
+      619
+    ],
+    [
+      331,
+      617
+    ],
+    [
+      341,
+      615
+    ],
+    [
+      351,
+      612
+    ],
+    [
+      361,
+      610
+    ],
+    [
+      9,
+      682
+    ],
+    [
+      22,
+      679
+    ],
+    [
+      35,
+      676
+    ],
+    [
+      48,
+      674
+    ],
+    [
+      60,
+      671
+    ],
+    [
+      73,
+      668
+    ],
+    [
+      85,
+      666
+    ],
+    [
+      97,
+      663
+    ],
+    [
+      110,
+      660
+    ],
+    [
+      122,
+      658
+    ],
+    [
+      133,
+      655
+    ],
+    [
+      145,
+      653
+    ],
+    [
+      157,
+      650
+    ],
+    [
+      168,
+      648
+    ],
+    [
+      180,
+      645
+    ],
+    [
+      191,
+      643
+    ],
+    [
+      203,
+      641
+    ],
+    [
+      214,
+      638
+    ],
+    [
+      225,
+      636
+    ],
+    [
+      236,
+      633
+    ],
+    [
+      247,
+      631
+    ],
+    [
+      257,
+      629
+    ],
+    [
+      268,
+      627
+    ],
+    [
+      279,
+      624
+    ],
+    [
+      289,
+      622
+    ],
+    [
+      300,
+      620
+    ],
+    [
+      310,
+      618
+    ],
+    [
+      320,
+      615
+    ],
+    [
+      330,
+      613
+    ],
+    [
+      340,
+      611
+    ],
+    [
+      350,
+      609
+    ],
+    [
+      360,
+      607
+    ],
+    [
+      11,
+      677
+    ],
+    [
+      24,
+      675
+    ],
+    [
+      37,
+      672
+    ],
+    [
+      49,
+      669
+    ],
+    [
+      62,
+      667
+    ],
+    [
+      74,
+      664
+    ],
+    [
+      87,
+      661
+    ],
+    [
+      99,
+      659
+    ],
+    [
+      111,
+      656
+    ],
+    [
+      123,
+      654
+    ],
+    [
+      135,
+      651
+    ],
+    [
+      146,
+      649
+    ],
+    [
+      158,
+      646
+    ],
+    [
+      169,
+      644
+    ],
+    [
+      181,
+      641
+    ],
+    [
+      192,
+      639
+    ],
+    [
+      203,
+      637
+    ],
+    [
+      214,
+      634
+    ],
+    [
+      225,
+      632
+    ],
+    [
+      236,
+      630
+    ],
+    [
+      247,
+      627
+    ],
+    [
+      258,
+      625
+    ],
+    [
+      268,
+      623
+    ],
+    [
+      279,
+      621
+    ],
+    [
+      289,
+      618
+    ],
+    [
+      299,
+      616
+    ],
+    [
+      310,
+      614
+    ],
+    [
+      320,
+      612
+    ],
+    [
+      330,
+      610
+    ],
+    [
+      340,
+      608
+    ],
+    [
+      350,
+      606
+    ],
+    [
+      360,
+      603
+    ],
+    [
+      0,
+      676
+    ],
+    [
+      13,
+      673
+    ],
+    [
+      26,
+      670
+    ],
+    [
+      39,
+      668
+    ],
+    [
+      51,
+      665
+    ],
+    [
+      64,
+      663
+    ],
+    [
+      76,
+      660
+    ],
+    [
+      88,
+      657
+    ],
+    [
+      100,
+      655
+    ],
+    [
+      112,
+      652
+    ],
+    [
+      124,
+      650
+    ],
+    [
+      136,
+      647
+    ],
+    [
+      147,
+      645
+    ],
+    [
+      159,
+      642
+    ],
+    [
+      170,
+      640
+    ],
+    [
+      181,
+      638
+    ],
+    [
+      193,
+      635
+    ],
+    [
+      204,
+      633
+    ],
+    [
+      215,
+      631
+    ],
+    [
+      226,
+      628
+    ],
+    [
+      236,
+      626
+    ],
+    [
+      247,
+      624
+    ],
+    [
+      258,
+      622
+    ],
+    [
+      268,
+      619
+    ],
+    [
+      279,
+      617
+    ],
+    [
+      289,
+      615
+    ],
+    [
+      299,
+      613
+    ],
+    [
+      310,
+      611
+    ],
+    [
+      320,
+      609
+    ],
+    [
+      330,
+      606
+    ],
+    [
+      340,
+      604
+    ],
+    [
+      349,
+      602
+    ],
+    [
+      359,
+      600
+    ],
+    [
+      3,
+      671
+    ],
+    [
+      15,
+      669
+    ],
+    [
+      28,
+      666
+    ],
+    [
+      41,
+      664
+    ],
+    [
+      53,
+      661
+    ],
+    [
+      65,
+      658
+    ],
+    [
+      77,
+      656
+    ],
+    [
+      89,
+      653
+    ],
+    [
+      101,
+      651
+    ],
+    [
+      113,
+      648
+    ],
+    [
+      125,
+      646
+    ],
+    [
+      137,
+      643
+    ],
+    [
+      148,
+      641
+    ],
+    [
+      160,
+      639
+    ],
+    [
+      171,
+      636
+    ],
+    [
+      182,
+      634
+    ],
+    [
+      193,
+      632
+    ],
+    [
+      204,
+      629
+    ],
+    [
+      215,
+      627
+    ],
+    [
+      226,
+      625
+    ],
+    [
+      237,
+      622
+    ],
+    [
+      247,
+      620
+    ],
+    [
+      258,
+      618
+    ],
+    [
+      268,
+      616
+    ],
+    [
+      279,
+      614
+    ],
+    [
+      289,
+      612
+    ],
+    [
+      299,
+      609
+    ],
+    [
+      309,
+      607
+    ],
+    [
+      319,
+      605
+    ],
+    [
+      329,
+      603
+    ],
+    [
+      339,
+      601
+    ],
+    [
+      349,
+      599
+    ],
+    [
+      359,
+      597
+    ],
+    [
+      5,
+      667
+    ],
+    [
+      17,
+      665
+    ],
+    [
+      30,
+      662
+    ],
+    [
+      42,
+      659
+    ],
+    [
+      55,
+      657
+    ],
+    [
+      67,
+      654
+    ],
+    [
+      79,
+      652
+    ],
+    [
+      91,
+      649
+    ],
+    [
+      103,
+      647
+    ],
+    [
+      114,
+      644
+    ],
+    [
+      126,
+      642
+    ],
+    [
+      138,
+      640
+    ],
+    [
+      149,
+      637
+    ],
+    [
+      160,
+      635
+    ],
+    [
+      172,
+      633
+    ],
+    [
+      183,
+      630
+    ],
+    [
+      194,
+      628
+    ],
+    [
+      205,
+      626
+    ],
+    [
+      216,
+      623
+    ],
+    [
+      226,
+      621
+    ],
+    [
+      237,
+      619
+    ],
+    [
+      248,
+      617
+    ],
+    [
+      258,
+      615
+    ],
+    [
+      268,
+      612
+    ],
+    [
+      279,
+      610
+    ],
+    [
+      289,
+      608
+    ],
+    [
+      299,
+      606
+    ],
+    [
+      309,
+      604
+    ],
+    [
+      319,
+      602
+    ],
+    [
+      329,
+      600
+    ],
+    [
+      339,
+      598
+    ],
+    [
+      348,
+      596
+    ],
+    [
+      358,
+      594
+    ],
+    [
+      7,
+      663
+    ],
+    [
+      19,
+      660
+    ],
+    [
+      32,
+      658
+    ],
+    [
+      44,
+      655
+    ],
+    [
+      56,
+      653
+    ],
+    [
+      68,
+      650
+    ],
+    [
+      80,
+      648
+    ],
+    [
+      92,
+      645
+    ],
+    [
+      104,
+      643
+    ],
+    [
+      116,
+      641
+    ],
+    [
+      127,
+      638
+    ],
+    [
+      139,
+      636
+    ],
+    [
+      150,
+      633
+    ],
+    [
+      161,
+      631
+    ],
+    [
+      172,
+      629
+    ],
+    [
+      183,
+      627
+    ],
+    [
+      194,
+      624
+    ],
+    [
+      205,
+      622
+    ],
+    [
+      216,
+      620
+    ],
+    [
+      227,
+      618
+    ],
+    [
+      237,
+      615
+    ],
+    [
+      248,
+      613
+    ],
+    [
+      258,
+      611
+    ],
+    [
+      269,
+      609
+    ],
+    [
+      279,
+      607
+    ],
+    [
+      289,
+      605
+    ],
+    [
+      299,
+      603
+    ],
+    [
+      309,
+      601
+    ],
+    [
+      319,
+      599
+    ],
+    [
+      329,
+      597
+    ],
+    [
+      338,
+      595
+    ],
+    [
+      348,
+      593
+    ],
+    [
+      358,
+      591
+    ],
+    [
+      9,
+      659
+    ],
+    [
+      21,
+      656
+    ],
+    [
+      34,
+      654
+    ],
+    [
+      46,
+      651
+    ],
+    [
+      58,
+      649
+    ],
+    [
+      70,
+      646
+    ],
+    [
+      82,
+      644
+    ],
+    [
+      94,
+      641
+    ],
+    [
+      105,
+      639
+    ],
+    [
+      117,
+      637
+    ],
+    [
+      128,
+      634
+    ],
+    [
+      140,
+      632
+    ],
+    [
+      151,
+      630
+    ],
+    [
+      162,
+      627
+    ],
+    [
+      173,
+      625
+    ],
+    [
+      184,
+      623
+    ],
+    [
+      195,
+      621
+    ],
+    [
+      206,
+      618
+    ],
+    [
+      217,
+      616
+    ],
+    [
+      227,
+      614
+    ],
+    [
+      238,
+      612
+    ],
+    [
+      248,
+      610
+    ],
+    [
+      258,
+      608
+    ],
+    [
+      269,
+      606
+    ],
+    [
+      279,
+      603
+    ],
+    [
+      289,
+      601
+    ],
+    [
+      299,
+      599
+    ],
+    [
+      309,
+      597
+    ],
+    [
+      319,
+      595
+    ],
+    [
+      328,
+      593
+    ],
+    [
+      338,
+      591
+    ],
+    [
+      348,
+      589
+    ],
+    [
+      357,
+      587
+    ],
+    [
+      11,
+      655
+    ],
+    [
+      23,
+      652
+    ],
+    [
+      35,
+      650
+    ],
+    [
+      48,
+      647
+    ],
+    [
+      60,
+      645
+    ],
+    [
+      71,
+      642
+    ],
+    [
+      83,
+      640
+    ],
+    [
+      95,
+      638
+    ],
+    [
+      107,
+      635
+    ],
+    [
+      118,
+      633
+    ],
+    [
+      129,
+      631
+    ],
+    [
+      141,
+      628
+    ],
+    [
+      152,
+      626
+    ],
+    [
+      163,
+      624
+    ],
+    [
+      174,
+      622
+    ],
+    [
+      185,
+      619
+    ],
+    [
+      196,
+      617
+    ],
+    [
+      206,
+      615
+    ],
+    [
+      217,
+      613
+    ],
+    [
+      227,
+      611
+    ],
+    [
+      238,
+      609
+    ],
+    [
+      248,
+      606
+    ],
+    [
+      259,
+      604
+    ],
+    [
+      269,
+      602
+    ],
+    [
+      279,
+      600
+    ],
+    [
+      289,
+      598
+    ],
+    [
+      299,
+      596
+    ],
+    [
+      309,
+      594
+    ],
+    [
+      318,
+      592
+    ],
+    [
+      328,
+      590
+    ],
+    [
+      338,
+      588
+    ],
+    [
+      347,
+      586
+    ],
+    [
+      0,
+      653
+    ],
+    [
+      13,
+      651
+    ],
+    [
+      25,
+      648
+    ],
+    [
+      37,
+      646
+    ],
+    [
+      49,
+      643
+    ],
+    [
+      61,
+      641
+    ],
+    [
+      73,
+      639
+    ],
+    [
+      85,
+      636
+    ],
+    [
+      96,
+      634
+    ],
+    [
+      108,
+      632
+    ],
+    [
+      119,
+      629
+    ],
+    [
+      130,
+      627
+    ],
+    [
+      142,
+      625
+    ],
+    [
+      153,
+      622
+    ],
+    [
+      164,
+      620
+    ],
+    [
+      175,
+      618
+    ],
+    [
+      185,
+      616
+    ],
+    [
+      196,
+      614
+    ],
+    [
+      207,
+      612
+    ],
+    [
+      217,
+      609
+    ],
+    [
+      228,
+      607
+    ],
+    [
+      238,
+      605
+    ],
+    [
+      248,
+      603
+    ],
+    [
+      259,
+      601
+    ],
+    [
+      269,
+      599
+    ],
+    [
+      279,
+      597
+    ],
+    [
+      289,
+      595
+    ],
+    [
+      299,
+      593
+    ],
+    [
+      308,
+      591
+    ],
+    [
+      318,
+      589
+    ],
+    [
+      328,
+      587
+    ],
+    [
+      337,
+      585
+    ],
+    [
+      347,
+      583
+    ],
+    [
+      3,
+      649
+    ],
+    [
+      15,
+      647
+    ],
+    [
+      27,
+      644
+    ],
+    [
+      39,
+      642
+    ],
+    [
+      51,
+      640
+    ],
+    [
+      63,
+      637
+    ],
+    [
+      74,
+      635
+    ],
+    [
+      86,
+      632
+    ],
+    [
+      98,
+      630
+    ],
+    [
+      109,
+      628
+    ],
+    [
+      120,
+      626
+    ],
+    [
+      131,
+      623
+    ],
+    [
+      143,
+      621
+    ],
+    [
+      154,
+      619
+    ],
+    [
+      165,
+      617
+    ],
+    [
+      175,
+      615
+    ],
+    [
+      186,
+      612
+    ],
+    [
+      197,
+      610
+    ],
+    [
+      207,
+      608
+    ],
+    [
+      218,
+      606
+    ],
+    [
+      228,
+      604
+    ],
+    [
+      238,
+      602
+    ],
+    [
+      249,
+      600
+    ],
+    [
+      259,
+      598
+    ],
+    [
+      269,
+      596
+    ],
+    [
+      279,
+      594
+    ],
+    [
+      289,
+      592
+    ],
+    [
+      299,
+      590
+    ],
+    [
+      308,
+      588
+    ],
+    [
+      318,
+      586
+    ],
+    [
+      327,
+      584
+    ],
+    [
+      337,
+      582
+    ],
+    [
+      5,
+      645
+    ],
+    [
+      17,
+      643
+    ],
+    [
+      29,
+      641
+    ],
+    [
+      41,
+      638
+    ],
+    [
+      53,
+      636
+    ],
+    [
+      64,
+      633
+    ],
+    [
+      76,
+      631
+    ],
+    [
+      87,
+      629
+    ],
+    [
+      99,
+      627
+    ],
+    [
+      110,
+      624
+    ],
+    [
+      121,
+      622
+    ],
+    [
+      133,
+      620
+    ],
+    [
+      144,
+      618
+    ],
+    [
+      155,
+      615
+    ],
+    [
+      165,
+      613
+    ],
+    [
+      176,
+      611
+    ],
+    [
+      187,
+      609
+    ],
+    [
+      197,
+      607
+    ],
+    [
+      208,
+      605
+    ],
+    [
+      218,
+      603
+    ],
+    [
+      229,
+      601
+    ],
+    [
+      239,
+      599
+    ],
+    [
+      249,
+      597
+    ],
+    [
+      259,
+      595
+    ],
+    [
+      269,
+      593
+    ],
+    [
+      279,
+      591
+    ],
+    [
+      289,
+      589
+    ],
+    [
+      298,
+      587
+    ],
+    [
+      308,
+      585
+    ],
+    [
+      318,
+      583
+    ],
+    [
+      327,
+      581
+    ],
+    [
+      7,
+      641
+    ],
+    [
+      19,
+      639
+    ],
+    [
+      31,
+      637
+    ],
+    [
+      42,
+      634
+    ],
+    [
+      54,
+      632
+    ],
+    [
+      66,
+      630
+    ],
+    [
+      77,
+      627
+    ],
+    [
+      89,
+      625
+    ],
+    [
+      100,
+      623
+    ],
+    [
+      111,
+      621
+    ],
+    [
+      122,
+      618
+    ],
+    [
+      134,
+      616
+    ],
+    [
+      145,
+      614
+    ],
+    [
+      155,
+      612
+    ],
+    [
+      166,
+      610
+    ],
+    [
+      177,
+      608
+    ],
+    [
+      187,
+      606
+    ],
+    [
+      198,
+      603
+    ],
+    [
+      208,
+      601
+    ],
+    [
+      219,
+      599
+    ],
+    [
+      229,
+      597
+    ],
+    [
+      239,
+      595
+    ],
+    [
+      249,
+      593
+    ],
+    [
+      259,
+      591
+    ],
+    [
+      269,
+      589
+    ],
+    [
+      279,
+      587
+    ],
+    [
+      289,
+      585
+    ],
+    [
+      298,
+      584
+    ],
+    [
+      308,
+      582
+    ],
+    [
+      317,
+      580
+    ],
+    [
+      8,
+      638
+    ],
+    [
+      20,
+      635
+    ],
+    [
+      32,
+      633
+    ],
+    [
+      44,
+      631
+    ],
+    [
+      56,
+      628
+    ],
+    [
+      67,
+      626
+    ],
+    [
+      79,
+      624
+    ],
+    [
+      90,
+      622
+    ],
+    [
+      101,
+      619
+    ],
+    [
+      113,
+      617
+    ],
+    [
+      124,
+      615
+    ],
+    [
+      135,
+      613
+    ],
+    [
+      145,
+      611
+    ],
+    [
+      156,
+      609
+    ],
+    [
+      167,
+      606
+    ],
+    [
+      178,
+      604
+    ],
+    [
+      188,
+      602
+    ],
+    [
+      198,
+      600
+    ],
+    [
+      209,
+      598
+    ],
+    [
+      219,
+      596
+    ],
+    [
+      229,
+      594
+    ],
+    [
+      239,
+      592
+    ],
+    [
+      249,
+      590
+    ],
+    [
+      259,
+      588
+    ],
+    [
+      269,
+      586
+    ],
+    [
+      279,
+      584
+    ],
+    [
+      289,
+      582
+    ],
+    [
+      298,
+      580
+    ],
+    [
+      308,
+      579
+    ],
+    [
+      317,
+      577
+    ],
+    [
+      10,
+      634
+    ],
+    [
+      22,
+      632
+    ],
+    [
+      34,
+      629
+    ],
+    [
+      46,
+      627
+    ],
+    [
+      57,
+      625
+    ],
+    [
+      69,
+      622
+    ],
+    [
+      80,
+      620
+    ],
+    [
+      91,
+      618
+    ],
+    [
+      103,
+      616
+    ],
+    [
+      114,
+      614
+    ],
+    [
+      125,
+      611
+    ],
+    [
+      136,
+      609
+    ],
+    [
+      146,
+      607
+    ],
+    [
+      157,
+      605
+    ],
+    [
+      168,
+      603
+    ],
+    [
+      178,
+      601
+    ],
+    [
+      189,
+      599
+    ],
+    [
+      199,
+      597
+    ],
+    [
+      209,
+      595
+    ],
+    [
+      219,
+      593
+    ],
+    [
+      230,
+      591
+    ],
+    [
+      240,
+      589
+    ],
+    [
+      250,
+      587
+    ],
+    [
+      259,
+      585
+    ],
+    [
+      269,
+      583
+    ],
+    [
+      279,
+      581
+    ],
+    [
+      289,
+      579
+    ],
+    [
+      298,
+      577
+    ],
+    [
+      308,
+      576
+    ],
+    [
+      0,
+      632
+    ],
+    [
+      12,
+      630
+    ],
+    [
+      24,
+      628
+    ],
+    [
+      36,
+      626
+    ],
+    [
+      47,
+      623
+    ],
+    [
+      59,
+      621
+    ],
+    [
+      70,
+      619
+    ],
+    [
+      82,
+      617
+    ],
+    [
+      93,
+      615
+    ],
+    [
+      104,
+      612
+    ],
+    [
+      115,
+      610
+    ],
+    [
+      126,
+      608
+    ],
+    [
+      137,
+      606
+    ],
+    [
+      147,
+      604
+    ],
+    [
+      158,
+      602
+    ],
+    [
+      168,
+      600
+    ],
+    [
+      179,
+      598
+    ],
+    [
+      189,
+      596
+    ],
+    [
+      200,
+      594
+    ],
+    [
+      210,
+      592
+    ],
+    [
+      220,
+      590
+    ],
+    [
+      230,
+      588
+    ],
+    [
+      240,
+      586
+    ],
+    [
+      250,
+      584
+    ],
+    [
+      260,
+      582
+    ],
+    [
+      269,
+      580
+    ],
+    [
+      279,
+      578
+    ],
+    [
+      288,
+      576
+    ],
+    [
+      298,
+      575
+    ],
+    [
+      2,
+      629
+    ],
+    [
+      14,
+      627
+    ],
+    [
+      26,
+      624
+    ],
+    [
+      38,
+      622
+    ],
+    [
+      49,
+      620
+    ],
+    [
+      60,
+      618
+    ],
+    [
+      72,
+      615
+    ],
+    [
+      83,
+      613
+    ],
+    [
+      94,
+      611
+    ],
+    [
+      105,
+      609
+    ],
+    [
+      116,
+      607
+    ],
+    [
+      127,
+      605
+    ],
+    [
+      137,
+      603
+    ],
+    [
+      148,
+      601
+    ],
+    [
+      159,
+      599
+    ],
+    [
+      169,
+      597
+    ],
+    [
+      180,
+      595
+    ],
+    [
+      190,
+      593
+    ],
+    [
+      200,
+      591
+    ],
+    [
+      210,
+      589
+    ],
+    [
+      220,
+      587
+    ],
+    [
+      230,
+      585
+    ],
+    [
+      240,
+      583
+    ],
+    [
+      250,
+      581
+    ],
+    [
+      260,
+      579
+    ],
+    [
+      269,
+      577
+    ],
+    [
+      279,
+      575
+    ],
+    [
+      288,
+      573
+    ],
+    [
+      4,
+      625
+    ],
+    [
+      16,
+      623
+    ],
+    [
+      28,
+      621
+    ],
+    [
+      39,
+      618
+    ],
+    [
+      51,
+      616
+    ],
+    [
+      62,
+      614
+    ],
+    [
+      73,
+      612
+    ],
+    [
+      84,
+      610
+    ],
+    [
+      95,
+      608
+    ],
+    [
+      106,
+      606
+    ],
+    [
+      117,
+      603
+    ],
+    [
+      128,
+      601
+    ],
+    [
+      138,
+      599
+    ],
+    [
+      149,
+      597
+    ],
+    [
+      159,
+      595
+    ],
+    [
+      170,
+      593
+    ],
+    [
+      180,
+      591
+    ],
+    [
+      190,
+      589
+    ],
+    [
+      201,
+      587
+    ],
+    [
+      211,
+      585
+    ],
+    [
+      221,
+      584
+    ],
+    [
+      231,
+      582
+    ],
+    [
+      240,
+      580
+    ],
+    [
+      250,
+      578
+    ],
+    [
+      260,
+      576
+    ],
+    [
+      269,
+      574
+    ],
+    [
+      279,
+      572
+    ],
+    [
+      18,
+      619
+    ],
+    [
+      29,
+      617
+    ],
+    [
+      41,
+      615
+    ],
+    [
+      52,
+      613
+    ],
+    [
+      63,
+      611
+    ],
+    [
+      75,
+      609
+    ],
+    [
+      86,
+      606
+    ],
+    [
+      96,
+      604
+    ],
+    [
+      107,
+      602
+    ],
+    [
+      118,
+      600
+    ],
+    [
+      129,
+      598
+    ],
+    [
+      139,
+      596
+    ],
+    [
+      150,
+      594
+    ],
+    [
+      160,
+      592
+    ],
+    [
+      171,
+      590
+    ],
+    [
+      181,
+      588
+    ],
+    [
+      191,
+      586
+    ],
+    [
+      201,
+      584
+    ],
+    [
+      211,
+      582
+    ],
+    [
+      221,
+      580
+    ],
+    [
+      231,
+      579
+    ],
+    [
+      241,
+      577
+    ],
+    [
+      250,
+      575
+    ],
+    [
+      260,
+      573
+    ],
+    [
+      31,
+      614
+    ],
+    [
+      42,
+      611
+    ],
+    [
+      54,
+      609
+    ],
+    [
+      65,
+      607
+    ],
+    [
+      76,
+      605
+    ],
+    [
+      87,
+      603
+    ],
+    [
+      98,
+      601
+    ],
+    [
+      109,
+      599
+    ],
+    [
+      119,
+      597
+    ],
+    [
+      130,
+      595
+    ],
+    [
+      140,
+      593
+    ],
+    [
+      151,
+      591
+    ],
+    [
+      161,
+      589
+    ],
+    [
+      171,
+      587
+    ],
+    [
+      182,
+      585
+    ],
+    [
+      192,
+      583
+    ],
+    [
+      202,
+      581
+    ],
+    [
+      212,
+      579
+    ],
+    [
+      221,
+      577
+    ],
+    [
+      231,
+      576
+    ],
+    [
+      99,
+      598
+    ],
+    [
+      110,
+      596
+    ],
+    [
+      120,
+      594
+    ],
+    [
+      131,
+      592
+    ],
+    [
+      141,
+      590
+    ],
+    [
+      152,
+      588
+    ],
+    [
+      162,
+      586
+    ],
+    [
+      172,
+      584
+    ],
+    [
+      182,
+      582
+    ],
+    [
+      192,
+      580
+    ],
+    [
+      202,
+      578
+    ],
+    [
+      142,
+      587
+    ],
+    [
+      152,
+      585
+    ],
+    [
+      163,
+      583
+    ]
+  ],
+  "perfil": "alto",
+  "quadros": [
+    {
+      "t_s": 0.0,
+      "troca_para": "limpo"
+    },
+    {
+      "estado_pedido": "limpo",
+      "nome": "dinamica_000.png",
+      "t_s": 0.0
+    },
+    {
+      "t_s": 5.0,
+      "troca_para": "nevasca"
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_001.png",
+      "t_s": 5.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_002.png",
+      "t_s": 10.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_003.png",
+      "t_s": 15.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_004.png",
+      "t_s": 20.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_005.png",
+      "t_s": 25.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_006.png",
+      "t_s": 30.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_007.png",
+      "t_s": 35.01
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_008.png",
+      "t_s": 40.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_009.png",
+      "t_s": 45.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_010.png",
+      "t_s": 50.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_011.png",
+      "t_s": 55.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_012.png",
+      "t_s": 60.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_013.png",
+      "t_s": 65.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_014.png",
+      "t_s": 70.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_015.png",
+      "t_s": 75.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_016.png",
+      "t_s": 80.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_017.png",
+      "t_s": 85.01
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_018.png",
+      "t_s": 90.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_019.png",
+      "t_s": 95.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_020.png",
+      "t_s": 100.0
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_021.png",
+      "t_s": 105.01
+    },
+    {
+      "estado_pedido": "nevasca",
+      "nome": "dinamica_022.png",
+      "t_s": 110.0
+    },
+    {
+      "t_s": 115.01,
+      "troca_para": "chuva"
+    },
+    {
+      "estado_pedido": "chuva",
+      "nome": "dinamica_023.png",
+      "t_s": 115.01
+    },
+    {
+      "estado_pedido": "chuva",
+      "nome": "dinamica_024.png",
+      "t_s": 120.0
+    },
+    {
+      "estado_pedido": "chuva",
+      "nome": "dinamica_025.png",
+      "t_s": 125.01
+    },
+    {
+      "estado_pedido": "chuva",
+      "nome": "dinamica_026.png",
+      "t_s": 130.0
+    },
+    {
+      "estado_pedido": "chuva",
+      "nome": "dinamica_027.png",
+      "t_s": 135.0
+    },
+    {
+      "estado_pedido": "chuva",
+      "nome": "dinamica_028.png",
+      "t_s": 140.0
+    },
+    {
+      "estado_pedido": "chuva",
+      "nome": "dinamica_029.png",
+      "t_s": 145.0
+    },
+    {
+      "estado_pedido": "chuva",
+      "nome": "dinamica_030.png",
+      "t_s": 150.0
+    },
+    {
+      "estado_pedido": "chuva",
+      "nome": "dinamica_031.png",
+      "t_s": 155.0
+    },
+    {
+      "estado_pedido": "chuva",
+      "nome": "dinamica_032.png",
+      "t_s": 160.0
+    },
+    {
+      "t_s": 165.0,
+      "troca_para": "limpo"
+    },
+    {
+      "estado_pedido": "limpo",
+      "nome": "dinamica_033.png",
+      "t_s": 165.0
+    },
+    {
+      "estado_pedido": "limpo",
+      "nome": "dinamica_034.png",
+      "t_s": 170.0
+    },
+    {
+      "estado_pedido": "limpo",
+      "nome": "dinamica_035.png",
+      "t_s": 175.0
+    },
+    {
+      "estado_pedido": "limpo",
+      "nome": "dinamica_036.png",
+      "t_s": 180.0
+    },
+    {
+      "estado_pedido": "limpo",
+      "nome": "dinamica_037.png",
+      "t_s": 185.0
+    },
+    {
+      "estado_pedido": "limpo",
+      "nome": "dinamica_038.png",
+      "t_s": 190.0
+    },
+    {
+      "estado_pedido": "limpo",
+      "nome": "dinamica_039.png",
+      "t_s": 195.01
+    },
+    {
+      "estado_pedido": "limpo",
+      "nome": "dinamica_040.png",
+      "t_s": 200.0
+    },
+    {
+      "estado_pedido": "limpo",
+      "nome": "dinamica_041.png",
+      "t_s": 205.0
+    },
+    {
+      "estado_pedido": "limpo",
+      "nome": "dinamica_042.png",
+      "t_s": 210.0
+    }
+  ]
+}
