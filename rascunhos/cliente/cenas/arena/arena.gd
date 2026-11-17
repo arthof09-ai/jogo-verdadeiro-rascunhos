@@ -125,7 +125,7 @@ func _process(_delta: float) -> void:
 func _ready() -> void:
 	# Ordem 42: o Sol já não se roda aqui — a direcção é a da luz pintada do mapa (paleta).
 	camera.altura_em = altura_chao
-	clima = Clima.new()
+	clima = CampoDaMesa.criar_clima()
 	clima.name = "Clima"
 	add_child(clima)
 	# Ordem 52: a relva do mapa e as contagens do clima seguem o perfil gráfico, pelo código partilhado com o ecrã

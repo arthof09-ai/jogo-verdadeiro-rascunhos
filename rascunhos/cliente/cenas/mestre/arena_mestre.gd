@@ -60,7 +60,10 @@ const RAIO_RECORTE_M := 5.0
 ## Ordem 45: o clima de jogo que o Mestre escolhe na aba Ambiente (vista.mestre.ambiente.clima) → o clima que
 ## o ecrã dele desenha (os nomes da preferência «clima» da arena do jogador). O que não está aqui não chove
 ## nem neva (limpo, nublado, nevoeiro). Só apresentação: a regra do clima é do servidor.
-const CLIMA_DO_AMBIENTE := {"chuva": "chuva-fraca", "tempestade": "chuva-forte", "neve": "neve-forte"}
+const CLIMA_DO_AMBIENTE := {
+	"chuva": "chuva-fraca", "tempestade": "chuva-forte",
+	"neve": "neve-forte", "neve_fraca": "neve-fraca", "neve-fraca": "neve-fraca", "nevasca": "neve-forte",
+}
 
 var largura := 0
 var altura := 0
@@ -143,7 +146,7 @@ func _ready() -> void:
 	_anel.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_anel.visible = false
 	add_child(_anel)
-	clima = Clima.new()
+	clima = CampoDaMesa.criar_clima()
 	clima.name = "Clima"
 	add_child(clima)
 	# Ordem 52: o perfil gráfico chega à relva do mapa e às contagens do clima pelo código das duas arenas

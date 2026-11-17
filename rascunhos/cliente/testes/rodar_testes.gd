@@ -52,6 +52,7 @@ func _initialize() -> void:
 	_teste_clima_frame_a_frame()
 	_teste_clima_modulo()
 	_teste_chuva_vento_do_mundo()
+	_teste_neve_arena_vento_e_estados()
 	_teste_terreno_do_servidor_em_dia()
 	_teste_pe_na_encosta()
 	print("")
@@ -825,6 +826,42 @@ func _teste_chuva_vento_do_mundo() -> void:
 	c.seguir_vento(sem_vetor)
 	_ok(c.fonte_do_vento() == null and c.tipos_com_fonte.is_empty(), "uma fonte sem vetor() é recusada (fica o vento manual)")
 	sem_vetor.free()
+	c.free()
+
+
+## Ordem Neve (Fatia 1): neve_fraca e nevasca seguem o vento do mundo na arena integrada e trocam entre os 4 estados
+## (limpo ↔ neve_fraca ↔ nevasca ↔ chuva) sem erro nem reinício.
+func _teste_neve_arena_vento_e_estados() -> void:
+	print("Clima (Ordem Neve, Fatia 1): neve_fraca e nevasca com o vento do mundo + troca viva dos 4 estados")
+	var CampoDaMesa = load("res://cenas/arena/campo_da_mesa.gd")
+	var vm = VentoMundo.new()
+	vm.parado = true
+	vm.hora_fixa = 16.25
+	for i in 20:
+		vm.avancar(0.1)
+	var c = CampoDaMesa.criar_clima()
+	c.configurar_area(Vector3(0.0, 0.0, 0.0), Vector2(30.0, 30.0))
+	c.seguir_vento(vm, CampoDaMesa.TIPOS_COM_VENTO_DO_MUNDO)
+	_ok(c.segue_fonte("chuva") and c.segue_fonte("neve"), "CampoDaMesa liga tanto a chuva como a neve ao vento do mundo")
+	_ok(c.definir_por_nome("neve_fraca") and c.estado_clima() == "neve_fraca", "estado neve_fraca liga sem reiniciar")
+	var w: Vector3 = vm.vetor()
+	var vn_fraca: Vector2 = c.vento_do_frame("neve")
+	_ok(vn_fraca.normalized().dot(Vector2(w.x, w.z).normalized()) > 0.999 and vn_fraca.length() > 0.5,
+		"neve_fraca deriva exactamente no rumo do vento do mundo (%.2f m/s)" % vn_fraca.length())
+	_ok(c.definir_por_nome("nevasca") and c.nevasca() and c.estado_clima() == "nevasca", "troca viva neve_fraca → nevasca")
+	for i in 130:
+		c.avancar(1.0 / 30.0)
+	var f_min := INF
+	var f_max := 0.0
+	for i in 360:
+		c.avancar(1.0 / 30.0)
+		var vf: float = c.vento_do_frame("neve").length()
+		f_min = minf(f_min, vf)
+		f_max = maxf(f_max, vf)
+	_ok(f_max > f_min * 2.2, "na nevasca a rajada muda visivelmente a força e o ângulo de queda (calma %.2f → pico %.2f m/s)" % [f_min, f_max])
+	_ok(c.definir_por_nome("chuva") and c.estado_clima() == "chuva", "troca viva nevasca → chuva sem reiniciar")
+	_ok(c.definir_por_nome("limpo") and c.estado_clima() == "limpo", "troca viva chuva → limpo sem reiniciar")
+	vm.free()
 	c.free()
 
 
