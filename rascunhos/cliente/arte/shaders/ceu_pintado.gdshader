@@ -160,7 +160,10 @@ void sky() {
 			// as cerdas mordem a borda do disco (até um quarto do raio)
 			float ang = length(EYEDIR - LIGHT0_DIRECTION) + cerda * raio * 0.5;
 			float disco = 1.0 - smoothstep(raio * (1.0 - borda_sol), raio * (1.0 + borda_sol), ang);
-			cor = mix(cor, cor_sol, clamp(disco * forca_sol, 0.0, 1.0));
+			// o disco é sempre mais claro do que o céu por trás: com o sol rasante (energia baixa) a
+			// tinta do sol sozinha ficava mais escura do que o halo e o disco lia-se como mancha escura
+			vec3 tinta_disco = max(cor_sol, cor + cor_sol * 0.35);
+			cor = mix(cor, tinta_disco, clamp(disco * forca_sol, 0.0, 1.0));
 		}
 	}
 	// Compatibility trabalha em RGBA8 (LDR): manter <= 1.
