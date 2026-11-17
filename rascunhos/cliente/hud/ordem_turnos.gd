@@ -7,7 +7,8 @@ extends RefCounted
 ##   EMERGE da sequência de quem agiu e REPETE-SE. Exemplo do Mestre: as jogadoras surpreendem um monstro; ataca a
 ##   jogadora 1, depois a 2, depois a 3, depois o monstro → a ordem ficou 1-2-3-monstro e repete.
 ##   Conta como «agiu» o que o servidor narra como acção de alguém: `movimento` (figuraId), `ataque` que NÃO é de
-##   oportunidade (atacanteId), `cura` (curadorId) e `consumivel` (figuraId). Várias acções seguidas da mesma
+##   oportunidade (atacanteId), `cura` (curadorId), `consumivel` (figuraId) e `acao` das acções da vez (correr,
+##   apanhar a arma, apagar o fogo, defender, desvincular — nunca `sem_desgraca`, que é decisão do Mestre). Várias acções seguidas da mesma
 ##   figura são uma só vez. Quando uma figura que já está na ordem volta a agir, a volta FECHA: a ordem passa a
 ##   repetir-se. Depois de fechada, se alguém age fora da sequência (o Mestre ditou outra coisa), a figura passa
 ##   a ficar logo a seguir a quem agiu antes dela — a caixa segue sempre a última sequência que aconteceu.
@@ -18,6 +19,8 @@ extends RefCounted
 
 const DINAMICO := "dinamico"
 const INICIATIVA := "iniciativa"
+## Os `acao` (sala.js) que são a figura a agir na vez dela.
+const ACOES_DA_VEZ := ["correr", "apanhar_arma", "apagar_fogo", "defender", "desvincular"]
 
 var modo := DINAMICO
 ## A ordem formada pelas acções (ids), pela ordem em que agiram pela primeira vez nesta volta.
@@ -45,6 +48,8 @@ static func actor_do_evento(evento: Dictionary) -> String:
 			return _id(d.get("atacanteId"))
 		"cura":
 			return _id(d.get("curadorId"))
+		"acao":
+			return _id(d.get("figuraId")) if ACOES_DA_VEZ.has(str(d.get("tipo", ""))) else ""
 	return ""
 
 
