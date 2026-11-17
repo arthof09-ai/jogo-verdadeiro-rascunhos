@@ -26,6 +26,12 @@ extends "res://arte/clima/clima.gd"
 
 const SH_CHAO_ARENA: Shader = preload("res://cenas/arena/clima_chao_arena.gdshader")
 const SH_FIGURA_ARENA: Shader = preload("res://cenas/arena/clima_figura_arena.gdshader")
+const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
+
+## Correcção 1b (17/11): na nevasca, de dia, os flocos crescem um pouco e ganham o branco cheio do núcleo, para se
+## lerem contra o chão já branco (na primeira execução liam-se pior na nevasca cheia do que na neve fraca).
+@export var flocos_nevasca_escala: float = 1.30
+@export var flocos_nevasca_px_minimo: float = 2.4
 
 ## Escala do vento do mundo (7–10 m/s à tarde) para a queda da neve (1,2–1,8 m/s): evita que a neve fraca se
 ## deite a 85° na horizontal e garante que na nevasca a rajada mude visivelmente o ângulo (~32° → ~74°) e a força.
@@ -304,6 +310,11 @@ func _empurrar_uniformes() -> void:
 	for mat in [_mat_chao, _mat_figura]:
 		if mat != null:
 			mat.set_shader_parameter(&"congelamento", cong)
+	if _mat_chao != null:
+		# 1c (17/11) — DECISÃO DO COORDENADOR: a lagoa não branqueia com a neve nesta ordem. Só a geometria do
+		# relevo (centro e raio da cova, nível da água) vai ao chão; nenhum ficheiro do lago é lido nem tocado.
+		_mat_chao.set_shader_parameter(&"lago_centro_raio", Vector3(Relevo.COVA.x, Relevo.COVA.y, Relevo.LAGO_RAIO))
+		_mat_chao.set_shader_parameter(&"lago_nivel", Relevo.nivel_lago())
 	var m := mapa_da_arena()
 	if m != null and m.get("ciclo") != null:
 		var e: Dictionary = m.ciclo.estado()
@@ -319,7 +330,13 @@ func _empurrar_uniformes() -> void:
 				var lum := 0.30 * luz_floco.r + 0.52 * luz_floco.g + 0.18 * luz_floco.b
 				luz_floco = luz_floco.lerp(Color(lum * 0.74, lum * 0.94, minf(lum * 1.42, 0.95)), noite_f * 0.45)
 			var raj := rajada_da_nevasca(_tempo) if _nevasca_vento > 0.0 else 0.0
-			_mat_flocos.set_shader_parameter(&"cor", Color(luz_floco.r, luz_floco.g, luz_floco.b, lerpf(0.88, 0.96, raj)))
+			# 1b (17/11): de dia, na nevasca, o núcleo do floco vai ao branco cheio (o chão branco fica abaixo de
+			# 0,96 pelo tecto do shader do chão), o floco cresce e não desce abaixo de ~2,4 px no ecrã.
+			var dia := (1.0 - noite_f) * _nevasca_vento
+			luz_floco = luz_floco.lerp(Color(1.0, 1.0, 1.0), 0.75 * dia)
+			_mat_flocos.set_shader_parameter(&"cor", Color(luz_floco.r, luz_floco.g, luz_floco.b, lerpf(lerpf(0.88, 0.97, dia), 0.98, raj)))
+			_mat_flocos.set_shader_parameter(&"tamanho_m", 0.075 * lerpf(1.0, flocos_nevasca_escala, _nevasca_vento))
+			_mat_flocos.set_shader_parameter(&"px_minimo", lerpf(1.7, flocos_nevasca_px_minimo, _nevasca_vento))
 			_mat_flocos.set_shader_parameter(&"exposicao_s", nevasca_rasto_s * _nevasca_vento * (0.35 + 0.95 * raj))
 		for mat in [_mat_chao, _mat_figura]:
 			if mat != null:

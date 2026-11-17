@@ -59,6 +59,17 @@ uniform sampler2D mapa_sombra_arena : filter_linear, repeat_disable, hint_defaul
 uniform float mapa_meio_arena = 72.0;
 uniform float tem_mapa_sombra = 0.0;
 
+// Correcções de 17/11 (sentença da bancada):
+// 1c — DECISÃO DO COORDENADOR: a lagoa NÃO branqueia com a neve nesta ordem (o gelo da água é trabalho futuro,
+//      reservado). O leito do lago é este mesmo chão e a água é translúcida: sem esta máscara, o leito branqueado
+//      lia-se através da água como uma placa pálida. Debaixo do nível da água (e na faixa encharcada da margem)
+//      o clima não pinta neve nem gelo — a água fica com o comportamento dela. Lê só a geometria do relevo
+//      (centro/raio da cova e nível da água), nenhum ficheiro do lago.
+uniform vec3 lago_centro_raio = vec3(0.0, 0.0, -1.0);
+uniform float lago_nivel = -1000.0;
+// 1a — modulação do campo exposto (véu liso ao meio-dia): força 0..1 (0 = como a primeira execução).
+uniform float modulacao_campo : hint_range(0.0, 1.0) = 1.0;
+
 varying vec3 v_mundo;
 varying vec3 v_normal;
 
@@ -88,6 +99,12 @@ float fbm(vec2 p) {
 		v += 0.075;
 	}
 	return v;
+}
+
+// Deriva de neve (1a): campo de espessura alongado ao longo do vento (≈ 6 m × 2 m) — zonas varridas finas e
+// línguas de neve acumulada no campo aberto, onde o abrigo dos obstáculos não chega.
+float deriva(vec2 uv) {
+	return 0.62 * ruido(uv) + 0.38 * ruido(uv * 2.3 + vec2(5.1, 1.7));
 }
 
 vec3 camada_pingos(vec2 p, float celula, float semente, float na_agua) {
@@ -215,6 +232,12 @@ void fragment() {
 	vec3 pre = vec3(0.0);
 	float a = 0.0;
 	float cong = max(gelo, congelamento);
+	// 1c: fora da lagoa = 1; debaixo de água (e na margem encharcada) = 0.
+	float fora_lago = 1.0;
+	if (lago_centro_raio.z > 0.0) {
+		float dentro = smoothstep(lago_centro_raio.z, lago_centro_raio.z - 0.6, length(xz - lago_centro_raio.xy));
+		fora_lago = 1.0 - dentro * smoothstep(lago_nivel + 0.14, lago_nivel + 0.04, v_mundo.y);
+	}
 
 	// Sombra viva da floresta (Ordem 43) para a neve ler as sombras das árvores e do relevo
 	float vis_sombra = 1.0;
@@ -311,7 +334,7 @@ void fragment() {
 	}
 
 	// ---------------------------------------------------------------- neve, acumulação direccional e cobertura do centro (Ordem Neve)
-	if (neve > 0.001 || aglomerado > 0.001 || cong > 0.001) {
+	if ((neve > 0.001 || aglomerado > 0.001 || cong > 0.001) && fora_lago > 0.001) {
 		vec2 w = normalize(vento_abrigo + vec2(1e-5, 0.0));
 		vec2 uv_vento = vec2(dot(xz, w), dot(xz, vec2(-w.y, w.x)));
 		// Sastrugi (ondas de neve esculpidas na direcção do vento): evitam que o chão seja um véu branco liso
@@ -408,6 +431,31 @@ void fragment() {
 		}
 		c_neve = min(c_neve, vec3(0.91, 0.93, 0.96));
 
+		// 1a (17/11): a modulação do campo exposto aplica-se DEPOIS do tecto de luz — antes, o tecto
+		// (luz_total ≤ 0,94–0,98 e c_neve ≤ 0,91) apagava ao meio-dia toda a variação de tinta e o centro lia-se
+		// como um véu uniforme. Três coisas, todas no campo aberto (os abrigos já são espessos):
+		//  · espessura: línguas de deriva (mais brancas e opacas) × zonas varridas (crosta fina, mais fria e
+		//    mais escura, onde o chão se adivinha);
+		//  · relevo da deriva iluminado pelo sol do ciclo (o lado virado à luz clareia, o outro escurece);
+		//  · sulcos finos de sastrugi ao longo do vento.
+		float m_amp = modulacao_campo * clamp(max(aglomerado, neve * 0.6) * 1.25, 0.0, 1.0) * mix(0.45, 1.0, exposto);
+		if (m_amp > 0.001) {
+			vec2 ud = uv_vento * vec2(0.16, 0.52);
+			float hd = deriva(ud);
+			vec2 Lxz = L.xz / max(length(L.xz), 1e-4);
+			vec2 l_uv = vec2(dot(Lxz, w), dot(Lxz, vec2(-w.y, w.x)));
+			float hd_l = deriva((uv_vento + l_uv * 0.5) * vec2(0.16, 0.52));
+			float sombra_deriva = clamp(0.5 + (hd_l - hd) * 5.0, 0.0, 1.0);
+			float grosso = smoothstep(0.30, 0.72, hd);
+			float sulco = ruido(uv_vento * vec2(0.85, 4.6) + vec2(2.0, 7.0));
+			vec3 tom = mix(vec3(0.80, 0.82, 0.86), vec3(1.04, 1.03, 1.02), grosso);
+			tom *= mix(0.82, 1.08, sombra_deriva * mix(1.0, vis_sombra, 0.5));
+			tom *= 0.93 + 0.10 * sulco;
+			c_neve *= mix(vec3(1.0), tom, m_amp);
+			c_neve = min(c_neve, vec3(0.96, 0.97, 0.985));
+			a_neve *= mix(1.0, mix(0.82, 1.0, grosso), m_amp * (1.0 - monte));
+		}
+
 		// ---- Congelamento gradual (Fatia 3): geada/gelo nas bordas do terreno, covas da Ordem 42 e zonas varridas
 		if (cong > 0.001) {
 			float d_cova = clima_fundura(xz, y_rel, 1.0, 0.35);
@@ -421,12 +469,12 @@ void fragment() {
 			vec3 c_gelo = cor_gelo * (0.52 + 0.42 * raspao_g) * clamp(luz_total * 1.08, vec3(0.30), vec3(0.95))
 				+ luz_cor * espicula * 0.95 + vec3(brilha * 0.75);
 			// O gelo veste tanto o chão varrido/bordas como dá crosta vidrada às covas e cristas
-			float a_gelo = cong * cima * clamp(placa * (0.35 + 0.45 * raspao_g + 0.35 * na_cova_ou_borda) + espicula * 0.8 + brilha * 0.6, 0.0, 0.88);
+			float a_gelo = fora_lago * cong * cima * clamp(placa * (0.35 + 0.45 * raspao_g + 0.35 * na_cova_ou_borda) + espicula * 0.8 + brilha * 0.6, 0.0, 0.88);
 			por_cima(pre, a, c_gelo, a_gelo * (1.0 - 0.65 * a_neve));
 			c_neve = mix(c_neve, mix(c_neve, cor_gelo * luz_total, 0.32), cong * (0.35 + 0.45 * crista_varrida));
 			c_neve += vec3(0.85, 0.94, 1.0) * brilha * cong * 0.45;
 		}
-		por_cima(pre, a, c_neve, a_neve);
+		por_cima(pre, a, c_neve, a_neve * fora_lago);
 	}
 
 	// ---------------------------------------------------------------- neve rasteira (fitas arrastadas pelo vento no chão)
@@ -438,7 +486,7 @@ void fragment() {
 		float s2 = ruido(uv * vec2(0.43, 2.70) + vec2(-0.55 * d_varre, 3.0));
 		float fita = smoothstep(0.58, 0.91, 0.62 * s1 + 0.38 * s2 + 0.14 * rasteira);
 		vec3 cor_fita = clamp(cor_ceu_ciclo * 0.45 + luz_cor * 0.55, vec3(0.35, 0.42, 0.56), vec3(0.92, 0.95, 0.99));
-		por_cima(pre, a, cor_fita, fita * rasteira * 0.42 * cima);
+		por_cima(pre, a, cor_fita, fita * rasteira * 0.42 * cima * fora_lago);
 	}
 
 	ALBEDO = pre / max(a, 1e-4);
