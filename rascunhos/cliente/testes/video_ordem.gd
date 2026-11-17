@@ -128,10 +128,10 @@ func _correr() -> void:
 	_m.aplicar_vista(_vista)
 	_m._ao_redimensionar()
 	_etiqueta = Label.new()
-	_etiqueta.add_theme_font_size_override("font_size", 22)
 	_etiqueta.add_theme_color_override("font_outline_color", Color.BLACK)
 	_etiqueta.add_theme_constant_override("outline_size", 6)
-	_etiqueta.position = Vector2(20, 720 - 120)
+	_etiqueta.position = Vector2(20, root.get_visible_rect().size.y - 110)
+	_etiqueta.add_theme_font_size_override("font_size", 30)
 	root.add_child(_etiqueta)
 	var arena = _m._arena
 	var centro := Vector3.ZERO
