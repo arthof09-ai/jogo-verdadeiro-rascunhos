@@ -57,6 +57,7 @@ uniform float campo_alto = 1.0;        // fracção da altura que a erva tem lá
 // debaixo da neve (o manto e os montes lêem-se). Tudo a zero: a erva de sempre.
 uniform float clima_neve = 0.0;
 uniform float clima_aglomerado = 0.0;
+uniform float clima_gelo = 0.0;
 uniform float clima_agua = 0.0;
 uniform float clima_lama = 0.0;
 float no_campo(vec2 xz) {
@@ -135,10 +136,12 @@ void vertex() {
 	if (clima_aglomerado > 0.0) {
 		float ab = clima_abrigo(raiz.xz);
 		float exposto = 1.0 - clamp(ab * 1.4, 0.0, 1.0);
-		neve_aqui = clima_neve * (1.0 - clima_aglomerado * exposto * 0.67) + clima_aglomerado * ab * 1.05;
+		// Ordem Neve (correcção de 14/11): na nevasca consolidada o centro também fica coberto (nunca relva verde
+		// crua no meio da nevasca), enquanto covas e abrigos acumulam manto mais espesso.
+		neve_aqui = clima_neve * (1.0 - clima_aglomerado * exposto * 0.14) + clima_aglomerado * (0.16 + ab * 0.95);
 	}
-	v_neve = clamp(neve_aqui, 0.0, 1.0);
-	baixa *= (1.0 - afoga) * (1.0 - 0.80 * clamp(neve_aqui, 0.0, 1.0));
+	v_neve = clamp(neve_aqui + clima_gelo * 0.38, 0.0, 1.0);
+	baixa *= (1.0 - afoga) * (1.0 - 0.88 * clamp(neve_aqui, 0.0, 1.0));
 	p.y = raiz.y + (p.y - raiz.y) * baixa;
 	// ---- ORDEM GRAMA: o rastro de quem passa — o tufo dobra pela raiz para o rumo guardado, mais na ponta
 	vec4 rastro = rastro_dobra(raiz.xz, alto_tufo * baixa * fica);
@@ -197,7 +200,9 @@ void fragment() {
 	float contra = max(dot(-vw, dir_luz), 0.0);
 	cor *= 1.0 + 0.22 * contra * contra * v_alt * vis;
 	cor = min(cor, vec3(0.86, 0.84, 0.70));
-	// clima: a erva debaixo da neve fica branca (as pontas primeiro)
-	cor = mix(cor, vec3(0.86, 0.89, 0.93) * mix(0.72, 1.0, vis), v_neve * mix(0.55, 0.95, v_alt));
+	// clima: a erva debaixo da neve e da geada fica fria/esbranquiçada, respeitando a luz do ciclo do dia
+	vec3 luz_neve = olho_noite(clamp(cor_ceu * 0.42 + mix(cor_sombra * 0.48, cor_sol * 0.95, vis), vec3(0.24, 0.30, 0.44), vec3(0.92, 0.94, 0.97)));
+	vec3 tinta_neve = mix(vec3(0.72, 0.80, 0.91), vec3(0.90, 0.93, 0.97), smoothstep(0.25, 0.90, v_alt)) * luz_neve;
+	cor = mix(cor, tinta_neve, clamp(v_neve * mix(0.78, 0.98, v_alt), 0.0, 0.97));
 	ALBEDO = cor;
 }

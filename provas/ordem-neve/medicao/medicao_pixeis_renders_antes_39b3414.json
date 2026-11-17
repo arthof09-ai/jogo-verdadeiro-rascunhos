@@ -1,0 +1,564 @@
+{
+  "definicoes": {
+    "branco_neve": "max>=0.55 e sat<=0.20",
+    "centro": [
+      0.379999995231628,
+      0.379999995231628,
+      0.620000004768372,
+      0.620000004768372
+    ],
+    "floco": "|dL|>=0.06 no par com/sem flocos",
+    "fonte": "Image.get_pixel sobre os PNG; nenhuma chamada ao clima",
+    "ladrilho_px": 24,
+    "periferia": [
+      0.0500000007450581,
+      0.300000011920929,
+      0.949999988079071,
+      0.900000035762787
+    ]
+  },
+  "quadros": {
+    "fraca": {
+      "chao_centro": {
+        "cobertura_branco": 0.6387,
+        "ladrilhos": 70,
+        "lum_media": 0.6789,
+        "modulacao_lum_p90_p10": 0.0741,
+        "modulacao_lum_std": 0.0314,
+        "variacao_cobertura_std": 0.1538
+      },
+      "chao_periferia": {
+        "cobertura_branco": 0.767,
+        "ladrilhos": 596,
+        "lum_media": 0.6731,
+        "modulacao_lum_p90_p10": 0.2488,
+        "modulacao_lum_std": 0.1208,
+        "variacao_cobertura_std": 0.2856
+      },
+      "flocos_ar": {
+        "contraste_medio_floco": 0.2032,
+        "fraccao_pixeis_floco": 0.00546,
+        "sinal_medio_floco": 0.198,
+        "tracos_angulo_da_vertical_graus": 84.1,
+        "tracos_coerencia": 0.0036
+      },
+      "flocos_centro": {
+        "contraste_medio_floco": 0.1845,
+        "fraccao_pixeis_floco": 0.00802,
+        "sinal_medio_floco": 0.1836,
+        "tracos_angulo_da_vertical_graus": 38.8,
+        "tracos_coerencia": 0.0015
+      },
+      "lagoa": {
+        "distancia_rgb_ao_t0": 0.1585,
+        "fraccao_branco": 0.7801,
+        "pixeis": 1037,
+        "referencia": "t0_limpo",
+        "rgb_media": [
+          0.689,
+          0.818,
+          0.802
+        ]
+      }
+    },
+    "t0_limpo": {
+      "chao_centro": {
+        "cobertura_branco": 0.0009,
+        "ladrilhos": 70,
+        "lum_media": 0.6677,
+        "modulacao_lum_p90_p10": 0.0594,
+        "modulacao_lum_std": 0.028,
+        "variacao_cobertura_std": 0.0035
+      },
+      "chao_periferia": {
+        "cobertura_branco": 0.0208,
+        "ladrilhos": 596,
+        "lum_media": 0.6094,
+        "modulacao_lum_p90_p10": 0.3706,
+        "modulacao_lum_std": 0.1497,
+        "variacao_cobertura_std": 0.1126
+      },
+      "flocos_ar": {
+        "contraste_medio_floco": 0.1012,
+        "fraccao_pixeis_floco": 0.00049,
+        "sinal_medio_floco": -0.0004,
+        "tracos_angulo_da_vertical_graus": 45.6,
+        "tracos_coerencia": 0.1667
+      },
+      "flocos_centro": {
+        "contraste_medio_floco": 0.0,
+        "fraccao_pixeis_floco": 0.0,
+        "sinal_medio_floco": 0.0,
+        "tracos_angulo_da_vertical_graus": 0.0,
+        "tracos_coerencia": 0.0
+      },
+      "lagoa": {
+        "distancia_rgb_ao_t0": 0.0,
+        "fraccao_branco": 0.7416,
+        "pixeis": 1037,
+        "referencia": "t0_limpo",
+        "rgb_media": [
+          0.668,
+          0.753,
+          0.659
+        ]
+      }
+    },
+    "t0_noite": {
+      "chao_centro": {
+        "cobertura_branco": 0.0008,
+        "ladrilhos": 70,
+        "lum_media": 0.2161,
+        "modulacao_lum_p90_p10": 0.0384,
+        "modulacao_lum_std": 0.0148,
+        "variacao_cobertura_std": 0.003
+      },
+      "chao_periferia": {
+        "cobertura_branco": 0.0002,
+        "ladrilhos": 596,
+        "lum_media": 0.1825,
+        "modulacao_lum_p90_p10": 0.1488,
+        "modulacao_lum_std": 0.0605,
+        "variacao_cobertura_std": 0.0036
+      },
+      "flocos_ar": {
+        "contraste_medio_floco": 0.0789,
+        "fraccao_pixeis_floco": 0.00004,
+        "sinal_medio_floco": 0.0427,
+        "tracos_angulo_da_vertical_graus": 48.9,
+        "tracos_coerencia": 0.1718
+      },
+      "flocos_centro": {
+        "contraste_medio_floco": 0.0,
+        "fraccao_pixeis_floco": 0.0,
+        "sinal_medio_floco": 0.0,
+        "tracos_angulo_da_vertical_graus": 0.0,
+        "tracos_coerencia": 0.0
+      },
+      "lagoa": {
+        "distancia_rgb_ao_t0": 0.0,
+        "fraccao_branco": 0.0,
+        "pixeis": 1037,
+        "referencia": "t0_noite",
+        "rgb_media": [
+          0.081,
+          0.127,
+          0.199
+        ]
+      }
+    },
+    "t0_tarde": {
+      "chao_centro": {
+        "cobertura_branco": 0.0008,
+        "ladrilhos": 70,
+        "lum_media": 0.5505,
+        "modulacao_lum_p90_p10": 0.0319,
+        "modulacao_lum_std": 0.0171,
+        "variacao_cobertura_std": 0.003
+      },
+      "chao_periferia": {
+        "cobertura_branco": 0.0125,
+        "ladrilhos": 596,
+        "lum_media": 0.4463,
+        "modulacao_lum_p90_p10": 0.3735,
+        "modulacao_lum_std": 0.1509,
+        "variacao_cobertura_std": 0.0737
+      },
+      "flocos_ar": {
+        "contraste_medio_floco": 0.1065,
+        "fraccao_pixeis_floco": 0.0002,
+        "sinal_medio_floco": 0.0,
+        "tracos_angulo_da_vertical_graus": 47.8,
+        "tracos_coerencia": 0.1532
+      },
+      "flocos_centro": {
+        "contraste_medio_floco": 0.0,
+        "fraccao_pixeis_floco": 0.0,
+        "sinal_medio_floco": 0.0,
+        "tracos_angulo_da_vertical_graus": 0.0,
+        "tracos_coerencia": 0.0
+      },
+      "lagoa": {
+        "distancia_rgb_ao_t0": 0.0,
+        "fraccao_branco": 0.4687,
+        "pixeis": 1037,
+        "referencia": "t0_tarde",
+        "rgb_media": [
+          0.586,
+          0.644,
+          0.539
+        ]
+      }
+    },
+    "t1_meia_nevasca": {
+      "chao_centro": {
+        "cobertura_branco": 0.7967,
+        "ladrilhos": 70,
+        "lum_media": 0.6954,
+        "modulacao_lum_p90_p10": 0.0762,
+        "modulacao_lum_std": 0.034,
+        "variacao_cobertura_std": 0.0887
+      },
+      "chao_periferia": {
+        "cobertura_branco": 0.8041,
+        "ladrilhos": 596,
+        "lum_media": 0.7105,
+        "modulacao_lum_p90_p10": 0.2476,
+        "modulacao_lum_std": 0.1225,
+        "variacao_cobertura_std": 0.2791
+      },
+      "flocos_ar": {
+        "contraste_medio_floco": 0.1973,
+        "fraccao_pixeis_floco": 0.01449,
+        "sinal_medio_floco": 0.1956,
+        "tracos_angulo_da_vertical_graus": 62.4,
+        "tracos_coerencia": 0.0045
+      },
+      "flocos_centro": {
+        "contraste_medio_floco": 0.1637,
+        "fraccao_pixeis_floco": 0.02385,
+        "sinal_medio_floco": 0.1632,
+        "tracos_angulo_da_vertical_graus": 44.6,
+        "tracos_coerencia": 0.0081
+      },
+      "lagoa": {
+        "distancia_rgb_ao_t0": 0.1993,
+        "fraccao_branco": 0.8023,
+        "pixeis": 1037,
+        "referencia": "t0_limpo",
+        "rgb_media": [
+          0.724,
+          0.848,
+          0.825
+        ]
+      }
+    },
+    "t2_nevasca": {
+      "chao_centro": {
+        "cobertura_branco": 0.9138,
+        "ladrilhos": 70,
+        "lum_media": 0.7682,
+        "modulacao_lum_p90_p10": 0.126,
+        "modulacao_lum_std": 0.046,
+        "variacao_cobertura_std": 0.0876
+      },
+      "chao_periferia": {
+        "cobertura_branco": 0.8704,
+        "ladrilhos": 596,
+        "lum_media": 0.7866,
+        "modulacao_lum_p90_p10": 0.2437,
+        "modulacao_lum_std": 0.1264,
+        "variacao_cobertura_std": 0.2404
+      },
+      "flocos_ar": {
+        "contraste_medio_floco": 0.2034,
+        "fraccao_pixeis_floco": 0.01666,
+        "sinal_medio_floco": 0.1993,
+        "tracos_angulo_da_vertical_graus": -53.3,
+        "tracos_coerencia": 0.1684
+      },
+      "flocos_centro": {
+        "contraste_medio_floco": 0.1467,
+        "fraccao_pixeis_floco": 0.02539,
+        "sinal_medio_floco": 0.1439,
+        "tracos_angulo_da_vertical_graus": -60.0,
+        "tracos_coerencia": 0.1378
+      },
+      "lagoa": {
+        "distancia_rgb_ao_t0": 0.2011,
+        "fraccao_branco": 0.7975,
+        "pixeis": 1037,
+        "referencia": "t0_limpo",
+        "rgb_media": [
+          0.728,
+          0.851,
+          0.824
+        ]
+      }
+    },
+    "t2_noite": {
+      "chao_centro": {
+        "cobertura_branco": 0.0009,
+        "ladrilhos": 70,
+        "lum_media": 0.4008,
+        "modulacao_lum_p90_p10": 0.0908,
+        "modulacao_lum_std": 0.0329,
+        "variacao_cobertura_std": 0.0032
+      },
+      "chao_periferia": {
+        "cobertura_branco": 0.0003,
+        "ladrilhos": 596,
+        "lum_media": 0.3853,
+        "modulacao_lum_p90_p10": 0.2309,
+        "modulacao_lum_std": 0.099,
+        "variacao_cobertura_std": 0.0038
+      },
+      "flocos_ar": {
+        "contraste_medio_floco": 0.1139,
+        "fraccao_pixeis_floco": 0.01204,
+        "sinal_medio_floco": 0.0261,
+        "tracos_angulo_da_vertical_graus": 66.3,
+        "tracos_coerencia": 0.0059
+      },
+      "flocos_centro": {
+        "contraste_medio_floco": 0.0942,
+        "fraccao_pixeis_floco": 0.01685,
+        "sinal_medio_floco": -0.0315,
+        "tracos_angulo_da_vertical_graus": -81.5,
+        "tracos_coerencia": 0.0172
+      },
+      "lagoa": {
+        "distancia_rgb_ao_t0": 0.1489,
+        "fraccao_branco": 0.0,
+        "pixeis": 1037,
+        "referencia": "t0_noite",
+        "rgb_media": [
+          0.138,
+          0.201,
+          0.315
+        ]
+      }
+    },
+    "t2_tarde": {
+      "chao_centro": {
+        "cobertura_branco": 0.8669,
+        "ladrilhos": 70,
+        "lum_media": 0.7533,
+        "modulacao_lum_p90_p10": 0.0847,
+        "modulacao_lum_std": 0.0314,
+        "variacao_cobertura_std": 0.0849
+      },
+      "chao_periferia": {
+        "cobertura_branco": 0.6761,
+        "ladrilhos": 596,
+        "lum_media": 0.7364,
+        "modulacao_lum_p90_p10": 0.2896,
+        "modulacao_lum_std": 0.1315,
+        "variacao_cobertura_std": 0.3885
+      },
+      "flocos_ar": {
+        "contraste_medio_floco": 0.2029,
+        "fraccao_pixeis_floco": 0.01119,
+        "sinal_medio_floco": 0.1975,
+        "tracos_angulo_da_vertical_graus": 62.2,
+        "tracos_coerencia": 0.0051
+      },
+      "flocos_centro": {
+        "contraste_medio_floco": 0.1749,
+        "fraccao_pixeis_floco": 0.01973,
+        "sinal_medio_floco": 0.1729,
+        "tracos_angulo_da_vertical_graus": -68.1,
+        "tracos_coerencia": 0.0245
+      },
+      "lagoa": {
+        "distancia_rgb_ao_t0": 0.2544,
+        "fraccao_branco": 0.8187,
+        "pixeis": 1037,
+        "referencia": "t0_tarde",
+        "rgb_media": [
+          0.676,
+          0.773,
+          0.739
+        ]
+      }
+    }
+  },
+  "series": {
+    "serie_fraca": {
+      "centro_contraste_media": 0.1731,
+      "centro_contraste_min": 0.1592,
+      "centro_fraccao_media": 0.00795,
+      "centro_instantes": [
+        {
+          "contraste_medio_floco": 0.1846,
+          "fraccao_pixeis_floco": 0.00804,
+          "sinal_medio_floco": 0.1846,
+          "tracos_angulo_da_vertical_graus": 38.4,
+          "tracos_coerencia": 0.0109
+        },
+        {
+          "contraste_medio_floco": 0.1673,
+          "fraccao_pixeis_floco": 0.00786,
+          "sinal_medio_floco": 0.1673,
+          "tracos_angulo_da_vertical_graus": -52.3,
+          "tracos_coerencia": 0.0093
+        },
+        {
+          "contraste_medio_floco": 0.1795,
+          "fraccao_pixeis_floco": 0.00804,
+          "sinal_medio_floco": 0.1795,
+          "tracos_angulo_da_vertical_graus": -62.1,
+          "tracos_coerencia": 0.0051
+        },
+        {
+          "contraste_medio_floco": 0.1737,
+          "fraccao_pixeis_floco": 0.00731,
+          "sinal_medio_floco": 0.1737,
+          "tracos_angulo_da_vertical_graus": -22.4,
+          "tracos_coerencia": 0.0206
+        },
+        {
+          "contraste_medio_floco": 0.1745,
+          "fraccao_pixeis_floco": 0.00852,
+          "sinal_medio_floco": 0.1745,
+          "tracos_angulo_da_vertical_graus": -56.0,
+          "tracos_coerencia": 0.0212
+        },
+        {
+          "contraste_medio_floco": 0.1592,
+          "fraccao_pixeis_floco": 0.00795,
+          "sinal_medio_floco": 0.1592,
+          "tracos_angulo_da_vertical_graus": 59.5,
+          "tracos_coerencia": 0.0076
+        }
+      ],
+      "contraste_media": 0.2006,
+      "contraste_min": 0.1903,
+      "fraccao_max": 0.0057,
+      "fraccao_media": 0.00542,
+      "fraccao_min": 0.00519,
+      "instantes": [
+        {
+          "contraste_medio_floco": 0.2024,
+          "fraccao_pixeis_floco": 0.0054,
+          "sinal_medio_floco": 0.1982,
+          "tracos_angulo_da_vertical_graus": 3.1,
+          "tracos_coerencia": 0.0033
+        },
+        {
+          "contraste_medio_floco": 0.1965,
+          "fraccao_pixeis_floco": 0.0057,
+          "sinal_medio_floco": 0.1876,
+          "tracos_angulo_da_vertical_graus": 50.2,
+          "tracos_coerencia": 0.006
+        },
+        {
+          "contraste_medio_floco": 0.1903,
+          "fraccao_pixeis_floco": 0.00533,
+          "sinal_medio_floco": 0.1828,
+          "tracos_angulo_da_vertical_graus": 60.0,
+          "tracos_coerencia": 0.0022
+        },
+        {
+          "contraste_medio_floco": 0.1951,
+          "fraccao_pixeis_floco": 0.00544,
+          "sinal_medio_floco": 0.1915,
+          "tracos_angulo_da_vertical_graus": 69.4,
+          "tracos_coerencia": 0.0035
+        },
+        {
+          "contraste_medio_floco": 0.2103,
+          "fraccao_pixeis_floco": 0.00546,
+          "sinal_medio_floco": 0.2068,
+          "tracos_angulo_da_vertical_graus": -81.4,
+          "tracos_coerencia": 0.004
+        },
+        {
+          "contraste_medio_floco": 0.2093,
+          "fraccao_pixeis_floco": 0.00519,
+          "sinal_medio_floco": 0.2044,
+          "tracos_angulo_da_vertical_graus": 44.6,
+          "tracos_coerencia": 0.0056
+        }
+      ]
+    },
+    "serie_nevasca": {
+      "centro_contraste_media": 0.1551,
+      "centro_contraste_min": 0.1453,
+      "centro_fraccao_media": 0.01882,
+      "centro_instantes": [
+        {
+          "contraste_medio_floco": 0.1453,
+          "fraccao_pixeis_floco": 0.02748,
+          "sinal_medio_floco": 0.1438,
+          "tracos_angulo_da_vertical_graus": -79.7,
+          "tracos_coerencia": 0.1584
+        },
+        {
+          "contraste_medio_floco": 0.1559,
+          "fraccao_pixeis_floco": 0.02646,
+          "sinal_medio_floco": 0.1534,
+          "tracos_angulo_da_vertical_graus": -78.2,
+          "tracos_coerencia": 0.1381
+        },
+        {
+          "contraste_medio_floco": 0.1666,
+          "fraccao_pixeis_floco": 0.01433,
+          "sinal_medio_floco": 0.1596,
+          "tracos_angulo_da_vertical_graus": -88.3,
+          "tracos_coerencia": 0.007
+        },
+        {
+          "contraste_medio_floco": 0.1527,
+          "fraccao_pixeis_floco": 0.01199,
+          "sinal_medio_floco": 0.1455,
+          "tracos_angulo_da_vertical_graus": -22.8,
+          "tracos_coerencia": 0.0087
+        },
+        {
+          "contraste_medio_floco": 0.1525,
+          "fraccao_pixeis_floco": 0.02071,
+          "sinal_medio_floco": 0.1492,
+          "tracos_angulo_da_vertical_graus": 72.7,
+          "tracos_coerencia": 0.0798
+        },
+        {
+          "contraste_medio_floco": 0.1576,
+          "fraccao_pixeis_floco": 0.01192,
+          "sinal_medio_floco": 0.1496,
+          "tracos_angulo_da_vertical_graus": -38.1,
+          "tracos_coerencia": 0.0178
+        }
+      ],
+      "contraste_media": 0.205,
+      "contraste_min": 0.2021,
+      "fraccao_max": 0.02028,
+      "fraccao_media": 0.0133,
+      "fraccao_min": 0.00931,
+      "instantes": [
+        {
+          "contraste_medio_floco": 0.2025,
+          "fraccao_pixeis_floco": 0.02028,
+          "sinal_medio_floco": 0.2,
+          "tracos_angulo_da_vertical_graus": -70.4,
+          "tracos_coerencia": 0.0198
+        },
+        {
+          "contraste_medio_floco": 0.2021,
+          "fraccao_pixeis_floco": 0.01675,
+          "sinal_medio_floco": 0.1997,
+          "tracos_angulo_da_vertical_graus": -66.4,
+          "tracos_coerencia": 0.0075
+        },
+        {
+          "contraste_medio_floco": 0.2062,
+          "fraccao_pixeis_floco": 0.00954,
+          "sinal_medio_floco": 0.1901,
+          "tracos_angulo_da_vertical_graus": 15.7,
+          "tracos_coerencia": 0.0074
+        },
+        {
+          "contraste_medio_floco": 0.2079,
+          "fraccao_pixeis_floco": 0.00931,
+          "sinal_medio_floco": 0.1956,
+          "tracos_angulo_da_vertical_graus": -52.1,
+          "tracos_coerencia": 0.0068
+        },
+        {
+          "contraste_medio_floco": 0.2047,
+          "fraccao_pixeis_floco": 0.01448,
+          "sinal_medio_floco": 0.1979,
+          "tracos_angulo_da_vertical_graus": -72.4,
+          "tracos_coerencia": 0.0108
+        },
+        {
+          "contraste_medio_floco": 0.2064,
+          "fraccao_pixeis_floco": 0.00941,
+          "sinal_medio_floco": 0.1875,
+          "tracos_angulo_da_vertical_graus": -39.6,
+          "tracos_coerencia": 0.0018
+        }
+      ]
+    }
+  }
+}

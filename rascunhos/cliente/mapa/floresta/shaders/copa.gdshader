@@ -14,6 +14,10 @@ uniform vec3 cor_ouro : source_color = vec3(0.70, 0.65, 0.27);
 // Ordem 43: o vento é o do MUNDO (vento_floresta.gdshaderinc). Aqui só fica o balanço (m)
 // desta família de copa com a tarde forte.
 uniform float vento_amplitude : hint_range(0.0, 1.5) = 0.22;
+uniform float clima_neve = 0.0;
+uniform float clima_aglomerado = 0.0;
+uniform float clima_gelo = 0.0;
+uniform vec2 vento_abrigo = vec2(1.0, 0.0);
 
 varying vec3 v_pos;
 varying vec3 v_n;
@@ -54,5 +58,16 @@ void fragment() {
 	float orla = 1.0 - max(dot(n, vw), 0.0);
 	float contra = max(dot(-vw, dir_luz), 0.0);
 	cor = mix(cor, cor_ouro * cor_sol * 1.2, orla * orla * (0.06 + 0.9 * contra * contra) * 0.42);
-	ALBEDO = olho_noite(cor * mix(0.72, 1.0, ao));
+	vec3 saida = olho_noite(cor * mix(0.72, 1.0, ao));
+	if (clima_neve > 0.001 || clima_aglomerado > 0.001 || clima_gelo > 0.001) {
+		vec2 w = normalize(vento_abrigo + vec2(1e-5, 0.0));
+		float sota = clamp(dot(n.xz, w) * 0.45, -0.25, 0.45);
+		float lim = mix(0.85, 0.08, clamp(clima_neve * 0.70 + clima_aglomerado * 0.55, 0.0, 1.0));
+		float m_copa = smoothstep(lim, lim + 0.24, n.y + sota + (pinc - 0.5) * 0.38)
+			* clamp((clima_neve + clima_aglomerado + clima_gelo * 0.5) * 1.35, 0.0, 0.92);
+		vec3 luz_copa = olho_noite(clamp(amb + mix(cor_sombra * 0.52, cor_sol * 1.02, k * ao), vec3(0.24, 0.30, 0.44), vec3(0.92, 0.94, 0.97)));
+		vec3 tinta_copa = mix(vec3(0.68, 0.77, 0.89), vec3(0.91, 0.94, 0.98), smoothstep(0.2, 0.8, n.y + 0.2 * pinc)) * luz_copa;
+		saida = mix(saida, tinta_copa, m_copa);
+	}
+	ALBEDO = saida;
 }
