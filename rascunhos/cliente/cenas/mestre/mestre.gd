@@ -29,10 +29,12 @@ const AbaAgir := preload("res://cenas/mestre/aba_agir.gd")
 const EscolhaPerfil := preload("res://arte/perfis/escolha_perfil.gd")
 
 const CENA_LOBBY := "res://cenas/lobby/lobby.tscn"
-const LARGURA_BASE := 1920.0
-const ALTURA_BASE := 1080.0
-const FONTE_BASE := 22
-const FONTE_MIN_PX_REAIS := 13.0
+## ORDEM DADOS DE APRESENTAÇÃO: os tamanhos de apresentação vêm da tabela única.
+const Apresentacao := preload("res://dados/apresentacao.gd")
+const LARGURA_BASE := Apresentacao.LARGURA_BASE
+const ALTURA_BASE := Apresentacao.ALTURA_BASE
+const FONTE_BASE := Apresentacao.FONTE_BASE
+const FONTE_MIN_PX_REAIS := Apresentacao.FONTE_MIN_PX_REAIS
 const FRACAO_TABULEIRO := 0.55
 const LINHAS_CARTAO := 6
 const LINHAS_TITULO := 2

@@ -14,9 +14,11 @@ extends Control
 const Textos := preload("res://cenas/mestre/textos_mestre.gd")
 const CamaraLivre := preload("res://cenas/mestre/camara_livre.gd")
 
-const COR_FUNDO := Color(30.0 / 255.0, 40.0 / 255.0, 48.0 / 255.0, 0.30)
-const COR_BORDA := Color(1.0, 1.0, 1.0, 0.55)
-const COR_NUB := Color(1.0, 1.0, 1.0, 0.85)
+## ORDEM DADOS DE APRESENTAÇÃO: as cores vêm da tabela única.
+const Apresentacao := preload("res://dados/apresentacao.gd")
+const COR_FUNDO := Apresentacao.COR_CAMARA_LIVRE_FUNDO
+const COR_BORDA := Apresentacao.COR_CAMARA_LIVRE_BORDA
+const COR_NUB := Apresentacao.COR_CAMARA_LIVRE_NUB
 const MANIPULO_PX := 132.0
 const NUB_PX := 56.0
 const CURSO_NUB_PX := 34.0

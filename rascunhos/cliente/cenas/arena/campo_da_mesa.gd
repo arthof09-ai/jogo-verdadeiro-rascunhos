@@ -16,6 +16,8 @@ extends RefCounted
 ##                          o ecrã de cada arena diz quem e porquê (o HUD da jogadora; os alertas do Mestre).
 ## Só apresentação e geometria: não lê Estado, Rede nem nada do Mestre (canario_privacidade.gd).
 
+## ORDEM DADOS DE APRESENTAÇÃO: as cores e os tamanhos de apresentação vêm da tabela única.
+const Apresentacao := preload("res://dados/apresentacao.gd")
 const CampoFloresta := preload("res://mapa/floresta/campo_floresta.gd")
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
 const Assentamento := preload("res://cenas/arena/assentamento.gd")
@@ -101,11 +103,11 @@ static func anotar_recusa(antes: Dictionary, agora: Dictionary, id: String, text
 
 ## Ordem 60: a cor da casa de uma figura recusada (o remendo por baixo da marca). Não é a do alvo, nem a do fogo,
 ## nem a dos destaques: é a cor de «aqui não».
-const COR_RECUSA := Color(0.80, 0.10, 0.36, 0.60)
+const COR_RECUSA := Apresentacao.COR_RECUSA
 ## A marca fica à altura do fogo e dos destaques (por cima da relva, pelo shader dos remendos de cada arena).
 const LEVANTA_RECUSA := 0.042
 ## O rótulo da marca fica por cima da casa, à altura da cabeça de uma figura de pé.
-const ALTURA_ROTULO_RECUSA := 1.6
+const ALTURA_ROTULO_RECUSA := Apresentacao.ALTURA_ROTULO_RECUSA
 
 
 ## Ordem 60: o motivo de uma recusa do pé («FLORESTA-E08-CASA-BLOQUEADA: (x,y) motivo» → «motivo»).
@@ -179,7 +181,7 @@ static func marcar_recusas(dono: Node3D, marcas: Dictionary, recusas: Dictionary
 		rotulo.font_size = 48
 		rotulo.outline_size = 12
 		rotulo.pixel_size = 0.005
-		rotulo.modulate = Color(1.0, 0.78, 0.84)
+		rotulo.modulate = Apresentacao.COR_RECUSA_ROTULO
 		rotulo.position = Assentamento.centro_casa(origem, casa_m, c) + Vector3(0.0, ALTURA_ROTULO_RECUSA, 0.0)
 		no.add_child(rotulo)
 		pai.add_child(no)

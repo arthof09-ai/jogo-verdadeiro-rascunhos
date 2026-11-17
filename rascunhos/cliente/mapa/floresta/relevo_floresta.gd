@@ -24,7 +24,9 @@ extends RefCounted
 ##   SO  a GARGANTA ................... um lombo de rocha e um tronco tombado: o corredor
 ##   N   a janela para a Árvore Ancestral (o chão cai para o vale)   ·   S  o monte sobe
 
-const CASA_M := 1.5
+## ORDEM DADOS DE APRESENTAÇÃO: o lado da casa vem da tabela única.
+const Apresentacao := preload("res://dados/apresentacao.gd")
+const CASA_M := Apresentacao.CASA_M
 const LADO_CASAS := 50
 const LADO := 75.0
 const MEIO := 37.5

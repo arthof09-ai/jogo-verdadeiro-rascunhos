@@ -70,10 +70,10 @@ const CORES_DANO := {
 ## Tipo de dano sem cor na tabela.
 const COR_DANO_SEM_TIPO := Color.WHITE
 
-## Controlos da câmara livre do Mestre (fundo 1e2830 a 30%, borda, botão).
+## Controlos da câmara livre do Mestre: fundo 1e2830 a 30% (a dica usa-o a 45%), borda e o «nub» do manípulo.
 const COR_CAMARA_LIVRE_FUNDO := Color(30.0 / 255.0, 40.0 / 255.0, 48.0 / 255.0, 0.30)
 const COR_CAMARA_LIVRE_BORDA := Color(1.0, 1.0, 1.0, 0.55)
-const COR_CAMARA_LIVRE_BOTAO := Color(1.0, 1.0, 1.0, 0.85)
+const COR_CAMARA_LIVRE_NUB := Color(1.0, 1.0, 1.0, 0.85)
 
 # ================================================================ paleta da mesa (arena da jogadora)
 
@@ -119,6 +119,8 @@ const RAIO_CONTACTO := 0.5
 # ×1,25: a Ong 2,625 m); sem ela, vale a do tipo. Hoje o cliente só desenha marcadores (não há passo de
 # importação de GLB a escalar modelos) e os dois tipos usam a mesma altura por omissão.
 
+## A escala das figuras: regra do Mestre, figuras ×1,25.
+const ESCALA_FIGURA := 1.25
 ## Humano de 1,80 m × 1,25 (Plano B §B1).
 const ALTURA_PADRAO := 2.25
 const ALTURAS_POR_TIPO := {

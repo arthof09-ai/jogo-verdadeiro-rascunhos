@@ -43,12 +43,14 @@ const SH_SOBRE := preload("res://cenas/arena/sobre_relevo.gdshader")
 
 # Do site (cena.js): grelha c9c2a7, casas do «mover» cab577 a 50% com contorno f5d59b, anel de destino ffd28b
 # (raio 0,65). O fundo, o céu e o sol já não são os do site: são os do mapa (Ordem 45, um só céu).
-const COR_LINHAS := Color(0.788, 0.761, 0.655, 0.5)  # c9c2a7
-const COR_DESTAQUE := Color(0.792, 0.710, 0.467, 0.5)  # cab577 a 50%
-const COR_CONTORNO_DESTAQUE := Color("f5d59b")
-const COR_ANEL := Color("ffd28b")
+## ORDEM DADOS DE APRESENTAÇÃO: as cores e os tamanhos de apresentação vêm da tabela única.
+const Apresentacao := preload("res://dados/apresentacao.gd")
+const COR_LINHAS := Apresentacao.COR_MESTRE_LINHAS  # c9c2a7
+const COR_DESTAQUE := Apresentacao.COR_MESTRE_DESTAQUE  # cab577 a 50%
+const COR_CONTORNO_DESTAQUE := Apresentacao.COR_MESTRE_CONTORNO_DESTAQUE
+const COR_ANEL := Apresentacao.COR_MESTRE_ANEL
 ## Ordem 13: casa a arder (o fogo do ambiente; as casas vêm do servidor, na vista do Mestre).
-const COR_FOGO := Color(1.0, 0.45, 0.10, 0.55)
+const COR_FOGO := Apresentacao.COR_FOGO
 ## Os metros acima do relevo de cada camada colada ao chão (como na arena do jogador: 3–5 cm; o shader
 ## `sobre_relevo` resolve o resto, por cima da relva pisada).
 const LEVANTA_LINHAS := 0.03
@@ -67,7 +69,7 @@ const CLIMA_DO_AMBIENTE := {
 
 var largura := 0
 var altura := 0
-var casa_m := 1.5
+var casa_m := Apresentacao.CASA_M
 ## Ordem 45: canto noroeste da casa (0, 0) no mundo (x, z), como na arena do jogador.
 var origem := Vector2(-15.0, -15.0)
 ## O mapa da floresta (o campo de batalha), filho desta arena.
@@ -106,9 +108,9 @@ func _ready() -> void:
 	_ambiente.add_to_group(&"ambiente")
 	var env := Environment.new()
 	env.background_mode = Environment.BG_COLOR
-	env.background_color = Color(0.52, 0.66, 0.8)
+	env.background_color = Apresentacao.COR_MESTRE_FUNDO_AMBIENTE
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.85, 0.88, 0.92)
+	env.ambient_light_color = Apresentacao.COR_MESTRE_LUZ_AMBIENTE
 	env.ambient_light_energy = 0.55
 	_ambiente.environment = env
 	add_child(_ambiente)

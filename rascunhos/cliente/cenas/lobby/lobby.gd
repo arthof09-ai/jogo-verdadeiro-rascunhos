@@ -16,14 +16,16 @@ extends Control
 
 const CENA_ARENA := "res://cenas/arena/arena.tscn"
 const CENA_MESTRE := "res://cenas/mestre/mestre.tscn"
-const LARGURA_BASE := 1920.0
-const ALTURA_BASE := 1080.0
-const FONTE_BASE := 22
-const FONTE_MIN_PX_REAIS := 13.0  # acima dos 12 px pedidos
-const OPACIDADE_PAINEL := 0.55
+## ORDEM DADOS DE APRESENTAÇÃO: as cores e os tamanhos de apresentação vêm da tabela única.
+const Apresentacao := preload("res://dados/apresentacao.gd")
+const LARGURA_BASE := Apresentacao.LARGURA_BASE
+const ALTURA_BASE := Apresentacao.ALTURA_BASE
+const FONTE_BASE := Apresentacao.FONTE_BASE
+const FONTE_MIN_PX_REAIS := Apresentacao.FONTE_MIN_PX_REAIS
+const OPACIDADE_PAINEL := Apresentacao.OPACIDADE_PAINEL
 ## Ordem 34 (N26-2): a validação do ROOM_JOIN no aparelho (limites e dicas).
 const ValidarEntrada := preload("res://rede/validar_entrada.gd")
-const COR_FORA := Color(1.0, 0.55, 0.45)
+const COR_FORA := Apresentacao.COR_FORA
 ## Frases do próprio cliente (quando o servidor não manda `texto`).
 const FRASES := {
 	"senha": "O nome ou a senha não conferem.",
@@ -82,16 +84,16 @@ func _ready() -> void:
 
 func _montar() -> void:
 	var painel_sb := StyleBoxFlat.new()
-	painel_sb.bg_color = Color(0.06, 0.07, 0.10, OPACIDADE_PAINEL)
+	painel_sb.bg_color = Apresentacao.COR_PAINEL
 	painel_sb.set_corner_radius_all(14)
 	painel_sb.set_content_margin_all(24)
 	_tema.set_stylebox("panel", "PanelContainer", painel_sb)
-	_tema.set_color("font_color", "Label", Color.WHITE)
-	_tema.set_color("font_color", "Button", Color.WHITE)
+	_tema.set_color("font_color", "Label", Apresentacao.COR_TEXTO)
+	_tema.set_color("font_color", "Button", Apresentacao.COR_TEXTO)
 	theme = _tema
 
 	var fundo := ColorRect.new()
-	fundo.color = Color(0.10, 0.13, 0.18)
+	fundo.color = Apresentacao.COR_FUNDO
 	fundo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(fundo)
 	fundo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -114,7 +116,7 @@ func _montar() -> void:
 	_estado = _rotulo_quebrado()
 	caixa.add_child(_estado)
 	_aviso = _rotulo_quebrado()
-	_aviso.add_theme_color_override("font_color", Color(1.0, 0.85, 0.45))
+	_aviso.add_theme_color_override("font_color", Apresentacao.COR_AVISO)
 	caixa.add_child(_aviso)
 
 	# Jogadora: nome da personagem + senha simples.
@@ -223,7 +225,7 @@ func _marcar(campo: LineEdit, dica: Label, texto: String) -> void:
 	if texto != "":
 		if _sb_fora == null:
 			_sb_fora = StyleBoxFlat.new()
-			_sb_fora.bg_color = Color(0.20, 0.09, 0.08, 0.9)
+			_sb_fora.bg_color = Apresentacao.COR_FUNDO_FORA
 			_sb_fora.border_color = COR_FORA
 			_sb_fora.set_border_width_all(2)
 			_sb_fora.set_corner_radius_all(4)

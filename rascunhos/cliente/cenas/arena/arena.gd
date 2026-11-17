@@ -22,23 +22,26 @@ const CENA_LOBBY := "res://cenas/lobby/lobby.tscn"
 ## PROVISÓRIO: o conjunto exato de letras não está na especificação; aceitam-se N/S/L/O e E/W.
 const RUMO_ORIENTACAO := {"N": 0.0, "S": 180.0, "L": -90.0, "E": -90.0, "O": 90.0, "W": 90.0}
 
-@export var largura_padrao: int = 20
-@export var altura_padrao: int = 20
-@export var casa_m_padrao: float = 1.5
+## ORDEM DADOS DE APRESENTAÇÃO: as cores e os tamanhos de apresentação vêm da tabela única.
+const Apresentacao := preload("res://dados/apresentacao.gd")
 
-const COR_CHAO := Color(0.30, 0.42, 0.26)
-const COR_LINHAS := Color(0.0, 0.0, 0.0, 0.35)
-const COR_MOVER := Color(0.30, 0.75, 1.0, 0.45)
-const COR_ALVO := Color(1.0, 0.30, 0.25, 0.50)
-const COR_CURSOR := Color(1.0, 0.90, 0.30, 0.65)
-const COR_PROPRIA := Color(0.35, 0.60, 1.0)
-const COR_JOGADORA := Color(0.40, 0.85, 0.50)
-const COR_CRIATURA := Color(0.85, 0.35, 0.30)
-const COR_MORTA := Color(0.35, 0.35, 0.35)
+@export var largura_padrao: int = Apresentacao.GRELHA_LARGURA_PADRAO
+@export var altura_padrao: int = Apresentacao.GRELHA_ALTURA_PADRAO
+@export var casa_m_padrao: float = Apresentacao.CASA_M
+
+const COR_CHAO := Apresentacao.COR_MESA_CHAO
+const COR_LINHAS := Apresentacao.COR_MESA_LINHAS
+const COR_MOVER := Apresentacao.COR_MESA_MOVER
+const COR_ALVO := Apresentacao.COR_MESA_ALVO
+const COR_CURSOR := Apresentacao.COR_MESA_CURSOR
+const COR_PROPRIA := Apresentacao.COR_FIGURA_PROPRIA
+const COR_JOGADORA := Apresentacao.COR_FIGURA_JOGADORA
+const COR_CRIATURA := Apresentacao.COR_FIGURA_CRIATURA
+const COR_MORTA := Apresentacao.COR_FIGURA_MORTA
 ## Ordem 44: a mancha de contacto da base (a do marcador do site: 080c12, opacidade 0,35).
-const COR_BASE := Color(0.031, 0.047, 0.071, 0.35)
+const COR_BASE := Apresentacao.COR_CONTACTO
 ## Ordem 13: casa a arder (o fogo do ambiente; as casas vêm do servidor, em Estado.fogo).
-const COR_FOGO := Color(1.0, 0.45, 0.10, 0.55)
+const COR_FOGO := Apresentacao.COR_FOGO
 ## Ordem 60: quanto tempo o Aviso do HUD mostra uma recusa do pé (a marca na casa fica enquanto ela durar).
 const SEGUNDOS_AVISO_RECUSA := 6.0
 

@@ -15,18 +15,20 @@ extends RefCounted
 ## A altura vem da ficha (`visual.alturaM`; as figuras do site já vêm ×1,25: a Ong 2,625 m). Sem ela, 2,25 m
 ## (humano de 1,80 m × 1,25, Plano B §B1). A arena só desenha: nunca calcula regra.
 
-const PALETA := [Color("87b4b0"), Color("e5bb74"), Color("b98b9d"), Color("b5c3ce"), Color("b7b77c")]
-const COR_PEDRA := Color("817c73")
-const COR_PEDRA_LOBO := Color("777b79")
-const COR_CONTACTO := Color(0.031, 0.047, 0.071, 0.35)  # 080c12, opacidade 0,35
-const ALTURA_PADRAO := 2.25  # 1,80 × 1,25
-const RAIO_ANEL := 0.56
-const RAIO_CONTACTO := 0.5
+## ORDEM DADOS DE APRESENTAÇÃO: as cores, a altura por omissão e os raios vêm da tabela única.
+const Apresentacao := preload("res://dados/apresentacao.gd")
+const PALETA := Apresentacao.PALETA_ANEIS
+const COR_PEDRA := Apresentacao.COR_PEDRA
+const COR_PEDRA_LOBO := Apresentacao.COR_PEDRA_LOBO
+const COR_CONTACTO := Apresentacao.COR_CONTACTO  # 080c12, opacidade 0,35
+const ALTURA_PADRAO := Apresentacao.ALTURA_PADRAO  # 1,80 × 1,25
+const RAIO_ANEL := Apresentacao.RAIO_ANEL
+const RAIO_CONTACTO := Apresentacao.RAIO_CONTACTO
 
 
 ## Cria o nó da figura: Marcador (raiz) → Pivo (corpo, que se deita) + Anel + Contacto.
 static func criar(altura_m: float, forma: String, indice_cor: int) -> Node3D:
-	var altura := altura_m if altura_m > 0.0 else ALTURA_PADRAO
+	var altura := altura_m if altura_m > 0.0 else float(Apresentacao.ALTURAS_POR_TIPO.get(forma, ALTURA_PADRAO))
 	var raiz := Node3D.new()
 	raiz.name = "Marcador"
 	raiz.set_meta("altura_m", altura)

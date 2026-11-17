@@ -14,9 +14,11 @@ extends Node3D
 ## No celular não há teclado: o ciclo corre sozinho e o rótulo mostra os números.
 
 const LADO_CASAS := 20
-const CASA_M := 1.5
+## ORDEM DADOS DE APRESENTAÇÃO: a casa e a escala das figuras vêm da tabela única.
+const Apresentacao := preload("res://dados/apresentacao.gd")
+const CASA_M := Apresentacao.CASA_M
 const LADO_M := LADO_CASAS * CASA_M  # 30 m
-const ESCALA_FIGURA := 1.25  # regra dele: figuras ×1,25
+const ESCALA_FIGURA := Apresentacao.ESCALA_FIGURA  # regra dele: figuras ×1,25
 const HORAS_CHAVE: Array[float] = [6.5, 15.0, 18.5, 22.0]  # as do color script (Ordem 65)
 const PERFIS: Array[String] = ["baixo", "medio", "alto"]
 const AQUECIMENTO_S := 10.0  # B3: medir depois de 10 s

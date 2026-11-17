@@ -16,17 +16,19 @@ signal acao_pedida(acao: Dictionary)
 signal preferencia_mudou(chave: String, valor: Variant)
 
 const Arena := preload("res://cenas/arena/arena.gd")
+## ORDEM DADOS DE APRESENTAÇÃO: as cores e os tamanhos de apresentação vêm da tabela única.
+const Apresentacao := preload("res://dados/apresentacao.gd")
 ## Ordem 52: a escolha do perfil gráfico (lista, nomes, ficheiro, linha «Gráficos») vive num só sítio, partilhado
 ## com o ecrã do Mestre (aba Sala). Os valores são os de antes.
 const EscolhaPerfil := preload("res://arte/perfis/escolha_perfil.gd")
 
 const ARQ_PREF := EscolhaPerfil.ARQ
-const LARGURA_BASE := 1920.0
-const ALTURA_BASE := 1080.0
-const FONTE_BASE := 22
-const FONTE_MIN_PX_REAIS := 13.0  # acima dos 12 px pedidos
-const MARGEM_BASE := 24.0
-const OPACIDADE_PAINEL := 0.55
+const LARGURA_BASE := Apresentacao.LARGURA_BASE
+const ALTURA_BASE := Apresentacao.ALTURA_BASE
+const FONTE_BASE := Apresentacao.FONTE_BASE
+const FONTE_MIN_PX_REAIS := Apresentacao.FONTE_MIN_PX_REAIS
+const MARGEM_BASE := Apresentacao.MARGEM_BASE
+const OPACIDADE_PAINEL := Apresentacao.OPACIDADE_PAINEL
 const LIMIAR_TELA_VERMELHA := 0.25
 const PERFIS := EscolhaPerfil.PERFIS
 const NOMES_PERFIS := EscolhaPerfil.NOMES
@@ -34,21 +36,7 @@ const CAMERAS := ["fixa", "360", "panorama"]
 const NOMES_CAMERAS := ["Fixa", "360°", "Panorama"]
 ## PROVISÓRIO: a paleta final é da V1.2 (Plano B). As chaves "cortante" e "perfurante"
 ## são as das fichas de exemplo do servidor (campo `tipo`/`tipos` das técnicas).
-const CORES_DANO := {
-	"fisico": Color(1.0, 0.96, 0.88),
-	"corte": Color(1.0, 0.85, 0.80),
-	"cortante": Color(1.0, 0.85, 0.80),
-	"perfuracao": Color(1.0, 0.90, 0.75),
-	"perfurante": Color(1.0, 0.90, 0.75),
-	"impacto": Color(0.95, 0.90, 0.80),
-	"contundente": Color(0.95, 0.90, 0.80),
-	"agua": Color(0.40, 0.75, 1.0),
-	"fogo": Color(1.0, 0.55, 0.15),
-	"eletrico": Color(1.0, 0.95, 0.30),
-	"gelo": Color(0.75, 0.95, 1.0),
-	"veneno": Color(0.55, 0.95, 0.35),
-	"cura": Color(0.45, 1.0, 0.60),
-}
+const CORES_DANO := Apresentacao.CORES_DANO
 ## `resultado` do evento `ataque` (sala.js RESULTADOS) → frase simples.
 const FRASES_ATAQUE := {
 	"acerto": "Acertou!",
@@ -227,15 +215,15 @@ func nome_legivel(v, nome, padrao: String) -> String:
 
 func _montar_tema() -> void:
 	var painel := StyleBoxFlat.new()
-	painel.bg_color = Color(0.06, 0.07, 0.10, OPACIDADE_PAINEL)
+	painel.bg_color = Apresentacao.COR_PAINEL
 	painel.set_corner_radius_all(14)
 	painel.set_content_margin_all(18)
 	_tema.set_stylebox("panel", "PanelContainer", painel)
 	var estilos := {
-		"normal": Color(0.10, 0.12, 0.16, OPACIDADE_PAINEL),
-		"hover": Color(0.16, 0.19, 0.25, OPACIDADE_PAINEL + 0.1),
-		"pressed": Color(0.20, 0.40, 0.65, 0.85),
-		"disabled": Color(0.10, 0.12, 0.16, 0.35),
+		"normal": Apresentacao.COR_BOTAO,
+		"hover": Apresentacao.COR_BOTAO_POR_CIMA,
+		"pressed": Apresentacao.COR_BOTAO_CARREGADO,
+		"disabled": Apresentacao.COR_BOTAO_DESLIGADO,
 	}
 	for nome in estilos:
 		var sb := StyleBoxFlat.new()
@@ -246,13 +234,13 @@ func _montar_tema() -> void:
 	var foco := StyleBoxFlat.new()
 	foco.draw_center = false
 	foco.set_border_width_all(3)
-	foco.border_color = Color(1.0, 0.9, 0.4)
+	foco.border_color = Apresentacao.COR_FOCO
 	foco.set_corner_radius_all(12)
 	_tema.set_stylebox("focus", "Button", foco)
-	_tema.set_color("font_color", "Label", Color.WHITE)
-	_tema.set_color("font_color", "Button", Color.WHITE)
-	_tema.set_color("font_pressed_color", "Button", Color.WHITE)
-	_tema.set_color("font_disabled_color", "Button", Color(1, 1, 1, 0.45))
+	_tema.set_color("font_color", "Label", Apresentacao.COR_TEXTO)
+	_tema.set_color("font_color", "Button", Apresentacao.COR_TEXTO)
+	_tema.set_color("font_pressed_color", "Button", Apresentacao.COR_TEXTO)
+	_tema.set_color("font_disabled_color", "Button", Apresentacao.COR_TEXTO_FRACO)
 	_raiz.theme = _tema
 
 
@@ -267,9 +255,9 @@ func _montar_layout() -> void:
 	_coluna.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_barra.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_faixa.add_theme_constant_override("outline_size", 8)
-	_faixa.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+	_faixa.add_theme_color_override("font_outline_color", Apresentacao.COR_CONTORNO_TEXTO)
 	_aviso.add_theme_constant_override("outline_size", 8)
-	_aviso.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+	_aviso.add_theme_color_override("font_outline_color", Apresentacao.COR_CONTORNO_TEXTO)
 	_botao_config.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	_coluna.add_theme_constant_override("separation", 10)
 	_barra.add_theme_constant_override("separation", 14)
@@ -426,13 +414,13 @@ func _desenhar_engrenagem() -> void:
 	var b := _botao_config
 	var c := b.size * 0.5
 	var r := minf(b.size.x, b.size.y) * 0.26
-	var cor := Color.WHITE
+	var cor := Apresentacao.COR_TEXTO
 	for i in 8:
 		b.draw_set_transform(c, TAU * float(i) / 8.0, Vector2.ONE)
 		b.draw_rect(Rect2(Vector2(-r * 0.22, -r * 1.4), Vector2(r * 0.44, r * 0.6)), cor)
 	b.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	b.draw_circle(c, r, cor)
-	b.draw_circle(c, r * 0.42, Color(0.10, 0.12, 0.16, 1.0))
+	b.draw_circle(c, r * 0.42, Apresentacao.COR_BOTAO_OPACO)
 
 
 # ---------------------------------------------------------------- estado da tela
@@ -802,7 +790,7 @@ func _ao_dano(alvo_id: String, valor, tipo_dano: String, em_mim: bool) -> void:
 	ls.font_size = int(_fonte * 1.9)
 	ls.font_color = _cor_dano(tipo_dano)
 	ls.outline_size = maxi(4, int(_fonte * 0.35))
-	ls.outline_color = Color(0.55, 0.0, 0.0) if em_mim else Color(0.0, 0.0, 0.0)
+	ls.outline_color = Apresentacao.COR_CONTORNO_DANO_EM_MIM if em_mim else Apresentacao.COR_CONTORNO_DANO
 	rotulo.label_settings = ls
 	_numeros.add_child(rotulo)
 	rotulo.reset_size()
@@ -847,7 +835,7 @@ func _cor_dano(tipo: String) -> Color:
 	for de_para in [["á", "a"], ["â", "a"], ["ã", "a"], ["é", "e"], ["ê", "e"], ["í", "i"],
 			["ó", "o"], ["ô", "o"], ["õ", "o"], ["ú", "u"], ["ç", "c"]]:
 		t = t.replace(de_para[0], de_para[1])
-	return CORES_DANO.get(t, Color.WHITE)
+	return CORES_DANO.get(t, Apresentacao.COR_DANO_SEM_TIPO)
 
 
 func _ao_recibo(_intent_id: String, estado: String, msg: Dictionary) -> void:

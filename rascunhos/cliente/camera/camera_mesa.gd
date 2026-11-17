@@ -14,7 +14,9 @@ signal toque(posicao: Vector2)
 
 enum Modo { FIXA, LIVRE_360, PANORAMA }
 
-const ZOOM_PADRAO := 1.5  # palavra do Mestre
+## ORDEM DADOS DE APRESENTAÇÃO: o zoom por omissão vem da tabela única.
+const Apresentacao := preload("res://dados/apresentacao.gd")
+const ZOOM_PADRAO := Apresentacao.ZOOM_PADRAO  # palavra do Mestre
 const NOMES_MODO := {"fixa": Modo.FIXA, "360": Modo.LIVRE_360, "panorama": Modo.PANORAMA}
 
 @export var zoom_min: float = 0.6
