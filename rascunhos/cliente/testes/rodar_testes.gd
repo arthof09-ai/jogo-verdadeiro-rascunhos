@@ -861,6 +861,15 @@ func _teste_neve_arena_vento_e_estados() -> void:
 	_ok(f_max > f_min * 2.2, "na nevasca a rajada muda visivelmente a força e o ângulo de queda (calma %.2f → pico %.2f m/s)" % [f_min, f_max])
 	_ok(c.definir_por_nome("chuva") and c.estado_clima() == "chuva", "troca viva nevasca → chuva sem reiniciar")
 	_ok(c.definir_por_nome("limpo") and c.estado_clima() == "limpo", "troca viva chuva → limpo sem reiniciar")
+	# Fatia 2: correcção de 14/11 — na nevasca consolidada (neve=1, aglomerado=1) o centro está coberto a sério
+	# (>= 0,85, nunca 0,33) e os cantos/abrigos têm manto mais espesso (> centro).
+	c.bordas_abrigo = 0.65
+	c.definir_acumulacao(0.0, 1.0)
+	c.definir_forte(1.0, 1.0, 0.0)
+	var neve_centro: float = c.neve_em(Vector2.ZERO)
+	var neve_canto: float = c.neve_em(Vector2(-14.2, -14.2))
+	_ok(neve_centro >= 0.85 and neve_canto > neve_centro + 0.25,
+		"Fatia 2 (correcção 14/11): centro coberto em F=1 (%.2f >= 0,85) e canto mais espesso (%.2f > %.2f)" % [neve_centro, neve_canto, neve_centro])
 	vm.free()
 	c.free()
 
