@@ -1,4 +1,4 @@
-# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 384 ficheiros mudados ou novos em rascunhos/.
+# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 385 ficheiros mudados ou novos em rascunhos/.
 93c8f082052020ffc4a3a95831f74a5a16a295f366e54842045791c071fc83e4  rascunhos/cliente/README.md
 2a9bda1fa4349cfa9ece76842797ac96adc27ef919c525b3843a6f1cd01e58d5  rascunhos/cliente/arte/README.md
 2bc9bbf8ab270183116aa4eca383ce5b521fe7a466e9db9a065d96cca0da28fa  rascunhos/cliente/arte/ambiente/color_script.gd
@@ -69,6 +69,7 @@ b093c412bab04c6e28ce933a82569ea9c476b13fe298fca9fb1e9c8bd1a041a5  rascunhos/clie
 52a7cc5524b5e04c4d907a3598243dd48b37f140587a78aac2739d122316544c  rascunhos/cliente/cenas/arena/ferramentas/clima_no_mapa.gd
 03b2faf9ec00eef945989a123bf336c1a5b50eb98c3c129d81e63f6e2df384d1  rascunhos/cliente/cenas/arena/ferramentas/exportar_terreno.gd
 0af7abe1d264e66d9769c1cd9d08e2ca46b1ed8926c388b71d98f55be2329d7b  rascunhos/cliente/cenas/arena/ferramentas/medir_toque_rasante.gd
+8180b001c5186be40f48768cb7d8b2faaba1e53ac504ed65c0592646c663e6bd  rascunhos/cliente/cenas/arena/ferramentas/neve_no_mapa.gd
 117ace8a2cf7f3915bbae696909a17ef7023f47a85b2369fe2a7dcd7ec1c6a74  rascunhos/cliente/cenas/arena/ferramentas/provar_assentamento.gd
 5db89f6b571bf28a17ed2f57fe592cec4d110dd552c04675dba27a3c381d278c  rascunhos/cliente/cenas/arena/ferramentas/provar_pes_bloqueadas.gd
 4d98628a2f73b701c7cfb09313209c267aa5a6c0807eeb454e8d40d5e19a3c59  rascunhos/cliente/cenas/arena/ferramentas/provar_pes_bloqueadas.gd.uid
