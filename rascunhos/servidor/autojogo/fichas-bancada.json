@@ -1,0 +1,141 @@
+{
+  "formato": "fichas/1",
+  "nota": "FICTÍCIO DE BANCADA (Ordem AUTOJOGO). Nenhum nome nem número vem do cânone, da Party ou das fichas do jogo: são valores inventados só para o autojogo ter uma partida que se joga até ao fim. Os números que o autojogo mede com este ficheiro falam DESTE ficheiro. Para medir as fichas do jogo, passa-se outro cenário (--cenario=) que aponte para elas.",
+  "fichas": [
+    {
+      "id": "espadachim-bancada",
+      "nome": "Espadachim de Bancada",
+      "nomePublico": "Espadachim de Bancada",
+      "papel": "jogadora",
+      "classificacao": "bronze",
+      "vidaTotal": 30,
+      "paTotal": 6,
+      "ca": 14,
+      "rd": { "geral": 0, "porTipo": {} },
+      "visual": { "alturaM": 2.25, "marcador": "marcador" },
+      "testes": { "ataque": "1d20+4", "fortitude": "1d20+3" },
+      "constituicao": 14,
+      "testesDeMorteDesignado": true,
+      "deslocamentoBase": 9,
+      "tecnicas": [
+        {
+          "id": "golpe-forte-bancada",
+          "nome": "Golpe Forte de Bancada",
+          "expressaoAtaque": "1d20+5",
+          "expressaoDano": "2d8+3",
+          "tipo": "cortante",
+          "custoPA": 2,
+          "alcanceM": 1.5,
+          "usaArma": true
+        },
+        {
+          "id": "espada-bancada",
+          "nome": "Espada de Bancada",
+          "expressaoAtaque": "1d20+5",
+          "expressaoDano": "1d8+3",
+          "tipo": "cortante",
+          "custoPA": 0,
+          "alcanceM": 1.5,
+          "usaArma": true
+        }
+      ],
+      "fonte": { "origem": "fictícia de bancada (Ordem AUTOJOGO; inventada para medir)", "data": "2026-11-16" }
+    },
+    {
+      "id": "arqueira-bancada",
+      "nome": "Arqueira de Bancada",
+      "nomePublico": "Arqueira de Bancada",
+      "papel": "jogadora",
+      "classificacao": "bronze",
+      "vidaTotal": 22,
+      "paTotal": 6,
+      "ca": 13,
+      "rd": { "geral": 0, "porTipo": {} },
+      "visual": { "alturaM": 2.25, "marcador": "marcador" },
+      "testes": { "ataque": "1d20+4", "fortitude": "1d20+1" },
+      "constituicao": 11,
+      "testesDeMorteDesignado": true,
+      "deslocamentoBase": 9,
+      "tecnicas": [
+        {
+          "id": "tiro-certeiro-bancada",
+          "nome": "Tiro Certeiro de Bancada",
+          "expressaoAtaque": "1d20+6",
+          "expressaoDano": "2d6+2",
+          "tipo": "perfurante",
+          "custoPA": 2,
+          "alcanceM": 12,
+          "usaArma": true
+        },
+        {
+          "id": "arco-bancada",
+          "nome": "Arco de Bancada",
+          "expressaoAtaque": "1d20+5",
+          "expressaoDano": "1d6+2",
+          "tipo": "perfurante",
+          "custoPA": 0,
+          "alcanceM": 12,
+          "usaArma": true
+        }
+      ],
+      "fonte": { "origem": "fictícia de bancada (Ordem AUTOJOGO; inventada para medir)", "data": "2026-11-16" }
+    },
+    {
+      "id": "bruto-bancada",
+      "nome": "Bruto de Bancada",
+      "nomePublico": "Bruto",
+      "papel": "criatura",
+      "classificacao": "bronze",
+      "vidaTotal": 34,
+      "paTotal": 0,
+      "ca": 12,
+      "rd": { "geral": 1, "porTipo": {} },
+      "visual": { "alturaM": 3.0, "marcador": "marcador" },
+      "verbos": { "acerto": "desferiu a clava", "falha": "tentou desferir a clava" },
+      "testes": { "ataque": "1d20+4", "fortitude": "1d20+4" },
+      "constituicao": 16,
+      "deslocamentoBase": 6,
+      "tecnicas": [
+        {
+          "id": "clava-bancada",
+          "nome": "Clava de Bancada",
+          "expressaoAtaque": "1d20+4",
+          "expressaoDano": "1d10+3",
+          "tipo": "contundente",
+          "custoPA": 0,
+          "alcanceM": 1.5,
+          "usaArma": true
+        }
+      ],
+      "fonte": { "origem": "fictícia de bancada (Ordem AUTOJOGO; inventada para medir)", "data": "2026-11-16" }
+    },
+    {
+      "id": "lobo-bancada",
+      "nome": "Lobo de Bancada",
+      "nomePublico": "Lobo",
+      "papel": "criatura",
+      "classificacao": "bronze",
+      "vidaTotal": 16,
+      "paTotal": 0,
+      "ca": 13,
+      "rd": { "geral": 0, "porTipo": {} },
+      "visual": { "alturaM": 1.35, "marcador": "marcador-lobo" },
+      "verbos": { "acerto": "mordeu", "falha": "tentou morder" },
+      "testes": { "ataque": "1d20+4", "fortitude": "1d20+2" },
+      "constituicao": 12,
+      "deslocamentoBase": 12,
+      "tecnicas": [
+        {
+          "id": "mordida-bancada",
+          "nome": "Mordida de Bancada",
+          "expressaoAtaque": "1d20+4",
+          "expressaoDano": "1d6+2",
+          "tipo": "perfurante",
+          "custoPA": 0,
+          "alcanceM": 1.5
+        }
+      ],
+      "fonte": { "origem": "fictícia de bancada (Ordem AUTOJOGO; inventada para medir)", "data": "2026-11-16" }
+    }
+  ]
+}

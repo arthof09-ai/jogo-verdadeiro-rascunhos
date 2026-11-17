@@ -6,3 +6,5 @@ pacotes/P-PC-01/saida/
 *.import
 # Ensaios das capturas da arena integrada (Ordem 42): só o conjunto final sobe
 rascunhos/cliente/cenas/arena/capturas/_ensaio/
+# Ordem AUTOJOGO: o motor baixado e o módulo embrulhado do servidor de bancada (regeneráveis)
+rascunhos/servidor/autojogo/.cache/

@@ -1,0 +1,17 @@
+{
+  "formato": "cenario-autojogo/1",
+  "nota": "Cenário de bancada FICTÍCIO (Ordem AUTOJOGO): 2 heroínas contra 2 criaturas na grelha 20 x 20 da arena. Nada daqui é cânone. O PIN e as senhas são da bancada (servidor só em 127.0.0.1, uma partida, fecha no fim).",
+  "fichas": "fichas-bancada.json",
+  "mapa": { "largura": 20, "altura": 20 },
+  "mapaId": "floresta",
+  "pin": "20261116",
+  "iniciativa": { "arqueira-bancada": 16, "lobo-bancada": 14, "espadachim-bancada": 12, "bruto-bancada": 10 },
+  "heroinas": [
+    { "fichaId": "espadachim-bancada", "nome": "Espadachim de Bancada", "senha": "bancada-espadachim", "casa": { "x": 8, "y": 5 } },
+    { "fichaId": "arqueira-bancada", "nome": "Arqueira de Bancada", "senha": "bancada-arqueira", "casa": { "x": 11, "y": 4 } }
+  ],
+  "criaturas": [
+    { "fichaId": "bruto-bancada", "casa": { "x": 9, "y": 13 } },
+    { "fichaId": "lobo-bancada", "casa": { "x": 12, "y": 14 } }
+  ]
+}
