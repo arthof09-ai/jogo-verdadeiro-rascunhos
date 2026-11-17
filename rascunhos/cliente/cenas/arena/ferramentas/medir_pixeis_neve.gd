@@ -232,15 +232,21 @@ func _medir_renders() -> Dictionary:
 		print("[medir] %s feito" % nome)
 	for serie in ["serie_nevasca", "serie_fraca"]:
 		var lista: Array = []
+		var centro: Array = []
 		for k in 6:
 			var com := _abrir("%s_%d.png" % [serie, k])
 			var sem := _abrir("%s_%d_sem_flocos.png" % [serie, k])
 			lista.append(_flocos(com, sem, AR, 2))
+			centro.append(_flocos(com, sem, CENTRO))
+		var cc: Array = centro.map(func(e): return e["contraste_medio_floco"])
+		var cf: Array = centro.map(func(e): return e["fraccao_pixeis_floco"])
 		var fr: Array = lista.map(func(e): return e["fraccao_pixeis_floco"])
 		var ct: Array = lista.map(func(e): return e["contraste_medio_floco"])
 		out["series"][serie] = {"instantes": lista, "fraccao_min": fr.min(), "fraccao_max": fr.max(),
 			"fraccao_media": snappedf(fr.reduce(func(a, b): return a + b, 0.0) / fr.size(), 0.00001),
-			"contraste_min": ct.min(), "contraste_media": snappedf(ct.reduce(func(a, b): return a + b, 0.0) / ct.size(), 0.0001)}
+			"contraste_min": ct.min(), "contraste_media": snappedf(ct.reduce(func(a, b): return a + b, 0.0) / ct.size(), 0.0001),
+			"centro_instantes": centro, "centro_contraste_media": snappedf(cc.reduce(func(a, b): return a + b, 0.0) / cc.size(), 0.0001),
+			"centro_contraste_min": cc.min(), "centro_fraccao_media": snappedf(cf.reduce(func(a, b): return a + b, 0.0) / cf.size(), 0.00001)}
 		print("[medir] %s feita" % serie)
 	return out
 
