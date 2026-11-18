@@ -34,7 +34,7 @@ Ponta `5471387` (a mesma árvore de código de `7f5bbdd`, mais a ordem):
   - cliente, godot-cliente (`200 de 200 verificações passaram.`);
   - ponta-a-ponta (motor falso e VLAB real), foto-mestre, retoma-pc.
 
-O commit deste ESTADO FINAL só acrescenta este `.md` na raiz, que está fora do MANIFESTO e das listas da retoma. A CI
+Depois da linha junta (secção 3), a CI corre outra vez na ponta: merge da Ordem HUD + listas refeitas + este `.md`. A CI
 dele corre no push. O resultado fica no Actions do ramo e no merge.
 
 ## 2. ESTADO FINAL commitado — VERIFICADO
@@ -43,13 +43,31 @@ dele corre no push. O resultado fica no Actions do ramo e no merge.
 
 ## 3. Merge para `fable/integracao-50`
 
-- **Linha junta buscada** (VERIFICADO): `fable/integracao-50` está em `cbe7729`, que é antepassado direto deste ramo.
-  Não há divergência e o merge é *fast-forward*.
-- **Por último:** depois de a CI deste commit ficar verde, `fable/integracao-50` avança para este commit (este
-  ESTADO FINAL incluído).
-- **Prova do merge:** `git rev-parse origin/fable/integracao-50` tem de dar a ponta deste ramo.
-- **Se o push falhar:** um commit a seguir a este regista-o aqui. Nesse caso o ramo fica completo à espera do merge
-  no PC.
+### Erro resolvido: a linha andou durante a sessão
+
+- **Problema** (VERIFICADO): no início da sessão, `fable/integracao-50` estava em `cbe7729`. A primeira versão deste
+  ficheiro (`bdcefe5`) dava por isso o merge como *fast-forward*. Na busca feita POR ÚLTIMO, a linha já estava em
+  `9e92de3`: a Ordem HUD (`claude2/hud`, `a85d104` + `9e92de3`) tinha entrado entretanto. O fast-forward deixou de
+  ser possível e **não se empurrou nada** para a linha nesse momento.
+- **Causa:** duas ordens em paralelo sobre a mesma linha. O estado da linha foi lido no início, não no momento do merge.
+- **Solução:** a linha `9e92de3` entrou neste ramo com um merge a sério (`46308f7`).
+  - Conflitos só em `MANIFESTO-SHA256.txt`, `retoma-i0004/depois.txt` e `ORDEM-CONTINUACAO.md` (os dois ramos
+    criaram-no).
+  - O código juntou-se sem conflito: `mestre.gd`, `arena_mestre.gd`, `medir_mestre.gd` e `rodar_testes.gd`. A tabela
+    manteve os nomes das constantes (`COR_LINHAS`, `FONTE_BASE`…), por isso a caixa da ordem e os retratos não
+    precisam de mudar. Não há declarações repetidas.
+  - As listas foram refeitas com `retoma-i0004/actualizar-listas.py`: depois.txt = 402, MANIFESTO = 447 (5 novos).
+    Os SHA de `mestre.gd` e `hud.gd` foram conferidos à mão contra a árvore.
+  - A ordem de continuação da HUD foi arquivada, sem perda, em `ORDEM-CONTINUACAO-HUD.md`.
+- **Prevenção:** buscar a linha imediatamente antes de empurrar e empurrar só se ela for antepassada. Foi o que
+  impediu o erro de chegar à linha.
+
+### O merge
+
+- **Por último:** com a CI verde na ponta deste ramo (merge + listas + este ficheiro), `fable/integracao-50`
+  avança para essa ponta. É um fast-forward a partir de `9e92de3`, que já é antepassado.
+- **Prova:** `git rev-parse origin/fable/integracao-50` tem de dar a ponta deste ramo.
+- **Se o push falhar:** um commit a seguir regista-o aqui. Nesse caso o ramo fica completo à espera do merge.
 
 ## Próximo passo (PENDENTE, reservado ao Mestre)
 
