@@ -1,0 +1,93 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Unicode parsing error, some characters were replaced with � (U+FFFD): Unexpected NUL character
+(844, 390): área 2337 × 1080 unidades; letra 36 (= 13.0 px reais)
+  ok    (844, 390) letra ≥ 13 px reais
+  ok    (844, 390) dois botões no cartão de desgraça (Confirmar, Escolher outra)
+  ok    (844, 390) botão «Confirmar» inteiro à vista (fundo em 502 de 1080)
+  ok    (844, 390) botão «Escolher outra» inteiro à vista (fundo em 586 de 1080)
+  ok    (844, 390) barra das abas inteira à vista
+  ok    (844, 390) contador da fila visível («+3 por decidir»)
+  ok    (844, 390) «Entrar na câmera livre» dentro do tabuleiro
+  ok    (844, 390) caixa da ordem à vista e sem tapar o «Entrar na câmera livre»
+  ok    (844, 390) câmara livre: «Manipulo» dentro do tabuleiro
+  ok    (844, 390) câmara livre: «Subir» dentro do tabuleiro
+  ok    (844, 390) câmara livre: «Descer» dentro do tabuleiro
+  ok    (844, 390) câmara livre: «Sair» dentro do tabuleiro
+  ok    (844, 390) câmara livre: «Velocidade» dentro do tabuleiro
+  ok    (844, 390) câmara livre: «Dica» dentro do tabuleiro
+  ok    (844, 390) câmara livre: «Manipulo» com 132 px reais (≥ 44)
+  ok    (844, 390) câmara livre: «Subir» com 68 px reais (≥ 44)
+  ok    (844, 390) câmara livre: «Descer» com 68 px reais (≥ 44)
+  ok    (844, 390) câmara livre: «Sair» com 44 px reais (≥ 44)
+  ok    (844, 390) câmara livre: nenhum controlo tapa outro
+  ok    (844, 390) câmara livre: a caixa da ordem não tapa o «Voltar», a dica nem os controlos de andar (à vista) []
+  ok    (844, 390) fora da câmara livre: a caixa da ordem volta, sem tapar o «Entrar»
+  ok    (844, 390) com o texto mais longo os botões não mexem
+  ok    (844, 390) (texto longo) botão «Continuar a rodada» à vista
+  ok    (844, 390) (texto longo) botão «Escolher outra» à vista
+  ok    (844, 390) (texto longo) botão «Jogo eu» à vista
+  ok    (844, 390) (folha encolhida) botão «Continuar a rodada» à vista
+  ok    (844, 390) (folha encolhida) botão «Escolher outra» à vista
+  ok    (844, 390) (folha encolhida) botão «Jogo eu» à vista
+  ok    (844, 390) (folha encolhida) título do cartão à vista
+(780, 360): área 2340 × 1080 unidades; letra 39 (= 13.0 px reais)
+  ok    (780, 360) letra ≥ 13 px reais
+  ok    (780, 360) dois botões no cartão de desgraça (Confirmar, Escolher outra)
+  ok    (780, 360) botão «Confirmar» inteiro à vista (fundo em 542 de 1080)
+  ok    (780, 360) botão «Escolher outra» inteiro à vista (fundo em 632 de 1080)
+  ok    (780, 360) barra das abas inteira à vista
+  ok    (780, 360) contador da fila visível («+3 por decidir»)
+  ok    (780, 360) «Entrar na câmera livre» dentro do tabuleiro
+  ok    (780, 360) caixa da ordem à vista e sem tapar o «Entrar na câmera livre»
+  ok    (780, 360) câmara livre: «Manipulo» dentro do tabuleiro
+  ok    (780, 360) câmara livre: «Subir» dentro do tabuleiro
+  ok    (780, 360) câmara livre: «Descer» dentro do tabuleiro
+  ok    (780, 360) câmara livre: «Sair» dentro do tabuleiro
+  ok    (780, 360) câmara livre: «Velocidade» dentro do tabuleiro
+  ok    (780, 360) câmara livre: «Dica» dentro do tabuleiro
+  ok    (780, 360) câmara livre: «Manipulo» com 116 px reais (≥ 44)
+  ok    (780, 360) câmara livre: «Subir» com 60 px reais (≥ 44)
+  ok    (780, 360) câmara livre: «Descer» com 60 px reais (≥ 44)
+  ok    (780, 360) câmara livre: «Sair» com 44 px reais (≥ 44)
+  ok    (780, 360) câmara livre: nenhum controlo tapa outro
+  ok    (780, 360) câmara livre: a caixa da ordem não tapa o «Voltar», a dica nem os controlos de andar (sem lugar: sai de cena) [&"Velocidade"]
+  ok    (780, 360) fora da câmara livre: a caixa da ordem volta, sem tapar o «Entrar»
+  ok    (780, 360) com o texto mais longo os botões não mexem
+  ok    (780, 360) (texto longo) botão «Continuar a rodada» à vista
+  ok    (780, 360) (texto longo) botão «Escolher outra» à vista
+  ok    (780, 360) (texto longo) botão «Jogo eu» à vista
+  ok    (780, 360) (folha encolhida) botão «Continuar a rodada» à vista
+  ok    (780, 360) (folha encolhida) botão «Escolher outra» à vista
+  ok    (780, 360) (folha encolhida) botão «Jogo eu» à vista
+  ok    (780, 360) (folha encolhida) título do cartão à vista
+(1920, 1080): área 1920 × 1080 unidades; letra 22 (= 22.0 px reais)
+  ok    (1920, 1080) letra ≥ 13 px reais
+  ok    (1920, 1080) dois botões no cartão de desgraça (Confirmar, Escolher outra)
+  ok    (1920, 1080) botão «Confirmar» inteiro à vista (fundo em 312 de 1080)
+  ok    (1920, 1080) botão «Escolher outra» inteiro à vista (fundo em 365 de 1080)
+  ok    (1920, 1080) barra das abas inteira à vista
+  ok    (1920, 1080) contador da fila visível («+3 por decidir»)
+  ok    (1920, 1080) «Entrar na câmera livre» dentro do tabuleiro
+  ok    (1920, 1080) caixa da ordem à vista e sem tapar o «Entrar na câmera livre»
+  ok    (1920, 1080) câmara livre: «Manipulo» dentro do tabuleiro
+  ok    (1920, 1080) câmara livre: «Subir» dentro do tabuleiro
+  ok    (1920, 1080) câmara livre: «Descer» dentro do tabuleiro
+  ok    (1920, 1080) câmara livre: «Sair» dentro do tabuleiro
+  ok    (1920, 1080) câmara livre: «Velocidade» dentro do tabuleiro
+  ok    (1920, 1080) câmara livre: «Dica» dentro do tabuleiro
+  ok    (1920, 1080) câmara livre: «Manipulo» com 132 px reais (≥ 44)
+  ok    (1920, 1080) câmara livre: «Subir» com 68 px reais (≥ 44)
+  ok    (1920, 1080) câmara livre: «Descer» com 68 px reais (≥ 44)
+  ok    (1920, 1080) câmara livre: «Sair» com 44 px reais (≥ 44)
+  ok    (1920, 1080) câmara livre: nenhum controlo tapa outro
+  ok    (1920, 1080) câmara livre: a caixa da ordem não tapa o «Voltar», a dica nem os controlos de andar (à vista) []
+  ok    (1920, 1080) fora da câmara livre: a caixa da ordem volta, sem tapar o «Entrar»
+  ok    (1920, 1080) com o texto mais longo os botões não mexem
+  ok    (1920, 1080) (texto longo) botão «Continuar a rodada» à vista
+  ok    (1920, 1080) (texto longo) botão «Escolher outra» à vista
+  ok    (1920, 1080) (texto longo) botão «Jogo eu» à vista
+  ok    (1920, 1080) (folha encolhida) botão «Continuar a rodada» à vista
+  ok    (1920, 1080) (folha encolhida) botão «Escolher outra» à vista
+  ok    (1920, 1080) (folha encolhida) botão «Jogo eu» à vista
+  ok    (1920, 1080) (folha encolhida) título do cartão à vista
+ecrã do Mestre: 0 falha(s), 0 sem medida
