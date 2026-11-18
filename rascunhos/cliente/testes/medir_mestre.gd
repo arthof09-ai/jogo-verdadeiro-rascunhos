@@ -117,6 +117,9 @@ func _medir(janela: Vector2i) -> void:
 	var tab: Rect2 = m._tabuleiro.get_global_rect()
 	var ctl = m._livre
 	_verificar(_dentro(ctl.entrar_botao, tab), "%s «Entrar na câmera livre» dentro do tabuleiro" % [janela])
+	# Ordem HUD: a caixa da ordem de turnos (à vista em combate) não tapa o «Entrar na câmera livre».
+	_verificar(m._caixa.visible and not m._caixa.get_global_rect().intersects(ctl.entrar_botao.get_global_rect()),
+		"%s caixa da ordem à vista e sem tapar o «Entrar na câmera livre»" % [janela])
 	ctl.entrar()
 	m._ao_redimensionar()
 	for i in 3:
@@ -135,8 +138,17 @@ func _medir(janela: Vector2i) -> void:
 				tapados = true
 				printerr("  %s tapa %s" % [(de_tocar[i] as Node).name, (de_tocar[j] as Node).name])
 	_verificar(not tapados, "%s câmara livre: nenhum controlo tapa outro" % [janela])
+	# Ordem HUD: dentro da câmara livre, a caixa da ordem desce para baixo do «Voltar» e da dica (e não chega aos de andar).
+	var tapa_caixa: Array = []
+	for n in [ctl.sair_botao, ctl.dica, ctl.manipulo, ctl.sobe_botao, ctl.desce_botao, ctl.vel_caixa]:
+		if m._caixa.get_global_rect().intersects((n as Control).get_global_rect()):
+			tapa_caixa.append((n as Node).name)
+	_verificar(not m._caixa.visible or tapa_caixa.is_empty(), "%s câmara livre: a caixa da ordem não tapa o «Voltar», a dica nem os controlos de andar (%s) %s"
+		% [janela, "à vista" if m._caixa.visible else "sem lugar: sai de cena", tapa_caixa])
 	ctl.sair()
 	await process_frame
+	_verificar(m._caixa.visible and not m._caixa.get_global_rect().intersects(ctl.entrar_botao.get_global_rect()),
+		"%s fora da câmara livre: a caixa da ordem volta, sem tapar o «Entrar»" % [janela])
 
 	# Texto de cartão mais longo: os botões não mexem.
 	var longo: Dictionary = _fx["mestre"]["cartoes"]["ia"].duplicate(true)

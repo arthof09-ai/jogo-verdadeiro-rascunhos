@@ -1042,6 +1042,9 @@ func _montar() -> void:
 	_caixa.visible = false
 	_caixa.pediu_iniciativa.connect(definir_modo_iniciativa)
 	add_child(_caixa)
+	# A caixa fica por baixo dos controlos de cima do tabuleiro: ao entrar/sair da câmara livre, muda de sítio
+	# (em diferido: o «Entrar» muda antes dos outros controlos da câmara livre).
+	_livre.entrar_botao.visibility_changed.connect(_desenhar_ordem, CONNECT_DEFERRED)
 
 	_folha = PanelContainer.new()
 	_folha.name = "Folha"
@@ -1302,8 +1305,7 @@ func _ao_redimensionar() -> void:
 	_tabuleiro.size = Vector2(area.x - largura_folha, area.y)
 	_livre.ajustar(Rect2(_tabuleiro.position, _tabuleiro.size), _escala)
 	_caixa.ajustar(_fonte)
-	_caixa.position = Vector2(margem * 2.0, margem * 2.0)
-	_caixa.size = _caixa.get_combined_minimum_size()
+	_desenhar_ordem()
 	_aviso_primeira.position = Vector2(margem * 2.0, margem * 2.0)
 	_aviso_primeira.custom_minimum_size = Vector2(minf(area.x - largura_folha - margem * 4.0, float(_fonte) * 18.0), 0.0)
 	_aviso_primeira.size = _aviso_primeira.custom_minimum_size
@@ -1342,6 +1344,29 @@ func definir_modo_iniciativa(ligar: bool) -> void:
 	_desenhar_ordem()
 
 
+## Ordem HUD: a caixa fica no canto de cima, à esquerda, mas POR BAIXO dos controlos de cima do tabuleiro — o
+## «Entrar na câmera livre» e, dentro da câmara livre, o «Voltar à câmera do jogo» e a dica —, para nunca os tapar.
+## Se, dentro da câmara livre, ainda assim tocar num controlo de andar (ecrãs baixos), sai de cena até o Mestre sair
+## da câmara livre: nunca tapa um controlo.
+func _posicionar_caixa() -> void:
+	if _caixa == null or _livre == null:
+		return
+	var margem := float(_fonte) * 0.5
+	var y := margem * 2.0
+	for n in [_livre.entrar_botao, _livre.sair_botao, _livre.dica]:
+		var c := n as Control
+		if c.visible:
+			y = maxf(y, _livre.position.y + c.position.y + c.size.y + margem)
+	_caixa.position = Vector2(margem * 2.0, y)
+	_caixa.size = _caixa.get_combined_minimum_size()
+	var r := Rect2(_caixa.position, _caixa.size)
+	for n in [_livre.manipulo, _livre.sobe_botao, _livre.desce_botao, _livre.vel_caixa]:
+		var c := n as Control
+		if c.visible and r.intersects(Rect2(_livre.position + c.position, c.size)):
+			_caixa.visible = false
+			return
+
+
 func _desenhar_ordem() -> void:
 	if _caixa == null:
 		return
@@ -1368,4 +1393,4 @@ func _desenhar_ordem() -> void:
 			retratos[id] = _retratos.textura(id)
 	_retratos.esquecer_ausentes(figs)
 	_caixa.mostrar(ordem, ordem_turnos.na_vez(vez_id), nomes, retratos, ordem_turnos.modo)
-	_caixa.size = _caixa.get_combined_minimum_size()
+	_posicionar_caixa()

@@ -160,9 +160,10 @@ func _correr() -> void:
 	await _segundos(PASSO_S * 0.6)
 	await _gravar("caixa-dinamica.png")
 	await _segundos(PASSO_S * 0.4)
+	var nome_curto := {j1: "jogadora 1 (Heroína)", j2: "jogadora 2 (Aliada)", j3: "jogadora 3", orc: "o monstro (Orc)"}
 	for par in [[j1, orc], [j2, orc], [j3, orc], [orc, j1]]:
 		_evento("ataque", _ataque(par[0], par[1]), par[0])
-		_marcar("Segunda volta: repete-se — na vez: %s" % _m._caixa.vez_mostrada)
+		_marcar("Segunda volta: repete-se — na vez: %s" % nome_curto.get(_m._caixa.vez_mostrada, _m._caixa.vez_mostrada))
 		await _segundos(PASSO_S * 0.8)
 	await _gravar("caixa-repete.png")
 	_m._caixa._botao.button_pressed = true  # o Mestre carrega em «Modo iniciativa»
