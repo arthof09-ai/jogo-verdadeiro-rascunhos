@@ -20,6 +20,11 @@ const VentoMundo := preload("res://mapa/floresta/vento_mundo.gd")
 const ExportarTerreno := preload("res://cenas/arena/ferramentas/exportar_terreno.gd")
 const Assentamento := preload("res://cenas/arena/assentamento.gd")
 const GrelhaMapa := preload("res://mapa/floresta/grelha_floresta.gd")
+## Ordem HUD: o modelo da caixa da ordem de turnos (dinâmico e iniciativa).
+const OrdemTurnos := preload("res://hud/ordem_turnos.gd")
+const Retratos := preload("res://hud/retratos.gd")
+const CaixaOrdem := preload("res://hud/caixa_ordem.gd")
+const MarcadorSite := preload("res://cenas/comum/marcador_figura.gd")
 
 var _total := 0
 var _falhas := 0
@@ -55,6 +60,10 @@ func _initialize() -> void:
 	_teste_neve_arena_vento_e_estados()
 	_teste_terreno_do_servidor_em_dia()
 	_teste_pe_na_encosta()
+	_teste_ordem_turnos_dinamica()
+	_teste_ordem_turnos_iniciativa()
+	_teste_retratos_do_modelo()
+	_teste_caixa_ordem()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -960,3 +969,97 @@ func _teste_pe_na_encosta() -> void:
 	_ok(is_zero_approx(Assentamento.subida_do_corpo(Vector2.ZERO, r)), "no plano o corpo não sobe")
 	var sobe := Assentamento.subida_do_corpo(e["gradiente"], r)
 	_ok(sobe > 0.0 and sobe < 0.15, "na encosta o corpo sobe %.3f m para a cápsula tocar o plano sem o atravessar" % sobe)
+
+
+# ---------------------------------------------------------------- Ordem HUD: a caixa da ordem de turnos
+
+static func _ev(tipo: String, dados: Dictionary) -> Dictionary:
+	return {"tipo": tipo, "dados": dados}
+
+
+## O exemplo do Mestre (16/11): ataca a jogadora 1, depois a 2, depois a 3, depois o monstro → 1-2-3-monstro, e repete.
+func _teste_ordem_turnos_dinamica() -> void:
+	var o = OrdemTurnos.new()
+	var figs := {"j1": {}, "j2": {}, "j3": {}, "m": {}}
+	_ok(o.modo == OrdemTurnos.DINAMICO, "ordem HUD: por defeito o modo é o dinâmico (sem iniciativa)")
+	_ok(o.ordem_visivel([], figs).is_empty(), "ordem HUD: sem acções, a caixa não inventa ordem nenhuma")
+	o.registar_evento(_ev("ataque", {"atacanteId": "j1", "alvoId": "m", "ataqueDeOportunidade": false}))
+	o.registar_evento(_ev("movimento", {"figuraId": "j1"}))  # mais uma acção da mesma vez
+	o.registar_evento(_ev("ataque", {"atacanteId": "j2", "alvoId": "m", "ataqueDeOportunidade": false}))
+	o.registar_evento(_ev("ataque", {"atacanteId": "m", "alvoId": "j2", "ataqueDeOportunidade": true}))  # reacção: não é ir
+	o.registar_evento(_ev("cura", {"curadorId": "j3", "alvoId": "j2"}))
+	o.registar_evento(_ev("ataque", {"atacanteId": "m", "alvoId": "j1", "ataqueDeOportunidade": false}))
+	_ok(o.ordem_visivel([], figs) == ["j1", "j2", "j3", "m"], "ordem HUD: a ordem emerge da sequência (1-2-3-monstro)")
+	_ok(not o.fechada and o.na_vez("j1") == "m", "ordem HUD: quem agiu por último está na vez; a volta ainda não fechou")
+	o.registar_evento(_ev("ataque", {"atacanteId": "j1", "alvoId": "m", "ataqueDeOportunidade": false}))
+	_ok(o.fechada and o.ordem_visivel([], figs) == ["j1", "j2", "j3", "m"], "ordem HUD: a jogadora 1 volta a agir — a ordem repete-se igual")
+	o.registar_evento(_ev("ataque", {"atacanteId": "j3", "alvoId": "m", "ataqueDeOportunidade": false}))
+	_ok(o.ordem_visivel([], figs) == ["j1", "j3", "j2", "m"], "ordem HUD: o Mestre dita outra sequência — a caixa segue a que aconteceu")
+	_ok(o.ordem_visivel([], {"j1": {}, "m": {}}) == ["j1", "m"], "ordem HUD: só figuras que existem no espelho")
+	o.registar_evento(_ev("recomeco", {}))
+	_ok(o.ordem_dinamica.is_empty() and o.ultimo == "", "ordem HUD: o Recomeçar limpa a ordem formada")
+	_ok(OrdemTurnos.actor_do_evento(_ev("dano", {"alvoId": "j1", "autorId": "m"})) == "", "ordem HUD: dano não é acção de ninguém")
+	_ok(OrdemTurnos.actor_do_evento(_ev("acao", {"figuraId": "j2", "tipo": "correr"})) == "j2", "ordem HUD: correr é a figura a agir")
+	_ok(OrdemTurnos.actor_do_evento(_ev("acao", {"figuraId": "j2", "tipo": "sem_desgraca"})) == "", "ordem HUD: a decisão do Mestre não é ir")
+
+
+## Modo iniciativa: a ordem é a do servidor (só a ORDEM) e a vez é o vezId; desligar volta à ordem dinâmica.
+func _teste_ordem_turnos_iniciativa() -> void:
+	var o = OrdemTurnos.new()
+	var figs := {"j1": {}, "j2": {}, "m": {}}
+	o.registar_acao("j2")
+	o.registar_acao("j1")
+	o.definir_modo(OrdemTurnos.INICIATIVA)
+	_ok(o.ordem_visivel(["m", "j1", "j2", "fora"], figs) == ["m", "j1", "j2"], "ordem HUD: modo iniciativa mostra a ordem do servidor")
+	_ok(o.na_vez("m") == "m", "ordem HUD: modo iniciativa — na vez está o vezId do servidor")
+	o.definir_modo(OrdemTurnos.DINAMICO)
+	_ok(o.ordem_visivel(["m", "j1", "j2"], figs) == ["j2", "j1"], "ordem HUD: desligar a iniciativa volta à ordem formada pelas acções")
+
+
+## O retrato é uma cópia do PRÓPRIO modelo em cena: as mesmas malhas, sem o chão nem rótulos, sem grupos.
+func _teste_retratos_do_modelo() -> void:
+	var modelo := MarcadorSite.criar(2.25, "marcador", 1)
+	modelo.add_to_group(&"figura_clima_teste")
+	modelo.transform = Transform3D(Basis(Vector3.RIGHT, 0.3), Vector3(5, 1, 5))
+	var copia := Retratos.copiar_modelo(modelo)
+	var corpo_o := modelo.get_node("Pivo/Corpo") as MeshInstance3D
+	var corpo_c := copia.get_node("Pivo/Corpo") as MeshInstance3D
+	_ok(corpo_c != null and corpo_c.mesh == corpo_o.mesh, "retrato: a cópia usa a MESMA malha do modelo em cena")
+	_ok(not (copia.get_node("Anel") as Node3D).visible and not (copia.get_node("Contacto") as Node3D).visible, "retrato: o anel e o contacto (do chão) não entram")
+	_ok(copia.get_groups().is_empty(), "retrato: a cópia não fica em grupos do jogo (clima, perfil)")
+	_ok(copia.transform == Transform3D.IDENTITY, "retrato: a cópia assenta na origem do palco")
+	var fundo := Retratos.cor_de_fundo(modelo)
+	_ok(fundo.is_equal_approx(MarcadorSite.cor_da_ordem(1).darkened(Retratos.ESCURECER_FUNDO)), "retrato: o fundo é a cor de identificação da figura (paleta do site), escurecida")
+	var cam := Camera3D.new()
+	Retratos.enquadrar(cam, copia)
+	var o := cam.transform.origin
+	var fw := -cam.transform.basis.z
+	var h := Vector2(fw.x, fw.z).length()
+	var alvo_y := o.y + fw.y * (Vector2(o.x, o.z).length() / h)
+	_ok(alvo_y > 1.2 and alvo_y < 1.9, "retrato: de pé, o enquadramento é o do busto (olha a %.2f m de 2,25)" % alvo_y)
+	cam.free()
+	var r := Retratos.new()
+	get_root().add_child(r)
+	r.pedir("a", "1", modelo)
+	var t1 := r.textura("a")
+	r.pedir("a", "1", modelo)
+	_ok(r.textura("a") == t1 and r.get_child_count() == 1, "retrato: a mesma chave não volta a desenhar")
+	r.esquecer_ausentes({})
+	_ok(not r.tem("a"), "retrato: a figura que saiu larga o retrato")
+	r.queue_free()
+	copia.free()
+	modelo.free()
+
+
+func _teste_caixa_ordem() -> void:
+	var c := CaixaOrdem.new()
+	get_root().add_child(c)
+	var ordem: Array[String] = ["j1", "j2", "m"]
+	c.mostrar(ordem, "j2", {"j1": "Ong", "j2": "Ruiva", "m": "Lobo"}, {}, "dinamico")
+	_ok(c.ids_mostrados == ordem and c.vez_mostrada == "j2", "caixa: mostra a ordem e quem está na vez")
+	_ok(c.find_child("Fila", true, false).get_child_count() == 3, "caixa: um retrato por figura")
+	var vazia: Array[String] = []
+	c.mostrar(vazia, "", {}, {}, "dinamico")
+	_ok(c.vez_mostrada == "" and (c.find_child("Vazia", true, false) as Label).visible, "caixa: sem acções, diz que a ordem se forma — nada inventado")
+	_ok(c.mouse_filter == Control.MOUSE_FILTER_IGNORE, "caixa: não rouba os toques ao tabuleiro")
+	c.queue_free()

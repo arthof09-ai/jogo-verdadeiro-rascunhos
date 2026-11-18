@@ -24,6 +24,12 @@ const ControlosLivre := preload("res://cenas/mestre/controlos_camara_livre.gd")
 const AbaRegisto := preload("res://cenas/mestre/aba_registo.gd")
 const AbaMesa := preload("res://cenas/mestre/aba_mesa.gd")
 const AbaAgir := preload("res://cenas/mestre/aba_agir.gd")
+## Ordem HUD: a caixa da ordem de turnos (dois modos do Mestre) e os retratos dos próprios modelos.
+const OrdemTurnos := preload("res://hud/ordem_turnos.gd")
+const CaixaOrdem := preload("res://hud/caixa_ordem.gd")
+const Retratos := preload("res://hud/retratos.gd")
+const CAIXA_LIGADA := "Caixa da ordem: ligada"
+const CAIXA_DESLIGADA := "Caixa da ordem: desligada"
 ## Ordem 52: a escolha do perfil gráfico das definições — a MESMA da ⚙ da jogadora (o mesmo ficheiro, a mesma chave,
 ## o mesmo seletor «Gráficos»).
 const EscolhaPerfil := preload("res://arte/perfis/escolha_perfil.gd")
@@ -139,6 +145,12 @@ var _som: Button
 ## Ordem 52: a linha «Gráficos» da aba Sala (Baixo / Médio / Alto). Sem escolha guardada, nenhum item marcado.
 var _graficos: OptionButton
 var _escolha: PanelContainer
+## Ordem HUD: a ordem (modelo), a caixa no tabuleiro e o interruptor dela na aba Sala.
+var ordem_turnos := OrdemTurnos.new()
+var caixa_ligada := true
+var _caixa: CaixaOrdem
+var _retratos: Retratos
+var _b_caixa: Button
 var _lista_escolha: VBoxContainer
 var _aviso_primeira: PanelContainer
 ## Ordem 34 (N32-1): o bloco dos avisos de quando o Mestre estava fora (um bloco, um toque para fechar).
@@ -357,6 +369,7 @@ func aplicar_vista(msg: Dictionary) -> void:
 	_arena.aplicar_vista(msg)
 	_desenhar_figuras()
 	_desenhar_ambiente()
+	_desenhar_ordem()
 	_aba_registo.atualizar(msg)
 	_aba_mesa.atualizar(msg)
 	_aba_agir.atualizar(msg)
@@ -401,6 +414,8 @@ func _ao_mestre(msg: Dictionary) -> void:
 
 
 func _ao_evento(msg: Dictionary) -> void:
+	if ordem_turnos.registar_evento(msg):
+		_desenhar_ordem()
 	_narrar_falha(msg)
 	_narrar_caida(msg)
 	_narrar_ambiente(msg)
@@ -1018,6 +1033,18 @@ func _montar() -> void:
 	_livre = ControlosLivre.new()
 	add_child(_livre)
 	_livre.montar(_arena)
+	# Ordem HUD: a caixa da ordem de turnos, por cima do tabuleiro (em cima, à esquerda).
+	_retratos = Retratos.new()
+	_retratos.name = "Retratos"
+	add_child(_retratos)
+	_caixa = CaixaOrdem.new()
+	_caixa.com_botao = true
+	_caixa.visible = false
+	_caixa.pediu_iniciativa.connect(definir_modo_iniciativa)
+	add_child(_caixa)
+	# A caixa fica por baixo dos controlos de cima do tabuleiro: ao entrar/sair da câmara livre, muda de sítio
+	# (em diferido: o «Entrar» muda antes dos outros controlos da câmara livre).
+	_livre.entrar_botao.visibility_changed.connect(_desenhar_ordem, CONNECT_DEFERRED)
 
 	_folha = PanelContainer.new()
 	_folha.name = "Folha"
@@ -1087,6 +1114,8 @@ func _montar() -> void:
 	_continuar = _botao(sala, Textos.CONTINUAR, func(): _enviar("MASTER_RESUME", {}))
 	_atualizar = _botao(sala, Textos.ATUALIZAR, func(): _pedir_vista_agora())
 	_som = _botao(sala, Textos.SOM_LIGADO, _alternar_som)
+	_b_caixa = _botao(sala, CAIXA_LIGADA, func(): ligar_caixa(not caixa_ligada))
+	_b_caixa.name = "LigarCaixaOrdem"
 	# Ordem 52: «Gráficos», o mesmo seletor da ⚙ da jogadora (arte/perfis/escolha_perfil.gd).
 	var linha_graficos := HBoxContainer.new()
 	linha_graficos.name = "LinhaGraficos"
@@ -1275,6 +1304,8 @@ func _ao_redimensionar() -> void:
 	_tabuleiro.position = Vector2.ZERO
 	_tabuleiro.size = Vector2(area.x - largura_folha, area.y)
 	_livre.ajustar(Rect2(_tabuleiro.position, _tabuleiro.size), _escala)
+	_caixa.ajustar(_fonte)
+	_desenhar_ordem()
 	_aviso_primeira.position = Vector2(margem * 2.0, margem * 2.0)
 	_aviso_primeira.custom_minimum_size = Vector2(minf(area.x - largura_folha - margem * 4.0, float(_fonte) * 18.0), 0.0)
 	_aviso_primeira.size = _aviso_primeira.custom_minimum_size
@@ -1293,3 +1324,73 @@ func _ao_redimensionar() -> void:
 	else:
 		_repassar = true
 		_ao_redimensionar.call_deferred()
+
+
+# ---------------------------------------------------------------- Ordem HUD: a caixa da ordem de turnos
+
+## O Mestre liga ou desliga a caixa (aba Sala). Desligada, o ecrã fica como antes; a ordem continua a formar-se
+## por baixo, para aparecer certa quando ele a voltar a ligar.
+func ligar_caixa(ligar: bool) -> void:
+	caixa_ligada = ligar
+	_b_caixa.text = CAIXA_LIGADA if ligar else CAIXA_DESLIGADA
+	_desenhar_ordem()
+
+
+## O botão «Modo iniciativa» da caixa. Ligado: a ordem é a de iniciativa que o servidor dá (`iniciativa` da vista —
+## só a ordem; os valores vêm da configuração da sala, o cliente não rola nem inventa a fórmula). Desligado: manda o
+## modo dinâmico, com a ordem formada pelas acções.
+func definir_modo_iniciativa(ligar: bool) -> void:
+	ordem_turnos.definir_modo(OrdemTurnos.INICIATIVA if ligar else OrdemTurnos.DINAMICO)
+	_desenhar_ordem()
+
+
+## Ordem HUD: a caixa fica no canto de cima, à esquerda, mas POR BAIXO dos controlos de cima do tabuleiro — o
+## «Entrar na câmera livre» e, dentro da câmara livre, o «Voltar à câmera do jogo» e a dica —, para nunca os tapar.
+## Se, dentro da câmara livre, ainda assim tocar num controlo de andar (ecrãs baixos), sai de cena até o Mestre sair
+## da câmara livre: nunca tapa um controlo.
+func _posicionar_caixa() -> void:
+	if _caixa == null or _livre == null:
+		return
+	var margem := float(_fonte) * 0.5
+	var y := margem * 2.0
+	for n in [_livre.entrar_botao, _livre.sair_botao, _livre.dica]:
+		var c := n as Control
+		if c.visible:
+			y = maxf(y, _livre.position.y + c.position.y + c.size.y + margem)
+	_caixa.position = Vector2(margem * 2.0, y)
+	_caixa.size = _caixa.get_combined_minimum_size()
+	var r := Rect2(_caixa.position, _caixa.size)
+	for n in [_livre.manipulo, _livre.sobe_botao, _livre.desce_botao, _livre.vel_caixa]:
+		var c := n as Control
+		if c.visible and r.intersects(Rect2(_livre.position + c.position, c.size)):
+			_caixa.visible = false
+			return
+
+
+func _desenhar_ordem() -> void:
+	if _caixa == null:
+		return
+	var fase := str(vista.get("fase", ""))
+	_caixa.visible = caixa_ligada and (fase == "combate" or fase == "pausa")
+	if not _caixa.visible:
+		return
+	var figs := {}
+	var nomes := {}
+	for f in Modelo.figuras(vista):
+		if f is Dictionary and f.get("colocada") == true:
+			var id := str(f.get("id", ""))
+			figs[id] = f
+			nomes[id] = Modelo.nome_mestre(f)
+	var ini = vista.get("iniciativa")
+	var ordem := ordem_turnos.ordem_visivel(ini if ini is Array else [], figs)
+	var vez_id := str(vista.get("vezId")) if vista.get("vezId") is String else ""
+	var retratos := {}
+	for id in ordem:
+		var f: Dictionary = figs[id]
+		var chave := "%s|%s|%s|%s" % [f.get("marcador"), f.get("alturaM"), f.get("caido") == true, f.get("vivo") == false]
+		_retratos.pedir(id, chave, _arena.modelo_da_figura(id))
+		if _retratos.tem(id):
+			retratos[id] = _retratos.textura(id)
+	_retratos.esquecer_ausentes(figs)
+	_caixa.mostrar(ordem, ordem_turnos.na_vez(vez_id), nomes, retratos, ordem_turnos.modo)
+	_posicionar_caixa()
