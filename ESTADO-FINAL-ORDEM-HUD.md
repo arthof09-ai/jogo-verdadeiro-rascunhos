@@ -106,4 +106,8 @@ pendências acima (iniciativa no servidor; a caixa no HUD do jogador).
   isso o merge não tem conflitos.
 - Feito por último, depois deste ESTADO, como merge `--no-ff` («a caixa da ordem une-se à linha»), à maneira das ordens
   anteriores.
-- O resultado do push fica na linha seguinte, num commit só de documento.
+- **Feito — VERIFICADO.** `fable/integracao-50` avançou de `cbe7729` para `a85d104`.
+  - É um merge `--no-ff` de `claude2/hud` @ `79c9d3b`.
+  - O push do ambiente web passou.
+  - A árvore da linha é igual à do ramo (diff 0).
+  - Este commit, só de documento, entra nos dois ramos.
