@@ -1,0 +1,41 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+Movie Maker mode enabled, recording movie in 1920×1080 @ 30 FPS...
+== ordem de turnos para /tmp/claude-0/godot/video2 · render: llvmpipe (LLVM 20.1.2, 256 bits) ==
+Unicode parsing error, some characters were replaced with � (U+FFFD): Unexpected NUL character
+  · DEMONSTRAÇÃO · modo dinâmico (sem iniciativa): a ordem ainda não existe
+  · A jogadora 1 (Heroína) surpreende o Orc
+  · Depois a jogadora 2 (Aliada)
+  · Depois a jogadora 3
+  · Depois o monstro: a ordem ficou 1-2-3-monstro
+  ok    caixa-dinamica.png (1280×720)
+  · Segunda volta: repete-se — na vez: jogadora 1 (Heroína)
+  · Segunda volta: repete-se — na vez: jogadora 2 (Aliada)
+  · Segunda volta: repete-se — na vez: jogadora 3
+  · Segunda volta: repete-se — na vez: o monstro (Orc)
+  ok    caixa-repete.png (1280×720)
+  · O Mestre liga o «Modo iniciativa»: a caixa passa à ordem de iniciativa do servidor
+  ok    caixa-iniciativa.png (1280×720)
+  · Desliga a iniciativa: volta a ordem formada pelas acções
+  · Caixa desligada (aba Sala): o ecrã é o de hoje
+  ok    caixa-desligada.png (1280×720)
+  · Caixa ligada outra vez
+  ok    retrato-humanoide.png
+  · Retrato (humanoide) e a figura em cena
+  ok    _cena-humanoide.png (1280×720)
+  ok    retrato-orc.png
+  · Retrato (orc) e a figura em cena
+  ok    _cena-orc.png (1280×720)
+  ok    retrato-lobo.png
+  · Retrato (lobo) e a figura em cena
+  ok    _cena-lobo.png (1280×720)
+ordem: 0 falha(s)
+--------------------------------------------------------------------------------
+Done recording movie at path: /tmp/claude-0/godot/video2/ordem-turnos.avi
+797 frames at 30 FPS (movie length: 00:00:26:17), recorded in 00:02:41 (16% of real-time speed).
+CPU render time: 4.99 seconds (average: 6.27 ms/frame)
+GPU render time: 6.16 seconds (average: 7.73 ms/frame)
+Encoding time: 20.04 seconds (average: 25.14 ms/frame)
+--------------------------------------------------------------------------------

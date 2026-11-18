@@ -403,6 +403,12 @@ func camara_livre_ativa() -> bool:
 	return camara_livre != null and camara_livre.ativa
 
 
+## Ordem HUD: o nó do modelo 3D da figura em cena (o marcador do site), para o retrato dela (hud/retratos.gd).
+func modelo_da_figura(id: String) -> Node3D:
+	var no: Node3D = _nos.get(id)
+	return no.get_node_or_null("Marcador") as Node3D if no != null else null
+
+
 func figuras_desenhadas() -> int:
 	return _nos.size()
 

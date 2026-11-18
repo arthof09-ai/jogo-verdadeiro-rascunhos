@@ -1,0 +1,168 @@
+[
+  {
+    "ordem": [],
+    "passo": "DEMONSTRAÇÃO · modo dinâmico (sem iniciativa): a ordem ainda não existe",
+    "t": 3.937,
+    "vez": ""
+  },
+  {
+    "ordem": [
+      "f1a88a9eef918a8b4"
+    ],
+    "passo": "A jogadora 1 (Heroína) surpreende o Orc",
+    "t": 13.392,
+    "vez": "f1a88a9eef918a8b4"
+  },
+  {
+    "ordem": [
+      "f1a88a9eef918a8b4",
+      "f0c1870b843e1465f"
+    ],
+    "passo": "Depois a jogadora 2 (Aliada)",
+    "t": 22.84,
+    "vez": "f0c1870b843e1465f"
+  },
+  {
+    "ordem": [
+      "f1a88a9eef918a8b4",
+      "f0c1870b843e1465f",
+      "jogadora3-demo"
+    ],
+    "passo": "Depois a jogadora 3",
+    "t": 32.246,
+    "vez": "jogadora3-demo"
+  },
+  {
+    "ordem": [
+      "f1a88a9eef918a8b4",
+      "f0c1870b843e1465f",
+      "jogadora3-demo",
+      "f1c8fc87e558f2d7e"
+    ],
+    "passo": "Depois o monstro: a ordem ficou 1-2-3-monstro",
+    "t": 41.627,
+    "vez": "f1c8fc87e558f2d7e"
+  },
+  {
+    "ordem": [
+      "f1a88a9eef918a8b4",
+      "f0c1870b843e1465f",
+      "jogadora3-demo",
+      "f1c8fc87e558f2d7e"
+    ],
+    "passo": "Segunda volta: repete-se — na vez: jogadora 1 (Heroína)",
+    "t": 51.338,
+    "vez": "f1a88a9eef918a8b4"
+  },
+  {
+    "ordem": [
+      "f1a88a9eef918a8b4",
+      "f0c1870b843e1465f",
+      "jogadora3-demo",
+      "f1c8fc87e558f2d7e"
+    ],
+    "passo": "Segunda volta: repete-se — na vez: jogadora 2 (Aliada)",
+    "t": 58.856,
+    "vez": "f0c1870b843e1465f"
+  },
+  {
+    "ordem": [
+      "f1a88a9eef918a8b4",
+      "f0c1870b843e1465f",
+      "jogadora3-demo",
+      "f1c8fc87e558f2d7e"
+    ],
+    "passo": "Segunda volta: repete-se — na vez: jogadora 3",
+    "t": 66.282,
+    "vez": "jogadora3-demo"
+  },
+  {
+    "ordem": [
+      "f1a88a9eef918a8b4",
+      "f0c1870b843e1465f",
+      "jogadora3-demo",
+      "f1c8fc87e558f2d7e"
+    ],
+    "passo": "Segunda volta: repete-se — na vez: o monstro (Orc)",
+    "t": 73.9,
+    "vez": "f1c8fc87e558f2d7e"
+  },
+  {
+    "ordem": [
+      "f1a88a9eef918a8b4",
+      "f0c1870b843e1465f",
+      "jogadora3-demo",
+      "fb43618ae935f84df",
+      "f1c8fc87e558f2d7e"
+    ],
+    "passo": "O Mestre liga o «Modo iniciativa»: a caixa passa à ordem de iniciativa do servidor",
+    "t": 81.956,
+    "vez": "f1c8fc87e558f2d7e"
+  },
+  {
+    "ordem": [
+      "f1a88a9eef918a8b4",
+      "f0c1870b843e1465f",
+      "jogadora3-demo",
+      "f1c8fc87e558f2d7e"
+    ],
+    "passo": "Desliga a iniciativa: volta a ordem formada pelas acções",
+    "t": 100.661,
+    "vez": "f1c8fc87e558f2d7e"
+  },
+  {
+    "ordem": [
+      "f1a88a9eef918a8b4",
+      "f0c1870b843e1465f",
+      "jogadora3-demo",
+      "f1c8fc87e558f2d7e"
+    ],
+    "passo": "Caixa desligada (aba Sala): o ecrã é o de hoje",
+    "t": 110.077,
+    "vez": "f1c8fc87e558f2d7e"
+  },
+  {
+    "ordem": [
+      "f1a88a9eef918a8b4",
+      "f0c1870b843e1465f",
+      "jogadora3-demo",
+      "f1c8fc87e558f2d7e"
+    ],
+    "passo": "Caixa ligada outra vez",
+    "t": 119.975,
+    "vez": "f1c8fc87e558f2d7e"
+  },
+  {
+    "ordem": [
+      "f1a88a9eef918a8b4",
+      "f0c1870b843e1465f",
+      "jogadora3-demo",
+      "f1c8fc87e558f2d7e"
+    ],
+    "passo": "Retrato (humanoide) e a figura em cena",
+    "t": 129.386,
+    "vez": "f1c8fc87e558f2d7e"
+  },
+  {
+    "ordem": [
+      "f1a88a9eef918a8b4",
+      "f0c1870b843e1465f",
+      "jogadora3-demo",
+      "f1c8fc87e558f2d7e"
+    ],
+    "passo": "Retrato (orc) e a figura em cena",
+    "t": 138.612,
+    "vez": "f1c8fc87e558f2d7e"
+  },
+  {
+    "ordem": [
+      "f1a88a9eef918a8b4",
+      "f0c1870b843e1465f",
+      "jogadora3-demo",
+      "f1c8fc87e558f2d7e"
+    ],
+    "passo": "Retrato (lobo) e a figura em cena",
+    "t": 147.567,
+    "vez": "f1c8fc87e558f2d7e"
+  }
+]
