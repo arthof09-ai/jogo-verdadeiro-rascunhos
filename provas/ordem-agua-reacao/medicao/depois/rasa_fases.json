@@ -1,0 +1,33 @@
+{
+  "angulo": "câmara a 3/4, da margem sul, a olhar para noroeste",
+  "duracao": 27.7333333333339,
+  "fases": [
+    {
+      "t0": 0.0333333333333333,
+      "t1": 2.5,
+      "texto": "antes: a superfície só com o vento"
+    },
+    {
+      "t0": 2.5,
+      "t1": 6.83333333333332,
+      "texto": "em seco, na margem"
+    },
+    {
+      "t0": 6.83333333333332,
+      "t1": 7.46666666666665,
+      "texto": "a entrar: a água pelo tornozelo"
+    },
+    {
+      "t0": 7.46666666666665,
+      "t1": 15.7666666666666,
+      "texto": "na RASA: a água pelo joelho, anéis à volta das pernas e pelo caminho"
+    },
+    {
+      "t0": 15.7666666666666,
+      "t1": 27.7333333333339,
+      "texto": "parado dentro de água: a ondulação acalma até sumir; os anéis e a esteira desfazem-se sozinhos"
+    }
+  ],
+  "modo": "rasa",
+  "titulo": "(a) ENTRAR NO LAGO E ANDAR NA RASA, COM A ÁGUA PELO JOELHO"
+}

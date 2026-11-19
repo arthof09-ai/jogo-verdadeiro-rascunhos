@@ -1,0 +1,43 @@
+{
+  "angulo": "câmara alta, da margem sul, a olhar para norte",
+  "duracao": 45.1333333333333,
+  "fases": [
+    {
+      "t0": 0.0333333333333333,
+      "t1": 2.0,
+      "texto": "antes: a superfície só com o vento"
+    },
+    {
+      "t0": 2.0,
+      "t1": 4.49999999999999,
+      "texto": "na RASA: a água pelo joelho, anéis à volta das pernas e pelo caminho"
+    },
+    {
+      "t0": 4.49999999999999,
+      "t1": 5.46666666666666,
+      "texto": "o leito desce: a água SOBE pelo corpo"
+    },
+    {
+      "t0": 5.46666666666666,
+      "t1": 25.5000000000004,
+      "texto": "a NADAR na funda (não faz pé): a esteira nasce atrás"
+    },
+    {
+      "t0": 25.5000000000004,
+      "t1": 26.7000000000005,
+      "texto": "o leito desce: a água SOBE pelo corpo"
+    },
+    {
+      "t0": 26.7000000000005,
+      "t1": 29.1333333333339,
+      "texto": "na RASA: a água pelo joelho, anéis à volta das pernas e pelo caminho"
+    },
+    {
+      "t0": 29.1333333333339,
+      "t1": 45.1333333333333,
+      "texto": "parado dentro de água: a ondulação acalma até sumir; os anéis e a esteira desfazem-se sozinhos"
+    }
+  ],
+  "modo": "funda",
+  "titulo": "(b) NADAR NA FUNDA: A ESTEIRA FORMA-SE ATRÁS DA PEÇA E DESFAZ-SE DEVAGAR"
+}
