@@ -1,0 +1,11 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+== Ordem NADO · conversão do clipe Swimming (Mixamo) para o manequim da casa ==
+[nado] fonte res://testes/manequim/orc-mixamo-swimming.fbx · 5323360 B · SHA-256 5a98e1af28816bc53fba21c8ac647012a86a7e19220759d8c6ad16ed97aae488
+[nado] clipe fonte mixamo_com: 4.53333333333333 s, 137 quadros, avanço da fonte por ciclo 1.89707016944885 m (tirado: fica no lugar), escala da anca 1.15352913142815
+[nado] clipe nadar_v1: 69 pistas de rotação + 1 de posição (pelvis), 4.53333333333333 s, em ciclo; a anca entre 0.701 e 0.74 m (média 0.726 m) acima da base
+[nado] velocidade natural do clipe (o avanço da fonte à escala / ciclo): 0.483 m/s
+[nado] gravado res://testes/manequim/nado-v1.glb · 2201832 B · SHA-256 5b75767967494201768a69a5743e155eda170e5c10d1f1baccb918d4130b5371
+[nado] relido: clipe nadar_v1, 4.53333330154419 s, 53 pistas; esqueleto 382 ossos; 1 malha(s)
+[nado] coxa esquerda a meio do ciclo: diferença original/relido 0.0°
+EXIT 0
