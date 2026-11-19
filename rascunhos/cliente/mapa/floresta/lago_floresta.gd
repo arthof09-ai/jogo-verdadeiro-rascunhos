@@ -16,7 +16,8 @@ extends Node3D
 ##   ponto_de_rasto(...)        um ponto da esteira, à mão;
 ##   imersao(y_base)            quantos metros de um corpo com a base em y_base estão debaixo de água;
 ##   pe_na_agua(x, z)           a altura da base de uma figura em (x, z): o leito enquanto se faz pé; onde a
-##                              água passa de FLUTUA_M, a figura bóia com a água pelo peito (não se enterra).
+##                              água passa de FLUTUA_M, a figura bóia com a água pelo peito (não se enterra);
+##   a_nadar(x, z)              (Ordem NADO) se a figura em (x, z) já não faz pé e passa ao clipe de nado.
 
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
 
@@ -160,6 +161,12 @@ static func pe_na_agua(x: float, z: float, flutua: float = FLUTUA_M) -> float:
 	if Relevo.lago_fundura(x, z) <= flutua:
 		return chao
 	return Relevo.nivel_lago() - flutua
+
+
+## Ordem NADO: em (x, z) uma figura já NADA? É quando não faz pé — a mesma fronteira de pe_na_agua (mais de
+## `flutua` metros de água). Na rasa anda (com a água pelo joelho); em seco anda. Só apresentação: escolhe o clipe.
+static func a_nadar(x: float, z: float, flutua: float = FLUTUA_M) -> bool:
+	return Relevo.lago_fundura(x, z) > flutua
 
 
 # ------------------------------------------------------------------ a reacção
