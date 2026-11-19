@@ -1,0 +1,2263 @@
+(node:4910) ExperimentalWarning: The MockTimers API is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+TAP version 13
+# Subtest: Q12: aliada adjacente ao atacante vai em aliadosAoAlcance como «adjacente»
+ok 1 - Q12: aliada adjacente ao atacante vai em aliadosAoAlcance como «adjacente»
+  ---
+  duration_ms: 48.037466
+  type: 'test'
+  ...
+# Subtest: Q12: aliada na linha até ao alvo (sem ser adjacente) vai como «naLinha»; fora da linha não vai
+ok 2 - Q12: aliada na linha até ao alvo (sem ser adjacente) vai como «naLinha»; fora da linha não vai
+  ---
+  duration_ms: 41.72446
+  type: 'test'
+  ...
+# Subtest: Q12: inimigos nunca contam como amigos — a heroína ataca, o lobo ao lado dela fica fora, a aliada na linha entra
+ok 3 - Q12: inimigos nunca contam como amigos — a heroína ataca, o lobo ao lado dela fica fora, a aliada na linha entra
+  ---
+  duration_ms: 12.938758
+  type: 'test'
+  ...
+# Subtest: Q12: «acerta-amigo» aprovado — metade com piso, sem RD, Vida da amiga desce; o mesmo contexto na 2.ª corrida
+ok 4 - Q12: «acerta-amigo» aprovado — metade com piso, sem RD, Vida da amiga desce; o mesmo contexto na 2.ª corrida
+  ---
+  duration_ms: 15.360224
+  type: 'test'
+  ...
+# Subtest: Q12: tecto de letalidade — nunca abaixo de 1 de Vida, nunca abre testes de morte
+ok 5 - Q12: tecto de letalidade — nunca abaixo de 1 de Vida, nunca abre testes de morte
+  ---
+  duration_ms: 13.61687
+  type: 'test'
+  ...
+# Subtest: Q12: a RD de quem recebe desconta antes do tecto (RD geral 41)
+ok 6 - Q12: a RD de quem recebe desconta antes do tecto (RD geral 41)
+  ---
+  duration_ms: 10.298271
+  type: 'test'
+  ...
+# Subtest: Q12: dano de dois tipos contra RD — como o VLAB, não se decide: não aplica e fica para o Mestre
+ok 7 - Q12: dano de dois tipos contra RD — como o VLAB, não se decide: não aplica e fica para o Mestre
+  ---
+  duration_ms: 10.536622
+  type: 'test'
+  ...
+# Subtest: Q12: «acerta-se» pendente (motor sem a Vida) — a mesma regra no próprio atacante
+ok 8 - Q12: «acerta-se» pendente (motor sem a Vida) — a mesma regra no próprio atacante
+  ---
+  duration_ms: 11.345253
+  type: 'test'
+  ...
+# Subtest: Q12: o registo da desgraça pendente (RD, Vida antes/depois) nunca chega à Party
+ok 9 - Q12: o registo da desgraça pendente (RD, Vida antes/depois) nunca chega à Party
+  ---
+  duration_ms: 7.781937
+  type: 'test'
+  ...
+# Subtest: Q8: arma quebrada — a técnica com arma desaparece das opções e o ataque com ela é recusado
+ok 10 - Q8: arma quebrada — a técnica com arma desaparece das opções e o ataque com ela é recusado
+  ---
+  duration_ms: 17.691391
+  type: 'test'
+  ...
+# Subtest: Q8: arma caída — só «apanhar_arma» (gasta a Acção de Movimento: a reserva toda); depois volta a atacar
+ok 11 - Q8: arma caída — só «apanhar_arma» (gasta a Acção de Movimento: a reserva toda); depois volta a atacar
+  ---
+  duration_ms: 16.958436
+  type: 'test'
+  ...
+# Subtest: Q8: a própria recebe logo o `estado` com a arma caída, e outra vez ao apanhá-la
+ok 12 - Q8: a própria recebe logo o `estado` com a arma caída, e outra vez ao apanhá-la
+  ---
+  duration_ms: 13.818226
+  type: 'test'
+  ...
+# Subtest: Q12: o cartão de desgraça leva os amigos elegíveis; os outros cartões levam null
+ok 13 - Q12: o cartão de desgraça leva os amigos elegíveis; os outros cartões levam null
+  ---
+  duration_ms: 8.74613
+  type: 'test'
+  ...
+# Subtest: Q12: o Mestre declara o amigo atingido (aliadoAtingidoId) e o motor recebe-o
+ok 14 - Q12: o Mestre declara o amigo atingido (aliadoAtingidoId) e o motor recebe-o
+  ---
+  duration_ms: 7.45999
+  type: 'test'
+  ...
+# Subtest: Q12: amigo fora da lista, ou com outra desgraça — recusado (acao_invalida) e o cartão continua aberto
+ok 15 - Q12: amigo fora da lista, ou com outra desgraça — recusado (acao_invalida) e o cartão continua aberto
+  ---
+  duration_ms: 9.430352
+  type: 'test'
+  ...
+# Subtest: autojogo: a mesma semente dá a mesma sequência de dados; outra semente, outra
+ok 16 - autojogo: a mesma semente dá a mesma sequência de dados; outra semente, outra
+  ---
+  duration_ms: 0.41051
+  type: 'test'
+  ...
+# Subtest: autojogo: o cenário de bancada carrega e as fichas dele validam
+ok 17 - autojogo: o cenário de bancada carrega e as fichas dele validam
+  ---
+  duration_ms: 1.038428
+  type: 'test'
+  ...
+# Subtest: autojogo: o conferidor aceita o registo que bate e soma-o
+ok 18 - autojogo: o conferidor aceita o registo que bate e soma-o
+  ---
+  duration_ms: 1.307689
+  type: 'test'
+  ...
+# Subtest: autojogo: o conferidor recusa o resumo que não bate com o registo
+ok 19 - autojogo: o conferidor recusa o resumo que não bate com o registo
+  ---
+  duration_ms: 0.70445
+  type: 'test'
+  ...
+# Subtest: REF_17: duas figuras vivas nunca ficam na mesma casa, ronda após ronda
+ok 20 - REF_17: duas figuras vivas nunca ficam na mesma casa, ronda após ronda
+  ---
+  duration_ms: 155.320942
+  type: 'test'
+  ...
+# Subtest: cura (ordem 7, site REF_31): a estabilizada curada soma a cura por cima do 1, levanta-se e age na vez dela
+ok 21 - cura (ordem 7, site REF_31): a estabilizada curada soma a cura por cima do 1, levanta-se e age na vez dela
+  ---
+  duration_ms: 22.436566
+  type: 'test'
+  ...
+# Subtest: cura (ordem 7): sem técnica de cura não há opção; intenção forjada, mal formada ou com alvo inimigo é recusada
+ok 22 - cura (ordem 7): sem técnica de cura não há opção; intenção forjada, mal formada ou com alvo inimigo é recusada
+  ---
+  duration_ms: 7.656663
+  type: 'test'
+  ...
+# Subtest: aceite 1: a fixture fictícia valida (4 fichas)
+ok 23 - aceite 1: a fixture fictícia valida (4 fichas)
+  ---
+  duration_ms: 0.423045
+  type: 'test'
+  ...
+# Subtest: aceite 2: cada campo obrigatório da ficha, removido, é recusado com o nome do campo
+ok 24 - aceite 2: cada campo obrigatório da ficha, removido, é recusado com o nome do campo
+  ---
+  duration_ms: 0.948487
+  type: 'test'
+  ...
+# Subtest: aceite 2 b: cada campo obrigatório da técnica, removido, é recusado
+ok 25 - aceite 2 b: cada campo obrigatório da técnica, removido, é recusado
+  ---
+  duration_ms: 0.619917
+  type: 'test'
+  ...
+# Subtest: aceite 2 c: subcampos obrigatórios (rd, testes.fortitude, fonte, defesaAplicavel.valor)
+ok 26 - aceite 2 c: subcampos obrigatórios (rd, testes.fortitude, fonte, defesaAplicavel.valor)
+  ---
+  duration_ms: 0.509733
+  type: 'test'
+  ...
+# Subtest: um campo em falta nunca vira zero: null num inteiro é recusado
+ok 27 - um campo em falta nunca vira zero: null num inteiro é recusado
+  ---
+  duration_ms: 0.156999
+  type: 'test'
+  ...
+# Subtest: aceite 3: componentes:[null] é recusado
+ok 28 - aceite 3: componentes:[null] é recusado
+  ---
+  duration_ms: 0.14816
+  type: 'test'
+  ...
+# Subtest: E4: sem ca e sem defesaAplicavel é recusado; reacaoDefensiva saiu da ficha
+ok 29 - E4: sem ca e sem defesaAplicavel é recusado; reacaoDefensiva saiu da ficha
+  ---
+  duration_ms: 0.603143
+  type: 'test'
+  ...
+# Subtest: E1: classificação da ficha em camelCase; testesDeMorteDesignado booleano
+ok 30 - E1: classificação da ficha em camelCase; testesDeMorteDesignado booleano
+  ---
+  duration_ms: 0.274891
+  type: 'test'
+  ...
+# Subtest: E3: tipo e tipos divergentes; reparticao com comprimento errado
+ok 31 - E3: tipo e tipos divergentes; reparticao com comprimento errado
+  ---
+  duration_ms: 0.340704
+  type: 'test'
+  ...
+# Subtest: E6: RD geral e por tipo ao mesmo tempo; chave de porTipo que nenhuma técnica usa
+ok 32 - E6: RD geral e por tipo ao mesmo tempo; chave de porTipo que nenhuma técnica usa
+  ---
+  duration_ms: 0.318738
+  type: 'test'
+  ...
+# Subtest: E7: testes.ataque só é obrigatório se alguma técnica não tiver expressaoAtaque
+ok 33 - E7: testes.ataque só é obrigatório se alguma técnica não tiver expressaoAtaque
+  ---
+  duration_ms: 0.159836
+  type: 'test'
+  ...
+# Subtest: ids repetidos e expressões não analisáveis são recusados
+ok 34 - ids repetidos e expressões não analisáveis são recusados
+  ---
+  duration_ms: 0.253347
+  type: 'test'
+  ...
+# Subtest: aceite: Object.freeze profundo; o objeto do chamador não é congelado
+ok 35 - aceite: Object.freeze profundo; o objeto do chamador não é congelado
+  ---
+  duration_ms: 0.731666
+  type: 'test'
+  ...
+# Subtest: aceite 4: o pacote recusa SHA errado, arquivo em falta e arquivo não listado
+ok 36 - aceite 4: o pacote recusa SHA errado, arquivo em falta e arquivo não listado
+  ---
+  duration_ms: 0.799889
+  type: 'test'
+  ...
+# Subtest: o erro diz qual arquivo e qual campo
+ok 37 - o erro diz qual arquivo e qual campo
+  ---
+  duration_ms: 0.224272
+  type: 'test'
+  ...
+# Subtest: fixture do ecrã do Mestre: o ficheiro guardado é o que o servidor gera hoje
+ok 38 - fixture do ecrã do Mestre: o ficheiro guardado é o que o servidor gera hoje
+  ---
+  duration_ms: 29.80372
+  type: 'test'
+  ...
+# Subtest: fixture do ecrã do Mestre: a jogadora nunca recebeu nenhum dos canários do Mestre
+ok 39 - fixture do ecrã do Mestre: a jogadora nunca recebeu nenhum dos canários do Mestre
+  ---
+  duration_ms: 20.769821
+  type: 'test'
+  ...
+# Subtest: T-IA-07: em auto, o lobo aproxima-se da jogadora e ataca; a vez volta a ela
+ok 40 - T-IA-07: em auto, o lobo aproxima-se da jogadora e ataca; a vez volta a ela
+  ---
+  duration_ms: 6.407765
+  type: 'test'
+  ...
+# Subtest: T-IA-07 (invariante 12): com o motor a falhar, a 2.ª recusa encerra o turno da criatura
+ok 41 - T-IA-07 (invariante 12): com o motor a falhar, a 2.ª recusa encerra o turno da criatura
+  ---
+  duration_ms: 7.556476
+  type: 'test'
+  ...
+# Subtest: T-IA-07 (semi): a IA propõe por cartão ao Mestre; a razão só o Mestre a vê
+ok 42 - T-IA-07 (semi): a IA propõe por cartão ao Mestre; a razão só o Mestre a vê
+  ---
+  duration_ms: 11.135975
+  type: 'test'
+  ...
+# Subtest: cartões em FIFO e decisão idempotente: a primeira decisão ganha
+ok 43 - cartões em FIFO e decisão idempotente: a primeira decisão ganha
+  ---
+  duration_ms: 8.328958
+  type: 'test'
+  ...
+# Subtest: T-IDEM-02: o mesmo intentId reenviado devolve o MESMO recibo e não dá segundo efeito
+ok 44 - T-IDEM-02: o mesmo intentId reenviado devolve o MESMO recibo e não dá segundo efeito
+  ---
+  duration_ms: 9.531906
+  type: 'test'
+  ...
+# Subtest: T-IDEM-02 (§8.1): ACK perdido → RECEIPT_QUERY devolve o recibo original e o RESYNC repõe os eventos
+ok 45 - T-IDEM-02 (§8.1): ACK perdido → RECEIPT_QUERY devolve o recibo original e o RESYNC repõe os eventos
+  ---
+  duration_ms: 4.919779
+  type: 'test'
+  ...
+# Subtest: T-IDEM-03: o mesmo intentId com outra ação dá intent_conflito e não grava nada
+ok 46 - T-IDEM-03: o mesmo intentId com outra ação dá intent_conflito e não grava nada
+  ---
+  duration_ms: 6.927147
+  type: 'test'
+  ...
+# Subtest: E-P8: deduplicação por (seatId, intentId); RECEIPT_QUERY alheio dá DESCONHECIDA
+ok 47 - E-P8: deduplicação por (seatId, intentId); RECEIPT_QUERY alheio dá DESCONHECIDA
+  ---
+  duration_ms: 5.454326
+  type: 'test'
+  ...
+# Subtest: formato mal feito não é gravado (o mesmo id pode voltar bem formado)
+ok 48 - formato mal feito não é gravado (o mesmo id pode voltar bem formado)
+  ---
+  duration_ms: 4.918549
+  type: 'test'
+  ...
+# Subtest: exportação: corpo canónico + assinatura; restaurar dá o mesmo estado e a mesma cadeia
+ok 49 - exportação: corpo canónico + assinatura; restaurar dá o mesmo estado e a mesma cadeia
+  ---
+  duration_ms: 21.431557
+  type: 'test'
+  ...
+# Subtest: restauração recusa 1 byte adulterado (amostra de posições, inserção e remoção)
+ok 50 - restauração recusa 1 byte adulterado (amostra de posições, inserção e remoção)
+  ---
+  duration_ms: 153.529433
+  type: 'test'
+  ...
+# Subtest: com chave (HMAC), só quem tem a chave restaura
+ok 51 - com chave (HMAC), só quem tem a chave restaura
+  ---
+  duration_ms: 3.958054
+  type: 'test'
+  ...
+# Subtest: a sala restaurada continua: a heroína volta com o seatToken e vê o mesmo tabuleiro
+ok 52 - a sala restaurada continua: a heroína volta com o seatToken e vê o mesmo tabuleiro
+  ---
+  duration_ms: 24.817603
+  type: 'test'
+  ...
+# Subtest: motor de outra versão ao restaurar → ROOM_PAUSED {manutencao}
+ok 53 - motor de outra versão ao restaurar → ROOM_PAUSED {manutencao}
+  ---
+  duration_ms: 28.106443
+  type: 'test'
+  ...
+# Subtest: o journal nunca apaga história: "voltar" cria um evento revertido e marca os recibos posteriores
+ok 54 - o journal nunca apaga história: "voltar" cria um evento revertido e marca os recibos posteriores
+  ---
+  duration_ms: 9.560468
+  type: 'test'
+  ...
+# Subtest: L1: antes do START, a vista do Mestre já tem a heroína (não colocada) com os totais e os nomes da ficha
+ok 55 - L1: antes do START, a vista do Mestre já tem a heroína (não colocada) com os totais e os nomes da ficha
+  ---
+  duration_ms: 2.089352
+  type: 'test'
+  ...
+# Subtest: L1: em combate, cada figura do Mestre tem vidaActual/vidaTotal e PA gasto/PA total; a criatura traz o nome verdadeiro
+ok 56 - L1: em combate, cada figura do Mestre tem vidaActual/vidaTotal e PA gasto/PA total; a criatura traz o nome verdadeiro
+  ---
+  duration_ms: 5.372653
+  type: 'test'
+  ...
+# Subtest: L1: a Party continua sem totais nem nomes verdadeiros de ninguém além dela (o snapshot da heroína)
+ok 57 - L1: a Party continua sem totais nem nomes verdadeiros de ninguém além dela (o snapshot da heroína)
+  ---
+  duration_ms: 7.627064
+  type: 'test'
+  ...
+# Subtest: L2: o cartão de desgraça traz a lista do «Escolher outra» (as 6 desgraças; sem «nenhuma», como no site), pela ordem
+ok 58 - L2: o cartão de desgraça traz a lista do «Escolher outra» (as 6 desgraças; sem «nenhuma», como no site), pela ordem
+  ---
+  duration_ms: 5.691736
+  type: 'test'
+  ...
+# Subtest: L2: editar com uma desgraça da lista aplica; com uma de fora, o servidor recusa e o cartão fica aberto
+ok 59 - L2: editar com uma desgraça da lista aplica; com uma de fora, o servidor recusa e o cartão fica aberto
+  ---
+  duration_ms: 10.61068
+  type: 'test'
+  ...
+# Subtest: regra-mãe (vale o site): recusar a desgraça não deita a rolagem fora — o cartão fica por decidir
+ok 60 - regra-mãe (vale o site): recusar a desgraça não deita a rolagem fora — o cartão fica por decidir
+  ---
+  duration_ms: 7.957049
+  type: 'test'
+  ...
+# Subtest: L2: os cartões que não são de desgraça levam a lista a null
+ok 61 - L2: os cartões que não são de desgraça levam a lista a null
+  ---
+  duration_ms: 6.833533
+  type: 'test'
+  ...
+# Subtest: L8: a vista do Mestre traz os pontos de «voltar», do mais novo ao mais velho, todos antes do ponto actual
+ok 62 - L8: a vista do Mestre traz os pontos de «voltar», do mais novo ao mais velho, todos antes do ponto actual
+  ---
+  duration_ms: 10.283061
+  type: 'test'
+  ...
+# Subtest: L8: o «voltar» aceita qualquer ponto da lista e recusa o ponto actual
+ok 63 - L8: o «voltar» aceita qualquer ponto da lista e recusa o ponto actual
+  ---
+  duration_ms: 14.103546
+  type: 'test'
+  ...
+# Subtest: L8: os pontos só vão ao Mestre (nenhuma mensagem da Party os leva)
+ok 64 - L8: os pontos só vão ao Mestre (nenhuma mensagem da Party os leva)
+  ---
+  duration_ms: 10.24019
+  type: 'test'
+  ...
+# Subtest: L10: com o cartão de IA aberto, o Mestre recebe as opções da criatura da vez (e a jogadora não)
+ok 65 - L10: com o cartão de IA aberto, o Mestre recebe as opções da criatura da vez (e a jogadora não)
+  ---
+  duration_ms: 11.867236
+  type: 'test'
+  ...
+# Subtest: L10: «Escolher outra» acção — editar o cartão de IA com uma casa das opções move o lobo para lá
+ok 66 - L10: «Escolher outra» acção — editar o cartão de IA com uma casa das opções move o lobo para lá
+  ---
+  duration_ms: 17.041301
+  type: 'test'
+  ...
+# Subtest: L6: «Continuar a rodada» deixa as marchas puras do lobo seguir sem cartão nessa rodada; na rodada seguinte volta o cartão
+ok 67 - L6: «Continuar a rodada» deixa as marchas puras do lobo seguir sem cartão nessa rodada; na rodada seguinte volta o cartão
+  ---
+  duration_ms: 23.409323
+  type: 'test'
+  ...
+# Subtest: L6: «Continuar a rodada» só serve para aprovar uma marcha pura (com recusar, o servidor recusa)
+ok 68 - L6: «Continuar a rodada» só serve para aprovar uma marcha pura (com recusar, o servidor recusa)
+  ---
+  duration_ms: 10.626672
+  type: 'test'
+  ...
+# Subtest: L9: selo TESTE só numa sala de teste; estatísticas contam ataques, dano e cartões; nada disto vai à Party
+ok 69 - L9: selo TESTE só numa sala de teste; estatísticas contam ataques, dano e cartões; nada disto vai à Party
+  ---
+  duration_ms: 8.876663
+  type: 'test'
+  ...
+# Subtest: morte: a heroína a 0 de Vida não sai da ordem, a vez dela é um teste de morte e, estabilizada, fica na batalha caída com 1 de Vida (Q4, site REF_31)
+ok 70 - morte: a heroína a 0 de Vida não sai da ordem, a vez dela é um teste de morte e, estabilizada, fica na batalha caída com 1 de Vida (Q4, site REF_31)
+  ---
+  duration_ms: 16.195565
+  type: 'test'
+  ...
+# Subtest: morte: três falhas → morteAdjudicada → a jogadora morre e a partida acaba em morte
+ok 71 - morte: três falhas → morteAdjudicada → a jogadora morre e a partida acaba em morte
+  ---
+  duration_ms: 8.8748
+  type: 'test'
+  ...
+# Subtest: T-OPT-06: cada opção da heroína, na sua revisão, dá APLICADA
+ok 72 - T-OPT-06: cada opção da heroína, na sua revisão, dá APLICADA
+  ---
+  duration_ms: 296.4515
+  type: 'test'
+  ...
+# Subtest: T-OPT-06 b: depois de agir, as opções novas também são honestas (atacou → sem ataques; andou → sem correr)
+ok 73 - T-OPT-06 b: depois de agir, as opções novas também são honestas (atacou → sem ataques; andou → sem correr)
+  ---
+  duration_ms: 6.181814
+  type: 'test'
+  ...
+# Subtest: BFS de 4 vizinhos: sem diagonais, figuras vivas bloqueiam, cadáveres não
+ok 74 - BFS de 4 vizinhos: sem diagonais, figuras vivas bloqueiam, cadáveres não
+  ---
+  duration_ms: 4.073853
+  type: 'test'
+  ...
+# Subtest: ordem 11 (P8a): a escala aceita 1, 1,5 e 2 m por casa
+ok 75 - ordem 11 (P8a): a escala aceita 1, 1,5 e 2 m por casa
+  ---
+  duration_ms: 5.67668
+  type: 'test'
+  ...
+# Subtest: ordem 11 (P8a): qualquer outro valor é recusado com erro claro — a escala não muda
+ok 76 - ordem 11 (P8a): qualquer outro valor é recusado com erro claro — a escala não muda
+  ---
+  duration_ms: 9.722986
+  type: 'test'
+  ...
+# Subtest: ordem 11 (P8b): técnica de 1,5 m com casa de 1 m — chega à vizinha (1,5 casas); a diagonal e 2 casas não (ordem 15)
+ok 77 - ordem 11 (P8b): técnica de 1,5 m com casa de 1 m — chega à vizinha (1,5 casas); a diagonal e 2 casas não (ordem 15)
+  ---
+  duration_ms: 15.652723
+  type: 'test'
+  ...
+# Subtest: ordem 11 (P8b): técnica de 1,5 m com casa de 2 m — o piso de 1 casa dá-lhe a vizinha (antes: 2 m > 1,5 m, fora)
+ok 78 - ordem 11 (P8b): técnica de 1,5 m com casa de 2 m — o piso de 1 casa dá-lhe a vizinha (antes: 2 m > 1,5 m, fora)
+  ---
+  duration_ms: 17.067461
+  type: 'test'
+  ...
+# Subtest: ordem 11 (P8b): na escala de sempre (1,5 m) nada muda — vizinha e diagonal sim, 2 casas não
+ok 79 - ordem 11 (P8b): na escala de sempre (1,5 m) nada muda — vizinha e diagonal sim, 2 casas não
+  ---
+  duration_ms: 10.833916
+  type: 'test'
+  ...
+# Subtest: ordem 11 (P8b): ataque de oportunidade com casa de 1 m — a técnica de 1,5 m continua a chegar à casa vizinha
+ok 80 - ordem 11 (P8b): ataque de oportunidade com casa de 1 m — a técnica de 1,5 m continua a chegar à casa vizinha
+  ---
+  duration_ms: 4.852238
+  type: 'test'
+  ...
+# Subtest: ordem 11 (P8b): ataque de oportunidade com casa de 2 m — também chega
+ok 81 - ordem 11 (P8b): ataque de oportunidade com casa de 2 m — também chega
+  ---
+  duration_ms: 7.027352
+  type: 'test'
+  ...
+# Subtest: ordem 12: o golpe na caída chega ao Mestre no `ataque` com a falha nova; não sai `estado`; a Party não a vê
+ok 82 - ordem 12: o golpe na caída chega ao Mestre no `ataque` com a falha nova; não sai `estado`; a Party não a vê
+  ---
+  duration_ms: 7.254319
+  type: 'test'
+  ...
+# Subtest: ordem 13 (ambiente.js): a chuva vem do clima (chuva = pouca, tempestade = forte) e os raios pedem chuva
+ok 83 - ordem 13 (ambiente.js): a chuva vem do clima (chuva = pouca, tempestade = forte) e os raios pedem chuva
+  ---
+  duration_ms: 0.214802
+  type: 'test'
+  ...
+# Subtest: ordem 13 (ambiente.js): regras 1, 3, 4 e 6 — o raio acende a casa e a cruz, fere 15 fixos sem RD e pega fogo
+ok 84 - ordem 13 (ambiente.js): regras 1, 3, 4 e 6 — o raio acende a casa e a cruz, fere 15 fixos sem RD e pega fogo
+  ---
+  duration_ms: 0.73847
+  type: 'test'
+  ...
+# Subtest: ordem 13 (ambiente.js): a cruz corta-se na borda; o re-impacto renova a casa; a vizinha acesa guarda o combustível
+ok 85 - ordem 13 (ambiente.js): a cruz corta-se na borda; o re-impacto renova a casa; a vizinha acesa guarda o combustível
+  ---
+  duration_ms: 0.267079
+  type: 'test'
+  ...
+# Subtest: ordem 13 (ambiente.js): o raio mata o monstro (sai do fogo); deita a heroína a morrer 0/0; não fere quem já está a morrer
+ok 86 - ordem 13 (ambiente.js): o raio mata o monstro (sai do fogo); deita a heroína a morrer 0/0; não fere quem já está a morrer
+  ---
+  duration_ms: 0.254048
+  type: 'test'
+  ...
+# Subtest: ordem 13 (ambiente.js): regra 5 — o tick 1d8 na casa a arder, uma vez por rodada; sair para a chuva apaga, sem chuva não
+ok 87 - ordem 13 (ambiente.js): regra 5 — o tick 1d8 na casa a arder, uma vez por rodada; sair para a chuva apaga, sem chuva não
+  ---
+  duration_ms: 0.270594
+  type: 'test'
+  ...
+# Subtest: ordem 13 (ambiente.js): o momento de ambiente — extinção pela chuva, combustível, pedido e raio automático
+ok 88 - ordem 13 (ambiente.js): o momento de ambiente — extinção pela chuva, combustível, pedido e raio automático
+  ---
+  duration_ms: 0.375953
+  type: 'test'
+  ...
+# Subtest: ordem 13: o painel — raios e «Raio agora» só do Mestre; a Party não recebe evento nenhum do pedido
+ok 89 - ordem 13: o painel — raios e «Raio agora» só do Mestre; a Party não recebe evento nenhum do pedido
+  ---
+  duration_ms: 6.57472
+  type: 'test'
+  ...
+# Subtest: ordem 13: «Raio agora» só em combate
+ok 90 - ordem 13: «Raio agora» só em combate
+  ---
+  duration_ms: 1.681903
+  type: 'test'
+  ...
+# Subtest: ordem 13: o raio pedido cai no início da rodada seguinte, em cima dela — 15 de dano, fogo na cruz, tick 1d8 na vez dela
+ok 91 - ordem 13: o raio pedido cai no início da rodada seguinte, em cima dela — 15 de dano, fogo na cruz, tick 1d8 na vez dela
+  ---
+  duration_ms: 8.483757
+  type: 'test'
+  ...
+# Subtest: ordem 13: regra 5 com chuva — ela sai da casa a arder e apaga-se no fim do movimento
+ok 92 - ordem 13: regra 5 com chuva — ela sai da casa a arder e apaga-se no fim do movimento
+  ---
+  duration_ms: 10.926463
+  type: 'test'
+  ...
+# Subtest: ordem 13: regra 5 sem chuva — sair não apaga, e o fogo continua a morder na vez seguinte
+ok 93 - ordem 13: regra 5 sem chuva — sair não apaga, e o fogo continua a morder na vez seguinte
+  ---
+  duration_ms: 10.513415
+  type: 'test'
+  ...
+# Subtest: ordem 13: regra 6 — a RD da ficha não desconta no raio nem no fogo
+ok 94 - ordem 13: regra 6 — a RD da ficha não desconta no raio nem no fogo
+  ---
+  duration_ms: 7.352885
+  type: 'test'
+  ...
+# Subtest: ordem 13: o raio mata o último monstro — a batalha acaba em vitória no momento de ambiente
+ok 95 - ordem 13: o raio mata o último monstro — a batalha acaba em vitória no momento de ambiente
+  ---
+  duration_ms: 11.09555
+  type: 'test'
+  ...
+# Subtest: ordem 13: o raio deita a heroína a morrer com 0/0 (sem falhas novas) e o fogo não a fere caída
+ok 96 - ordem 13: o raio deita a heroína a morrer com 0/0 (sem falhas novas) e o fogo não a fere caída
+  ---
+  duration_ms: 6.400173
+  type: 'test'
+  ...
+# Subtest: ordem 13: o «voltar» repõe o fogo do instante; o «Recomeçar» começa sem fogo e sem pedido
+ok 97 - ordem 13: o «voltar» repõe o fogo do instante; o «Recomeçar» começa sem fogo e sem pedido
+  ---
+  duration_ms: 12.490016
+  type: 'test'
+  ...
+# Subtest: ordem 13: o raio é aleatório — sem roteiro, a casa sai do dado da sala e cai dentro do tabuleiro
+ok 98 - ordem 13: o raio é aleatório — sem roteiro, a casa sai do dado da sala e cai dentro do tabuleiro
+  ---
+  duration_ms: 10.211077
+  type: 'test'
+  ...
+# Subtest: ordem 15: a direito chega, mas o caminho está tapado pelas figuras — fora do alcance (opções e intenção)
+ok 99 - ordem 15: a direito chega, mas o caminho está tapado pelas figuras — fora do alcance (opções e intenção)
+  ---
+  duration_ms: 7.209575
+  type: 'test'
+  ...
+# Subtest: ordem 15: a direito chega (6 casas), mas o desvio à volta da figura passa do alcance — fora
+ok 100 - ordem 15: a direito chega (6 casas), mas o desvio à volta da figura passa do alcance — fora
+  ---
+  duration_ms: 8.200566
+  type: 'test'
+  ...
+# Subtest: ordem 15 (inverso): com o caminho livre, a mesma distância está ao alcance — e o ataque passa
+ok 101 - ordem 15 (inverso): com o caminho livre, a mesma distância está ao alcance — e o ataque passa
+  ---
+  duration_ms: 10.391257
+  type: 'test'
+  ...
+# Subtest: ordem 15 (inverso): a figura que tapa não conta quando é o próprio alvo, e o alvo atrás dela chega pelo desvio curto
+ok 102 - ordem 15 (inverso): a figura que tapa não conta quando é o próprio alvo, e o alvo atrás dela chega pelo desvio curto
+  ---
+  duration_ms: 6.227035
+  type: 'test'
+  ...
+# Subtest: ordem 15: a diagonal fica a 2 passos — uma técnica de 1,5 m não chega lá em nenhuma escala
+ok 103 - ordem 15: a diagonal fica a 2 passos — uma técnica de 1,5 m não chega lá em nenhuma escala
+  ---
+  duration_ms: 15.470455
+  type: 'test'
+  ...
+# Subtest: ordem 15 (ambiente.js): podeApagarSeco — a arder, fora do fogo e SEM chuva; com chuva ou na casa a arder, não
+ok 104 - ordem 15 (ambiente.js): podeApagarSeco — a arder, fora do fogo e SEM chuva; com chuva ou na casa a arder, não
+  ---
+  duration_ms: 0.278359
+  type: 'test'
+  ...
+# Subtest: ordem 15: com chuva a opção nunca aparece (na casa a arder; e ao sair a chuva apaga-a sozinha)
+ok 105 - ordem 15: com chuva a opção nunca aparece (na casa a arder; e ao sair a chuva apaga-a sozinha)
+  ---
+  duration_ms: 9.054357
+  type: 'test'
+  ...
+# Subtest: ordem 15: sem chuva, fora do fogo — «apagar_fogo» gasta a Acção de Movimento e ela deixa de arder
+ok 106 - ordem 15: sem chuva, fora do fogo — «apagar_fogo» gasta a Acção de Movimento e ela deixa de arder
+  ---
+  duration_ms: 14.95963
+  type: 'test'
+  ...
+# Subtest: ordem 15: a heroína parada na vez dela sem chuva e fora do fogo também pode (o site não pede reserva por gastar)
+ok 107 - ordem 15: a heroína parada na vez dela sem chuva e fora do fogo também pode (o site não pede reserva por gastar)
+  ---
+  duration_ms: 18.490811
+  type: 'test'
+  ...
+# Subtest: ordem 16: o envelope do adaptador leva o registo intacto e abre-se para o mesmo texto
+ok 108 - ordem 16: o envelope do adaptador leva o registo intacto e abre-se para o mesmo texto
+  ---
+  duration_ms: 19.170479
+  type: 'test'
+  ...
+# Subtest: ordem 16: a forma antiga (a string JSON do texto) também se abre e restaura o mesmo estado
+ok 109 - ordem 16: a forma antiga (a string JSON do texto) também se abre e restaura o mesmo estado
+  ---
+  duration_ms: 16.747931
+  type: 'test'
+  ...
+# Subtest: ordem 16: o envelope do ecrã do Mestre restaura pelo registo; a narração nunca entra no estado
+ok 110 - ordem 16: o envelope do ecrã do Mestre restaura pelo registo; a narração nunca entra no estado
+  ---
+  duration_ms: 32.340554
+  type: 'test'
+  ...
+# Subtest: ordem 16: formas desconhecidas falham FECHADO (ErroJournal, nada é restaurado)
+ok 111 - ordem 16: formas desconhecidas falham FECHADO (ErroJournal, nada é restaurado)
+  ---
+  duration_ms: 12.431277
+  type: 'test'
+  ...
+# Subtest: ordem 16: um registo adulterado dentro do envelope certo não restaura (a assinatura do journal decide)
+ok 112 - ordem 16: um registo adulterado dentro do envelope certo não restaura (a assinatura do journal decide)
+  ---
+  duration_ms: 14.90118
+  type: 'test'
+  ...
+# Subtest: ordem 16: o ficheiro tem de dizer MESTRE-ONLY no nome e nunca fica na pasta estática
+ok 113 - ordem 16: o ficheiro tem de dizer MESTRE-ONLY no nome e nunca fica na pasta estática
+  ---
+  duration_ms: 0.34822
+  type: 'test'
+  ...
+# Subtest: ordem 16 (disco): ponta-a-ponta exportar → gravar → ler → restaurar dá o estado exportado
+ok 114 - ordem 16 (disco): ponta-a-ponta exportar → gravar → ler → restaurar dá o estado exportado
+  ---
+  duration_ms: 42.367168
+  type: 'test'
+  ...
+# Subtest: ordem 16 (disco): as duas formas em disco (envelope do Mestre com narração e string antiga)
+ok 115 - ordem 16 (disco): as duas formas em disco (envelope do Mestre com narração e string antiga)
+  ---
+  duration_ms: 23.555679
+  type: 'test'
+  ...
+# Subtest: ordem 16 (disco): forma inválida ou registo adulterado → a sala não abre e o ficheiro fica intacto
+ok 116 - ordem 16 (disco): forma inválida ou registo adulterado → a sala não abre e o ficheiro fica intacto
+  ---
+  duration_ms: 15.454983
+  type: 'test'
+  ...
+# Subtest: ordem 16 (disco): sem ficheiro, sala nova; o primeiro gravar cria-o
+ok 117 - ordem 16 (disco): sem ficheiro, sala nova; o primeiro gravar cria-o
+  ---
+  duration_ms: 2.197317
+  type: 'test'
+  ...
+# Subtest: ordem 16 (disco): o criarServidor grava o journal a cada commit, antes de entregar
+ok 118 - ordem 16 (disco): o criarServidor grava o journal a cada commit, antes de entregar
+  ---
+  duration_ms: 4.375135
+  type: 'test'
+  ...
+# Subtest: ordem 17 V1: motor de outra versão ao restaurar uma sala já em pausa (Mestre desligado) — a volta do Mestre não a retoma
+ok 119 - ordem 17 V1: motor de outra versão ao restaurar uma sala já em pausa (Mestre desligado) — a volta do Mestre não a retoma
+  ---
+  duration_ms: 17.223264
+  type: 'test'
+  ...
+# Subtest: ordem 17 V1 (controlo): o mesmo motor numa sala em pausa por desconexão — a volta do Mestre retoma, como antes
+ok 120 - ordem 17 V1 (controlo): o mesmo motor numa sala em pausa por desconexão — a volta do Mestre retoma, como antes
+  ---
+  duration_ms: 16.528966
+  type: 'test'
+  ...
+# Subtest: ordem 17 V2: corpo bem assinado mas com a estrutura errada → ErroJournal (nunca TypeError)
+ok 121 - ordem 17 V2: corpo bem assinado mas com a estrutura errada → ErroJournal (nunca TypeError)
+  ---
+  duration_ms: 2.919461
+  type: 'test'
+  ...
+# Subtest: ordem 17 V3: mexer no que se passou ao commit (ou no que o journal devolve) não muda o journal
+ok 122 - ordem 17 V3: mexer no que se passou ao commit (ou no que o journal devolve) não muda o journal
+  ---
+  duration_ms: 0.48832
+  type: 'test'
+  ...
+# Subtest: ordem 17 V3: o adaptador que mexa numa mensagem entregue não muda o registo da sala
+ok 123 - ordem 17 V3: o adaptador que mexa numa mensagem entregue não muda o registo da sala
+  ---
+  duration_ms: 5.558187
+  type: 'test'
+  ...
+# Subtest: ordem 17 V4: no Windows, a pasta estática com outras maiúsculas também apanha o journal (E-P13)
+ok 124 - ordem 17 V4: no Windows, a pasta estática com outras maiúsculas também apanha o journal (E-P13)
+  ---
+  duration_ms: 0.576037
+  type: 'test'
+  ...
+# Subtest: ordem 17 B1 (disco): a gravação que falha fica pendente e não deixa o «.a-gravar» para trás
+ok 125 - ordem 17 B1 (disco): a gravação que falha fica pendente e não deixa o «.a-gravar» para trás
+  ---
+  duration_ms: 1.798633
+  type: 'test'
+  ...
+# Subtest: ordem 17 B1 (disco): o relógio do adaptador volta a tentar a gravação pendente, sem commit novo
+ok 126 - ordem 17 B1 (disco): o relógio do adaptador volta a tentar a gravação pendente, sem commit novo
+  ---
+  duration_ms: 2.233044
+  type: 'test'
+  ...
+# Subtest: ordem 17 B1: sem nada pendente, o relógio não exporta (não regrava a cada ping)
+ok 127 - ordem 17 B1: sem nada pendente, o relógio não exporta (não regrava a cada ping)
+  ---
+  duration_ms: 0.851682
+  type: 'test'
+  ...
+# Subtest: ordem 17 V5 (disco): nada de dotfiles, também com «\\» no caminho (Windows)
+ok 128 - ordem 17 V5 (disco): nada de dotfiles, também com «\\» no caminho (Windows)
+  ---
+  duration_ms: 43.25721
+  type: 'test'
+  ...
+# Subtest: ordem 17 V6: a mesma ligação a repetir o ROOM_JOIN não dá ao Mestre um alerta de segunda ligação
+ok 129 - ordem 17 V6: a mesma ligação a repetir o ROOM_JOIN não dá ao Mestre um alerta de segunda ligação
+  ---
+  duration_ms: 3.931687
+  type: 'test'
+  ...
+# Subtest: ordem 17 V7: ping fragmentado ou com mais de 125 bytes fecha a ligação com 1002 (RFC 6455 §5.5)
+ok 130 - ordem 17 V7: ping fragmentado ou com mais de 125 bytes fecha a ligação com 1002 (RFC 6455 §5.5)
+  ---
+  duration_ms: 1.389254
+  type: 'test'
+  ...
+# Subtest: ordem 17 B2: a chicotada para lá do alcance pelo caminho — o porquê vai só ao Mestre
+ok 131 - ordem 17 B2: a chicotada para lá do alcance pelo caminho — o porquê vai só ao Mestre
+  ---
+  duration_ms: 7.178011
+  type: 'test'
+  ...
+# Subtest: ordem 17 B2: sem caminho nenhum até ao alvo — o porquê vai só ao Mestre
+ok 132 - ordem 17 B2: sem caminho nenhum até ao alvo — o porquê vai só ao Mestre
+  ---
+  duration_ms: 5.238911
+  type: 'test'
+  ...
+# Subtest: ordem 17 B2 (controlo): uma recusa que não é de alcance não ganha detalhe de alcance
+ok 133 - ordem 17 B2 (controlo): uma recusa que não é de alcance não ganha detalhe de alcance
+  ---
+  duration_ms: 6.005388
+  type: 'test'
+  ...
+# Subtest: ordem 18 (17-1): o travão do ROOM_JOIN tem tecto de memória; o IP bloqueado continua bloqueado na enxurrada
+ok 134 - ordem 18 (17-1): o travão do ROOM_JOIN tem tecto de memória; o IP bloqueado continua bloqueado na enxurrada
+  ---
+  duration_ms: 25.938945
+  type: 'test'
+  ...
+# Subtest: ordem 18 (17-1): só bloqueados acima do tecto — sai primeiro o que acaba primeiro e a memória fica limitada
+ok 135 - ordem 18 (17-1): só bloqueados acima do tecto — sai primeiro o que acaba primeiro e a memória fica limitada
+  ---
+  duration_ms: 161.630783
+  type: 'test'
+  ...
+# Subtest: ordem 18 (17-2, depois da ordem 22): a jogadora antes do Mestre já não pausa a mesa
+ok 136 - ordem 18 (17-2, depois da ordem 22): a jogadora antes do Mestre já não pausa a mesa
+  ---
+  duration_ms: 16.502253
+  type: 'test'
+  ...
+# Subtest: ordem 18 (17-2, controlo): o Mestre entra primeiro — nada de pausa, nenhum evento novo de pausa
+ok 137 - ordem 18 (17-2, controlo): o Mestre entra primeiro — nada de pausa, nenhum evento novo de pausa
+  ---
+  duration_ms: 15.688312
+  type: 'test'
+  ...
+# Subtest: ordem 18 (17-2, controlo): uma sala nova (não restaurada) não muda — a jogadora no lobby antes do Mestre
+ok 138 - ordem 18 (17-2, controlo): uma sala nova (não restaurada) não muda — a jogadora no lobby antes do Mestre
+  ---
+  duration_ms: 1.009615
+  type: 'test'
+  ...
+# Subtest: ordem 18 (17-3): sala restaurada no fim com motor de outra versão — o «Recomeçar» é recusado, só o Mestre sabe porquê
+ok 139 - ordem 18 (17-3): sala restaurada no fim com motor de outra versão — o «Recomeçar» é recusado, só o Mestre sabe porquê
+  ---
+  duration_ms: 22.246495
+  type: 'test'
+  ...
+# Subtest: ordem 18 (17-3, controlo): o mesmo motor — o «Recomeçar» depois do restauro funciona como antes
+ok 140 - ordem 18 (17-3, controlo): o mesmo motor — o «Recomeçar» depois do restauro funciona como antes
+  ---
+  duration_ms: 26.604904
+  type: 'test'
+  ...
+# Subtest: ordem 18 (17-4): RESYNC acima de 10/s por lugar → a recusa do excesso (ROOM_REJECT formato), sem o fluxo
+ok 141 - ordem 18 (17-4): RESYNC acima de 10/s por lugar → a recusa do excesso (ROOM_REJECT formato), sem o fluxo
+  ---
+  duration_ms: 1.788923
+  type: 'test'
+  ...
+# Subtest: ordem 18 (17-4): RECEIPT_QUERY acima de 10/s → recusa; os comandos têm o seu próprio balde
+ok 142 - ordem 18 (17-4): RECEIPT_QUERY acima de 10/s → recusa; os comandos têm o seu próprio balde
+  ---
+  duration_ms: 1.716344
+  type: 'test'
+  ...
+# Subtest: ordem 18 V8: JSON inválido repetido fecha a ligação (1008), como as outras rejeições de formato (§2)
+ok 143 - ordem 18 V8: JSON inválido repetido fecha a ligação (1008), como as outras rejeições de formato (§2)
+  ---
+  duration_ms: 2.580465
+  type: 'test'
+  ...
+# Subtest: ordem 18 V8: tipo desconhecido repetido depois de entrar (ERRO formato do núcleo) também fecha
+ok 144 - ordem 18 V8: tipo desconhecido repetido depois de entrar (ERRO formato do núcleo) também fecha
+  ---
+  duration_ms: 2.86751
+  type: 'test'
+  ...
+# Subtest: ordem 18 V9: texto que não é UTF-8 válido fecha a ligação com 1007; UTF-8 com acentos passa
+ok 145 - ordem 18 V9: texto que não é UTF-8 válido fecha a ligação com 1007; UTF-8 com acentos passa
+  ---
+  duration_ms: 2.128903
+  type: 'test'
+  ...
+# Subtest: ordem 18 V10: journal bem assinado com um estado sem a forma da sala → ErroJournal, a sala não abre
+ok 146 - ordem 18 V10: journal bem assinado com um estado sem a forma da sala → ErroJournal, a sala não abre
+  ---
+  duration_ms: 67.747886
+  type: 'test'
+  ...
+# Subtest: ordem 19 (V11): RECEIPT_QUERY com um id que não é id devolve intentId null, nunca o texto recebido
+ok 147 - ordem 19 (V11): RECEIPT_QUERY com um id que não é id devolve intentId null, nunca o texto recebido
+  ---
+  duration_ms: 5.032269
+  type: 'test'
+  ...
+# Subtest: ordem 19 (V11, controlo): um id válido continua a voltar como foi pedido (próprio, alheio ou desconhecido)
+ok 148 - ordem 19 (V11, controlo): um id válido continua a voltar como foi pedido (próprio, alheio ou desconhecido)
+  ---
+  duration_ms: 9.085538
+  type: 'test'
+  ...
+# Subtest: ordem 21 (N18-2): restaurar no fim com motor de outra versão avisa o Mestre logo (evento aviso_motor, só dele)
+ok 149 - ordem 21 (N18-2): restaurar no fim com motor de outra versão avisa o Mestre logo (evento aviso_motor, só dele)
+  ---
+  duration_ms: 25.605073
+  type: 'test'
+  ...
+# Subtest: ordem 21 (N18-2): o aviso fica no journal — exportar e restaurar outra vez com o motor certo não o apaga
+ok 150 - ordem 21 (N18-2): o aviso fica no journal — exportar e restaurar outra vez com o motor certo não o apaga
+  ---
+  duration_ms: 29.732104
+  type: 'test'
+  ...
+# Subtest: ordem 21 (N18-2, controlo): o mesmo motor — restaurar no fim não avisa nada e não escreve no journal
+ok 151 - ordem 21 (N18-2, controlo): o mesmo motor — restaurar no fim não avisa nada e não escreve no journal
+  ---
+  duration_ms: 19.558172
+  type: 'test'
+  ...
+# Subtest: ordem 21 (N18-2, controlo): em combate o motor de outra versão continua a ser a pausa de manutenção (E-C11), sem aviso_motor
+ok 152 - ordem 21 (N18-2, controlo): em combate o motor de outra versão continua a ser a pausa de manutenção (E-C11), sem aviso_motor
+  ---
+  duration_ms: 22.243602
+  type: 'test'
+  ...
+# Subtest: ordem 21 (N19-2): o schema ROOM_JOIN não exige roomId (errata: o cliente só o aprende no ROOM_WELCOME)
+ok 153 - ordem 21 (N19-2): o schema ROOM_JOIN não exige roomId (errata: o cliente só o aprende no ROOM_WELCOME)
+  ---
+  duration_ms: 0.406612
+  type: 'test'
+  ...
+# Subtest: ordem 21 (N19-2, controlo): o servidor aceita o JOIN sem roomId e com o roomId certo
+ok 154 - ordem 21 (N19-2, controlo): o servidor aceita o JOIN sem roomId e com o roomId certo
+  ---
+  duration_ms: 1.621352
+  type: 'test'
+  ...
+# Subtest: ordem 21 (N19-1): o exemplo MASTER_EXPORT tem conteudo em texto, como o servidor o manda
+ok 155 - ordem 21 (N19-1): o exemplo MASTER_EXPORT tem conteudo em texto, como o servidor o manda
+  ---
+  duration_ms: 0.3018
+  type: 'test'
+  ...
+# Subtest: ordem 21 (N19-1, controlo): o MASTER_EXPORT pelo protocolo leva o texto de journal.exportar()
+ok 156 - ordem 21 (N19-1, controlo): o MASTER_EXPORT pelo protocolo leva o texto de journal.exportar()
+  ---
+  duration_ms: 17.286359
+  type: 'test'
+  ...
+# Subtest: ordem 22 (17-2 a): sala restaurada em combate — a jogadora entra antes do Mestre e fica no lobby
+ok 157 - ordem 22 (17-2 a): sala restaurada em combate — a jogadora entra antes do Mestre e fica no lobby
+  ---
+  duration_ms: 12.009611
+  type: 'test'
+  ...
+# Subtest: ordem 22 (17-2 b): o Mestre entra a seguir — a jogadora sai do lobby para a batalha, com as opções
+ok 158 - ordem 22 (17-2 b): o Mestre entra a seguir — a jogadora sai do lobby para a batalha, com as opções
+  ---
+  duration_ms: 7.80071
+  type: 'test'
+  ...
+# Subtest: ordem 22 (17-2 a, pausa): sala restaurada em combate já pausado — a jogadora antes do Mestre também fica no lobby
+ok 159 - ordem 22 (17-2 a, pausa): sala restaurada em combate já pausado — a jogadora antes do Mestre também fica no lobby
+  ---
+  duration_ms: 5.301296
+  type: 'test'
+  ...
+# Subtest: ordem 22 (17-2 c, controlo): o Mestre entra primeiro — a jogadora vê a batalha logo, nada no journal
+ok 160 - ordem 22 (17-2 c, controlo): o Mestre entra primeiro — a jogadora vê a batalha logo, nada no journal
+  ---
+  duration_ms: 5.461339
+  type: 'test'
+  ...
+# Subtest: ordem 22 (17-2, controlo): sala restaurada no lobby ou no fim — a jogadora entra como sempre
+ok 161 - ordem 22 (17-2, controlo): sala restaurada no lobby ou no fim — a jogadora entra como sempre
+  ---
+  duration_ms: 8.16327
+  type: 'test'
+  ...
+# Subtest: ordem 22 (N21-1): o Mestre entra de fresco numa sala restaurada no fim com outro motor — a vista traz o aviso
+ok 162 - ordem 22 (N21-1): o Mestre entra de fresco numa sala restaurada no fim com outro motor — a vista traz o aviso
+  ---
+  duration_ms: 5.667127
+  type: 'test'
+  ...
+# Subtest: ordem 22 (N21-1, controlo): o mesmo motor, ou sala não restaurada — avisoMotor null
+ok 163 - ordem 22 (N21-1, controlo): o mesmo motor, ou sala não restaurada — avisoMotor null
+  ---
+  duration_ms: 4.921133
+  type: 'test'
+  ...
+# Subtest: ordem 22 (N21-1, controlo): em combate com outro motor fica a pausa de manutenção — sem avisoMotor
+ok 164 - ordem 22 (N21-1, controlo): em combate com outro motor fica a pausa de manutenção — sem avisoMotor
+  ---
+  duration_ms: 4.915003
+  type: 'test'
+  ...
+# Subtest: ordem 22 (V13): MASTER_PLACE com orientação vazia é recusado por formato e nada sai para a Party
+ok 165 - ordem 22 (V13): MASTER_PLACE com orientação vazia é recusado por formato e nada sai para a Party
+  ---
+  duration_ms: 3.037195
+  type: 'test'
+  ...
+# Subtest: ordem 22 (V13, controlo): MASTER_PLACE com orientação, sem ela ou null continua a colocar
+ok 166 - ordem 22 (V13, controlo): MASTER_PLACE com orientação, sem ela ou null continua a colocar
+  ---
+  duration_ms: 6.686867
+  type: 'test'
+  ...
+# Subtest: ordem 22 (V14): hora fora do relógio não diz dia nem noite à Party
+ok 167 - ordem 22 (V14): hora fora do relógio não diz dia nem noite à Party
+  ---
+  duration_ms: 1.423897
+  type: 'test'
+  ...
+# Subtest: ordem 22 (V14, controlo): as horas válidas continuam — 06:00 a 17:59 dia, o resto noite
+ok 168 - ordem 22 (V14, controlo): as horas válidas continuam — 06:00 a 17:59 dia, o resto noite
+  ---
+  duration_ms: 0.189984
+  type: 'test'
+  ...
+# Subtest: ordem 23 (V15): «Continuar a rodada» (rodada: true) num cartão de desgraça é recusado e o cartão fica aberto
+ok 169 - ordem 23 (V15): «Continuar a rodada» (rodada: true) num cartão de desgraça é recusado e o cartão fica aberto
+  ---
+  duration_ms: 3.612468
+  type: 'test'
+  ...
+# Subtest: ordem 23 (V15): «Continuar a rodada» num cartão de progresso é recusado e a vez não acaba
+ok 170 - ordem 23 (V15): «Continuar a rodada» num cartão de progresso é recusado e a vez não acaba
+  ---
+  duration_ms: 7.499856
+  type: 'test'
+  ...
+# Subtest: ordem 23 (V15, controlo): sem rodada (ou rodada: false), aprovar a desgraça e o progresso funciona como antes
+ok 171 - ordem 23 (V15, controlo): sem rodada (ou rodada: false), aprovar a desgraça e o progresso funciona como antes
+  ---
+  duration_ms: 12.99632
+  type: 'test'
+  ...
+# Subtest: ordem 23 (V16): «editar» num cartão de progresso é recusado — o cartão fica aberto e a vez não acaba
+ok 172 - ordem 23 (V16): «editar» num cartão de progresso é recusado — o cartão fica aberto e a vez não acaba
+  ---
+  duration_ms: 7.917893
+  type: 'test'
+  ...
+# Subtest: ordem 23 (V16, controlo): «recusar» o cartão de progresso continua a devolver a vez ao Mestre
+ok 173 - ordem 23 (V16, controlo): «recusar» o cartão de progresso continua a devolver a vez ao Mestre
+  ---
+  duration_ms: 11.458799
+  type: 'test'
+  ...
+# Subtest: ordem 23 (E-22-1 a): sala gravada sem vlabSha, restaurada com o mesmo motor sem sha — o «Recomeçar» é recusado
+ok 174 - ordem 23 (E-22-1 a): sala gravada sem vlabSha, restaurada com o mesmo motor sem sha — o «Recomeçar» é recusado
+  ---
+  duration_ms: 5.876467
+  type: 'test'
+  ...
+# Subtest: ordem 23 (E-22-1 a): sha em falta só de um lado (gravado ou agora) — recusa
+ok 175 - ordem 23 (E-22-1 a): sha em falta só de um lado (gravado ou agora) — recusa
+  ---
+  duration_ms: 11.071564
+  type: 'test'
+  ...
+# Subtest: ordem 23 (E-22-1 b, controlo): sha presente e igual dos dois lados — o «Recomeçar» funciona como antes
+ok 176 - ordem 23 (E-22-1 b, controlo): sha presente e igual dos dois lados — o «Recomeçar» funciona como antes
+  ---
+  duration_ms: 8.943675
+  type: 'test'
+  ...
+# Subtest: ordem 23 (E-22-1 c, controlo): sha presente e diferente — recusa, como hoje
+ok 177 - ordem 23 (E-22-1 c, controlo): sha presente e diferente — recusa, como hoje
+  ---
+  duration_ms: 7.26813
+  type: 'test'
+  ...
+# Subtest: V17: visual.alturaM fora de ]0, 15] é recusada (o schema da ficha já o dizia)
+ok 178 - V17: visual.alturaM fora de ]0, 15] é recusada (o schema da ficha já o dizia)
+  ---
+  duration_ms: 0.866913
+  type: 'test'
+  ...
+# Subtest: V17 controlo: alturas dentro de ]0, 15] continuam aceites
+ok 179 - V17 controlo: alturas dentro de ]0, 15] continuam aceites
+  ---
+  duration_ms: 0.677822
+  type: 'test'
+  ...
+# Subtest: V18: caminho com nome do protótipo no PACOTE.json → erro, não excepção
+ok 180 - V18: caminho com nome do protótipo no PACOTE.json → erro, não excepção
+  ---
+  duration_ms: 0.382708
+  type: 'test'
+  ...
+# Subtest: V18: conteúdo que não é texto nem bytes → erro, não excepção
+ok 181 - V18: conteúdo que não é texto nem bytes → erro, não excepção
+  ---
+  duration_ms: 0.163399
+  type: 'test'
+  ...
+# Subtest: V18 controlo: pacote certo (texto e bytes) continua a abrir
+ok 182 - V18 controlo: pacote certo (texto e bytes) continua a abrir
+  ---
+  duration_ms: 0.318214
+  type: 'test'
+  ...
+# Subtest: N24-1: id da ficha com mais de 64 caracteres é recusado (fichaId ≤ 64)
+ok 183 - N24-1: id da ficha com mais de 64 caracteres é recusado (fichaId ≤ 64)
+  ---
+  duration_ms: 0.431098
+  type: 'test'
+  ...
+# Subtest: N24-1 controlo: id da ficha com 64 caracteres continua aceite
+ok 184 - N24-1 controlo: id da ficha com 64 caracteres continua aceite
+  ---
+  duration_ms: 0.30577
+  type: 'test'
+  ...
+# Subtest: N24-1: nomePublico com mais de 80 caracteres é recusado (comum.nomePublico ≤ 80), em qualquer papel
+ok 185 - N24-1: nomePublico com mais de 80 caracteres é recusado (comum.nomePublico ≤ 80), em qualquer papel
+  ---
+  duration_ms: 0.367298
+  type: 'test'
+  ...
+# Subtest: N24-1 controlo: nomePublico de 80 caracteres (também fora do ASCII) continua aceite
+ok 186 - N24-1 controlo: nomePublico de 80 caracteres (também fora do ASCII) continua aceite
+  ---
+  duration_ms: 0.659071
+  type: 'test'
+  ...
+# Subtest: N24-1: jogadora sem nomePublico com nome de mais de 80 caracteres é recusada (o nome é o nome público dela)
+ok 187 - N24-1: jogadora sem nomePublico com nome de mais de 80 caracteres é recusada (o nome é o nome público dela)
+  ---
+  duration_ms: 0.263471
+  type: 'test'
+  ...
+# Subtest: N24-1 controlo: o nome verdadeiro de quem tem nomePublico (ou da criatura) não tem limite escrito
+ok 188 - N24-1 controlo: o nome verdadeiro de quem tem nomePublico (ou da criatura) não tem limite escrito
+  ---
+  duration_ms: 0.759459
+  type: 'test'
+  ...
+# Subtest: N24-1: id de técnica com mais de 64 caracteres é recusado (arma/tecnica ≤ 64)
+ok 189 - N24-1: id de técnica com mais de 64 caracteres é recusado (arma/tecnica ≤ 64)
+  ---
+  duration_ms: 0.372342
+  type: 'test'
+  ...
+# Subtest: N24-1 controlo: id de técnica com 64 caracteres continua aceite
+ok 190 - N24-1 controlo: id de técnica com 64 caracteres continua aceite
+  ---
+  duration_ms: 0.261101
+  type: 'test'
+  ...
+# Subtest: N24-1: itemId com mais de 64 caracteres é recusado (itemId ≤ 64)
+ok 191 - N24-1: itemId com mais de 64 caracteres é recusado (itemId ≤ 64)
+  ---
+  duration_ms: 0.242573
+  type: 'test'
+  ...
+# Subtest: N24-1 controlo: itemId com 64 caracteres continua aceite
+ok 192 - N24-1 controlo: itemId com 64 caracteres continua aceite
+  ---
+  duration_ms: 0.225287
+  type: 'test'
+  ...
+# Subtest: N24-1: tipo de dano com mais de 32 caracteres é recusado (tipos do evento dano ≤ 32), pelas três formas
+ok 193 - N24-1: tipo de dano com mais de 32 caracteres é recusado (tipos do evento dano ≤ 32), pelas três formas
+  ---
+  duration_ms: 0.586151
+  type: 'test'
+  ...
+# Subtest: N24-1 controlo: tipo de dano com 32 caracteres continua aceite
+ok 194 - N24-1 controlo: tipo de dano com 32 caracteres continua aceite
+  ---
+  duration_ms: 0.230852
+  type: 'test'
+  ...
+# Subtest: N24-1: expressão de ataque ou de cura da técnica da jogadora com mais de 64 caracteres é recusada (expressao ≤ 64)
+ok 195 - N24-1: expressão de ataque ou de cura da técnica da jogadora com mais de 64 caracteres é recusada (expressao ≤ 64)
+  ---
+  duration_ms: 0.373821
+  type: 'test'
+  ...
+# Subtest: N24-1 controlo: expressão de 64 na jogadora, e expressões longas de quem não é jogadora (não saem), continuam aceites
+ok 196 - N24-1 controlo: expressão de 64 na jogadora, e expressões longas de quem não é jogadora (não saem), continuam aceites
+  ---
+  duration_ms: 0.805194
+  type: 'test'
+  ...
+# Subtest: V20: handshake com método que não é GET é recusado (400), não 101
+ok 197 - V20: handshake com método que não é GET é recusado (400), não 101
+  ---
+  duration_ms: 18.536952
+  type: 'test'
+  ...
+# Subtest: V20: handshake em HTTP/1.0 é recusado (400)
+ok 198 - V20: handshake em HTTP/1.0 é recusado (400)
+  ---
+  duration_ms: 2.18175
+  type: 'test'
+  ...
+# Subtest: V20: Sec-WebSocket-Key que não é base64 de 16 bytes é recusada (400)
+ok 199 - V20: Sec-WebSocket-Key que não é base64 de 16 bytes é recusada (400)
+  ---
+  duration_ms: 3.456938
+  type: 'test'
+  ...
+# Subtest: V20 controlo: o handshake certo continua a dar 101 (e o WebSocket do Node liga)
+ok 200 - V20 controlo: o handshake certo continua a dar 101 (e o WebSocket do Node liga)
+  ---
+  duration_ms: 11.558048
+  type: 'test'
+  ...
+# Subtest: V21: AoO de monstro com a arma quebrada usa a técnica sem arma, não a que não declara `usaArma`
+ok 201 - V21: AoO de monstro com a arma quebrada usa a técnica sem arma, não a que não declara `usaArma`
+  ---
+  duration_ms: 7.911677
+  type: 'test'
+  ...
+# Subtest: V21: AoO de monstro com a arma quebrada e só técnicas de arma não vai ao motor e não gasta a reacção
+ok 202 - V21: AoO de monstro com a arma quebrada e só técnicas de arma não vai ao motor e não gasta a reacção
+  ---
+  duration_ms: 10.172425
+  type: 'test'
+  ...
+# Subtest: V21 (controlo): monstro com a arma inteira continua a atacar de oportunidade com a técnica de arma
+ok 203 - V21 (controlo): monstro com a arma inteira continua a atacar de oportunidade com a técnica de arma
+  ---
+  duration_ms: 3.460373
+  type: 'test'
+  ...
+# Subtest: ordem 27 (N23-1, falhava antes): sala no fim gravada e restaurada SEM sha dos dois lados — aviso ao Mestre e vista com avisoMotor
+ok 204 - ordem 27 (N23-1, falhava antes): sala no fim gravada e restaurada SEM sha dos dois lados — aviso ao Mestre e vista com avisoMotor
+  ---
+  duration_ms: 5.92167
+  type: 'test'
+  ...
+# Subtest: ordem 27 (N23-1, falhava antes): sala em combate gravada e restaurada SEM sha dos dois lados — pausa de manutenção do motor
+ok 205 - ordem 27 (N23-1, falhava antes): sala em combate gravada e restaurada SEM sha dos dois lados — pausa de manutenção do motor
+  ---
+  duration_ms: 3.949348
+  type: 'test'
+  ...
+# Subtest: ordem 27 (N23-1, controlo): sha em falta só de um lado — aviso no fim e pausa em combate, como já era
+ok 206 - ordem 27 (N23-1, controlo): sha em falta só de um lado — aviso no fim e pausa em combate, como já era
+  ---
+  duration_ms: 15.681088
+  type: 'test'
+  ...
+# Subtest: ordem 27 (N23-1, falhava antes): o mesmo vlabSha mas outro dmgVersao — no fim, aviso e «Recomeçar» recusado
+ok 207 - ordem 27 (N23-1, falhava antes): o mesmo vlabSha mas outro dmgVersao — no fim, aviso e «Recomeçar» recusado
+  ---
+  duration_ms: 5.321145
+  type: 'test'
+  ...
+# Subtest: ordem 27 (N23-1, falhava antes): o mesmo vlabSha mas outro dmgVersao — em combate, pausa de manutenção
+ok 208 - ordem 27 (N23-1, falhava antes): o mesmo vlabSha mas outro dmgVersao — em combate, pausa de manutenção
+  ---
+  duration_ms: 4.028656
+  type: 'test'
+  ...
+# Subtest: ordem 27 (N23-1, falhava antes): dmgVersao em falta de um lado — motor não provado igual
+ok 209 - ordem 27 (N23-1, falhava antes): dmgVersao em falta de um lado — motor não provado igual
+  ---
+  duration_ms: 5.424423
+  type: 'test'
+  ...
+# Subtest: ordem 27 (N23-1, falhava antes): o mesmo vlabSha mas outro levelupSha (ou levelupSha só de um lado) — aviso e recusa no fim, pausa em combate
+ok 210 - ordem 27 (N23-1, falhava antes): o mesmo vlabSha mas outro levelupSha (ou levelupSha só de um lado) — aviso e recusa no fim, pausa em combate
+  ---
+  duration_ms: 15.843156
+  type: 'test'
+  ...
+# Subtest: ordem 27 (N23-1, controlo): vlabSha, dmgVersao e levelupSha iguais (levelupSha null dos dois lados, como em todos os motores do repositório) — sem aviso, sem pausa, «Recomeçar» funciona
+ok 211 - ordem 27 (N23-1, controlo): vlabSha, dmgVersao e levelupSha iguais (levelupSha null dos dois lados, como em todos os motores do repositório) — sem aviso, sem pausa, «Recomeçar» funciona
+  ---
+  duration_ms: 8.318851
+  type: 'test'
+  ...
+# Subtest: ordem 27 (N25-1, falhava antes): 5 mensagens seguidas sem ROOM_JOIN (ERRO sem_lugar) fecham a ligação com 1008
+ok 212 - ordem 27 (N25-1, falhava antes): 5 mensagens seguidas sem ROOM_JOIN (ERRO sem_lugar) fecham a ligação com 1008
+  ---
+  duration_ms: 1.241328
+  type: 'test'
+  ...
+# Subtest: ordem 27 (N25-1, controlo): 4 seguidas não fecham
+ok 213 - ordem 27 (N25-1, controlo): 4 seguidas não fecham
+  ---
+  duration_ms: 0.884248
+  type: 'test'
+  ...
+# Subtest: ordem 27 (N25-1, falhava antes): erros que não são sem_lugar não desfazem a série — credenciais erradas pelo meio
+ok 214 - ordem 27 (N25-1, falhava antes): erros que não são sem_lugar não desfazem a série — credenciais erradas pelo meio
+  ---
+  duration_ms: 0.870233
+  type: 'test'
+  ...
+# Subtest: ordem 27 (N25-1, controlo): quem entra na sala fica com o lugar — a série zera e o resto segue como antes
+ok 215 - ordem 27 (N25-1, controlo): quem entra na sala fica com o lugar — a série zera e o resto segue como antes
+  ---
+  duration_ms: 1.190829
+  type: 'test'
+  ...
+# Subtest: ordem 30 (V26, falhava antes): o Mestre que fecha o TCP sem quadro de fecho (FIN) sai da sala logo, e o servidor fecha o seu lado
+ok 216 - ordem 30 (V26, falhava antes): o Mestre que fecha o TCP sem quadro de fecho (FIN) sai da sala logo, e o servidor fecha o seu lado
+  ---
+  duration_ms: 24.796938
+  type: 'test'
+  ...
+# Subtest: ordem 30 (V26, falhava antes): a jogadora cuja aplicação morre (socket destruído sem quadro de fecho) deixa de contar como ligada
+ok 217 - ordem 30 (V26, falhava antes): a jogadora cuja aplicação morre (socket destruído sem quadro de fecho) deixa de contar como ligada
+  ---
+  duration_ms: 22.521905
+  type: 'test'
+  ...
+ordem 34 N31-1 fuzz: recusadas 2527, abriram 473, rebentaram 0
+# Subtest: ordem 30 (controlo, passava antes): com quadro de fecho e depois o FIN, a sala conta UM só fecho
+ok 218 - ordem 30 (controlo, passava antes): com quadro de fecho e depois o FIN, a sala conta UM só fecho
+  ---
+  duration_ms: 123.8769
+  type: 'test'
+  ...
+# Subtest: ordem 30 (V27, falhava antes): 2 000 000 quadros de continuação vazios (12 MB no fio) não ficam guardados na memória
+ok 219 - ordem 30 (V27, falhava antes): 2 000 000 quadros de continuação vazios (12 MB no fio) não ficam guardados na memória
+  ---
+  duration_ms: 511.857996
+  type: 'test'
+  ...
+# Subtest: ordem 30 (controlo, passava antes): a mensagem partida em pedaços, com vazios pelo meio, chega inteira e igual
+ok 220 - ordem 30 (controlo, passava antes): a mensagem partida em pedaços, com vazios pelo meio, chega inteira e igual
+  ---
+  duration_ms: 0.626905
+  type: 'test'
+  ...
+# Subtest: V28: o restauro muda a ordem das figuras (pré-condição dos testes abaixo)
+ok 221 - V28: o restauro muda a ordem das figuras (pré-condição dos testes abaixo)
+  ---
+  duration_ms: 6.374525
+  type: 'test'
+  ...
+# Subtest: V28: a entrada do Mestre na sala restaurada não sobe revisões sem as entregar
+ok 222 - V28: a entrada do Mestre na sala restaurada não sobe revisões sem as entregar
+  ---
+  duration_ms: 6.402696
+  type: 'test'
+  ...
+# Subtest: V28: sala restaurada em pausa pela queda do Mestre — ao voltar, o MASTER_RESUME passa
+ok 223 - V28: sala restaurada em pausa pela queda do Mestre — ao voltar, o MASTER_RESUME passa
+  ---
+  duration_ms: 8.425819
+  type: 'test'
+  ...
+# Subtest: V28: a jogadora entra antes do Mestre (sala de espera) e o Mestre ainda manda com a revisão que conhece
+ok 224 - V28: a jogadora entra antes do Mestre (sala de espera) e o Mestre ainda manda com a revisão que conhece
+  ---
+  duration_ms: 7.141657
+  type: 'test'
+  ...
+# Subtest: controlo V28: sem restauro, a volta do Mestre e o MASTER_RESUME já passavam
+ok 225 - controlo V28: sem restauro, a volta do Mestre e o MASTER_RESUME já passavam
+  ---
+  duration_ms: 7.188043
+  type: 'test'
+  ...
+# Subtest: controlo V28: depois do restauro, uma mudança de verdade continua a subir a revisão e a entregá-la
+ok 226 - controlo V28: depois do restauro, uma mudança de verdade continua a subir a revisão e a entregá-la
+  ---
+  duration_ms: 5.654669
+  type: 'test'
+  ...
+# Subtest: V29: volta pelo lastSeq depois de um «voltar» — recebe o mundo revertido (a figura volta à casa)
+ok 227 - V29: volta pelo lastSeq depois de um «voltar» — recebe o mundo revertido (a figura volta à casa)
+  ---
+  duration_ms: 8.164593
+  type: 'test'
+  ...
+# Subtest: V29: volta pelo lastSeq depois de um «recomeçar» — sai da fase fim e as figuras voltam às casas
+ok 228 - V29: volta pelo lastSeq depois de um «recomeçar» — sai da fase fim e as figuras voltam às casas
+  ---
+  duration_ms: 10.493673
+  type: 'test'
+  ...
+# Subtest: V29: volta pelo lastSeq depois de «mudar a escala» — recebe a escala nova
+ok 229 - V29: volta pelo lastSeq depois de «mudar a escala» — recebe a escala nova
+  ---
+  duration_ms: 7.071922
+  type: 'test'
+  ...
+# Subtest: V29: ligação que caiu entre o evento e o snapshot do «voltar» (lastSeq = seq do snapshot) — recebe-o outra vez
+ok 230 - V29: ligação que caiu entre o evento e o snapshot do «voltar» (lastSeq = seq do snapshot) — recebe-o outra vez
+  ---
+  duration_ms: 6.664427
+  type: 'test'
+  ...
+# Subtest: V29: ROOM_RESYNC com um buraco que atravessa o «voltar» — responde com o snapshot
+ok 231 - V29: ROOM_RESYNC com um buraco que atravessa o «voltar» — responde com o snapshot
+  ---
+  duration_ms: 5.552118
+  type: 'test'
+  ...
+# Subtest: V29: o corte sobrevive ao restauro do journal (o servidor morreu depois do «voltar»)
+ok 232 - V29: o corte sobrevive ao restauro do journal (o servidor morreu depois do «voltar»)
+  ---
+  duration_ms: 10.791179
+  type: 'test'
+  ...
+# Subtest: V29: journal gravado antes da ordem 32 (sem seqSnapshot) — o corte vem do evento no fluxo
+ok 233 - V29: journal gravado antes da ordem 32 (sem seqSnapshot) — o corte vem do evento no fluxo
+  ---
+  duration_ms: 9.367393
+  type: 'test'
+  ...
+# Subtest: V29 controlo: volta pelo lastSeq sem nenhum destes pontos no intervalo — continua a receber os EVENTOS (a narração)
+ok 234 - V29 controlo: volta pelo lastSeq sem nenhum destes pontos no intervalo — continua a receber os EVENTOS (a narração)
+  ---
+  duration_ms: 10.795832
+  type: 'test'
+  ...
+# Subtest: V29 controlo: um movimento perdido chega por evento (sem snapshot)
+ok 235 - V29 controlo: um movimento perdido chega por evento (sem snapshot)
+  ---
+  duration_ms: 4.289285
+  type: 'test'
+  ...
+# Subtest: V30: a mesa pausou enquanto ela estava em baixo — ao voltar pelo lastSeq, sabe que está em pausa
+ok 236 - V30: a mesa pausou enquanto ela estava em baixo — ao voltar pelo lastSeq, sabe que está em pausa
+  ---
+  duration_ms: 4.166155
+  type: 'test'
+  ...
+# Subtest: V30: a mesa retomou enquanto ela estava em baixo — ao voltar pelo lastSeq, sai da pausa
+ok 237 - V30: a mesa retomou enquanto ela estava em baixo — ao voltar pelo lastSeq, sai da pausa
+  ---
+  duration_ms: 5.986476
+  type: 'test'
+  ...
+# Subtest: V30: a queda do Mestre pausou e a volta dele retomou, tudo com ela em baixo — fica a saber que a mesa corre
+ok 238 - V30: a queda do Mestre pausou e a volta dele retomou, tudo com ela em baixo — fica a saber que a mesa corre
+  ---
+  duration_ms: 6.311985
+  type: 'test'
+  ...
+# Subtest: V30 controlo: sem pausa nem retomada no intervalo, a volta continua por eventos
+ok 239 - V30 controlo: sem pausa nem retomada no intervalo, a volta continua por eventos
+  ---
+  duration_ms: 18.502412
+  type: 'test'
+  ...
+# Subtest: V31: recebeu o lobby de espera, caiu, o Mestre entrou — ao voltar pelo lastSeq recebe a batalha
+ok 240 - V31: recebeu o lobby de espera, caiu, o Mestre entrou — ao voltar pelo lastSeq recebe a batalha
+  ---
+  duration_ms: 11.206865
+  type: 'test'
+  ...
+# Subtest: V31 controlo: ligada quando o Mestre entra — recebe a batalha logo (ordem 22) e depois segue por eventos
+ok 241 - V31 controlo: ligada quando o Mestre entra — recebe a batalha logo (ordem 22) e depois segue por eventos
+  ---
+  duration_ms: 7.241614
+  type: 'test'
+  ...
+# Subtest: V32: o ataque que custa PA diz à própria o PA livre novo
+ok 242 - V32: o ataque que custa PA diz à própria o PA livre novo
+  ---
+  duration_ms: 4.860182
+  type: 'test'
+  ...
+# Subtest: V29: o Mestre que volta depois de um «voltar» recebe os eventos do intervalo (o registo dele)
+ok 243 - V29: o Mestre que volta depois de um «voltar» recebe os eventos do intervalo (o registo dele)
+  ---
+  duration_ms: 9.137607
+  type: 'test'
+  ...
+# Subtest: V29: a Party que perde o snapshot da resposta (a ligação cai a meio dela) volta outra vez e recebe-o
+ok 244 - V29: a Party que perde o snapshot da resposta (a ligação cai a meio dela) volta outra vez e recebe-o
+  ---
+  duration_ms: 12.949978
+  type: 'test'
+  ...
+# Subtest: V30: o Mestre que volta à sala pausada pela queda dele recebe o evento `pausa` (o registo dele)
+ok 245 - V30: o Mestre que volta à sala pausada pela queda dele recebe o evento `pausa` (o registo dele)
+  ---
+  duration_ms: 4.321068
+  type: 'test'
+  ...
+# Subtest: D-1 (N28-1): a criatura colocada a meio do jogo fica; a heroína vai para a casa livre mais próxima, sem casa repetida
+ok 246 - D-1 (N28-1): a criatura colocada a meio do jogo fica; a heroína vai para a casa livre mais próxima, sem casa repetida
+  ---
+  duration_ms: 16.202961
+  type: 'test'
+  ...
+# Subtest: D-1: a distância é o BFS do motor — vizinhas tomadas não contam; desempate pela ordem de leitura
+ok 247 - D-1: a distância é o BFS do motor — vizinhas tomadas não contam; desempate pela ordem de leitura
+  ---
+  duration_ms: 13.564981
+  type: 'test'
+  ...
+# Subtest: D-1: duas criaturas com a mesma casa de colocação — fica a última colocada; o mesmo depois de restaurar o journal
+ok 248 - D-1: duas criaturas com a mesma casa de colocação — fica a última colocada; o mesmo depois de restaurar o journal
+  ---
+  duration_ms: 15.890722
+  type: 'test'
+  ...
+# Subtest: D-1 / N34-2: sem casa livre alcançável, o «Recomeçar» é recusado e nada muda; a Party não recebe nada
+ok 249 - D-1 / N34-2: sem casa livre alcançável, o «Recomeçar» é recusado e nada muda; a Party não recebe nada
+  ---
+  duration_ms: 9.8352
+  type: 'test'
+  ...
+# Subtest: D-1 / N34-2: duas figuras que voltam a querer a mesma casa livre — recusado, nada muda
+ok 250 - D-1 / N34-2: duas figuras que voltam a querer a mesma casa livre — recusado, nada muda
+  ---
+  duration_ms: 18.252757
+  type: 'test'
+  ...
+# Subtest: D-1 (controlo): sem colocações a meio do jogo, todas voltam à casa de colocação, como antes
+ok 251 - D-1 (controlo): sem colocações a meio do jogo, todas voltam à casa de colocação, como antes
+  ---
+  duration_ms: 5.298053
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N26-1, falhava antes): o MASTER_SEARCH fora do schema recebe ERRO formato com o cmdId, sem pesquisa nem recibo
+ok 252 - ordem 34 (N26-1, falhava antes): o MASTER_SEARCH fora do schema recebe ERRO formato com o cmdId, sem pesquisa nem recibo
+  ---
+  duration_ms: 13.215239
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N26-1, controlo): a pesquisa bem formada — apara, conta caracteres (não bytes) e não corta
+ok 253 - ordem 34 (N26-1, controlo): a pesquisa bem formada — apara, conta caracteres (não bytes) e não corta
+  ---
+  duration_ms: 1.530664
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N26-1, falhava antes): no adaptador, pesquisas mal formadas nunca fecham a ligação do Mestre (1008)
+ok 254 - ordem 34 (N26-1, falhava antes): no adaptador, pesquisas mal formadas nunca fecham a ligação do Mestre (1008)
+  ---
+  duration_ms: 1.883901
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N26-1): a pesquisa recusada não conta nem desfaz a família de formato dos outros erros
+ok 255 - ordem 34 (N26-1): a pesquisa recusada não conta nem desfaz a família de formato dos outros erros
+  ---
+  duration_ms: 1.466282
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N26-1, controlo): o ritmo de 10 mensagens/s aplica-se também à pesquisa
+ok 256 - ordem 34 (N26-1, controlo): o ritmo de 10 mensagens/s aplica-se também à pesquisa
+  ---
+  duration_ms: 1.273327
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N26-2, falhava antes): o ROOM_JOIN mal formado recebe ERRO formato, nunca «credenciais»
+ok 257 - ordem 34 (N26-2, falhava antes): o ROOM_JOIN mal formado recebe ERRO formato, nunca «credenciais»
+  ---
+  duration_ms: 10.143303
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N26-2, falhava antes): mal formados sem fim não gastam o travão — nem do IP, nem do lugar, nem alertam o Mestre
+ok 258 - ordem 34 (N26-2, falhava antes): mal formados sem fim não gastam o travão — nem do IP, nem do lugar, nem alertam o Mestre
+  ---
+  duration_ms: 1.345513
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N26-2, controlo): contam-se caracteres, não bytes — 64 letras com acento é nome bem formado
+ok 259 - ordem 34 (N26-2, controlo): contam-se caracteres, não bytes — 64 letras com acento é nome bem formado
+  ---
+  duration_ms: 0.559565
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N26-2, controlo): o bem formado com a credencial errada gasta o travão, como antes (5 → bloqueado + alerta)
+ok 260 - ordem 34 (N26-2, controlo): o bem formado com a credencial errada gasta o travão, como antes (5 → bloqueado + alerta)
+  ---
+  duration_ms: 0.83325
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N26-2, falhava antes): no adaptador, 5 ROOM_JOIN mal formados fecham a ligação (1008 formato) e o travão fica intacto
+ok 261 - ordem 34 (N26-2, falhava antes): no adaptador, 5 ROOM_JOIN mal formados fecham a ligação (1008 formato) e o travão fica intacto
+  ---
+  duration_ms: 1.445684
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N27-2, falhava antes): só o vlabSha → quaisDiferem ["vlabSha"], no evento e na vista
+ok 262 - ordem 34 (N27-2, falhava antes): só o vlabSha → quaisDiferem ["vlabSha"], no evento e na vista
+  ---
+  duration_ms: 5.088577
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N27-2, falhava antes): só o dmgVersao → quaisDiferem ["dmgVersao"], no evento e na vista
+ok 263 - ordem 34 (N27-2, falhava antes): só o dmgVersao → quaisDiferem ["dmgVersao"], no evento e na vista
+  ---
+  duration_ms: 4.609055
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N27-2, falhava antes): só o levelupSha → quaisDiferem ["levelupSha"], no evento e na vista
+ok 264 - ordem 34 (N27-2, falhava antes): só o levelupSha → quaisDiferem ["levelupSha"], no evento e na vista
+  ---
+  duration_ms: 4.784115
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N27-2, falhava antes): vlabSha e levelupSha → quaisDiferem ["vlabSha","levelupSha"], no evento e na vista
+ok 265 - ordem 34 (N27-2, falhava antes): vlabSha e levelupSha → quaisDiferem ["vlabSha","levelupSha"], no evento e na vista
+  ---
+  duration_ms: 6.800237
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N27-2, falhava antes): dmgVersao e levelupSha → quaisDiferem ["dmgVersao","levelupSha"], no evento e na vista
+ok 266 - ordem 34 (N27-2, falhava antes): dmgVersao e levelupSha → quaisDiferem ["dmgVersao","levelupSha"], no evento e na vista
+  ---
+  duration_ms: 5.132154
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N27-2, falhava antes): os três → quaisDiferem ["vlabSha","dmgVersao","levelupSha"], no evento e na vista
+ok 267 - ordem 34 (N27-2, falhava antes): os três → quaisDiferem ["vlabSha","dmgVersao","levelupSha"], no evento e na vista
+  ---
+  duration_ms: 5.037873
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N27-2, falhava antes): vlabSha em falta agora → quaisDiferem ["vlabSha"], no evento e na vista
+ok 268 - ordem 34 (N27-2, falhava antes): vlabSha em falta agora → quaisDiferem ["vlabSha"], no evento e na vista
+  ---
+  duration_ms: 4.418717
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N27-2, falhava antes): vlabSha em falta na gravação → quaisDiferem ["vlabSha"], no evento e na vista
+ok 269 - ordem 34 (N27-2, falhava antes): vlabSha em falta na gravação → quaisDiferem ["vlabSha"], no evento e na vista
+  ---
+  duration_ms: 4.5065
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N27-2, falhava antes): dmgVersao em falta agora → quaisDiferem ["dmgVersao"], no evento e na vista
+ok 270 - ordem 34 (N27-2, falhava antes): dmgVersao em falta agora → quaisDiferem ["dmgVersao"], no evento e na vista
+  ---
+  duration_ms: 6.327154
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N27-2, controlo): o mesmo motor (dmgVersao/levelupSha null dos dois lados = igual) — sem aviso
+ok 271 - ordem 34 (N27-2, controlo): o mesmo motor (dmgVersao/levelupSha null dos dois lados = igual) — sem aviso
+  ---
+  duration_ms: 4.522134
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N30-1): os valores fechados pela bancada
+ok 272 - ordem 34 (N30-1): os valores fechados pela bancada
+  ---
+  duration_ms: 0.096745
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N30-1, falhava antes): 300 s sem ROOM_JOIN aceite → fecho 1008; o pong não prolonga; volta a ligar na hora
+ok 273 - ordem 34 (N30-1, falhava antes): 300 s sem ROOM_JOIN aceite → fecho 1008; o pong não prolonga; volta a ligar na hora
+  ---
+  duration_ms: 1.777471
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N30-1, falhava antes): tentativas de entrada falhadas e mensagens soltas não prolongam o prazo
+ok 274 - ordem 34 (N30-1, falhava antes): tentativas de entrada falhadas e mensagens soltas não prolongam o prazo
+  ---
+  duration_ms: 0.804778
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N30-1, controlo): depois do ROOM_JOIN aceite o prazo nunca mais se aplica àquela ligação
+ok 275 - ordem 34 (N30-1, controlo): depois do ROOM_JOIN aceite o prazo nunca mais se aplica àquela ligação
+  ---
+  duration_ms: 1.391005
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N30-1, falhava antes): tecto por IP — a 13.ª ligação do mesmo IP é recusada com 1013; as 12 ficam; outro IP entra
+ok 276 - ordem 34 (N30-1, falhava antes): tecto por IP — a 13.ª ligação do mesmo IP é recusada com 1013; as 12 ficam; outro IP entra
+  ---
+  duration_ms: 0.945819
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N30-1, falhava antes): tecto pré-entrada — a 33.ª ligação sem lugar é recusada com 1013; entrar liberta vaga
+ok 277 - ordem 34 (N30-1, falhava antes): tecto pré-entrada — a 33.ª ligação sem lugar é recusada com 1013; entrar liberta vaga
+  ---
+  duration_ms: 1.321669
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N30-1, falhava antes): tecto geral — a 65.ª ligação (com e sem lugar) é recusada com 1013; ninguém sai
+ok 278 - ordem 34 (N30-1, falhava antes): tecto geral — a 65.ª ligação (com e sem lugar) é recusada com 1013; ninguém sai
+  ---
+  duration_ms: 9.487665
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N30-1, falhava antes): antes da entrada, a mensagem que não é ROOM_JOIN conta para a família de formato (5 → 1008)
+ok 279 - ordem 34 (N30-1, falhava antes): antes da entrada, a mensagem que não é ROOM_JOIN conta para a família de formato (5 → 1008)
+  ---
+  duration_ms: 0.876023
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N30-1, falhava antes): o ritmo de 10 mensagens/s aplica-se à ligação sem lugar — a 11.ª no mesmo segundo nem chega à sala
+ok 280 - ordem 34 (N30-1, falhava antes): o ritmo de 10 mensagens/s aplica-se à ligação sem lugar — a 11.ª no mesmo segundo nem chega à sala
+  ---
+  duration_ms: 1.039961
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N31-1, controlo): os journals verdadeiros de todas as fases restauram e aguentam a entrada
+ok 281 - ordem 34 (N31-1, controlo): os journals verdadeiros de todas as fases restauram e aguentam a entrada
+  ---
+  duration_ms: 33.41552
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N31-1, falhava antes): camada 1 — um campo de dentro com o tipo errado ou em falta recusa a sala, com o caminho
+ok 282 - ordem 34 (N31-1, falhava antes): camada 1 — um campo de dentro com o tipo errado ou em falta recusa a sala, com o caminho
+  ---
+  duration_ms: 31.853623
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N31-1, falhava antes): camada 2 — fichaId que não existe nas fichas, vez e ordem que não apontam para uma figura
+ok 283 - ordem 34 (N31-1, falhava antes): camada 2 — fichaId que não existe nas fichas, vez e ordem que não apontam para uma figura
+  ---
+  duration_ms: 19.314472
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N31-1, falhava antes): a sala não abre, o ficheiro fica intacto e os mesmos bytes dão a mesma recusa na hora
+ok 284 - ordem 34 (N31-1, falhava antes): a sala não abre, o ficheiro fica intacto e os mesmos bytes dão a mesma recusa na hora
+  ---
+  duration_ms: 24.376749
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N31-1, falhava antes): camada 3 — qualquer excepção na restauração vira recusa da sala (o adaptador não a deixa subir)
+ok 285 - ordem 34 (N31-1, falhava antes): camada 3 — qualquer excepção na restauração vira recusa da sala (o adaptador não a deixa subir)
+  ---
+  duration_ms: 19.996152
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N31-1, falhava antes): camada 3 — a excepção no ROOM_JOIN vira recusa daquela entrada; o processo e as outras ligações seguem
+ok 286 - ordem 34 (N31-1, falhava antes): camada 3 — a excepção no ROOM_JOIN vira recusa daquela entrada; o processo e as outras ligações seguem
+  ---
+  duration_ms: 2.238485
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N31-1, falhava antes): camada 3 — a excepção ao fechar uma ligação com lugar não sobe
+ok 287 - ordem 34 (N31-1, falhava antes): camada 3 — a excepção ao fechar uma ligação com lugar não sobe
+  ---
+  duration_ms: 1.58053
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N31-1, falhava antes): fuzz de 3000 mutações ao estado re-assinado — nenhuma rebenta; ou recusa limpa, ou abre e aguenta a entrada
+ok 288 - ordem 34 (N31-1, falhava antes): fuzz de 3000 mutações ao estado re-assinado — nenhuma rebenta; ou recusa limpa, ou abre e aguenta a entrada
+  ---
+  duration_ms: 4549.735635
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N32-1, falhava antes): o Mestre em baixo — os alertas ficam na fila e chegam num só bloco quando ele entra
+ok 289 - ordem 34 (N32-1, falhava antes): o Mestre em baixo — os alertas ficam na fila e chegam num só bloco quando ele entra
+  ---
+  duration_ms: 2.103552
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N32-1, falhava antes): sem confirmação os alertas voltam na ligação seguinte; confirmados por id, saem
+ok 290 - ordem 34 (N32-1, falhava antes): sem confirmação os alertas voltam na ligação seguinte; confirmados por id, saem
+  ---
+  duration_ms: 2.683515
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N32-1, falhava antes): com o Mestre ligado, o alerta sai na hora (com id, ordem e hora) e também fica na fila até à confirmação
+ok 291 - ordem 34 (N32-1, falhava antes): com o Mestre ligado, o alerta sai na hora (com id, ordem e hora) e também fica na fila até à confirmação
+  ---
+  duration_ms: 2.245674
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N32-1): a confirmação mal formada é ERRO formato; um id que já saiu não é erro
+ok 292 - ordem 34 (N32-1): a confirmação mal formada é ERRO formato; um id que já saiu não é erro
+  ---
+  duration_ms: 1.8823
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N32-1): o módulo da fila — 100 por sala, o 101.º tira o mais antigo, perdidos contados, ordem e ids
+ok 293 - ordem 34 (N32-1): o módulo da fila — 100 por sala, o 101.º tira o mais antigo, perdidos contados, ordem e ids
+  ---
+  duration_ms: 2.339486
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N32-1, falhava antes): a fila sobrevive ao reinício do servidor, num ficheiro próprio, separado do journal
+ok 294 - ordem 34 (N32-1, falhava antes): a fila sobrevive ao reinício do servidor, num ficheiro próprio, separado do journal
+  ---
+  duration_ms: 2.776752
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N32-1): o ficheiro da fila estragado — a sala não abre (falha fechada, como o journal), sem reparação
+ok 295 - ordem 34 (N32-1): o ficheiro da fila estragado — a sala não abre (falha fechada, como o journal), sem reparação
+  ---
+  duration_ms: 1.359819
+  type: 'test'
+  ...
+# Subtest: ordem 34 (N32-1, falhava antes): no adaptador, a fila vai para o ficheiro próprio antes de o alerta sair, e volta no arranque
+ok 296 - ordem 34 (N32-1, falhava antes): no adaptador, a fila vai para o ficheiro próprio antes de o alerta sair, e volta no arranque
+  ---
+  duration_ms: 2.417686
+  type: 'test'
+  ...
+# Subtest: ordem 35 (N34-1, falhava antes): o estado gravado depois de «voltar» para antes de uma figura volta a abrir
+ok 297 - ordem 35 (N34-1, falhava antes): o estado gravado depois de «voltar» para antes de uma figura volta a abrir
+  ---
+  duration_ms: 9.94091
+  type: 'test'
+  ...
+# Subtest: ordem 35 (N34-1, falhava antes): pelo adaptador, o arranque abre a sala (antes: recusada para sempre, os mesmos bytes)
+ok 298 - ordem 35 (N34-1, falhava antes): pelo adaptador, o arranque abre a sala (antes: recusada para sempre, os mesmos bytes)
+  ---
+  duration_ms: 5.774481
+  type: 'test'
+  ...
+# Subtest: ordem 35 (N34-1, controlo): o cartão ABERTO continua a validar a figura; o fechado continua a ter a forma conferida
+ok 299 - ordem 35 (N34-1, controlo): o cartão ABERTO continua a validar a figura; o fechado continua a ter a forma conferida
+  ---
+  duration_ms: 13.083452
+  type: 'test'
+  ...
+# Subtest: o pacote do terreno lê-se: o mapa inteiro, gerado pelo cliente, com as fontes e sem casas bloqueadas na grelha de sempre
+ok 300 - o pacote do terreno lê-se: o mapa inteiro, gerado pelo cliente, com as fontes e sem casas bloqueadas na grelha de sempre
+  ---
+  duration_ms: 4.590214
+  type: 'test'
+  ...
+# Subtest: o pacote falha fechado: formato, tamanhos, valores, motivos e redes
+ok 301 - o pacote falha fechado: formato, tamanhos, valores, motivos e redes
+  ---
+  duration_ms: 31.692243
+  type: 'test'
+  ...
+# Subtest: regressão: na grelha de sempre (20 × 20), com ou sem terreno, as opções e o estado são os mesmos
+ok 302 - regressão: na grelha de sempre (20 × 20), com ou sem terreno, as opções e o estado são os mesmos
+  ---
+  duration_ms: 13.751184
+  type: 'test'
+  ...
+# Subtest: grelha maior (30 × 30): o servidor conhece os marcos — não se colocam figuras nas casas bloqueadas (recusa nomeada ao Mestre)
+ok 303 - grelha maior (30 × 30): o servidor conhece os marcos — não se colocam figuras nas casas bloqueadas (recusa nomeada ao Mestre)
+  ---
+  duration_ms: 10.529101
+  type: 'test'
+  ...
+# Subtest: grelha maior (30 × 30): o mover não oferece casas bloqueadas e o caminho contorna-as
+ok 304 - grelha maior (30 × 30): o mover não oferece casas bloqueadas e o caminho contorna-as
+  ---
+  duration_ms: 30.116721
+  type: 'test'
+  ...
+# Subtest: o juízo do terreno segue a escala viva (o Mestre muda a casa para 2 m: a grelha de 30 × 30 de 2 m)
+ok 305 - o juízo do terreno segue a escala viva (o Mestre muda a casa para 2 m: a grelha de 30 × 30 de 2 m)
+  ---
+  duration_ms: 20.582537
+  type: 'test'
+  ...
+# Subtest: 25 × 25 (o tamanho que caía na queda): servido pelo recorte — as casas bloqueadas do mapa bloqueiam, com o nome
+ok 306 - 25 × 25 (o tamanho que caía na queda): servido pelo recorte — as casas bloqueadas do mapa bloqueiam, com o nome
+  ---
+  duration_ms: 17.809762
+  type: 'test'
+  ...
+# Subtest: 25 × 25 nas outras escalas e grelhas não quadradas: servidas, a altura e o pé de cada casa vêm do recorte
+ok 307 - 25 × 25 nas outras escalas e grelhas não quadradas: servidas, a altura e o pé de cada casa vêm do recorte
+  ---
+  duration_ms: 1.115382
+  type: 'test'
+  ...
+# Subtest: o recorte é o mesmo de onde quer que se olhe: uma grelha menor é a maior, deslocada (mesmos doubles)
+ok 308 - o recorte é o mesmo de onde quer que se olhe: uma grelha menor é a maior, deslocada (mesmos doubles)
+  ---
+  duration_ms: 0.837731
+  type: 'test'
+  ...
+# Subtest: fim da queda silenciosa: uma grelha que não cabe no mapa não abre a sala (erro nomeado)
+ok 309 - fim da queda silenciosa: uma grelha que não cabe no mapa não abre a sala (erro nomeado)
+  ---
+  duration_ms: 9.296994
+  type: 'test'
+  ...
+# Subtest: a escala viva: mudar para uma escala em que a grelha não cabe é recusado ao Mestre, com o nome; a sala fica como estava
+ok 310 - a escala viva: mudar para uma escala em que a grelha não cabe é recusado ao Mestre, com o nome; a sala fica como estava
+  ---
+  duration_ms: 22.326702
+  type: 'test'
+  ...
+# Subtest: restaurar com terreno uma sala gravada numa grelha que não cabe: não abre, com o nome
+ok 311 - restaurar com terreno uma sala gravada numa grelha que não cabe: não abre, com o nome
+  ---
+  duration_ms: 10.228362
+  type: 'test'
+  ...
+# Subtest: a cobertura na faixa da borda: o servidor só afirma o que sabe (2 é 2; abaixo disso, null); longe da borda é a do mapa
+ok 312 - a cobertura na faixa da borda: o servidor só afirma o que sabe (2 é 2; abaixo disso, null); longe da borda é a do mapa
+  ---
+  duration_ms: 6.751293
+  type: 'test'
+  ...
+# Subtest: regressão na zona livre: a grelha de sempre (20 × 20 de 1,5 m), com e sem terreno recortado, dá o mesmo combate
+ok 313 - regressão na zona livre: a grelha de sempre (20 × 20 de 1,5 m), com e sem terreno recortado, dá o mesmo combate
+  ---
+  duration_ms: 15.607062
+  type: 'test'
+  ...
+# Subtest: o pacote diz até que folga um lado da zona está na fronteira (0,70 m, do exportador)
+ok 314 - o pacote diz até que folga um lado da zona está na fronteira (0,70 m, do exportador)
+  ---
+  duration_ms: 0.161836
+  type: 'test'
+  ...
+# Subtest: 50 × 50 de 1,5 m (o mapa inteiro, os quatro lados na fronteira): nenhuma casa sem cobertura, toda a do mapa
+ok 315 - 50 × 50 de 1,5 m (o mapa inteiro, os quatro lados na fronteira): nenhuma casa sem cobertura, toda a do mapa
+  ---
+  duration_ms: 6.612013
+  type: 'test'
+  ...
+# Subtest: 49 × 30 de 1.5 m (fronteira a este): a faixa da fronteira serve o mapa; a dos lados abertos fica como estava
+ok 316 - 49 × 30 de 1.5 m (fronteira a este): a faixa da fronteira serve o mapa; a dos lados abertos fica como estava
+  ---
+  duration_ms: 5.415083
+  type: 'test'
+  ...
+# Subtest: 50 × 20 de 1.5 m (fronteira a oeste, este): a faixa da fronteira serve o mapa; a dos lados abertos fica como estava
+ok 317 - 50 × 20 de 1.5 m (fronteira a oeste, este): a faixa da fronteira serve o mapa; a dos lados abertos fica como estava
+  ---
+  duration_ms: 5.716103
+  type: 'test'
+  ...
+# Subtest: 49 × 49 de 1.5 m (fronteira a este, sul): a faixa da fronteira serve o mapa; a dos lados abertos fica como estava
+ok 318 - 49 × 49 de 1.5 m (fronteira a este, sul): a faixa da fronteira serve o mapa; a dos lados abertos fica como estava
+  ---
+  duration_ms: 5.291716
+  type: 'test'
+  ...
+# Subtest: 37 × 20 de 2 m (fronteira a oeste, este): a faixa da fronteira serve o mapa; a dos lados abertos fica como estava
+ok 319 - 37 × 20 de 2 m (fronteira a oeste, este): a faixa da fronteira serve o mapa; a dos lados abertos fica como estava
+  ---
+  duration_ms: 3.642863
+  type: 'test'
+  ...
+# Subtest: 35 × 37 de 2 m (fronteira a norte, sul): a faixa da fronteira serve o mapa; a dos lados abertos fica como estava
+ok 320 - 35 × 37 de 2 m (fronteira a norte, sul): a faixa da fronteira serve o mapa; a dos lados abertos fica como estava
+  ---
+  duration_ms: 5.431638
+  type: 'test'
+  ...
+# Subtest: 37 × 37 de 2 m (fronteira a oeste, este, norte, sul): a faixa da fronteira serve o mapa; a dos lados abertos fica como estava
+ok 321 - 37 × 37 de 2 m (fronteira a oeste, este, norte, sul): a faixa da fronteira serve o mapa; a dos lados abertos fica como estava
+  ---
+  duration_ms: 5.437564
+  type: 'test'
+  ...
+# Subtest: as grelhas que não tocam a fronteira julgam-se exactamente como antes
+ok 322 - as grelhas que não tocam a fronteira julgam-se exactamente como antes
+  ---
+  duration_ms: 9.559214
+  type: 'test'
+  ...
+# Subtest: uma folga inválida no pacote não se prepara (falha fechado, com o nome)
+ok 323 - uma folga inválida no pacote não se prepara (falha fechado, com o nome)
+  ---
+  duration_ms: 0.300951
+  type: 'test'
+  ...
+# Subtest: decisão 1: a falha crítica do monstro abre o cartão de desgraça ao Mestre (proposta), e não se aplica sozinha
+ok 324 - decisão 1: a falha crítica do monstro abre o cartão de desgraça ao Mestre (proposta), e não se aplica sozinha
+  ---
+  duration_ms: 4.249314
+  type: 'test'
+  ...
+# Subtest: decisão 1: o Mestre aprova a desgraça do monstro e ela aplica-se com a mesma semente
+ok 325 - decisão 1: o Mestre aprova a desgraça do monstro e ela aplica-se com a mesma semente
+  ---
+  duration_ms: 5.318769
+  type: 'test'
+  ...
+# Subtest: decisão 1: o Mestre edita a desgraça do monstro para outra da lista
+ok 326 - decisão 1: o Mestre edita a desgraça do monstro para outra da lista
+  ---
+  duration_ms: 4.486892
+  type: 'test'
+  ...
+# Subtest: decisão 7: monstro a 0 de Vida = morto — sai da ordem, sem testes de morte nem levantar
+ok 327 - decisão 7: monstro a 0 de Vida = morto — sai da ordem, sem testes de morte nem levantar
+  ---
+  duration_ms: 12.00295
+  type: 'test'
+  ...
+# Subtest: a sonda da Ordem 58 (1,5 → 2 m): a escala é recusada, nenhuma figura fica numa casa bloqueada, e cada uma vai nomeada ao Mestre
+ok 328 - a sonda da Ordem 58 (1,5 → 2 m): a escala é recusada, nenhuma figura fica numa casa bloqueada, e cada uma vai nomeada ao Mestre
+  ---
+  duration_ms: 112.785449
+  type: 'test'
+  ...
+# Subtest: as 6 mudanças de escala: nenhuma deixa figuras em casas bloqueadas; as que não deixam passam como antes
+ok 329 - as 6 mudanças de escala: nenhuma deixa figuras em casas bloqueadas; as que não deixam passam como antes
+  ---
+  duration_ms: 608.696423
+  type: 'test'
+  ...
+# Subtest: tirada a figura do caminho, a escala muda (a recusa não prende o Mestre)
+ok 330 - tirada a figura do caminho, a escala muda (a recusa não prende o Mestre)
+  ---
+  duration_ms: 9.079196
+  type: 'test'
+  ...
+# Subtest: a Party não vê o porquê nem a lista (só o recibo fixo de sempre)
+ok 331 - a Party não vê o porquê nem a lista (só o recibo fixo de sempre)
+  ---
+  duration_ms: 97.27923
+  type: 'test'
+  ...
+# Subtest: «Recomeçar» depois de a escala bloquear uma casa de colocação: recusado com o nome, ninguém volta à casa bloqueada
+ok 332 - «Recomeçar» depois de a escala bloquear uma casa de colocação: recusado com o nome, ninguém volta à casa bloqueada
+  ---
+  duration_ms: 21.30597
+  type: 'test'
+  ...
+# Subtest: sem terreno a escala é como sempre (nenhum mapa a respeitar)
+ok 333 - sem terreno a escala é como sempre (nenhum mapa a respeitar)
+  ---
+  duration_ms: 3.825457
+  type: 'test'
+  ...
+# Subtest: item 5: «Não acontece nada» (recusar + semDesgraca) fecha o cartão sem desgraça e SEM segunda chamada ao motor
+ok 334 - item 5: «Não acontece nada» (recusar + semDesgraca) fecha o cartão sem desgraça e SEM segunda chamada ao motor
+  ---
+  duration_ms: 5.855227
+  type: 'test'
+  ...
+# Subtest: item 5: o monstro também — o Mestre recusa a proposta do orc com «Não acontece nada»
+ok 335 - item 5: o monstro também — o Mestre recusa a proposta do orc com «Não acontece nada»
+  ---
+  duration_ms: 4.893474
+  type: 'test'
+  ...
+# Subtest: item 5: «Não acontece nada» não é linha da tabela — a lista do cartão continua a ser só as 6, e não há outro caminho
+ok 336 - item 5: «Não acontece nada» não é linha da tabela — a lista do cartão continua a ser só as 6, e não há outro caminho
+  ---
+  duration_ms: 4.894549
+  type: 'test'
+  ...
+# Subtest: item 5: a IA nunca a escolhe — em auto, a falha crítica do monstro espera sempre pelo Mestre
+ok 337 - item 5: a IA nunca a escolhe — em auto, a falha crítica do monstro espera sempre pelo Mestre
+  ---
+  duration_ms: 4.570192
+  type: 'test'
+  ...
+# Subtest: item 8: o Mestre muda a escala — as posições ficam em casas, a reserva em metros, as opções contam na escala nova
+ok 338 - item 8: o Mestre muda a escala — as posições ficam em casas, a reserva em metros, as opções contam na escala nova
+  ---
+  duration_ms: 4.069962
+  type: 'test'
+  ...
+# Subtest: item 8: o movimento já gasto na volta conta em metros na escala nova
+ok 339 - item 8: o movimento já gasto na volta conta em metros na escala nova
+  ---
+  duration_ms: 6.078355
+  type: 'test'
+  ...
+# Subtest: item 8: sem custo — a vez, a acção, o PA e a reacção ficam como estavam
+ok 340 - item 8: sem custo — a vez, a acção, o PA e a reacção ficam como estavam
+  ---
+  duration_ms: 5.653612
+  type: 'test'
+  ...
+# Subtest: item 8: só o Mestre — a jogadora não muda a escala; valores inválidos, a mesma escala e cartão aberto são recusados
+ok 341 - item 8: só o Mestre — a jogadora não muda a escala; valores inválidos, a mesma escala e cartão aberto são recusados
+  ---
+  duration_ms: 9.870465
+  type: 'test'
+  ...
+# Subtest: item 8: a Party vê o resultado, nunca a mecânica — o evento `escala` vai vazio; o antes/depois é só do Mestre
+ok 342 - item 8: a Party vê o resultado, nunca a mecânica — o evento `escala` vai vazio; o antes/depois é só do Mestre
+  ---
+  duration_ms: 3.802713
+  type: 'test'
+  ...
+# Subtest: item 8: o «voltar» a um ponto anterior repõe a escala desse instante
+ok 343 - item 8: o «voltar» a um ponto anterior repõe a escala desse instante
+  ---
+  duration_ms: 4.27609
+  type: 'test'
+  ...
+# Subtest: ordem 9: a falha crítica do AoO do monstro abre o cartão do Mestre DEPOIS de o movimento terminar
+ok 344 - ordem 9: a falha crítica do AoO do monstro abre o cartão do Mestre DEPOIS de o movimento terminar
+  ---
+  duration_ms: 7.072141
+  type: 'test'
+  ...
+# Subtest: ordem 9: recusar com «Não acontece nada» no AoO não chama o motor outra vez e não aplica desgraça
+ok 345 - ordem 9: recusar com «Não acontece nada» no AoO não chama o motor outra vez e não aplica desgraça
+  ---
+  duration_ms: 6.857454
+  type: 'test'
+  ...
+# Subtest: ordem 9: «Escolher outra» no AoO — a desgraça escolhida pelo Mestre aplica-se ao monstro
+ok 346 - ordem 9: «Escolher outra» no AoO — a desgraça escolhida pelo Mestre aplica-se ao monstro
+  ---
+  duration_ms: 4.202712
+  type: 'test'
+  ...
+# Subtest: ordem 9: com dois monstros, a série pára no cartão e o segundo só ataca depois da decisão
+ok 347 - ordem 9: com dois monstros, a série pára no cartão e o segundo só ataca depois da decisão
+  ---
+  duration_ms: 5.151637
+  type: 'test'
+  ...
+# Subtest: ordem 9: a falha crítica do segundo monstro da série também abre cartão (um de cada vez)
+ok 348 - ordem 9: a falha crítica do segundo monstro da série também abre cartão (um de cada vez)
+  ---
+  duration_ms: 5.597158
+  type: 'test'
+  ...
+# Subtest: canários: nada do Mestre chega a nenhum papel da Party (jogadoras e espectador)
+ok 349 - canários: nada do Mestre chega a nenhum papel da Party (jogadoras e espectador)
+  ---
+  duration_ms: 32.663849
+  type: 'test'
+  ...
+# Subtest: canários: "outra jogadora" e espectador não veem a ficha, a Vida nem o dano alheio
+ok 350 - canários: "outra jogadora" e espectador não veem a ficha, a Vida nem o dano alheio
+  ---
+  duration_ms: 32.533665
+  type: 'test'
+  ...
+# Subtest: lista de campos permitidos: todo o ROOM_EVENT da Party só tem campos da lista do seu tipo
+ok 351 - lista de campos permitidos: todo o ROOM_EVENT da Party só tem campos da lista do seu tipo
+  ---
+  duration_ms: 28.730411
+  type: 'test'
+  ...
+# Subtest: E-P7: id oculto e id inexistente dão a MESMA recusa, byte a byte (tirando o intentId)
+ok 352 - E-P7: id oculto e id inexistente dão a MESMA recusa, byte a byte (tirando o intentId)
+  ---
+  duration_ms: 26.322953
+  type: 'test'
+  ...
+# Subtest: seatToken: cada um só vê o seu; a exportação leva só o hash; PIN e senhas nunca entram
+ok 353 - seatToken: cada um só vê o seu; a exportação leva só o hash; PIN e senhas nunca entram
+  ---
+  duration_ms: 29.519996
+  type: 'test'
+  ...
+# Subtest: E-P9: 5 ROOM_JOIN errados bloqueiam e avisam o Mestre; papel mestre sem PIN é recusado
+ok 354 - E-P9: 5 ROOM_JOIN errados bloqueiam e avisam o Mestre; papel mestre sem PIN é recusado
+  ---
+  duration_ms: 1.555657
+  type: 'test'
+  ...
+# Subtest: E-P9: a recusa do JOIN é a mesma para nome inexistente e para senha errada
+ok 355 - E-P9: a recusa do JOIN é a mesma para nome inexistente e para senha errada
+  ---
+  duration_ms: 1.017549
+  type: 'test'
+  ...
+# Subtest: Mestre ausente: ROOM_PAUSED, intenções recusadas, nenhum cartão se aprova sozinho; RESUMED só após o RESYNC
+ok 356 - Mestre ausente: ROOM_PAUSED, intenções recusadas, nenhum cartão se aprova sozinho; RESUMED só após o RESYNC
+  ---
+  duration_ms: 6.61223
+  type: 'test'
+  ...
+# Subtest: REF_19: o cartão (proposta H10) não cobra; aprovado com quebra-corpo, perde floor(vida/4) uma vez
+ok 357 - REF_19: o cartão (proposta H10) não cobra; aprovado com quebra-corpo, perde floor(vida/4) uma vez
+  ---
+  duration_ms: 6.954483
+  type: 'test'
+  ...
+# Subtest: REF_19: só a própria vê que perdeu; a outra jogadora e o espectador veem só o efeito
+ok 358 - REF_19: só a própria vê que perdeu; a outra jogadora e o espectador veem só o efeito
+  ---
+  duration_ms: 8.344812
+  type: 'test'
+  ...
+# Subtest: REF_19: com Vida 1 a 3 a perda é 0 e a frase da perda não sai; com Vida 4 perde 1
+ok 359 - REF_19: com Vida 1 a 3 a perda é 0 e a frase da perda não sai; com Vida 4 perde 1
+  ---
+  duration_ms: 27.071023
+  type: 'test'
+  ...
+# Subtest: REF_19: outra desgraça (cai) não mexe na Vida
+ok 360 - REF_19: outra desgraça (cai) não mexe na Vida
+  ---
+  duration_ms: 6.880829
+  type: 'test'
+  ...
+# Subtest: T-REV-04: intenção com revision velha é recusada, nunca aplicada, e chega um ROOM_OPTIONS novo
+ok 361 - T-REV-04: intenção com revision velha é recusada, nunca aplicada, e chega um ROOM_OPTIONS novo
+  ---
+  duration_ms: 7.136004
+  type: 'test'
+  ...
+# Subtest: T-REV-05: mudança oculta (MASTER_MODE, painel do ambiente) não mexe no revision nem no seq da Party
+ok 362 - T-REV-05: mudança oculta (MASTER_MODE, painel do ambiente) não mexe no revision nem no seq da Party
+  ---
+  duration_ms: 5.418247
+  type: 'test'
+  ...
+# Subtest: T-REV-05 b: a revisão só sobe para quem vê a mudança (o movimento dela muda a vista de todos)
+ok 363 - T-REV-05 b: a revisão só sobe para quem vê a mudança (o movimento dela muda a vista de todos)
+  ---
+  duration_ms: 6.200091
+  type: 'test'
+  ...
+# Subtest: vetores FIPS 180-4
+ok 364 - vetores FIPS 180-4
+  ---
+  duration_ms: 0.138051
+  type: 'test'
+  ...
+# Subtest: igual ao node:crypto em todos os comprimentos de 0 a 300 e em texto com acentos
+ok 365 - igual ao node:crypto em todos os comprimentos de 0 a 300 e em texto com acentos
+  ---
+  duration_ms: 7.215731
+  type: 'test'
+  ...
+# Subtest: HMAC-SHA256 igual ao node:crypto (chave curta e chave longa)
+ok 366 - HMAC-SHA256 igual ao node:crypto (chave curta e chave longa)
+  ---
+  duration_ms: 0.649404
+  type: 'test'
+  ...
+# Subtest: JSON canónico: chaves ordenadas, inteiros como chave na mesma ordem, undefined omitido
+ok 367 - JSON canónico: chaves ordenadas, inteiros como chave na mesma ordem, undefined omitido
+  ---
+  duration_ms: 0.208277
+  type: 'test'
+  ...
+# Subtest: terminar: a batalha acaba com o desfecho «terminada»; a Party recebe o fim; depois disso não há vez
+ok 368 - terminar: a batalha acaba com o desfecho «terminada»; a Party recebe o fim; depois disso não há vez
+  ---
+  duration_ms: 4.968939
+  type: 'test'
+  ...
+# Subtest: terminar: com o cartão de desgraça aberto, fecha o cartão e recusa o recibo que esperava por ele
+ok 369 - terminar: com o cartão de desgraça aberto, fecha o cartão e recusa o recibo que esperava por ele
+  ---
+  duration_ms: 4.784097
+  type: 'test'
+  ...
+# Subtest: terminar e recomeçar: só depois de a batalha começar
+ok 370 - terminar e recomeçar: só depois de a batalha começar
+  ---
+  duration_ms: 1.545358
+  type: 'test'
+  ...
+# Subtest: recomeçar: a mesma batalha do zero — casas da colocação, ficha inteira, rodada 1, vez dela; o modo H10 fica
+ok 371 - recomeçar: a mesma batalha do zero — casas da colocação, ficha inteira, rodada 1, vez dela; o modo H10 fica
+  ---
+  duration_ms: 10.705036
+  type: 'test'
+  ...
+# Subtest: recomeçar depois do fim (terminar → recomeçar) volta a pôr a batalha em combate
+ok 372 - recomeçar depois do fim (terminar → recomeçar) volta a pôr a batalha em combate
+  ---
+  duration_ms: 5.099822
+  type: 'test'
+  ...
+# Subtest: voltar para um instante com o cartão aberto: o cartão continua por decidir, com a mesma rolagem
+ok 373 - voltar para um instante com o cartão aberto: o cartão continua por decidir, com a mesma rolagem
+  ---
+  duration_ms: 6.049816
+  type: 'test'
+  ...
+# Subtest: voltar para antes da decisão do Mestre: o cartão reabre, o Mestre volta a recebê-lo e o recibo volta a AGUARDANDO
+ok 374 - voltar para antes da decisão do Mestre: o cartão reabre, o Mestre volta a recebê-lo e o recibo volta a AGUARDANDO
+  ---
+  duration_ms: 5.086527
+  type: 'test'
+  ...
+# Subtest: voltar para antes do golpe: o cartão nascido depois fica na história, fechado «revertido», e o recibo é recusado
+ok 375 - voltar para antes do golpe: o cartão nascido depois fica na história, fechado «revertido», e o recibo é recusado
+  ---
+  duration_ms: 4.450451
+  type: 'test'
+  ...
+1..375
+# tests 375
+# suites 0
+# pass 375
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10123.138868

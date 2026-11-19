@@ -399,6 +399,11 @@
     "danoCausado": {},
     "danoSofrido": {},
     "cartoes": {}
+   },
+   "ordemDinamica": {
+    "ordem": [],
+    "fechada": false,
+    "ultimo": null
    }
   },
   "snapshot": {
@@ -692,6 +697,11 @@
     "danoCausado": {},
     "danoSofrido": {},
     "cartoes": {}
+   },
+   "ordemDinamica": {
+    "ordem": [],
+    "fechada": false,
+    "ultimo": null
    }
   },
   "resultados": {
@@ -949,6 +959,11 @@
     "danoCausado": {},
     "danoSofrido": {},
     "cartoes": {}
+   },
+   "ordemDinamica": {
+    "ordem": [],
+    "fechada": false,
+    "ultimo": null
    }
   },
   "opcoes": {

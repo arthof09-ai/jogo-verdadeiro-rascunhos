@@ -245,6 +245,23 @@ export function conferirEstadoProfundo(e, fichas, fluxos = null) {
   }
   exigir(e, 'desfecho', '', ouNull(ehTexto), 'não é texto nem null');
   seHouver(e, 'marchaLivre', '', ouNull(ehInt), 'não é inteiro nem null');
+  // Ordem INICIATIVA NO SERVIDOR: a ordem dinâmica da caixa do Mestre (journals de antes não a têm; o «voltar» a um
+  // ponto de antes dela põe null). Presente: só ids de figuras que existem, um booleano e um contador.
+  seHouver(e, 'ordemDinamica', '', ouNull(ehObj), 'não é objecto nem null');
+  if (ehObj(e.ordemDinamica)) conferirOrdemDinamica(e.ordemDinamica, e);
+}
+
+function conferirOrdemDinamica(od, e) {
+  const p = 'ordemDinamica';
+  exigir(od, 'ordem', p, Array.isArray, 'não é lista');
+  od.ordem.forEach((id, i) => {
+    if (!ehTextoCheio(id)) falha(`${p}.ordem.${i}`, 'não é texto');
+    if (!tem(e.figuras, id)) falha(`${p}.ordem.${i}`, 'figura inexistente'); // camada 2
+  });
+  exigir(od, 'fechada', p, ehBool, 'não é booleano');
+  exigir(od, 'ultimo', p, ouNull(ehTextoCheio), 'não é texto nem null');
+  if (od.ultimo !== null && !tem(e.figuras, od.ultimo)) falha(p + '.ultimo', 'figura inexistente'); // camada 2
+  exigir(od, 'vezes', p, ehIntPos0, 'não é inteiro >= 0');
 }
 
 /**

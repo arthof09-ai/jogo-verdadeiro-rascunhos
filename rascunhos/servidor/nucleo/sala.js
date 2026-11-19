@@ -18,6 +18,7 @@ import { projetarEvento, projetarSnapshot, efeitoAmbiente, nomePublicoDe, visive
 import * as Amb from './ambiente.js';
 import { criarFilaAlertas } from './fila-alertas.js';
 import { prepararTerreno } from './terreno.js';
+import { ordemDinamicaVazia, registarEvento as registarNaOrdemDinamica, ordemParaVista } from './ordem-dinamica.js';
 
 export const PROTOCOLO = 2;
 /** A escala com que a sala nasce (Q5 do site, jogo.js: CASA_M = 1,5 m). Ordem 8 do CM-000009 (item 8, desempate do
@@ -134,7 +135,8 @@ const TIPOS_MESTRE = Object.freeze([
 const RE_ID = /^[A-Za-z0-9_-]{1,64}$/;
 // `cartoes` entra no checkpoint para o «voltar» repor os cartões do instante (rolagem por resolver incluída).
 // Ordem 13: `fogo` (casas a arder, quem arde) também volta com o «voltar».
-const CHAVES_MUNDO = Object.freeze(['fase', 'mapa', 'lobby', 'figuras', 'ordem', 'vezIdx', 'rodada', 'vez', 'ambiente', 'desfecho', 'cartoes', 'marchaLivre', 'fogo']);
+// Ordem INICIATIVA NO SERVIDOR: `ordemDinamica` (a ordem da caixa do Mestre) também volta com o «voltar».
+const CHAVES_MUNDO = Object.freeze(['fase', 'mapa', 'lobby', 'figuras', 'ordem', 'vezIdx', 'rodada', 'vez', 'ambiente', 'desfecho', 'cartoes', 'marchaLivre', 'fogo', 'ordemDinamica']);
 /**
  * L6 (D4 do Plano A, desenho JV3.1; I0004 08/11): «marcha pura» = proposta da IA sem efeito de regra sobre ninguém
  * (andar ou encerrar a vez). Com o «Continuar a rodada» do Mestre (MASTER_APPROVE {rodada:true}), as marchas puras
@@ -568,6 +570,8 @@ export function criarSala({
       // `raioPedidoRodada` (um pedido por rodada, como o site). Tudo só do Mestre.
       ambiente: { hora: null, clima: null, futuro: null, raios: false, raioPendente: false, raioPedidoRodada: 0 },
       fogo: Amb.fogoVazio(),
+      // Ordem INICIATIVA NO SERVIDOR: a ordem dinâmica (quem agiu, por que ordem) — só ids; o servidor é o dono.
+      ordemDinamica: ordemDinamicaVazia(),
       cartoes: [], contadores: { cartao: 0, ia: 0 }, lugares, motores: { ...motoresInfo }, desfecho: null,
     };
     atualizarRevisoes(estado);
@@ -1017,6 +1021,9 @@ export function criarSala({
       // L9 (C-28; I0004 08/11): o selo TESTE e as estatísticas só existem no papel Mestre.
       selo: seloTeste,
       estatisticas: estatisticas(),
+      // Ordem INICIATIVA NO SERVIDOR: a ordem dinâmica da caixa, do servidor (só ids). O Mestre que volta a entrar a meio
+      // da batalha recebe-a como estava, com as entradas, as saídas e os atrasos.
+      ordemDinamica: ordemParaVista(m.ordemDinamica, m.figuras),
     };
   }
   function mensagemCartao(c) {
@@ -1120,6 +1127,12 @@ export function criarSala({
 
   function finalizar(tx, cartaoAntes) {
     const m = tx.estado;
+    // Ordem INICIATIVA NO SERVIDOR: a ordem dinâmica regista-se AQUI, pelos eventos da transacção, pela ordem em que
+    // aconteceram — o mesmo que a caixa do Mestre fazia no cliente, agora no estado da sala (journal e «voltar»).
+    for (const ev of tx.eventos) {
+      if (!m.ordemDinamica) m.ordemDinamica = ordemDinamicaVazia(); // salas de antes desta ordem
+      registarNaOrdemDinamica(m.ordemDinamica, ev);
+    }
     const mudaram = atualizarRevisoes(m);
     const lugares = Object.values(m.lugares);
     // 1) eventos, projetados e numerados POR DESTINATÁRIO (E-P4)
@@ -2561,6 +2574,7 @@ export function criarSala({
         }
         m.fase = 'combate';
         m.rodada = 1;
+        m.ordemDinamica = ordemDinamicaVazia(); // Ordem INICIATIVA NO SERVIDOR: batalha nova, ordem dinâmica nova
         m.ordem = ordenarPorIniciativa(colocadas(m).map((f) => f.id), m);
         // A batalha começa sempre na vez dela (D-13.3, rodada 1).
         m.vezIdx = m.ordem.findIndex((id) => m.figuras[id].lado === 'jogadora');

@@ -97,6 +97,9 @@ func _correr() -> void:
 	rede.papel = "mestre"
 	root.size = Vector2i(1280, 720)
 	_vista = (d["mestre"]["vista"] as Dictionary).duplicate(true)
+	# Ordem INICIATIVA NO SERVIDOR: a fixture traz a ordem dinâmica do servidor (vazia, antes de alguém agir). Este
+	# guião não corre o servidor — os eventos são inventados aqui —, por isso a vista do guião vai sem ela.
+	_vista.erase("ordemDinamica")
 	var figs: Array = _vista["mestre"]["figuras"]
 	var ids := {}
 	for f in figs:

@@ -15,6 +15,11 @@ extends RefCounted
 ## - INICIATIVA (o botão «Modo iniciativa» do Mestre): a ordem é a do servidor (`iniciativa` do snapshot — só a
 ##   ORDEM, nunca os valores) e quem está na vez é `vezId`. O cliente não rola nem inventa a fórmula.
 ##
+## Ordem INICIATIVA NO SERVIDOR (19/11/2026): o DONO da ordem dinâmica é o servidor (`servidor/nucleo/ordem-dinamica.js`,
+## as mesmas regras de cima, no estado da sala). Cada MASTER_VIEW traz `ordemDinamica` e `carregar_do_servidor` põe-na
+## aqui, por cima do que se formou: o Mestre que sai e volta a entrar a meio da batalha vê a ordem como estava. Os
+## eventos continuam a adiantar a caixa até à vista seguinte (e servem um servidor de antes desta ordem).
+##
 ## Só guarda e ordena ids. Nunca calcula regra. Sem nós: os testes usam-no sem árvore.
 
 const DINAMICO := "dinamico"
@@ -108,6 +113,21 @@ func _seguinte_de(id: String) -> String:
 	if i < 0 or ordem_dinamica.is_empty():
 		return ""
 	return ordem_dinamica[(i + 1) % ordem_dinamica.size()]
+
+
+## Ordem INICIATIVA NO SERVIDOR: a ordem dinâmica que o servidor guarda (MASTER_VIEW `ordemDinamica`:
+## {ordem:[ids], fechada, ultimo}) substitui a que se formou aqui. Devolve false (e não mexe) se a vista não a traz.
+func carregar_do_servidor(d) -> bool:
+	if not (d is Dictionary) or not (d.get("ordem") is Array):
+		return false
+	ordem_dinamica.clear()
+	for v in d["ordem"]:
+		var id := _id(v)
+		if id != "" and not ordem_dinamica.has(id):
+			ordem_dinamica.append(id)
+	fechada = d.get("fechada") == true
+	ultimo = _id(d.get("ultimo"))
+	return true
 
 
 func limpar_dinamica() -> void:
