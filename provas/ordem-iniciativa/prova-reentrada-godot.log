@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+iniciativa do servidor: ["f1a88a9eef918a8b4", "f0c1870b843e1465f", "fb43618ae935f84df", "f1c8fc87e558f2d7e"]
+caixa antes de sair: ["f0c1870b843e1465f", "f1c8fc87e558f2d7e", "f1a88a9eef918a8b4"] vez=f1a88a9eef918a8b4
+caixa depois de reentrar: ["f0c1870b843e1465f", "f1c8fc87e558f2d7e", "f1a88a9eef918a8b4"] vez=f1a88a9eef918a8b4
+  ok    a caixa está à vista em combate
+  ok    a caixa reconstrói-se igual (Aliada → Orc → Heroína)
+  ok    na vez: quem agiu por último (a Heroína)
+  ok    controlo: a ordem vazia do servidor dá a caixa vazia
+0 falha(s)

@@ -1,0 +1,12 @@
+1) iniciativa (ordem inicial do servidor) por cliente: {"mestre":["f1a88a9eef918a8b4","f0c1870b843e1465f","fb43618ae935f84df","f1c8fc87e558f2d7e"],"heroina":["f1a88a9eef918a8b4","f0c1870b843e1465f","fb43618ae935f84df","f1c8fc87e558f2d7e"],"aliada":["f1a88a9eef918a8b4","f0c1870b843e1465f","fb43618ae935f84df","f1c8fc87e558f2d7e"],"espectador":["f1a88a9eef918a8b4","f0c1870b843e1465f","fb43618ae935f84df","f1c8fc87e558f2d7e"]}
+   ordemDinamica no início: {"ordem":[],"fechada":false,"ultimo":null}
+   ordem de iniciativa no estado: Heroína → Aliada → Lobo → Orc
+2) depois de uma volta: Heroína → Aliada → Lobo → Orc | fechada=false | última=Orc
+   a heroína volta a agir (fecha): Heroína → Aliada → Lobo → Orc | fechada=true | última=Heroína
+3) Mestre sai e volta a entrar a meio da batalha: Heroína → Aliada → Lobo → Orc | fechada=true | última=Heroína
+4) sala reaberta do journal: Heroína → Aliada → Lobo → Orc | fechada=true | última=Heroína
+5) o exemplo do Mestre + atraso da j2: j1 → j3 → j2 → m | fechada true
+6) «voltar» ao ponto em que a aliada andou: Heroína → Aliada | fechada=false | última=Aliada
+7) chaves de ordemDinamica (vista e estado): 0, 1, fechada, ordem, ultimo, vezes
+   a Party (heroína, aliada, espectador) nunca recebeu ordemDinamica: ok
+PROVA OK
