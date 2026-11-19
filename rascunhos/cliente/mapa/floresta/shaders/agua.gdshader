@@ -49,8 +49,10 @@ uniform int n_rasto = 0;
 // corpos[i] = (x, z, raio na linha de água, vigor 0–1)
 uniform vec4 corpos[MAX_CORPOS];
 uniform int n_corpos = 0;
-// (Ordem ÁGUA-REAÇÃO) o agito de cada corpo, 0–1 (lago_floresta.gd: sobe com a velocidade, parado cai a 0)
-uniform float corpos_agito[MAX_CORPOS];
+// (Ordem ÁGUA-REAÇÃO) o agito de cada corpo, 0–1 (lago_floresta.gd: sobe com a velocidade, parado cai a 0), um por
+// componente (MAX_CORPOS = 4). Um vec4 e não um float[4]: no Compatibility o float[4] não chegou ao desenho
+// (a espuma dos corpos sumia com agito 1 — visto na 1.ª filmagem desta ordem).
+uniform vec4 corpos_agito = vec4(0.0);
 
 varying vec3 v_pos;
 

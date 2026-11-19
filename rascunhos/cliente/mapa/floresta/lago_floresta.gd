@@ -29,7 +29,8 @@ extends Node3D
 
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
 
-## Os tamanhos das listas do shader (agua.gdshader: MAX_PULSOS, MAX_RASTO, MAX_CORPOS).
+## Os tamanhos das listas do shader (agua.gdshader: MAX_PULSOS, MAX_RASTO, MAX_CORPOS). MAX_CORPOS fica em 4: o
+## agito dos corpos vai num vec4 (corpos_agito).
 const MAX_PULSOS := 24
 const MAX_RASTO := 48
 const MAX_CORPOS := 4
@@ -378,7 +379,7 @@ func _escrever(corpos: PackedVector4Array = PackedVector4Array(), agitos: Packed
 	corpos.resize(MAX_CORPOS)
 	agitos.resize(MAX_CORPOS)
 	material.set_shader_parameter("corpos", corpos)
-	material.set_shader_parameter("corpos_agito", agitos)
+	material.set_shader_parameter("corpos_agito", Vector4(agitos[0], agitos[1], agitos[2], agitos[3]))
 	material.set_shader_parameter("n_corpos", n_corpos)
 	if not _sujo:
 		return
