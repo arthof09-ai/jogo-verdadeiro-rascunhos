@@ -116,6 +116,7 @@
           "enum": ["TESTE", null]
         },
         "estatisticas": { "$ref": "#/$defs/estatisticas" },
+        "ordemDinamica": { "$ref": "#/$defs/ordemDinamica" },
         "avisoMotor": {
           "description": "Errata D-36 (N21-1; palavra do Mestre, 11/11/2026): o aviso do motor (o mesmo do evento aviso_motor, D-35) também na vista, para o Mestre que entra sem lastSeq (só recebe o snapshot, sem eventos). Os campos do soMestre do evento, enquanto a sala estiver no fim gravada com outro motor (o «Recomeçar» é recusado, 17-3); senão null. O servidor manda-o sempre a partir da ordem 22; fica fora do `required` para as vistas de antes. Só o Mestre.",
           "oneOf": [
@@ -141,6 +142,17 @@
             }
           ]
         }
+      },
+      "additionalProperties": false
+    },
+    "ordemDinamica": {
+      "description": "Ordem INICIATIVA NO SERVIDOR (19/11/2026): a ordem dinâmica da caixa do Mestre, guardada pelo servidor (sala.js estado.ordemDinamica, no journal e nos pontos do «voltar»): quem agiu, pela ordem da volta, com as entradas, as saídas (só figuras colocadas) e os atrasos. `fechada` = a ordem já se repetiu; `ultimo` = quem agiu por último (a figura na vez no modo dinâmico), ou null. Só ids e um booleano — nunca vida nem alma. Só o Mestre. Fica fora do `required` para as vistas de antes desta ordem.",
+      "type": "object",
+      "required": ["ordem", "fechada", "ultimo"],
+      "properties": {
+        "ordem": { "type": "array", "items": { "$ref": "comum.schema.json#/$defs/idOpaco" }, "uniqueItems": true },
+        "fechada": { "type": "boolean" },
+        "ultimo": { "$ref": "comum.schema.json#/$defs/idOuNull" }
       },
       "additionalProperties": false
     },

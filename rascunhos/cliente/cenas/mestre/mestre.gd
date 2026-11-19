@@ -371,6 +371,7 @@ func aplicar_vista(msg: Dictionary) -> void:
 	_arena.aplicar_vista(msg)
 	_desenhar_figuras()
 	_desenhar_ambiente()
+	ordem_turnos.carregar_do_servidor(msg.get("ordemDinamica"))  # Ordem INICIATIVA NO SERVIDOR: o servidor é o dono
 	_desenhar_ordem()
 	_aba_registo.atualizar(msg)
 	_aba_mesa.atualizar(msg)
