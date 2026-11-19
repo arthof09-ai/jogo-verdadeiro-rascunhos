@@ -2,6 +2,9 @@ extends SceneTree
 ## Bancada do LAGO (Ordem 66): os vídeos etiquetados, os renders de apoio e a medição da água do lago na arena
 ## DO JOGO (cenas/arena/arena.tscn, com o mapa da floresta) — o MANEQUIM DE PROVA (Mannequin_F do UAL2 com o
 ## ANDAR v3: testes/manequim/andar-v3.glb) entra no lago, anda na RASA com a água pelo joelho e nada na FUNDA.
+## ORDEM NADO: onde não faz pé (LagoFloresta.a_nadar) o manequim passa ao clipe de nado da casa — o «Swimming» do
+## Mixamo convertido para o esqueleto dele (testes/manequim/nado-v1.glb, clipe nadar_v1, feito por
+## testes/converter_nado.gd) — e deita-se à superfície; ao voltar a fazer pé, volta ao ANDAR v3 (mistura de 0,6 s).
 ## Corre COM render — nunca com --headless (que não desenha). Não entra no CI: precisa de GPU; a prova é para os
 ## olhos. O arranjo é de DEMONSTRAÇÃO, posto por esta bancada: o manequim e o caminho dele não são o jogo (o
 ## manequim não é personagem, não está no Estado, não ocupa casa nenhuma, e nada aqui decide regra: o que a água
@@ -23,6 +26,19 @@ extends SceneTree
 const CENA := "res://cenas/arena/arena.tscn"
 const GLB := "res://testes/manequim/andar-v3.glb"
 const GLB_SHA256 := "8413b0395d6b9f161aefe05004999ee5f605d4eb68e81a4767a81f9b56ea3491"
+## Ordem NADO: o clipe de nado da casa (o manequim com só o nadar_v1; daqui só se tira o clipe).
+const GLB_NADO := "res://testes/manequim/nado-v1.glb"
+const GLB_NADO_SHA256 := "5b75767967494201768a69a5743e155eda170e5c10d1f1baccb918d4130b5371"
+const ANIM_NADO := "nadar_v1"
+## O nadar_v1 está NO LUGAR (como o andar_v3); a fonte avançava 1,90 m × 1,1535 (a escala da anca) por ciclo de
+## 4,533 s: 0,483 m/s é a velocidade a que as braçadas não patinam.
+const VELOCIDADE_NADO_CLIPE := 0.483
+## A anca no nadar_v1 fica, em média, 0,726 m acima da base do manequim (o corpo deitado); a nadar a anca vai
+## AFUNDA_ANCA_NADO metros abaixo do nível (as costas e a nuca à tona).
+const ANCA_NO_NADO := 0.726
+const AFUNDA_ANCA_NADO := 0.08
+## A mistura entre o andar e o nado (s): o clipe e a altura do corpo passam juntos.
+const MISTURA_NADO_S := 0.6
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
 const LagoFloresta := preload("res://mapa/floresta/lago_floresta.gd")
 const DT := 1.0 / 30.0
@@ -44,6 +60,9 @@ var _lago: LagoFloresta
 var _manequim: Node3D
 var _esqueleto: Skeleton3D
 var _anim: AnimationPlayer
+var _a_nadar := false                   # Ordem NADO: o clipe de agora é o nadar_v1
+var _peso_nado := 0.0                   # 0 = de pé (andar_v3) … 1 = deitado a nadar; anda com a mistura
+var _quadros_a_nadar := 0
 var _ossos: Dictionary = {}
 var _camara: Camera3D
 var _rotulo: Label
@@ -129,6 +148,8 @@ func _comecar() -> void:
 		"rasa", "funda":
 			_guiao()
 			_colocar(0.0)
+			_estado_na_agua(-1.0)
+			_colocar(0.0)
 			_lago.seguir(_manequim, RAIO_TRONCO, _furos)
 			process_frame.connect(_quadro)
 		_:
@@ -186,6 +207,7 @@ func _por_manequim() -> void:
 	_esqueleto = _manequim.find_children("*", "Skeleton3D", true, false)[0]
 	_anim = _manequim.find_child("AnimationPlayer", true, false)
 	_anim.get_animation(ANIM).loop_mode = Animation.LOOP_LINEAR
+	_juntar_nado()
 	_anim.play(ANIM)
 	_anim.speed_scale = 0.0
 	for nome in ["pelvis", "spine_03", "thigh_l", "calf_l", "foot_l", "ball_l", "thigh_r", "calf_r", "foot_r", "ball_r"]:
@@ -193,6 +215,53 @@ func _por_manequim() -> void:
 		if int(_ossos[nome]) < 0:
 			printerr("o manequim não tem o osso ", nome)
 			_falhas += 1
+
+
+## Ordem NADO: o clipe de nado da casa entra na biblioteca do AnimationPlayer do manequim (as pistas são as
+## mesmas: Armature/Skeleton3D:<osso>). O .glb tem de ser o convertido e conferido (SHA-256).
+func _juntar_nado() -> void:
+	var sha := FileAccess.get_sha256(GLB_NADO)
+	if sha != GLB_NADO_SHA256:
+		printerr("o clipe de nado não é o nado-v1 convertido: SHA-256 ", sha)
+		_falhas += 1
+		return
+	var doc := GLTFDocument.new()
+	var estado := GLTFState.new()
+	if doc.append_from_file(GLB_NADO, estado) != OK:
+		printerr("o nado-v1 não abriu")
+		_falhas += 1
+		return
+	var cena: Node = doc.generate_scene(estado)
+	var ap: AnimationPlayer = cena.find_child("AnimationPlayer", true, false)
+	if ap == null or not ap.has_animation(ANIM_NADO):
+		printerr("o nado-v1 não traz o clipe ", ANIM_NADO)
+		_falhas += 1
+		cena.free()
+		return
+	var clipe: Animation = ap.get_animation(ANIM_NADO).duplicate(true)
+	clipe.loop_mode = Animation.LOOP_LINEAR
+	_anim.get_animation_library(&"").add_animation(ANIM_NADO, clipe)
+	cena.free()
+
+
+## Ordem NADO: escolhe o clipe pelo sítio do manequim — a nadar onde não faz pé, a andar no resto (em seco e na
+## rasa, tal como antes). `dt` < 0: troca já, sem mistura (o primeiro quadro, a medição).
+func _estado_na_agua(dt: float) -> void:
+	var p := _manequim.position
+	var nadar := LagoFloresta.a_nadar(p.x, p.z) and _anim.has_animation(ANIM_NADO)
+	if nadar != _a_nadar or dt < 0.0:
+		_a_nadar = nadar
+		var vel := _anim.speed_scale
+		_anim.play(ANIM_NADO if nadar else ANIM, 0.0 if dt < 0.0 else MISTURA_NADO_S)
+		_anim.speed_scale = vel
+	var alvo := 1.0 if _a_nadar else 0.0
+	_peso_nado = alvo if dt < 0.0 else move_toward(_peso_nado, alvo, dt / MISTURA_NADO_S)
+
+
+## A velocidade de reprodução do clipe de agora para o manequim avançar `v` m/s sem os pés (ou as braçadas)
+## patinarem.
+func _escala_do_clipe(v: float) -> float:
+	return v / (VELOCIDADE_NADO_CLIPE if _a_nadar else VELOCIDADE)
 
 
 func _osso(nome: String) -> Vector3:
@@ -207,6 +276,8 @@ func _furos() -> Array:
 	if anca.y <= nivel + 0.03:
 		var peito := _osso("spine_03")
 		var k := clampf((nivel - anca.y) / maxf(peito.y - anca.y, 0.01), 0.0, 1.0)
+		if _a_nadar:
+			k = 0.5   # Ordem NADO: deitado, o tronco fura a água a meio, entre a anca e o peito
 		var p := anca.lerp(peito, k)
 		return [Vector3(p.x, p.z, RAIO_TRONCO)]
 	var r: Array = []
@@ -291,7 +362,10 @@ func _colocar(d: float) -> void:
 	var rumo: Vector2 = q[1]
 	var y := LagoFloresta.pe_na_agua(p.x, p.y)
 	if Relevo.lago_fundura(p.x, p.y) > LagoFloresta.FLUTUA_M:
-		y += 0.022 * sin(_t * 2.3)   # a nadar, o corpo sobe e desce um nada com as braçadas
+		y += 0.022 * sin(_t * 2.3) * (1.0 - _peso_nado)   # a boiar de pé, o corpo sobe e desce um nada
+	# Ordem NADO: a nadar o corpo deita-se à tona (o nadar_v1 traz o seu próprio balanço da anca).
+	var y_nado := _lago.nivel() - AFUNDA_ANCA_NADO - ANCA_NO_NADO
+	y = lerpf(y, y_nado, smoothstep(0.0, 1.0, _peso_nado))
 	_manequim.position = Vector3(p.x, y, p.y)
 	_manequim.rotation.y = atan2(-rumo.x, -rumo.y)   # o manequim olha para −Z
 
@@ -340,9 +414,12 @@ func _quadro() -> void:
 		if not _a_andar:
 			_a_andar = true
 		var v := _velocidade(fundura)
-		_anim.speed_scale = v / VELOCIDADE
+		_estado_na_agua(DT)
+		_anim.speed_scale = _escala_do_clipe(v)
 		_andado = minf(_andado + v * DT, total)
 		_colocar(_andado)
+		if _a_nadar:
+			_quadros_a_nadar += 1
 		_fase(_nome_da_fase(fundura, imersao))
 		if _andado >= total:
 			_anim.speed_scale = 0.0
@@ -353,7 +430,7 @@ func _quadro() -> void:
 	var l1 := "ORDEM 66 · O LAGO · %s" % _titulo
 	var l2 := "%s · t = %s s · fundura debaixo da peça: %s m · água no corpo: %s m · %s" % [
 		_angulo, _n(_t, 1), _n(fundura), _n(imersao), _fase_agora]
-	var l3 := "DEMONSTRAÇÃO: manequim de prova (ANDAR v3) e câmara da bancada; a água, o relevo e a luz são os do mapa do jogo. %d anéis · %d pontos de esteira" % [
+	var l3 := "DEMONSTRAÇÃO: manequim de prova (ANDAR v3 · NADO v1, clipe %s) e câmara da bancada" % (ANIM_NADO if _a_nadar else ANIM) + "; a água, o relevo e a luz são os do mapa do jogo. %d anéis · %d pontos de esteira" % [
 		_lago.pulsos_vivos(), _lago.pontos_de_rasto()]
 	_rotulo.text = l1 + "\n" + l2 + "\n" + l3
 	# ---- o que se mede: os pés no leito (enquanto faz pé)
@@ -403,6 +480,8 @@ func _fechar() -> void:
 	var medidas := {"modo": _modo, "duracao_s": _t, "caminho_m": _comprimento(),
 		"velocidade_em_seco_m_s": VELOCIDADE, "velocidade_na_rasa_m_s": VELOCIDADE * FRACCAO_NA_RASA,
 		"velocidade_a_nadar_m_s": VELOCIDADE_A_NADAR, "fundura_maxima_no_caminho_m": fundura_max,
+		"nado": {"clipe": ANIM_NADO, "glb": GLB_NADO, "glb_sha256": GLB_NADO_SHA256, "quadros_a_nadar": _quadros_a_nadar,
+			"o_que_e": "quadros em que o manequim usou o clipe de nado (onde não faz pé: LagoFloresta.a_nadar)"},
 		"agua_no_corpo_maxima_m": imersao_max, "nivel_do_lago_m": _lago.nivel(), "lago": _lago.medidas,
 		"camara": {"posicao": [_camara.position.x, _camara.position.y, _camara.position.z], "fov": _camara.fov},
 		"chamadas_de_desenho": RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME),
@@ -459,7 +538,9 @@ func _medir() -> void:
 	_olhar(Vector3(19.9, nivel + 6.4, -11.0), Vector3(19.4, nivel, -20.3), 50.0)
 	_arco(Vector2(19.5, -21.0), 2.0, 0.0, 360.0)
 	var total := _comprimento()
-	_anim.speed_scale = VELOCIDADE_A_NADAR / VELOCIDADE
+	_colocar(0.0)
+	_estado_na_agua(-1.0)   # Ordem NADO: o arco da medição é todo na funda: a nadar
+	_anim.speed_scale = _escala_do_clipe(VELOCIDADE_A_NADAR)
 	for perfil: String in ["alto", "medio", "baixo"]:
 		_arena._perfis.aplicar(perfil)
 		var linha := {}
@@ -498,4 +579,5 @@ func _medir() -> void:
 func _passo_medir(total: float) -> void:
 	_t += 1.0 / 60.0
 	_andado = fposmod(_andado + VELOCIDADE_A_NADAR * (1.0 / 60.0), total)
+	_estado_na_agua(1.0 / 60.0)
 	_colocar(_andado)
