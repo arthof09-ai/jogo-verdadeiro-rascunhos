@@ -79,7 +79,7 @@ três corridas seguidas: ANTES (`55e5814`), DEPOIS, ANTES outra vez (para ver o 
 - Local, Godot 4.7.2 headless: abrir_scripts **104 scripts, 0 falhas**; rodar_testes **243/243** (226 + 17 novos);
   arranque da cena principal «pronto», 0 erros de script.
 - CI (Testes dos rascunhos, 9 jobs, e Sonda): **success** em `7888f85` (run 44559249404), `4785173` (44559654910),
-  `750b660` (44564134228, a ponta do código) e `4015fa5` (44567776428). O deste commit: ver «Fecho».
+  `750b660` (44564134228, a ponta do código), `4015fa5` (44567776428) e `4815a92` (44578264812; Sonda 44578264985).
 
 ## Erro registado (falso alarme, corrigido no registo)
 - **Problema:** na 1.ª folha antes/depois julguei que a espuma colada aos pés sumia no DEPOIS com agito 1, e mudei o
@@ -110,4 +110,9 @@ três corridas seguidas: ANTES (`55e5814`), DEPOIS, ANTES outra vez (para ver o 
    sobe 3 de uma vez na entrada.
 
 ## Fecho
-- Fusão na linha junta `fable/integracao-50`: ver a secção acrescentada a seguir, depois do CI deste commit.
+- CI verde no código final (`750b660`) e na ponta antes deste commit (`4815a92`). Este commit só muda este ficheiro.
+- Fusão na linha junta `fable/integracao-50` — a ÚLTIMA parte, depois das provas: **fast-forward** (a ponta da
+  linha, `e09ba96`, já estava contida neste ramo; nada a resolver). Feita depois deste commit, que fica a ponta das
+  duas; confirmada com `git ls-remote` (o resultado vai no relatório da sessão e no Diário).
+- Próximo passo: conferência do coordenador (os vídeos com GPU; o olho do Mestre sobre a força do salpico e o
+  `CALMA_S`); decisão do Mestre sobre pôr o lago ao alcance das figuras do jogo (risco 3).
