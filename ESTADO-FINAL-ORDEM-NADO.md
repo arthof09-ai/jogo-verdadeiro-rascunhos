@@ -79,7 +79,11 @@ por conferir; **PENDENTE** = por fazer. Testes e conferência são do coordenado
 
 ## CI
 - Base `c94df09`: Testes dos rascunhos **success** (run 44540268193); Sonda **success** (run 44540268169).
-- `7fe613a` e a ponta: ver a secção «Fecho».
+- `7fe613a` (código + listas): Sonda **success** (run 44548166974); Testes dos rascunhos: corrida 44548166920 (9 jobs; os
+  da conversão e do cliente — `cliente` abrir/testes, `godot-cliente`, `retoma-pc` — já verdes quando a vi).
+- `112a8e5` (ESTADO FINAL e provas): Sonda **success** (run 44548400110); Testes dos rascunhos **success** (run 44548400209).
 
 ## Fecho
+- Fusão na linha junta `fable/integracao-50`: **fast-forward** (a ponta da linha, `ba3b16c`, já estava contida neste ramo;
+  nada a resolver). Feita depois deste commit, que fica a ponta das duas; confirmada com `git ls-remote`.
 - Próximo passo: conferência do coordenador (vídeos `--modo=funda`/`rasa` com GPU; o olho do Mestre sobre o nado).
