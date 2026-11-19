@@ -151,3 +151,13 @@ O código é `5e3104f`: o ramo com a linha `fable/integracao-50` @ `58b39d9` já
   3. Se ainda estiver em `58b39d9`, que já está dentro do ramo, a fusão é um **fast-forward** da linha para a ponta do
      ramo, à maneira das ordens DADOS e NADO.
 - O resultado e a confirmação por `git ls-remote` ficam no fim deste ficheiro.
+
+### Resultado da fusão — VERIFICADO
+- `fable/integracao-50` avançou por **fast-forward** de `58b39d9` para `3b61023`, a ponta do ramo com este ESTADO e as
+  provas. Push sem forçar: `58b39d9..3b61023  HEAD -> fable/integracao-50`.
+- `git ls-remote` logo a seguir:
+  ```
+  3b6102361aa64cf4dcab49143929d6d61bd4a3d7	refs/heads/claude2/iniciativa-servidor
+  3b6102361aa64cf4dcab49143929d6d61bd4a3d7	refs/heads/fable/integracao-50
+  ```
+- Este parágrafo, só de documento, entra nos dois ramos pelo mesmo fast-forward.
