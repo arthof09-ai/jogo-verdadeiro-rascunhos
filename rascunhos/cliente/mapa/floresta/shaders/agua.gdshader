@@ -16,6 +16,8 @@
 //                 · `rasto`   a ESTEIRA: a faixa remexida e espumada por onde o corpo passou; alarga e
 //                             desfaz-se DEVAGAR (a espuma parte-se em manchas que vão fechando).
 //                   Quem os escreve é lago_floresta.gd (seguir / pulso / ponto_de_rasto), com o relógio `tempo`.
+//                 · (Ordem ÁGUA-REAÇÃO) `corpos_agito` quanto cada corpo ainda mexe a água: 1 a andar/nadar, cai
+//                   a 0 quando pára — a ondulação colada e a espuma da linha de água acalmam até sumir.
 shader_type spatial;
 render_mode unshaded, cull_back, world_vertex_coords, blend_mix, depth_draw_never;
 
@@ -47,6 +49,10 @@ uniform int n_rasto = 0;
 // corpos[i] = (x, z, raio na linha de água, vigor 0–1)
 uniform vec4 corpos[MAX_CORPOS];
 uniform int n_corpos = 0;
+// (Ordem ÁGUA-REAÇÃO) o agito de cada corpo, 0–1 (lago_floresta.gd: sobe com a velocidade, parado cai a 0), um por
+// componente (MAX_CORPOS = 4). Um vec4 e não um float[4]: no Compatibility o float[4] não chegou ao desenho
+// (a espuma dos corpos sumia com agito 1 — visto na 1.ª filmagem desta ordem).
+uniform vec4 corpos_agito = vec4(0.0);
 
 varying vec3 v_pos;
 
@@ -125,15 +131,19 @@ void fragment() {
 	float anel = 0.0;
 	for (int i = 0; i < n_corpos; i++) {
 		vec4 c = corpos[i];
+		float ag = corpos_agito[i];
+		if (ag <= 0.0) {
+			continue;
+		}
 		vec2 dv = p - c.xy;
 		float dist = length(dv) + 0.0001;
 		float x = dist - c.z;
 		float perto = exp(-max(x, 0.0) * 2.4) * step(-0.05, x);
 		float fase = x * 16.0 - t * 5.5;
-		g_reac += (dv / dist) * (-sin(fase) * perto * (0.22 + 0.55 * c.w));
-		crista += max(cos(fase), 0.0) * perto * (0.10 + 0.35 * c.w) * smoothstep(0.9, 0.2, x);
+		g_reac += (dv / dist) * (-sin(fase) * perto * (0.22 + 0.55 * c.w) * ag);
+		crista += max(cos(fase), 0.0) * perto * (0.10 + 0.35 * c.w) * smoothstep(0.9, 0.2, x) * ag;
 		float borda = smoothstep(-0.03, 0.015, x) * (1.0 - smoothstep(0.03, 0.10 + 0.10 * c.w, x));
-		anel = max(anel, borda * (0.55 + 0.45 * c.w));
+		anel = max(anel, borda * (0.55 + 0.45 * c.w) * ag);
 	}
 	// ---- a esteira: a faixa por onde o corpo passou (a distância ao fio e a idade no ponto mais perto)
 	float esteira = 0.0;

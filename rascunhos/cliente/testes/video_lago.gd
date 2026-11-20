@@ -5,6 +5,10 @@ extends SceneTree
 ## ORDEM NADO: onde não faz pé (LagoFloresta.a_nadar) o manequim passa ao clipe de nado da casa — o «Swimming» do
 ## Mixamo convertido para o esqueleto dele (testes/manequim/nado-v1.glb, clipe nadar_v1, feito por
 ## testes/converter_nado.gd) — e deita-se à superfície; ao voltar a fazer pé, volta ao ANDAR v3 (mistura de 0,6 s).
+## ORDEM ÁGUA-REAÇÃO: a água reage ao estado do manequim (o do lago: lago_floresta.gd, a partir de imersao e
+## a_nadar) — o SALPICO ao entrar e ao deitar-se a nadar, a ondulação que cresce com o movimento e o AGITO que, com
+## o manequim parado, cai até a água acalmar. A etiqueta e a medição dizem o agito e os salpicos quadro a quadro;
+## a medição de custo diz também o tempo de CPU do lago por quadro (avancar).
 ## Corre COM render — nunca com --headless (que não desenha). Não entra no CI: precisa de GPU; a prova é para os
 ## olhos. O arranjo é de DEMONSTRAÇÃO, posto por esta bancada: o manequim e o caminho dele não são o jogo (o
 ## manequim não é personagem, não está no Estado, não ocupa casa nenhuma, e nada aqui decide regra: o que a água
@@ -76,7 +80,7 @@ var _andado := 0.0
 var _a_andar := false
 var _fases: Array = []
 var _fase_agora := ""
-var _serie: Array = []                  # [[t, fundura, imersão, folga do pé ao leito, anéis, pontos de esteira]]
+var _serie: Array = []                  # [[t, fundura, imersão, folga do pé ao leito, anéis, pontos de esteira, agito, salpicos]]
 var _fim_do_caminho_t := -1.0
 var _espera_inicial := 2.5
 var _espera_final := 8.0
@@ -339,9 +343,10 @@ func _guiao() -> void:
 		# da erva da margem oeste para dentro de água, ao longo da rasa para norte (em curva) e parar lá dentro
 		_recta(Vector2(9.2, -15.6), Vector2(13.4, -17.4))
 		_arco(Vector2(13.4, -19.3), 1.9, 90.0, -90.0)
-		_espera_final = 9.0
+		_espera_final = 12.0   # ÁGUA-REAÇÃO: parado, o agito cai em 3,5 s e os anéis morrem: a água tem de acalmar no vídeo
 		_olhar(Vector3(17.6, nivel + 3.1, -11.6), Vector3(14.2, nivel + 0.25, -19.6), 50.0)
-		_capturas = [[1.0, "antes"], [5.5, "a-entrar"], [9.0, "na-rasa-1"], [13.0, "na-rasa-2"], [18.0, "na-rasa-3"], [22.0, "parado"], [27.0, "aneis-a-morrer"]]
+		_capturas = [[1.0, "antes"], [5.5, "a-entrar"], [7.2, "salpico-ao-entrar"], [8.0, "salpico-a-abrir"], [10.0, "a-vadear-1"], [13.0, "a-vadear-2"],
+			[16.2, "parou"], [18.0, "a-acalmar-1"], [20.0, "a-acalmar-2"], [23.0, "calma"], [27.0, "calma-2"]]
 	else:
 		_titulo = "(b) NADAR NA FUNDA: A ESTEIRA FORMA-SE ATRÁS DA PEÇA E DESFAZ-SE DEVAGAR"
 		_angulo = "câmara alta, da margem sul, a olhar para norte"
@@ -352,7 +357,7 @@ func _guiao() -> void:
 		_espera_inicial = 2.0
 		_espera_final = 16.0
 		_olhar(Vector3(19.9, nivel + 6.4, -11.0), Vector3(19.4, nivel, -20.3), 50.0)
-		_capturas = [[1.0, "antes"], [6.0, "a-agua-sobe"], [10.0, "nado-1"], [15.0, "nado-2"], [20.0, "nado-3"], [25.0, "nado-4"], [30.0, "a-sair"], [34.0, "esteira-a-desfazer-1"], [38.0, "esteira-a-desfazer-2"], [42.0, "esteira-a-desfazer-3"], [45.0, "esteira-desfeita"]]
+		_capturas = [[1.0, "antes"], [5.0, "a-agua-sobe"], [5.8, "salpico-ao-deitar-a-nadar"], [6.6, "salpico-a-abrir"], [10.0, "nado-1"], [15.0, "nado-2"], [20.0, "nado-3"], [25.0, "nado-4"], [30.0, "a-sair"], [34.0, "esteira-a-desfazer-1"], [38.0, "esteira-a-desfazer-2"], [42.0, "esteira-a-desfazer-3"], [45.0, "esteira-desfeita"]]
 
 
 ## Põe o manequim no ponto `d` do caminho: os pés no leito enquanto faz pé; na funda bóia com a água pelo peito.
@@ -425,13 +430,13 @@ func _quadro() -> void:
 			_anim.speed_scale = 0.0
 			_fim_do_caminho_t = _t
 	else:
-		_fase("parado dentro de água: os anéis e a esteira desfazem-se sozinhos")
+		_fase("parado dentro de água: a ondulação acalma até sumir; os anéis e a esteira desfazem-se sozinhos")
 	# ---- a etiqueta
-	var l1 := "ORDEM 66 · O LAGO · %s" % _titulo
+	var l1 := "ORDEM 66 + ÁGUA-REAÇÃO · O LAGO · %s" % _titulo
 	var l2 := "%s · t = %s s · fundura debaixo da peça: %s m · água no corpo: %s m · %s" % [
 		_angulo, _n(_t, 1), _n(fundura), _n(imersao), _fase_agora]
-	var l3 := "DEMONSTRAÇÃO: manequim de prova (ANDAR v3 · NADO v1, clipe %s) e câmara da bancada" % (ANIM_NADO if _a_nadar else ANIM) + "; a água, o relevo e a luz são os do mapa do jogo. %d anéis · %d pontos de esteira" % [
-		_lago.pulsos_vivos(), _lago.pontos_de_rasto()]
+	var l3 := "DEMONSTRAÇÃO: manequim de prova (ANDAR v3 · NADO v1, clipe %s) e câmara da bancada" % (ANIM_NADO if _a_nadar else ANIM) + "; a água, o relevo e a luz são os do mapa do jogo. %d anéis · %d pontos de esteira · agito %s · %d salpico(s)" % [
+		_lago.pulsos_vivos(), _lago.pontos_de_rasto(), _n(maxf(_lago.agito_de(_manequim), 0.0)), _lago.salpicos]
 	_rotulo.text = l1 + "\n" + l2 + "\n" + l3
 	# ---- o que se mede: os pés no leito (enquanto faz pé)
 	var folga := NAN
@@ -441,7 +446,8 @@ func _quadro() -> void:
 			var o := _osso(nome)
 			folga = minf(folga, o.y - Relevo.altura(o.x, o.z))
 	_serie.append([snappedf(_t, 0.001), snappedf(fundura, 0.001), snappedf(imersao, 0.001),
-		snappedf(folga, 0.001) if not is_nan(folga) else null, _lago.pulsos_vivos(), _lago.pontos_de_rasto()])
+		snappedf(folga, 0.001) if not is_nan(folga) else null, _lago.pulsos_vivos(), _lago.pontos_de_rasto(),
+		snappedf(maxf(_lago.agito_de(_manequim), 0.0), 0.001), _lago.salpicos])
 	while _capturas_feitas < _capturas.size() and _t >= float(_capturas[_capturas_feitas][0]):
 		_capturar(_capturas[_capturas_feitas][1])
 		_capturas_feitas += 1
@@ -485,7 +491,9 @@ func _fechar() -> void:
 		"agua_no_corpo_maxima_m": imersao_max, "nivel_do_lago_m": _lago.nivel(), "lago": _lago.medidas,
 		"camara": {"posicao": [_camara.position.x, _camara.position.y, _camara.position.z], "fov": _camara.fov},
 		"chamadas_de_desenho": RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME),
-		"serie": {"colunas": ["t_s", "fundura_m", "agua_no_corpo_m", "folga_do_pe_ao_leito_m", "aneis", "pontos_de_esteira"], "linhas": _serie}}
+		"reacao": {"salpicos": _lago.salpicos, "calma_s": LagoFloresta.CALMA_S, "salpico_aneis": LagoFloresta.SALPICO_ANEIS,
+			"o_que_e": "ÁGUA-REAÇÃO: salpicos = entradas na água + passagens a nado; agito (série) = quanto o manequim ainda mexe a água (0 = calma)"},
+		"serie": {"colunas": ["t_s", "fundura_m", "agua_no_corpo_m", "folga_do_pe_ao_leito_m", "aneis", "pontos_de_esteira", "agito", "salpicos"], "linhas": _serie}}
 	if folga_n > 0:
 		medidas["pes_no_leito"] = {"quadros": folga_n, "folga_min_m": snappedf(folga_min, 0.001), "folga_max_m": snappedf(folga_max, 0.001),
 			"folga_media_m": snappedf(folga_soma / folga_n, 0.001),
@@ -555,6 +563,7 @@ func _medir() -> void:
 			for i in 120:
 				_passo_medir(total)
 				await process_frame
+			_lago.custo_medio_us()   # zera a conta do lago
 			var t0 := Time.get_ticks_usec()
 			var chamadas := 0.0
 			var primitivas := 0.0
@@ -567,7 +576,8 @@ func _medir() -> void:
 			var ms := float(Time.get_ticks_usec() - t0) / 1000.0 / float(n)
 			linha[caso] = {"fps": snappedf(1000.0 / ms, 0.1), "ms_por_quadro": snappedf(ms, 0.001),
 				"chamadas_de_desenho": snappedf(chamadas / n, 0.1), "primitivas": int(primitivas / n),
-				"aneis": _lago.pulsos_vivos(), "pontos_de_esteira": _lago.pontos_de_rasto()}
+				"aneis": _lago.pulsos_vivos(), "pontos_de_esteira": _lago.pontos_de_rasto(),
+				"lago_cpu_us_por_quadro": snappedf(_lago.custo_medio_us(), 0.1) if _lago.has_method("custo_medio_us") else null}
 			print("[lago] medir %s · %s o lago e o manequim a nadar: %s" % [perfil, caso, JSON.stringify(linha[caso])])
 		saida["perfis"][perfil] = linha
 	var f := FileAccess.open(_saida.path_join("medicao_perfis.json"), FileAccess.WRITE)

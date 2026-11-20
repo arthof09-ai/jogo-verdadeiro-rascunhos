@@ -1,0 +1,72 @@
+{
+  "lago": {
+    "lago_area_m2": 183.0,
+    "lago_funda_m2": 20.9,
+    "lago_fundura_max_m": 2.0,
+    "lago_nivel_m": -1.522,
+    "lago_rasa_m2": 148.2,
+    "lago_tri": 2990
+  },
+  "motor": "4.7.2-stable (official)",
+  "perfis": {
+    "alto": {
+      "com": {
+        "aneis": 5,
+        "chamadas_de_desenho": 49.0,
+        "fps": 1.7,
+        "ms_por_quadro": 598.645,
+        "pontos_de_esteira": 4,
+        "primitivas": 686284
+      },
+      "sem": {
+        "aneis": 0,
+        "chamadas_de_desenho": 44.0,
+        "fps": 2.3,
+        "ms_por_quadro": 429.971,
+        "pontos_de_esteira": 0,
+        "primitivas": 654104
+      }
+    },
+    "baixo": {
+      "com": {
+        "aneis": 5,
+        "chamadas_de_desenho": 50.0,
+        "fps": 6.3,
+        "ms_por_quadro": 158.747,
+        "pontos_de_esteira": 4,
+        "primitivas": 551843
+      },
+      "sem": {
+        "aneis": 0,
+        "chamadas_de_desenho": 44.9,
+        "fps": 8.0,
+        "ms_por_quadro": 124.833,
+        "pontos_de_esteira": 0,
+        "primitivas": 519211
+      }
+    },
+    "medio": {
+      "com": {
+        "aneis": 5,
+        "chamadas_de_desenho": 49.0,
+        "fps": 3.2,
+        "ms_por_quadro": 311.394,
+        "pontos_de_esteira": 4,
+        "primitivas": 617387
+      },
+      "sem": {
+        "aneis": 0,
+        "chamadas_de_desenho": 44.2,
+        "fps": 4.2,
+        "ms_por_quadro": 236.815,
+        "pontos_de_esteira": 0,
+        "primitivas": 585657
+      }
+    }
+  },
+  "quadro": [
+    1920,
+    1080
+  ],
+  "render": "llvmpipe (LLVM 20.1.2, 256 bits)"
+}

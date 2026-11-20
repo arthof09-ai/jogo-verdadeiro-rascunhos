@@ -25,6 +25,9 @@ const OrdemTurnos := preload("res://hud/ordem_turnos.gd")
 const Retratos := preload("res://hud/retratos.gd")
 const CaixaOrdem := preload("res://hud/caixa_ordem.gd")
 const MarcadorSite := preload("res://cenas/comum/marcador_figura.gd")
+## Ordem ÁGUA-REAÇÃO: o lago reage ao estado das figuras (salpico, agito que acalma).
+const LagoFloresta := preload("res://mapa/floresta/lago_floresta.gd")
+const RelevoFloresta := preload("res://mapa/floresta/relevo_floresta.gd")
 
 var _total := 0
 var _falhas := 0
@@ -64,6 +67,9 @@ func _initialize() -> void:
 	_teste_ordem_turnos_iniciativa()
 	_teste_retratos_do_modelo()
 	_teste_caixa_ordem()
+	# Ordem ÁGUA-REAÇÃO: o lago segue nós que estão na árvore — e no _initialize a raiz ainda não está; um quadro.
+	await process_frame
+	_teste_agua_reacao()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -1063,3 +1069,106 @@ func _teste_caixa_ordem() -> void:
 	_ok(c.vez_mostrada == "" and (c.find_child("Vazia", true, false) as Label).visible, "caixa: sem acções, diz que a ordem se forma — nada inventado")
 	_ok(c.mouse_filter == Control.MOUSE_FILTER_IGNORE, "caixa: não rouba os toques ao tabuleiro")
 	c.queue_free()
+
+
+# ---------------------------------------------------------------- Ordem ÁGUA-REAÇÃO (o lago reage às figuras)
+
+## Anda `fig` de `a` para `b` (x, z) a `v` m/s, quadro a quadro (30 q/s), com os pés como o lago os põe
+## (LagoFloresta.pe_na_agua); devolve o número de quadros.
+func _agua_andar(lago, fig: Node3D, a: Vector2, b: Vector2, v: float) -> int:
+	var dt := 1.0 / 30.0
+	var n := maxi(int(ceil(a.distance_to(b) / (v * dt))), 1)
+	for i in range(1, n + 1):
+		var q := a.lerp(b, float(i) / float(n))
+		fig.position = Vector3(q.x, LagoFloresta.pe_na_agua(q.x, q.y), q.y)
+		lago.avancar(dt)
+	return n
+
+
+func _agua_parar(lago, s: float) -> void:
+	for i in int(round(s * 30.0)):
+		lago.avancar(1.0 / 30.0)
+
+
+func _teste_agua_reacao() -> void:
+	var lago = LagoFloresta.new()
+	lago.set_process(false)   # o relógio da água anda à mão
+	root.add_child(lago)
+	var fig := Node3D.new()
+	root.add_child(fig)
+	var seco := Vector2(9.2, -15.6)
+	var rasa_a := Vector2(13.4, -17.4)
+	var rasa_b := Vector2(14.6, -18.6)
+	var funda := Vector2(19.5, -21.0)
+	_ok(RelevoFloresta.lago_fundura(seco.x, seco.y) <= 0.0 and RelevoFloresta.lago_fundura(rasa_a.x, rasa_a.y) > 0.05
+		and not LagoFloresta.a_nadar(rasa_b.x, rasa_b.y) and LagoFloresta.a_nadar(funda.x, funda.y),
+		"água-reação: os sítios da prova (seco, rasa, funda) são o que dizem ser (lago_fundura / a_nadar)")
+	fig.position = Vector3(seco.x, RelevoFloresta.altura(seco.x, seco.y), seco.y)
+	lago.seguir(fig)
+	_agua_parar(lago, 0.5)
+	_ok(lago.salpicos == 0 and lago.pulsos_vivos() == 0 and is_zero_approx(lago.agito_de(fig)), "água-reação: em seco a água não reage")
+	# ---- ENTRAR: o salpico nasce no ponto de contacto, em SALPICO_ANEIS anéis
+	var dt := 1.0 / 30.0
+	var entrada := -1
+	var n := maxi(int(ceil(seco.distance_to(rasa_a) / (0.7 * dt))), 1)
+	for i in range(1, n + 1):
+		var q := seco.lerp(rasa_a, float(i) / float(n))
+		fig.position = Vector3(q.x, LagoFloresta.pe_na_agua(q.x, q.y), q.y)
+		lago.avancar(dt)
+		if entrada < 0 and lago.salpicos > 0:
+			entrada = i
+			_ok(lago.imersao(q.x, q.y, fig.position.y) > 0.02, "água-reação: o salpico nasce no quadro em que a figura entra na água")
+			_ok(lago.pulsos_vivos() == LagoFloresta.SALPICO_ANEIS, "água-reação: ao entrar, %d anéis (o salpico)" % LagoFloresta.SALPICO_ANEIS)
+			_ok(is_equal_approx(lago.agito_de(fig), 1.0), "água-reação: ao entrar, o agito vai a 1")
+	_ok(entrada > 0 and lago.salpicos == 1, "água-reação: uma entrada, um salpico")
+	# ---- VADEAR: a ondulação acompanha o movimento (proporcional à velocidade)
+	_agua_andar(lago, fig, rasa_a, rasa_b, 0.7)
+	_ok(lago.agito_de(fig) > 0.99 and lago.pulsos_vivos() > LagoFloresta.SALPICO_ANEIS, "água-reação: a vadear, agito 1 e anéis pelo caminho")
+	_agua_parar(lago, LagoFloresta.CALMA_S + 0.2)
+	_agua_andar(lago, fig, rasa_b, rasa_a, 0.09)
+	var lento: float = lago.agito_de(fig)
+	_ok(lento > 0.1 and lento < 0.3, "água-reação: devagar (0,09 m/s) o agito é pequeno (%s): cresce com a velocidade" % snappedf(lento, 0.01))
+	# ---- PARADA: a ondulação acalma até sumir
+	_agua_andar(lago, fig, rasa_a, rasa_b, 0.7)
+	_agua_parar(lago, LagoFloresta.CALMA_S * 0.5)
+	var meio: float = lago.agito_de(fig)
+	_ok(meio > 0.4 and meio < 0.6, "água-reação: parada há %s s, o agito vai a meio (%s)" % [LagoFloresta.CALMA_S * 0.5, snappedf(meio, 0.01)])
+	_agua_parar(lago, LagoFloresta.CALMA_S * 0.5 + 0.1)
+	_ok(is_zero_approx(lago.agito_de(fig)), "água-reação: parada há mais de %s s, o agito é 0 (a água acalmou)" % LagoFloresta.CALMA_S)
+	_agua_parar(lago, LagoFloresta.VIDA_PULSO_S + 0.5)
+	_ok(lago.pulsos_vivos() == 0, "água-reação: parada, os anéis morrem e não nascem outros (só fica o vento)")
+	_ok(lago.salpicos == 1, "água-reação: andar e parar dentro de água não salpica")
+	# ---- NADAR: ao passar a nadar (LagoFloresta.a_nadar, a fronteira do NADO), outro salpico
+	var antes_nado: int = lago.salpicos
+	var no_salpico := Vector2.INF
+	n = maxi(int(ceil(rasa_b.distance_to(funda) / (0.6 * dt))), 1)
+	for i in range(1, n + 1):
+		var q := rasa_b.lerp(funda, float(i) / float(n))
+		fig.position = Vector3(q.x, LagoFloresta.pe_na_agua(q.x, q.y), q.y)
+		lago.avancar(dt)
+		if no_salpico == Vector2.INF and lago.salpicos > antes_nado:
+			no_salpico = q
+	_ok(lago.salpicos == antes_nado + 1 and no_salpico != Vector2.INF and LagoFloresta.a_nadar(no_salpico.x, no_salpico.y),
+		"água-reação: ao passar a nadar (a_nadar do NADO), um salpico — e só um")
+	_ok(lago.agito_de(fig) > 0.99, "água-reação: a nadar, agito 1")
+	# ---- quem já começa dentro de água não entrou: não salpica; e fora da água o agito é 0
+	var outra := Node3D.new()
+	root.add_child(outra)
+	outra.position = Vector3(funda.x, LagoFloresta.pe_na_agua(funda.x, funda.y), funda.y)
+	var s0: int = lago.salpicos
+	lago.seguir(outra)
+	_agua_parar(lago, 0.5)
+	_ok(lago.salpicos == s0 and is_zero_approx(lago.agito_de(outra)), "água-reação: posta já dentro de água (parada) não salpica e a água fica calma")
+	fig.position = Vector3(seco.x, RelevoFloresta.altura(seco.x, seco.y), seco.y)
+	_agua_parar(lago, 0.1)
+	_ok(is_zero_approx(lago.agito_de(fig)), "água-reação: fora da água o agito é 0")
+	# ---- o shader recebe o agito de cada corpo
+	var sh := load("res://mapa/floresta/shaders/agua.gdshader") as Shader
+	var tem := false
+	for u: Dictionary in sh.get_shader_uniform_list():
+		if String(u["name"]) == "corpos_agito":
+			tem = true
+	_ok(tem, "água-reação: o shader da água tem o uniforme corpos_agito")
+	lago.queue_free()
+	fig.queue_free()
+	outra.queue_free()

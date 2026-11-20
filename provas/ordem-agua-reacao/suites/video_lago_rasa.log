@@ -1,0 +1,32 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+Movie Maker mode enabled, recording movie in 1920×1080 @ 30 FPS...
+== bancada do lago · modo rasa · saída /tmp/claude-0/depois · render: llvmpipe (LLVM 20.1.2, 256 bits) ==
+[floresta] pronta em 2255 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":165828,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":2255,"casas":2500,"casas_bloqueadas":173,"casas_livres":2327,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":164824,"hastes_espiga":1521,"hastes_flor":843,"hastes_junco":65,"hastes_tri":43522,"lago_area_m2":183.0,"lago_estrato_tirado":5,"lago_funda_m2":20.9,"lago_fundura_max_m":2.0,"lago_nivel_m":-1.522,"lago_rasa_m2":148.2,"lago_tri":2990,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":805050,"relva_tufos":44725,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2004,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+pronto
+[lago] t=0,0 · antes: a superfície só com o vento
+[lago] captura rasa_t01s_antes.jpg
+[lago] t=2,5 · em seco, na margem
+[lago] captura rasa_t06s_a-entrar.jpg
+[lago] t=6,8 · a entrar: a água pelo tornozelo
+[lago] captura rasa_t07s_salpico-ao-entrar.jpg
+[lago] t=7,5 · na RASA: a água pelo joelho, anéis à volta das pernas e pelo caminho
+[lago] captura rasa_t08s_salpico-a-abrir.jpg
+[lago] captura rasa_t10s_a-vadear-1.jpg
+[lago] captura rasa_t13s_a-vadear-2.jpg
+[lago] t=15,8 · parado dentro de água: a ondulação acalma até sumir; os anéis e a esteira desfazem-se sozinhos
+[lago] captura rasa_t16s_parou.jpg
+[lago] captura rasa_t18s_a-acalmar-1.jpg
+[lago] captura rasa_t20s_a-acalmar-2.jpg
+[lago] captura rasa_t23s_calma.jpg
+[lago] captura rasa_t27s_calma-2.jpg
+[lago] fim rasa: 27,7 s · {"folga_max_m":0.09,"folga_media_m":0.008,"folga_min_m":-0.065,"o_que_e":"a altura do osso da planta do pé mais baixo acima do leito, quadro a quadro, enquanto faz pé","quadros":758}
+--------------------------------------------------------------------------------
+Done recording movie at path: /tmp/claude-0/depois/rasa.ogv
+835 frames at 30 FPS (movie length: 00:00:27:25), recorded in 00:11:42 (3% of real-time speed).
+CPU render time: 606.25 seconds (average: 726.05 ms/frame)
+GPU render time: 598.55 seconds (average: 716.83 ms/frame)
+Encoding time: 34.50 seconds (average: 41.32 ms/frame)
+--------------------------------------------------------------------------------

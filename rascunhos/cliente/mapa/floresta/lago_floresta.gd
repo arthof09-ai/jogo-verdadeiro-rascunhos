@@ -18,10 +18,19 @@ extends Node3D
 ##   pe_na_agua(x, z)           a altura da base de uma figura em (x, z): o leito enquanto se faz pé; onde a
 ##                              água passa de FLUTUA_M, a figura bóia com a água pelo peito (não se enterra);
 ##   a_nadar(x, z)              (Ordem NADO) se a figura em (x, z) já não faz pé e passa ao clipe de nado.
+##
+## ORDEM ÁGUA-REAÇÃO (v2 da reacção): a água responde ao ESTADO de cada figura seguida, lido das mesmas funções
+## de cima (imersao para «dentro de água», a_nadar para «a nadar») — não há outra detecção de água:
+##   · ao ENTRAR na água, e outra vez ao passar a NADAR, um SALPICO: SALPICO_ANEIS anéis que nascem no ponto de
+##     contacto, uns atrás dos outros, e se abrem;
+##   · a MEXER-SE (vadear ou nadar) a ondulação colada ao corpo, os anéis do caminho e a esteira crescem com a
+##     velocidade; PARADA, o AGITO da figura cai a direito até 0 em CALMA_S segundos — a ondulação, a espuma
+##     da linha de água e os anéis fracos de quem está parado acalmam até sumir (fica só o vento).
 
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
 
-## Os tamanhos das listas do shader (agua.gdshader: MAX_PULSOS, MAX_RASTO, MAX_CORPOS).
+## Os tamanhos das listas do shader (agua.gdshader: MAX_PULSOS, MAX_RASTO, MAX_CORPOS). MAX_CORPOS fica em 4: o
+## agito dos corpos vai num vec4 (corpos_agito).
 const MAX_PULSOS := 24
 const MAX_RASTO := 48
 const MAX_CORPOS := 4
@@ -36,6 +45,13 @@ const PASSO_PULSO_M := 0.42
 const PASSO_RASTO_M := 0.30
 ## Parado dentro de água, um corpo ainda mexe um pouco: um anel fraco de tantos em tantos segundos.
 const PULSO_PARADO_S := 1.6
+## ORDEM ÁGUA-REAÇÃO — o salpico ao entrar na água (e ao passar a nadar): tantos anéis, com este intervalo (s);
+## e o tempo que o agito de uma figura parada leva a cair de 1 a 0 (s).
+const SALPICO_ANEIS := 3
+const SALPICO_INTERVALO_S := 0.24
+const CALMA_S := 3.5
+## A velocidade (m/s) a partir da qual o agito de quem anda na água é o máximo (abaixo, cresce com ela).
+const AGITO_VELOC_M_S := 0.45
 ## Quanto tempo vivem (s): o shader já os apagou antes disto.
 const VIDA_PULSO_S := 7.0
 const VIDA_RASTO_S := 14.5
@@ -48,7 +64,11 @@ var medidas: Dictionary = {}
 
 var _pulsos: Array[Vector4] = []
 var _rasto: Array[Vector4] = []
-var _seguidos: Array = []   # [{no, raio, pontos, antes, andado_p, andado_r, parado, dentro, lado}]
+var _seguidos: Array = []   # [{no, raio, pontos, antes, andado_p, andado_r, parado, dentro, lado, vigor, agito, nada}]
+## ORDEM ÁGUA-REAÇÃO: quantos salpicos houve (entradas na água e passagens a nado) e o custo do avancar() (µs).
+var salpicos := 0
+var _custo_us := 0
+var _custo_n := 0
 var _sujo := true
 
 
@@ -171,14 +191,24 @@ static func a_nadar(x: float, z: float, flutua: float = FLUTUA_M) -> bool:
 
 # ------------------------------------------------------------------ a reacção
 
-## Um anel solto em (x, z), de força 0–1.
-func pulso(x: float, z: float, forca: float) -> void:
+## Um anel solto em (x, z), de força 0–1. `atraso` (s): o anel nasce daqui a tanto (o salpico põe vários).
+func pulso(x: float, z: float, forca: float, atraso: float = 0.0) -> void:
 	if Relevo.lago_fundura(x, z) <= 0.0 or forca <= 0.0:
 		return
-	_pulsos.append(Vector4(x, z, tempo, clampf(forca, 0.0, 1.0)))
+	_pulsos.append(Vector4(x, z, tempo + maxf(atraso, 0.0), clampf(forca, 0.0, 1.0)))
 	while _pulsos.size() > MAX_PULSOS:
 		_pulsos.pop_front()
 	_sujo = true
+
+
+## ORDEM ÁGUA-REAÇÃO — um SALPICO no ponto de contacto (x, z): SALPICO_ANEIS anéis, o primeiro já, os outros
+## a SALPICO_INTERVALO_S uns dos outros e cada um mais fraco; abrem-se como os outros anéis (o shader).
+func salpico(x: float, z: float, forca: float) -> void:
+	if Relevo.lago_fundura(x, z) <= 0.0 or forca <= 0.0:
+		return
+	for i in SALPICO_ANEIS:
+		pulso(x, z, forca * pow(0.72, i), SALPICO_INTERVALO_S * i)
+	salpicos += 1
 
 
 ## Um ponto da esteira em (x, z), de força 0–1 (0 = o rasto leve de quem anda na rasa; 1 = a esteira de quem
@@ -197,7 +227,7 @@ func ponto_de_rasto(x: float, z: float, forca: float, novo_fio: bool = false) ->
 func seguir(no: Node3D, raio: float = 0.28, pontos: Callable = Callable()) -> void:
 	deixar(no)
 	_seguidos.append({"no": no, "raio": raio, "pontos": pontos, "antes": null, "andado_p": 0.0, "andado_r": 0.0,
-		"parado": 0.0, "dentro": false, "lado": 1.0, "vigor": 0.0})
+		"parado": 0.0, "dentro": false, "lado": 1.0, "vigor": 0.0, "agito": 0.0, "nada": false})
 
 
 func deixar(no: Node3D) -> void:
@@ -227,14 +257,33 @@ func pontos_de_rasto() -> int:
 	return _rasto.size()
 
 
+## ORDEM ÁGUA-REAÇÃO: o agito de `no` agora (0 = a água à volta dele está calma … 1 = a mexê-la de todo); -1 se
+## não é seguido. Fora de água é 0.
+func agito_de(no: Node3D) -> float:
+	for s: Dictionary in _seguidos:
+		if s["no"] == no:
+			return float(s["agito"])
+	return -1.0
+
+
+## O custo médio do avancar() desde o último pedido (µs por quadro; zera a conta).
+func custo_medio_us() -> float:
+	var m := float(_custo_us) / float(maxi(_custo_n, 1))
+	_custo_us = 0
+	_custo_n = 0
+	return m
+
+
 func _process(delta: float) -> void:
 	avancar(delta)
 
 
 ## Um passo do relógio da água (o _process chama-o; as provas sem janela também).
 func avancar(delta: float) -> void:
+	var t0 := Time.get_ticks_usec()
 	tempo += delta
 	var corpos := PackedVector4Array()
+	var agitos := PackedFloat32Array()
 	for i in range(_seguidos.size() - 1, -1, -1):
 		var s: Dictionary = _seguidos[i]
 		var no: Node3D = s["no"]
@@ -248,6 +297,8 @@ func avancar(delta: float) -> void:
 		if imerso <= 0.02:
 			s["dentro"] = false
 			s["vigor"] = 0.0
+			s["agito"] = 0.0
+			s["nada"] = false
 			continue
 		var passo := 0.0
 		var rumo := Vector2.ZERO
@@ -259,6 +310,10 @@ func avancar(delta: float) -> void:
 		var veloc := passo / maxf(delta, 0.0001)
 		var vigor := clampf(veloc / 1.2, 0.0, 1.0)
 		s["vigor"] = lerpf(float(s["vigor"]), vigor, clampf(delta * 6.0, 0.0, 1.0))
+		# ÁGUA-REAÇÃO: o agito sobe logo com a velocidade e, parado, cai a direito até 0 em CALMA_S
+		var alvo := clampf(veloc / AGITO_VELOC_M_S, 0.0, 1.0)
+		s["agito"] = maxf(alvo, float(s["agito"]) - delta / CALMA_S)
+		var nada := a_nadar(p.x, p.z)
 		# quanto do corpo vai na água: 0 = pelo tornozelo … 1 = pelo peito (a esteira cresce com isto)
 		var fundo := clampf((imerso - 0.15) / (FLUTUA_M - 0.15), 0.0, 1.0)
 		# os sítios onde o corpo fura a superfície
@@ -271,12 +326,24 @@ func avancar(delta: float) -> void:
 		for f: Vector3 in furos:
 			if corpos.size() < MAX_CORPOS:
 				corpos.append(Vector4(f.x, f.y, f.z, float(s["vigor"])))
+				agitos.append(float(s["agito"]))
 		# os anéis: um por cada PASSO_PULSO_M andado (alternando os furos: um pé, o outro), ou um fraco, parado
 		s["andado_p"] = float(s["andado_p"]) + passo
 		s["andado_r"] = float(s["andado_r"]) + passo
 		s["parado"] = float(s["parado"]) + delta
 		var novo: bool = not s["dentro"]
-		if float(s["andado_p"]) >= PASSO_PULSO_M or novo:
+		# ÁGUA-REAÇÃO: o salpico — ao entrar na água (no primeiro furo: o pé que entra) e ao passar a nadar (o tronco
+		# deita-se na água); a força cresce com a velocidade e com quanto do corpo vai dentro. Quem já começa dentro
+		# de água (o primeiro quadro em que é seguido) não entrou: não salpica.
+		var entrou: bool = novo and antes != null
+		if entrou or (nada and not bool(s["nada"]) and not novo):
+			var fs: Vector3 = furos[0]
+			salpico(fs.x, fs.y, (0.85 if nada else 0.55 + 0.35 * fundo) * (0.55 + 0.45 * clampf(veloc / 1.2, 0.0, 1.0)))
+			s["agito"] = 1.0
+			s["andado_p"] = 0.0
+			s["parado"] = 0.0
+		s["nada"] = nada
+		if float(s["andado_p"]) >= PASSO_PULSO_M:
 			s["andado_p"] = 0.0
 			s["parado"] = 0.0
 			s["lado"] = -float(s["lado"])
@@ -284,7 +351,9 @@ func avancar(delta: float) -> void:
 			pulso(f.x, f.y, (0.50 + 0.40 * fundo) * (0.45 + 0.55 * vigor))
 		elif float(s["parado"]) >= PULSO_PARADO_S:
 			s["parado"] = 0.0
-			pulso(p.x, p.z, 0.22)
+			# ÁGUA-REAÇÃO: parado, o anel fraco enfraquece com o agito e deixa de nascer quando a água acalma
+			if float(s["agito"]) > 0.05:
+				pulso(p.x, p.z, 0.22 * float(s["agito"]))
 		# a esteira: um ponto por cada PASSO_RASTO_M (o fio recomeça quando o corpo entra na água)
 		if float(s["andado_r"]) >= PASSO_RASTO_M or novo:
 			s["andado_r"] = 0.0
@@ -297,16 +366,20 @@ func avancar(delta: float) -> void:
 		_rasto.pop_front()
 	if _rasto.size() == 1 and tempo - _rasto[0].z > VIDA_RASTO_S:
 		_rasto.clear()
-	_escrever(corpos)
+	_escrever(corpos, agitos)
+	_custo_us += Time.get_ticks_usec() - t0
+	_custo_n += 1
 
 
-func _escrever(corpos: PackedVector4Array = PackedVector4Array()) -> void:
+func _escrever(corpos: PackedVector4Array = PackedVector4Array(), agitos: PackedFloat32Array = PackedFloat32Array()) -> void:
 	if material == null:
 		return
 	material.set_shader_parameter("tempo", tempo)
 	var n_corpos := corpos.size()
 	corpos.resize(MAX_CORPOS)
+	agitos.resize(MAX_CORPOS)
 	material.set_shader_parameter("corpos", corpos)
+	material.set_shader_parameter("corpos_agito", Vector4(agitos[0], agitos[1], agitos[2], agitos[3]))
 	material.set_shader_parameter("n_corpos", n_corpos)
 	if not _sujo:
 		return
