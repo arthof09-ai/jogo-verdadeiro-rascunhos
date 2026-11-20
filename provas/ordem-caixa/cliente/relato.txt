@@ -1,0 +1,40 @@
+== Ordem CAIXA-PERSISTENTE — o Mestre sai e volta a entrar a meio de uma batalha de bancada ==
+servidor ws://127.0.0.1:8791/ws · render llvmpipe (LLVM 20.1.2, 256 bits)
+== 0. batalha de bancada (IA de bancada, lugares próprios) ==
+  bancada: Arqueira de Bancada → {"destino":{"x":11,"y":10},"tipo":"mover"} (APLICADA)
+  bancada: Arqueira de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Lobo de Bancada → {"destino":{"x":12,"y":10},"tipo":"mover"} (APLICADA)
+  bancada: Lobo de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Espadachim de Bancada → {"destino":{"x":11,"y":8},"tipo":"mover"} (APLICADA)
+  bancada: Espadachim de Bancada → {"tipo":"encerrar"} (APLICADA)
+  a batalha a meio: fase combate, rodada 1.0, vez de f1c67641aa5cdfe28, ordem dinâmica ["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"]
+  ok    batalha de bancada a meio: em combate e com a ordem dinâmica formada no servidor (≥ 2 figuras)
+== 1. o Mestre entra pelo ecrã a sério ==
+  ok    1: o ecrã do Mestre abriu a meio da batalha (fase pausa, rodada 1.0)
+  ok    1: a caixa vem como o servidor a guarda (omissão: ligada, dinâmico) — caixa_ligada=true modo=dinamico visível=true (pedido: true, dinamico)
+  ok    captura 1-entrou.png (1280×720)
+== 2. «Modo iniciativa» ==
+  ok    2: o servidor guardou a escolha (MASTER_VIEW caixaMestre = ligada, iniciativa)
+  ok    captura 2-iniciativa.png (1280×720)
+== 3. sai e volta a entrar ==
+  ok    3: o Mestre saiu (lugar esquecido no aparelho, ecrã fechado)
+  ok    3: o ecrã do Mestre abriu a meio da batalha (fase pausa, rodada 1.0)
+  ok    3: a caixa reconstruiu-se com a escolha anterior — caixa_ligada=true modo=iniciativa visível=true (pedido: true, iniciativa)
+  ok    3: a ordem dinâmica é a mesma depois de reentrar ["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"]
+  ok    captura 3-reentrou-iniciativa.png (1280×720)
+== 4. desliga a caixa, sai e volta a entrar ==
+  ok    4: o servidor guardou a caixa desligada
+  ok    4: o Mestre saiu (lugar esquecido no aparelho, ecrã fechado)
+  ok    4: o ecrã do Mestre abriu a meio da batalha (fase pausa, rodada 1.0)
+  ok    4: a caixa voltou desligada (não aparece) — caixa_ligada=false modo=iniciativa visível=false (pedido: false, iniciativa)
+  ok    captura 4-reentrou-desligada.png (1280×720)
+== 5. volta a ligar e repõe o modo dinâmico ==
+  ok    5: caixa ligada no servidor
+  ok    5: modo dinâmico no servidor
+  ok    5: caixa_ligada=true modo=dinamico visível=true (pedido: true, dinamico)
+  ok    captura 5-religada.png (1280×720)
+  ok    nenhum comando do Mestre foi recusado []
+  ok    a heroína f20af3254ba898103 nunca recebeu caixaMestre
+  ok    a heroína ff2acf60bd672e76e nunca recebeu caixaMestre
+
+prova da caixa (cliente): 23 de 23 verificações passaram.
