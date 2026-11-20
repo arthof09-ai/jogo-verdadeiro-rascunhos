@@ -52,7 +52,7 @@ const CASOS := [
 	[33, 27, 2.0, "auto"],
 	[44, 20, 1.5, "auto"],
 	[50, 50, 1.5, "auto"],
-	[50, 50, 1.0, "auto"],
+	[50, 50, 1.0, "auto"],  # pedida 50×50 @ 1 m → servida 75×75 @ 1 m (a grelha-mapa a 1 m; ORDEM PROVAS-MAPA-CORRECÕES)
 	[37, 37, 2.0, "auto"],
 	# Ordem 59: grelhas que tocam a FRONTEIRA DO MAPA só nalguns lados (a 50 × 50 de 1,5 m e a 37 × 37 de 2 m, acima,
 	# tocam nos quatro).
@@ -148,9 +148,23 @@ func _correr() -> void:
 		var lh: int = caso[1]
 		var cm: float = caso[2]
 		var pedidas: String = caso[3]
+		# ORDEM PROVAS-MAPA-CORRECÕES: a arena abre a grelha que o SERVIDOR devolve, não a pedida. Desde a MAPA-JOGÁVEL
+		# a sala nasce 50×50 @ 1,5 m (= o mapa) e mudar para 1 m dá a grelha-mapa 75×75 @ 1 m (o sítio no mapa fica
+		# guardado; regra §0, PROPOSTA ao Mestre): o caso [50, 50, 1.0] é servido como 75×75 @ 1 m. A pedida e a
+		# servida vão para o relatório («pedida»).
+		var lw_pedida := lw
+		var lh_pedida := lh
 		if pedidas == "auto":
-			pedidas = figuras_auto(juizo_do_servidor(lw, lh, cm, ""), lw, lh)
-		var sv := juizo_do_servidor(lw, lh, cm, pedidas)
+			var sv0 := juizo_do_servidor(lw, lh, cm, "")
+			if sv0.get("juizo") is Dictionary:
+				lw = int(sv0["juizo"]["largura"])
+				lh = int(sv0["juizo"]["altura"])
+			pedidas = figuras_auto(sv0, lw, lh)
+		var sv := juizo_do_servidor(lw_pedida, lh_pedida, cm, pedidas)
+		if sv.get("juizo") is Dictionary:
+			lw = int(sv["juizo"]["largura"])
+			lh = int(sv["juizo"]["altura"])
+		print("  ..    pedida %d×%d @ %s m → o servidor serve %d×%d" % [lw_pedida, lh_pedida, cm, lw, lh])
 		if sv.is_empty() or sv.get("juizo") == null:
 			_ok(false, "grelha %d×%d de %s m: o servidor não devolveu juízo do terreno" % [lw, lh, cm])
 			continue
@@ -330,7 +344,8 @@ func _correr() -> void:
 				"alturaM": casa_srv["alturaM"]}, "cliente": {"alturaM": arena.centro_casa(Vector2i(int(casa_srv["x"]), int(casa_srv["y"]))).y}})
 		_ok(marcos_ok == marcos_dentro, "marcos do mapa na grelha (que bloqueiam): %d, %d com a casa bloqueada no servidor e o mesmo nome" % [marcos_dentro, marcos_ok])
 
-		relatorio.append({"grelha": {"largura": lw, "altura": lh, "casaM": cm, "origemM": [arena.origem.x, arena.origem.y]},
+		relatorio.append({"pedida": {"largura": lw_pedida, "altura": lh_pedida, "casaM": cm},
+			"grelha": {"largura": lw, "altura": lh, "casaM": cm, "origemM": [arena.origem.x, arena.origem.y]},
 			"casasDentroZonaLivre": n_casas[0], "casasFora": n_casas[1],
 			"desvioMaxAlturaM": {"dentro": d_alt[0], "fora": d_alt[1]}, "desvioMaxPeM": {"dentro": d_pe[0], "fora": d_pe[1]},
 			"desvioMaxFigurasM": d_fig, "casasBloqueadas": bloq_srv, "juizoDiferente": difere_bloq, "motivosDiferentes": difere_motivo,

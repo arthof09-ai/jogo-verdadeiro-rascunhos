@@ -5,6 +5,11 @@
  "zonaLivre": "x e z em [−15, 15] m (a grelha 20 × 20 de 1,5 m da Ordem 42)",
  "grelhas": [
   {
+   "pedida": {
+    "largura": 30,
+    "altura": 30,
+    "casaM": 1.5
+   },
    "grelha": {
     "largura": 30,
     "altura": 30,
@@ -377,6 +382,11 @@
    "casas": []
   },
   {
+   "pedida": {
+    "largura": 30,
+    "altura": 30,
+    "casaM": 2.0
+   },
    "grelha": {
     "largura": 30,
     "altura": 30,
@@ -631,6 +641,11 @@
    "casas": []
   },
   {
+   "pedida": {
+    "largura": 20,
+    "altura": 20,
+    "casaM": 1.5
+   },
    "grelha": {
     "largura": 20,
     "altura": 20,
@@ -800,6 +815,11 @@
    "casas": []
   },
   {
+   "pedida": {
+    "largura": 25,
+    "altura": 25,
+    "casaM": 1.5
+   },
    "grelha": {
     "largura": 25,
     "altura": 25,
@@ -15386,6 +15406,11 @@
    ]
   },
   {
+   "pedida": {
+    "largura": 25,
+    "altura": 25,
+    "casaM": 1.0
+   },
    "grelha": {
     "largura": 25,
     "altura": 25,
@@ -29931,6 +29956,11 @@
    ]
   },
   {
+   "pedida": {
+    "largura": 25,
+    "altura": 25,
+    "casaM": 2.0
+   },
    "grelha": {
     "largura": 25,
     "altura": 25,
@@ -44723,6 +44753,11 @@
    ]
   },
   {
+   "pedida": {
+    "largura": 21,
+    "altura": 17,
+    "casaM": 1.0
+   },
    "grelha": {
     "largura": 21,
     "altura": 17,
@@ -44892,6 +44927,11 @@
    "casas": []
   },
   {
+   "pedida": {
+    "largura": 33,
+    "altura": 27,
+    "casaM": 2.0
+   },
    "grelha": {
     "largura": 33,
     "altura": 27,
@@ -45385,6 +45425,11 @@
    "casas": []
   },
   {
+   "pedida": {
+    "largura": 44,
+    "altura": 20,
+    "casaM": 1.5
+   },
    "grelha": {
     "largura": 44,
     "altura": 20,
@@ -45653,6 +45698,11 @@
    "casas": []
   },
   {
+   "pedida": {
+    "largura": 50,
+    "altura": 50,
+    "casaM": 1.5
+   },
    "grelha": {
     "largura": 50,
     "altura": 50,
@@ -46458,42 +46508,52 @@
    "casas": []
   },
   {
-   "grelha": {
+   "pedida": {
     "largura": 50,
     "altura": 50,
+    "casaM": 1.0
+   },
+   "grelha": {
+    "largura": 75,
+    "altura": 75,
     "casaM": 1.0,
     "origemM": [
-     -25.0,
-     -25.0
+     -37.5,
+     -37.5
     ]
    },
-   "casasDentroZonaLivre": 900,
-   "casasFora": 4725,
+   "casasDentroZonaLivre": 841,
+   "casasFora": 4784,
    "desvioMaxAlturaM": {
-    "dentro": 3.0179594457149506,
-    "fora": 4.432319238781929
+    "dentro": 0.0,
+    "fora": 0.0
    },
    "desvioMaxPeM": {
-    "dentro": 3.01914581656456,
-    "fora": 4.431283436715603
+    "dentro": 0.0,
+    "fora": 0.0
    },
-   "desvioMaxFigurasM": 3.4736284017562866,
+   "desvioMaxFigurasM": 0.0,
    "casasBloqueadas": 156,
-   "juizoDiferente": 336,
-   "motivosDiferentes": 184,
-   "coberturaAfirmadaDiferente": 631,
+   "juizoDiferente": 0,
+   "motivosDiferentes": 0,
+   "coberturaAfirmadaDiferente": 0,
    "coberturaNaoAfirmada": 0,
    "coberturaNaoAfirmadaClienteDifereDaReferencia": 0,
    "faixaFronteira": {
-    "lados": [],
-    "folgasM": [
-     12.5,
-     12.5,
-     12.5,
-     12.5
+    "lados": [
+     "oeste",
+     "este",
+     "norte",
+     "sul"
     ],
-    "casas": 0,
-    "coberturaAfirmada": 0,
+    "folgasM": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "casas": 441,
+    "coberturaAfirmada": 441,
     "coberturaAfirmadaDiferente": 0,
     "coberturaNaoAfirmada": 0,
     "coberturaNaoAfirmadaClienteDifereDaReferencia": 0
@@ -47281,127 +47341,127 @@
     }
    ],
    "moverOferecidas": 110,
-   "moverBloqueadas": 15,
+   "moverBloqueadas": 0,
    "figuras": [
     {
      "id": "fba2529d0fcfbedbf",
      "x": 3,
      "y": 3,
      "zona": "fora",
-     "desenhadaY": 2.4794554710388184,
+     "desenhadaY": -0.5575702786445618,
      "servidorPeM": -0.5575702786445618,
-     "desvioM": 3.03702574968338,
-     "encostaGraus": 2.2915399699716703,
-     "enterraM": 0.00017648961214367098,
-     "flutuaM": 0.00017648961214367098
+     "desvioM": 0.0,
+     "encostaGraus": 0.7331342626905645,
+     "enterraM": 0.001568758449904284,
+     "flutuaM": 0.001568758449904284
     },
     {
      "id": "f0eca9c7df5e7493f",
      "x": 0,
      "y": 0,
      "zona": "fora",
-     "desenhadaY": 1.0591986179351807,
+     "desenhadaY": -0.3959192633628845,
      "servidorPeM": -0.3959192633628845,
-     "desvioM": 1.4551178812980652,
-     "encostaGraus": 34.16052131855103,
-     "enterraM": 0.001583903582416668,
-     "flutuaM": 0.001583903582416668
+     "desvioM": 0.0,
+     "encostaGraus": 3.465067275969398,
+     "enterraM": 0.0006681611015251776,
+     "flutuaM": 0.0006681611015251776
     },
     {
      "id": "f84d44cbfa536e9de",
-     "x": 49,
+     "x": 74,
      "y": 0,
      "zona": "fora",
-     "desenhadaY": -1.892379879951477,
-     "servidorPeM": -0.9392326474189758,
-     "desvioM": 0.9531472325325012,
-     "encostaGraus": 5.583294131497968,
-     "enterraM": 0.0035379193259964525,
-     "flutuaM": 0.0035379193259964525
+     "desenhadaY": -1.1499601602554321,
+     "servidorPeM": -1.149960160255432,
+     "desvioM": 0.0,
+     "encostaGraus": 5.151593713378738,
+     "enterraM": 0.001181441620895507,
+     "flutuaM": 0.001181441620895507
     },
     {
      "id": "f79afaed802e9f4a2",
      "x": 0,
-     "y": 49,
+     "y": 74,
      "zona": "fora",
-     "desenhadaY": 2.529582977294922,
-     "servidorPeM": 0.17335247993469238,
-     "desvioM": 2.3562304973602295,
-     "encostaGraus": 12.552709034597807,
-     "enterraM": 0.013518087424743142,
-     "flutuaM": 0.013518087424743142
+     "desenhadaY": 1.3423112630844116,
+     "servidorPeM": 1.3423112630844116,
+     "desvioM": 0.0,
+     "encostaGraus": 3.7884405188093604,
+     "enterraM": 0.000814073162103579,
+     "flutuaM": 0.000814073162103579
     },
     {
      "id": "fb3c8f91c318ec249",
-     "x": 49,
-     "y": 49,
+     "x": 74,
+     "y": 74,
      "zona": "fora",
-     "desenhadaY": 4.0496954917907715,
-     "servidorPeM": 0.5760670900344849,
-     "desvioM": 3.4736284017562866,
-     "encostaGraus": 3.6848300938137113,
-     "enterraM": 0.0012261744039347988,
-     "flutuaM": 0.0012261744039347988
+     "desenhadaY": 0.49220946431159973,
+     "servidorPeM": 0.4922094643115998,
+     "desvioM": 0.0,
+     "encostaGraus": 3.861361941115381,
+     "enterraM": 0.001071195824078608,
+     "flutuaM": 0.001071195824078608
     },
     {
      "id": "fd13543ea504fd68e",
-     "x": 25,
+     "x": 37,
      "y": 0,
      "zona": "fora",
-     "desenhadaY": -0.4132281243801117,
-     "servidorPeM": -0.436406522989273,
-     "desvioM": 0.02317839860916132,
-     "encostaGraus": 5.269082488584173,
-     "enterraM": 0.0004430579439578808,
-     "flutuaM": 0.0004430579439578808
+     "desenhadaY": -0.1895628422498703,
+     "servidorPeM": -0.1895628422498703,
+     "desvioM": 0.0,
+     "encostaGraus": 2.831944330522356,
+     "enterraM": 0.004288670787103072,
+     "flutuaM": 0.004288670787103072
     },
     {
      "id": "ff9563be1fb6a9a74",
      "x": 0,
-     "y": 25,
+     "y": 37,
      "zona": "fora",
-     "desenhadaY": -0.7743356823921204,
-     "servidorPeM": -0.7826824188232422,
-     "desvioM": 0.008346736431121826,
-     "encostaGraus": 2.9889295010387302,
-     "enterraM": 0.000920402684564503,
-     "flutuaM": 0.000920402684564503
+     "desenhadaY": -0.07519762963056564,
+     "servidorPeM": -0.07519762963056564,
+     "desvioM": 0.0,
+     "encostaGraus": 7.422991837833733,
+     "enterraM": 0.0010735007595678511,
+     "flutuaM": 0.0010735007595678511
     },
     {
      "id": "facad82a683d0d79a",
-     "x": 49,
-     "y": 25,
+     "x": 74,
+     "y": 37,
      "zona": "fora",
-     "desenhadaY": 0.3415566384792328,
-     "servidorPeM": -0.06213092058897018,
-     "desvioM": 0.403687559068203,
-     "encostaGraus": 4.174075438153384,
-     "enterraM": 0.0010442229576897999,
-     "flutuaM": 0.0010442229576897999
+     "desenhadaY": -0.24934934079647064,
+     "servidorPeM": -0.24934934079647064,
+     "desvioM": 0.0,
+     "encostaGraus": 1.2675659182616885,
+     "enterraM": 0.0032006498989746723,
+     "flutuaM": 0.0032006498989746723
     },
     {
      "id": "fbd58ba6be8a46341",
-     "x": 25,
-     "y": 49,
+     "x": 37,
+     "y": 74,
      "zona": "fora",
-     "desenhadaY": 0.444380521774292,
-     "servidorPeM": -0.1680992692708969,
-     "desvioM": 0.6124797910451889,
-     "encostaGraus": 2.9950369345661954,
-     "enterraM": 0.0009785190246115738,
-     "flutuaM": 0.0009785190246115738
+     "desenhadaY": 1.441324234008789,
+     "servidorPeM": 1.441324234008789,
+     "desvioM": 0.0,
+     "encostaGraus": 3.4241424236362454,
+     "enterraM": 0.0050120402110538365,
+     "flutuaM": 0.0050120402110538365
     },
     {
      "id": "ffd4255c748a7297a",
-     "x": 25,
-     "y": 25,
+     "x": 37,
+     "y": 37,
      "zona": "dentro",
-     "desenhadaY": -0.0809892863035202,
-     "servidorPeM": -0.5353440046310425,
-     "desvioM": 0.4543547183275223,
-     "encostaGraus": 1.3940537510275526,
-     "enterraM": 0.0011536809538528203,
-     "flutuaM": 0.0011536809538528203
+     "desenhadaY": -0.08139440417289734,
+     "servidorPeM": -0.08139440417289734,
+     "desvioM": 0.0,
+     "encostaGraus": 0.6980118663290359,
+     "enterraM": 0.004015214281128353,
+     "flutuaM": 0.004015214281128353
     }
    ],
    "marcos": [
@@ -47414,16 +47474,16 @@
      ],
      "relevoNoPontoM": 2.7500851245282925,
      "casa": [
-      7,
-      5
+      19,
+      18
      ],
      "servidor": {
-      "bloqueada": false,
-      "motivo": null,
-      "alturaM": -0.45589450001716614
+      "bloqueada": true,
+      "motivo": "menir",
+      "alturaM": 2.665973424911499
      },
      "cliente": {
-      "alturaM": 2.672607183456421
+      "alturaM": 2.665973424911499
      }
     },
     {
@@ -47435,16 +47495,16 @@
      ],
      "relevoNoPontoM": 2.6549288454283064,
      "casa": [
-      5,
-      8
+      18,
+      21
      ],
      "servidor": {
-      "bloqueada": false,
-      "motivo": null,
-      "alturaM": -0.3833589553833008
+      "bloqueada": true,
+      "motivo": "menir",
+      "alturaM": 2.644047975540161
      },
      "cliente": {
-      "alturaM": 2.612823009490967
+      "alturaM": 2.644047975540161
      }
     },
     {
@@ -47456,16 +47516,16 @@
      ],
      "relevoNoPontoM": 2.5974332643030116,
      "casa": [
-      2,
-      8
+      15,
+      21
      ],
      "servidor": {
-      "bloqueada": false,
-      "motivo": null,
-      "alturaM": -0.5233727693557739
+      "bloqueada": true,
+      "motivo": "menir",
+      "alturaM": 2.5980477333068848
      },
      "cliente": {
-      "alturaM": 2.5861008167266846
+      "alturaM": 2.5980477333068848
      }
     },
     {
@@ -47477,16 +47537,16 @@
      ],
      "relevoNoPontoM": 2.4503395617781885,
      "casa": [
-      1,
-      5
+      13,
+      18
      ],
      "servidor": {
-      "bloqueada": false,
-      "motivo": null,
-      "alturaM": -0.4603214263916016
+      "bloqueada": true,
+      "motivo": "menir",
+      "alturaM": 2.4668493270874023
      },
      "cliente": {
-      "alturaM": 2.433875322341919
+      "alturaM": 2.4668493270874023
      }
     },
     {
@@ -47498,16 +47558,16 @@
      ],
      "relevoNoPontoM": 2.550801468364322,
      "casa": [
-      4,
-      2
+      16,
+      15
      ],
      "servidor": {
-      "bloqueada": false,
-      "motivo": null,
-      "alturaM": -0.5966016054153442
+      "bloqueada": true,
+      "motivo": "menir",
+      "alturaM": 2.4991753101348877
      },
      "cliente": {
-      "alturaM": 2.516178846359253
+      "alturaM": 2.4991753101348877
      }
     },
     {
@@ -47519,16 +47579,16 @@
      ],
      "relevoNoPontoM": 2.6811787421265763,
      "casa": [
-      7,
-      4
+      19,
+      16
      ],
      "servidor": {
-      "bloqueada": false,
-      "motivo": null,
-      "alturaM": -0.45333659648895264
+      "bloqueada": true,
+      "motivo": "menir",
+      "alturaM": 2.6234419345855713
      },
      "cliente": {
-      "alturaM": 2.6604809761047363
+      "alturaM": 2.6234419345855713
      }
     },
     {
@@ -47540,16 +47600,16 @@
      ],
      "relevoNoPontoM": 4.378441693182443,
      "casa": [
-      46,
-      44
+      58,
+      57
      ],
      "servidor": {
-      "bloqueada": false,
-      "motivo": null,
-      "alturaM": 0.3150312602519989
+      "bloqueada": true,
+      "motivo": "santuário",
+      "alturaM": 4.46177864074707
      },
      "cliente": {
-      "alturaM": 4.449863433837891
+      "alturaM": 4.46177864074707
      }
     },
     {
@@ -47561,16 +47621,79 @@
      ],
      "relevoNoPontoM": 4.1799686488496555,
      "casa": [
-      49,
-      38
+      61,
+      51
      ],
      "servidor": {
-      "bloqueada": false,
-      "motivo": null,
-      "alturaM": 0.23485952615737915
+      "bloqueada": true,
+      "motivo": "lanterna",
+      "alturaM": 4.199647426605225
      },
      "cliente": {
-      "alturaM": 3.914139747619629
+      "alturaM": 4.199647426605225
+     }
+    },
+    {
+     "nome": "lanterna",
+     "pontoM": [
+      27.078834533691406,
+      4.152552604675293,
+      17.591381072998047
+     ],
+     "relevoNoPontoM": 4.152552665383456,
+     "casa": [
+      64,
+      54
+     ],
+     "servidor": {
+      "bloqueada": true,
+      "motivo": "lanterna",
+      "alturaM": 4.1889848709106445
+     },
+     "cliente": {
+      "alturaM": 4.1889848709106445
+     }
+    },
+    {
+     "nome": "lanterna",
+     "pontoM": [
+      30.378719329833984,
+      0.36874374747276306,
+      8.41678237915039
+     ],
+     "relevoNoPontoM": 0.3687437544645045,
+     "casa": [
+      67,
+      45
+     ],
+     "servidor": {
+      "bloqueada": true,
+      "motivo": "lanterna",
+      "alturaM": 0.2979339063167572
+     },
+     "cliente": {
+      "alturaM": 0.2979339063167572
+     }
+    },
+    {
+     "nome": "lanterna",
+     "pontoM": [
+      18.25452995300293,
+      3.7574617862701416,
+      26.63629150390625
+     ],
+     "relevoNoPontoM": 3.7574617787510443,
+     "casa": [
+      55,
+      63
+     ],
+     "servidor": {
+      "bloqueada": true,
+      "motivo": "lanterna",
+      "alturaM": 3.981347560882568
+     },
+     "cliente": {
+      "alturaM": 3.9813475608825684
      }
     },
     {
@@ -47582,22 +47705,69 @@
      ],
      "relevoNoPontoM": 3.874018775057871,
      "casa": [
-      38,
-      47
+      51,
+      60
      ],
      "servidor": {
-      "bloqueada": false,
-      "motivo": null,
-      "alturaM": 0.27879106998443604
+      "bloqueada": true,
+      "motivo": "lanterna",
+      "alturaM": 3.596978187561035
      },
      "cliente": {
-      "alturaM": 2.955610752105713
+      "alturaM": 3.596978187561035
+     }
+    },
+    {
+     "nome": "lanterna",
+     "pontoM": [
+      9.164194107055664,
+      0.5955392122268677,
+      30.161670684814453
+     ],
+     "relevoNoPontoM": 0.5955392320906867,
+     "casa": [
+      46,
+      67
+     ],
+     "servidor": {
+      "bloqueada": true,
+      "motivo": "lanterna",
+      "alturaM": 0.5615552067756653
+     },
+     "cliente": {
+      "alturaM": 0.5615552067756653
+     }
+    },
+    {
+     "nome": "tronco tombado",
+     "pontoM": [
+      -16.280000686645508,
+      0.7484205961227417,
+      27.450000762939453
+     ],
+     "relevoNoPontoM": 0.7484206063327296,
+     "casa": [
+      21,
+      64
+     ],
+     "servidor": {
+      "bloqueada": true,
+      "motivo": "tronco tombado",
+      "alturaM": 0.7027642130851746
+     },
+     "cliente": {
+      "alturaM": 0.7027642130851746
      }
     }
    ],
    "casas": []
   },
   {
+   "pedida": {
+    "largura": 37,
+    "altura": 37,
+    "casaM": 2.0
+   },
    "grelha": {
     "largura": 37,
     "altura": 37,
@@ -48178,6 +48348,11 @@
    "casas": []
   },
   {
+   "pedida": {
+    "largura": 49,
+    "altura": 49,
+    "casaM": 1.5
+   },
    "grelha": {
     "largura": 49,
     "altura": 49,
@@ -48981,6 +49156,11 @@
    "casas": []
   },
   {
+   "pedida": {
+    "largura": 50,
+    "altura": 20,
+    "casaM": 1.5
+   },
    "grelha": {
     "largura": 50,
     "altura": 20,
@@ -49252,6 +49432,11 @@
    "casas": []
   },
   {
+   "pedida": {
+    "largura": 20,
+    "altura": 50,
+    "casaM": 1.5
+   },
    "grelha": {
     "largura": 20,
     "altura": 50,
@@ -49518,6 +49703,11 @@
    "casas": []
   },
   {
+   "pedida": {
+    "largura": 49,
+    "altura": 30,
+    "casaM": 1.5
+   },
    "grelha": {
     "largura": 49,
     "altura": 30,
@@ -50116,6 +50306,11 @@
    "casas": []
   },
   {
+   "pedida": {
+    "largura": 37,
+    "altura": 20,
+    "casaM": 2.0
+   },
    "grelha": {
     "largura": 37,
     "altura": 20,
@@ -50428,6 +50623,11 @@
    "casas": []
   },
   {
+   "pedida": {
+    "largura": 35,
+    "altura": 37,
+    "casaM": 2.0
+   },
    "grelha": {
     "largura": 35,
     "altura": 37,

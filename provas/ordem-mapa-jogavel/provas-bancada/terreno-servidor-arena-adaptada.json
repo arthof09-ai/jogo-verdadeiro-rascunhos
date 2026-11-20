@@ -1,6 +1,6 @@
 {
- "ordem": 59,
- "prova": "cliente/cenas/arena/ferramentas/provar_terreno_servidor.gd",
+ "ordem": "PROVAS-MAPA (cópia adaptada da Ordem 59)",
+ "prova": "provas/ordem-mapa-jogavel/provas-bancada/ferramentas/provar_terreno_servidor_mapa.gd (cópia adaptada de cliente/cenas/arena/ferramentas/provar_terreno_servidor.gd)",
  "servidor": "servidor/ferramentas/juizo-terreno.mjs (núcleo sala.js + dados/terreno-floresta.json)",
  "zonaLivre": "x e z em [−15, 15] m (a grelha 20 × 20 de 1,5 m da Ordem 42)",
  "grelhas": [

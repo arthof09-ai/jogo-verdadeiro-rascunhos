@@ -3,8 +3,10 @@
 Ordem: correr as duas provas que a MAPA-JOGÁVEL deixou por correr (o §4 do ESTADO-FINAL dela). **Não houve
 construção**: nenhuma linha do jogo (servidor ou cliente) mudou. Base: `fable/integracao-50` @ `c9c176f` (com as
 capturas fundidas). Ramo: `claude2/provas-mapa` (sem fusão). Regime: PC em uso LEVE (Steam aberto, CPU ~3 %); só
-Godot `--headless` (CPU), sem GPU, corridas curtas (a prova 1 dura ~70 s, a bancada ~40 s). O regime não chegou a
-EM_USO pesado e não houve paragens.
+Godot `--headless` (CPU), sem GPU, corridas curtas. *(Correcção 5: as durações «~70 s / ~40 s» que aqui estavam não
+tinham carimbo de tempo e foram tiradas. Na re-corrida das correcções, com carimbos nos registos, a prova 1 levou
+**84 s** (original) e **80 s** (cópia); a bancada não foi re-corrida e não tem duração registada.)* O regime não
+chegou a EM_USO pesado e não houve paragens.
 Marcas: VERIFICADO (corrido e conferido nesta sessão), PROPOSTO, PENDENTE, [FALTA].
 
 **Resultado em curto:**
@@ -33,7 +35,11 @@ o `terreno-floresta.json`) e abre a arena do jogo. Depois compara, casa a casa:
 **As «12 grelhas» são hoje 18.** A ordem fala em 12, que são as da Ordem 48 (linhas 1–12 abaixo). A Ordem 59
 acrescentou 6 grelhas que tocam a fronteira do mapa só nalguns lados (linhas 13–18). Corri as 18 e registo todas.
 
-### 1a. A ferramenta original (como está no repo): 17 grelhas a 100 %, 1 diverge — 9 falhas, todas na mesma grelha
+### 1a. A ferramenta original (como estava em `b62a887`): 17 grelhas a 100 %, 1 diverge — 9 falhas, todas na mesma grelha
+
+*(Correcção 1: a ferramenta original foi corrigida no commit das correcções e voltou a correr nas 18 grelhas, com
+TUDO PASSOU e código de saída 0. Ver §5. Esta tabela é a corrida de `b62a887`, guardada em
+`provar-terreno-servidor-b62a887.log`.)*
 
 | # | grelha | casas | água | bloq. (srv) | juízo ≠ | motivo ≠ | cobertura ≠ | desvio altura / pé | figuras (desvio) | recusas | mover (bloq. no cliente) | marcos |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -59,6 +65,25 @@ acrescentou 6 grelhas que tocam a fronteira do mapa só nalguns lados (linhas 13
 Em todas as grelhas, a faixa da fronteira do mapa tem a cobertura toda afirmada e 0 casas diferentes. As «recusas»
 são só as das figuras pedidas: nas grelhas «auto» são todas as bloqueadas; nas 1–3 são as casas escolhidas à mão.
 
+**O que cada coluna conta (correcções 2 e 5).** As regras estão escritas no cabeçalho de `tabela-grelhas.md`, que sai
+de `ferramentas/tabela_grelhas.py`.
+- **«cobertura ≠»** conta **só a cobertura afirmada**: as casas em que o servidor dá um número (≠ null) e o cliente
+  tem outro (`coberturaAfirmadaDiferente`). É o portão da ferramenta, e o «0 divergências» é verdadeiro dentro desse
+  portão.
+- **A cobertura não afirmada (o resíduo nulo).** São as casas da faixa da borda em que o servidor diz `null`. Estão
+  registadas na ferramenta mas não julgadas (`coberturaNaoAfirmada` e `coberturaNaoAfirmadaClienteDifereDaReferencia`).
+  Por grelha, de 1 a 18: 99 (1), 107 (0), 76 (1), 91 (2), 184 (2), 42 (3), 87 (0), 112 (4), 120 (3), 0, 0, 0, 97 (0),
+  96 (1), 88 (0), 112 (1), 65 (1), 74 (0). Entre parênteses está quantas delas o cliente tem com outra cobertura que
+  a do mapa de referência: **de 0 a 4 por grelha**. As três grelhas-mapa (10–12) não têm nenhuma.
+- **«água»** conta as casas do juízo do servidor com `agua`. Não está nos JSON: o gerador recalcula-a correndo
+  `juizo-terreno.mjs` com a grelha pedida e a escala, sem figuras.
+- **«marcos»** conta os marcos que o mapa do cliente bloqueia com o próprio nome e que caem no centro de uma casa do
+  jogo (as entradas `marcos` do JSON). «ok» quer dizer casa bloqueada no servidor; a ferramenta exige também o mesmo
+  nome.
+- **As 15 figuras da grelha 1.** Foram pedidas 17 casas à mão. O servidor recusou 3: (1,0) e (3,2), que são menires,
+  e (28,28), um santuário. Ficam 14 criaturas, mais a heroína, que o `juizo-terreno.mjs` põe sempre: 15. Nas grelhas
+  «auto» entram 9 casas livres mais a heroína, e por isso são 10.
+
 ### 1b. A grelha 11 — porque diverge, e porque é a ferramenta e não o jogo
 - **O que a ferramenta faz.** O `juizo-terreno.mjs` monta a sala com o tamanho pedido (50×50), que nasce a 1,5 m, e
   depois pede `escala 1`. A arena do Godot é aberta com o tamanho que a ferramenta pediu (50×50 @ 1 m, canto NO em
@@ -70,7 +95,11 @@ são só as das figuras pedidas: nas grelhas «auto» são todas as bloqueadas; 
   −37,5 m). Daí os 336 juízos diferentes, a altura 4,43 m ao lado e os 9 marcos que não batem. As 9 falhas são todas
   desta grelha e todas desta causa: a primeira linha da grelha já diz «FALHA grelha 50×50 de 1.0 m: o servidor julga
   esta grelha».
-- **Conclusão.** O caso `[50, 50, 1.0]` da ferramenta ficou obsoleto com a MAPA-JOGÁVEL. Uma grelha 50×50 @ 1 m
+- **A condição (correcção 3).** Esta obsolescência **assenta na regra §0 da MAPA-JOGÁVEL**: a mudança de escala na
+  grelha-mapa guarda o sítio no mapa. Essa regra está **ainda PROPOSTA ao Mestre**. Se ele a rejeitar, a sala a 1 m
+  deixa de servir 75×75 e **o caso reabre**: a ferramenta e esta prova têm de voltar a ser julgadas. A fusão não faz
+  da obsolescência uma coisa incondicional.
+- **Conclusão.** O caso `[50, 50, 1.0]` da ferramenta ficou obsoleto com a MAPA-JOGÁVEL (sob a condição acima). Uma grelha 50×50 @ 1 m
   deixou de existir no jogo: a sala nasce sempre a 1,5 m e uma 50×50 a 1,5 m é a grelha-mapa. Não é defeito do jogo,
   por isso não parei. Fiz a cópia adaptada abaixo e o original ficou intocado.
 
@@ -87,7 +116,7 @@ e a 11 passa a:
 **As três grelhas-mapa (50 / 75 / 37) batem casa a casa com o servidor.** As casas de água (21 / 50 / 13) são as
 mesmas da MAPA-JOGÁVEL, e o servidor não oferece nenhuma casa de mover que o cliente desenhe bloqueada.
 
-**Sugestão ao coordenador (PROPOSTO, não feito):** trocar o caso `[50, 50, 1.0]` do original pela leitura da
+**Sugestão ao coordenador (feita nas correcções, ver §5):** trocar o caso `[50, 50, 1.0]` do original pela leitura da
 grelha servida, como faz a cópia, ou documentá-lo como «75×75 @ 1 m». A mudança é na ferramenta do cliente
 (`cenas/arena/ferramentas/`) e fica fora do âmbito desta ordem.
 
@@ -133,6 +162,14 @@ grelha servida, como faz a cópia, ou documentá-lo como «75×75 @ 1 m». A mud
   `vez` com `reservaM` 7,5 / 6,5 e `casasQuePaga` 7 / 3. O Mestre vê as figuras nas mesmas casas que a jogadora:
   (57,8)/(57,17) e (28,4)/(28,8).
 - **0** «SCRIPT ERROR» no Godot.
+- **A floresta varia de carga para carga (correcção 6).** Os resumos `[floresta] pronta em … | {…}` dos registos trazem
+  `casas_bloqueadas` diferentes conforme a carga. Na prova 1 foram 173, 146, 128, 173, 164, 188, 141, 204, 125, 157,
+  88, 88, 88, 151, 141, 122, 133 e 91; na bancada, 173, 88 e 88. **Isto não é falha.** É a contagem da grelha própria
+  da floresta (50×50 casas de 1,5 m, `campo_floresta.gd`), e a floresta tira árvores, rochas e estrato de dentro da
+  zona jogável da grelha que a arena abriu (`zona_tirados_*` no mesmo resumo). Por isso o número depende da grelha
+  aberta: a grelha-mapa inteira dá sempre 88. Repete-se de corrida para corrida: a re-corrida das correcções deu a
+  mesma sequência, grelha a grelha. A prova não lê esse número: compara o juízo do servidor com a grelha da arena,
+  casa a casa.
 
 ### 2a. Privacidade — VERIFICADO
 - **Sonda da batalha, na jogadora Godot:** varri as **22 mensagens** que chegaram à Rede dela, à procura de três
@@ -175,12 +212,12 @@ grelha servida, como faz a cópia, ou documentá-lo como «75×75 @ 1 m». A mud
   - `bancada-servidor.mjs`, `bancada-mestre.mjs`, `bancada_jogadora_mapa.gd` e `correr-bancada.sh`: a bancada;
   - `tabela_grelhas.py`.
 
-**Sem mudança** em `rascunhos/` (servidor, cliente, protocolo), no workflow, na paleta, nas cores da caixa e do
+**Sem mudança** em `rascunhos/` (servidor, cliente, protocolo) em `b62a887` (nas correcções mudou só a ferramenta de prova `cenas/arena/ferramentas/provar_terreno_servidor.gd`, §5), nem no workflow, na paleta, nas cores da caixa e do
 retrato, na iniciativa e nas figuras. O `--import` gerou `.uid` não rastreados no clone, que não entraram no commit.
 
 ## 4. Passagem
 
-**Onde parou:** ordem cumprida. As duas provas foram corridas e registadas, e o commit está no ramo
+**Onde parou:** ordem cumprida. As duas provas foram corridas e registadas, e o commit `b62a887` está no ramo
 `claude2/provas-mapa`, empurrado para o `origin`, **sem fusão**.
 
 **Para voltar a correr** (num clone, a partir de `rascunhos/`):
@@ -192,9 +229,8 @@ retrato, na iniciativa e nas figuras. O `--import` gerou `.uid` não rastreados 
 É preciso Node ≥ 22 no PATH.
 
 **O que falta conferir (coordenador / Mestre):**
-1. **A ferramenta original tem um caso obsoleto.** O `[50, 50, 1.0]` passou a ser servido como 75×75 @ 1 m. Ver §1b;
-   a correção sugerida (PROPOSTO) é a da cópia. Enquanto não for corrigida, a ferramenta original dá 9 falhas que não
-   são do jogo.
+1. **A ferramenta original tinha um caso obsoleto**: o `[50, 50, 1.0]` passou a ser servido como 75×75 @ 1 m (§1b).
+   **Corrigido nas correcções** (§5): a original passou a TUDO PASSOU. A condição da regra §0 mantém-se.
 2. **Continua da MAPA-JOGÁVEL, sem mudança:**
    - [FALTA] o custo da água (hoje igual a uma casa seca);
    - PROPOSTO: a mudança de escala na grelha-mapa guardar o sítio no mapa (esta bancada confirma que funciona como
@@ -203,3 +239,23 @@ retrato, na iniciativa e nas figuras. O `--import` gerou `.uid` não rastreados 
 3. **PENDENTE, fora desta ordem:**
    - uma bancada de rede com o **ecrã do Mestre em Godot** na grelha-mapa;
    - a ponta-a-ponta do CI continua a 20×20.
+- `git ls-remote`: claude2/provas-mapa = b62a8870fc28747f484a2dc7d78083b290d1462a; fable/integracao-50 = c9c176f (intocado).
+
+## 5. Correcções da conferência (ORDEM-PROVAS-MAPA-CORRECOES, sentença «FUNDE COM CORRECÇÕES — 800/1000»)
+São as seis que bloqueiam a fusão, aplicadas no ramo com um commit novo e sem fusão. O registo completo está em
+`ESTADO-FINAL-ORDEM-PROVAS-MAPA-CORRECOES.md`, na sede.
+1. **A ferramenta original foi corrigida.** É `rascunhos/cliente/cenas/arena/ferramentas/provar_terreno_servidor.gd`, a
+   única linha fora de `provas/` em todo o ramo. É uma ferramenta de prova; o jogo não muda. Recebeu a mesma mudança
+   da cópia: a arena abre a grelha que o servidor devolve, e o relatório guarda `pedida` e `grelha`. Voltou a correr
+   nas 18 grelhas: **TUDO PASSOU, código 0**, com a grelha 11 pedida 50×50 → servida 75×75 @ 1 m e 0 divergências.
+   O registo está em `provar-terreno-servidor.log` / `terreno-servidor-arena.json`, e a corrida antiga em
+   `provar-terreno-servidor-b62a887.log`. **VERIFICADO.**
+2. **O resíduo nulo** está registado em §1a, e a tabela gerada define o que «cobertura ≠» conta.
+3. **A condição da obsolescência** (a regra §0, ainda PROPOSTA ao Mestre) está em §1b.
+4. **A proveniência está alinhada.** O JSON adaptado nomeia agora a cópia (`"prova": "provas/…/provar_terreno_servidor_mapa.gd
+   (cópia adaptada de …)"`), porque a cópia foi corrigida e voltou a correr (TUDO PASSOU). Este ESTADO-FINAL é o mesmo
+   ficheiro na sede e no commit, byte a byte, com a linha de verificação do push de `b62a887`.
+5. **O que não se re-deriva.** As durações sem carimbo saíram (cabeçalho), e os registos novos têm `# início` /
+   `# fim`. As regras de contagem da água e dos marcos estão no gerador e na tabela, e as 15 figuras da grelha 1
+   estão explicadas em §1a.
+6. **A variância da floresta por carga** está explicada em §2.
