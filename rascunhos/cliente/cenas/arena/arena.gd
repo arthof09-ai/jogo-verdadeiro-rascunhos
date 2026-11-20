@@ -81,7 +81,7 @@ const Clima := preload("res://arte/clima/clima.gd")
 
 var largura := 20
 var altura := 20
-var casa_m := 1.5
+var casa_m := Apresentacao.CASA_M  # Ordem ESCALA: a escala do mundo nasce da tabela (DADOS)
 ## Ordem 42: canto noroeste da casa (0, 0) no mundo (x, z). A grelha fica centrada no mapa.
 var origem := Vector2(-15.0, -15.0)
 ## O mapa da floresta (o campo de batalha), filho desta cena.
@@ -166,7 +166,7 @@ func _ao_precisa_entrar(_motivo: String) -> void:
 func _construir_grelha(w: int, h: int, c: float) -> void:
 	largura = maxi(1, w)
 	altura = maxi(1, h)
-	casa_m = c if c > 0.0 else 1.5
+	casa_m = c if c > 0.0 else Apresentacao.CASA_M
 	for n in _grelha.get_children():
 		# Ordem 49 (C), como o ecrã do Mestre (arena_mestre.gd, Ordem 45): sai já da árvore. Só com o queue_free o
 		# velho ficava até ao fim do quadro e o «Linhas» novo (e o Fogo, os Destaques, o Cursor) nascia com outro nome.

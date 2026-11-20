@@ -133,7 +133,7 @@ var armado_fim := ""
 ## Ordem 8 (item 8): a escala que o Mestre está a escolher (m por casa) e o segundo toque do «Mudar a escala».
 ## Ordem 11 (paridade P8a, REF_36 do site): só valem 1 / 1,5 / 2 m por casa; os botões − e + andam nesta lista e
 ## param nas pontas (o servidor recusa qualquer outro valor).
-const ESCALAS := [1.0, 1.5, 2.0]
+const ESCALAS := Apresentacao.ESCALAS_CASA_M  # Ordem ESCALA: a lista vive na tabela (DADOS), não aqui
 var escala_nova := 0.0
 var armado_escala := false
 var _escala_rotulo: Label
@@ -291,14 +291,14 @@ func pedir_recomecar() -> void:
 	_desenhar_fim()
 
 
-## Ordem 8 (item 8): a escala que vale agora (mapa.casaM da vista; 1,5 se ainda não veio).
+## Ordem 8 (item 8): a escala que vale agora (mapa.casaM da vista; a pré-definida da tabela, 1,5, se ainda não veio).
 func escala_atual() -> float:
 	var mapa = vista.get("mapa")
 	if mapa is Dictionary:
 		var c = mapa.get("casaM")
 		if (c is float or c is int) and float(c) > 0.0:
 			return float(c)
-	return 1.5
+	return Apresentacao.CASA_M
 
 
 func ajustar_escala(passos: int) -> void:

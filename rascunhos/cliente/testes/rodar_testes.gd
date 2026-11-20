@@ -28,6 +28,8 @@ const MarcadorSite := preload("res://cenas/comum/marcador_figura.gd")
 ## Ordem ÁGUA-REAÇÃO: o lago reage ao estado das figuras (salpico, agito que acalma).
 const LagoFloresta := preload("res://mapa/floresta/lago_floresta.gd")
 const RelevoFloresta := preload("res://mapa/floresta/relevo_floresta.gd")
+## Ordem ESCALA: a escala do mundo (1 · 1,5 · 2 m por casa; pré-definida 1,5) vive na tabela DADOS.
+const Apresentacao := preload("res://dados/apresentacao.gd")
 
 var _total := 0
 var _falhas := 0
@@ -67,6 +69,7 @@ func _initialize() -> void:
 	_teste_ordem_turnos_iniciativa()
 	_teste_retratos_do_modelo()
 	_teste_caixa_ordem()
+	_teste_escala_do_mundo()
 	# Ordem ÁGUA-REAÇÃO: o lago segue nós que estão na árvore — e no _initialize a raiz ainda não está; um quadro.
 	await process_frame
 	_teste_agua_reacao()
@@ -1172,3 +1175,70 @@ func _teste_agua_reacao() -> void:
 	lago.queue_free()
 	fig.queue_free()
 	outra.queue_free()
+
+
+# ---------------------------------------------------------------- Ordem ESCALA: a escala do mundo
+
+## A escala do mundo é um parâmetro (1 · 1,5 · 2 m por casa, pré-definida 1,5), numa fonte só por lado: a tabela DADOS
+## no cliente e sala.js no servidor. Prova: (1) a tabela; (2) o servidor diz o mesmo; (3) o selector do Mestre e o
+## terreno do servidor cobrem exactamente essas escalas; (4) nenhum consumidor guarda um 1,5 solto; (5) as contas em
+## metros passam pela escala: 6 m cobrem 6 casas a 1 m, 4 a 1,5 m e 3 a 2 m, medido na geometria da arena.
+func _teste_escala_do_mundo() -> void:
+	print("Escala do mundo (Ordem ESCALA):")
+	var tabela: Array = Apresentacao.ESCALAS_CASA_M
+	_ok(tabela == [1.0, 1.5, 2.0], "a tabela tem as escalas 1 · 1,5 · 2 m (veio %s)" % [tabela])
+	_ok(is_equal_approx(Apresentacao.CASA_M, 1.5) and tabela.has(Apresentacao.CASA_M), "a pré-definida é 1,5 m e é uma das que valem")
+
+	# (2) o servidor: export const ESCALAS_CASA_M = Object.freeze([1, 1.5, 2]); export const CASA_M = 1.5;
+	var sala_js := FileAccess.get_file_as_string(ProjectSettings.globalize_path("res://").path_join("../servidor/nucleo/sala.js").simplify_path())
+	var do_servidor: Array = []
+	var marca_lista := "export const ESCALAS_CASA_M = Object.freeze(["
+	var k := sala_js.find(marca_lista)
+	if k >= 0:
+		var fim := sala_js.find("]", k)
+		for v in sala_js.substr(k + marca_lista.length(), fim - k - marca_lista.length()).split(","):
+			do_servidor.append(float(v.strip_edges()))
+	var marca_padrao := "export const CASA_M = "
+	var kp := sala_js.find(marca_padrao)
+	var padrao_servidor := -1.0
+	if kp >= 0:
+		padrao_servidor = float(sala_js.substr(kp + marca_padrao.length(), sala_js.find(";", kp) - kp - marca_padrao.length()))
+	_ok(do_servidor == tabela, "o servidor (sala.js ESCALAS_CASA_M) diz o mesmo que a tabela (%s)" % [do_servidor])
+	_ok(is_equal_approx(padrao_servidor, Apresentacao.CASA_M), "o servidor nasce na mesma escala pré-definida (sala.js CASA_M)")
+
+	# (3) o selector do Mestre anda nesta lista; o terreno do servidor tem uma tabela por escala (a mesma lista).
+	var Mestre = load("res://cenas/mestre/mestre.gd")
+	_ok(Mestre.ESCALAS == tabela, "o selector do Mestre (mestre.gd ESCALAS) é a lista da tabela")
+	_ok(ExportarTerreno.ESCALAS == tabela, "o terreno do servidor é exportado para cada escala da tabela (exportar_terreno.ESCALAS)")
+	var pacote = JSON.parse_string(FileAccess.get_file_as_string(ExportarTerreno.caminho_saida()))
+	var no_terreno: Array = []
+	if pacote is Dictionary:
+		for e in pacote.get("escalas", []):
+			no_terreno.append(float(e.get("casaM", 0.0)))
+	_ok(no_terreno == tabela, "o pacote do terreno do servidor serve as três escalas (%s)" % [no_terreno])
+	var mestre = Mestre.new()
+	mestre.vista = {}
+	_ok(is_equal_approx(mestre.escala_atual(), Apresentacao.CASA_M), "sem escala do servidor, o Mestre vê a pré-definida (1,5)")
+	for v in tabela:
+		mestre.vista = {"mapa": {"largura": 20, "altura": 20, "casaM": v}}
+		_ok(is_equal_approx(mestre.escala_atual(), v), "o Mestre vê a escala viva que o servidor mandou (%s m)" % v)
+	mestre.free()
+
+	# (4) nenhum 1,5 solto nos consumidores (o que resta de 1,5 no cliente é a malha do mapa — ver PENDENCIAS).
+	for f in ["res://cenas/arena/arena.gd", "res://cenas/mestre/arena_mestre.gd", "res://cenas/mestre/mestre.gd",
+			"res://hud/hud.gd", "res://estado/estado.gd"]:
+		_ok(not FileAccess.get_file_as_string(f).contains("1.5"), "%s não guarda um 1,5 solto: lê a escala viva ou a tabela" % f.get_file())
+
+	# (5) metros = casas × escala, na geometria da arena (a mesma que arena.gd e arena_mestre.gd usam).
+	var esperado := {1.0: 6, 1.5: 4, 2.0: 3}
+	for s in tabela:
+		var lado := Apresentacao.GRELHA_LARGURA_PADRAO
+		var origem := Assentamento.origem_no_mapa(Vector2(lado * s, lado * s), s)
+		var casas: int = floori(6.0 / s + 0.0001)
+		var a := Assentamento.centro_casa(origem, s, Vector2i(0, 0))
+		var b := Assentamento.centro_casa(origem, s, Vector2i(casas, 0))
+		var d := Vector2(b.x - a.x, b.z - a.z).length()
+		_ok(casas == int(esperado[s]) and is_equal_approx(d, 6.0),
+			"a %s m por casa, 6 m cobrem %d casas (no mundo da arena: %.3f m)" % [s, casas, d])
+		var c_fim := Assentamento.centro_casa(origem, s, Vector2i(lado - 1, 0))
+		_ok(is_equal_approx(c_fim.x - a.x, (lado - 1) * s), "a %s m por casa, a grelha de %d casas mede %s m" % [s, lado, lado * s])

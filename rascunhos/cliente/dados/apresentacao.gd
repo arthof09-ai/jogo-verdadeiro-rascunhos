@@ -130,8 +130,17 @@ const ALTURAS_POR_TIPO := {
 
 # ================================================================ tamanhos da mesa (m)
 
-## O lado de uma casa da grelha das arenas e da Clareira. O MAPA (grelha_floresta.CASA_M, relevo_floresta.CASA_M)
-## guarda o seu próprio 1,5 m: esses dois ficheiros são fontes do terreno do servidor, conferidas por SHA (ver PENDENCIAS).
+## A ESCALA DO MUNDO (Ordem ESCALA; palavra do Mestre, 20/11/2026, como no protótipo `hudt1-escala`): o lado de uma
+## casa NÃO é fixo — o Mestre escolhe-o (1 · 1,5 · 2 m por casa) no selector dele (mestre.gd, «Mudar a escala»), e o
+## servidor guarda a escala viva no mundo (`mapa.casaM`, ROOM_SNAPSHOT / MASTER_VIEW). Esta tabela é a fonte única,
+## no cliente, das escalas que valem e da PRÉ-DEFINIDA (1,5 m: a escala com que a sala nasce e a que vale enquanto o
+## servidor não disse outra). No servidor, a mesma lista é `ESCALAS_CASA_M`/`CASA_M` de servidor/nucleo/sala.js; o
+## teste do cliente (rodar_testes, _teste_escala_do_mundo) confere que as duas dizem o mesmo.
+## Toda a conta em metros é casas × escala viva (nunca × esta constante quando o servidor mandou a escala).
+## O MAPA (grelha_floresta.CASA_M, relevo_floresta.CASA_M) guarda o seu próprio 1,5 m — é a malha do relevo, não a
+## escala do mundo: esses ficheiros são fontes do terreno do servidor, conferidas por SHA (ver PENDENCIAS).
+const ESCALAS_CASA_M := [1.0, 1.5, 2.0]
+## A escala pré-definida (m por casa): a da sala que nasce.
 const CASA_M := 1.5
 ## A grelha por omissão da arena da jogadora (o ROOM_SNAPSHOT.mapa manda).
 const GRELHA_LARGURA_PADRAO := 20
@@ -156,7 +165,7 @@ const ZOOM_PADRAO := 1.5  # palavra do Mestre
 # Registadas com o número; nenhuma se corrige nesta tabela.
 const PENDENCIAS := [
 	"Paleta: os papéis bronze, ouro, sangue, lendário, raro e mágico não têm valor — a Ordem 65 fechou só a paleta do AMBIENTE (color_script) e nenhum desses papéis existe hoje no cliente. Sem hexadecimal inventado.",
-	"Casa: a ordem diz 1,0 m; o cliente usa 1,5 m (grelha_floresta, relevo_floresta, arena, arena_mestre, clareira_prova). Ficou 1,5 m.",
+	"Casa: FECHADA pela Ordem ESCALA (palavra do Mestre, 20/11/2026) — a casa é a escala do mundo, 1 · 1,5 · 2 m, escolhida pelo Mestre; pré-definida 1,5 m (ESCALAS_CASA_M / CASA_M acima). A malha do mapa (grelha_floresta, relevo_floresta) continua a 1,5 m: ver a linha seguinte.",
 	"Casa no mapa: grelha_floresta.CASA_M e relevo_floresta.CASA_M (1,5 m) ficam no mapa, sem ler da tabela — os dois ficheiros são fontes do terreno do servidor (servidor/dados/terreno-floresta.json, conferido por SHA no rodar_testes); religá-los obriga a refazer o terreno com exportar_terreno.gd. Fica para quando o terreno se refizer por outra razão.",
 	"Degrau: não há tamanho de apresentação de degrau no cliente; o degrau de uma casa é medido do relevo (grelha_floresta.degrau) e o limite de passagem é regra do servidor.",
 	"Alturas: não há passo de importação de GLB que escale modelos; só a altura por omissão dos marcadores (2,25 m). Alturas-alvo por tipo de modelo ficam por definir quando a importação existir.",

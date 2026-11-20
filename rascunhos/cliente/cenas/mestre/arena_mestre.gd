@@ -157,7 +157,7 @@ func _ready() -> void:
 	perfis.name = "Perfis"
 	add_child(perfis)
 	CampoDaMesa.ligar_perfil(perfis, clima, func() -> Node3D: return mapa)
-	construir_grelha(20, 20, 1.5)
+	construir_grelha(Apresentacao.GRELHA_LARGURA_PADRAO, Apresentacao.GRELHA_ALTURA_PADRAO, Apresentacao.CASA_M)
 
 
 ## Ordem 15 (parte F): a cada quadro, os nomes arrumam-se para a câmara activa (a da mesa ou a livre).
@@ -185,7 +185,7 @@ func construir_grelha(w: int, h: int, c: float) -> void:
 		return
 	largura = maxi(1, w)
 	altura = maxi(1, h)
-	casa_m = c if c > 0.0 else 1.5
+	casa_m = c if c > 0.0 else Apresentacao.CASA_M
 	for n in _grelha.get_children():
 		_grelha.remove_child(n)  # sai já: o «Linhas» novo fica com o nome dele
 		n.queue_free()
@@ -244,7 +244,7 @@ func altura_chao(x: float, z: float) -> float:
 func aplicar_vista(vista: Dictionary) -> void:
 	var m = vista.get("mapa")
 	if m is Dictionary:
-		construir_grelha(int(m.get("largura", 20)), int(m.get("altura", 20)), float(m.get("casaM", 1.5)))
+		construir_grelha(int(m.get("largura", 20)), int(m.get("altura", 20)), float(m.get("casaM", Apresentacao.CASA_M)))
 	var vistos := {}
 	var recusados := {}
 	var marcas := {}

@@ -1,0 +1,17 @@
+✔ ordem ESCALA (a): as escalas que valem são 1 · 1,5 · 2 m e a sala nasce na pré-definida, 1,5 m (31.4098ms)
+✔ ordem ESCALA (b): a 1 m por casa, 6 m de deslocamento cobrem 6 casas — opções e intenção (14.2484ms)
+✔ ordem ESCALA (b): a 1 m por casa, uma técnica de 6 m chega a 6 casas e não a 7 (7.6918ms)
+✔ ordem ESCALA (b): a 1.5 m por casa, 6 m de deslocamento cobrem 4 casas — opções e intenção (7.1951ms)
+✔ ordem ESCALA (b): a 1.5 m por casa, uma técnica de 6 m chega a 4 casas e não a 5 (6.86ms)
+✔ ordem ESCALA (b): a 2 m por casa, 6 m de deslocamento cobrem 3 casas — opções e intenção (10.685ms)
+✔ ordem ESCALA (b): a 2 m por casa, uma técnica de 6 m chega a 3 casas e não a 4 (6.0932ms)
+✔ ordem ESCALA (c): a escala é persistente na partida — de vez para vez, na reentrada e no restauro do journal (15.6067ms)
+✔ ordem ESCALA (d): só o Mestre muda a escala; a Party vê o resultado e nada de vida/alma nem a mecânica (6.6578ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 241.2046
