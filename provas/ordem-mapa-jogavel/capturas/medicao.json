@@ -1,0 +1,145 @@
+{
+  "ordem": "CAPTURAS-MAPA",
+  "render": "NVIDIA GeForce RTX 4060",
+  "medidas": [
+    {
+      "vista": "jogadora",
+      "grelha": "50x50_1,5m",
+      "abriu": true,
+      "casa_lago": [
+        36,
+        9
+      ],
+      "casa_de_agua": true,
+      "recusada": false,
+      "mapa_todo": {
+        "foto": "jogadora_50x50_1,5m_1-mapa-todo.png",
+        "ok": true,
+        "cores_amostra": 2181
+      },
+      "casa_margem": [
+        33,
+        6
+      ],
+      "salpicos_ao_entrar": 1,
+      "agua_acima_do_pe_m": 0.517,
+      "perto": {
+        "foto": "jogadora_50x50_1,5m_2-perto-no-lago.png",
+        "ok": true,
+        "cores_amostra": 2032
+      }
+    },
+    {
+      "vista": "jogadora",
+      "grelha": "75x75_1,0m",
+      "abriu": true,
+      "casa_lago": [
+        54,
+        14
+      ],
+      "casa_de_agua": true,
+      "recusada": false,
+      "mapa_todo": {
+        "foto": "jogadora_75x75_1,0m_1-mapa-todo.png",
+        "ok": true,
+        "cores_amostra": 2173
+      },
+      "casa_margem": [
+        50,
+        10
+      ],
+      "salpicos_ao_entrar": 1,
+      "agua_acima_do_pe_m": 0.505,
+      "perto": {
+        "foto": "jogadora_75x75_1,0m_2-perto-no-lago.png",
+        "ok": true,
+        "cores_amostra": 2025
+      }
+    },
+    {
+      "vista": "jogadora",
+      "grelha": "37x37_2,0m",
+      "abriu": true,
+      "casa_lago": [
+        27,
+        6
+      ],
+      "casa_de_agua": true,
+      "recusada": false,
+      "mapa_todo": {
+        "foto": "jogadora_37x37_2,0m_1-mapa-todo.png",
+        "ok": true,
+        "cores_amostra": 2204
+      },
+      "casa_margem": [
+        25,
+        4
+      ],
+      "salpicos_ao_entrar": 1,
+      "agua_acima_do_pe_m": 0.496,
+      "perto": {
+        "foto": "jogadora_37x37_2,0m_2-perto-no-lago.png",
+        "ok": true,
+        "cores_amostra": 2046
+      }
+    },
+    {
+      "vista": "mestre",
+      "grelha": "50x50_1,5m",
+      "casa_heroina": [
+        36,
+        9
+      ],
+      "casa_de_agua": true,
+      "recusas": 0,
+      "figuras_de_pe": 4,
+      "escala_rotulo": "Escala: 1,5 m por casa",
+      "escala_nova": "Nova escala: 1,5 m",
+      "salpicos": 0,
+      "ecra": {
+        "foto": "mestre_50x50_1,5m_1-ecra-mapa-todo.png",
+        "ok": true,
+        "cores_amostra": 1194
+      }
+    },
+    {
+      "vista": "mestre",
+      "grelha": "75x75_1,0m",
+      "casa_heroina": [
+        54,
+        14
+      ],
+      "casa_de_agua": true,
+      "recusas": 0,
+      "figuras_de_pe": 4,
+      "escala_rotulo": "Escala: 1 m por casa",
+      "escala_nova": "Nova escala: 1 m",
+      "salpicos": 0,
+      "ecra": {
+        "foto": "mestre_75x75_1,0m_1-ecra-mapa-todo.png",
+        "ok": true,
+        "cores_amostra": 1191
+      }
+    },
+    {
+      "vista": "mestre",
+      "grelha": "37x37_2,0m",
+      "casa_heroina": [
+        27,
+        6
+      ],
+      "casa_de_agua": true,
+      "recusas": 0,
+      "figuras_de_pe": 4,
+      "escala_rotulo": "Escala: 2 m por casa",
+      "escala_nova": "Nova escala: 2 m",
+      "salpicos": 0,
+      "ecra": {
+        "foto": "mestre_37x37_2,0m_1-ecra-mapa-todo.png",
+        "ok": true,
+        "cores_amostra": 1205
+      }
+    }
+  ],
+  "falhas": 0
+}
