@@ -1,0 +1,165 @@
+{
+  "ordem": "MAPA-JOGAVEL",
+  "casos": [
+    {
+      "grelha": "20x20@1.5",
+      "abriu": true,
+      "zona_jogo": [
+        -15.0,
+        -15.0,
+        30.0,
+        30.0
+      ],
+      "construcao_ms": 2285,
+      "mapa": {
+        "arvores_arena": 24,
+        "arvores_orla": 244,
+        "rochas": 94,
+        "zona_tirados_arvores": 2,
+        "zona_tirados_rochas": 24,
+        "zona_tirados_estrato": 5,
+        "zona_tronco_tombado_m": 12.7,
+        "casas_bloqueadas": 173,
+        "estrato_tri": 164824,
+        "arvores_tri": 225536,
+        "relva_tufos": 44725
+      },
+      "linhas_cobrem_m": [
+        -15.0,
+        -15.0,
+        30.0,
+        30.0
+      ]
+    },
+    {
+      "grelha": "50x50@1.5",
+      "abriu": true,
+      "zona_jogo": [
+        -37.5,
+        -37.5,
+        75.0,
+        75.0
+      ],
+      "construcao_ms": 3479,
+      "mapa": {
+        "arvores_arena": 24,
+        "arvores_orla": 250,
+        "rochas": 45,
+        "zona_tirados_arvores": 39,
+        "zona_tirados_rochas": 66,
+        "zona_tirados_estrato": 168,
+        "zona_tronco_tombado_m": 4.1,
+        "casas_bloqueadas": 88,
+        "estrato_tri": 113608,
+        "arvores_tri": 173220,
+        "relva_tufos": 47769
+      },
+      "linhas_cobrem_m": [
+        -37.5,
+        -37.5,
+        75.0,
+        75.0
+      ],
+      "figura_no_lago": {
+        "casa": [
+          36,
+          9
+        ],
+        "casa_de_agua": true,
+        "recusada": false,
+        "de_pe": true,
+        "mexe_a_agua": true,
+        "pe_y": -2.038,
+        "nivel_lago": -1.522,
+        "agua_acima_do_pe_m": 0.517
+      }
+    },
+    {
+      "grelha": "75x75@1.0",
+      "abriu": true,
+      "zona_jogo": [
+        -37.5,
+        -37.5,
+        75.0,
+        75.0
+      ],
+      "construcao_ms": 481,
+      "mapa": {
+        "arvores_arena": 24,
+        "arvores_orla": 250,
+        "rochas": 45,
+        "zona_tirados_arvores": 39,
+        "zona_tirados_rochas": 66,
+        "zona_tirados_estrato": 168,
+        "zona_tronco_tombado_m": 4.1,
+        "casas_bloqueadas": 88,
+        "estrato_tri": 113608,
+        "arvores_tri": 173220,
+        "relva_tufos": 47769
+      },
+      "linhas_cobrem_m": [
+        -37.5,
+        -37.5,
+        75.0,
+        75.0
+      ],
+      "figura_no_lago": {
+        "casa": [
+          54,
+          14
+        ],
+        "casa_de_agua": true,
+        "recusada": false,
+        "de_pe": true,
+        "mexe_a_agua": true,
+        "pe_y": -2.027,
+        "nivel_lago": -1.522,
+        "agua_acima_do_pe_m": 0.505
+      }
+    },
+    {
+      "grelha": "37x37@2.0",
+      "abriu": true,
+      "zona_jogo": [
+        -37.0,
+        -37.0,
+        74.0,
+        74.0
+      ],
+      "construcao_ms": 3441,
+      "mapa": {
+        "arvores_arena": 24,
+        "arvores_orla": 250,
+        "rochas": 44,
+        "zona_tirados_arvores": 29,
+        "zona_tirados_rochas": 77,
+        "zona_tirados_estrato": 165,
+        "zona_tronco_tombado_m": 4.1,
+        "casas_bloqueadas": 88,
+        "estrato_tri": 114440,
+        "arvores_tri": 185548,
+        "relva_tufos": 47210
+      },
+      "linhas_cobrem_m": [
+        -37.0,
+        -37.0,
+        74.0,
+        74.0
+      ],
+      "figura_no_lago": {
+        "casa": [
+          27,
+          6
+        ],
+        "casa_de_agua": true,
+        "recusada": false,
+        "de_pe": true,
+        "mexe_a_agua": true,
+        "pe_y": -2.018,
+        "nivel_lago": -1.522,
+        "agua_acima_do_pe_m": 0.496
+      }
+    }
+  ],
+  "falhas": 0
+}

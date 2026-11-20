@@ -278,6 +278,8 @@ func aplicar_vista(vista: Dictionary) -> void:
 		_repor_prumo(marcador)
 		Marcador.deitar(marcador, deitada)
 		_assentar(marcador, c, deitada)
+		# ORDEM MAPA-JOGÁVEL: a casa de água pisa-se; a figura mexe o lago (salpico, anéis — ORDEM ÁGUA-REAÇÃO).
+		CampoDaMesa.seguir_na_agua(mapa, no, casa_m * Assentamento.RAIO_PEGADA_FRAC)
 	for id in _nos.keys():
 		if not vistos.has(id):
 			(_nos[id] as Node).queue_free()

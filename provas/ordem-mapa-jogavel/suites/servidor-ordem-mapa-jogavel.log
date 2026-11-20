@@ -1,0 +1,22 @@
+✔ MAPA-JOGÁVEL: os números do mapa — 75 / 50 / 37 casas, a água do lago em cada escala (4.2461ms)
+✔ MAPA-JOGÁVEL (a): a sala com terreno nasce com a grelha = o mapa inteiro (50 × 50 de 1,5 m); sem terreno, a de sempre (17.9268ms)
+✔ MAPA-JOGÁVEL (a): mudar a escala com a grelha-mapa — 50 → 75 → 37 → 50, ninguém muda de sítio no mapa (39.1765ms)
+✔ MAPA-JOGÁVEL (b): a 1 m, uma figura atravessa o mapa inteiro (75 × 75) e entra no lago — nenhuma casa inalcançável (149.7182ms)
+✔ MAPA-JOGÁVEL (c): a 1 m, 6 m sobre a água cobrem 6 casas — mover e alcance (57.457ms)
+✔ MAPA-JOGÁVEL (d): a 1 m, o ataque de oportunidade passa pela grelha-mapa — sair de ao pé do orc, dentro de água (8.8145ms)
+✔ MAPA-JOGÁVEL (b): a 1.5 m, uma figura atravessa o mapa inteiro (50 × 50) e entra no lago — nenhuma casa inalcançável (62.8098ms)
+✔ MAPA-JOGÁVEL (c): a 1.5 m, 6 m sobre a água cobrem 4 casas — mover e alcance (27.152ms)
+✔ MAPA-JOGÁVEL (d): a 1.5 m, o ataque de oportunidade passa pela grelha-mapa — sair de ao pé do orc, dentro de água (5.3697ms)
+✔ MAPA-JOGÁVEL (b): a 2 m, uma figura atravessa o mapa inteiro (37 × 37) e entra no lago — nenhuma casa inalcançável (40.348ms)
+✔ MAPA-JOGÁVEL (c): a 2 m, 6 m sobre a água cobrem 3 casas — mover e alcance (23.5677ms)
+✔ MAPA-JOGÁVEL (d): a 2 m, o ataque de oportunidade passa pela grelha-mapa — sair de ao pé do orc, dentro de água (5.2775ms)
+✔ MAPA-JOGÁVEL (e): as recusas da escala na grelha-mapa — juntas numa casa, ou numa casa bloqueada — deixam tudo igual (20.0175ms)
+✔ MAPA-JOGÁVEL (f): a Party recebe o mapa novo e o evento vazio; o antes/depois da grelha é só do Mestre (17.5876ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 572.6999

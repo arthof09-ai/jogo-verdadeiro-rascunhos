@@ -79,13 +79,43 @@ static func montar_mapa(dono: Node3D, zona: Rect2, ambiente: NodePath, sol: Node
 ## regra do terreno do servidor (provar_terreno_servidor.gd: o mesmo juízo, casa a casa, em 12 grelhas).
 ## Devolve "" se a figura se põe de pé na casa `c`, ou o texto da recusa «FLORESTA-E08-CASA-BLOQUEADA: (x,y) motivo».
 ## Sem mapa (ainda por montar) não recusa.
+## ORDEM MAPA-JOGÁVEL: a água não recusa o pé — as casas de água (o lago) são casas onde se entra (`casa_de_agua`).
 static func recusa_do_pe(mapa: Node3D, origem: Vector2, casa_m: float, c: Vector2i) -> String:
 	if mapa == null or not is_instance_valid(mapa) or mapa.grelha == null:
 		return ""
 	var cm := Assentamento.casa_do_mapa(origem, casa_m, c)
-	if not mapa.grelha.bloqueada(cm):
+	if not mapa.grelha.bloqueada(cm) or MOTIVOS_DE_AGUA.has(mapa.grelha.motivo_bloqueio(cm)):
 		return ""
 	return "%s: (%d,%d) %s" % [Erros.CASA_BLOQUEADA, c.x, c.y, mapa.grelha.motivo_bloqueio(cm)]
+
+
+## ORDEM MAPA-JOGÁVEL (palavra do Mestre, 20/11/2026: «Eu quero que todo o mapa seja jogável» — água incluída): os
+## motivos da grelha do mapa que são ÁGUA. A grelha do mapa (grelha_floresta.gd, fonte do terreno presa por SHA)
+## continua a bloquear o lago por «água funda»; as arenas, como o servidor (servidor/nucleo/terreno.js
+## MOTIVOS_DE_AGUA, a mesma lista, amarrada por teste), lêem essas casas como CASAS DE ÁGUA: a figura entra nelas.
+const MOTIVOS_DE_AGUA: Array[String] = ["água funda"]
+
+
+## ORDEM MAPA-JOGÁVEL: a casa `c` do jogo é de água (o lago)? A mesma regra do servidor (a casa do mapa debaixo do
+## centro). Sem mapa: false.
+static func casa_de_agua(mapa: Node3D, origem: Vector2, casa_m: float, c: Vector2i) -> bool:
+	if mapa == null or not is_instance_valid(mapa) or mapa.grelha == null:
+		return false
+	var cm := Assentamento.casa_do_mapa(origem, casa_m, c)
+	return mapa.grelha.bloqueada(cm) and MOTIVOS_DE_AGUA.has(mapa.grelha.motivo_bloqueio(cm))
+
+
+## ORDEM MAPA-JOGÁVEL: a figura `no` mexe a água do lago do mapa (a reacção da ORDEM ÁGUA-REAÇÃO: o salpico ao
+## entrar, os anéis, a calma). Idempotente: chama-se a cada sincronização e só liga o nó uma vez a cada lago (um
+## mapa refeito traz um lago novo, que passa a segui-lo). Os nós libertados saem sozinhos (LagoFloresta.avancar).
+## Só liga: a figura (o marcador) não muda.
+static func seguir_na_agua(mapa: Node3D, no: Node3D, raio: float) -> void:
+	if mapa == null or not is_instance_valid(mapa) or no == null:
+		return
+	var lago = mapa.get("lago")
+	if lago == null or not is_instance_valid(lago) or lago.segue(no):
+		return
+	lago.seguir(no, raio)
 
 
 ## Ordem 58: guarda a recusa do pé de `id` em `agora` e avisa na consola (push_warning, uma vez) se ela é nova ou

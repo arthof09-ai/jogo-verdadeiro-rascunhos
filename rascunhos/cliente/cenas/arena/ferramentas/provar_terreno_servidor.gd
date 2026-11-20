@@ -33,6 +33,8 @@ const CENA := "res://cenas/arena/arena.tscn"
 const Assentamento := preload("res://cenas/arena/assentamento.gd")
 const GrelhaMapa := preload("res://mapa/floresta/grelha_floresta.gd")
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
+## ORDEM MAPA-JOGÁVEL: a água do lago pisa-se (servidor e arenas lêem os mesmos motivos de água).
+const CampoDaMesa := preload("res://cenas/arena/campo_da_mesa.gd")
 
 ## A zona livre da Ordem 42 (20 × 20 casas de 1,5 m no centro do mapa): x e z em [−15, 15] m.
 const ZONA_M := 15.0
@@ -213,7 +215,7 @@ func _correr() -> void:
 			d_alt[k] = maxf(d_alt[k], da)
 			d_pe[k] = maxf(d_pe[k], dp)
 			var cmapa := Assentamento.casa_do_mapa(arena.origem, arena.casa_m, cc)
-			var bloq_cli: bool = g.bloqueada(cmapa)
+			var bloq_cli: bool = g.bloqueada(cmapa) and not CampoDaMesa.MOTIVOS_DE_AGUA.has(g.motivo_bloqueio(cmapa))
 			if not bool(c["passavel"]):
 				bloq_srv += 1
 			if bloq_cli == bool(c["passavel"]):
@@ -293,7 +295,8 @@ func _correr() -> void:
 		# 3d. as casas que o servidor oferece para mover: nenhuma bloqueada no cliente
 		var mover_bloq := 0
 		for c in sv["mover"]:
-			if g.bloqueada(Assentamento.casa_do_mapa(arena.origem, arena.casa_m, Vector2i(int(c["x"]), int(c["y"])))):
+			var cm_mover := Assentamento.casa_do_mapa(arena.origem, arena.casa_m, Vector2i(int(c["x"]), int(c["y"])))
+			if g.bloqueada(cm_mover) and not CampoDaMesa.MOTIVOS_DE_AGUA.has(g.motivo_bloqueio(cm_mover)):
 				mover_bloq += 1
 		_ok(mover_bloq == 0, "mover: o servidor oferece %d casas, %d bloqueadas no cliente" % [(sv["mover"] as Array).size(), mover_bloq])
 

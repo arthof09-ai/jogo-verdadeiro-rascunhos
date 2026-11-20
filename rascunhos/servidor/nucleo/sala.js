@@ -313,8 +313,13 @@ export function criarSala({
   const modoPadrao = MODOS.includes(config.modoPadrao) ? config.modoPadrao : 'auto';
   const iniciativa = Object.freeze({ ...(config.iniciativa ?? {}) }); // valores só do Mestre (vivem na memória)
   const lugaresConfig = Array.isArray(config.lugares) ? config.lugares : [];
-  const largura = Number.isInteger(config.mapa?.largura) ? config.mapa.largura : 20; // v1: ≥ 20×20
-  const altura = Number.isInteger(config.mapa?.altura) ? config.mapa.altura : 20;
+  // ORDEM MAPA-JOGÁVEL (palavra do Mestre, 20/11/2026: «Eu quero que todo o mapa seja jogável»): com terreno e sem
+  // tamanho na config, a grelha é o MAPA INTEIRO na escala com que a sala nasce (50 × 50 casas de 1,5 m: a malha do
+  // relevo, casa a casa). Um tamanho dado na config continua a valer (bancadas e provas das Ordens 44/48); sem terreno
+  // não há mapa e fica a grelha de sempre (20 × 20).
+  const ladoPadrao = (terrenos ? terrenos.escalas.find((e) => Math.abs(e.casaM - CASA_M) < EPS)?.ladoMax : null) ?? 20;
+  const largura = Number.isInteger(config.mapa?.largura) ? config.mapa.largura : ladoPadrao; // v1: ≥ 20×20
+  const altura = Number.isInteger(config.mapa?.altura) ? config.mapa.altura : ladoPadrao;
   // Ordem 48: com terreno, a grelha com que a sala nasce tem de caber no mapa — senão a sala não abre, com o porquê.
   // (Antes, um tamanho fora do pacote caía em silêncio em «todas as casas se pisam» enquanto o cliente desenhava os
   // marcos.) Uma sala restaurada confere-se com o journal lido (abaixo).
@@ -3043,6 +3048,8 @@ export function criarSala({
     }
     const antes = casaDe(m);
     if (Math.abs(antes - casaM) < EPS) throw new ErroRecusa('acao_invalida'); // nada a mudar
+    // ORDEM MAPA-JOGÁVEL: a grelha que é o mapa inteiro continua a ser o mapa inteiro na escala nova (o tamanho muda).
+    if (grelhaEoMapa(m)) return mudarEscalaNoMapaInteiro(tx, casaM, antes);
     // Ordem 48: com terreno, a grelha tem de caber no mapa na escala nova (ex.: 40 × 40 cabe com 1,5 m, não com 2 m).
     // Recusa nomeada ao Mestre; a sala fica na escala em que estava.
     const semGrelha = terrenos ? terrenos.motivoSemGrelha(m.mapa.largura, m.mapa.altura, casaM) : null;
@@ -3064,6 +3071,105 @@ export function criarSala({
         casasQuePaga: Math.floor(m.vez.reservaM / casaM + EPS) } : null,
     });
     tx.snapshotsTodos = true; // mapa.casaM novo para todos; as opções seguem pela revisão
+    return 'APLICADA';
+  }
+
+  // =================================================================== ORDEM MAPA-JOGÁVEL: a grelha é o mapa inteiro
+  /** O lado da grelha que é o mapa inteiro nesta escala (75 / 50 / 37 casas a 1 / 1,5 / 2 m), ou null sem terreno. */
+  function ladoDoMapa(casaM) {
+    return terrenos ? terrenos.escalas.find((e) => Math.abs(e.casaM - casaM) < EPS)?.ladoMax ?? null : null;
+  }
+  /** A grelha viva é o mapa inteiro (o maior quadrado que cabe no mapa na escala viva)? */
+  function grelhaEoMapa(m) {
+    const l = ladoDoMapa(casaDe(m));
+    return l !== null && m.mapa.largura === l && m.mapa.altura === l;
+  }
+  /**
+   * A casa da grelha `para` que contém, no mapa, o centro da casa `c` da grelha `de` ({origemM, casaM, largura,
+   * altura}). Na fronteira exacta entre duas casas fica a de índice maior (leste/sul); fora da grelha nova (a faixa
+   * de 0,5 m de cada borda a 2 m) fica a casa da borda.
+   */
+  function casaNoLugar(c, de, para) {
+    const eixo = (v, i) => {
+      const centro = de.origemM[i] + (v + 0.5) * de.casaM;
+      const k = Math.floor((centro - para.origemM[i]) / para.casaM + EPS);
+      return Math.min((i === 0 ? para.largura : para.altura) - 1, Math.max(0, k));
+    };
+    return { x: eixo(c.x, 0), y: eixo(c.y, 1) };
+  }
+  /**
+   * ORDEM MAPA-JOGÁVEL: mudar a escala com a grelha = o mapa inteiro. A grelha passa a ser o mapa inteiro na escala
+   * nova (75 × 75 de 1 m, 50 × 50 de 1,5 m, 37 × 37 de 2 m). NINGUÉM MUDA DE SÍTIO NO MAPA: cada figura (e a casa
+   * inicial, a casa de colocação do «Recomeçar» e cada casa a arder) passa para a casa da grelha nova que contém, no
+   * mapa, o centro da casa em que estava — a regra da Ordem 8 («nenhuma figura mexe») lida no mapa, não no índice
+   * (com o índice, mudar de escala atirava as figuras para o canto NO e a 2 m deixava fora quem estivesse além da casa
+   * 36). Recusas nomeadas ao Mestre, e a sala fica como estava:
+   *  - ESCALA_JUNTA_FIGURAS: duas figuras colocadas cairiam na mesma casa (ao passar a casas maiores);
+   *  - ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS (Ordem 62): alguma cairia numa casa que o mapa bloqueia.
+   * Duas casas a arder que caiam na mesma ficam uma, com o combustível maior. O resto é o da Ordem 8: sem custo, a
+   * reserva da vez em metros, a Party vê o evento vazio e o snapshot novo.
+   */
+  function mudarEscalaNoMapaInteiro(tx, casaM, antes) {
+    const m = tx.estado;
+    const lado = ladoDoMapa(casaM);
+    if (lado === null) throw new ErroRecusa('acao_invalida', terrenos.motivoSemGrelha(1, 1, casaM));
+    const tAntes = terrenoDe(m);
+    const tNova = terrenos.para(lado, lado, casaM);
+    const de = { origemM: tAntes.origemM, casaM: antes, largura: m.mapa.largura, altura: m.mapa.altura };
+    const para = { origemM: tNova.origemM, casaM, largura: lado, altura: lado };
+    const noLugar = (c) => casaNoLugar(c, de, para);
+    const pares = colocadas(m)
+      .map((f) => [f, noLugar(f)])
+      .sort(([a, ca], [b, cb]) => ca.y - cb.y || ca.x - cb.x || (a.id < b.id ? -1 : 1));
+    const porCasa = new Map();
+    for (const [f, c] of pares) {
+      const k = chaveCasa(c.x, c.y);
+      if (!porCasa.has(k)) porCasa.set(k, []);
+      porCasa.get(k).push(f);
+    }
+    const juntas = [];
+    for (const [f, c] of pares) {
+      const outras = porCasa.get(chaveCasa(c.x, c.y)).filter((g) => g !== f);
+      if (outras.length) {
+        const motivo = 'na mesma casa que ' + outras.map((g) => g.id).join(', ');
+        juntas.push({ figuraId: f.id, x: c.x, y: c.y, motivo, texto: `${f.id} (${c.x},${c.y}) ${motivo}` });
+      }
+    }
+    if (juntas.length) {
+      throw recusaFigurasBloqueadas('ESCALA_JUNTA_FIGURAS', `ficavam juntas com ${casaM} m por casa`, juntas);
+    }
+    const bloq = casasBloqueadasDe(tNova, pares);
+    if (bloq.length) {
+      throw recusaFigurasBloqueadas('ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS',
+        `ficava${bloq.length === 1 ? '' : 'm'} em casas que o mapa bloqueia com ${casaM} m por casa`, bloq);
+    }
+    for (const f of Object.values(m.figuras)) {
+      const c = noLugar(f);
+      f.x = c.x;
+      f.y = c.y;
+      if (f.casaInicial) f.casaInicial = noLugar(f.casaInicial);
+      if (f.casaColocacao) f.casaColocacao = { ...f.casaColocacao, ...noLugar(f.casaColocacao) };
+    }
+    if (m.fogo && Array.isArray(m.fogo.casas)) {
+      const casas = new Map();
+      for (const c of m.fogo.casas) {
+        const n = noLugar(c);
+        const k = chaveCasa(n.x, n.y);
+        const ja = casas.get(k);
+        if (!ja || c.combustivel > ja.combustivel) casas.set(k, { ...c, x: n.x, y: n.y });
+      }
+      m.fogo.casas = [...casas.values()];
+    }
+    const grelhaAntes = { largura: m.mapa.largura, altura: m.mapa.altura };
+    m.mapa.largura = lado;
+    m.mapa.altura = lado;
+    m.mapa.casaM = casaM;
+    tx.emitir('escala', {}, {
+      casaMAntes: antes, casaM, grelhaAntes, grelha: { largura: lado, altura: lado },
+      vez: m.vez ? { figuraId: m.vez.figuraId, reservaM: m.vez.reservaM, andouM: m.vez.andouM,
+        casasQuePaga: Math.floor(m.vez.reservaM / casaM + EPS) } : null,
+    });
+    tx.snapshotsTodos = true; // mapa novo (tamanho e casaM) e posições novas para todos; as opções seguem pela revisão
     return 'APLICADA';
   }
 
@@ -3412,6 +3518,7 @@ export function criarSala({
       for (let x = 0; x < m.mapa.largura; x++) {
         casas.push({
           x, y, alturaM: t.alturaM(x, y), peM: t.peM(x, y), passavel: passavel(m, x, y), motivo: t.motivo(x, y), cobertura: t.cobertura(x, y),
+          agua: t.agua(x, y),
         });
       }
     }

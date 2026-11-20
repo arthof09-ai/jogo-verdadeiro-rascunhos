@@ -34,6 +34,15 @@
 // O núcleo não importa node:* (o adaptador lê o ficheiro e passa o objecto já lido); o base64 lê-se com `atob`.
 
 const FORMATO = 'terreno/2';
+/**
+ * ORDEM MAPA-JOGÁVEL (palavra do Mestre, 20/11/2026: «Eu quero que todo o mapa seja jogável» — água incluída): os
+ * motivos do pacote que são ÁGUA. O pacote (gerado pelo cliente, preso por SHA) continua a marcar o lago como casas
+ * bloqueadas por «água funda» — não se refaz aqui (outra ordem). O servidor lê-as como CASAS DE ÁGUA: entram-se,
+ * ocupam-se e atravessam-se; `bloqueada` deixa de as contar e `agua(x, y)` diz que são de água.
+ * O custo de entrar na água é o MESMO que em seco (o cânone não tem regra de água: [FALTA] na Passagem da ordem).
+ * O cliente tem a mesma lista (campo_da_mesa.gd MOTIVOS_DE_AGUA), amarrada a esta por teste.
+ */
+export const MOTIVOS_DE_AGUA = Object.freeze(['água funda']);
 export const TERRENO_GRELHA_FORA_DO_MAPA = 'TERRENO_GRELHA_FORA_DO_MAPA';
 export const TERRENO_ESCALA_SEM_TABELA = 'TERRENO_ESCALA_SEM_TABELA';
 
@@ -211,7 +220,9 @@ function recortar(mapa, e, largura, altura) {
   const indice = (x, y) => (Number.isInteger(x) && Number.isInteger(y) && x >= 0 && y >= 0 && x < largura && y < altura ? (kz + y) * rede.largura + kx + x : -1);
   /** A casa do mapa debaixo do centro da casa (x, y) do jogo, como índice no mapa, ou -1. */
   const casaMapa = (x, y) => (indice(x, y) < 0 ? -1 : rede.linhaMapa[kz + y] * mapa.lado + rede.colunaMapa[kx + x]);
-  const bloqueada = (x, y) => { const k = casaMapa(x, y); return k >= 0 && mapa.bloq[k] === 1; };
+  // ORDEM MAPA-JOGÁVEL: a casa do mapa que o pacote bloqueia por água é uma casa de ÁGUA, que se pisa.
+  const deAgua = (k) => k >= 0 && mapa.bloq[k] === 1 && MOTIVOS_DE_AGUA.includes(mapa.motivos[`${k % mapa.lado},${Math.floor(k / mapa.lado)}`]);
+  const bloqueada = (x, y) => { const k = casaMapa(x, y); return k >= 0 && mapa.bloq[k] === 1 && !deAgua(k); };
   // Ordem 59: os lados [oeste, este, norte, sul] da zona que estão ABERTOS (com mapa para lá da folga das fontes de
   // cobertura). Os fechados (na fronteira do mapa) não contam para a faixa da borda. Sem folga no pacote: todos abertos.
   const mapaFimX = mapa.origemM[0] + mapa.lado * mapa.casaM;
@@ -225,7 +236,13 @@ function recortar(mapa, e, largura, altura) {
     return [mx - ox, fimX - mx, mz - oz, fimZ - mz].every((d, i) => !aberto[i] || d > mapa.borda);
   };
   let bloqueadas = 0;
-  for (let y = 0; y < altura; y++) for (let x = 0; x < largura; x++) bloqueadas += bloqueada(x, y) ? 1 : 0;
+  let agua = 0;
+  for (let y = 0; y < altura; y++) {
+    for (let x = 0; x < largura; x++) {
+      bloqueadas += bloqueada(x, y) ? 1 : 0;
+      agua += deAgua(casaMapa(x, y)) ? 1 : 0;
+    }
+  }
   return {
     largura, altura, casaM, origemM: Object.freeze([ox, oz]),
     /** Ordem 59: os lados da zona na fronteira do mapa (não trazem cobertura de fora: a faixa deles julga-se como o interior). */
@@ -235,8 +252,10 @@ function recortar(mapa, e, largura, altura) {
     bloqueada,
     motivo: (x, y) => {
       const k = casaMapa(x, y);
-      return k >= 0 && mapa.bloq[k] === 1 ? mapa.motivos[`${k % mapa.lado},${Math.floor(k / mapa.lado)}`] ?? null : null;
+      return k >= 0 && mapa.bloq[k] === 1 && !deAgua(k) ? mapa.motivos[`${k % mapa.lado},${Math.floor(k / mapa.lado)}`] ?? null : null;
     },
+    /** ORDEM MAPA-JOGÁVEL: a casa (x, y) do jogo é de água (o lago)? Entra-se nela; false fora da grelha. */
+    agua: (x, y) => deAgua(casaMapa(x, y)),
     /**
      * 0 nenhuma, 1 meia, 2 total. Na faixa da borda o que o cliente planta fora da zona pode SUBIR a cobertura (nunca a
      * baixa: no mapa a cobertura só sobe), logo 2 é 2; abaixo de 2 o servidor não sabe: null. null fora da grelha.
@@ -250,5 +269,7 @@ function recortar(mapa, e, largura, altura) {
     /** A casa do mapa (coluna, linha) debaixo do centro da casa do jogo, ou null fora da grelha. */
     casaDoMapa: (x, y) => { const k = casaMapa(x, y); return k < 0 ? null : { coluna: k % mapa.lado, linha: Math.floor(k / mapa.lado) }; },
     casasBloqueadas: () => bloqueadas,
+    /** ORDEM MAPA-JOGÁVEL: quantas casas desta grelha são de água. */
+    casasDeAgua: () => agua,
   };
 }

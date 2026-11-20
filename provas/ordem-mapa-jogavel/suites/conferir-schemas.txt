@@ -1,0 +1,89 @@
+== Mensagens recolhidas (sentido, type) ==
+  entra MASTER_ACT             50
+  entra MASTER_ALERTA_ACK      11
+  entra MASTER_AMBIENTE        45
+  entra MASTER_APPROVE         79
+  entra MASTER_LOBBY_SET       374
+  entra MASTER_MODE            21
+  entra MASTER_PAUSE           4
+  entra MASTER_PLACE           625
+  entra MASTER_RESUME          2
+  entra MASTER_SEARCH          24
+  entra MASTER_START           372
+  entra MASTER_SUPERVISOR      178
+  entra MASTER_VIEW            25
+  entra RECEIPT_QUERY          19
+  entra ROOM_INTENT            439
+  entra ROOM_JOIN              979
+  entra ROOM_RESYNC            35
+  sai   ERRO                   47
+  sai   MASTER_ALERTA          3
+  sai   MASTER_ALERTAS         5
+  sai   MASTER_CARD            101
+  sai   MASTER_EXPORT          1
+  sai   MASTER_RESULTS         12
+  sai   MASTER_VIEW            448
+  sai   ROOM_EVENT             8799
+  sai   ROOM_OPTIONS           1861
+  sai   ROOM_PAUSED            42
+  sai   ROOM_RECEIPT           2152
+  sai   ROOM_REJECT            127
+  sai   ROOM_RESUMED           8
+  sai   ROOM_SNAPSHOT          1190
+  sai   ROOM_WELCOME           955
+
+== Sem schema ==
+
+== Falhas nas mensagens que SAEM do servidor (contam) ==
+
+== Entradas recusadas pelo schema (informação: os testes mandam entradas inválidas de propósito) ==
+  MASTER_ACT: (raiz): Additional properties are not allowed ('cmdId' was unexpected)  (x4)
+  MASTER_ALERTA_ACK: (raiz): 'ids' is a required property  (x1)
+  MASTER_ALERTA_ACK: (raiz): 'perdidos' is a required property  (x1)
+  MASTER_ALERTA_ACK: ids: 'a1' is not of type 'array'  (x1)
+  MASTER_ALERTA_ACK: ids/0: 'não é id!' does not match '^[A-Za-z0-9_-]{1,64}$'  (x1)
+  MASTER_ALERTA_ACK: perdidos: -1 is less than the minimum of 0  (x1)
+  MASTER_ALERTA_ACK: (raiz): Additional properties are not allowed ('extra' was unexpected)  (x1)
+  MASTER_AMBIENTE: raios: 'sim' is not of type 'boolean'  (x1)
+  MASTER_AMBIENTE: raioAgora: True was expected  (x1)
+  MASTER_APPROVE: edicao/desgraca: 'voar' is not one of ['cai', 'arma-cai', 'arma-quebra', 'acerta-se', 'quebra-corpo', 'acerta-amigo']  (x1)
+  MASTER_APPROVE: edicao/desgraca: 'nada' is not one of ['cai', 'arma-cai', 'arma-quebra', 'acerta-se', 'quebra-corpo', 'acerta-amigo']  (x1)
+  MASTER_PLACE: orientacao: '' is not valid under any of the given schemas  (x1)
+  MASTER_SEARCH: (raiz): 'texto' is a required property  (x2)
+  MASTER_SEARCH: texto: '' does not match '^\\s*\\S(?:[\\s\\S]{0,62}\\S)?\\s*$'  (x2)
+  MASTER_SEARCH: texto: '   \t ' does not match '^\\s*\\S(?:[\\s\\S]{0,62}\\S)?\\s*$'  (x1)
+  MASTER_SEARCH: texto: 42 is not of type 'string'  (x1)
+  MASTER_SEARCH: texto: None is not of type 'string'  (x1)
+  MASTER_SEARCH: texto: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' does not match '^\\s*\\S(?:[\\s\\S]{0,62}\\S)?\\s*$'  (x1)
+  MASTER_SEARCH: texto: 'ççççççççççççççççççççççççççççççççççççççççççççççççççççççççççççççççç' does not match '^\\s*\\S(?:[\\s\\S]{0,62}\\S)?\\s*$'  (x1)
+  MASTER_SEARCH: (raiz): Additional properties are not allowed ('limite' was unexpected)  (x1)
+  MASTER_SEARCH: cmdId: 'não é id!' does not match '^[A-Za-z0-9_-]{1,64}$'  (x1)
+  MASTER_SEARCH: cmdId: 7 is not of type 'string'  (x1)
+  MASTER_SEARCH: revision: -1 is less than the minimum of 0  (x1)
+  MASTER_SUPERVISOR: casaM: 3 is not one of [1, 1.5, 2]  (x3)
+  MASTER_SUPERVISOR: casaM: 0.5 is not one of [1, 1.5, 2]  (x2)
+  MASTER_SUPERVISOR: (raiz): Additional properties are not allowed ('intentId' was unexpected)  (x1)
+  MASTER_SUPERVISOR: (raiz): {'v': 2, 'roomId': 'sala-teste', 'type': 'MASTER_SUPERVISOR', 'intentId': 'escala-da-jogadora', 'revision': 3, 'op': 'escala', 'casaM': 2} is not valid under an  (x1)
+  MASTER_SUPERVISOR: casaM: 2.5 is not one of [1, 1.5, 2]  (x1)
+  MASTER_SUPERVISOR: casaM: 1.25 is not one of [1, 1.5, 2]  (x1)
+  MASTER_SUPERVISOR: casaM: 0.75 is not one of [1, 1.5, 2]  (x1)
+  MASTER_SUPERVISOR: casaM: 1.4999 is not one of [1, 1.5, 2]  (x1)
+  MASTER_SUPERVISOR: casaM: 10 is not one of [1, 1.5, 2]  (x1)
+  MASTER_SUPERVISOR: casaM: 0 is not one of [1, 1.5, 2]  (x1)
+  MASTER_SUPERVISOR: casaM: -1.5 is not one of [1, 1.5, 2]  (x1)
+  MASTER_SUPERVISOR: casaM: '2' is not one of [1, 1.5, 2]  (x1)
+  MASTER_SUPERVISOR: casaM: None is not one of [1, 1.5, 2]  (x1)
+  MASTER_SUPERVISOR: (raiz): {'v': 2, 'roomId': 'sala-teste', 'type': 'MASTER_SUPERVISOR', 'cmdId': 'cmd-10', 'revision': 4, 'op': 'escala'} is not valid under any of the given schemas  (x1)
+  MASTER_SUPERVISOR: (raiz): {'v': 2, 'roomId': 'sala-teste', 'type': 'MASTER_SUPERVISOR', 'cmdId': 'cmd-11', 'revision': 4, 'op': 'recomecar', 'casaM': 3} is not valid under any of the giv  (x1)
+  RECEIPT_QUERY: intentIds/0: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' does not match '^[A-Za-z0-9_-]{1,64}$'  (x1)
+  RECEIPT_QUERY: intentIds/1: 'não é id!' does not match '^[A-Za-z0-9_-]{1,64}$'  (x1)
+  RECEIPT_QUERY: intentIds/2: 42 is not of type 'string'  (x1)
+  ROOM_INTENT: acao: {'tipo': 'curar', 'alvoId': 'fa8c5ee39b55a53b8'} is not valid under any of the given schemas  (x1)
+  ROOM_INTENT: acao: {'tipo': 'curar', 'alvoId': 'fa8c5ee39b55a53b8', 'tecnica': 'x', 'extra': 1} is not valid under any of the given schemas  (x1)
+  ROOM_INTENT: acao: {'tipo': 'voar'} is not valid under any of the given schemas  (x1)
+  ROOM_JOIN: (raiz): {'v': 2, 'type': 'ROOM_JOIN', 'roomId': 'sala-teste', 'papel': 'mestre', 'pin': '90210777', 'seatToken': '1a88a9eef918a8b46dc588d3472f513c', 'lastSeq': 7} is no  (x1)
+  ROOM_JOIN: (raiz): {'v': 2, 'type': 'ROOM_JOIN', 'roomId': 'sala-teste', 'papel': 'mestre'} is not valid under any of the given schemas  (x1)
+  ROOM_RESYNC: lastSeq: -1 is less than the minimum of 0  (x1)
+
+Artefactos de teste (ids não-UUID) ignorados: 430
+Schemas sem nenhuma mensagem no tráfego: MASTER_CONFIRM_DICE

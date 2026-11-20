@@ -39,6 +39,22 @@ O pacote é o **mapa inteiro**; o servidor (`nucleo/terreno.js`) recorta dele a 
   ou menos da fronteira do mapa não traz cobertura de fora (as fontes só contam dentro do mapa e só sobrevivem a
   mais de 0,70 m fora da zona): a faixa desse lado é servida com a cobertura do mapa, como o interior.
 
+## Ordem MAPA-JOGÁVEL — o mapa inteiro é campo de batalha (20/11/2026)
+
+- **A grelha é o mapa inteiro.** Uma sala com terreno e sem tamanho na config nasce com a grelha = o maior quadrado
+  que cabe no mapa na escala viva: **50 × 50 de 1,5 m** (a malha, casa a casa). Quando o Mestre muda a escala, a
+  grelha continua a ser o mapa inteiro — **75 × 75 de 1 m**, **37 × 37 de 2 m** (74 m: sobra uma faixa de 0,5 m em
+  cada borda, menos do que uma casa) — e **ninguém muda de sítio no mapa**: cada figura, casa inicial, casa de
+  colocação e casa a arder passa para a casa nova que contém o centro da de antes. Recusas nomeadas ao Mestre:
+  `ESCALA_JUNTA_FIGURAS` (duas figuras na mesma casa) e `ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS`. Um tamanho dado
+  na config continua a valer como antes (bancadas, provas das Ordens 44/48/62).
+- **A água pisa-se.** O pacote continua a marcar o lago como casas bloqueadas por «água funda» (não muda: está preso
+  por SHA às fontes do cliente). O servidor lê esse motivo como **casa de água** (`MOTIVOS_DE_AGUA` em
+  `nucleo/terreno.js`): entra-se, ocupa-se e atravessa-se, com o **mesmo custo** de uma casa seca (o cânone diz
+  «terreno difícil, não parede», sem número: [FALTA] o custo). `agua(x, y)` e `casasDeAgua()` na grelha recortada;
+  `agua` no juízo do terreno. A 1,5 m são as 21 casas de água funda; 50 a 1 m; 13 a 2 m.
+- Prova: `testes/ordem-mapa-jogavel.test.mjs`.
+
 ## Refazer o pacote
 
 Sempre que o relevo, o mapa, a regra do assentamento ou o exportador mudarem. Em `rascunhos/`:

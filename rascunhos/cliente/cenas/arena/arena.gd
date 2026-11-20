@@ -602,6 +602,8 @@ func _sincronizar_figuras() -> void:
 			_nos[id] = no
 			no.position = pe_figura(c)
 		_atualizar_figura(no, id, f, c)
+		# ORDEM MAPA-JOGÁVEL: a casa de água pisa-se; a figura mexe o lago (salpico, anéis — ORDEM ÁGUA-REAÇÃO).
+		CampoDaMesa.seguir_na_agua(mapa, no, casa_m * Assentamento.RAIO_PEGADA_FRAC)
 	for id in _nos.keys():
 		if not vistos.has(id):
 			_nos[id].queue_free()

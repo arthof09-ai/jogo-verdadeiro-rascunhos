@@ -27,7 +27,10 @@ test('o pacote do terreno lê-se: o mapa inteiro, gerado pelo cliente, com as fo
   assert.match(PACOTE.cabecalho.geradoPor, /exportar_terreno\.gd/);
   assert.equal(t.para(20, 20, 1.5).casasBloqueadas(), 0, 'a zona livre (20 × 20) não tem casas bloqueadas');
   const g30 = t.para(30, 30, 1.5);
-  assert.equal(g30.casasBloqueadas(), 43);
+  // ORDEM MAPA-JOGÁVEL: das 43 casas que o pacote bloqueia nesta grelha, 17 são do lago («água funda») e passam a
+  // casas de água, que se pisam; as outras 26 bloqueiam como antes.
+  assert.equal(g30.casasBloqueadas(), 26);
+  assert.equal(g30.casasDeAgua(), 17);
   assert.equal(g30.motivo(1, 0), 'menir');
   assert.equal(g30.bloqueada(1, 0), true);
   assert.equal(g30.bloqueada(10, 10), false);

@@ -286,10 +286,13 @@ func avancar(delta: float) -> void:
 	var agitos := PackedFloat32Array()
 	for i in range(_seguidos.size() - 1, -1, -1):
 		var s: Dictionary = _seguidos[i]
-		var no: Node3D = s["no"]
-		if not is_instance_valid(no) or not no.is_inside_tree():
+		# ORDEM MAPA-JOGÁVEL: as figuras das arenas libertam-se a meio (o servidor tira-as, o mapa refaz-se) — conferir
+		# ANTES de atribuir a uma variável tipada (atribuir um nó já libertado é um SCRIPT ERROR).
+		var bruto = s["no"]
+		if not is_instance_valid(bruto) or not (bruto as Node3D).is_inside_tree():
 			_seguidos.remove_at(i)
 			continue
+		var no: Node3D = bruto
 		var p := no.global_position
 		var imerso := imersao(p.x, p.z, p.y)
 		var antes = s["antes"]

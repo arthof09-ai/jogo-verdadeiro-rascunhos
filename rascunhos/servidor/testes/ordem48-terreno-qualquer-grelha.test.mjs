@@ -20,14 +20,18 @@ test('25 × 25 (o tamanho que caía na queda): servido pelo recorte — as casas
   assert.equal(T.motivoSemGrelha(25, 25, 1.5), null);
   const g = T.para(25, 25, 1.5);
   assert.deepEqual([...g.origemM], [-18, -18], 'a origem da arena para 25 × 25 de 1,5 m (encostada às linhas do mapa)');
-  assert.equal(g.casasBloqueadas(), 10);
+  // ORDEM MAPA-JOGÁVEL: eram 10; 2 são do lago e passam a casas de água (pisam-se).
+  assert.equal(g.casasBloqueadas(), 8);
+  assert.equal(g.casasDeAgua(), 2);
   const m = montarMesa({ terreno: PACOTE, mapa: { largura: 25, altura: 25 } });
   m.entrarTodos();
   m.iniciarCombate([['orc-teste', { x: 12, y: 12 }]]);
   const j = m.sala.depuracao.juizoTerreno();
   assert.equal(j.casas.length, 625, 'o servidor julga as 625 casas');
   const bloqueadas = j.casas.filter((c) => !c.passavel);
-  assert.equal(bloqueadas.length, 10);
+  assert.equal(bloqueadas.length, 8);
+  assert.equal(j.casas.filter((c) => c.agua).length, 2, 'as 2 casas do lago pisam-se (ORDEM MAPA-JOGÁVEL)');
+  assert.ok(j.casas.filter((c) => c.agua).every((c) => c.passavel && c.motivo === null));
   assert.ok(bloqueadas.every((c) => typeof c.motivo === 'string' && c.motivo.length > 0), 'cada casa bloqueada tem o motivo');
   // colocar em cima de cada casa bloqueada é recusado, com o nome do motivo ao Mestre
   for (const c of bloqueadas) {
@@ -41,7 +45,7 @@ test('25 × 25 (o tamanho que caía na queda): servido pelo recorte — as casas
 });
 
 test('25 × 25 nas outras escalas e grelhas não quadradas: servidas, a altura e o pé de cada casa vêm do recorte', () => {
-  for (const [l, a, c, bloq] of [[25, 25, 1, 0], [25, 25, 2, 41], [21, 17, 1, 0], [33, 27, 2, 48], [44, 20, 1.5, null], [1, 1, 1, null]]) {
+  for (const [l, a, c, bloq] of [[25, 25, 1, 0], [25, 25, 2, 28], [21, 17, 1, 0], [33, 27, 2, 35], [44, 20, 1.5, null], [1, 1, 1, null]]) { // MAPA-JOGÁVEL: 41 e 48 menos 13 do lago
     assert.equal(T.motivoSemGrelha(l, a, c), null, `${l}x${a}@${c}`);
     const g = T.para(l, a, c);
     if (bloq !== null) assert.equal(g.casasBloqueadas(), bloq, `${l}x${a}@${c}: casas bloqueadas`);

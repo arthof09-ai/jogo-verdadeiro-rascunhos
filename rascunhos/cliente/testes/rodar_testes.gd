@@ -30,6 +30,14 @@ const LagoFloresta := preload("res://mapa/floresta/lago_floresta.gd")
 const RelevoFloresta := preload("res://mapa/floresta/relevo_floresta.gd")
 ## Ordem ESCALA: a escala do mundo (1 · 1,5 · 2 m por casa; pré-definida 1,5) vive na tabela DADOS.
 const Apresentacao := preload("res://dados/apresentacao.gd")
+## ORDEM MAPA-JOGÁVEL: o que as duas arenas fazem igual (a água não recusa o pé; a figura mexe o lago).
+const CampoDaMesaT := preload("res://cenas/arena/campo_da_mesa.gd")
+
+
+## ORDEM MAPA-JOGÁVEL: um mapa de prova — só a grelha do mapa e o lago (o que campo_da_mesa.gd lê do CampoFloresta).
+class MapaDeProva extends Node3D:
+	var grelha
+	var lago
 
 var _total := 0
 var _falhas := 0
@@ -70,9 +78,12 @@ func _initialize() -> void:
 	_teste_retratos_do_modelo()
 	_teste_caixa_ordem()
 	_teste_escala_do_mundo()
+	# ORDEM MAPA-JOGÁVEL: a grelha é o mapa inteiro e a água pisa-se (o lago segue nós na árvore: depois do quadro).
+	_teste_mapa_jogavel_geometria()
 	# Ordem ÁGUA-REAÇÃO: o lago segue nós que estão na árvore — e no _initialize a raiz ainda não está; um quadro.
 	await process_frame
 	_teste_agua_reacao()
+	_teste_mapa_jogavel_agua()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -1242,3 +1253,89 @@ func _teste_escala_do_mundo() -> void:
 			"a %s m por casa, 6 m cobrem %d casas (no mundo da arena: %.3f m)" % [s, casas, d])
 		var c_fim := Assentamento.centro_casa(origem, s, Vector2i(lado - 1, 0))
 		_ok(is_equal_approx(c_fim.x - a.x, (lado - 1) * s), "a %s m por casa, a grelha de %d casas mede %s m" % [s, lado, lado * s])
+
+
+# ---------------------------------------------------------------- ORDEM MAPA-JOGÁVEL
+
+## ORDEM MAPA-JOGÁVEL (palavra do Mestre, 20/11/2026: «Eu quero que todo o mapa seja jogável» — água incluída).
+## A geometria da decisão escala × malha: a grelha-mapa (o maior quadrado que cabe no mapa) em cada escala, com a
+## regra da arena (Assentamento.origem_no_mapa) = a tabela do servidor; e o lago dentro dela, casa a casa.
+func _teste_mapa_jogavel_geometria() -> void:
+	print("Todo o mapa jogável (ORDEM MAPA-JOGÁVEL) — a grelha-mapa:")
+	var pacote = JSON.parse_string(FileAccess.get_file_as_string(ExportarTerreno.caminho_saida()))
+	var lado_mapa := GrelhaMapa.LADO * GrelhaMapa.CASA_M
+	_ok(is_equal_approx(lado_mapa, 75.0) and GrelhaMapa.LADO == 50, "o mapa é 50 × 50 casas de 1,5 m = 75 m (a malha do relevo)")
+	# o lado da grelha-mapa por escala e a origem (canto NO): a decisão (75 / 50 / 37; −37,5 / −37,5 / −37)
+	var decisao := {1.0: [75, -37.5], 1.5: [50, -37.5], 2.0: [37, -37.0]}
+	var motivos: Dictionary = pacote["mapa"]["motivos"] if pacote is Dictionary else {}
+	var agua_esperada := {1.0: 50, 1.5: 21, 2.0: 13}
+	for e in (pacote.get("escalas", []) if pacote is Dictionary else []):
+		var s := float(e["casaM"])
+		var lado: int = (e["origensM"] as Array).size()
+		_ok(lado == int(decisao[s][0]), "a %s m a grelha-mapa tem %d casas de lado (o servidor: ladoMax)" % [s, lado])
+		_ok(lado * s <= lado_mapa + 0.0001 and lado_mapa - lado * s < s, "a %s m cabe no mapa e o que sobra (%.1f m) é menos do que uma casa" % [s, lado_mapa - lado * s])
+		var origem := Assentamento.origem_no_mapa(Vector2(lado * s, lado * s), s)
+		_ok(origem.is_equal_approx(Vector2(decisao[s][1], decisao[s][1])) and is_equal_approx(float(e["origensM"][lado - 1]), origem.x),
+			"a %s m a arena põe a grelha-mapa onde o servidor a tem (origem %s)" % [s, origem])
+		# o lago dentro da grelha: as casas do jogo cujo centro cai numa casa do mapa de «água funda» (a regra do servidor)
+		var agua := 0
+		for y in lado:
+			for x in lado:
+				var cm := Assentamento.casa_do_mapa(origem, s, Vector2i(x, y))
+				if str(motivos.get("%d,%d" % [cm.x, cm.y], "")) in CampoDaMesaT.MOTIVOS_DE_AGUA:
+					agua += 1
+		_ok(agua == int(agua_esperada[s]), "a %s m o lago tem %d casas de água dentro da grelha (o servidor conta %d)" % [s, agua, agua_esperada[s]])
+	# A lista dos motivos de água é a mesma no servidor e é o motivo que o mapa escreve.
+	var terreno_js := FileAccess.get_file_as_string(ProjectSettings.globalize_path("res://").path_join("../servidor/nucleo/terreno.js").simplify_path())
+	_ok(terreno_js.contains("export const MOTIVOS_DE_AGUA = Object.freeze(['água funda']);") and CampoDaMesaT.MOTIVOS_DE_AGUA == ["água funda"],
+		"os motivos de água são os mesmos no cliente e no servidor (terreno.js MOTIVOS_DE_AGUA)")
+	_ok(FileAccess.get_file_as_string("res://mapa/floresta/campo_floresta.gd").contains("grelha.bloquear(casa, \"água funda\")"),
+		"é esse o motivo que o mapa escreve no lago (campo_floresta.gd)")
+
+
+## ORDEM MAPA-JOGÁVEL: a casa de água não recusa o pé (as outras bloqueadas sim) e a figura mexe o lago (uma vez).
+func _teste_mapa_jogavel_agua() -> void:
+	print("Todo o mapa jogável (ORDEM MAPA-JOGÁVEL) — a água:")
+	var mapa := MapaDeProva.new()
+	mapa.grelha = GrelhaMapa.new()
+	for wy in range(9, 12):
+		for wx in range(35, 38):
+			mapa.grelha.bloquear(Vector2i(wx, wy), "água funda")  # um lago de 3 × 3 casas do mapa, à volta de (36,10)
+	mapa.grelha.bloquear(Vector2i(2, 2), "menir")
+	# 1,5 m, a grelha-mapa: a casa do jogo é a casa do mapa
+	var origem := Assentamento.origem_no_mapa(Vector2(75.0, 75.0), 1.5)
+	_ok(CampoDaMesaT.recusa_do_pe(mapa, origem, 1.5, Vector2i(36, 10)) == "", "na casa de água a figura põe-se de pé (não há recusa)")
+	_ok(CampoDaMesaT.casa_de_agua(mapa, origem, 1.5, Vector2i(36, 10)), "e a casa é de água")
+	var r := CampoDaMesaT.recusa_do_pe(mapa, origem, 1.5, Vector2i(2, 2))
+	_ok(r.ends_with("(2,2) menir") and not CampoDaMesaT.casa_de_agua(mapa, origem, 1.5, Vector2i(2, 2)), "o menir continua a recusar (veio «%s»)" % r)
+	_ok(CampoDaMesaT.recusa_do_pe(mapa, origem, 1.5, Vector2i(10, 10)) == "" and not CampoDaMesaT.casa_de_agua(mapa, origem, 1.5, Vector2i(10, 10)),
+		"a casa seca livre: nem recusa nem água")
+	# a 1 m e a 2 m a casa do jogo é a do mapa debaixo do centro: a casa de água (36,10) do mapa (centro 17,25 / −21,75)
+	for s in [1.0, 2.0]:
+		var lado := 75 if s == 1.0 else 37
+		var o := Assentamento.origem_no_mapa(Vector2(lado * s, lado * s), s)
+		var c := Vector2i(floori((17.25 - o.x) / s), floori((-21.75 - o.y) / s))
+		_ok(CampoDaMesaT.casa_de_agua(mapa, o, s, c) and CampoDaMesaT.recusa_do_pe(mapa, o, s, c) == "",
+			"a %s m a casa %s (sobre a água do mapa) é de água e não recusa o pé" % [s, c])
+	# a figura mexe o lago: ligada uma vez, por muitas sincronizações; um lago novo (mapa refeito) volta a ligá-la
+	var lago := LagoFloresta.new()
+	mapa.lago = lago
+	root.add_child(mapa)
+	mapa.add_child(lago)
+	var no := Node3D.new()
+	mapa.add_child(no)
+	for i in 3:
+		CampoDaMesaT.seguir_na_agua(mapa, no, 0.42)
+	_ok(lago.segue(no) and lago.a_seguir() == 1, "a figura mexe o lago — ligada uma vez em 3 sincronizações")
+	var lago2 := LagoFloresta.new()
+	mapa.add_child(lago2)
+	mapa.lago = lago2
+	CampoDaMesaT.seguir_na_agua(mapa, no, 0.42)
+	_ok(lago2.segue(no), "o lago de um mapa refeito também a segue")
+	CampoDaMesaT.seguir_na_agua(null, no, 0.42)
+	_ok(lago2.a_seguir() == 1, "sem mapa não faz nada")
+	# a figura que a arena liberta sai do lago sozinha, sem erro (avancar confere antes de a usar)
+	no.free()
+	lago2.avancar(0.016)
+	_ok(lago2.a_seguir() == 0, "a figura libertada sai do lago no passo seguinte")
+	mapa.free()
