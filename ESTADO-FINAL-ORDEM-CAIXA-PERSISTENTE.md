@@ -83,6 +83,10 @@ Marcas: VERIFICADO (conferido nesta sessão), PENDENTE (com a razão), [FALTA] (
   `ferramentas/correr-prova-caixa.sh`).
 - Fusão em `fable/integracao-50`: fast-forward de `9ed3d18` para a ponta desta branch, DEPOIS do CI verde nela (a branch
   contém `9ed3d18`, por isso não há merge novo). A confirmação (`git ls-remote`) fica num commit a seguir.
+- **FEITA — VERIFICADO:** CI verde no `37421e7` (Testes dos rascunhos + Sonda de privacidade, success); push
+  `9ed3d18..37421e7 HEAD -> fable/integracao-50` (fast-forward); `git ls-remote`: `fable/integracao-50` =
+  `claude2/caixa-persistente` = `37421e770e1a25bd314eafe7412fe4393bf43bee`. Este registo (só este ficheiro) segue no
+  commit seguinte, também em fast-forward nas duas.
 
 ## Passagem
 - O que mudou: a escolha da caixa do Mestre (ligada, modo) é estado do servidor (`caixaMestre`, journal, MASTER_VIEW, MASTER_SUPERVISOR op `caixa`); o cliente reconstrói a caixa com ela ao reentrar; o realce da caixa lê da tabela DADOS.
