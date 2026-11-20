@@ -15,7 +15,9 @@ signal mudou(id: String)
 ## O lado do retrato em píxeis (quadrado).
 const TAMANHO := 160
 ## Fundo quando o modelo não traz cor de identificação (o anel do marcador do site).
-## PENDÊNCIA (ordem DADOS): passar para a tabela de apresentação quando ela existir na linha.
+## A cor de identificação já vem da tabela de apresentação (Apresentacao.PALETA_ANEIS, pelo material do anel do
+## marcador). Este fundo de recurso NÃO está na tabela da Ordem DADOS: fica o literal da Ordem HUD, como pendência
+## registada no ESTADO FINAL da Ordem CAIXA-PERSISTENTE (nenhuma cor nova inventada aqui).
 const COR_FUNDO_PADRAO := Color("27303a")
 ## Quanto o fundo escurece a cor de identificação, para a pedra do corpo se ler por cima.
 const ESCURECER_FUNDO := 0.45

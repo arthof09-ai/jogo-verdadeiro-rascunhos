@@ -123,7 +123,9 @@ func _correr() -> void:
 	(_vista["iniciativa"] as Array).insert(2, j3)
 
 	_m = (load(CENA) as PackedScene).instantiate()
-	_m.enviar_fn = func(_t, _c, _r): return ""
+	# Ordem CAIXA-PERSISTENTE: sem servidor, a escolha da caixa (MASTER_SUPERVISOR op 'caixa') fica «em voo» (um id
+	# fixo) — sem o alerta «sem ligação» nas capturas; os outros comandos não saem, como antes.
+	_m.enviar_fn = func(_t, c, _r): return "prova-caixa" if c.get("op") == "caixa" else ""
 	_m.pedir_vista_fn = func(): pass
 	root.add_child(_m)
 	await _quadros(2)

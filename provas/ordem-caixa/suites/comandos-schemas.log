@@ -1,0 +1,37 @@
+  ok    linha 1 MASTER_APPROVE editar
+  ok    linha 2 MASTER_APPROVE aprovar
+  ok    linha 3 MASTER_APPROVE recusar
+  ok    linha 4 MASTER_CONFIRM_DICE 
+  ok    linha 5 MASTER_APPROVE aprovar
+  ok    linha 6 MASTER_APPROVE editar
+  ok    linha 7 MASTER_APPROVE editar
+  ok    linha 8 MASTER_APPROVE recusar
+  ok    linha 9 MASTER_SUPERVISOR escala
+9 mensagens, 0 falhas
+  ok    linha 1 MASTER_SUPERVISOR voltar
+  ok    linha 2 MASTER_MODE 
+  ok    linha 3 MASTER_ACT 
+  ok    linha 4 MASTER_ACT 
+  ok    linha 5 MASTER_ACT 
+  ok    linha 6 MASTER_APPROVE editar
+  ok    linha 7 MASTER_APPROVE aprovar
+  ok    linha 8 MASTER_SUPERVISOR terminar
+  ok    linha 9 MASTER_SUPERVISOR recomecar
+  ok    linha 10 MASTER_APPROVE recusar
+  ok    linha 11 MASTER_LOBBY_SET 
+  ok    linha 12 MASTER_START 
+  ok    linha 13 MASTER_PLACE 
+  ok    linha 14 MASTER_PLACE 
+  ok    linha 15 MASTER_PLACE 
+  ok    linha 16 MASTER_PLACE 
+  ok    linha 17 MASTER_AMBIENTE 
+  ok    linha 18 MASTER_AMBIENTE 
+  ok    linha 19 MASTER_AMBIENTE 
+  ok    linha 20 MASTER_AMBIENTE 
+  ok    linha 21 ROOM_JOIN 
+  ok    linha 22 ROOM_JOIN 
+  ok    linha 23 ROOM_JOIN 
+  ok    linha 24 MASTER_APPROVE aprovar
+  ok    linha 25 MASTER_PLACE 
+  ok    linha 26 MASTER_PLACE 
+26 mensagens, 0 falhas

@@ -20,9 +20,13 @@ const NA_VEZ := "na vez"
 const LADO_RETRATO_EM_LETRAS := 2.8
 const LADO_ACTIVA_EM_LETRAS := 4.6
 const MAX_LETRAS_NOME := 10
-## PENDÊNCIA (ordem DADOS): estas cores vão para a tabela de apresentação quando ela existir na linha.
+## Ordem CAIXA-PERSISTENTE: a tabela de apresentação da Ordem DADOS (dados/apresentacao.gd) aplica-se onde ela já
+## define a cor: o realce da figura na vez é o anel de destino do site (Apresentacao.COR_MESTRE_ANEL = ffd28b, o mesmo
+## literal de antes, por isso o ecrã fica igual). O fundo do painel e a moldura da caixa NÃO estão na tabela: ficam os
+## literais da Ordem HUD, como pendência registada no ESTADO FINAL da ordem (nenhuma cor nova inventada aqui).
+const Apresentacao := preload("res://dados/apresentacao.gd")
 const COR_PAINEL := Color(0.07, 0.09, 0.12, 0.78)
-const COR_REALCE := Color("ffd28b")  # o anel de destino do site (arena_mestre.gd COR_ANEL)
+const COR_REALCE := Apresentacao.COR_MESTRE_ANEL
 const COR_MOLDURA := Color(1, 1, 1, 0.18)
 
 var modo := "dinamico"

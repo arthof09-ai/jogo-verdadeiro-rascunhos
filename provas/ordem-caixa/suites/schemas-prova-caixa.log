@@ -1,0 +1,37 @@
+== Mensagens recolhidas (sentido, type) ==
+  entra MASTER_AMBIENTE        2
+  entra MASTER_LOBBY_SET       2
+  entra MASTER_MODE            1
+  entra MASTER_PLACE           3
+  entra MASTER_RESUME          1
+  entra MASTER_START           2
+  entra MASTER_SUPERVISOR      14
+  entra MASTER_VIEW            11
+  entra ROOM_INTENT            5
+  entra ROOM_JOIN              8
+  sai   MASTER_CARD            1
+  sai   MASTER_VIEW            15
+  sai   ROOM_EVENT             66
+  sai   ROOM_OPTIONS           14
+  sai   ROOM_PAUSED            4
+  sai   ROOM_RECEIPT           27
+  sai   ROOM_REJECT            9
+  sai   ROOM_RESUMED           4
+  sai   ROOM_SNAPSHOT          16
+  sai   ROOM_WELCOME           8
+
+== Sem schema ==
+
+== Falhas nas mensagens que SAEM do servidor (contam) ==
+
+== Entradas recusadas pelo schema (informação: os testes mandam entradas inválidas de propósito) ==
+  MASTER_SUPERVISOR: caixa: 'modo' is a required property  (x1)
+  MASTER_SUPERVISOR: caixa/ligada: 1 is not of type 'boolean'  (x1)
+  MASTER_SUPERVISOR: caixa/modo: 'turnos' is not one of ['dinamico', 'iniciativa']  (x1)
+  MASTER_SUPERVISOR: caixa: Additional properties are not allowed ('vida' was unexpected)  (x1)
+  MASTER_SUPERVISOR: (raiz): {'v': 2, 'roomId': 'sala-teste', 'type': 'MASTER_SUPERVISOR', 'cmdId': 'cmd-21', 'revision': 13, 'op': 'caixa'} is not valid under any of the given schemas  (x1)
+  MASTER_SUPERVISOR: (raiz): {'v': 2, 'roomId': 'sala-teste', 'type': 'MASTER_SUPERVISOR', 'cmdId': 'cmd-22', 'revision': 13, 'op': 'caixa', 'caixa': {'ligada': True, 'modo': 'dinamico'}, '  (x1)
+  MASTER_SUPERVISOR: (raiz): {'v': 2, 'roomId': 'sala-teste', 'type': 'MASTER_SUPERVISOR', 'cmdId': 'cmd-23', 'revision': 13, 'op': 'escala', 'casaM': 2, 'caixa': {'ligada': True, 'modo': '  (x1)
+
+Artefactos de teste (ids não-UUID) ignorados: 5
+Schemas sem nenhuma mensagem no tráfego: ERRO, MASTER_ACT, MASTER_ALERTA, MASTER_ALERTAS, MASTER_ALERTA_ACK, MASTER_APPROVE, MASTER_CONFIRM_DICE, MASTER_EXPORT, MASTER_PAUSE, MASTER_RESULTS, MASTER_SEARCH, RECEIPT_QUERY, ROOM_RESYNC

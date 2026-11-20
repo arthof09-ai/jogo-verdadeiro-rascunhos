@@ -1,0 +1,17 @@
+1) escolha por omissão na MASTER_VIEW: {"ligada":true,"modo":"dinamico"}
+2) a meio da batalha: ordem dinâmica Heroína → Aliada | vez de Lobo
+3) «Modo iniciativa» → recibo APLICADA | estado.caixaMestre {"ligada":true,"modo":"iniciativa"}
+   journalSeq 12 → 12 | revisões iguais | Party: 0 mensagens novas | pontos do «voltar»: 10 → 10
+4) Mestre sai e volta a entrar a meio da batalha: caixaMestre {"ligada":true,"modo":"iniciativa"} | fase pausa | ordem Heroína → Aliada
+5) caixa desligada, sair e voltar a entrar: {"ligada":false,"modo":"iniciativa"}
+6) em pausa: caixa → APLICADA {"ligada":true,"modo":"dinamico"} | MASTER_AMBIENTE → sala_pausada
+7) sala reaberta do journal: {"ligada":true,"modo":"iniciativa"}
+   journal de antes desta ordem (sem o campo): abre, caixaMestre {"ligada":true,"modo":"dinamico"}
+   journal com caixaMestre estragado (ligada não booleana, modo desconhecido, campo a mais): não abre
+8) «voltar» ao ponto em que a Aliada andou: ordem Heroína → Aliada | caixaMestre {"ligada":true,"modo":"iniciativa"}
+   «Recomeçar»: caixaMestre {"ligada":true,"modo":"iniciativa"} | ordem dinâmica []
+9) com um cartão aberto: caixa → APLICADA | MASTER_AMBIENTE → cartao_aberto
+10) mensagens mal formadas → formato, formato, formato, formato, formato, formato, formato
+11) chaves de caixaMestre (estado e vista): ligada, modo
+   a Party (heroína, aliada, espectador) nunca recebeu caixaMestre: ok
+PROVA OK

@@ -404,6 +404,10 @@
     "ordem": [],
     "fechada": false,
     "ultimo": null
+   },
+   "caixaMestre": {
+    "ligada": true,
+    "modo": "dinamico"
    }
   },
   "snapshot": {
@@ -702,6 +706,10 @@
     "ordem": [],
     "fechada": false,
     "ultimo": null
+   },
+   "caixaMestre": {
+    "ligada": true,
+    "modo": "dinamico"
    }
   },
   "resultados": {
@@ -964,6 +972,10 @@
     "ordem": [],
     "fechada": false,
     "ultimo": null
+   },
+   "caixaMestre": {
+    "ligada": true,
+    "modo": "dinamico"
    }
   },
   "opcoes": {

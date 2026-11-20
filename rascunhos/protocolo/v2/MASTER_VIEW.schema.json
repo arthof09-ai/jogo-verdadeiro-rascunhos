@@ -117,6 +117,7 @@
         },
         "estatisticas": { "$ref": "#/$defs/estatisticas" },
         "ordemDinamica": { "$ref": "#/$defs/ordemDinamica" },
+        "caixaMestre": { "$ref": "#/$defs/caixaMestre" },
         "avisoMotor": {
           "description": "Errata D-36 (N21-1; palavra do Mestre, 11/11/2026): o aviso do motor (o mesmo do evento aviso_motor, D-35) também na vista, para o Mestre que entra sem lastSeq (só recebe o snapshot, sem eventos). Os campos do soMestre do evento, enquanto a sala estiver no fim gravada com outro motor (o «Recomeçar» é recusado, 17-3); senão null. O servidor manda-o sempre a partir da ordem 22; fica fora do `required` para as vistas de antes. Só o Mestre.",
           "oneOf": [
@@ -142,6 +143,16 @@
             }
           ]
         }
+      },
+      "additionalProperties": false
+    },
+    "caixaMestre": {
+      "description": "Ordem CAIXA-PERSISTENTE (19/11/2026): a escolha da caixa da ordem de turnos do Mestre, guardada pelo servidor (sala.js estado.caixaMestre, no journal; fora dos pontos do «voltar»): `ligada` = a caixa aparece no ecrã de batalha dele (aba Sala); `modo` = 'dinamico' (a ordem pelas acções, a vez = ordemDinamica.ultimo) ou 'iniciativa' (a ordem `iniciativa`, a vez = vezId). Muda-se com MASTER_SUPERVISOR op 'caixa'. O Mestre que volta a entrar a meio da batalha reconstrói a caixa com ela. Só um booleano e um modo — nunca vida nem alma. Só o Mestre. Fica fora do `required` para as vistas de antes desta ordem.",
+      "type": "object",
+      "required": ["ligada", "modo"],
+      "properties": {
+        "ligada": { "type": "boolean" },
+        "modo": { "enum": ["dinamico", "iniciativa"] }
       },
       "additionalProperties": false
     },

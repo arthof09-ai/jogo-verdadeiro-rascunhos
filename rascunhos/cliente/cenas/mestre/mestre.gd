@@ -151,6 +151,9 @@ var _escolha: PanelContainer
 var ordem_turnos := OrdemTurnos.new()
 var caixa_ligada := true
 var _caixa: CaixaOrdem
+## Ordem CAIXA-PERSISTENTE: o id do último MASTER_SUPERVISOR op 'caixa' que mandámos. Enquanto ele está em voo, a escolha
+## que o Mestre acabou de fazer manda sobre a da vista (que pode ser de antes dela); depois, manda a do servidor.
+var _caixa_cmd := ""
 var _retratos: Retratos
 var _b_caixa: Button
 var _lista_escolha: VBoxContainer
@@ -372,6 +375,7 @@ func aplicar_vista(msg: Dictionary) -> void:
 	_desenhar_figuras()
 	_desenhar_ambiente()
 	ordem_turnos.carregar_do_servidor(msg.get("ordemDinamica"))  # Ordem INICIATIVA NO SERVIDOR: o servidor é o dono
+	_carregar_caixa_do_servidor(msg.get("caixaMestre"))  # Ordem CAIXA-PERSISTENTE: a escolha da caixa também
 	_desenhar_ordem()
 	_aba_registo.atualizar(msg)
 	_aba_mesa.atualizar(msg)
@@ -1334,9 +1338,15 @@ func _ao_redimensionar() -> void:
 ## O Mestre liga ou desliga a caixa (aba Sala). Desligada, o ecrã fica como antes; a ordem continua a formar-se
 ## por baixo, para aparecer certa quando ele a voltar a ligar.
 func ligar_caixa(ligar: bool) -> void:
-	caixa_ligada = ligar
-	_b_caixa.text = CAIXA_LIGADA if ligar else CAIXA_DESLIGADA
+	_mostrar_caixa_ligada(ligar)
 	_desenhar_ordem()
+	_guardar_caixa()
+
+
+func _mostrar_caixa_ligada(ligar: bool) -> void:
+	caixa_ligada = ligar
+	if _b_caixa != null:
+		_b_caixa.text = CAIXA_LIGADA if ligar else CAIXA_DESLIGADA
 
 
 ## O botão «Modo iniciativa» da caixa. Ligado: a ordem é a de iniciativa que o servidor dá (`iniciativa` da vista —
@@ -1345,6 +1355,25 @@ func ligar_caixa(ligar: bool) -> void:
 func definir_modo_iniciativa(ligar: bool) -> void:
 	ordem_turnos.definir_modo(OrdemTurnos.INICIATIVA if ligar else OrdemTurnos.DINAMICO)
 	_desenhar_ordem()
+	_guardar_caixa()
+
+
+## Ordem CAIXA-PERSISTENTE: a escolha da caixa (ligada, modo) vai para o servidor, que a guarda no estado da sala e a
+## devolve em cada MASTER_VIEW — o Mestre que sai e volta a entrar a meio da batalha reconstrói a caixa com ela.
+func _guardar_caixa() -> void:
+	_caixa_cmd = _enviar("MASTER_SUPERVISOR", {"op": "caixa", "caixa": {"ligada": caixa_ligada, "modo": ordem_turnos.modo}})
+
+
+## Ordem CAIXA-PERSISTENTE: a escolha da vista (`caixaMestre` {ligada, modo}) passa a ser a da caixa. Não mexe se a
+## vista não a traz (servidor de antes desta ordem) nem enquanto a escolha que o Mestre acabou de fazer está em voo.
+func _carregar_caixa_do_servidor(c) -> void:
+	if _caixa_cmd != "" and _em_voo.has(_caixa_cmd):
+		return
+	_caixa_cmd = ""
+	if not (c is Dictionary) or not (c.get("ligada") is bool):
+		return
+	_mostrar_caixa_ligada(c["ligada"])
+	ordem_turnos.definir_modo(str(c.get("modo", "")))
 
 
 ## Ordem HUD: a caixa fica no canto de cima, à esquerda, mas POR BAIXO dos controlos de cima do tabuleiro — o

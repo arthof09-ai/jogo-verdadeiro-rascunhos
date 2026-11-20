@@ -18,7 +18,7 @@ import { projetarEvento, projetarSnapshot, efeitoAmbiente, nomePublicoDe, visive
 import * as Amb from './ambiente.js';
 import { criarFilaAlertas } from './fila-alertas.js';
 import { prepararTerreno } from './terreno.js';
-import { ordemDinamicaVazia, registarEvento as registarNaOrdemDinamica, ordemParaVista } from './ordem-dinamica.js';
+import { ordemDinamicaVazia, registarEvento as registarNaOrdemDinamica, ordemParaVista, caixaMestrePadrao, caixaBemFormada, caixaParaVista } from './ordem-dinamica.js';
 
 export const PROTOCOLO = 2;
 /** A escala com que a sala nasce (Q5 do site, jogo.js: CASA_M = 1,5 m). Ordem 8 do CM-000009 (item 8, desempate do
@@ -572,6 +572,8 @@ export function criarSala({
       fogo: Amb.fogoVazio(),
       // Ordem INICIATIVA NO SERVIDOR: a ordem dinâmica (quem agiu, por que ordem) — só ids; o servidor é o dono.
       ordemDinamica: ordemDinamicaVazia(),
+      // Ordem CAIXA-PERSISTENTE: a escolha da caixa do Mestre (ligada/desligada, modo) — fora do «voltar» (não é mundo).
+      caixaMestre: caixaMestrePadrao(),
       cartoes: [], contadores: { cartao: 0, ia: 0 }, lugares, motores: { ...motoresInfo }, desfecho: null,
     };
     atualizarRevisoes(estado);
@@ -1024,6 +1026,9 @@ export function criarSala({
       // Ordem INICIATIVA NO SERVIDOR: a ordem dinâmica da caixa, do servidor (só ids). O Mestre que volta a entrar a meio
       // da batalha recebe-a como estava, com as entradas, as saídas e os atrasos.
       ordemDinamica: ordemParaVista(m.ordemDinamica, m.figuras),
+      // Ordem CAIXA-PERSISTENTE: a escolha da caixa (ligada, modo), do servidor. O Mestre que volta a entrar reconstrói a
+      // caixa com ela; nas salas de antes desta ordem vem a de omissão (ligada, dinâmico).
+      caixaMestre: caixaParaVista(m.caixaMestre),
     };
   }
   function mensagemCartao(c) {
@@ -2508,6 +2513,9 @@ export function criarSala({
           && (msg.raios === undefined || typeof msg.raios === 'boolean')
           && (msg.raioAgora === undefined || msg.raioAgora === true);
       case 'MASTER_SUPERVISOR':
+        // Ordem CAIXA-PERSISTENTE: a escolha da caixa vem só com op 'caixa', exactamente {ligada, modo}.
+        if (msg.op === 'caixa') return msg.ateSeq === undefined && msg.casaM === undefined && caixaBemFormada(msg.caixa);
+        if (msg.caixa !== undefined) return false;
         if (msg.op === 'terminar' || msg.op === 'recomecar') return msg.ateSeq === undefined && msg.casaM === undefined; // N4 (palavra do Mestre, 08/11)
         // Ordem 8 (item 8): a escala nova, em metros por casa. Aqui só a forma (número > 0); os valores que valem
         // (1 / 1,5 / 2, ordem 11) confere-os mudarEscala, para a recusa levar o detalhe ESCALA_INVALIDA ao Mestre.
@@ -2538,10 +2546,13 @@ export function criarSala({
     const liberadoComCartao =
       (tipo === 'MASTER_APPROVE' && ativo && msg.cartaoId === ativo.cartaoId)
       || (tipo === 'MASTER_CONFIRM_DICE' && ativo && ativo.tipo === 'dados' && ativo.origem?.id === msg.intentId)
-      || (tipo === 'MASTER_SUPERVISOR' && ['voltar', 'terminar', 'recomecar'].includes(msg.op))
+      || (tipo === 'MASTER_SUPERVISOR' && ['voltar', 'terminar', 'recomecar', 'caixa'].includes(msg.op))
       || tipo === 'MASTER_PAUSE' || tipo === 'MASTER_RESUME';
     if (ativo && !liberadoComCartao) throw new ErroRecusa('cartao_aberto'); // E-C6
-    if (m.fase === 'pausa' && tipo !== 'MASTER_RESUME' && tipo !== 'MASTER_PAUSE') throw new ErroRecusa('sala_pausada');
+    // Ordem CAIXA-PERSISTENTE: a escolha da caixa é só apresentação do Mestre — vale com um cartão aberto e em pausa
+    // (a caixa aparece em combate e em pausa), como o botão dela no cliente.
+    const soApresentacao = tipo === 'MASTER_SUPERVISOR' && msg.op === 'caixa';
+    if (m.fase === 'pausa' && tipo !== 'MASTER_RESUME' && tipo !== 'MASTER_PAUSE' && !soApresentacao) throw new ErroRecusa('sala_pausada');
     if (msg.revision !== m.lugares[seatId].revision) throw new ErroRecusa('revisao_antiga'); // E-C3
 
     switch (tipo) {
@@ -2642,6 +2653,7 @@ export function criarSala({
         if (msg.op === 'terminar') return terminarBatalha(tx);
         if (msg.op === 'recomecar') return recomecarBatalha(tx);
         if (msg.op === 'escala') return mudarEscala(tx, msg.casaM);
+        if (msg.op === 'caixa') return escolherCaixa(tx, msg.caixa);
         return voltar(tx, msg.ateSeq);
       case 'MASTER_PAUSE':
         if (!pausar(tx, 'manutencao', 'mestre')) throw new ErroRecusa('acao_invalida');
@@ -3030,6 +3042,17 @@ export function criarSala({
         casasQuePaga: Math.floor(m.vez.reservaM / casaM + EPS) } : null,
     });
     tx.snapshotsTodos = true; // mapa.casaM novo para todos; as opções seguem pela revisão
+    return 'APLICADA';
+  }
+
+  /**
+   * Ordem CAIXA-PERSISTENTE: MASTER_SUPERVISOR op 'caixa' — o Mestre ligou/desligou a caixa da ordem de turnos ou mudou o
+   * modo dela (dinâmico/iniciativa). O servidor guarda a escolha no estado da sala (journal) e manda-a na MASTER_VIEW.
+   * Sem evento: não é um facto da batalha (nada no registo, nenhum ponto novo do «voltar») e a Party não sabe de nada; a
+   * revisão também não muda (a escolha não entra no snapshot nem nas opções). Vale em qualquer fase.
+   */
+  function escolherCaixa(tx, caixa) {
+    tx.estado.caixaMestre = { ligada: caixa.ligada, modo: caixa.modo };
     return 'APLICADA';
   }
 

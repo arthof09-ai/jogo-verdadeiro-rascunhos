@@ -249,6 +249,13 @@ export function conferirEstadoProfundo(e, fichas, fluxos = null) {
   // ponto de antes dela põe null). Presente: só ids de figuras que existem, um booleano e um contador.
   seHouver(e, 'ordemDinamica', '', ouNull(ehObj), 'não é objecto nem null');
   if (ehObj(e.ordemDinamica)) conferirOrdemDinamica(e.ordemDinamica, e);
+  // Ordem CAIXA-PERSISTENTE: a escolha da caixa do Mestre (journals de antes não a têm). Presente: um booleano e um modo.
+  seHouver(e, 'caixaMestre', '', ehObj, 'não é objecto');
+  if (ehObj(e.caixaMestre)) {
+    exigir(e.caixaMestre, 'ligada', 'caixaMestre', ehBool, 'não é booleano');
+    exigir(e.caixaMestre, 'modo', 'caixaMestre', (v) => v === 'dinamico' || v === 'iniciativa', 'modo desconhecido');
+    for (const k of Object.keys(e.caixaMestre)) if (k !== 'ligada' && k !== 'modo') falha('caixaMestre.' + k, 'campo a mais');
+  }
 }
 
 function conferirOrdemDinamica(od, e) {

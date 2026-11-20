@@ -111,3 +111,35 @@ export function ordemParaVista(od, figuras) {
   for (const id of Array.isArray(o.ordem) ? o.ordem : []) if (naBatalha(id) && !ordem.includes(id)) ordem.push(id);
   return { ordem, fechada: o.fechada === true, ultimo: naBatalha(o.ultimo) ? o.ultimo : null };
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Ordem CAIXA-PERSISTENTE (19/11/2026): a ESCOLHA DA CAIXA do Mestre passa a viver no servidor, ao lado da ordem dinâmica.
+//
+// Antes (Ordem HUD, pendência 2) o «ligar/desligar a caixa» (aba Sala) e o «Modo iniciativa» (botão da caixa) viviam só
+// no cliente do Mestre: se ele saísse e voltasse a entrar a meio da batalha, a caixa voltava ligada e no modo dinâmico,
+// fosse qual fosse a escolha dele. Agora o servidor guarda-a no estado da sala (`caixaMestre`, no journal) e manda-a na
+// MASTER_VIEW; o cliente reconstrói a caixa com ela. A figura MOSTRADA na caixa (quem está na vez) já era do servidor:
+// `ordemDinamica.ultimo` no modo dinâmico e `vezId` no modo iniciativa — a escolha decide qual das duas se mostra.
+//
+// É uma preferência de apresentação do Mestre, não um facto do mundo: NÃO entra nos pontos do «voltar» (voltar atrás na
+// batalha não religa uma caixa que o Mestre desligou depois), nem se apaga no «Recomeçar» ou numa batalha nova. Só um
+// booleano e um modo — nenhum valor de vida ou de alma. Só o Mestre a vê e só ele a muda (MASTER_SUPERVISOR op 'caixa').
+
+/** Os modos da caixa (os mesmos de `cliente/hud/ordem_turnos.gd`: DINAMICO e INICIATIVA). */
+export const MODOS_CAIXA = Object.freeze(['dinamico', 'iniciativa']);
+
+/** A escolha por omissão — a de sempre no cliente (Ordem HUD): caixa ligada, modo dinâmico. */
+export function caixaMestrePadrao() {
+  return { ligada: true, modo: 'dinamico' };
+}
+
+/** A escolha que vem no MASTER_SUPERVISOR op 'caixa': exactamente {ligada: booleano, modo: um dos MODOS_CAIXA}. */
+export function caixaBemFormada(c) {
+  return !!c && typeof c === 'object' && !Array.isArray(c)
+    && Object.keys(c).length === 2 && typeof c.ligada === 'boolean' && MODOS_CAIXA.includes(c.modo);
+}
+
+/** O que vai na MASTER_VIEW: a escolha guardada ou, nas salas de antes desta ordem, a de omissão. */
+export function caixaParaVista(c) {
+  return caixaBemFormada(c) ? { ligada: c.ligada, modo: c.modo } : caixaMestrePadrao();
+}
