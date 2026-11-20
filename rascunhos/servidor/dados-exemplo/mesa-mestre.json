@@ -1208,6 +1208,15 @@
      "casas": [],
      "aArder": []
     },
+    "caixa": {
+     "ligada": true,
+     "ordemPor": "dinamico",
+     "ordemDinamica": {
+      "ordem": [],
+      "fechada": false,
+      "ultimo": null
+     }
+    },
     "propria": {
      "figuraId": "f1a88a9eef918a8b4",
      "vidaActual": 5150,

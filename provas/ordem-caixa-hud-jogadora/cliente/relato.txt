@@ -1,0 +1,61 @@
+== Ordem CAIXA-HUD-JOGADORA — a jogadora entra a meio de uma batalha de bancada e vê a caixa do Mestre ==
+servidor ws://127.0.0.1:8792/ws · render NVIDIA GeForce RTX 4060
+== 0. batalha de bancada (IA de bancada, lugares próprios) ==
+  bancada: Arqueira de Bancada → {"destino":{"x":11,"y":10},"tipo":"mover"} (APLICADA)
+  bancada: Arqueira de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Lobo de Bancada → {"destino":{"x":12,"y":10},"tipo":"mover"} (APLICADA)
+  bancada: Lobo de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Espadachim de Bancada → {"destino":{"x":11,"y":8},"tipo":"mover"} (APLICADA)
+  bancada: Espadachim de Bancada → {"tipo":"encerrar"} (APLICADA)
+  a batalha a meio: fase combate, rodada 1.0, vez de Bruto de Bancada, ordem dinâmica (Mestre) ["Arqueira de Bancada","Lobo de Bancada","Espadachim de Bancada"]
+  ok    batalha de bancada a meio: em combate e com a ordem dinâmica formada no servidor (≥ 2 figuras)
+== 1. a jogadora (Espadachim de Bancada) entra pelo ecrã a sério ==
+  ok    1: a jogadora entrou a meio da batalha (fase combate, rodada 1)
+  caixa da jogadora: visível=true modo=dinamico ordem=["Arqueira de Bancada","Lobo","Espadachim de Bancada"] vez=Espadachim de Bancada
+  ok    1: a caixa aparece no HUD dela como o Mestre a tem (ligada, dinâmico)
+  ok    1: a ordem é a do servidor ["Arqueira de Bancada","Lobo","Espadachim de Bancada"]
+  ok    1: a figura na vez (dinâmico: quem agiu por último) é a do servidor (Espadachim de Bancada)
+  ok    1: a própria jogadora está na ordem (agiu antes de entrar, pelo lugar de bancada)
+  ok    1: nenhuma mensagem do Mestre chegou ao aparelho dela (1 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    1: o estado dela não guarda nada do Mestre
+  ok    1: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica {"ligada":true,"ordemDinamica":{"fechada":false,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"],"ultimo":"f20af3254ba898103"},"ordemPor":"dinamico"}
+  ok    1: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa []
+  ok    captura 1-entrou-dinamica.png (1028×720)
+== 2. o Mestre carrega em «Modo iniciativa» ==
+  ok    2: o servidor aceitou a escolha do Mestre (ligada, iniciativa)
+  ok    2: a caixa da jogadora passou ao modo iniciativa
+  caixa da jogadora: visível=true modo=iniciativa ordem=["Arqueira de Bancada","Lobo","Espadachim de Bancada","Bruto"] vez=Bruto
+  ok    2: a ordem é a de iniciativa do servidor ["Arqueira de Bancada","Lobo","Espadachim de Bancada","Bruto"] e a vez é a do servidor (Bruto)
+  ok    captura 2-iniciativa.png (1028×720)
+== 3. o Mestre desliga a caixa ==
+  ok    3: o servidor aceitou (desligada)
+  ok    3: a caixa desapareceu do HUD da jogadora
+  ok    captura 3-desligada.png (1028×720)
+== 4. o Mestre volta a ligar no modo dinâmico; a bancada joga mais duas vezes ==
+  ok    4: o servidor aceitou (ligada, dinâmico)
+  ok    4: a caixa voltou ao HUD dela no modo dinâmico
+  bancada: Bruto de Bancada → {"destino":{"x":10,"y":10},"tipo":"mover"} (APLICADA)
+  bancada: Bruto de Bancada → {"tipo":"encerrar"} (APLICADA)
+  ok    4: a bancada jogou a vez de Bruto
+  bancada: Arqueira de Bancada → {"alvoId":"f08e6e9dc41e7a378","arma":"tiro-certeiro-bancada","tipo":"atacar"} (APLICADA)
+  bancada: Arqueira de Bancada → {"tipo":"encerrar"} (APLICADA)
+  ok    4: a bancada jogou a vez de Arqueira de Bancada
+  caixa da jogadora: visível=true modo=dinamico ordem=["Arqueira de Bancada","Lobo","Espadachim de Bancada","Bruto"] vez=Arqueira de Bancada
+  ok    4: pelos eventos que recebeu, a caixa dela adiantou-se e é igual à ordem do servidor ["Arqueira de Bancada","Lobo","Espadachim de Bancada","Bruto"] (vez: Arqueira de Bancada, fechada: true)
+  ok    4: nenhuma mensagem do Mestre chegou ao aparelho dela (9 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    4: o estado dela não guarda nada do Mestre
+  ok    4: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica {"ligada":true,"ordemDinamica":{"fechada":false,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"],"ultimo":"f20af3254ba898103"},"ordemPor":"dinamico"}
+  ok    4: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa []
+  ok    captura 4-religada-avancou.png (1028×720)
+== 5. a jogadora sai e volta a entrar ==
+  ok    5: a jogadora saiu
+  ok    5: a jogadora entrou a meio da batalha (fase combate, rodada 2)
+  caixa da jogadora: visível=true modo=dinamico ordem=["Arqueira de Bancada","Lobo","Espadachim de Bancada","Bruto"] vez=Arqueira de Bancada
+  ok    5: a caixa reconstruiu-se do snapshot, igual à de antes de sair
+  ok    5: nenhuma mensagem do Mestre chegou ao aparelho dela (1 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    5: o estado dela não guarda nada do Mestre
+  ok    5: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica {"ligada":true,"ordemDinamica":{"fechada":true,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103","f1c67641aa5cdfe28"],"ultimo":"ff2acf60bd672e76e"},"ordemPor":"dinamico"}
+  ok    5: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa []
+  ok    captura 5-reentrou.png (1028×720)
+
+prova da caixa no HUD da jogadora: 36 de 36 verificações passaram.

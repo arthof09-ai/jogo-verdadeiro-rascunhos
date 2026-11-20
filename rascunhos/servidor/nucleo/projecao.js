@@ -9,6 +9,7 @@
 
 import { clonarJson } from './util.js';
 import { fogoPublico, fogoDoMestre } from './ambiente.js';
+import { caixaParaParty } from './ordem-dinamica.js';
 
 /**
  * Campos permitidos por tipo de ROOM_EVENT.
@@ -201,6 +202,11 @@ export function projetarSnapshot(mundo, fichas, dest) {
     };
     return base;
   }
+
+  // Ordem CAIXA-HUD-JOGADORA: a caixa da ordem de turnos no HUD da Party — a escolha do Mestre (ligada, modo) e a ordem
+  // dinâmica formada só pelos eventos que a Party recebe (ordem-dinamica.js caixaParaParty). Não vai à sala de espera
+  // (sala.js `mundoDeEspera`: nada da batalha). Salas de antes desta ordem: a escolha de omissão, como na MASTER_VIEW.
+  if (mundo.salaDeEspera !== true) base.caixa = caixaParaParty(mundo.caixaMestre, mundo.ordemDinamicaParty, mundo.figuras);
 
   if (dest.papel === 'jogadora' && dest.figuraId) {
     const f = mundo.figuras[dest.figuraId];

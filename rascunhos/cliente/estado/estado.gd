@@ -54,6 +54,10 @@ var minha_figura_id := ""
 var propria: Dictionary = {}
 ## Só o Mestre: o bloco `mestre` do snapshot (figuras não colocadas, lobby, vez, cartões).
 var mestre: Dictionary = {}
+## Ordem CAIXA-HUD-JOGADORA: a caixa da ordem de turnos da Party (projecao.js `caixa`): a escolha do Mestre
+## {ligada, ordemPor} e a ordem dinâmica DA PARTY {ordem, fechada, ultimo} (formada só pelos eventos que ela recebe).
+## Só ids, um booleano e um modo. {} = o servidor não a mandou (sala de espera, servidor de antes desta ordem).
+var caixa: Dictionary = {}
 var pausada := false
 
 var _espera: Dictionary = {}  # seq -> mensagem
@@ -131,6 +135,7 @@ func aplicar_snapshot(msg: Dictionary) -> void:
 	ambiente = _dict(msg.get("ambiente")).duplicate(true)
 	fogo = _dict(msg.get("fogo")).duplicate(true)
 	propria = _dict(msg.get("propria")).duplicate(true)
+	caixa = _dict(msg.get("caixa")).duplicate(true)  # Ordem CAIXA-HUD-JOGADORA
 	var mf = propria.get("figuraId")
 	if mf is String and mf != "":
 		minha_figura_id = mf
@@ -216,6 +221,7 @@ func limpar() -> void:
 	minha_figura_id = ""
 	propria = {}
 	mestre = {}
+	caixa = {}
 	_arma_de.clear()
 	_teste_morte_pendente = false
 	_reentrada = false

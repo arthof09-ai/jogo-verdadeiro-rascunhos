@@ -249,6 +249,9 @@ export function conferirEstadoProfundo(e, fichas, fluxos = null) {
   // ponto de antes dela põe null). Presente: só ids de figuras que existem, um booleano e um contador.
   seHouver(e, 'ordemDinamica', '', ouNull(ehObj), 'não é objecto nem null');
   if (ehObj(e.ordemDinamica)) conferirOrdemDinamica(e.ordemDinamica, e);
+  // Ordem CAIXA-HUD-JOGADORA: a ordem dinâmica da Party (journals de antes não a têm). A mesma forma.
+  seHouver(e, 'ordemDinamicaParty', '', ouNull(ehObj), 'não é objecto nem null');
+  if (ehObj(e.ordemDinamicaParty)) conferirOrdemDinamica(e.ordemDinamicaParty, e, 'ordemDinamicaParty');
   // Ordem CAIXA-PERSISTENTE: a escolha da caixa do Mestre (journals de antes não a têm). Presente: um booleano e um modo.
   seHouver(e, 'caixaMestre', '', ehObj, 'não é objecto');
   if (ehObj(e.caixaMestre)) {
@@ -258,8 +261,7 @@ export function conferirEstadoProfundo(e, fichas, fluxos = null) {
   }
 }
 
-function conferirOrdemDinamica(od, e) {
-  const p = 'ordemDinamica';
+function conferirOrdemDinamica(od, e, p = 'ordemDinamica') {
   exigir(od, 'ordem', p, Array.isArray, 'não é lista');
   od.ordem.forEach((id, i) => {
     if (!ehTextoCheio(id)) falha(`${p}.ordem.${i}`, 'não é texto');

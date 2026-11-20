@@ -136,7 +136,8 @@ const RE_ID = /^[A-Za-z0-9_-]{1,64}$/;
 // `cartoes` entra no checkpoint para o «voltar» repor os cartões do instante (rolagem por resolver incluída).
 // Ordem 13: `fogo` (casas a arder, quem arde) também volta com o «voltar».
 // Ordem INICIATIVA NO SERVIDOR: `ordemDinamica` (a ordem da caixa do Mestre) também volta com o «voltar».
-const CHAVES_MUNDO = Object.freeze(['fase', 'mapa', 'lobby', 'figuras', 'ordem', 'vezIdx', 'rodada', 'vez', 'ambiente', 'desfecho', 'cartoes', 'marchaLivre', 'fogo', 'ordemDinamica']);
+const CHAVES_MUNDO = Object.freeze(['fase', 'mapa', 'lobby', 'figuras', 'ordem', 'vezIdx', 'rodada', 'vez', 'ambiente', 'desfecho', 'cartoes', 'marchaLivre', 'fogo', 'ordemDinamica', 'ordemDinamicaParty']);
+// Ordem CAIXA-HUD-JOGADORA: `ordemDinamicaParty` (a ordem da caixa da Party, só pelos eventos que ela recebe) também.
 /**
  * L6 (D4 do Plano A, desenho JV3.1; I0004 08/11): «marcha pura» = proposta da IA sem efeito de regra sobre ninguém
  * (andar ou encerrar a vez). Com o «Continuar a rodada» do Mestre (MASTER_APPROVE {rodada:true}), as marchas puras
@@ -572,6 +573,8 @@ export function criarSala({
       fogo: Amb.fogoVazio(),
       // Ordem INICIATIVA NO SERVIDOR: a ordem dinâmica (quem agiu, por que ordem) — só ids; o servidor é o dono.
       ordemDinamica: ordemDinamicaVazia(),
+      // Ordem CAIXA-HUD-JOGADORA: a ordem dinâmica da caixa da Party — a mesma regra, só pelos eventos que a Party recebe.
+      ordemDinamicaParty: ordemDinamicaVazia(),
       // Ordem CAIXA-PERSISTENTE: a escolha da caixa do Mestre (ligada/desligada, modo) — fora do «voltar» (não é mundo).
       caixaMestre: caixaMestrePadrao(),
       cartoes: [], contadores: { cartao: 0, ia: 0 }, lugares, motores: { ...motoresInfo }, desfecho: null,
@@ -967,7 +970,10 @@ export function criarSala({
    */
   function snapshotParaRevisao(snap) {
     const porId = (a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
-    const r = { ...snap, figuras: [...snap.figuras].sort(porId) };
+    // Ordem CAIXA-HUD-JOGADORA: a caixa da Party é apresentação (como a escolha do Mestre): fica fora do hash — mudar a
+    // caixa não sobe a revisão nem recusa uma intenção em voo por `revisao_antiga`.
+    const { caixa, ...semCaixa } = snap;
+    const r = { ...semCaixa, figuras: [...snap.figuras].sort(porId) };
     if (snap.mestre && Array.isArray(snap.mestre.figuras)) r.mestre = { ...snap.mestre, figuras: [...snap.mestre.figuras].sort(porId) };
     return r;
   }
@@ -1007,6 +1013,7 @@ export function criarSala({
     return {
       fase: 'lobby', mapa: m.mapa, figuras, ordem: [], vez: null, rodada: 0,
       ambiente: { hora: null, clima: null }, fogo: Amb.fogoVazio(),
+      salaDeEspera: true, // Ordem CAIXA-HUD-JOGADORA: sem a caixa da ordem de turnos (projecao.js)
     };
   }
   function mensagemOpcoes(s, o) {
@@ -1103,6 +1110,7 @@ export function criarSala({
       opcoesForcadas: new Set(),
       anuncio: null,
       snapshotsTodos: false,
+      snapshotsParty: false, // Ordem CAIXA-HUD-JOGADORA: só a Party recebe snapshot (a caixa mudou)
       ts: isoAgora(),
       baseSeq: journal.journalSeq,
     };
@@ -1137,6 +1145,11 @@ export function criarSala({
     for (const ev of tx.eventos) {
       if (!m.ordemDinamica) m.ordemDinamica = ordemDinamicaVazia(); // salas de antes desta ordem
       registarNaOrdemDinamica(m.ordemDinamica, ev);
+      // Ordem CAIXA-HUD-JOGADORA: a ordem da Party, pelo evento TAL COMO A PARTY O RECEBE (o espectador: só os campos
+      // `todos`). Evento que não sai para a Party (ex.: `acao`) não conta — nada se deriva do que ela não vê.
+      if (!m.ordemDinamicaParty) m.ordemDinamicaParty = ordemDinamicaVazia(); // salas de antes desta ordem
+      const visto = projetarEvento(ev, { papel: 'espectador', figuraId: null });
+      if (visto !== null) registarNaOrdemDinamica(m.ordemDinamicaParty, { tipo: ev.tipo, dados: visto });
     }
     const mudaram = atualizarRevisoes(m);
     const lugares = Object.values(m.lugares);
@@ -1157,6 +1170,14 @@ export function criarSala({
     // lastSeq que não passa daqui recebe o snapshot outra vez em vez de só os eventos (mensagensDeSincronizacao).
     if (tx.snapshotsTodos) {
       for (const s of lugares) {
+        s.seqSnapshot = s.seq;
+        tx.saidas.push({ seatId: s.seatId, msg: mensagemSnapshot(m, s, tx.ts) });
+      }
+    } else if (tx.snapshotsParty) {
+      // Ordem CAIXA-HUD-JOGADORA: o Mestre mudou a caixa — a Party recebe o snapshot com a caixa nova (a revisão não muda).
+      // Como o anúncio da pausa (V30): quem voltar com um lastSeq até aqui recebe o snapshot outra vez.
+      for (const s of lugares) {
+        if (s.papel === 'mestre' || naEspera(s)) continue;
         s.seqSnapshot = s.seq;
         tx.saidas.push({ seatId: s.seatId, msg: mensagemSnapshot(m, s, tx.ts) });
       }
@@ -2586,6 +2607,7 @@ export function criarSala({
         m.fase = 'combate';
         m.rodada = 1;
         m.ordemDinamica = ordemDinamicaVazia(); // Ordem INICIATIVA NO SERVIDOR: batalha nova, ordem dinâmica nova
+        m.ordemDinamicaParty = ordemDinamicaVazia(); // Ordem CAIXA-HUD-JOGADORA: e a da Party também
         m.ordem = ordenarPorIniciativa(colocadas(m).map((f) => f.id), m);
         // A batalha começa sempre na vez dela (D-13.3, rodada 1).
         m.vezIdx = m.ordem.findIndex((id) => m.figuras[id].lado === 'jogadora');
@@ -3048,11 +3070,13 @@ export function criarSala({
   /**
    * Ordem CAIXA-PERSISTENTE: MASTER_SUPERVISOR op 'caixa' — o Mestre ligou/desligou a caixa da ordem de turnos ou mudou o
    * modo dela (dinâmico/iniciativa). O servidor guarda a escolha no estado da sala (journal) e manda-a na MASTER_VIEW.
-   * Sem evento: não é um facto da batalha (nada no registo, nenhum ponto novo do «voltar») e a Party não sabe de nada; a
-   * revisão também não muda (a escolha não entra no snapshot nem nas opções). Vale em qualquer fase.
+   * Sem evento: não é um facto da batalha (nada no registo, nenhum ponto novo do «voltar»); a revisão também não muda
+   * (a escolha não entra no hash da vista nem nas opções). Vale em qualquer fase.
+   * Ordem CAIXA-HUD-JOGADORA: a Party passa a saber — a escolha vai no ROOM_SNAPSHOT dela (`caixa`), que segue logo.
    */
   function escolherCaixa(tx, caixa) {
     tx.estado.caixaMestre = { ligada: caixa.ligada, modo: caixa.modo };
+    tx.snapshotsParty = true;
     return 'APLICADA';
   }
 

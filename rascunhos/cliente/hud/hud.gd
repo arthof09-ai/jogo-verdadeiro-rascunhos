@@ -9,6 +9,10 @@ extends CanvasLayer
 ## - Tela vermelha gradual desde 25% da vida DELA, com pulso.
 ## - Safe-area; textos com 12 px reais ou mais; nada técnico na tela.
 ## - Mostra ROOM_OPTIONS como o servidor as manda: nunca calcula alcance, caminho nem CA.
+## - Ordem CAIXA-HUD-JOGADORA: a CAIXA DA ORDEM DE TURNOS (a mesma do Mestre: hud/caixa_ordem.gd) no canto de cima,
+##   à direita, como o Mestre a escolheu — ligada/desligada e o modo (dinâmico/iniciativa) vêm do servidor
+##   (ROOM_SNAPSHOT `caixa`). A jogadora não a muda (sem o botão «Modo iniciativa»). A ordem dinâmica é a DA PARTY
+##   (só pelos eventos que ela recebe); a de iniciativa é a `iniciativa`/`vezId` do snapshot. Nada do Mestre.
 ## A entrada (nome e senha) é do lobby (cenas/lobby).
 
 signal modo_pedido(modo: int, extra: Dictionary)
@@ -21,6 +25,12 @@ const Apresentacao := preload("res://dados/apresentacao.gd")
 ## Ordem 52: a escolha do perfil gráfico (lista, nomes, ficheiro, linha «Gráficos») vive num só sítio, partilhado
 ## com o ecrã do Mestre (aba Sala). Os valores são os de antes.
 const EscolhaPerfil := preload("res://arte/perfis/escolha_perfil.gd")
+## Ordem CAIXA-HUD-JOGADORA: o modelo da ordem, a caixa e os retratos — as MESMAS peças do ecrã do Mestre (Ordem HUD).
+## As cores da caixa: o realce lê da tabela (Apresentacao.COR_MESTRE_ANEL, em caixa_ordem.gd); o painel, a moldura e o
+## fundo do retrato ficam POR LIGAR — esperam a palavra do Mestre sobre os [FALTA] (nenhuma cor nova aqui).
+const OrdemTurnos := preload("res://hud/ordem_turnos.gd")
+const CaixaOrdem := preload("res://hud/caixa_ordem.gd")
+const Retratos := preload("res://hud/retratos.gd")
 
 const ARQ_PREF := EscolhaPerfil.ARQ
 const LARGURA_BASE := Apresentacao.LARGURA_BASE
@@ -116,6 +126,14 @@ var _painel_ficha: PanelContainer
 var _b_defender: Button
 var _texto_defender: Label
 
+## Ordem CAIXA-HUD-JOGADORA: a caixa da ordem de turnos (o que o Mestre escolheu, do servidor).
+var ordem_turnos := OrdemTurnos.new()
+## A escolha do Mestre: a caixa aparece? (false até o servidor dizer: sala de espera ou servidor de antes desta ordem.)
+var caixa_ligada := false
+var _caixa: CaixaOrdem
+var _retratos: Retratos
+var _caixa_pendente := false
+
 
 func _ready() -> void:
 	_carregar_preferencias()
@@ -125,6 +143,7 @@ func _ready() -> void:
 	_montar_escolha()
 	_montar_gaveta()
 	_montar_ficha()
+	_montar_caixa()
 	_montar_tela_vermelha()
 	get_viewport().size_changed.connect(_ao_redimensionar)
 	_ao_redimensionar()
@@ -149,6 +168,10 @@ func _ready() -> void:
 	Estado.ataque_visto.connect(_ao_ataque)
 	Estado.frase_batalha.connect(_ao_frase_batalha)
 	Estado.fase_mudou.connect(_ao_fase)
+	Estado.snapshot_aplicado.connect(_carregar_caixa)
+	# O snapshot pode ter chegado antes de a cena abrir (a jogadora entra pelo lobby): a caixa lê-o já, como a arena.
+	if Estado.tem_snapshot:
+		_carregar_caixa()
 	_atualizar()
 
 
@@ -361,6 +384,7 @@ func _ao_redimensionar() -> void:
 		(b as Button).custom_minimum_size = Vector2(_fonte * 9.0, _fonte * 2.8)
 	_b_ficha.custom_minimum_size = Vector2(_fonte * 6.0, _fonte * 2.4)
 	_painel_ficha.custom_minimum_size = Vector2(_fonte * 17.0, 0.0)
+	_caixa.ajustar(_fonte)
 	_aplicar_safe_area()
 	_reposicionar.call_deferred()
 
@@ -402,6 +426,7 @@ func _reposicionar() -> void:
 	_gaveta.offset_top -= subir
 	_gaveta.offset_bottom -= subir
 	_ancorar(_painel_escolha, Control.PRESET_CENTER)
+	_posicionar_caixa()
 
 
 func _ancorar(c: Control, preset: int) -> void:
@@ -438,6 +463,7 @@ func _atualizar() -> void:
 	_b_encerrar.visible = Estado.e_minha_vez() and Estado.tem_acao("encerrar")
 	_b_encerrar.disabled = not livre
 	_barra.visible = na_mesa and Estado.fase == "combate"
+	_pedir_desenho_caixa()
 	_atualizar_gaveta(livre)
 	_atualizar_ficha(livre)
 	_faixa.text = _texto_faixa()
@@ -514,7 +540,8 @@ func _ao_ligacao(_e: int) -> void:
 	_atualizar()
 
 
-func _ao_evento(_e: Dictionary) -> void:
+func _ao_evento(e: Dictionary) -> void:
+	ordem_turnos.registar_evento(e)  # Ordem CAIXA-HUD-JOGADORA: as mesmas regras do servidor, só com o que ela recebe
 	_atualizar()
 
 
@@ -898,3 +925,92 @@ func _guardar_preferencias() -> void:
 	for k in pref:
 		cfg.set_value("pref", k, pref[k])
 	cfg.save(ARQ_PREF)
+
+
+# ---------------------------------------------------------------- Ordem CAIXA-HUD-JOGADORA: a caixa da ordem de turnos
+
+func _montar_caixa() -> void:
+	_retratos = Retratos.new()
+	_retratos.name = "Retratos"
+	add_child(_retratos)
+	_caixa = CaixaOrdem.new()
+	_caixa.com_botao = false  # a escolha é do Mestre: a jogadora só vê
+	_caixa.visible = false
+	$Raiz/Seguro/Camadas.add_child(_caixa)
+	_retratos.mudou.connect(func(_id: String): _pedir_desenho_caixa())
+
+
+## O snapshot trouxe a caixa (ou não): a escolha do Mestre e a ordem dinâmica da Party passam a ser as do servidor.
+## Sem o campo (sala de espera, servidor de antes desta ordem), a caixa não aparece — o ecrã fica como antes.
+func _carregar_caixa() -> void:
+	var c: Dictionary = Estado.caixa
+	if c.get("ligada") is bool:
+		caixa_ligada = c["ligada"]
+		ordem_turnos.definir_modo(str(c.get("ordemPor", "")))
+		if not ordem_turnos.carregar_do_servidor(c.get("ordemDinamica")):
+			ordem_turnos.limpar_dinamica()
+	else:
+		caixa_ligada = false
+		ordem_turnos.limpar_dinamica()
+	_pedir_desenho_caixa()
+
+
+## A arena sincroniza as figuras no mesmo sinal: o desenho espera pelo fim do quadro (os retratos são cópias delas).
+func _pedir_desenho_caixa() -> void:
+	if _caixa_pendente:
+		return
+	_caixa_pendente = true
+	_desenhar_caixa.call_deferred()
+
+
+func _desenhar_caixa() -> void:
+	_caixa_pendente = false
+	if _caixa == null:
+		return
+	var mostrar := caixa_ligada and Rede.na_mesa() and Estado.fase == "combate"  # em pausa a fase continua «combate»
+	if mostrar != _caixa.visible:
+		_caixa.visible = mostrar
+		_posicionar_caixa()
+	if not mostrar:
+		return
+	var nomes := {}
+	for id in Estado.figuras:
+		nomes[id] = Estado.nome_de(str(id))
+	var ordem := ordem_turnos.ordem_visivel(Estado.iniciativa, Estado.figuras)
+	var retratos := {}
+	for id in ordem:
+		var f: Dictionary = Estado.figuras[id]
+		var modelo: Node3D = arena.modelo_da_figura(id) if arena != null and arena.has_method("modelo_da_figura") else null
+		_retratos.pedir(id, "%s|%s" % [f.get("visivel"), id == Estado.minha_figura_id], modelo)
+		if _retratos.tem(id):
+			retratos[id] = _retratos.textura(id)
+	_retratos.esquecer_ausentes(Estado.figuras)
+	_caixa.mostrar(ordem, ordem_turnos.na_vez(Estado.vez_id), nomes, retratos, ordem_turnos.modo)
+	_posicionar_caixa()
+
+
+## A caixa fica no canto de cima, à direita (à esquerda estão a ⚙ e a ficha; em baixo, a barra). A faixa e o aviso de
+## cima encolhem dos dois lados o mesmo, para continuarem centrados sem passar por baixo da caixa.
+func _posicionar_caixa() -> void:
+	if _caixa == null:
+		return
+	var margem_lado := float(_fonte) * 3.5
+	if _caixa.visible:
+		_caixa.size = _caixa.get_combined_minimum_size()
+		var area: Vector2 = ($Raiz/Seguro/Camadas as Control).size
+		_caixa.position = Vector2(maxf(0.0, area.x - _caixa.size.x), 0.0)
+		margem_lado = maxf(margem_lado, _caixa.size.x + float(_fonte) * 0.5)
+	for c in [_faixa, _aviso]:
+		(c as Control).offset_left = margem_lado
+		(c as Control).offset_right = -margem_lado
+
+
+## Para os testes e as provas: o que a caixa mostra agora.
+func caixa_mostrada() -> Dictionary:
+	return {
+		"visivel": _caixa != null and _caixa.visible,
+		"ids": _caixa.ids_mostrados.duplicate() if _caixa != null else [],
+		"vez": _caixa.vez_mostrada if _caixa != null else "",
+		"modo": ordem_turnos.modo,
+		"rect": _caixa.get_global_rect() if _caixa != null else Rect2(),
+	}

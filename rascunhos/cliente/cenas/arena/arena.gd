@@ -323,6 +323,11 @@ func posicao_tela(figura_id: String):
 	return camera.unproject_position(p)
 
 
+## Ordem CAIXA-HUD-JOGADORA: o nó da figura `id` em cena (o retrato da caixa do HUD é a cópia dele), ou null.
+func modelo_da_figura(id: String) -> Node3D:
+	return _nos.get(id) as Node3D
+
+
 # ---------------------------------------------------------------- modos e intenções
 
 func definir_modo(m: int, extra: Dictionary = {}) -> void:

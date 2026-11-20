@@ -31,6 +31,26 @@
       },
       "additionalProperties": false
     },
+    "caixaParty": {
+      "type": "object",
+      "description": "Ordem CAIXA-HUD-JOGADORA (20/11/2026): a caixa da ordem de turnos no HUD da Party (jogadoras e espectadores). `ligada` e `ordemPor` são a escolha do Mestre (MASTER_VIEW caixaMestre: ligada, modo; o nome não é `modo` porque essa chave é proibida à Party, E-P11). `ordemDinamica` é a ordem dinâmica DA PARTY: as regras da do Mestre, mas formada só pelos eventos tal como a Party os recebe (os `acao` não saem para a Party, por isso não contam). No modo iniciativa a caixa usa `iniciativa` e `vezId` deste snapshot. Só ids, um booleano e um modo — nunca vida, alma, valores de iniciativa nem nada técnico. Não vai à sala de espera. Muda-se só pelo Mestre (MASTER_SUPERVISOR op 'caixa'), que faz seguir um ROOM_SNAPSHOT novo à Party; fica fora do hash da revisão. Fora do `required` para os snapshots de antes desta ordem.",
+      "required": ["ligada", "ordemPor", "ordemDinamica"],
+      "properties": {
+        "ligada": { "type": "boolean" },
+        "ordemPor": { "enum": ["dinamico", "iniciativa"] },
+        "ordemDinamica": {
+          "type": "object",
+          "required": ["ordem", "fechada", "ultimo"],
+          "properties": {
+            "ordem": { "type": "array", "items": { "$ref": "comum.schema.json#/$defs/idOpaco" } },
+            "fechada": { "type": "boolean" },
+            "ultimo": { "$ref": "comum.schema.json#/$defs/idOuNull" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
     "figuraMestre": {
       "type": "object",
       "description": "Figura no bloco do Mestre: o estado interno inteiro (posição, vida actual, PA gasto, estados, modo H10, fichaId, colocada) + nome verdadeiro, nome público e os totais da ficha (L1 do desenho JV3.1, revisão do Muse 08/11). Nunca vai à Party.",
@@ -102,7 +122,8 @@
         "vezId": { "$ref": "comum.schema.json#/$defs/idOuNull" },
         "rodada": { "type": "integer", "minimum": 0 },
         "ambiente": { "$ref": "comum.schema.json#/$defs/ambienteEfeito" },
-        "fogo": { "$ref": "comum.schema.json#/$defs/fogoPublico" }
+        "fogo": { "$ref": "comum.schema.json#/$defs/fogoPublico" },
+        "caixa": { "$ref": "#/$defs/caixaParty" }
       },
       "additionalProperties": false
     },
@@ -124,6 +145,7 @@
         "rodada": { "type": "integer", "minimum": 0 },
         "ambiente": { "$ref": "comum.schema.json#/$defs/ambienteEfeito" },
         "fogo": { "$ref": "comum.schema.json#/$defs/fogoPublico" },
+        "caixa": { "$ref": "#/$defs/caixaParty" },
         "propria": { "$ref": "#/$defs/propria" }
       },
       "additionalProperties": false

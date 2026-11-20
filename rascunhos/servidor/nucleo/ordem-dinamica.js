@@ -143,3 +143,25 @@ export function caixaBemFormada(c) {
 export function caixaParaVista(c) {
   return caixaBemFormada(c) ? { ligada: c.ligada, modo: c.modo } : caixaMestrePadrao();
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Ordem CAIXA-HUD-JOGADORA (20/11/2026): a CAIXA NO HUD DA JOGADORA. A escolha do Mestre (ligada, modo) chega à Party no
+// ROOM_SNAPSHOT (`caixa`), com a ordem dinâmica QUE A PARTY PODE SABER.
+//
+// PRIVACIDADE: a ordem dinâmica do Mestre conta também os `acao` (correr, defender, apanhar a arma…), que não saem para
+// a Party (projecao.js CAMPOS_PERMITIDOS não tem `acao`). Por isso a Party tem a SUA ordem dinâmica
+// (`estado.ordemDinamicaParty`), formada com as mesmas regras de cima mas só pelos eventos TAL COMO A PARTY OS RECEBE
+// (a projecção do evento para um espectador): nada nela se deriva de um dado que a jogadora não vê. A jogadora que
+// adianta a caixa pelos eventos que recebe chega à mesma ordem; o snapshot dá-lha ao entrar ou voltar a entrar.
+// Só ids, um booleano e um modo — nunca vida, alma, valores de iniciativa, nem nada técnico.
+
+/**
+ * A caixa que vai no ROOM_SNAPSHOT da Party: a escolha do Mestre e a ordem dinâmica da Party (só figuras colocadas).
+ * `ordemPor` é o modo da caixa ('dinamico' | 'iniciativa'). Não se chama `modo`: essa chave é PROIBIDA à Party (é o
+ * modo H10 das figuras, E-P11 — a sonda de canários dos testes falha com ela). No modo iniciativa a jogadora usa a
+ * `iniciativa` e o `vezId` do próprio snapshot (já eram públicos).
+ */
+export function caixaParaParty(caixaMestre, odParty, figuras) {
+  const c = caixaParaVista(caixaMestre);
+  return { ligada: c.ligada, ordemPor: c.modo, ordemDinamica: ordemParaVista(odParty, figuras) };
+}
