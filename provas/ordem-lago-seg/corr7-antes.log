@@ -1,0 +1,37 @@
+✔ CORR7 (a): o retorno 2 → 1,5 m a meio da batalha (1,5 → 1 → 2 → 1,5) — ninguém muda de sítio, a grelha volta a 50 × 50, a batalha continua (95.438ms)
+✔ CORR7 (a): o retorno directo 2 → 1,5 m com a heroína a meio da vez — os metros andados a 2 m ficam em metros (24.4318ms)
+✔ CORR7 (b): ESCALA_JUNTA_FIGURAS a subir 1,5 → 2 m — recusada, a sala fica igual, e a batalha continua (12.9855ms)
+✔ CORR7 (b): a descer 2 → 1,5 m, ESCALA_JUNTA_FIGURAS nunca pode disparar — vizinhas a 2 m ficam vizinhas a 1,5 m (12.8259ms)
+✔ CORR7 (c): ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS a subir 1,5 → 2 m — recusada, a sala fica igual, e a batalha continua (36.821ms)
+✖ CORR7 (c): a descer 2 → 1,5 m, ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS nunca pode disparar — provado por enumeração, confirmado no servidor numa amostra das casas de risco (1.8007ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 278.5065
+
+✖ failing tests:
+
+test at testes\ordem-provas-mapa-corr7.test.mjs:205:1
+✖ CORR7 (c): a descer 2 → 1,5 m, ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS nunca pode disparar — provado por enumeração, confirmado no servidor numa amostra das casas de risco (1.8007ms)
+  AssertionError [ERR_ASSERTION]: as casas livres de 2 m do terreno actual (1.326)
+  
+  1275 !== 1326
+  
+      at TestContext.<anonymous> (file:///C:/Users/txcga/RPG_Local/jogo-verdadeiro/ordem-lago-seg/repo/rascunhos/servidor/testes/ordem-provas-mapa-corr7.test.mjs:210:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1275,
+    expected: 1326,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

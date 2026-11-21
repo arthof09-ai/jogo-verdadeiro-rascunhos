@@ -1,0 +1,10 @@
+origens { '1': [ -37.5, -37.5 ], '2': [ -37, -37 ], '1.5': [ -37.5, -37.5 ] }
+2 -> 1.5: casas de origem que colidem 0; livres que caem em bloqueadas 0 
+1.5 -> 2: casas de origem que colidem 1131; livres que caem em bloqueadas 47 (8,0)->(6,0) (9,0)->(6,0) (10,0)->(7,0) (23,0)->(17,0)
+1 -> 2: casas de origem que colidem 4256; livres que caem em bloqueadas 139 (12,0)->(6,0) (13,0)->(6,0) (14,0)->(7,0) (15,0)->(7,0)
+2 -> 1: casas de origem que colidem 0; livres que caem em bloqueadas 0 
+1 -> 1.5: casas de origem que colidem 3125; livres que caem em bloqueadas 0 
+1.5 -> 1: casas de origem que colidem 0; livres que caem em bloqueadas 0 
+(b) par juntas a 1,5 m: {"h":{"x":12,"y":10},"o":{"x":13,"y":10},"em2":{"x":9,"y":7}}
+(c) alvo bloqueada a 2 m: {"x":8,"y":0,"em2":{"x":6,"y":0}}
+(c) descer: livres a 2 m 1275; de risco 301; postas no servidor 51 (1 em 6)
