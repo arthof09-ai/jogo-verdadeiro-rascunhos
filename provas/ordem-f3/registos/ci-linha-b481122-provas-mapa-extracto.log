@@ -1,0 +1,12 @@
+provas-mapa	UNKNOWN STEP	2026-11-21T08:37:24.3150008Z   ok    1.5 m: heroína desenhada no pé da casa (38, 4)
+provas-mapa	UNKNOWN STEP	2026-11-21T08:37:24.3150743Z   ok    1.5 m: orc desenhada no pé da casa (38, 11)
+provas-mapa	UNKNOWN STEP	2026-11-21T08:37:24.3157830Z   ok    1.5 m: a heroína desenhada no pé da casa (38, 5) (0.3 s)
+provas-mapa	UNKNOWN STEP	2026-11-21T08:37:24.3161521Z   ok    1.0 m: heroína desenhada no pé da casa (57, 8)
+provas-mapa	UNKNOWN STEP	2026-11-21T08:37:24.3163011Z   ok    1.0 m: orc desenhada no pé da casa (57, 17)
+provas-mapa	UNKNOWN STEP	2026-11-21T08:37:24.3168497Z   ok    1.0 m: a heroína desenhada no pé da casa (57, 9) (0.2 s)
+provas-mapa	UNKNOWN STEP	2026-11-21T08:37:24.3181776Z   ok    2.0 m: heroína desenhada no pé da casa (28, 4)
+provas-mapa	UNKNOWN STEP	2026-11-21T08:37:24.3184040Z   ok    2.0 m: orc desenhada no pé da casa (28, 8)
+provas-mapa	UNKNOWN STEP	2026-11-21T08:37:24.3192562Z   ok    2.0 m: a heroína desenhada no pé da casa (28, 6) (0.2 s)
+provas-mapa	UNKNOWN STEP	2026-11-21T08:37:24.4434596Z | bancada 2 m: figuras | heroína (28,4) nó (20,-28) desvio (0,0) · orc (28,8) nó (20,-20) desvio (0,0) água | heroína (28,4) nó (20,-28) desvio (0,0.0004062652587890625) · orc (28,8) nó (20,-20) desvio (0,0) água | **NÃO** |
+provas-mapa	UNKNOWN STEP	2026-11-21T08:37:24.4499120Z | bancada jogadora: nós desenhados | 9efe237b91d09495 | ad05a7adc8ba8bd1 | **NÃO** |
+provas-mapa	UNKNOWN STEP	2026-11-21T08:37:24.4499900Z NÃO SE REPETE — primeira × ci: números 460/461 iguais, bits 72/73 iguais (bits só registados)

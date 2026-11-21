@@ -1,0 +1,12 @@
+2026-11-21T08:07:20.4185262Z   ok    1.5 m: heroína desenhada no pé da casa (38, 4)
+2026-11-21T08:07:20.4185814Z   ok    1.5 m: orc desenhada no pé da casa (38, 11)
+2026-11-21T08:07:20.4191203Z   ok    1.5 m: a heroína desenhada no pé da casa (38, 5) (0.2 s)
+2026-11-21T08:07:20.4195019Z   ok    1.0 m: heroína desenhada no pé da casa (57, 8)
+2026-11-21T08:07:20.4196488Z   ok    1.0 m: orc desenhada no pé da casa (57, 17)
+2026-11-21T08:07:20.4201553Z   ok    1.0 m: a heroína desenhada no pé da casa (57, 9) (0.2 s)
+2026-11-21T08:07:20.4215982Z   ok    2.0 m: heroína desenhada no pé da casa (28, 4)
+2026-11-21T08:07:20.4218328Z   ok    2.0 m: orc desenhada no pé da casa (28, 8)
+2026-11-21T08:07:20.4226222Z   ok    2.0 m: a heroína desenhada no pé da casa (28, 6) (0.3 s)
+2026-11-21T08:07:20.5428678Z | bancada 2 m: figuras | heroína (28,4) nó (20,-28) desvio (0,0) · orc (28,8) nó (20,-20) desvio (0,0) água | heroína (28,4) nó (20,-28) desvio (0,0.0004024505615234375) · orc (28,8) nó (20,-20) desvio (0,0) água | **NÃO** |
+2026-11-21T08:07:20.5493043Z | bancada jogadora: nós desenhados | 9efe237b91d09495 | ca41031e1c46e9af | **NÃO** |
+2026-11-21T08:07:20.5493820Z NÃO SE REPETE — primeira × ci: números 460/461 iguais, bits 72/73 iguais (bits só registados)
