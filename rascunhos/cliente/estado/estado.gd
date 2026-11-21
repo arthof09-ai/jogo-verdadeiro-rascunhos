@@ -33,6 +33,9 @@ const Frases := preload("res://hud/frases_batalha.gd")
 const REPETIR_RESYNC_S := 5.0
 ## Acima disto não se guarda mais: o RESYNC traz o resto.
 const MAX_EM_ESPERA := 512
+## Ordem CAIXA-JANELA: quantos eventos depois do snapshot se guardam para quem abre mais tarde (o HUD da arena).
+## Acima disto caem os mais velhos (a batalha inteira sem snapshot novo; a caixa segue a última sequência).
+const MAX_DESDE_SNAPSHOT := 4096
 
 var tem_snapshot := false
 var ultimo_seq := 0
@@ -59,6 +62,10 @@ var mestre: Dictionary = {}
 ## Só ids, um booleano e um modo. {} = o servidor não a mandou (sala de espera, servidor de antes desta ordem).
 var caixa: Dictionary = {}
 var pausada := false
+## Ordem CAIXA-JANELA: os ROOM_EVENT aplicados DEPOIS do último snapshot, pela ordem do `seq`. O `evento_aplicado` é
+## fogo-e-esquece: quem liga o sinal depois (o HUD nasce com a arena, depois do snapshot do lobby) repete estes para
+## não perder o que já aconteceu. Só guarda o que JÁ chegou a este aparelho (nada novo à vista da jogadora).
+var eventos_desde_snapshot: Array = []
 
 var _espera: Dictionary = {}  # seq -> mensagem
 var _resync_pendente := false
@@ -149,6 +156,7 @@ func aplicar_snapshot(msg: Dictionary) -> void:
 			_espera.erase(k)
 	_resync_pendente = false
 	_tempo_resync = 0.0
+	eventos_desde_snapshot = []  # Ordem CAIXA-JANELA: o snapshot é o novo ponto de partida (antes do _drenar)
 	snapshot_aplicado.emit()
 	if fase != fase_antes:
 		fase_mudou.emit(fase)
@@ -485,6 +493,9 @@ func _aplicar_evento(msg: Dictionary) -> void:
 		_:
 			pass  # entrada, reacao, consumivel, revertido (o snapshot vem a seguir)
 
+	eventos_desde_snapshot.append(msg)  # Ordem CAIXA-JANELA
+	if eventos_desde_snapshot.size() > MAX_DESDE_SNAPSHOT:
+		eventos_desde_snapshot.pop_front()
 	evento_aplicado.emit(msg)
 	if fase != fase_antes:
 		fase_mudou.emit(fase)

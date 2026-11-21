@@ -28,6 +28,8 @@ const EscolhaPerfil := preload("res://arte/perfis/escolha_perfil.gd")
 ## Ordem CAIXA-HUD-JOGADORA: o modelo da ordem, a caixa e os retratos — as MESMAS peças do ecrã do Mestre (Ordem HUD).
 ## As cores da caixa: o realce lê da tabela (Apresentacao.COR_MESTRE_ANEL, em caixa_ordem.gd); o painel, a moldura e o
 ## fundo do retrato ficam POR LIGAR — esperam a palavra do Mestre sobre os [FALTA] (nenhuma cor nova aqui).
+## Ordem CAIXA-JANELA (B3): a frase mais comprida da faixa em combate (`_texto_faixa`): a largura que se lhe guarda.
+const FAIXA_MAIS_LONGA := "A mesa está em pausa. O Mestre já volta."
 const OrdemTurnos := preload("res://hud/ordem_turnos.gd")
 const CaixaOrdem := preload("res://hud/caixa_ordem.gd")
 const Retratos := preload("res://hud/retratos.gd")
@@ -172,6 +174,9 @@ func _ready() -> void:
 	# O snapshot pode ter chegado antes de a cena abrir (a jogadora entra pelo lobby): a caixa lê-o já, como a arena.
 	if Estado.tem_snapshot:
 		_carregar_caixa()
+		# Ordem CAIXA-JANELA (B1): os eventos que o Estado aplicou entre esse snapshot e este `_ready` não passaram pelo
+		# sinal (ainda não estava ligado). Repetem-se aqui, pela mesma ordem, sobre a ordem do snapshot.
+		_repetir_eventos_antes_do_hud()
 	_atualizar()
 
 
@@ -385,6 +390,7 @@ func _ao_redimensionar() -> void:
 	_b_ficha.custom_minimum_size = Vector2(_fonte * 6.0, _fonte * 2.4)
 	_painel_ficha.custom_minimum_size = Vector2(_fonte * 17.0, 0.0)
 	_caixa.ajustar(_fonte)
+	_pedir_desenho_caixa()  # Ordem CAIXA-JANELA: a fila refaz-se com a letra nova (os retratos e os nomes medem-se por ela)
 	_aplicar_safe_area()
 	_reposicionar.call_deferred()
 
@@ -476,7 +482,7 @@ func _texto_faixa() -> String:
 	if not Rede.na_mesa():
 		return ""
 	if Estado.pausada:
-		return "A mesa está em pausa. O Mestre já volta."
+		return FAIXA_MAIS_LONGA
 	if Rede.aguardando_mestre():
 		return "O Mestre está decidindo..."
 	if Estado.fase == "lobby":
@@ -955,6 +961,15 @@ func _carregar_caixa() -> void:
 	_pedir_desenho_caixa()
 
 
+## Ordem CAIXA-JANELA: a janela lobby→arena. O snapshot do lobby já está no Estado e a caixa leu-o; os eventos de
+## depois dele (a batalha andou enquanto a arena abria) repetem-se no modelo da ordem, como se o sinal já estivesse ligado.
+func _repetir_eventos_antes_do_hud() -> void:
+	for e in Estado.eventos_desde_snapshot:
+		if e is Dictionary:
+			ordem_turnos.registar_evento(e)
+	_pedir_desenho_caixa()
+
+
 ## A arena sincroniza as figuras no mesmo sinal: o desenho espera pelo fim do quadro (os retratos são cópias delas).
 func _pedir_desenho_caixa() -> void:
 	if _caixa_pendente:
@@ -991,18 +1006,38 @@ func _desenhar_caixa() -> void:
 
 ## A caixa fica no canto de cima, à direita (à esquerda estão a ⚙ e a ficha; em baixo, a barra). A faixa e o aviso de
 ## cima encolhem dos dois lados o mesmo, para continuarem centrados sem passar por baixo da caixa.
+## Ordem CAIXA-JANELA (B3): com muitas figuras em ecrãs baixos (8+ em 844×390) os dois lados iguais já não deixavam à
+## faixa a largura da frase mais comprida. Então: (1) a caixa não come a largura que a faixa precisa ao lado da ⚙ — a fila
+## parte em linhas; (2) se centrada não cabe, a faixa fica entre a ⚙ e a caixa (centrada no espaço que sobra).
 func _posicionar_caixa() -> void:
 	if _caixa == null:
 		return
-	var margem_lado := float(_fonte) * 3.5
+	var esq := float(_fonte) * 3.5  # não passa por cima da ⚙
+	var dir := esq
 	if _caixa.visible:
-		_caixa.size = _caixa.get_combined_minimum_size()
 		var area: Vector2 = ($Raiz/Seguro/Camadas as Control).size
+		var folga := float(_fonte) * 0.5
+		var precisa := largura_faixa_precisa()
+		_caixa.limitar_largura(maxf(1.0, area.x - esq - precisa - folga))
+		_caixa.size = _caixa.get_combined_minimum_size()
 		_caixa.position = Vector2(maxf(0.0, area.x - _caixa.size.x), 0.0)
-		margem_lado = maxf(margem_lado, _caixa.size.x + float(_fonte) * 0.5)
+		dir = maxf(esq, _caixa.size.x + folga)
+		if area.x - 2.0 * dir >= precisa:
+			esq = dir  # cabe centrada: os dois lados iguais, como antes
 	for c in [_faixa, _aviso]:
-		(c as Control).offset_left = margem_lado
-		(c as Control).offset_right = -margem_lado
+		(c as Control).offset_left = esq
+		(c as Control).offset_right = -dir
+
+
+## Ordem CAIXA-JANELA (B3): a largura que a faixa precisa para a frase mais comprida que mostra (a da pausa, ou a de
+## agora se for maior), numa linha, com a letra de agora.
+func largura_faixa_precisa() -> float:
+	var fonte: Font = _faixa.get_theme_font("font")
+	var tam := _faixa.get_theme_font_size("font_size")
+	var w := 0.0
+	for t in [FAIXA_MAIS_LONGA, _faixa.text]:
+		w = maxf(w, fonte.get_string_size(str(t), HORIZONTAL_ALIGNMENT_LEFT, -1, tam).x)
+	return ceilf(w) + 2.0 * float(_faixa.get_theme_constant("outline_size"))
 
 
 ## Para os testes e as provas: o que a caixa mostra agora.

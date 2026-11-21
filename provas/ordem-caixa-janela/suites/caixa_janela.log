@@ -1,0 +1,84 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+== B1. eventos aplicados ANTES de o HUD abrir (a batalha anda enquanto a arena abre) ==
+  ok    o Estado guardou os 2 eventos de depois do snapshot
+  ok    ao abrir, a caixa já tem os eventos de antes do HUD (["f2", "f1", "f3", "f4"], vez f4), sem esperar pelo snapshot seguinte
+  ok    depois de abrir, os eventos seguem pelo sinal, sem repetir os de antes (vez f2)
+  ok    cada evento contou uma só vez (repetidos no _ready: 2; pelo sinal: 1) — vezes 3
+  ok    um snapshot novo é o ponto de partida: a lista de depois dele recomeça vazia
+  ok    sem eventos depois do snapshot, a caixa é a do snapshot (["f1"])
+== B3. 8, 12 e 16 figuras na ordem, em ecrãs baixos ==
+  MEDIDA 8 figuras · 1280x720 (unidades 1920x1080, escala 0.667): caixa 767x212 u = 511x141 px reais (40% da largura, 20% da altura) · retrato 62 u = 41 px · nome 17 u = 11.3 px · letra 22 u = 14.7 px · 8 por linha · faixa livre 1017 u (precisa 437 u) = 678 px reais
+  ok    8 figuras 1280x720: a caixa mostra as 8 (8)
+  ok    8 figuras 1280x720: a caixa [P: (1129.0, 24.0), S: (767.0, 212.0)] cabe no ecrã [P: (0.0, 0.0), S: (1920.0, 1080.0)]
+  ok    8 figuras 1280x720: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    8 figuras 1280x720: a caixa não passa de metade da altura (212 de 1080 u)
+  ok    8 figuras 1280x720: a faixa tem 1017 u livres para a frase mais comprida (437 u), numa linha, sem passar por baixo da caixa (faixa [P: (101.0, 24.0), S: (1017.0, 31.0)])
+  ok    8 figuras 1280x720: a fila segue a letra de agora (retrato 62 u = 2,8 × 22)
+  ok    8 figuras 1280x720: a letra da faixa tem 14.7 px reais (≥ 13)
+  MEDIDA 8 figuras · 844x390 (unidades 2337x1080, escala 0.361): caixa 1186x323 u = 428x116 px reais (51% da largura, 30% da altura) · retrato 101 u = 36 px · nome 27 u = 9.8 px · letra 36 u = 13.0 px · 8 por linha · faixa livre 959 u (precisa 713 u) = 346 px reais
+  ok    8 figuras 844x390: a caixa mostra as 8 (8)
+  ok    8 figuras 844x390: a caixa [P: (1127.0, 24.0), S: (1186.0, 323.0)] cabe no ecrã [P: (0.0, 0.0), S: (2337.0, 1080.0)]
+  ok    8 figuras 844x390: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    8 figuras 844x390: a caixa não passa de metade da altura (323 de 1080 u)
+  ok    8 figuras 844x390: a faixa tem 959 u livres para a frase mais comprida (713 u), numa linha, sem passar por baixo da caixa (faixa [P: (150.0, 24.0), S: (959.0, 50.0)])
+  ok    8 figuras 844x390: a fila segue a letra de agora (retrato 101 u = 2,8 × 36)
+  ok    8 figuras 844x390: a letra da faixa tem 13.0 px reais (≥ 13)
+  MEDIDA 8 figuras · 780x360 (unidades 2340x1080, escala 0.333): caixa 1269x349 u = 423x116 px reais (54% da largura, 32% da altura) · retrato 110 u = 37 px · nome 29 u = 9.7 px · letra 39 u = 13.0 px · 8 por linha · faixa livre 867 u (precisa 772 u) = 289 px reais
+  ok    8 figuras 780x360: a caixa mostra as 8 (8)
+  ok    8 figuras 780x360: a caixa [P: (1047.0, 24.0), S: (1269.0, 349.0)] cabe no ecrã [P: (0.0, 0.0), S: (2340.0, 1080.0)]
+  ok    8 figuras 780x360: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    8 figuras 780x360: a caixa não passa de metade da altura (349 de 1080 u)
+  ok    8 figuras 780x360: a faixa tem 867 u livres para a frase mais comprida (772 u), numa linha, sem passar por baixo da caixa (faixa [P: (160.5, 24.0), S: (867.0, 54.0)])
+  ok    8 figuras 780x360: a fila segue a letra de agora (retrato 110 u = 2,8 × 39)
+  ok    8 figuras 780x360: a letra da faixa tem 13.0 px reais (≥ 13)
+  MEDIDA 12 figuras · 1280x720 (unidades 1920x1080, escala 0.667): caixa 1090x212 u = 726x141 px reais (57% da largura, 20% da altura) · retrato 62 u = 41 px · nome 17 u = 11.3 px · letra 22 u = 14.7 px · 12 por linha · faixa livre 694 u (precisa 437 u) = 462 px reais
+  ok    12 figuras 1280x720: a caixa mostra as 12 (12)
+  ok    12 figuras 1280x720: a caixa [P: (806.0, 24.0), S: (1090.0, 212.0)] cabe no ecrã [P: (0.0, 0.0), S: (1920.0, 1080.0)]
+  ok    12 figuras 1280x720: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    12 figuras 1280x720: a caixa não passa de metade da altura (212 de 1080 u)
+  ok    12 figuras 1280x720: a faixa tem 694 u livres para a frase mais comprida (437 u), numa linha, sem passar por baixo da caixa (faixa [P: (101.0, 24.0), S: (694.0, 31.0)])
+  ok    12 figuras 1280x720: a fila segue a letra de agora (retrato 62 u = 2,8 × 22)
+  ok    12 figuras 1280x720: a letra da faixa tem 14.7 px reais (≥ 13)
+  MEDIDA 12 figuras · 844x390 (unidades 2337x1080, escala 0.361): caixa 1414x358 u = 510x129 px reais (61% da largura, 33% da altura) · retrato 101 u = 36 px · nome 27 u = 9.8 px · letra 36 u = 13.0 px · 10 por linha · faixa livre 731 u (precisa 713 u) = 263 px reais
+  ok    12 figuras 844x390: a caixa mostra as 12 (12)
+  ok    12 figuras 844x390: a caixa [P: (899.0, 24.0), S: (1414.0, 358.0)] cabe no ecrã [P: (0.0, 0.0), S: (2337.0, 1080.0)]
+  ok    12 figuras 844x390: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    12 figuras 844x390: a caixa não passa de metade da altura (358 de 1080 u)
+  ok    12 figuras 844x390: a faixa tem 731 u livres para a frase mais comprida (713 u), numa linha, sem passar por baixo da caixa (faixa [P: (150.0, 24.0), S: (731.0, 50.0)])
+  ok    12 figuras 844x390: a fila segue a letra de agora (retrato 101 u = 2,8 × 36)
+  ok    12 figuras 844x390: a letra da faixa tem 13.0 px reais (≥ 13)
+  MEDIDA 12 figuras · 780x360 (unidades 2340x1080, escala 0.333): caixa 1329x386 u = 443x128 px reais (57% da largura, 36% da altura) · retrato 110 u = 37 px · nome 29 u = 9.7 px · letra 39 u = 13.0 px · 8 por linha · faixa livre 807 u (precisa 772 u) = 269 px reais
+  ok    12 figuras 780x360: a caixa mostra as 12 (12)
+  ok    12 figuras 780x360: a caixa [P: (987.0, 24.0), S: (1329.0, 386.0)] cabe no ecrã [P: (0.0, 0.0), S: (2340.0, 1080.0)]
+  ok    12 figuras 780x360: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    12 figuras 780x360: a caixa não passa de metade da altura (386 de 1080 u)
+  ok    12 figuras 780x360: a faixa tem 807 u livres para a frase mais comprida (772 u), numa linha, sem passar por baixo da caixa (faixa [P: (160.5, 24.0), S: (807.0, 54.0)])
+  ok    12 figuras 780x360: a fila segue a letra de agora (retrato 110 u = 2,8 × 39)
+  ok    12 figuras 780x360: a letra da faixa tem 13.0 px reais (≥ 13)
+  MEDIDA 16 figuras · 1280x720 (unidades 1920x1080, escala 0.667): caixa 1306x235 u = 870x156 px reais (68% da largura, 22% da altura) · retrato 62 u = 41 px · nome 17 u = 11.3 px · letra 22 u = 14.7 px · 15 por linha · faixa livre 478 u (precisa 437 u) = 318 px reais
+  ok    16 figuras 1280x720: a caixa mostra as 16 (16)
+  ok    16 figuras 1280x720: a caixa [P: (590.0, 24.0), S: (1306.0, 235.0)] cabe no ecrã [P: (0.0, 0.0), S: (1920.0, 1080.0)]
+  ok    16 figuras 1280x720: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    16 figuras 1280x720: a caixa não passa de metade da altura (235 de 1080 u)
+  ok    16 figuras 1280x720: a faixa tem 478 u livres para a frase mais comprida (437 u), numa linha, sem passar por baixo da caixa (faixa [P: (101.0, 24.0), S: (478.0, 31.0)])
+  ok    16 figuras 1280x720: a fila segue a letra de agora (retrato 62 u = 2,8 × 22)
+  ok    16 figuras 1280x720: a letra da faixa tem 14.7 px reais (≥ 13)
+  MEDIDA 16 figuras · 844x390 (unidades 2337x1080, escala 0.361): caixa 1414x358 u = 510x129 px reais (61% da largura, 33% da altura) · retrato 101 u = 36 px · nome 27 u = 9.8 px · letra 36 u = 13.0 px · 10 por linha · faixa livre 731 u (precisa 713 u) = 263 px reais
+  ok    16 figuras 844x390: a caixa mostra as 16 (16)
+  ok    16 figuras 844x390: a caixa [P: (899.0, 24.0), S: (1414.0, 358.0)] cabe no ecrã [P: (0.0, 0.0), S: (2337.0, 1080.0)]
+  ok    16 figuras 844x390: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    16 figuras 844x390: a caixa não passa de metade da altura (358 de 1080 u)
+  ok    16 figuras 844x390: a faixa tem 731 u livres para a frase mais comprida (713 u), numa linha, sem passar por baixo da caixa (faixa [P: (150.0, 24.0), S: (731.0, 50.0)])
+  ok    16 figuras 844x390: a fila segue a letra de agora (retrato 101 u = 2,8 × 36)
+  ok    16 figuras 844x390: a letra da faixa tem 13.0 px reais (≥ 13)
+  MEDIDA 16 figuras · 780x360 (unidades 2340x1080, escala 0.333): caixa 1329x386 u = 443x128 px reais (57% da largura, 36% da altura) · retrato 110 u = 37 px · nome 29 u = 9.7 px · letra 39 u = 13.0 px · 8 por linha · faixa livre 807 u (precisa 772 u) = 269 px reais
+  ok    16 figuras 780x360: a caixa mostra as 16 (16)
+  ok    16 figuras 780x360: a caixa [P: (987.0, 24.0), S: (1329.0, 386.0)] cabe no ecrã [P: (0.0, 0.0), S: (2340.0, 1080.0)]
+  ok    16 figuras 780x360: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    16 figuras 780x360: a caixa não passa de metade da altura (386 de 1080 u)
+  ok    16 figuras 780x360: a faixa tem 807 u livres para a frase mais comprida (772 u), numa linha, sem passar por baixo da caixa (faixa [P: (160.5, 24.0), S: (807.0, 54.0)])
+  ok    16 figuras 780x360: a fila segue a letra de agora (retrato 110 u = 2,8 × 39)
+  ok    16 figuras 780x360: a letra da faixa tem 13.0 px reais (≥ 13)
+
+69 de 69 verificações passaram.

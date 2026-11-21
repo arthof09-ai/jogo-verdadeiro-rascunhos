@@ -6,6 +6,7 @@ extends SceneTree
 ## O HUD a sério recebe o tráfego pela Rede (ROOM_WELCOME, ROOM_SNAPSHOT com `caixa`, ROOM_EVENT) e a caixa mostra a
 ## escolha do Mestre: ligada/desligada, modo dinâmico (a ordem da Party, adiantada pelos eventos) ou iniciativa
 ## (`iniciativa` + `vezId`). Sem o campo, na sala de espera ou no lobby, não aparece. Não tapa a ⚙, a ficha nem a barra.
+## §7 (Ordem CAIXA-JANELA): os eventos que chegam entre o snapshot e a abertura do HUD aparecem na caixa ao abrir.
 ## Código de saída 0 se tudo passa, 1 se algo falha.
 
 var _total := 0
@@ -147,6 +148,30 @@ func _correr() -> void:
 				tapa.append(p.get_file())
 		var tela := root.get_visible_rect()
 		_ok(c["visivel"] and tapa.is_empty() and tela.encloses(r), "%dx%d (fonte %d): a caixa %s cabe no ecrã %s e não tapa nada %s" % [tam.x, tam.y, hud._fonte, r, tela, tapa])
+	hud.queue_free()
+	await process_frame
+
+	print("== 7. Ordem CAIXA-JANELA: eventos ANTES de o HUD abrir (a batalha anda entre o snapshot e o _ready) ==")
+	# O §1 só cobre o snapshot de antes do HUD. Aqui, depois do snapshot e antes de a arena abrir, a Criatura anda e a
+	# Aliada ataca: a caixa tem de os mostrar logo ao abrir, sem esperar pelo snapshot seguinte.
+	root.size = Vector2i(1920, 1080)
+	await process_frame
+	_snapshot({"ligada": true, "ordemPor": "dinamico", "ordemDinamica": {"ordem": ["j1"], "fechada": false, "ultimo": "j1"}})
+	_evento("movimento", {"figuraId": "m1", "de": {"x": 6, "y": 2}, "para": {"x": 6, "y": 3}, "caminho": []})
+	_evento("ataque", {"atacanteId": "j2", "alvoId": "m1", "arma": "x", "resultado": "erro", "ataqueDeOportunidade": false})
+	hud = (load("res://hud/hud.tscn") as PackedScene).instantiate()
+	root.add_child(hud)
+	await process_frame
+	hud._ao_redimensionar()
+	await _quadros(3)
+	c = hud.caixa_mostrada()
+	_ok(c["visivel"] and c["ids"] == ["j1", "m1", "j2"] and c["vez"] == "j2",
+		"os eventos de antes do HUD estão na caixa ao abrir (%s, vez %s), sem esperar pelo snapshot seguinte" % [c["ids"], c["vez"]])
+	_evento("movimento", {"figuraId": "j1", "de": {"x": 2, "y": 2}, "para": {"x": 2, "y": 3}, "caminho": []})
+	await _quadros(2)
+	c = hud.caixa_mostrada()
+	_ok(c["ids"] == ["j1", "m1", "j2"] and c["vez"] == "j1" and hud.ordem_turnos.fechada,
+		"e os de depois seguem pelo sinal: a Heroína volta a agir e a volta fecha (vez %s)" % c["vez"])
 	hud.queue_free()
 	await process_frame
 	print("")

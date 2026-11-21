@@ -39,7 +39,11 @@ var _activa_retrato: TextureRect
 var _activa_moldura: PanelContainer
 var _activa_nome: Label
 var _activa: VBoxContainer
-var _fila: HBoxContainer
+## Ordem CAIXA-JANELA (B3): a fila é uma grelha. Sem limite (o ecrã do Mestre) tem uma coluna por figura — uma linha só,
+## como antes. Com `limitar_largura` (o HUD da jogadora em ecrãs baixos) parte em linhas para caber na largura dada.
+var _fila: GridContainer
+## A largura máxima da caixa (unidades do ecrã). 0 = sem limite.
+var _max_largura := 0.0
 var _vazia: Label
 ## Para os testes e as provas: o que a caixa mostra agora.
 var ids_mostrados: Array[String] = []
@@ -85,7 +89,7 @@ func _init() -> void:
 	_activa_retrato = _activa_moldura.get_child(0) as TextureRect
 	_activa_nome = _rotulo(_activa, "NomeActiva", "")
 	_activa_nome.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_fila = HBoxContainer.new()
+	_fila = GridContainer.new()
 	_fila.name = "Fila"
 	_fila.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	corpo.add_child(_fila)
@@ -130,6 +134,26 @@ func mostrar(ordem: Array[String], vez: String, nomes: Dictionary, retratos: Dic
 	_vazia.visible = ordem.is_empty()
 	_vazia.text = VAZIA_INICIATIVA if modo == "iniciativa" else VAZIA
 	_fila.visible = not ordem.is_empty()
+	_ajustar_colunas()
+
+
+## Ordem CAIXA-JANELA (B3): a caixa não passa desta largura (0 = sem limite): a fila parte em mais linhas.
+func limitar_largura(max_largura: float) -> void:
+	_max_largura = maxf(0.0, max_largura)
+	_ajustar_colunas()
+
+
+## Quantas figuras por linha a fila tem agora (para os testes e as medidas).
+func colunas_fila() -> int:
+	return _fila.columns
+
+
+func _ajustar_colunas() -> void:
+	var n := maxi(1, _fila.get_child_count())
+	_fila.columns = n
+	if _max_largura > 0.0:
+		while _fila.columns > 1 and get_combined_minimum_size().x > _max_largura:
+			_fila.columns -= 1
 	size = get_combined_minimum_size()
 
 
