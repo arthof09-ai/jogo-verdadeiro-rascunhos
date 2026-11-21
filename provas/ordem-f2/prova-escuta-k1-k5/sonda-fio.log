@@ -1,0 +1,77 @@
+== a sonda do fio da jogadora: 29 mensagens em 19 lotes — PROVA DA ESCUTA, com K1–K5 ==
+   por type: {"ROOM_WELCOME":1,"ROOM_SNAPSHOT":3,"ROOM_EVENT:colocacao":2,"ROOM_EVENT:turno":1,"ROOM_OPTIONS":7,"ROOM_EVENT:movimento":3,"ROOM_RECEIPT":3,"ROOM_EVENT:escala":5,"MASTER_VIEW":1,"ROOM_REJECT":1,"ERRO":1,"ROOM_PAUSED":1}
+  ok    (A) fora: 0 achados (fora das mensagens de teste) 
+  ok    (A) mensagens MASTER_* no fio dela: 0
+   textos varridos em (A): [{"type":"ERRO","codigo":"proibido","texto":"Só o Mestre."},{"type":"ROOM_PAUSED","motivo":"mestre_desconectado"}]
+  ok    K1: no fio (uma vez) e APANHADO pelo conjunto exacto — ["chave:casaMAntes","chave:casasQuePaga","chave:grelhaAntes","chave:soMestre"] (esperado ["chave:casaMAntes","chave:casasQuePaga","chave:grelhaAntes","chave:soMestre"])
+  ok    K2: no fio (uma vez) e APANHADO pelo conjunto exacto — ["texto:90210777","texto:CANARIO-FANTASMA","texto:ESCALA_","texto:Orc Verdadeiro"] (esperado ["texto:90210777","texto:CANARIO-FANTASMA","texto:ESCALA_","texto:Orc Verdadeiro"])
+  ok    K3: no fio (uma vez) e APANHADO pelo conjunto exacto — ["numero:313","numero:7777","numero:9137"] (esperado ["numero:313","numero:7777","numero:9137"])
+  ok    K4: no fio (uma vez) e APANHADO pelo conjunto exacto — ["numero:313","numero:7777","texto:Orc Verdadeiro"] (esperado ["numero:313","numero:7777","texto:Orc Verdadeiro"])
+  ok    K5: no fio (uma vez) e APANHADO pelo conjunto exacto — ["texto:CANARIO-FANTASMA","texto:ESCALA_"] (esperado ["texto:CANARIO-FANTASMA","texto:ESCALA_"])
+  ok    (B) linha 3 — a escala recusada do Mestre (3 m): 1 lote(s); Mestre ["ROOM_EVENT:recusa","ROOM_REJECT"], jogadora 0, espectador 0
+  ok    (C) linha 4 — o pedido de escala da jogadora (MASTER_SUPERVISOR escala 1): 1 lote(s); ela recebe ["ERRO proibido «Só o Mestre.»"]; outros papéis []
+  ok    (D) ROOM_PAUSED no fio dela: 1 (n=28 conexaoFechada motivo=mestre_desconectado) — varrido em (A)
+== o que chegou à jogadora em cada entrega com um evento `escala` (2) ==
+-- lote 11:
+   10 ROOM_EVENT:escala seq=6 rev=5 dados={}
+   11 ROOM_EVENT:escala seq=6 rev=5 [TESTE K1] dados={"soMestre":{"casaMAntes":1.5,"casaM":1,"grelhaAntes":{"largura":50,"altura":50}
+   12 ROOM_EVENT:escala seq=6 rev=5 [TESTE K2] dados={"detalhe":"ESCALA_JUNTA_FIGURAS: 2 figuras ficavam juntas com 1 m por casa — te
+   13 ROOM_EVENT:escala seq=6 rev=5 [TESTE K3] dados={"vida":7777,"pa":313,"defesa":9137}
+   14 MASTER_VIEW seq=null rev=null [TESTE K4] mapa={"largura":75,"altura":75,"casaM":1} figuras=Heroína Teste(57,8) Orc(57,17)
+   15 ROOM_REJECT seq=null rev=null [TESTE K5] motivo=acao_invalida texto=«ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS: teste CANARIO-FANTASMA»
+   16 ROOM_SNAPSHOT seq=6 rev=5 mapa={"largura":75,"altura":75,"casaM":1} figuras=Heroína Teste(57,8) Orc(57,17)
+   17 ROOM_OPTIONS seq=null rev=5 orcamentoM=7.5 mover=112
+-- lote 13:
+   21 ROOM_EVENT:escala seq=8 rev=7 dados={}
+   22 ROOM_SNAPSHOT seq=8 rev=7 mapa={"largura":37,"altura":37,"casaM":2} figuras=Heroína Teste(28,4) Orc(28,8)
+   23 ROOM_OPTIONS seq=null rev=7 orcamentoM=6.5 mover=24
+== a cronologia do fio (lote: quem mandou o quê → o que a heroína recebeu) ==
+-- lote 1 entrar ← jogadora ROOM_JOIN: heroína 2; espectador 1, mestre 1
+   0 ROOM_WELCOME seq=null rev=null
+   1 ROOM_SNAPSHOT seq=1 rev=1 mapa={"largura":50,"altura":50,"casaM":1.5} figuras=
+-- lote 2 conexaoAberta ← jogadora : heroína 0
+-- lote 3 entrar ← mestre ROOM_JOIN: heroína 0; mestre 3
+-- lote 4 conexaoAberta ← mestre : heroína 0
+-- lote 5 entrar ← espectador ROOM_JOIN: heroína 0; espectador 2
+-- lote 6 conexaoAberta ← espectador : heroína 0
+-- lote 7 receber ← mestre MASTER_LOBBY_SET: heroína 0; mestre 2
+-- lote 8 receber ← mestre MASTER_START: heroína 3; espectador 2, mestre 3
+   2 ROOM_EVENT:colocacao seq=2 rev=2 dados={"figuraId":"f9e0ab29f88d7d1ee","nomePublico":"Heroína Teste","lado":"jogadora",
+   3 ROOM_EVENT:turno seq=3 rev=2 dados={"figuraId":"f9e0ab29f88d7d1ee","rodada":1,"narra":false}
+   4 ROOM_OPTIONS seq=null rev=2 orcamentoM=9 mover=80
+-- lote 9 receber ← mestre MASTER_PLACE: heroína 2; espectador 1, mestre 2
+   5 ROOM_EVENT:colocacao seq=4 rev=3 dados={"figuraId":"f3deedfc73b32fbf0","nomePublico":"Orc","lado":"criatura","x":38,"y"
+   6 ROOM_OPTIONS seq=null rev=3 orcamentoM=9 mover=80
+-- lote 10 receber ← jogadora ROOM_INTENT: heroína 3; espectador 1, mestre 1
+   7 ROOM_EVENT:movimento seq=5 rev=4 dados={"figuraId":"f9e0ab29f88d7d1ee","de":{"x":38,"y":4},"para":{"x":38,"y":5},"camin
+   8 ROOM_RECEIPT seq=5 rev=4
+   9 ROOM_OPTIONS seq=null rev=4 orcamentoM=7.5 mover=60
+-- lote 11 receber ← mestre MASTER_SUPERVISOR escala 1: heroína 8; espectador 2, mestre 3
+   10 ROOM_EVENT:escala seq=6 rev=5 dados={}
+   11 ROOM_EVENT:escala seq=6 rev=5 [TESTE K1] dados={"soMestre":{"casaMAntes":1.5,"casaM":1,"grelhaAntes":{"largura":50,"altura":50}
+   12 ROOM_EVENT:escala seq=6 rev=5 [TESTE K2] dados={"detalhe":"ESCALA_JUNTA_FIGURAS: 2 figuras ficavam juntas com 1 m por casa — te
+   13 ROOM_EVENT:escala seq=6 rev=5 [TESTE K3] dados={"vida":7777,"pa":313,"defesa":9137}
+   14 MASTER_VIEW seq=null rev=null [TESTE K4] mapa={"largura":75,"altura":75,"casaM":1} figuras=Heroína Teste(57,8) Orc(57,17)
+   15 ROOM_REJECT seq=null rev=null [TESTE K5] motivo=acao_invalida texto=«ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS: teste CANARIO-FANTASMA»
+   16 ROOM_SNAPSHOT seq=6 rev=5 mapa={"largura":75,"altura":75,"casaM":1} figuras=Heroína Teste(57,8) Orc(57,17)
+   17 ROOM_OPTIONS seq=null rev=5 orcamentoM=7.5 mover=112
+-- lote 12 receber ← jogadora ROOM_INTENT: heroína 3; espectador 1, mestre 1
+   18 ROOM_EVENT:movimento seq=7 rev=6 dados={"figuraId":"f9e0ab29f88d7d1ee","de":{"x":57,"y":8},"para":{"x":57,"y":9},"camin
+   19 ROOM_RECEIPT seq=7 rev=6
+   20 ROOM_OPTIONS seq=null rev=6 orcamentoM=6.5 mover=84
+-- lote 13 receber ← mestre MASTER_SUPERVISOR escala 2: heroína 3; espectador 2, mestre 3
+   21 ROOM_EVENT:escala seq=8 rev=7 dados={}
+   22 ROOM_SNAPSHOT seq=8 rev=7 mapa={"largura":37,"altura":37,"casaM":2} figuras=Heroína Teste(28,4) Orc(28,8)
+   23 ROOM_OPTIONS seq=null rev=7 orcamentoM=6.5 mover=24
+-- lote 14 receber ← jogadora MASTER_SUPERVISOR escala 1: heroína 1
+   24 ERRO seq=null rev=null codigo=proibido texto=«Só o Mestre.»
+-- lote 15 receber ← jogadora ROOM_INTENT: heroína 3; espectador 1, mestre 1
+   25 ROOM_EVENT:movimento seq=9 rev=8 dados={"figuraId":"f9e0ab29f88d7d1ee","de":{"x":28,"y":4},"para":{"x":28,"y":6},"camin
+   26 ROOM_RECEIPT seq=9 rev=8
+   27 ROOM_OPTIONS seq=null rev=8 orcamentoM=2.5 mover=4
+-- lote 16 receber ← mestre MASTER_SUPERVISOR escala 3: heroína 0; mestre 2
+-- lote 17 conexaoFechada ← mestre : heroína 1; mestre 2, espectador 1
+   28 ROOM_PAUSED seq=null rev=null motivo=mestre_desconectado
+-- lote 18 conexaoFechada ← espectador : heroína 0
+-- lote 19 conexaoFechada ← jogadora : heroína 0
+TUDO PASSOU

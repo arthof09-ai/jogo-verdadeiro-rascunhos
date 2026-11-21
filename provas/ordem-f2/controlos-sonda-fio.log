@@ -1,0 +1,42 @@
+# ORDEM-F2 — controlos da sonda do fio padrão (sonda-fio.mjs sem --canarios), sobre cópias adulteradas das escutas desta ordem. 2026-11-21T05:03:52-03:00
+
+## N0 positivo: a escuta da corrida padrão, sem mudança (esperado: saída 0)
+TUDO PASSOU
+→ saída 0
+
+## N1: a escuta da prova K1–K5 sem as marcas canarioTeste (as 5 fugas como se fossem reais) (esperado: saída 1)
+  FALHA (A) fora: 17 achados [{"i":11,"type":"ROOM_EVENT","tipo":"escala","chave":"soMestre","porque":"chave proibida","n":11},{"i":11,"type":"ROOM_EVENT","tipo":"escala","chave":"casaMAntes","porque":"chave proibida","n":11},{"i":11,"type":"ROOM_EVENT","tipo"
+  FALHA (A) mensagens MASTER_* no fio dela: 1
+2 FALHAS
+→ saída 1
+
+## N2: a escuta da prova K1–K5 como está, sem --canarios (mensagens de teste na corrida padrão) (esperado: saída 1)
+  FALHA (A) mensagens de teste no fio: 5 (a corrida padrão não as tem)
+1 FALHAS
+→ saída 1
+
+## N3: a escuta padrão sem o ERRO da jogadora (linha 4 sem testemunha) (esperado: saída 1)
+  FALHA (C) linha 4 — o pedido de escala da jogadora (MASTER_SUPERVISOR escala 1): 1 lote(s); ela recebe []; outros papéis []
+1 FALHAS
+→ saída 1
+
+## N4: a escuta padrão sem o ROOM_PAUSED (esperado: saída 1)
+  FALHA (D) ROOM_PAUSED no fio dela: 0 () — varrido em (A)
+1 FALHAS
+→ saída 1
+
+## N5: o texto do ERRO com uma fuga ESCALA_ (esperado: saída 1)
+  FALHA (A) fora: 1 achados [{"i":19,"type":"ERRO","chave":"texto","valor":"ESCALA_","n":19}]
+  FALHA (C) linha 4 — o pedido de escala da jogadora (MASTER_SUPERVISOR escala 1): 1 lote(s); ela recebe ["ERRO proibido «Só o Mestre. ESCALA_INVALIDA»"]; outros papéis []
+2 FALHAS
+→ saída 1
+
+## N6: o motivo do ROOM_PAUSED com o nome verdadeiro do orc (esperado: saída 1)
+  FALHA (A) fora: 1 achados [{"i":23,"type":"ROOM_PAUSED","chave":"motivo","valor":"Orc Verdadeiro","n":23}]
+1 FALHAS
+→ saída 1
+
+## N7: no lote da escala recusada do Mestre, um evento recusa (vazio, sem canário) também à heroína (esperado: saída 1)
+  FALHA (B) linha 3 — a escala recusada do Mestre (3 m): 1 lote(s); Mestre ["ROOM_EVENT:recusa","ROOM_REJECT"], jogadora 1, espectador 0
+1 FALHAS
+→ saída 1

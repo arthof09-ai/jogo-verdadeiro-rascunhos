@@ -5,6 +5,7 @@
 #   prova 1b — a cópia adaptada       provas/ordem-mapa-jogavel/provas-bancada/ferramentas/provar_terreno_servidor_mapa.gd
 #   prova 2  — a batalha de bancada   servidor Node (WebSocket) + jogadora Godot + Mestre e espectador Node
 # Usa as ferramentas da ORDEM-PROVAS-MAPA tal como estão (nenhuma é copiada nem mudada); só a pasta de saída muda.
+# ORDEM-F2: a prova 2 segue o correr-bancada.sh — a escuta do fio no servidor e, no fim, a sonda do fio (sonda-fio.mjs).
 #   GODOT=<godot console> bash correr-provas-mapa.sh <pasta-de-saida> [porta]
 # Precisa do projecto do cliente importado (godot --headless --path rascunhos/cliente --import) e do Node no PATH.
 # Sai com 0 se as três passam.
@@ -32,7 +33,7 @@ T2=0; terreno "-adaptada" "$(win "$PM/provar_terreno_servidor_mapa.gd")" "$OUT/t
 
 # prova 2: o mesmo encadeamento de correr-bancada.sh, com os registos em $OUT
 echo "# início: $(agora)" > "$OUT/bancada-tempos.log"
-node "$PM/bancada-servidor.mjs" "$PORTA" > "$OUT/bancada-servidor.log" 2>&1 &
+node "$PM/bancada-servidor.mjs" "$PORTA" "$(win "$OUT/escuta-jogadora.jsonl")" > "$OUT/bancada-servidor.log" 2>&1 &
 SRV=$!
 for i in $(seq 1 50); do grep -q pronto-bancada "$OUT/bancada-servidor.log" && break; sleep 0.2; done
 (cd "$CLI" && timeout 400 "$GODOT" --headless --path . -s "$(win "$PM/bancada_jogadora_mapa.gd")" -- \
@@ -45,6 +46,9 @@ JOGADORA=0
 wait $JOG || JOGADORA=$?
 kill $SRV 2>/dev/null || true
 echo "# fim: $(agora)" >> "$OUT/bancada-tempos.log"
+FIO=0
+node "$PM/sonda-fio.mjs" "$(win "$OUT/escuta-jogadora.jsonl")" "$(win "$OUT/sonda-fio.json")" > "$OUT/sonda-fio.log" 2>&1 || FIO=$?
 ERROS=$(cat "$OUT"/provar-terreno-servidor*.log "$OUT/bancada-jogadora.log" | grep -cE "SCRIPT ERROR|Parse Error|Compile Error")
-echo "terreno-original=$T1 terreno-adaptada=$T2 Mestre/espectador=$MESTRE jogadora=$JOGADORA erros-de-script=$ERROS" | tee "$OUT/resultado.txt"
-test "$T1" -eq 0 && test "$T2" -eq 0 && test "$MESTRE" -eq 0 && test "$JOGADORA" -eq 0 && test "$ERROS" -eq 0
+echo "terreno-original=$T1 terreno-adaptada=$T2 Mestre/espectador=$MESTRE jogadora=$JOGADORA sonda-do-fio=$FIO erros-de-script=$ERROS" | tee "$OUT/resultado.txt"
+grep -E "^  (ok|FALHA)|PASSOU|FALHAS" "$OUT/sonda-fio.log" | sed 's/^/[sonda-do-fio] /'
+test "$T1" -eq 0 && test "$T2" -eq 0 && test "$MESTRE" -eq 0 && test "$JOGADORA" -eq 0 && test "$FIO" -eq 0 && test "$ERROS" -eq 0

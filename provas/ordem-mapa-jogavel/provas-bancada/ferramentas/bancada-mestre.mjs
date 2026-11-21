@@ -7,6 +7,11 @@
 // o passo a 1 m → escala 2 m → espera o passo a 2 m → fim. Regista o que o Mestre recebe de cada mudança (grelhaAntes,
 // grelha, as figuras antes e depois).
 // Espectador: recebe tudo o que a Party recebe; no fim, a SONDA DE PRIVACIDADE varre as mensagens dele.
+// ORDEM-F2: depois do passo a 2 m (e do retrato final), o Mestre PROVOCA uma escala recusada — 3 m por casa
+// (ESCALA_INVALIDA: só valem 1 / 1,5 / 2 m). Tem de receber o ROOM_REJECT acao_invalida e o evento `recusa` com o
+// detalhe ESCALA_INVALIDA; o espectador não recebe nada. É a testemunha da linha 3 do contrato (§2f da CORR8: recusa →
+// nada à Party); a sonda do fio (sonda-fio.mjs) confere o mesmo lote no fio da heroína. Fica em `rel.provocacao`, à
+// parte dos recibos e das escalas da batalha (que o comparador da CORR9 compara com a primeira corrida).
 // Só fichas fictícias. Sai com 0 se tudo correu e a sonda está limpa, 1 se não.
 import { randomUUID } from 'node:crypto';
 import { writeFileSync } from 'node:fs';
@@ -46,11 +51,11 @@ const esperarAte = (cond, ms, rotulo) => new Promise((ok, nao) => {
 });
 
 let mestre;
-function comando(type, campos = {}) {
+function comando(type, campos = {}, recibos = rel.mestre.recibos) {
   const cmdId = randomUUID();
   return new Promise((ok) => {
     mestre.espera.set(cmdId, (r) => {
-      rel.mestre.recibos.push({ type, campos, recibo: r.type, estado: r.estado ?? null, motivo: r.motivo ?? null });
+      recibos.push({ type, campos, recibo: r.type, estado: r.estado ?? null, motivo: r.motivo ?? null });
       log(`${type} ${JSON.stringify(campos)} → ${r.type} ${r.estado ?? r.motivo ?? ''}`);
       ok(r);
     });
@@ -101,10 +106,30 @@ try {
   await esperarAte(() => movimentos >= ESCALAS.length + 1, 90000, 'o passo a 2 m');
   await new Promise((r) => setTimeout(r, 800));
   rel.mestre.final = figurasDoMestre();
+  await provocarRecusa();
 } catch (e) {
   falhar(e.message);
 }
 fim();
+
+/** ORDEM-F2: a escala recusada (3 m), a testemunha da linha 3 do contrato. */
+async function provocarRecusa() {
+  const p = { recibos: [], casaM: 3 };
+  rel.provocacao = p;
+  const nEsp = espectador.msgs.length;
+  const nMes = mestre.msgs.length;
+  const r = await comando('MASTER_SUPERVISOR', { op: 'escala', casaM: 3 }, p.recibos);
+  await esperarAte(() => mestre.msgs.slice(nMes).some((m) => m.type === 'ROOM_EVENT' && m.tipo === 'recusa'), 3000, 'o evento recusa da escala 3 m')
+    .catch((e) => falhar(e.message));
+  await new Promise((ok) => setTimeout(ok, 500)); // o que fugisse para a Party chegava aqui
+  const recusa = mestre.msgs.slice(nMes).find((m) => m.type === 'ROOM_EVENT' && m.tipo === 'recusa');
+  p.mestre = { recibo: r.type, motivo: r.motivo ?? null, detalhe: recusa?.dados?.soMestre?.detalhe ?? null };
+  p.espectadorDepois = espectador.msgs.slice(nEsp).map((m) => m.type + (m.tipo ? ':' + m.tipo : ''));
+  if (r.type !== 'ROOM_REJECT' || r.motivo !== 'acao_invalida') falhar(`provocação: a escala 3 m não foi recusada: ${JSON.stringify(r)}`);
+  if (!/^ESCALA_INVALIDA/.test(p.mestre.detalhe ?? '')) falhar(`provocação: o Mestre não recebeu o detalhe ESCALA_INVALIDA (${p.mestre.detalhe})`);
+  if (p.espectadorDepois.length) falhar(`provocação: o espectador recebeu ${JSON.stringify(p.espectadorDepois)} na recusa`);
+  log(`provocação (linha 3): escala 3 m → ${r.type} ${r.motivo ?? ''}; detalhe ao Mestre «${p.mestre.detalhe}»; espectador ${p.espectadorDepois.length} mensagens`);
+}
 
 function fim() {
   clearTimeout(limite);

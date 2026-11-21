@@ -19,6 +19,15 @@ extends SceneTree
 ##       pé da casa nova e a reserva desce o custo;
 ## e no fim (6) a SONDA DE PRIVACIDADE: todas as mensagens que chegaram a esta jogadora, varridas por números do orc,
 ##       textos e chaves só do Mestre; nenhuma mensagem de Mestre (mestre_recebido).
+## ORDEM-F2 — as provocações e o varrimento dos textos (registadas à parte, em `provocacoes` e `sondaTextos`, para os
+## números da batalha continuarem comparáveis com a primeira corrida, comparar-corridas.mjs da CORR9):
+##   (7) na vez dela a 2 m, antes do passo, a jogadora PEDE UMA ESCALA (um MASTER_SUPERVISOR montado à mão e mandado
+##       cru pela WebSocket — a Rede não o deixa sair de um lugar de jogadora): tem de receber só o ERRO `proibido`
+##       «Só o Mestre.», e nada mais muda (linha 4 do contrato, §2f da CORR8);
+##   (8) no fim, espera o ROOM_PAUSED (o Mestre sai depois da escala recusada dele, a linha 3);
+##   (9) a SONDA varre também os TEXTOS que a Rede não põe nos sinais de mensagem: o texto das recusas
+##       (recusa_recebida), o dos ERRO (erro_recebido) e o motivo do ROOM_PAUSED (sala_pausada).
+##   A sonda do fio (sonda-fio.mjs, no servidor) varre o fio inteiro e confere os mesmos lotes do lado do servidor.
 ## Sai com 0 se tudo passa, 1 se não.
 
 const CENA := "res://cenas/arena/arena.tscn"
@@ -36,29 +45,33 @@ var _msgs: Array = []
 var _mestre_msgs := 0
 var _recibos := {}
 var _arena: Node = null
-var _rel := {"fases": [], "verificacoes": []}
+var _rel := {"fases": [], "verificacoes": [], "provocacoes": []}
+var _textos: Array = []  # ORDEM-F2: recusas, ERRO e ROOM_PAUSED como chegaram pelos sinais da Rede
+var _erros: Array = []
+var _pausada := false
 
 
 func _init() -> void:
 	process_frame.connect(_correr, CONNECT_ONE_SHOT)
 
 
-func _ok(cond: bool, texto: String) -> void:
+## `lista`: "verificacoes" (a batalha) ou "provocacoes" (ORDEM-F2). As duas contam para a saída.
+func _ok(cond: bool, texto: String, lista: String = "verificacoes") -> void:
 	_total += 1
 	if not cond:
 		_falhas += 1
-	_rel["verificacoes"].append({"ok": cond, "texto": texto})
+	_rel[lista].append({"ok": cond, "texto": texto})
 	print(("  ok    " if cond else "  FALHA ") + texto)
 
 
-func _esperar(cond: Callable, rotulo: String, segundos: float = ESPERA_S) -> bool:
+func _esperar(cond: Callable, rotulo: String, segundos: float = ESPERA_S, lista: String = "verificacoes") -> bool:
 	var t0 := Time.get_ticks_msec()
 	while not cond.call():
 		if Time.get_ticks_msec() - t0 > int(segundos * 1000.0):
-			_ok(false, rotulo + " (tempo esgotado)")
+			_ok(false, rotulo + " (tempo esgotado)", lista)
 			return false
 		await process_frame
-	_ok(true, "%s (%.1f s)" % [rotulo, (Time.get_ticks_msec() - t0) / 1000.0])
+	_ok(true, "%s (%.1f s)" % [rotulo, (Time.get_ticks_msec() - t0) / 1000.0], lista)
 	return true
 
 
@@ -72,7 +85,15 @@ func _correr() -> void:
 	rede.boas_vindas_recebidas.connect(func(m): _msgs.append(m))
 	rede.mestre_recebido.connect(func(m): _mestre_msgs += 1; _msgs.append(m))
 	rede.recibo_recebido.connect(func(id, e, m): _recibos[id] = e; _msgs.append(m))
-	rede.recusa_recebida.connect(func(id, mot, tx): _recibos[id] = "RECUSADA " + mot + " " + tx)
+	rede.recusa_recebida.connect(func(id, mot, tx):
+		_recibos[id] = "RECUSADA " + mot + " " + tx
+		_textos.append({"type": "ROOM_REJECT", "intentId": id, "motivo": mot, "texto": tx}))
+	rede.erro_recebido.connect(func(cod, tx):
+		_erros.append([cod, tx])
+		_textos.append({"type": "ERRO", "codigo": cod, "texto": tx}))
+	rede.sala_pausada.connect(func(mot):
+		_pausada = true
+		_textos.append({"type": "ROOM_PAUSED", "motivo": mot}))
 	print("== a jogadora liga-se a ", rede.url_servidor(), " ==")
 	rede.entrar("Heroína Teste", SENHA)
 	if not await _esperar(func(): return rede.na_mesa() and est.tem_snapshot and est.minha_figura_id != "", "a heroína entrou e recebeu o snapshot"):
@@ -196,6 +217,8 @@ func _correr() -> void:
 				melhor = nota
 				alvo = k
 		var custo: float = servidor[alvo]
+		if fi == FASES.size() - 1:
+			await _pedir_escala(rede, est)
 		var id_int: String = ""
 		if _arena.enviar_acao({"tipo": "mover", "destino": {"x": alvo.x, "y": alvo.y}}):
 			id_int = _arena._ultimo_id
@@ -218,7 +241,31 @@ func _correr() -> void:
 	# a reserva final, depois do passo a 2 m
 	await _esperar(func(): return est.orcamento_m() >= 0.0 and absf(est.orcamento_m() - (DESLOCAMENTO_M - andou_m)) < 0.006,
 		"a reserva no fim: 9 − %s = %s m" % [andou_m, DESLOCAMENTO_M - andou_m], 10.0)
+	# (8) ORDEM-F2: o Mestre provoca a escala recusada (3 m) e sai; a jogadora tem de ver a sala pausada
+	await _esperar(func(): return _pausada, "F2 (8): o ROOM_PAUSED chegou (o Mestre saiu depois da escala recusada)", 60.0, "provocacoes")
 	_fim()
+
+
+## (7) ORDEM-F2: a jogadora pede uma escala (só o Mestre pode). Linha 4 do contrato: recebe só o ERRO proibido.
+func _pedir_escala(rede: Node, est: Node) -> void:
+	var n_msgs := _msgs.size()
+	var n_textos := _textos.size()
+	var n_erros := _erros.size()
+	var msg: Dictionary = rede.montar_comando_mestre("MASTER_SUPERVISOR", {"op": "escala", "casaM": 1.0}, est.revisao, "f2-jogadora-pede-escala")
+	var saiu: bool = rede._enviar_dict(msg)
+	_ok(saiu, "F2 (7): a jogadora manda um MASTER_SUPERVISOR escala 1 m (cru, pela WebSocket)", "provocacoes")
+	if not saiu:
+		return
+	if not await _esperar(func(): return _erros.size() > n_erros, "F2 (7): a resposta ao pedido da escala chegou", 10.0, "provocacoes"):
+		return
+	for i in 20:
+		await process_frame  # o que viesse junto com o ERRO chegava aqui
+	var e: Array = _erros[n_erros]
+	_ok(e[0] == "proibido" and e[1] == "Só o Mestre." and _erros.size() == n_erros + 1 and _textos.size() == n_textos + 1 and _msgs.size() == n_msgs
+		and is_equal_approx(float(est.mapa.get("casaM", 0)), 2.0),
+		"F2 (7): só o ERRO %s «%s» (%d ERRO, %d textos, %d mensagens novas); a escala continua %s m" % [
+			e[0], e[1], _erros.size() - n_erros, _textos.size() - n_textos, _msgs.size() - n_msgs, est.mapa.get("casaM")], "provocacoes")
+	_rel["pedidoEscala"] = {"erro": e, "mensagensNovas": _msgs.size() - n_msgs}
 
 
 ## BFS de 4 vizinhos (sala.js bfs): dentro da grelha, casas que o CLIENTE desenha como pisáveis (a água pisa-se), as
@@ -271,6 +318,16 @@ func _sonda() -> void:
 		"mapasVistos": mapas.keys(), "canarios": {"numeros": numeros, "textos": textos, "chaves": chaves}}
 	_ok(achados.is_empty() and _mestre_msgs == 0, "privacidade: %d mensagens à jogadora, %d achados, %d mensagens de Mestre; mapas vistos %s" % [
 		_msgs.size(), achados.size(), _mestre_msgs, ", ".join(mapas.keys())])
+	# (9) ORDEM-F2: os textos das recusas, dos ERRO e do ROOM_PAUSED, com os mesmos canários
+	var achados_t: Array = []
+	for i in _textos.size():
+		_varrer(_textos[i], "", i, numeros, textos, chaves, achados_t)
+	var tipos := {}
+	for t in _textos:
+		tipos[t["type"]] = int(tipos.get(t["type"], 0)) + 1
+	_rel["sondaTextos"] = {"textos": _textos, "porType": tipos, "achados": achados_t}
+	_ok(achados_t.is_empty() and tipos.has("ERRO") and tipos.has("ROOM_PAUSED"),
+		"F2 (9): privacidade nos textos — %d (%s), %d achados" % [_textos.size(), JSON.stringify(tipos), achados_t.size()], "provocacoes")
 
 
 func _varrer(v, chave: String, i: int, numeros: Array, textos: Array, chaves: Array, achados: Array) -> void:
