@@ -8,6 +8,7 @@ import { montarMesa, exigirAplicada, procurarCanarios, PIN, SENHAS, fichasDeTest
 import { criarSala } from '../nucleo/sala.js';
 import { criarMotorFalso } from './motor-falso.mjs';
 import { ordemDinamicaVazia, registarEvento } from '../nucleo/ordem-dinamica.js';
+import { jsonCanonico } from '../nucleo/util.js';
 
 const PARTY = ['heroina', 'aliada', 'espectador'];
 
@@ -242,4 +243,66 @@ test('caixa no HUD da jogadora: o «voltar» repõe a ordemDinamicaParty do chec
   m.sair('aliada');
   m.entrar('aliada', { papel: 'jogadora', nome: 'Aliada Teste', senha: SENHAS.aliada });
   assert.deepEqual(m.clientes.aliada.ultimo('ROOM_SNAPSHOT').caixa.ordemDinamica, esperada);
+// Ordem CAIXA-LOBBY (21/11/2026), B6 — NÃO aplicado (ver ESTADO-FINAL-ORDEM-CAIXA-LOBBY.md): o começo do combate não
+// manda ROOM_SNAPSHOT à Party (só eventos), por isso o snapshot do LOBBY é o único que leva a escolha do Mestre à jogadora
+// que estava na mesa antes da batalha (o cliente lê Estado.caixa desse snapshot ao abrir a arena: hud.gd _carregar_caixa).
+// Tirar a caixa do lobby deixava-a sem caixa a batalha inteira. Este teste guarda isso; se um dia o começo do combate
+// mandar snapshot à Party, a premissa cai e o B6 pode fazer-se.
+test('caixa no HUD da jogadora: a escolha do Mestre feita no lobby chega à batalha pelo snapshot do lobby (o começo do combate não manda snapshot)', () => {
+  const m = montarMesa({ comAliada: true, comEspectador: true, modoPadrao: 'manual' });
+  m.entrarTodos();
+  for (const k of PARTY) assert.equal(m.clientes[k].ultimo('ROOM_SNAPSHOT').fase, 'lobby', k);
+  // O Mestre escolhe no lobby: a Party recebe um snapshot de lobby com a escolha.
+  exigirAplicada(m.mestre('MASTER_SUPERVISOR', { op: 'caixa', caixa: { ligada: true, modo: 'iniciativa' } }), 'caixa no lobby');
+  const antes = Object.fromEntries(PARTY.map((k) => [k, m.clientes[k].msgs.length]));
+  m.iniciarCombate([['orc-teste', { x: 8, y: 8 }]]);
+  for (const k of PARTY) {
+    const novas = m.clientes[k].msgs.slice(antes[k]);
+    assert.ok(novas.some((x) => x.type === 'ROOM_EVENT'), k + ': a batalha começou');
+    assert.ok(!novas.some((x) => x.type === 'ROOM_SNAPSHOT'),
+      k + ': o começo do combate passou a mandar snapshot à Party — o B6 da Ordem CAIXA-LOBBY (tirar a caixa do lobby) já pode fazer-se');
+    // A caixa que a jogadora tem ao entrar na batalha é a do último snapshot — o do lobby.
+    const s = m.clientes[k].ultimo('ROOM_SNAPSHOT');
+    assert.equal(s.fase, 'lobby', k);
+    assert.deepEqual(s.caixa, { ligada: true, ordemPor: 'iniciativa', ordemDinamica: { ordem: [], fechada: false, ultimo: null } }, k);
+  }
+});
+
+// Ordem CAIXA-LOBBY (21/11/2026), B7a: a ordem dinâmica (a do Mestre e a da Party) com uma chave a mais é recusada.
+test('caixa no HUD da jogadora: a ordem dinâmica do journal com uma chave a mais é recusada; as de hoje abrem', () => {
+  const { m, H, orc, act, estado } = mesaEmCombate();
+  exigirAplicada(m.intencao('heroina', { tipo: 'mover', destino: { x: 3, y: 2 } }), 'mover');
+  exigirAplicada(m.intencao('heroina', { tipo: 'encerrar' }), 'encerrar');
+  if (estado().vez?.figuraId === orc) act(orc, { tipo: 'encerrar' });
+  const [corpo] = m.sala.exportar().split('\n');
+  const assinar = (o) => { const t = jsonCanonico(o); return t + '\nsha256:' + createHash('sha256').update(t).digest('hex') + '\n'; };
+  const CONFIG = { roomId: 'sala-teste', mapa: { largura: 20, altura: 20 }, iniciativa: INICIATIVA, modoPadrao: 'manual', depurar: true,
+    lugares: [
+      { papel: 'jogadora', nome: 'Heroína Teste', senha: SENHAS.heroina, fichaId: 'heroina-teste', casa: { x: 2, y: 2 } },
+      { papel: 'jogadora', nome: 'Aliada Teste', senha: SENHAS.aliada, fichaId: 'aliada-teste', casa: { x: 2, y: 4 } },
+      { papel: 'espectador', nome: 'Visita', senha: SENHAS.espectador },
+      { papel: 'mestre', nome: 'Mestre', pin: PIN }] };
+  const abrir = (o) => criarSala({ motores: criarMotorFalso(), fichas: fichasDeTeste({ comAliada: true }), rng: rngDeterministico(), agora: relogio(), config: CONFIG, restaurarDe: assinar(o) });
+  const base = JSON.parse(corpo);
+  assert.ok(base.estado.ordemDinamica.ordem.includes(H), 'a ordem do Mestre tem a jogada');
+  assert.ok(base.estado.ordemDinamicaParty.ordem.includes(H), 'a ordem da Party tem a jogada');
+  // As válidas de hoje abrem todas: as duas como estão, vazias, null e ausentes (journals de antes).
+  const validas = [
+    (e) => e,
+    (e) => { e.ordemDinamica = { ordem: [], fechada: false, ultimo: null, vezes: 0 }; e.ordemDinamicaParty = { ordem: [], fechada: false, ultimo: null, vezes: 0 }; },
+    (e) => { e.ordemDinamica = { ordem: [H], fechada: true, ultimo: H, vezes: 3 }; e.ordemDinamicaParty = { ordem: [H], fechada: true, ultimo: H, vezes: 0 }; },
+    (e) => { e.ordemDinamica = null; e.ordemDinamicaParty = null; },
+    (e) => { delete e.ordemDinamica; delete e.ordemDinamicaParty; },
+  ];
+  for (const [i, mudar] of validas.entries()) {
+    const c = JSON.parse(corpo); mudar(c.estado);
+    assert.doesNotThrow(() => abrir(c), 'válida ' + i);
+  }
+  // Uma chave inventada (em qualquer das duas) recusa o journal — não se ignora.
+  for (const campo of ['ordemDinamica', 'ordemDinamicaParty']) {
+    for (const [k, v] of [['inventado', 1], ['valores', { [H]: 5150 }], ['modo', 'iniciativa']]) {
+      const c = JSON.parse(corpo); c.estado[campo] = { ...c.estado[campo], [k]: v };
+      assert.throws(() => abrir(c), (err) => err.message.includes(`${campo}.${k}`) && err.message.includes('campo a mais'), `${campo}.${k}`);
+    }
+  }
 });

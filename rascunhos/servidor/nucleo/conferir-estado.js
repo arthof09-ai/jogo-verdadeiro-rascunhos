@@ -261,6 +261,9 @@ export function conferirEstadoProfundo(e, fichas, fluxos = null) {
   }
 }
 
+/** Ordem CAIXA-LOBBY (B7a): as chaves da ordem dinâmica (ordem-dinamica.js ordemDinamicaVazia); nenhuma outra. */
+const CHAVES_ORDEM_DINAMICA = ['ordem', 'fechada', 'ultimo', 'vezes'];
+
 function conferirOrdemDinamica(od, e, p = 'ordemDinamica') {
   exigir(od, 'ordem', p, Array.isArray, 'não é lista');
   od.ordem.forEach((id, i) => {
@@ -271,6 +274,8 @@ function conferirOrdemDinamica(od, e, p = 'ordemDinamica') {
   exigir(od, 'ultimo', p, ouNull(ehTextoCheio), 'não é texto nem null');
   if (od.ultimo !== null && !tem(e.figuras, od.ultimo)) falha(p + '.ultimo', 'figura inexistente'); // camada 2
   exigir(od, 'vezes', p, ehIntPos0, 'não é inteiro >= 0');
+  // Ordem CAIXA-LOBBY (B7a): como a caixaMestre — uma chave fora da lista recusa o journal, não se ignora.
+  for (const k of Object.keys(od)) if (!CHAVES_ORDEM_DINAMICA.includes(k)) falha(`${p}.${k}`, 'campo a mais');
 }
 
 /**
