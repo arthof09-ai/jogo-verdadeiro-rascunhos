@@ -17,7 +17,13 @@ const VAZIA := "A ordem forma-se à medida que as figuras agem."
 const VAZIA_INICIATIVA := "O servidor ainda não deu a ordem de iniciativa."
 const NA_VEZ := "na vez"
 ## Medidas em múltiplos do tamanho da letra (como o resto do ecrã do Mestre).
-const LADO_RETRATO_EM_LETRAS := 2.8
+## Ordem CAIXA-PADRAO-BUSTO (palavra do Mestre, 21/11/2026 19:52: «tem que ser tudo padronizado»): cada quadradinho
+## da fila tem uma CÉLULA DE TAMANHO FIXO — o retrato quadrado deste lado e, por baixo, uma linha de nome da mesma
+## largura. O nome nunca alarga a célula: corta-se com «…» dentro dela. O cartão da figura na vez (LADO_ACTIVA) é
+## outro elemento e continua maior.
+const LADO_RETRATO_EM_LETRAS := 3.4
+## A letra do nome por baixo de cada quadradinho (fracção da letra do ecrã).
+const LETRA_NOME := 0.75
 const LADO_ACTIVA_EM_LETRAS := 4.6
 const MAX_LETRAS_NOME := 10
 ## As cores vêm da tabela de apresentação (dados/apresentacao.gd). Ordem CAIXA-TESTE-ESTETICA (teste visual,
@@ -47,6 +53,8 @@ var _fila: GridContainer
 ## A largura máxima da caixa (unidades do ecrã). 0 = sem limite.
 var _max_largura := 0.0
 var _vazia: Label
+## Uma linha de nome escondida, só para medir a altura da linha de nome das células (tamanho_celula).
+var _medida_nome: Label
 ## Para os testes e as provas: o que a caixa mostra agora.
 var ids_mostrados: Array[String] = []
 var vez_mostrada := ""
@@ -95,6 +103,8 @@ func _init() -> void:
 	_fila.name = "Fila"
 	_fila.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	corpo.add_child(_fila)
+	_medida_nome = _rotulo(col, "MedidaNome", "Ág")
+	_medida_nome.visible = false
 	_vazia = _rotulo(corpo, "Vazia", VAZIA)
 	_vazia.modulate = Color(1, 1, 1, 0.75)
 	_vazia.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -112,18 +122,29 @@ func mostrar(ordem: Array[String], vez: String, nomes: Dictionary, retratos: Dic
 	for c in _fila.get_children():
 		_fila.remove_child(c)
 		c.queue_free()
-	var lado := float(_fonte) * LADO_RETRATO_EM_LETRAS
+	var celula := tamanho_celula()
 	for id in ordem:
-		var slot := VBoxContainer.new()
+		# A célula é um Control de tamanho FIXO (não um contentor que some o que leva): o retrato quadrado em cima, a
+		# linha do nome por baixo, postos à mão. Nada do que leva a pode alargar.
+		var slot := Control.new()
 		slot.name = "Slot_" + id
 		slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		slot.custom_minimum_size = celula
+		slot.clip_contents = true
 		var m := _moldura(id == vez_mostrada)
-		m.custom_minimum_size = Vector2(lado, lado)
 		(m.get_child(0) as TextureRect).texture = retratos.get(id)
 		slot.add_child(m)
+		m.position = Vector2.ZERO
+		m.custom_minimum_size = Vector2(celula.x, celula.x)
+		m.size = m.custom_minimum_size
 		var n := _rotulo(slot, "Nome", _curto(str(nomes.get(id, id))))
 		n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		n.add_theme_font_size_override("font_size", maxi(1, int(round(_fonte * 0.75))))
+		n.add_theme_font_size_override("font_size", _letra_nome())
+		# O nome não mede a célula: corta-se dentro da largura fixa (com «…»).
+		n.clip_text = true
+		n.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		n.position = Vector2(0.0, celula.x)
+		n.size = Vector2(celula.x, celula.y - celula.x)
 		if id == vez_mostrada:
 			n.add_theme_color_override("font_color", COR_REALCE)
 		_fila.add_child(slot)
@@ -137,6 +158,19 @@ func mostrar(ordem: Array[String], vez: String, nomes: Dictionary, retratos: Dic
 	_vazia.text = VAZIA_INICIATIVA if modo == "iniciativa" else VAZIA
 	_fila.visible = not ordem.is_empty()
 	_ajustar_colunas()
+
+
+## Ordem CAIXA-PADRAO-BUSTO: o tamanho (largura × altura) de CADA quadradinho da fila — o mesmo para todas as figuras,
+## qualquer que seja o nome: o retrato quadrado (LADO_RETRATO_EM_LETRAS letras) mais uma linha de nome.
+func tamanho_celula() -> Vector2:
+	var lado := roundf(float(_fonte) * LADO_RETRATO_EM_LETRAS)
+	# A altura de uma linha de nome medida por uma Label a sério (fonte, espaçamento e margens do tema).
+	_medida_nome.add_theme_font_size_override("font_size", _letra_nome())
+	return Vector2(lado, lado + ceilf(_medida_nome.get_minimum_size().y))
+
+
+func _letra_nome() -> int:
+	return maxi(1, int(round(_fonte * LETRA_NOME)))
 
 
 ## Ordem CAIXA-JANELA (B3): a caixa não passa desta largura (0 = sem limite): a fila parte em mais linhas.
