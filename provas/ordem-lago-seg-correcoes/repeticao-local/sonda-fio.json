@@ -1,0 +1,1121 @@
+{
+ "modo": "corrida padrão",
+ "mensagens": 24,
+ "lotes": 19,
+ "porType": {
+  "ROOM_WELCOME": 1,
+  "ROOM_SNAPSHOT": 3,
+  "ROOM_EVENT:colocacao": 2,
+  "ROOM_EVENT:turno": 1,
+  "ROOM_OPTIONS": 7,
+  "ROOM_EVENT:movimento": 3,
+  "ROOM_RECEIPT": 3,
+  "ROOM_EVENT:escala": 2,
+  "ERRO": 1,
+  "ROOM_PAUSED": 1
+ },
+ "casos": [],
+ "porCaso": {},
+ "fora": [],
+ "linha3": {
+  "lote": 16,
+  "onde": "receber",
+  "entrada": {
+   "papel": "mestre",
+   "type": "MASTER_SUPERVISOR",
+   "op": "escala",
+   "casaM": 3
+  },
+  "porPapel": {
+   "mestre": {
+    "n": 2,
+    "types": [
+     "ROOM_EVENT:recusa",
+     "ROOM_REJECT"
+    ]
+   }
+  }
+ },
+ "linha4": {
+  "lote": {
+   "lote": 14,
+   "onde": "receber",
+   "entrada": {
+    "papel": "jogadora",
+    "type": "MASTER_SUPERVISOR",
+    "op": "escala",
+    "casaM": 1
+   },
+   "porPapel": {
+    "jogadora": {
+     "n": 1,
+     "types": []
+    }
+   }
+  },
+  "recebeu": [
+   {
+    "v": 2,
+    "type": "ERRO",
+    "roomId": "sala-bancada-mapa",
+    "codigo": "proibido",
+    "texto": "Só o Mestre."
+   }
+  ]
+ },
+ "pausas": [
+  {
+   "n": 23,
+   "lote": 17,
+   "onde": "conexaoFechada",
+   "type": "ROOM_PAUSED",
+   "tipo": null,
+   "seq": null,
+   "revision": null,
+   "canarioTeste": null,
+   "mapa": null,
+   "codigo": null,
+   "motivo": "mestre_desconectado",
+   "texto": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  }
+ ],
+ "escalas": [
+  [
+   {
+    "n": 10,
+    "lote": 11,
+    "onde": "receber",
+    "type": "ROOM_EVENT",
+    "tipo": "escala",
+    "seq": 6,
+    "revision": 5,
+    "canarioTeste": null,
+    "mapa": null,
+    "dados": {},
+    "codigo": null,
+    "motivo": null,
+    "texto": null,
+    "vezId": null,
+    "orcamentoM": null,
+    "nMover": null,
+    "figuras": null
+   },
+   {
+    "n": 11,
+    "lote": 11,
+    "onde": "receber",
+    "type": "ROOM_SNAPSHOT",
+    "tipo": null,
+    "seq": 6,
+    "revision": 5,
+    "canarioTeste": null,
+    "mapa": {
+     "largura": 75,
+     "altura": 75,
+     "casaM": 1
+    },
+    "codigo": null,
+    "motivo": null,
+    "texto": null,
+    "vezId": "f65da451bf53d657e",
+    "orcamentoM": null,
+    "nMover": null,
+    "figuras": [
+     "Heroína Teste(57,8)",
+     "Orc(57,17)"
+    ]
+   },
+   {
+    "n": 12,
+    "lote": 11,
+    "onde": "receber",
+    "type": "ROOM_OPTIONS",
+    "tipo": null,
+    "seq": null,
+    "revision": 5,
+    "canarioTeste": null,
+    "mapa": null,
+    "codigo": null,
+    "motivo": null,
+    "texto": null,
+    "vezId": "f65da451bf53d657e",
+    "orcamentoM": 7.5,
+    "nMover": 99,
+    "figuras": null
+   }
+  ],
+  [
+   {
+    "n": 16,
+    "lote": 13,
+    "onde": "receber",
+    "type": "ROOM_EVENT",
+    "tipo": "escala",
+    "seq": 8,
+    "revision": 7,
+    "canarioTeste": null,
+    "mapa": null,
+    "dados": {},
+    "codigo": null,
+    "motivo": null,
+    "texto": null,
+    "vezId": null,
+    "orcamentoM": null,
+    "nMover": null,
+    "figuras": null
+   },
+   {
+    "n": 17,
+    "lote": 13,
+    "onde": "receber",
+    "type": "ROOM_SNAPSHOT",
+    "tipo": null,
+    "seq": 8,
+    "revision": 7,
+    "canarioTeste": null,
+    "mapa": {
+     "largura": 37,
+     "altura": 37,
+     "casaM": 2
+    },
+    "codigo": null,
+    "motivo": null,
+    "texto": null,
+    "vezId": "f65da451bf53d657e",
+    "orcamentoM": null,
+    "nMover": null,
+    "figuras": [
+     "Heroína Teste(28,4)",
+     "Orc(28,8)"
+    ]
+   },
+   {
+    "n": 18,
+    "lote": 13,
+    "onde": "receber",
+    "type": "ROOM_OPTIONS",
+    "tipo": null,
+    "seq": null,
+    "revision": 7,
+    "canarioTeste": null,
+    "mapa": null,
+    "codigo": null,
+    "motivo": null,
+    "texto": null,
+    "vezId": "f65da451bf53d657e",
+    "orcamentoM": 6.5,
+    "nMover": 20,
+    "figuras": null
+   }
+  ]
+ ],
+ "cronologia": [
+  {
+   "n": 0,
+   "lote": 1,
+   "onde": "entrar",
+   "type": "ROOM_WELCOME",
+   "tipo": null,
+   "seq": null,
+   "revision": null,
+   "canarioTeste": null,
+   "mapa": null,
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 1,
+   "lote": 1,
+   "onde": "entrar",
+   "type": "ROOM_SNAPSHOT",
+   "tipo": null,
+   "seq": 1,
+   "revision": 1,
+   "canarioTeste": null,
+   "mapa": {
+    "largura": 50,
+    "altura": 50,
+    "casaM": 1.5
+   },
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": []
+  },
+  {
+   "n": 2,
+   "lote": 8,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "colocacao",
+   "seq": 2,
+   "revision": 2,
+   "canarioTeste": null,
+   "mapa": null,
+   "dados": {
+    "figuraId": "f65da451bf53d657e",
+    "nomePublico": "Heroína Teste",
+    "lado": "jogadora",
+    "x": 38,
+    "y": 4,
+    "orientacao": "S",
+    "visivel": "de_pe"
+   },
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 3,
+   "lote": 8,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "turno",
+   "seq": 3,
+   "revision": 2,
+   "canarioTeste": null,
+   "mapa": null,
+   "dados": {
+    "figuraId": "f65da451bf53d657e",
+    "rodada": 1,
+    "narra": false
+   },
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 4,
+   "lote": 8,
+   "onde": "receber",
+   "type": "ROOM_OPTIONS",
+   "tipo": null,
+   "seq": null,
+   "revision": 2,
+   "canarioTeste": null,
+   "mapa": null,
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": "f65da451bf53d657e",
+   "orcamentoM": 9,
+   "nMover": 70,
+   "figuras": null
+  },
+  {
+   "n": 5,
+   "lote": 9,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "colocacao",
+   "seq": 4,
+   "revision": 3,
+   "canarioTeste": null,
+   "mapa": null,
+   "dados": {
+    "figuraId": "f6655e4cb9fb91275",
+    "nomePublico": "Orc",
+    "lado": "criatura",
+    "x": 38,
+    "y": 11,
+    "orientacao": "S",
+    "visivel": "de_pe"
+   },
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 6,
+   "lote": 9,
+   "onde": "receber",
+   "type": "ROOM_OPTIONS",
+   "tipo": null,
+   "seq": null,
+   "revision": 3,
+   "canarioTeste": null,
+   "mapa": null,
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": "f65da451bf53d657e",
+   "orcamentoM": 9,
+   "nMover": 70,
+   "figuras": null
+  },
+  {
+   "n": 7,
+   "lote": 10,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "movimento",
+   "seq": 5,
+   "revision": 4,
+   "canarioTeste": null,
+   "mapa": null,
+   "dados": {
+    "figuraId": "f65da451bf53d657e",
+    "de": {
+     "x": 38,
+     "y": 4
+    },
+    "para": {
+     "x": 38,
+     "y": 5
+    },
+    "caminho": [
+     {
+      "x": 38,
+      "y": 4
+     },
+     {
+      "x": 38,
+      "y": 5
+     }
+    ],
+    "custoM": 1.5,
+    "reservaM": 7.5
+   },
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 8,
+   "lote": 10,
+   "onde": "receber",
+   "type": "ROOM_RECEIPT",
+   "tipo": null,
+   "seq": 5,
+   "revision": 4,
+   "canarioTeste": null,
+   "mapa": null,
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 9,
+   "lote": 10,
+   "onde": "receber",
+   "type": "ROOM_OPTIONS",
+   "tipo": null,
+   "seq": null,
+   "revision": 4,
+   "canarioTeste": null,
+   "mapa": null,
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": "f65da451bf53d657e",
+   "orcamentoM": 7.5,
+   "nMover": 51,
+   "figuras": null
+  },
+  {
+   "n": 10,
+   "lote": 11,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "escala",
+   "seq": 6,
+   "revision": 5,
+   "canarioTeste": null,
+   "mapa": null,
+   "dados": {},
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 11,
+   "lote": 11,
+   "onde": "receber",
+   "type": "ROOM_SNAPSHOT",
+   "tipo": null,
+   "seq": 6,
+   "revision": 5,
+   "canarioTeste": null,
+   "mapa": {
+    "largura": 75,
+    "altura": 75,
+    "casaM": 1
+   },
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": "f65da451bf53d657e",
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": [
+    "Heroína Teste(57,8)",
+    "Orc(57,17)"
+   ]
+  },
+  {
+   "n": 12,
+   "lote": 11,
+   "onde": "receber",
+   "type": "ROOM_OPTIONS",
+   "tipo": null,
+   "seq": null,
+   "revision": 5,
+   "canarioTeste": null,
+   "mapa": null,
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": "f65da451bf53d657e",
+   "orcamentoM": 7.5,
+   "nMover": 99,
+   "figuras": null
+  },
+  {
+   "n": 13,
+   "lote": 12,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "movimento",
+   "seq": 7,
+   "revision": 6,
+   "canarioTeste": null,
+   "mapa": null,
+   "dados": {
+    "figuraId": "f65da451bf53d657e",
+    "de": {
+     "x": 57,
+     "y": 8
+    },
+    "para": {
+     "x": 57,
+     "y": 9
+    },
+    "caminho": [
+     {
+      "x": 57,
+      "y": 8
+     },
+     {
+      "x": 57,
+      "y": 9
+     }
+    ],
+    "custoM": 1,
+    "reservaM": 6.5
+   },
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 14,
+   "lote": 12,
+   "onde": "receber",
+   "type": "ROOM_RECEIPT",
+   "tipo": null,
+   "seq": 7,
+   "revision": 6,
+   "canarioTeste": null,
+   "mapa": null,
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 15,
+   "lote": 12,
+   "onde": "receber",
+   "type": "ROOM_OPTIONS",
+   "tipo": null,
+   "seq": null,
+   "revision": 6,
+   "canarioTeste": null,
+   "mapa": null,
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": "f65da451bf53d657e",
+   "orcamentoM": 6.5,
+   "nMover": 77,
+   "figuras": null
+  },
+  {
+   "n": 16,
+   "lote": 13,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "escala",
+   "seq": 8,
+   "revision": 7,
+   "canarioTeste": null,
+   "mapa": null,
+   "dados": {},
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 17,
+   "lote": 13,
+   "onde": "receber",
+   "type": "ROOM_SNAPSHOT",
+   "tipo": null,
+   "seq": 8,
+   "revision": 7,
+   "canarioTeste": null,
+   "mapa": {
+    "largura": 37,
+    "altura": 37,
+    "casaM": 2
+   },
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": "f65da451bf53d657e",
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": [
+    "Heroína Teste(28,4)",
+    "Orc(28,8)"
+   ]
+  },
+  {
+   "n": 18,
+   "lote": 13,
+   "onde": "receber",
+   "type": "ROOM_OPTIONS",
+   "tipo": null,
+   "seq": null,
+   "revision": 7,
+   "canarioTeste": null,
+   "mapa": null,
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": "f65da451bf53d657e",
+   "orcamentoM": 6.5,
+   "nMover": 20,
+   "figuras": null
+  },
+  {
+   "n": 19,
+   "lote": 14,
+   "onde": "receber",
+   "type": "ERRO",
+   "tipo": null,
+   "seq": null,
+   "revision": null,
+   "canarioTeste": null,
+   "mapa": null,
+   "codigo": "proibido",
+   "motivo": null,
+   "texto": "Só o Mestre.",
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 20,
+   "lote": 15,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "movimento",
+   "seq": 9,
+   "revision": 8,
+   "canarioTeste": null,
+   "mapa": null,
+   "dados": {
+    "figuraId": "f65da451bf53d657e",
+    "de": {
+     "x": 28,
+     "y": 4
+    },
+    "para": {
+     "x": 28,
+     "y": 3
+    },
+    "caminho": [
+     {
+      "x": 28,
+      "y": 4
+     },
+     {
+      "x": 28,
+      "y": 3
+     }
+    ],
+    "custoM": 2,
+    "reservaM": 4.5
+   },
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 21,
+   "lote": 15,
+   "onde": "receber",
+   "type": "ROOM_RECEIPT",
+   "tipo": null,
+   "seq": 9,
+   "revision": 8,
+   "canarioTeste": null,
+   "mapa": null,
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 22,
+   "lote": 15,
+   "onde": "receber",
+   "type": "ROOM_OPTIONS",
+   "tipo": null,
+   "seq": null,
+   "revision": 8,
+   "canarioTeste": null,
+   "mapa": null,
+   "codigo": null,
+   "motivo": null,
+   "texto": null,
+   "vezId": "f65da451bf53d657e",
+   "orcamentoM": 4.5,
+   "nMover": 10,
+   "figuras": null
+  },
+  {
+   "n": 23,
+   "lote": 17,
+   "onde": "conexaoFechada",
+   "type": "ROOM_PAUSED",
+   "tipo": null,
+   "seq": null,
+   "revision": null,
+   "canarioTeste": null,
+   "mapa": null,
+   "codigo": null,
+   "motivo": "mestre_desconectado",
+   "texto": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  }
+ ],
+ "lotesResumo": [
+  {
+   "lote": 1,
+   "onde": "entrar",
+   "entrada": {
+    "papel": "jogadora",
+    "type": "ROOM_JOIN"
+   },
+   "porPapel": {
+    "jogadora": {
+     "n": 2,
+     "types": []
+    },
+    "espectador": {
+     "n": 1,
+     "types": []
+    },
+    "mestre": {
+     "n": 1,
+     "types": [
+      "ROOM_EVENT:entrada"
+     ]
+    }
+   }
+  },
+  {
+   "lote": 2,
+   "onde": "conexaoAberta",
+   "entrada": {
+    "papel": "jogadora",
+    "type": null
+   },
+   "porPapel": {}
+  },
+  {
+   "lote": 3,
+   "onde": "entrar",
+   "entrada": {
+    "papel": "mestre",
+    "type": "ROOM_JOIN"
+   },
+   "porPapel": {
+    "mestre": {
+     "n": 3,
+     "types": [
+      "ROOM_WELCOME",
+      "ROOM_SNAPSHOT",
+      "MASTER_VIEW"
+     ]
+    }
+   }
+  },
+  {
+   "lote": 4,
+   "onde": "conexaoAberta",
+   "entrada": {
+    "papel": "mestre",
+    "type": null
+   },
+   "porPapel": {}
+  },
+  {
+   "lote": 5,
+   "onde": "entrar",
+   "entrada": {
+    "papel": "espectador",
+    "type": "ROOM_JOIN"
+   },
+   "porPapel": {
+    "espectador": {
+     "n": 2,
+     "types": []
+    }
+   }
+  },
+  {
+   "lote": 6,
+   "onde": "conexaoAberta",
+   "entrada": {
+    "papel": "espectador",
+    "type": null
+   },
+   "porPapel": {}
+  },
+  {
+   "lote": 7,
+   "onde": "receber",
+   "entrada": {
+    "papel": "mestre",
+    "type": "MASTER_LOBBY_SET"
+   },
+   "porPapel": {
+    "mestre": {
+     "n": 2,
+     "types": [
+      "ROOM_EVENT:lobby",
+      "ROOM_RECEIPT"
+     ]
+    }
+   }
+  },
+  {
+   "lote": 8,
+   "onde": "receber",
+   "entrada": {
+    "papel": "mestre",
+    "type": "MASTER_START"
+   },
+   "porPapel": {
+    "jogadora": {
+     "n": 3,
+     "types": []
+    },
+    "espectador": {
+     "n": 2,
+     "types": []
+    },
+    "mestre": {
+     "n": 3,
+     "types": [
+      "ROOM_EVENT:colocacao",
+      "ROOM_EVENT:turno",
+      "ROOM_RECEIPT"
+     ]
+    }
+   }
+  },
+  {
+   "lote": 9,
+   "onde": "receber",
+   "entrada": {
+    "papel": "mestre",
+    "type": "MASTER_PLACE"
+   },
+   "porPapel": {
+    "jogadora": {
+     "n": 2,
+     "types": []
+    },
+    "espectador": {
+     "n": 1,
+     "types": []
+    },
+    "mestre": {
+     "n": 2,
+     "types": [
+      "ROOM_EVENT:colocacao",
+      "ROOM_RECEIPT"
+     ]
+    }
+   }
+  },
+  {
+   "lote": 10,
+   "onde": "receber",
+   "entrada": {
+    "papel": "jogadora",
+    "type": "ROOM_INTENT"
+   },
+   "porPapel": {
+    "jogadora": {
+     "n": 3,
+     "types": []
+    },
+    "espectador": {
+     "n": 1,
+     "types": []
+    },
+    "mestre": {
+     "n": 1,
+     "types": [
+      "ROOM_EVENT:movimento"
+     ]
+    }
+   }
+  },
+  {
+   "lote": 11,
+   "onde": "receber",
+   "entrada": {
+    "papel": "mestre",
+    "type": "MASTER_SUPERVISOR",
+    "op": "escala",
+    "casaM": 1
+   },
+   "porPapel": {
+    "jogadora": {
+     "n": 3,
+     "types": []
+    },
+    "espectador": {
+     "n": 2,
+     "types": []
+    },
+    "mestre": {
+     "n": 3,
+     "types": [
+      "ROOM_EVENT:escala",
+      "ROOM_SNAPSHOT",
+      "ROOM_RECEIPT"
+     ]
+    }
+   }
+  },
+  {
+   "lote": 12,
+   "onde": "receber",
+   "entrada": {
+    "papel": "jogadora",
+    "type": "ROOM_INTENT"
+   },
+   "porPapel": {
+    "jogadora": {
+     "n": 3,
+     "types": []
+    },
+    "espectador": {
+     "n": 1,
+     "types": []
+    },
+    "mestre": {
+     "n": 1,
+     "types": [
+      "ROOM_EVENT:movimento"
+     ]
+    }
+   }
+  },
+  {
+   "lote": 13,
+   "onde": "receber",
+   "entrada": {
+    "papel": "mestre",
+    "type": "MASTER_SUPERVISOR",
+    "op": "escala",
+    "casaM": 2
+   },
+   "porPapel": {
+    "jogadora": {
+     "n": 3,
+     "types": []
+    },
+    "espectador": {
+     "n": 2,
+     "types": []
+    },
+    "mestre": {
+     "n": 3,
+     "types": [
+      "ROOM_EVENT:escala",
+      "ROOM_SNAPSHOT",
+      "ROOM_RECEIPT"
+     ]
+    }
+   }
+  },
+  {
+   "lote": 14,
+   "onde": "receber",
+   "entrada": {
+    "papel": "jogadora",
+    "type": "MASTER_SUPERVISOR",
+    "op": "escala",
+    "casaM": 1
+   },
+   "porPapel": {
+    "jogadora": {
+     "n": 1,
+     "types": []
+    }
+   }
+  },
+  {
+   "lote": 15,
+   "onde": "receber",
+   "entrada": {
+    "papel": "jogadora",
+    "type": "ROOM_INTENT"
+   },
+   "porPapel": {
+    "jogadora": {
+     "n": 3,
+     "types": []
+    },
+    "espectador": {
+     "n": 1,
+     "types": []
+    },
+    "mestre": {
+     "n": 1,
+     "types": [
+      "ROOM_EVENT:movimento"
+     ]
+    }
+   }
+  },
+  {
+   "lote": 16,
+   "onde": "receber",
+   "entrada": {
+    "papel": "mestre",
+    "type": "MASTER_SUPERVISOR",
+    "op": "escala",
+    "casaM": 3
+   },
+   "porPapel": {
+    "mestre": {
+     "n": 2,
+     "types": [
+      "ROOM_EVENT:recusa",
+      "ROOM_REJECT"
+     ]
+    }
+   }
+  },
+  {
+   "lote": 17,
+   "onde": "conexaoFechada",
+   "entrada": {
+    "papel": "mestre",
+    "type": null
+   },
+   "porPapel": {
+    "mestre": {
+     "n": 2,
+     "types": [
+      "ROOM_EVENT:pausa",
+      "ROOM_PAUSED"
+     ]
+    },
+    "jogadora": {
+     "n": 1,
+     "types": []
+    },
+    "espectador": {
+     "n": 1,
+     "types": []
+    }
+   }
+  },
+  {
+   "lote": 18,
+   "onde": "conexaoFechada",
+   "entrada": {
+    "papel": "espectador",
+    "type": null
+   },
+   "porPapel": {}
+  },
+  {
+   "lote": 19,
+   "onde": "conexaoFechada",
+   "entrada": {
+    "papel": "jogadora",
+    "type": null
+   },
+   "porPapel": {}
+  }
+ ]
+}

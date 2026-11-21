@@ -1,0 +1,8 @@
+[mestre] na mesa (Mestre e espectador)
+[mestre] MASTER_LOBBY_SET {"mapaId":"arena-teste","criaturasDisponiveis":["orc-teste"],"npcsDisponiveis":[]} → ROOM_RECEIPT APLICADA
+[mestre] MASTER_START {} → ROOM_RECEIPT APLICADA
+[mestre] MASTER_PLACE {"fichaId":"orc-teste","casa":{"x":38,"y":11}} → ROOM_RECEIPT APLICADA
+[mestre] MASTER_SUPERVISOR {"op":"escala","casaM":1} → ROOM_RECEIPT APLICADA
+[mestre] MASTER_SUPERVISOR {"op":"escala","casaM":2} → ROOM_RECEIPT APLICADA
+[mestre] espectador: 12 mensagens, 0 achados; mapas vistos [{"largura":50,"altura":50,"casaM":1.5},{"largura":75,"altura":75,"casaM":1},{"largura":37,"altura":37,"casaM":2}]
+[mestre] TUDO PASSOU
