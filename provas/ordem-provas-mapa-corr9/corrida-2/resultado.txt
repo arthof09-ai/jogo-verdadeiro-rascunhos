@@ -1,0 +1,1 @@
+terreno-original=0 terreno-adaptada=0 Mestre/espectador=0 jogadora=0 erros-de-script=0

@@ -1,0 +1,411 @@
+{
+ "fases": [
+  {
+   "casaM": 1.5,
+   "lado": 50,
+   "figuras": {
+    "f77939129be029a0e": {
+     "quem": "heroína",
+     "casa": [
+      38,
+      4
+     ],
+     "noXZ": [
+      20.25,
+      -30.75
+     ],
+     "agua": false
+    },
+    "f5c8a08efe647d226": {
+     "quem": "orc",
+     "casa": [
+      38,
+      11
+     ],
+     "noXZ": [
+      20.25,
+      -20.25
+     ],
+     "agua": true
+    }
+   },
+   "caminho": {
+    "reservaM": 9.0,
+    "maxCasas": 6,
+    "servidor": 80,
+    "cliente": 80,
+    "deAgua": 4,
+    "soServidor": 0,
+    "soCliente": 0,
+    "custoDiferente": 0
+   },
+   "alcance": {
+    "passos": 7,
+    "alcanceCasas": 6.0,
+    "aoAlcance": false,
+    "nosAtaques": false
+   },
+   "passo": {
+    "para": [
+     38,
+     5
+    ],
+    "custoM": 1.5,
+    "recibo": "APLICADA",
+    "agua": false
+   }
+  },
+  {
+   "casaM": 1.0,
+   "lado": 75,
+   "figuras": {
+    "f77939129be029a0e": {
+     "quem": "heroína",
+     "casa": [
+      57,
+      8
+     ],
+     "noXZ": [
+      20.0,
+      -29.0
+     ],
+     "agua": false,
+     "antesXZ": [
+      20.25,
+      -29.25
+     ],
+     "desvioXZ": [
+      -0.25,
+      0.25
+     ]
+    },
+    "f5c8a08efe647d226": {
+     "quem": "orc",
+     "casa": [
+      57,
+      17
+     ],
+     "noXZ": [
+      20.0,
+      -20.0
+     ],
+     "agua": true,
+     "antesXZ": [
+      20.25,
+      -20.25
+     ],
+     "desvioXZ": [
+      -0.25,
+      0.25
+     ]
+    }
+   },
+   "caminho": {
+    "reservaM": 7.5,
+    "maxCasas": 7,
+    "servidor": 112,
+    "cliente": 112,
+    "deAgua": 9,
+    "soServidor": 0,
+    "soCliente": 0,
+    "custoDiferente": 0
+   },
+   "alcance": {
+    "passos": 9,
+    "alcanceCasas": 9.0,
+    "aoAlcance": true,
+    "nosAtaques": true
+   },
+   "passo": {
+    "para": [
+     57,
+     9
+    ],
+    "custoM": 1.0,
+    "recibo": "APLICADA",
+    "agua": false
+   }
+  },
+  {
+   "casaM": 2.0,
+   "lado": 37,
+   "figuras": {
+    "f77939129be029a0e": {
+     "quem": "heroína",
+     "casa": [
+      28,
+      4
+     ],
+     "noXZ": [
+      20.0,
+      -28.0
+     ],
+     "agua": false,
+     "antesXZ": [
+      20.0,
+      -28.0
+     ],
+     "desvioXZ": [
+      0.0,
+      0.0
+     ]
+    },
+    "f5c8a08efe647d226": {
+     "quem": "orc",
+     "casa": [
+      28,
+      8
+     ],
+     "noXZ": [
+      20.0,
+      -20.0
+     ],
+     "agua": true,
+     "antesXZ": [
+      20.0,
+      -20.0
+     ],
+     "desvioXZ": [
+      0.0,
+      0.0
+     ]
+    }
+   },
+   "caminho": {
+    "reservaM": 6.5,
+    "maxCasas": 3,
+    "servidor": 24,
+    "cliente": 24,
+    "deAgua": 4,
+    "soServidor": 0,
+    "soCliente": 0,
+    "custoDiferente": 0
+   },
+   "alcance": {
+    "passos": 4,
+    "alcanceCasas": 4.5,
+    "aoAlcance": true,
+    "nosAtaques": true
+   },
+   "passo": {
+    "para": [
+     28,
+     6
+    ],
+    "custoM": 4.0,
+    "recibo": "APLICADA",
+    "agua": true
+   }
+  }
+ ],
+ "verificacoes": [
+  {
+   "ok": true,
+   "texto": "a heroína entrou e recebeu o snapshot (0.0 s)"
+  },
+  {
+   "ok": true,
+   "texto": "a sala nasce com a grelha-mapa: a jogadora recebe { \"largura\": 50.0, \"altura\": 50.0, \"casaM\": 1.5 }"
+  },
+  {
+   "ok": true,
+   "texto": "1.5 m: a arena refez a grelha (50 × 50), as figuras assentes e as opções da vez dela (0.0 s)"
+  },
+  {
+   "ok": true,
+   "texto": "1.5 m: a grelha da arena é a grelha-mapa — 50 × 50, canto NO (-37.5, -37.5) m"
+  },
+  {
+   "ok": true,
+   "texto": "1.5 m: heroína desenhada no pé da casa (38, 4)"
+  },
+  {
+   "ok": true,
+   "texto": "1.5 m: orc desenhada no pé da casa (38, 11)"
+  },
+  {
+   "ok": true,
+   "texto": "1.5 m: o orc está numa casa de água (no lago) — [38, 11]"
+  },
+  {
+   "ok": true,
+   "texto": "1.5 m: a reserva em metros continua — 9.0 m (9 − 0.0 andados)"
+  },
+  {
+   "ok": true,
+   "texto": "1.5 m: caminho — o servidor oferece 80 casas (4 de água), o BFS do cliente (terreno da arena, 6 casas de alcance) dá 80; só no servidor 0, só no cliente 0, custo diferente 0"
+  },
+  {
+   "ok": true,
+   "texto": "1.5 m: alcance — o orc a 7 passos, chicote 9 m = 6.00 casas: fora; nos ataques do servidor: false"
+  },
+  {
+   "ok": true,
+   "texto": "1.5 m: a heroína pede o passo para (38, 5) (custo 1.5 m)"
+  },
+  {
+   "ok": true,
+   "texto": "1.5 m: o recibo do passo chegou (0.0 s)"
+  },
+  {
+   "ok": true,
+   "texto": "1.5 m: o passo foi APLICADA"
+  },
+  {
+   "ok": true,
+   "texto": "1.5 m: a heroína desenhada no pé da casa (38, 5) (0.2 s)"
+  },
+  {
+   "ok": true,
+   "texto": "1.0 m: a arena refez a grelha (75 × 75), as figuras assentes e as opções da vez dela (0.5 s)"
+  },
+  {
+   "ok": true,
+   "texto": "1.0 m: a grelha da arena é a grelha-mapa — 75 × 75, canto NO (-37.5, -37.5) m"
+  },
+  {
+   "ok": true,
+   "texto": "1.0 m: heroína fica no mesmo sítio do mapa — (20.25, -29.25) → (20.00, -29.00) m, desvio (-0.25, 0.25) ≤ meia casa 0.50; casa (57, 8) (esperada (57, 8))"
+  },
+  {
+   "ok": true,
+   "texto": "1.0 m: heroína desenhada no pé da casa (57, 8)"
+  },
+  {
+   "ok": true,
+   "texto": "1.0 m: orc fica no mesmo sítio do mapa — (20.25, -20.25) → (20.00, -20.00) m, desvio (-0.25, 0.25) ≤ meia casa 0.50; casa (57, 17) (esperada (57, 17))"
+  },
+  {
+   "ok": true,
+   "texto": "1.0 m: orc desenhada no pé da casa (57, 17)"
+  },
+  {
+   "ok": true,
+   "texto": "1.0 m: o orc está numa casa de água (no lago) — [57, 17]"
+  },
+  {
+   "ok": true,
+   "texto": "1.0 m: a reserva em metros continua — 7.5 m (9 − 1.5 andados)"
+  },
+  {
+   "ok": true,
+   "texto": "1.0 m: caminho — o servidor oferece 112 casas (9 de água), o BFS do cliente (terreno da arena, 7 casas de alcance) dá 112; só no servidor 0, só no cliente 0, custo diferente 0"
+  },
+  {
+   "ok": true,
+   "texto": "1.0 m: alcance — o orc a 9 passos, chicote 9 m = 9.00 casas: ao alcance; nos ataques do servidor: true"
+  },
+  {
+   "ok": true,
+   "texto": "1.0 m: a heroína pede o passo para (57, 9) (custo 1.0 m)"
+  },
+  {
+   "ok": true,
+   "texto": "1.0 m: o recibo do passo chegou (0.0 s)"
+  },
+  {
+   "ok": true,
+   "texto": "1.0 m: o passo foi APLICADA"
+  },
+  {
+   "ok": true,
+   "texto": "1.0 m: a heroína desenhada no pé da casa (57, 9) (0.2 s)"
+  },
+  {
+   "ok": true,
+   "texto": "2.0 m: a arena refez a grelha (37 × 37), as figuras assentes e as opções da vez dela (3.3 s)"
+  },
+  {
+   "ok": true,
+   "texto": "2.0 m: a grelha da arena é a grelha-mapa — 37 × 37, canto NO (-37.0, -37.0) m"
+  },
+  {
+   "ok": true,
+   "texto": "2.0 m: heroína fica no mesmo sítio do mapa — (20.00, -28.00) → (20.00, -28.00) m, desvio (0.00, 0.00) ≤ meia casa 1.00; casa (28, 4) (esperada (28, 4))"
+  },
+  {
+   "ok": true,
+   "texto": "2.0 m: heroína desenhada no pé da casa (28, 4)"
+  },
+  {
+   "ok": true,
+   "texto": "2.0 m: orc fica no mesmo sítio do mapa — (20.00, -20.00) → (20.00, -20.00) m, desvio (0.00, 0.00) ≤ meia casa 1.00; casa (28, 8) (esperada (28, 8))"
+  },
+  {
+   "ok": true,
+   "texto": "2.0 m: orc desenhada no pé da casa (28, 8)"
+  },
+  {
+   "ok": true,
+   "texto": "2.0 m: o orc está numa casa de água (no lago) — [28, 8]"
+  },
+  {
+   "ok": true,
+   "texto": "2.0 m: a reserva em metros continua — 6.5 m (9 − 2.5 andados)"
+  },
+  {
+   "ok": true,
+   "texto": "2.0 m: caminho — o servidor oferece 24 casas (4 de água), o BFS do cliente (terreno da arena, 3 casas de alcance) dá 24; só no servidor 0, só no cliente 0, custo diferente 0"
+  },
+  {
+   "ok": true,
+   "texto": "2.0 m: alcance — o orc a 4 passos, chicote 9 m = 4.50 casas: ao alcance; nos ataques do servidor: true"
+  },
+  {
+   "ok": true,
+   "texto": "2.0 m: a heroína pede o passo para (28, 6) (custo 4.0 m, casa de água)"
+  },
+  {
+   "ok": true,
+   "texto": "2.0 m: o recibo do passo chegou (0.0 s)"
+  },
+  {
+   "ok": true,
+   "texto": "2.0 m: o passo foi APLICADA"
+  },
+  {
+   "ok": true,
+   "texto": "2.0 m: a heroína desenhada no pé da casa (28, 6) (0.2 s)"
+  },
+  {
+   "ok": true,
+   "texto": "a reserva no fim: 9 − 6.5 = 2.5 m (0.0 s)"
+  },
+  {
+   "ok": true,
+   "texto": "privacidade: 22 mensagens à jogadora, 0 achados, 0 mensagens de Mestre; mapas vistos {\"altura\":50.0,\"casaM\":1.5,\"largura\":50.0}, {\"altura\":75.0,\"casaM\":1.0,\"largura\":75.0}, {\"altura\":37.0,\"casaM\":2.0,\"largura\":37.0}"
+  }
+ ],
+ "sonda": {
+  "mensagens": 22,
+  "mensagensDeMestre": 0,
+  "achados": [],
+  "nAchados": 0,
+  "mapasVistos": [
+   "{\"altura\":50.0,\"casaM\":1.5,\"largura\":50.0}",
+   "{\"altura\":75.0,\"casaM\":1.0,\"largura\":75.0}",
+   "{\"altura\":37.0,\"casaM\":2.0,\"largura\":37.0}"
+  ],
+  "canarios": {
+   "numeros": [
+    7777.0,
+    313.0,
+    9137.0
+   ],
+   "textos": [
+    "ESCALA_",
+    "CANARIO-FANTASMA",
+    "CANARIO-DESGRACA",
+    "CANARIO-SENHA",
+    "Orc Verdadeiro",
+    "90210777"
+   ],
+   "chaves": [
+    "casaMAntes",
+    "grelhaAntes",
+    "casasQuePaga",
+    "soMestre"
+   ]
+  }
+ }
+}
