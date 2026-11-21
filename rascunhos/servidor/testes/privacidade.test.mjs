@@ -26,6 +26,7 @@ const TEXTOS_MESTRE = [
 const CHAVES_MESTRE = [
   'soMestre', 'semente', 'journalSeq', 'recibo', 'modo', 'verificacaoCritico', 'proposta', 'razao', 'fichaId',
   'campoNovoDoMotor', 'reacaoDefensiva', 'desgracaProposta', 'mestre', 'contexto', 'iniciativaValor', 'tokenHash',
+  'caixaMestre', // Ordem CAIXA-TESTES (B5-b): a escolha do Mestre na forma dele só vai na MASTER_VIEW
 ];
 // Da heroína: só ela os vê. Da aliada: só ela.
 const NUMEROS_HEROINA = [8642, 5551, 5150, 4040];
@@ -71,6 +72,12 @@ function guiao() {
   // O orc (auto) joga sozinho; a vez volta à heroína.
   assert.equal(h.opcoes?.vezId, h.figuraId, 'a vez voltou à heroína');
 
+  // Ordem CAIXA-TESTES (21/11/2026, correcção B5-b): o Mestre muda a caixa (escolherCaixa) a meio da batalha, com a
+  // ordem dinâmica já formada — a Party recebe um ROOM_SNAPSHOT com a `caixa` dela, e esse caminho também é varrido.
+  exigirAplicada(m.mestre('MASTER_SUPERVISOR', { op: 'caixa', caixa: { ligada: true, modo: 'iniciativa' } }), 'caixa iniciativa');
+  exigirAplicada(m.mestre('MASTER_SUPERVISOR', { op: 'caixa', caixa: { ligada: false, modo: 'iniciativa' } }), 'caixa desligada');
+  exigirAplicada(m.mestre('MASTER_SUPERVISOR', { op: 'caixa', caixa: { ligada: true, modo: 'dinamico' } }), 'caixa dinâmico');
+
   // Reconexões: RESYNC desde o início e snapshot, para todos os papéis da Party.
   for (const k of ['heroina', 'aliada', 'espectador']) {
     m.enviar(k, { type: 'ROOM_RESYNC', lastSeq: 0 });
@@ -86,6 +93,16 @@ test('canários: nada do Mestre chega a nenhum papel da Party (jogadoras e espec
     const achados = procurarCanarios(m.clientes[k].msgs, { numeros: NUMEROS_MESTRE, textos: TEXTOS_MESTRE, chaves: CHAVES_MESTRE });
     assert.deepEqual(achados, [], `vazamento para ${k}: ${JSON.stringify(achados.slice(0, 5))}`);
   }
+  // Sanidade (B5-b): o caminho do escolherCaixa correu e foi varrido — cada papel da Party recebeu os snapshots da caixa,
+  // com a ordem dinâmica já formada (não vazia); o Mestre recebeu a escolha dele na MASTER_VIEW.
+  for (const k of ['heroina', 'aliada', 'espectador']) {
+    const caixas = m.clientes[k].msgs.filter((x) => x.type === 'ROOM_SNAPSHOT' && x.caixa).map((x) => x.caixa);
+    assert.ok(caixas.some((c) => c.ligada === true && c.ordemPor === 'iniciativa'), k + ': snapshot da caixa em iniciativa');
+    assert.ok(caixas.some((c) => c.ligada === false), k + ': snapshot da caixa desligada');
+    assert.ok(caixas.some((c) => c.ordemDinamica.ordem.length > 0), k + ': a caixa varrida traz a ordem dinâmica da Party');
+  }
+  const vistaMestre = m.enviar('mestre', { type: 'MASTER_VIEW' }).find((x) => x.type === 'MASTER_VIEW');
+  assert.deepEqual(vistaMestre.caixaMestre, { ligada: true, modo: 'dinamico' }, 'o Mestre vê a escolha dele');
   // Sanidade: o Mestre recebeu os canários (o teste não está a varrer o vazio).
   const mestre = JSON.stringify(m.clientes.mestre.msgs);
   for (const t of ['CANARIO-RAZAO-IA', 'CANARIO-DESGRACA', 'CANARIO-FANTASMA', 'raio 23:59 CANARIO', '9137', '6601', String(SEMENTE)]) {
