@@ -11,27 +11,53 @@
 **Ramo:** `claude1/provas-mapa-corr8`, **SEM fusão**.
 Marcas: VERIFICADO (corrido e conferido nesta sessão), ACHADO (para o coordenador decidir).
 
+> **Revisto pela ORDEM-PROVAS-MAPA-CORR8-CORRECOES** (conta 2 · Opus · 21/11/2026), depois da sentença FUNDE COM
+> CORRECÇÕES (850/1000). Mudou o texto deste relatório (o âmbito exacto de cada prova), o teste (c) ganhou a recusa da
+> Ordem 48, o teste (a) ganhou a grelha fixa, o teste (b) o sentido 2 → 1,5 m na vez dela e a `propria` campo a campo,
+> e a sonda do fio passou a exigir o conjunto exacto por caso. Nenhuma linha da lógica do jogo mudou. Os números
+> abaixo são os desta revisão (servidor **408/408**, cliente **290/290**, bancada **47/47** + sonda do fio **6/6**).
+> O relatório da revisão é `ESTADO-FINAL-ORDEM-PROVAS-MAPA-CORR8-CORRECOES.md`, na sede dela.
+
+## Estatuto dos instrumentos (o que cada um prova)
+
+- **A sonda da jogadora** (`bancada_jogadora_canario.gd`, a mesma `_varrer` de `bancada_jogadora_mapa.gd`) varre as
+  mensagens que saem dos sinais da Rede do cliente. É autoridade do que a jogadora **vê**: o controlo positivo dela
+  cobre K1–K3, e só K1–K3. Não vê o fio.
+- **O contador `mensagensDeMestre`** da bancada conta os sinais `mestre_recebido` da Rede que chegaram à bancada.
+  Num lugar de jogadora, a Rede deita fora toda a MASTER_* antes do sinal (`rede.gd:488`). Por isso
+  `mensagensDeMestre == 0` prova que **nada de Mestre sobreviveu ao filtro da Rede** — **não** prova que o servidor
+  não emitiu nada de Mestre para o fio dela. Isso só a sonda do fio o mede.
+- **A sonda do fio** (`sonda-fio.mjs`, `procurarCanarios` sobre `escuta-jogadora.jsonl`) varre tudo o que o servidor
+  entregou à heroína, antes do cliente: é a autoridade do que **saiu do servidor**. O controlo positivo dela cobre
+  K1–K5, cada um pelo conjunto exacto de canários.
+- **O teste de servidor (a)** cose mensagens de teste na matriz das mensagens recebidas, **em memória**: prova que
+  `procurarCanarios` apanha cada classe de canário, não que o fio as transporta.
+
 ## Leia primeiro
 
-1. **A sonda APANHA o canário — VERIFICADO.** Na batalha de bancada real, o servidor meteu no fio da jogadora três
-   mensagens de teste com canário. A sonda da jogadora (Godot) apanhou as três, cada uma por todos os canários que
-   levava e só por esses.
+1. **A sonda da jogadora APANHA o canário K1–K3 — VERIFICADO; K4/K5 só na sonda do fio.** Na batalha de bancada
+   real, o servidor meteu no fio da jogadora cinco mensagens de teste com canário. A sonda da jogadora (Godot) apanhou
+   as três que lhe chegam (K1–K3), cada uma por todos os canários que levava e só por esses. K4 e K5 não lhe chegam
+   (a Rede filtra-as); só a sonda do fio as apanha.
    - **K1, as chaves só do Mestre:** `soMestre`, `casaMAntes`, `grelhaAntes`, `casasQuePaga`.
    - **K2, os textos:** `ESCALA_`, `Orc Verdadeiro`, `CANARIO-FANTASMA` e o PIN.
    - **K3, os números do orc:** 7777, 313, 9137.
 
    Fora das mensagens de teste, a sonda deu 0 achados, também nessa mesma corrida. A sonda Node (`procurarCanarios`)
-   teve o mesmo controlo positivo, no fio e num teste de servidor novo. Correu três vezes com o mesmo resultado (ver
-   §1).
+   teve controlo positivo no fio (K1–K5, conjunto exacto por caso) e, em memória, num teste de servidor novo (ver
+   §1). A bancada correu três vezes na CORR8 e uma vez na revisão, com o mesmo resultado.
 2. **A lista do «deve receber» está no §2.** Numa mudança aplicada, a jogadora recebe exactamente 3 mensagens na vez
-   dela e 2 fora dela. Numa recusa não recebe **nenhuma**.
+   dela e 2 fora dela. Numa recusa (incluindo a da Ordem 48, na grelha fixa, em combate ou em lobby) não recebe
+   **nenhuma**.
    - O silêncio na recusa é correcto: a recusa é só do Mestre.
    - A ausência de qualquer frase ou aviso escrito sobre a mudança também é o desenho actual (Ordem 8, item 8).
    - Isto está provado por teste, e cada mutação que o quebra faz cair o teste certo.
 3. **ACHADO — até onde a sonda da jogadora chega.** A sonda varre o que sai dos sinais da Rede do cliente, não o fio.
    - Uma MASTER_VIEW enviada por engano à jogadora (K4) **nunca chega à sonda**: a Rede deita-a fora, porque a
      jogadora não é Mestre (`rede.gd:488`). Isto é defesa do cliente, não fuga, mas a sonda não o pode ver. O
-     contador `mensagensDeMestre == 0` da bancada, num lugar de jogadora, não pode dar outra coisa.
+     contador `mensagensDeMestre == 0` da bancada, num lugar de jogadora, não pode dar outra coisa: prova que nada de
+     Mestre sobreviveu ao filtro da Rede, não que o servidor não emitiu nada de Mestre (ver «Estatuto dos
+     instrumentos»).
    - Um ROOM_REJECT com texto `ESCALA_…` e um intentId que não é dela (K5) também não chega: a Rede ignora-o
      (`rede.gd:566`). Mais em geral, a bancada não junta às mensagens varridas o texto de nenhuma recusa
      (`bancada_jogadora_mapa.gd:75`), nem o ROOM_PAUSED.
@@ -41,14 +67,15 @@ Marcas: VERIFICADO (corrido e conferido nesta sessão), ACHADO (para o coordenad
      também o fio ou as recusas.
 4. **ACHADO — os números da base.** A ordem dava «servidor 409». Esses 409 são do ramo `claude1/provas-mapa-corr7`
    (403 + 6), que não está fundido em `b7ecadd`.
-   - A base real deu **403/403**. Depois desta ordem dá **407/407** (403 + 4 testes novos).
+   - A base real deu **403/403**. Depois da CORR8 dava **407/407** (403 + 4 testes novos); depois da revisão dá
+     **408/408** (o teste (a) passou a correr nas duas grelhas).
    - O cliente dá **290/290**, como a ordem dizia.
 5. **Nenhuma linha da lógica do jogo mudou.** `git diff b7ecadd -- rascunhos` dá só o ficheiro de teste novo. Nenhuma
    prova falhou contra a lógica, por isso não houve nada para parar.
 
 ---
 
-## 1. O controlo positivo da sonda — VERIFICADO
+## 1. O controlo positivo — a sonda da jogadora APANHA o canário K1–K3 — VERIFICADO; K4/K5 só na sonda do fio
 
 ### 1a. Na batalha de bancada real (servidor WebSocket + jogadora Godot + Mestre e espectador Node)
 É a bancada da PROVAS-MAPA, posta a correr outra vez com o controlo positivo. Tudo está em
@@ -81,11 +108,15 @@ Marcas: VERIFICADO (corrido e conferido nesta sessão), ACHADO (para o coordenad
   O `diff` contra o original dá só 4 blocos: o cabeçalho (2), o título da `_sonda` e o corpo da `_sonda`.
 - **`bancada-mestre.mjs`** é o da PROVAS-MAPA, **sem mudança**. A sonda do espectador tem de continuar limpa, porque
   as mensagens de teste só vão ao fio da heroína.
-- **`sonda-fio.mjs`** corre `procurarCanarios` sobre a escuta do fio: K1–K5 têm de ser apanhados, e fora deles tem de
-  haver 0 achados. Escreve também a cronologia.
+- **`sonda-fio.mjs`** corre `procurarCanarios` sobre a escuta do fio: cada um de K1–K5 tem de estar no fio uma vez e
+  de ser apanhado pelo **conjunto exacto** de canários que leva (revisão C1-2; antes bastava «algum»), e fora deles
+  tem de haver 0 achados. Escreve também a cronologia. Os conjuntos de K1–K3 são os da sonda da jogadora; K4 (a
+  MASTER_VIEW do Mestre depois de o orc ser posto) leva o nome verdadeiro, a Vida e os PA do orc, não a CA; K5 leva
+  `ESCALA_` e `CANARIO-FANTASMA`. Controlo negativo: a mesma escuta com o PIN tirado de K2 faz cair K2 (saída 1),
+  quando com a regra antiga passava.
 - O guião é `correr-bancada-canario.sh`.
 
-**Saída (corrida 3, a do commit: `provas/ordem-provas-mapa-corr8/bancada-jogadora.log`, `sonda-fio.log`,
+**Saída (corrida da revisão, a do commit: `provas/ordem-provas-mapa-corr8/bancada-jogadora.log`, `sonda-fio.log`,
 `bancada-mestre.log`). O que está entre `[…]` foi abreviado aqui; os registos têm o texto inteiro:**
 ```
 [canario] 5 mensagens de teste no fio da heroína (K1, K2, K3, K4, K5), seq 6
@@ -96,11 +127,11 @@ Marcas: VERIFICADO (corrido e conferido nesta sessão), ACHADO (para o coordenad
   nota  limite da sonda: K4 (MASTER_VIEW) não chegou à sonda (a Rede deita-a fora); K5 (ROOM_REJECT alheio) não chegou à sonda (a Rede ignora a recusa alheia)
 bancada da jogadora: 47 de 47 verificações passaram.
 == a sonda Node no fio da jogadora: 28 mensagens, casos de teste ["K1","K2","K3","K4","K5"] ==
-  ok    K1: no fio e APANHADO — ["chave:casaMAntes","chave:casasQuePaga","chave:grelhaAntes","chave:soMestre"]
-  ok    K2: no fio e APANHADO — ["texto:90210777","texto:CANARIO-FANTASMA","texto:ESCALA_","texto:Orc Verdadeiro"]
-  ok    K3: no fio e APANHADO — ["numero:313","numero:7777","numero:9137"]
-  ok    K4: no fio e APANHADO — ["numero:313","numero:7777","texto:Orc Verdadeiro"]
-  ok    K5: no fio e APANHADO — ["texto:CANARIO-FANTASMA","texto:ESCALA_"]
+  ok    K1: no fio (uma vez) e APANHADO pelo conjunto exacto — ["chave:casaMAntes","chave:casasQuePaga","chave:grelhaAntes","chave:soMestre"] (esperado […os mesmos…])
+  ok    K2: no fio (uma vez) e APANHADO pelo conjunto exacto — ["texto:90210777","texto:CANARIO-FANTASMA","texto:ESCALA_","texto:Orc Verdadeiro"] (esperado […os mesmos…])
+  ok    K3: no fio (uma vez) e APANHADO pelo conjunto exacto — ["numero:313","numero:7777","numero:9137"] (esperado […os mesmos…])
+  ok    K4: no fio (uma vez) e APANHADO pelo conjunto exacto — ["numero:313","numero:7777","texto:Orc Verdadeiro"] (esperado […os mesmos…])
+  ok    K5: no fio (uma vez) e APANHADO pelo conjunto exacto — ["texto:CANARIO-FANTASMA","texto:ESCALA_"] (esperado […os mesmos…])
   ok    fora das mensagens de teste: 0 achados []
 [mestre] espectador: 12 mensagens, 0 achados; mapas vistos […50×50 @ 1,5 · 75×75 @ 1 · 37×37 @ 2…]
 Mestre/espectador=0 jogadora=0 sonda-do-fio=0 erros-de-script=0
@@ -114,20 +145,21 @@ Mestre/espectador=0 jogadora=0 sonda-do-fio=0 erros-de-script=0
     ficheiros desta corrida não foram guardados. K1–K3 e as 47 verificações já tinham passado.
   - **Corridas 1 e 2:** iguais à 3, tudo verde. Os registos estão na sede, em `registos/corrida-1/` e `corrida-2/`.
     Ficam só na sede porque a escuta ainda levava o `seatToken` do servidor de teste.
-  - **Corrida 3:** a do commit, com o token retirado da escuta.
+  - **Corrida 3:** a do commit `d0863f7`, com o token retirado da escuta.
+  - **Corrida da revisão (CORR8-CORRECOES):** a mesma bancada, com a `sonda-fio.mjs` do conjunto exacto; tudo verde.
+    Os registos desta corrida substituem os da corrida 3 no ramo.
 
-### 1b. No teste de servidor novo: `rascunhos/servidor/testes/ordem-provas-mapa-corr8.test.mjs` (a)
-- Na grelha-mapa, a 1,5 → 1 m, o fio real da jogadora dá 0 achados.
-- O mesmo fio, com uma mensagem de teste de cada tipo depois do evento real, é apanhado. Todos os achados caem no
-  índice da mensagem de teste, e o conjunto apanhado é exactamente o que ela leva.
+### 1b. No teste de servidor novo: `rascunhos/servidor/testes/ordem-provas-mapa-corr8.test.mjs` (a) — EM MEMÓRIA
+**Âmbito:** este teste **não põe nada no fio**. Cose as mensagens de teste na matriz das mensagens recebidas pela
+jogadora, em memória (`h.msgs`), e corre `procurarCanarios` sobre essa matriz. Prova que a sonda Node apanha cada
+classe de canário; não prova que o fio as transporta. O controlo ao nível do fio vive **só** na bancada-canário (§1a).
+- Na grelha-mapa (1,5 → 1 m) e, desde a revisão (C1-4), também na grelha fixa 30 × 30 (1,5 → 1 m), as mensagens reais
+  da jogadora dão 0 achados.
+- A mesma matriz, com uma mensagem de teste de cada tipo cosida depois do evento real, é apanhada. Todos os achados
+  caem no índice da mensagem de teste, e o conjunto apanhado é exactamente o que ela leva. Na grelha fixa, as chaves
+  só do Mestre são as que o evento real dela leva (`soMestre`, `casaMAntes`, `casasQuePaga` — não há `grelhaAntes`).
 - As mensagens de teste são feitas de coisas **reais** do fio do Mestre: o evento `escala` dele e o detalhe
   `ESCALA_INVALIDA` do evento `recusa`.
-
-### 1c. A sonda do CI (`privacidade.yml`, o grep dos e-mails) — VERIFICADO
-Não é a sonda da C2-4, mas também tem o nome «sonda de privacidade», por isso dei-lhe também um controlo positivo.
-- A mesma regex, numa pasta temporária **fora do repo**, com um endereço fictício num dos domínios vigiados, **apanha-o**.
-- No ramo, com os ficheiros novos, dá «Sonda limpa».
-- O registo está em `registos/sonda-ci.log`, com o domínio mascarado para não pôr o CI vermelho.
 
 ---
 
@@ -161,12 +193,19 @@ Ela **não** recebe:
 O `ROOM_EVENT` `escala` com `{}` e o `ROOM_SNAPSHOT`. Não recebe `ROOM_OPTIONS` (`sala.js:965`). O espectador recebe
 sempre estas 2, na vez dela ou não.
 
+O teste (b) cobre os dois sentidos na vez dela (1,5 → 2 m e, desde a revisão, 2 → 1,5 m: as mesmas 3 mensagens, a
+reserva fica 7,5 m) e, fora da vez, 1,5 → 1 m; em cada mudança a `propria` dela é conferida campo a campo contra o
+último snapshot antes da mudança (a escala não lhe toca; a posição vai nas `figuras`).
+
 ### 2c. Mudança RECUSADA — NENHUMA mensagem (o silêncio correcto)
-Isto vale para `ESCALA_JUNTA_FIGURAS`, `ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS`, `ESCALA_INVALIDA` e «a mesma
-escala».
+Isto vale para `ESCALA_JUNTA_FIGURAS`, `ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS`, `ESCALA_INVALIDA`, «a mesma
+escala» e, na **grelha fixa**, a recusa da **Ordem 48** — `TERRENO_GRELHA_FORA_DO_MAPA`, a grelha que não cabe no
+mapa na escala nova (ex.: 40 × 40 a 2 m = 80 m > 75 m; `sala.js:3053-3056`). A Ordem 48 recusa **em combate e em
+lobby** (as duas fases em que a escala muda); o teste (c) prova as duas.
 - A jogadora e o espectador: **0 mensagens**. O Mestre recebe o `ROOM_REJECT` `acao_invalida`, com o texto fixo
   «Ação não disponível.».
-- Quando há detalhe, o Mestre recebe também o evento interno `recusa`, com `soMestre.detalhe` = «ESCALA_…: …». O
+- Quando há detalhe, o Mestre recebe também o evento interno `recusa`, com `soMestre.detalhe` = «ESCALA_…: …» (ou
+  «TERRENO_GRELHA_FORA_DO_MAPA: a grelha 40x40 de 2 m …» na Ordem 48). O
   evento `recusa` não tem regra na projecção, por isso à Party não sai (`projecao.js:122-123`, «falha fechada»).
 - A sala fica igual.
 
@@ -179,13 +218,24 @@ Recebe só `ERRO` `proibido` «Só o Mestre.» (`sala.js:3337`). Mais ninguém r
 - **A mudança vê-se pela arena:** o `_ao_snapshot` refaz a grelha quando a largura, a altura ou o `casaM` mudam
   (`arena.gd:723`). As figuras são desenhadas na casa nova e as opções refazem-se.
 
-### 2f. Como distinguir os dois silêncios
-| situação | o que tem de chegar à jogadora | se faltar… |
-|---|---|---|
-| mudança aplicada, na vez dela | evento `escala` `{}` + snapshot com o mapa novo + opções | **notificação em falta** (é o que a mutação M2 provoca) |
-| mudança aplicada, fora da vez | evento `escala` `{}` + snapshot | idem |
-| mudança recusada | nada | se chegar alguma coisa, é **fuga** (é o que a mutação M3 provoca) |
-| aviso escrito («o Mestre mudou a escala») | nada: não existe no desenho | é **silêncio correcto pelo desenho actual** (ver o achado abaixo) |
+### 2f. Como distinguir os dois silêncios — o contrato
+Cada linha é uma cláusula do contrato do que a Party recebe numa mudança de escala; a última coluna diz com que
+instrumento se testa. «Teste (b)/(c)» é `ordem-provas-mapa-corr8.test.mjs`; «bancada» é a sonda da jogadora mais a
+cronologia da bancada-canário; «sonda do fio» é `sonda-fio.mjs` sobre a escuta.
+
+| # | situação | o que tem de chegar | se faltar… / se sobrar… | testa-se com |
+|---|---|---|---|---|
+| 1 | mudança aplicada, na vez dela | à jogadora: evento `escala` `{}` + snapshot com o mapa novo + opções — e mais nada | falta: **notificação em falta** (a mutação M2); sobra: fuga | teste (b), nos dois sentidos; bancada e sonda do fio (lotes 12 e 14, 1,5 → 1 → 2 m) |
+| 2 | mudança aplicada, fora da vez dela | à jogadora: evento `escala` `{}` + snapshot, sem opções | idem | só teste (b) (a bancada muda a escala sempre na vez dela) |
+| 3 | mudança recusada (ESCALA_JUNTA_FIGURAS, ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS, ESCALA_INVALIDA, a mesma escala, Ordem 48 em combate/lobby) | à jogadora e ao espectador: **nada** | se chegar alguma coisa, é **fuga** (as mutações M3 e M4) | **só** o teste (c) e a sonda do fio — **não** a bancada: a sonda da jogadora não varre o texto das recusas nem vê o que a Rede filtra, e a corrida padrão da bancada não provoca nenhuma recusa de escala (a sonda do fio apanharia a fuga se houvesse, como mostra K5, mas nesta corrida não há recusa real para varrer) |
+| 4 | a jogadora pede a escala (§2d) | à jogadora: **só** o `ERRO` `proibido` «Só o Mestre.»; ao Mestre e ao espectador: nada; a escala fica | falta o ERRO: notificação em falta; sobra: fuga | só teste (c) (a bancada não faz este pedido) |
+| 5 | o espectador, em qualquer mudança aplicada | evento `escala` `{}` + snapshot, na vez dela ou não; nas recusas, nada | falta: notificação em falta; sobra (ex.: dados do Mestre): fuga | teste (b) e (c); bancada (`bancada-mestre.log`: 12 mensagens, 0 achados, os 3 mapas vistos) |
+| 6 | aviso escrito («o Mestre mudou a escala») | nada: não existe no desenho | é **silêncio correcto pelo desenho actual** (ver o achado abaixo) | — (por desenho; nenhum instrumento o exige) |
+
+**Nota de âmbito.** O contrato acima é o da mudança de escala. Fora dele, na corrida da bancada, a jogadora recebe
+também o `ROOM_PAUSED` do fim da sessão (quando o Mestre sai; último registo da escuta). Não está previsto na tabela
+porque não é da escala, e a bancada não o varre (a Rede emite-o como `sala_pausada`, que a bancada não liga, e ele
+chega depois de a jogadora fechar); a sonda do fio varre-o e dá 0 achados.
 
 **ACHADO (desenho, não defeito).** Que a jogadora não receba nenhum aviso escrito sobre a mudança de escala é a regra
 escrita da Ordem 8, item 8: «A Party vê só o resultado (evento `escala` sem campos + snapshot novo + as opções da
@@ -201,6 +251,7 @@ ficou vazio. A saída está em `registos/mutacoes.log`.
 | M1: o evento `escala` da grelha-mapa leva `casaMAntes` à Party (fuga) | (a) [o fio real deixa de estar limpo] e (b) grelha-mapa |
 | M2: a grelha-mapa não manda o snapshot novo (notificação em falta) | só (b) grelha-mapa |
 | M3: o evento interno `recusa` passa a sair para a Party (fuga na recusa) | (a) e (c) |
+| M4 (revisão, C1-1): a recusa da Ordem 48 na mudança de escala desligada (`sala.js:3056`) | só (c): o caso 40 × 40 a 2 m segue para `terrenos.para`, que lança `TERRENO_GRELHA_FORA_DO_MAPA` como erro, não como recusa (registo: `mutacoes-correcoes.log` na sede da revisão) |
 
 ---
 
@@ -208,14 +259,14 @@ ficou vazio. A saída está em `registos/mutacoes.log`.
 
 | suite | base `b7ecadd` | depois |
 |---|---|---|
-| servidor `node --test testes/` (Node 26.13.0) | **403/403** | **407/407** (403 + 4 novos), 0 falhas |
+| servidor `node --test testes/` (Node 26.13.0) | **403/403** | CORR8: **407/407** (403 + 4 novos); revisão: **408/408** (403 + 5), 0 falhas |
 | escala + privacidade (6 ficheiros: corr8, ordem-escala, ordem11, ordem-mapa-jogavel, ordem62, privacidade) | — | **48/48** |
 | cliente `rodar_testes.gd` (Godot 4.7.2 headless, depois de `--import`) | 290 (a da ordem) | **290 de 290 verificações passaram**, código de saída 0, 0 «SCRIPT ERROR / Parse Error / Compile Error» |
-| bancada com o controlo positivo | — | jogadora **47/47**; sonda do fio 6/6; Mestre/espectador TUDO PASSOU; 3 corridas verdes |
+| bancada com o controlo positivo | — | jogadora **47/47**; sonda do fio 6/6 (na revisão: conjunto exacto por caso); Mestre/espectador TUDO PASSOU; 3 corridas verdes na CORR8 + 1 na revisão |
 
-Os registos estão em `provas/ordem-provas-mapa-corr8/registos/`: `servidor-base.log`, `servidor-todos.log`,
+Os registos da CORR8 estão em `provas/ordem-provas-mapa-corr8/registos/`: `servidor-base.log`, `servidor-todos.log`,
 `servidor-escala-privacidade.log`, `cliente-import.log`, `cliente-rodar_testes.log`, `mutacoes.log` e
-`sonda-ci.log`.
+`sonda-ci.log`. Os da revisão estão na sede dela (`registos/`, `mutacoes-correcoes.log`, `sonda-fio-controlo.log`).
 
 ## 4. Comandos corridos
 ```
@@ -231,17 +282,19 @@ python -I retoma-i0004/actualizar-listas.py               # as listas da retoma 
 ```
 
 ## 5. O que fica no ramo
-- `rascunhos/servidor/testes/ordem-provas-mapa-corr8.test.mjs` (novo): os 4 testes.
+- `rascunhos/servidor/testes/ordem-provas-mapa-corr8.test.mjs` (novo): os testes (4 na CORR8, 5 depois da revisão).
 - `provas/ordem-provas-mapa-corr8/`:
   - `ferramentas/`: `bancada-servidor-canario.mjs`, `bancada_jogadora_canario.gd`, `sonda-fio.mjs`,
     `correr-bancada-canario.sh`;
-  - os registos da corrida 3: `bancada-*.log/.json`, `escuta-jogadora.jsonl`, `sonda-fio.log/.json`;
+  - os registos da última corrida (a da revisão): `bancada-*.log/.json`, `escuta-jogadora.jsonl`,
+    `sonda-fio.log/.json`;
   - `registos/`.
 - `MANIFESTO-SHA256.txt` e `retoma-i0004/depois.txt`, refeitos por `actualizar-listas.py`:
   - o teste novo está em `rascunhos/` e o job `retoma-pc` do CI exige-o nas listas;
-  - como na CORR7, isso põe também a linha do `provar_terreno_servidor.gd` (a deriva do `d21f734`, achado 3 da
-    CORR7), que deixava a base vermelha no `retoma-pc`;
-  - se o coordenador preferir essa reparação numa ordem própria, basta reverter essa linha nas duas listas.
+  - como na CORR7, isso também **corrige o hash da linha** do `provar_terreno_servidor.gd`
+    (`a2d74928…` → `93f5d67d…`; a deriva do `d21f734`, achado 3 da CORR7), que deixava a base vermelha no `retoma-pc`;
+  - se o coordenador preferir essa reparação numa ordem própria, basta reverter essa linha nas duas listas (decisão
+    do juiz: fica neste ramo; o coordenador reconcilia as listas com o ramo da CORR7 na fusão).
 - `ESTADO-FINAL-ORDEM-PROVAS-MAPA-CORR8.md`: este ficheiro.
 - Os `.uid` que o `--import` gerou ficaram fora do commit, como nas ordens anteriores.
 
@@ -253,3 +306,10 @@ python -I retoma-i0004/actualizar-listas.py               # as listas da retoma 
   - o aviso escrito da mudança de escala para a jogadora, que hoje não existe por desenho (achado do §2f);
   - a reparação das listas do `d21f734`, se não a quiser aqui (§5).
 - As correcções 9 e 10 da sentença não foram tocadas.
+
+---
+
+<sub>**Nota de rodapé (fora do corpo; retirada do §1c pela revisão, C2-B4).** A CORR8 deu também um controlo
+positivo à sonda do CI (`privacidade.yml`, o grep dos e-mails). Essa é **outra** sonda, não a da C2-4; e o controlo
+correu fora do repo, com o domínio mascarado no registo (`registos/sonda-ci.log`), por isso é evidência que não se
+pode verificar a partir do ramo. Não conta para a prova deste relatório. No ramo, a sonda do CI dá «Sonda limpa».</sub>

@@ -4,7 +4,7 @@
    "casaM": 1.5,
    "lado": 50,
    "figuras": {
-    "fb6677dffc5f3e878": {
+    "f34211c1096b1d3e6": {
      "quem": "heroína",
      "casa": [
       38,
@@ -16,7 +16,7 @@
      ],
      "agua": false
     },
-    "ff5d0d9edb1b90945": {
+    "f68aa80c33520bb3c": {
      "quem": "orc",
      "casa": [
       38,
@@ -59,7 +59,7 @@
    "casaM": 1.0,
    "lado": 75,
    "figuras": {
-    "fb6677dffc5f3e878": {
+    "f34211c1096b1d3e6": {
      "quem": "heroína",
      "casa": [
       57,
@@ -79,7 +79,7 @@
       0.25
      ]
     },
-    "ff5d0d9edb1b90945": {
+    "f68aa80c33520bb3c": {
      "quem": "orc",
      "casa": [
       57,
@@ -130,7 +130,7 @@
    "casaM": 2.0,
    "lado": 37,
    "figuras": {
-    "fb6677dffc5f3e878": {
+    "f34211c1096b1d3e6": {
      "quem": "heroína",
      "casa": [
       28,
@@ -150,7 +150,7 @@
       0.0
      ]
     },
-    "ff5d0d9edb1b90945": {
+    "f68aa80c33520bb3c": {
      "quem": "orc",
      "casa": [
       28,
@@ -209,7 +209,7 @@
   },
   {
    "ok": true,
-   "texto": "1.5 m: a arena refez a grelha (50 × 50), as figuras assentes e as opções da vez dela (0.1 s)"
+   "texto": "1.5 m: a arena refez a grelha (50 × 50), as figuras assentes e as opções da vez dela (0.0 s)"
   },
   {
    "ok": true,
@@ -253,11 +253,11 @@
   },
   {
    "ok": true,
-   "texto": "1.5 m: a heroína desenhada no pé da casa (38, 5) (0.1 s)"
+   "texto": "1.5 m: a heroína desenhada no pé da casa (38, 5) (0.2 s)"
   },
   {
    "ok": true,
-   "texto": "1.0 m: a arena refez a grelha (75 × 75), as figuras assentes e as opções da vez dela (1.0 s)"
+   "texto": "1.0 m: a arena refez a grelha (75 × 75), as figuras assentes e as opções da vez dela (0.7 s)"
   },
   {
    "ok": true,
@@ -313,7 +313,7 @@
   },
   {
    "ok": true,
-   "texto": "2.0 m: a arena refez a grelha (37 × 37), as figuras assentes e as opções da vez dela (5.8 s)"
+   "texto": "2.0 m: a arena refez a grelha (37 × 37), as figuras assentes e as opções da vez dela (3.4 s)"
   },
   {
    "ok": true,

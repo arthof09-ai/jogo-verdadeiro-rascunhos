@@ -70,7 +70,7 @@
        "altura": 75
       },
       "vez": {
-       "figuraId": "fb6677dffc5f3e878",
+       "figuraId": "f34211c1096b1d3e6",
        "reservaM": 7.5,
        "andouM": 1.5,
        "casasQuePaga": 7
@@ -95,13 +95,13 @@
      },
      "figuras": [
       {
-       "id": "fb6677dffc5f3e878",
+       "id": "f34211c1096b1d3e6",
        "nome": "Heroína Teste",
        "x": 57,
        "y": 8
       },
       {
-       "id": "ff5d0d9edb1b90945",
+       "id": "f68aa80c33520bb3c",
        "nome": "Orc",
        "x": 57,
        "y": 17
@@ -123,7 +123,7 @@
        "altura": 37
       },
       "vez": {
-       "figuraId": "fb6677dffc5f3e878",
+       "figuraId": "f34211c1096b1d3e6",
        "reservaM": 6.5,
        "andouM": 2.5,
        "casasQuePaga": 3
@@ -140,13 +140,13 @@
      },
      "figuras": [
       {
-       "id": "fb6677dffc5f3e878",
+       "id": "f34211c1096b1d3e6",
        "nome": "Heroína Teste",
        "x": 57,
        "y": 8
       },
       {
-       "id": "ff5d0d9edb1b90945",
+       "id": "f68aa80c33520bb3c",
        "nome": "Orc",
        "x": 57,
        "y": 17
@@ -161,13 +161,13 @@
      },
      "figuras": [
       {
-       "id": "fb6677dffc5f3e878",
+       "id": "f34211c1096b1d3e6",
        "nome": "Heroína Teste",
        "x": 28,
        "y": 4
       },
       {
-       "id": "ff5d0d9edb1b90945",
+       "id": "f68aa80c33520bb3c",
        "nome": "Orc",
        "x": 28,
        "y": 8
@@ -178,7 +178,7 @@
   ],
   "movimentos": [
    {
-    "figuraId": "fb6677dffc5f3e878",
+    "figuraId": "f34211c1096b1d3e6",
     "de": {
      "x": 38,
      "y": 4
@@ -203,7 +203,7 @@
     "journalSeq": 6
    },
    {
-    "figuraId": "fb6677dffc5f3e878",
+    "figuraId": "f34211c1096b1d3e6",
     "de": {
      "x": 57,
      "y": 8
@@ -228,7 +228,7 @@
     "journalSeq": 8
    },
    {
-    "figuraId": "fb6677dffc5f3e878",
+    "figuraId": "f34211c1096b1d3e6",
     "de": {
      "x": 28,
      "y": 4
@@ -273,13 +273,13 @@
    },
    "figuras": [
     {
-     "id": "fb6677dffc5f3e878",
+     "id": "f34211c1096b1d3e6",
      "nome": "Heroína Teste",
      "x": 28,
      "y": 4
     },
     {
-     "id": "ff5d0d9edb1b90945",
+     "id": "f68aa80c33520bb3c",
      "nome": "Orc",
      "x": 28,
      "y": 8

@@ -1,6 +1,7 @@
 // ORDEM-PROVAS-MAPA-CORR8: a sonda Node (procurarCanarios, a do espectador e dos testes do servidor) sobre a ESCUTA DO
 // FIO da jogadora (bancada-servidor-canario.mjs). Tem duas partes:
-//  1) o controlo positivo no fio: os cinco casos de teste K1–K5 têm de ser apanhados, e fora deles tem de haver 0 achados;
+//  1) o controlo positivo no fio: os cinco casos de teste K1–K5 têm de ser apanhados, cada um pelo conjunto exacto de
+//     canários que leva (CORR8-CORRECOES, C1-2), e fora deles tem de haver 0 achados;
 //  2) a cronologia do fio, e em especial o que chegou à jogadora em cada entrega que trouxe um evento `escala` (a lista
 //     do «deve receber»).
 //   node sonda-fio.mjs <escuta.jsonl> <relatorio.json>
@@ -28,8 +29,22 @@ let falhas = 0;
 const ok = (c, t) => { if (!c) falhas += 1; console.log((c ? '  ok    ' : '  FALHA ') + t); };
 const casos = msgs.filter((m) => m.canarioTeste).map((m) => m.canarioTeste);
 console.log(`== a sonda Node no fio da jogadora: ${msgs.length} mensagens, casos de teste ${JSON.stringify(casos)} ==`);
+// CORR8-CORRECOES (C1-2): cada caso tem de ser apanhado pelo conjunto EXACTO de canários que a mensagem de teste leva
+// (como a sonda da jogadora e o teste (a)), e não só por «algum». K1–K3 são os da sonda da jogadora
+// (bancada_jogadora_canario.gd `_sonda`). K4 é a MASTER_VIEW do Mestre depois de o orc ser posto: leva o nome verdadeiro,
+// a Vida e os PA do orc, mas não a CA (a vista do Mestre não a mostra). K5 é o texto do ROOM_REJECT alheio.
+const ESPERADO = {
+  K1: ['chave:soMestre', 'chave:casaMAntes', 'chave:grelhaAntes', 'chave:casasQuePaga'],
+  K2: ['texto:ESCALA_', 'texto:Orc Verdadeiro', 'texto:CANARIO-FANTASMA', 'texto:' + PIN],
+  K3: [ORC.vidaTotal, ORC.paTotal, ORC.ca].map((n) => 'numero:' + n),
+  K4: ['texto:Orc Verdadeiro', 'numero:' + ORC.vidaTotal, 'numero:' + ORC.paTotal],
+  K5: ['texto:ESCALA_', 'texto:CANARIO-FANTASMA'],
+};
 for (const k of ['K1', 'K2', 'K3', 'K4', 'K5']) {
-  ok(casos.includes(k) && porCaso[k]?.size > 0, `${k}: no fio e APANHADO — ${JSON.stringify([...(porCaso[k] ?? [])].sort())}`);
+  const apanhou = [...(porCaso[k] ?? [])].sort();
+  const quer = [...ESPERADO[k]].sort();
+  ok(casos.filter((c) => c === k).length === 1 && JSON.stringify(apanhou) === JSON.stringify(quer),
+    `${k}: no fio (uma vez) e APANHADO pelo conjunto exacto — ${JSON.stringify(apanhou)} (esperado ${JSON.stringify(quer)})`);
 }
 ok(fora.length === 0, `fora das mensagens de teste: ${fora.length} achados ${JSON.stringify(fora.slice(0, 5))}`);
 

@@ -77,7 +77,7 @@
        "altura": 75
       },
       "vez": {
-       "figuraId": "fb6677dffc5f3e878",
+       "figuraId": "f34211c1096b1d3e6",
        "reservaM": 7.5,
        "andouM": 1.5,
        "casasQuePaga": 7
@@ -182,7 +182,7 @@
      "altura": 75,
      "casaM": 1
     },
-    "vezId": "fb6677dffc5f3e878",
+    "vezId": "f34211c1096b1d3e6",
     "orcamentoM": null,
     "nMover": null,
     "figuras": [
@@ -200,7 +200,7 @@
     "revision": 5,
     "canarioTeste": null,
     "mapa": null,
-    "vezId": "fb6677dffc5f3e878",
+    "vezId": "f34211c1096b1d3e6",
     "orcamentoM": 7.5,
     "nMover": 112,
     "figuras": null
@@ -237,7 +237,7 @@
      "altura": 37,
      "casaM": 2
     },
-    "vezId": "fb6677dffc5f3e878",
+    "vezId": "f34211c1096b1d3e6",
     "orcamentoM": null,
     "nMover": null,
     "figuras": [
@@ -255,7 +255,7 @@
     "revision": 7,
     "canarioTeste": null,
     "mapa": null,
-    "vezId": "fb6677dffc5f3e878",
+    "vezId": "f34211c1096b1d3e6",
     "orcamentoM": 6.5,
     "nMover": 24,
     "figuras": null
@@ -308,7 +308,7 @@
    "canarioTeste": null,
    "mapa": null,
    "dados": {
-    "figuraId": "fb6677dffc5f3e878",
+    "figuraId": "f34211c1096b1d3e6",
     "nomePublico": "Heroína Teste",
     "lado": "jogadora",
     "x": 38,
@@ -332,7 +332,7 @@
    "canarioTeste": null,
    "mapa": null,
    "dados": {
-    "figuraId": "fb6677dffc5f3e878",
+    "figuraId": "f34211c1096b1d3e6",
     "rodada": 1,
     "narra": false
    },
@@ -351,7 +351,7 @@
    "revision": 2,
    "canarioTeste": null,
    "mapa": null,
-   "vezId": "fb6677dffc5f3e878",
+   "vezId": "f34211c1096b1d3e6",
    "orcamentoM": 9,
    "nMover": 80,
    "figuras": null
@@ -367,7 +367,7 @@
    "canarioTeste": null,
    "mapa": null,
    "dados": {
-    "figuraId": "ff5d0d9edb1b90945",
+    "figuraId": "f68aa80c33520bb3c",
     "nomePublico": "Orc",
     "lado": "criatura",
     "x": 38,
@@ -390,7 +390,7 @@
    "revision": 3,
    "canarioTeste": null,
    "mapa": null,
-   "vezId": "fb6677dffc5f3e878",
+   "vezId": "f34211c1096b1d3e6",
    "orcamentoM": 9,
    "nMover": 80,
    "figuras": null
@@ -406,7 +406,7 @@
    "canarioTeste": null,
    "mapa": null,
    "dados": {
-    "figuraId": "fb6677dffc5f3e878",
+    "figuraId": "f34211c1096b1d3e6",
     "de": {
      "x": 38,
      "y": 4
@@ -458,7 +458,7 @@
    "revision": 4,
    "canarioTeste": null,
    "mapa": null,
-   "vezId": "fb6677dffc5f3e878",
+   "vezId": "f34211c1096b1d3e6",
    "orcamentoM": 7.5,
    "nMover": 60,
    "figuras": null
@@ -502,7 +502,7 @@
       "altura": 75
      },
      "vez": {
-      "figuraId": "fb6677dffc5f3e878",
+      "figuraId": "f34211c1096b1d3e6",
       "reservaM": 7.5,
       "andouM": 1.5,
       "casasQuePaga": 7
@@ -607,7 +607,7 @@
     "altura": 75,
     "casaM": 1
    },
-   "vezId": "fb6677dffc5f3e878",
+   "vezId": "f34211c1096b1d3e6",
    "orcamentoM": null,
    "nMover": null,
    "figuras": [
@@ -625,7 +625,7 @@
    "revision": 5,
    "canarioTeste": null,
    "mapa": null,
-   "vezId": "fb6677dffc5f3e878",
+   "vezId": "f34211c1096b1d3e6",
    "orcamentoM": 7.5,
    "nMover": 112,
    "figuras": null
@@ -641,7 +641,7 @@
    "canarioTeste": null,
    "mapa": null,
    "dados": {
-    "figuraId": "fb6677dffc5f3e878",
+    "figuraId": "f34211c1096b1d3e6",
     "de": {
      "x": 57,
      "y": 8
@@ -693,7 +693,7 @@
    "revision": 6,
    "canarioTeste": null,
    "mapa": null,
-   "vezId": "fb6677dffc5f3e878",
+   "vezId": "f34211c1096b1d3e6",
    "orcamentoM": 6.5,
    "nMover": 84,
    "figuras": null
@@ -728,7 +728,7 @@
     "altura": 37,
     "casaM": 2
    },
-   "vezId": "fb6677dffc5f3e878",
+   "vezId": "f34211c1096b1d3e6",
    "orcamentoM": null,
    "nMover": null,
    "figuras": [
@@ -746,7 +746,7 @@
    "revision": 7,
    "canarioTeste": null,
    "mapa": null,
-   "vezId": "fb6677dffc5f3e878",
+   "vezId": "f34211c1096b1d3e6",
    "orcamentoM": 6.5,
    "nMover": 24,
    "figuras": null
@@ -762,7 +762,7 @@
    "canarioTeste": null,
    "mapa": null,
    "dados": {
-    "figuraId": "fb6677dffc5f3e878",
+    "figuraId": "f34211c1096b1d3e6",
     "de": {
      "x": 28,
      "y": 4
@@ -818,7 +818,7 @@
    "revision": 8,
    "canarioTeste": null,
    "mapa": null,
-   "vezId": "fb6677dffc5f3e878",
+   "vezId": "f34211c1096b1d3e6",
    "orcamentoM": 2.5,
    "nMover": 4,
    "figuras": null
