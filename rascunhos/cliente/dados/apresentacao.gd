@@ -19,8 +19,16 @@ extends RefCounted
 const COLOR_SCRIPT := "res://arte/ambiente/color_script.gd"
 
 # ================================================================ paleta da interface (papéis)
-# Os papéis com valor são os que o cliente já usa. Os papéis sem valor fechado (bronze, ouro, sangue, lendário,
-# raro, mágico) ficam em PENDENCIAS: a Ordem 65 não os fechou e esta tabela não inventa hexadecimais.
+# Os papéis com valor são os que o cliente já usa. Os 6 papéis (bronze, ouro, sangue, lendário, raro, mágico) têm
+# o valor da paleta C — Noite e Brasa, palavra do Mestre (21/11/2026, Ordem PALETA-C), escritos abaixo tal e qual.
+
+## Os 6 papéis da paleta C — Noite e Brasa (palavra do Mestre, 21/11/2026).
+const COR_BRONZE := Color("CD7F32")
+const COR_OURO := Color("FFC93C")
+const COR_SANGUE := Color("C1121F")
+const COR_LENDARIO := Color("FF5E00")
+const COR_RARO := Color("4361EE")
+const COR_MAGICO := Color("9D4EDD")
 
 ## Fundo do ecrã de entrada (lobby).
 const COR_FUNDO := Color(0.10, 0.13, 0.18)
@@ -164,7 +172,7 @@ const ZOOM_PADRAO := 1.5  # palavra do Mestre
 # ================================================================ pendências (valores por fechar ou a conferir)
 # Registadas com o número; nenhuma se corrige nesta tabela.
 const PENDENCIAS := [
-	"Paleta: os papéis bronze, ouro, sangue, lendário, raro e mágico não têm valor — a Ordem 65 fechou só a paleta do AMBIENTE (color_script) e nenhum desses papéis existe hoje no cliente. Sem hexadecimal inventado.",
+	"Paleta: FECHADA pela Ordem PALETA-C (palavra do Mestre, 21/11/2026) — paleta C, Noite e Brasa: bronze CD7F32, ouro FFC93C, sangue C1121F, lendário FF5E00, raro 4361EE, mágico 9D4EDD (COR_BRONZE … COR_MAGICO acima). As 3 cores da caixa/retrato (caixa_ordem.gd COR_PAINEL, COR_MOLDURA; retratos.gd COR_FUNDO_PADRAO) continuam POR LIGAR: nenhum código nem passagem diz a que papel corresponde cada uma.",
 	"Casa: FECHADA pela Ordem ESCALA (palavra do Mestre, 20/11/2026) — a casa é a escala do mundo, 1 · 1,5 · 2 m, escolhida pelo Mestre; pré-definida 1,5 m (ESCALAS_CASA_M / CASA_M acima). A malha do mapa (grelha_floresta, relevo_floresta) continua a 1,5 m: ver a linha seguinte.",
 	"Casa no mapa: grelha_floresta.CASA_M e relevo_floresta.CASA_M (1,5 m) ficam no mapa, sem ler da tabela — os dois ficheiros são fontes do terreno do servidor (servidor/dados/terreno-floresta.json, conferido por SHA no rodar_testes); religá-los obriga a refazer o terreno com exportar_terreno.gd. Fica para quando o terreno se refizer por outra razão.",
 	"Degrau: não há tamanho de apresentação de degrau no cliente; o degrau de uma casa é medido do relevo (grelha_floresta.degrau) e o limite de passagem é regra do servidor.",
