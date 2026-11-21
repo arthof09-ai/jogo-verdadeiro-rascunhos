@@ -168,6 +168,10 @@ Testes mudados (números presos ao lago e ao mapa antigos — cada um com o porq
 
 Registos: `provas/ordem-lago-maior/testes/` e `provas/ordem-lago-maior/provas-bancada/`.
 
+**CI do ramo (GitHub Actions, `a661553`): VERDE** — «Testes dos rascunhos» run 44852115055, os 9 jobs (servidor,
+foto-mestre, protocolo, retoma-pc, cliente, validador-glb, motor-real, ponta-a-ponta, godot-cliente) e «Sonda de
+privacidade» run 44852115024.
+
 ## 4. Capturas — VERIFICADO (render com GPU)
 
 `provas/ordem-lago-maior/capturas/` (RTX 4060, 1920 × 1080, a arena do jogo, grelha 50 × 50 @ 1,5 m). **A figura é o
