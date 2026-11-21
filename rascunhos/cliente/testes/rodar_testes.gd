@@ -1110,9 +1110,11 @@ func _teste_agua_reacao() -> void:
 	root.add_child(lago)
 	var fig := Node3D.new()
 	root.add_child(fig)
+	# LAGO-MAIOR: o lago cresceu — rasa_b (14,6; −18,6) caiu na parte de nadar; a nova fica na faixa de andar, ao
+	# longo da margem (a 1,1 m da água, como rasa_a). Os outros três sítios continuam a ser o que eram.
 	var seco := Vector2(9.2, -15.6)
 	var rasa_a := Vector2(13.4, -17.4)
-	var rasa_b := Vector2(14.6, -18.6)
+	var rasa_b := Vector2(13.85, -15.75)
 	var funda := Vector2(19.5, -21.0)
 	_ok(RelevoFloresta.lago_fundura(seco.x, seco.y) <= 0.0 and RelevoFloresta.lago_fundura(rasa_a.x, rasa_a.y) > 0.05
 		and not LagoFloresta.a_nadar(rasa_b.x, rasa_b.y) and LagoFloresta.a_nadar(funda.x, funda.y),
@@ -1268,7 +1270,7 @@ func _teste_mapa_jogavel_geometria() -> void:
 	# o lado da grelha-mapa por escala e a origem (canto NO): a decisão (75 / 50 / 37; −37,5 / −37,5 / −37)
 	var decisao := {1.0: [75, -37.5], 1.5: [50, -37.5], 2.0: [37, -37.0]}
 	var motivos: Dictionary = pacote["mapa"]["motivos"] if pacote is Dictionary else {}
-	var agua_esperada := {1.0: 50, 1.5: 21, 2.0: 13}
+	var agua_esperada := {1.0: 301, 1.5: 131, 2.0: 75}   # LAGO-MAIOR (antes: 50 / 21 / 13)
 	for e in (pacote.get("escalas", []) if pacote is Dictionary else []):
 		var s := float(e["casaM"])
 		var lado: int = (e["origensM"] as Array).size()

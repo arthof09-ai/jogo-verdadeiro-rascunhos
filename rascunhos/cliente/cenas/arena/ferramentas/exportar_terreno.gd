@@ -31,6 +31,11 @@ extends SceneTree
 ## do que o raio deles da borda — medido em 42 zonas pela sonda da Ordem 48: 0 casas com bloqueio ou motivo
 ## diferente). A zona de REFERÊNCIA é maior do que o mapa (4,5 m de folga a toda a volta): nada removível chega a
 ## uma casa do mapa, e o que fica é exactamente o que bloqueia dentro de QUALQUER zona.
+## ORDEM LAGO-MAIOR (Parte 2): a zona viva deixou de decidir a decoração — o mapa só a tira do CAMPO DA ORDEM 42 (o
+## quadrado fixo de 30 × 30 m do meio, campo_floresta.CAMPO_ORDEM_42), com qualquer zona. O mapa de referência passa
+## a ter a floresta de fora desse campo: as casas de tronco e de rocha vão no pacote como BLOQUEADAS («tronco»,
+## «rocha»), como os marcos; o estrato não bloqueia. E a «água funda» é a do lago novo (onde não se faz pé), não a do
+## charco da Ordem 38.
 ##
 ## A COBERTURA NA BORDA. A cobertura de uma casa dentro da zona também vem de coisas FORA dela (uma árvore logo
 ## fora dá meia cobertura à casa vizinha), e o que fica fora depende da zona (o gerador gasta a semente de outra

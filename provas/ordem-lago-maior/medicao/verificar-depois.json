@@ -1,0 +1,119 @@
+{
+  "nivel_m": -1.522,
+  "limiar_nado_m": 1.25,
+  "lago_novo": true,
+  "casas_por_grelha": {
+    "1.0 m (75 × 75)": {
+      "andar": 164,
+      "nadar": 289,
+      "agua": 453,
+      "fundura_max_centro_casa_m": 2.51
+    },
+    "1.5 m (50 × 50)": {
+      "andar": 70,
+      "nadar": 131,
+      "agua": 201,
+      "fundura_max_centro_casa_m": 2.52
+    },
+    "2.0 m (37 × 37)": {
+      "andar": 41,
+      "nadar": 72,
+      "agua": 113,
+      "fundura_max_centro_casa_m": 2.51
+    }
+  },
+  "meio": {
+    "x": 21.0,
+    "z": -21.0,
+    "fundura_m": 2.45,
+    "figura_1_7m_pe_no_leito": {
+      "agua_acima_do_pe_m": 2.45,
+      "submersa": true,
+      "cabeca_abaixo_da_agua_m": 0.75
+    },
+    "figura_1_7m_a_boiar_pe_na_agua": {
+      "pe_y_m": -2.77,
+      "agua_acima_do_pe_m": 1.25,
+      "a_nadar": true
+    }
+  },
+  "fundura_max_m": {
+    "m": 2.52,
+    "x": 20.25,
+    "z": -15.75
+  },
+  "margem": {
+    "amostras_0_25m": 18769,
+    "agua_a_mais_de_0_6m_fora_da_margem": 0,
+    "seco_a_mais_de_0_6m_dentro_da_margem": 0
+  },
+  "relevo": {
+    "vertices_mexidos": 1235,
+    "vertices_mexidos_relevo": 1235,
+    "na_costura": 0,
+    "a_mais_de_23_5m_do_centro": 0
+  },
+  "perfil_por_distancia_a_margem": [
+    [
+      0.0,
+      0.0
+    ],
+    [
+      0.5,
+      0.42
+    ],
+    [
+      1.0,
+      0.48
+    ],
+    [
+      1.5,
+      0.75
+    ],
+    [
+      2.0,
+      1.28
+    ],
+    [
+      2.5,
+      1.6
+    ],
+    [
+      3.0,
+      1.64
+    ],
+    [
+      3.5,
+      1.76
+    ],
+    [
+      4.0,
+      1.92
+    ],
+    [
+      4.5,
+      2.11
+    ],
+    [
+      5.0,
+      2.28
+    ],
+    [
+      5.5,
+      2.4
+    ],
+    [
+      6.0,
+      2.45
+    ],
+    [
+      6.5,
+      2.45
+    ],
+    [
+      7.0,
+      2.45
+    ]
+  ],
+  "degrau_max_casas_de_andar_1_5m": 1.36
+}

@@ -19,6 +19,7 @@ extends RefCounted
 ##   NE  a COVA do charco ............. −2,6 m, com água no fundo: travessia em desvantagem
 ##       (Ordem 66) a cova passou a ser a bacia do LAGO: a água sobe a LAGO_ACIMA do fundo antigo e o leito
 ##       debaixo dela foi refeito (uma RASA até ao joelho e uma FUNDA de nadar) — ver «o lago», mais abaixo.
+##       (LAGO-MAIOR) a margem é desenhada e o lago cresceu ~2,5× — o que cresceu é água de nadar, 2,45 m no meio.
 ##   SE  o TERRAÇO do santuário ....... +3,6 m, escarpa virada ao centro, duas rampas nos flancos,
 ##                                      encosta de relva pelas costas (do canto da arena)
 ##   SO  a GARGANTA ................... um lombo de rocha e um tronco tombado: o corredor
@@ -58,20 +59,38 @@ const COVA := Vector2(19.5, -19.0)
 const COVA_FUNDO := 2.6
 const COVA_RAIO := 8.0
 const AGUA_ABAIXO := 0.75          # a água fica a esta altura acima do fundo da cova
-# ---- o LAGO (Ordem 66): a água da cova, subida. Fora da água o relevo é o da Ordem 38, vértice a vértice.
+# ---- o LAGO (Ordem 66; ORDEM LAGO-MAIOR, 20/11/2026 — «muito pequeno e muito raso», palavra do Mestre). O nível é
+# o da Ordem 66 (LAGO_ACIMA acima do fundo da cova da Ordem 38); a MARGEM deixou de ser a curva de nível da cova:
+# é desenhada (LAGO_MARGEM_M) e o leito, por dentro dela, é um PERFIL pela distância à margem:
+#   faixa de ANDAR  (0 – LAGO_ANDAR_FIM m da margem): a rasa da Ordem 66, LAGO_RASA_M pelo joelho;
+#   TALUDE          (até LAGO_TALUDE_FIM m): a descida para a funda — passa a fundura de nado (1,25 m) a meio;
+#   FUNDA           (de LAGO_FUNDA_BASE_M a LAGO_FUNDA_M, plena a LAGO_FUNDA_PLENA m da margem): não se faz pé.
+# O crescimento foi TODO para a parte de nadar (refino do Mestre, 18:57): a área de andar ficou a mesma (~160 m²).
+# Por fora da margem nova o chão seco desce para a água num BARRANCO de LAGO_BARRANCO m por m (nunca abaixo do
+# nível: não nasce água fora da margem). O relevo da Ordem 38 (_fino_38) fica guardado tal e qual: é dele que o
+# gerador do mapa decide (agua(), normal_38()) — a floresta não muda de sítio por causa do lago.
 const LAGO_ACIMA := 1.25           # o nível do lago acima do fundo da cova da Ordem 38 (m)
-const LAGO_RAIO := 11.0            # o lago vive dentro deste raio à volta da COVA (a margem fecha antes)
-const LAGO_RASA_M := 0.48          # a fundura da RASA (m): a água pelo joelho de uma figura
-const LAGO_FUNDA_M := 2.0          # a fundura da FUNDA (m): não se faz pé
-# A FUNDA cabe dentro das casas que a grelha JÁ bloqueava como «água funda»: onde não se faz pé é onde a regra já
-# dizia que não se pisa. São três bolhas que se fundem — (x, z, raio de fora, expoente da norma): a do meio enche
-# o quadrado de 4 × 4 casas (x de 16,5 a 22,5 · z de −24 a −18); as outras duas são os lóbulos a oeste (as duas
-# casas x 15–16,5 · z −22,5 a −19,5) e a sul (a fila z −18 a −16,5 · x 16,5–21): a margem da funda não é um
-# quadrado, e não sai das casas bloqueadas.
-const LAGO_FUNDA_CENTRO := Vector2(19.5, -21.0)
-const LAGO_FUNDA_BOLHAS: Array[Vector4] = [Vector4(19.5, -21.0, 2.85, 2.6), Vector4(16.6, -21.0, 1.45, 2.0),
-	Vector4(18.75, -18.2, 1.58, 2.0)]
-const LAGO_TALUDE_M := 1.25        # largura do talude entre a funda e a rasa (m): o degrau que se lê no fundo
+const LAGO_RAIO := 19.5            # o lago vive dentro deste raio à volta da COVA (a margem nova fecha antes: ≤ 17,6 m)
+const LAGO_RASA_M := 0.48          # a fundura da faixa de ANDAR (m): a água pelo joelho de uma figura
+const LAGO_FUNDA_M := 2.45         # a fundura do MEIO (m): uma figura de 1,7 m fica submersa
+const LAGO_FUNDA_BASE_M := 1.60    # a fundura ao pé do talude (m): já não se faz pé
+const LAGO_ANDAR_FIM := 1.00       # onde a faixa de andar começa a descer (m da margem)
+const LAGO_TALUDE_FIM := 2.55      # onde o talude acaba (m da margem)
+const LAGO_FUNDA_PLENA := 6.0      # a partir daqui a fundura é LAGO_FUNDA_M (m da margem)
+const LAGO_BARRANCO := 0.35        # o declive do chão seco que desce para a margem nova (m por m)
+# A MARGEM: o centro e 72 raios (m), de 5 em 5 graus a partir do norte, a rodar para leste; entre eles, Catmull-Rom.
+# Desenhada (provas/ordem-lago-maior/ferramentas/desenho_margem.py) para caber entre o que o mapa já tem: as
+# árvores e as rochas postas à mão a mais de raio + 1,3 m / 0,9 × tam + 0,7 m, o trilho a mais de 3,2 m, a borda do
+# mapa a mais de 2 m — e o lago da Ordem 66 todo por dentro. Nada é círculo: a baía de oeste, o lóbulo de norte.
+const LAGO_CENTRO := Vector2(21.0, -21.0)
+const LAGO_MARGEM_M: Array[float] = [
+	12.02, 12.57, 13.17, 13.75, 14.25, 14.63, 14.87, 15.00, 15.03, 14.99, 14.89, 14.72,
+	14.46, 14.08, 13.57, 12.94, 12.23, 11.49, 10.80, 10.21, 9.70, 9.65, 9.93, 10.22,
+	10.48, 10.63, 10.66, 10.56, 10.41, 10.31, 10.30, 10.55, 10.99, 11.51, 12.00, 12.36,
+	12.52, 12.49, 12.33, 12.11, 11.89, 11.69, 11.50, 11.30, 11.04, 10.73, 10.37, 10.01,
+	9.65, 9.55, 11.09, 12.51, 13.70, 14.56, 15.03, 15.07, 14.69, 13.93, 12.86, 11.58,
+	10.20, 9.67, 9.15, 8.45, 7.85, 7.75, 8.05, 9.02, 9.88, 10.56, 11.09, 11.55]
+const LAGO_COSTA_N := 360          # pontos da linha de margem (para a distância à margem)
 const LOMBO_A := Vector2(-25.0, 29.0)
 const LOMBO_B := Vector2(-22.0, 8.0)
 const LOMBO_ALTO := 2.3
@@ -85,6 +104,8 @@ static var _fino_38 := PackedFloat32Array()   # a zona fina SEM o lago (o relevo
 static var _largo := PackedFloat32Array()
 static var _nivel_agua := INF
 static var _nivel_lago := INF
+static var _costa := PackedVector2Array()
+static var _lago_mexidos := 0   # LAGO-MAIOR: quantos vértices da zona fina o lago mudou (medido pela sonda)
 
 
 static func ruido() -> FastNoiseLite:
@@ -216,40 +237,94 @@ static func _cozer() -> void:
 			if borda > 0.0:
 				h = lerpf(h, _interpolar(_largo, N_LARGO, MEIO_LARGO, PASSO_LARGO, x, z), borda)
 			_fino[j * N_FINO + i] = h
-	# Ordem 66: o LAGO. O relevo da Ordem 38 fica guardado tal e qual (_fino_38); o leito do lago só mexe nos
-	# vértices que ficam DEBAIXO do nível dele, dentro do raio do lago — a margem e tudo o que está em seco têm
-	# exactamente os números de antes.
+	# Ordem 66 / LAGO-MAIOR: o LAGO. O relevo da Ordem 38 fica guardado tal e qual (_fino_38). Dentro da margem o leito
+	# é o perfil (_leito); fora dela, até onde o barranco chega, o chão seco desce para a água (nunca abaixo do nível).
+	# Mais longe, os números são exactamente os de antes.
 	_fino_38 = _fino.duplicate()
 	var fundo_38 := _interpolar(_fino_38, N_FINO, MEIO_FINO, PASSO_FINO, COVA.x, COVA.y)
 	_nivel_agua = fundo_38 + AGUA_ABAIXO
 	_nivel_lago = fundo_38 + LAGO_ACIMA
+	var alcance := 0.0
+	for r in LAGO_MARGEM_M:
+		alcance = maxf(alcance, r)
+	alcance += 8.0
 	for j in N_FINO:
 		for i in N_FINO:
 			var x := -MEIO_FINO + i * PASSO_FINO
 			var z := -MEIO_FINO + j * PASSO_FINO
-			if Vector2(x - COVA.x, z - COVA.y).length_squared() < LAGO_RAIO * LAGO_RAIO:
-				_fino[j * N_FINO + i] = _leito(x, z, _fino_38[j * N_FINO + i])
+			# a costura com a zona larga (os últimos COSTURA_M) nunca se mexe: o chão continua sem degrau
+			if maxf(absf(x), absf(z)) >= MEIO_FINO - COSTURA_M:
+				continue
+			if Vector2(x - LAGO_CENTRO.x, z - LAGO_CENTRO.y).length_squared() < alcance * alcance:
+				var h := _leito(x, z, _fino_38[j * N_FINO + i])
+				if h != _fino_38[j * N_FINO + i]:
+					_lago_mexidos += 1
+				_fino[j * N_FINO + i] = h
 
 
-## Ordem 66 — o LEITO do lago em (x, z), dado o relevo da Ordem 38 nesse ponto (`h38`). Em seco (h38 ≥ nível)
-## devolve h38 sem lhe tocar: a linha de água é a curva de nível da cova antiga, e a margem não muda.
-## Debaixo de água o fundo é desenhado: a RASA (entra-se devagar e fica-se com a água pelo joelho, LAGO_RASA_M,
-## com um ondulado leve de areia) e a FUNDA (LAGO_FUNDA_M, dentro das casas que a grelha já bloqueava — ver
-## LAGO_FUNDA_BOLHAS), separadas por um TALUDE de LAGO_TALUDE_M — o degrau que se lê no fundo.
+## LAGO-MAIOR — o raio da margem (m, a partir de LAGO_CENTRO) no rumo `ang` (radianos, 0 = norte, a rodar para leste).
+static func margem_raio(ang: float) -> float:
+	var n := LAGO_MARGEM_M.size()
+	var t := fposmod(ang / TAU * n, float(n))
+	var k := int(t)
+	var u := t - float(k)
+	var p0: float = LAGO_MARGEM_M[(k - 1 + n) % n]
+	var p1: float = LAGO_MARGEM_M[k % n]
+	var p2: float = LAGO_MARGEM_M[(k + 1) % n]
+	var p3: float = LAGO_MARGEM_M[(k + 2) % n]
+	return 0.5 * (2.0 * p1 + (p2 - p0) * u + (2.0 * p0 - 5.0 * p1 + 4.0 * p2 - p3) * u * u + (3.0 * p1 - p0 - 3.0 * p2 + p3) * u * u * u)
+
+
+## LAGO-MAIOR — (x, z) está por dentro da margem desenhada?
+static func dentro_da_margem(x: float, z: float) -> bool:
+	var d := Vector2(x - LAGO_CENTRO.x, z - LAGO_CENTRO.y)
+	return d.length() < margem_raio(atan2(d.x, -d.y))
+
+
+## LAGO-MAIOR — a distância (m) de (x, z) à linha da margem: positiva por dentro (água), negativa por fora.
+static func distancia_margem(x: float, z: float) -> float:
+	if _costa.is_empty():
+		_costa.resize(LAGO_COSTA_N)
+		for k in LAGO_COSTA_N:
+			var a := TAU * float(k) / float(LAGO_COSTA_N)
+			var r := margem_raio(a)
+			_costa[k] = LAGO_CENTRO + Vector2(sin(a), -cos(a)) * r
+	var p := Vector2(x, z)
+	var m2 := INF
+	for k in LAGO_COSTA_N:
+		var a := _costa[k]
+		var ab := _costa[(k + 1) % LAGO_COSTA_N] - a
+		var t := clampf((p - a).dot(ab) / ab.length_squared(), 0.0, 1.0)
+		m2 = minf(m2, p.distance_squared_to(a + ab * t))
+	var m := sqrt(m2)
+	return m if dentro_da_margem(x, z) else -m
+
+
+## LAGO-MAIOR — a fundura do PERFIL (m) a `s` metros da margem, para dentro (s ≤ 0: seco).
+static func perfil_fundura(s: float) -> float:
+	if s <= 0.0:
+		return 0.0
+	var rasa := LAGO_RASA_M * tanh(s / 0.37)
+	var funda := LAGO_FUNDA_BASE_M + (LAGO_FUNDA_M - LAGO_FUNDA_BASE_M) * _ss(LAGO_TALUDE_FIM, LAGO_FUNDA_PLENA, s)
+	return lerpf(rasa, funda, _ss(LAGO_ANDAR_FIM, LAGO_TALUDE_FIM, s))
+
+
+## Ordem 66 / LAGO-MAIOR — o LEITO do lago em (x, z), dado o relevo da Ordem 38 nesse ponto (`h38`).
+## Por dentro da margem: o nível menos o perfil (a rasa com um ondulado leve de areia; a funda com o fundo a ondear
+## uns centímetros). Por fora: o chão de antes, mas nunca mais alto do que o barranco que sobe da margem
+## (LAGO_BARRANCO m por m) nem mais baixo do que o nível (+3 cm) — a água não sai da margem desenhada.
 static func _leito(x: float, z: float, h38: float) -> float:
-	var a := _nivel_lago - h38  # quanto a cova antiga ficava abaixo do nível: 0 na margem, cresce para o meio
-	if a <= 0.0:
-		return h38
+	var s := distancia_margem(x, z)
+	if s <= 0.0:
+		var h := minf(h38, _nivel_lago + 0.03 + LAGO_BARRANCO * -s)
+		if Vector2(x - COVA.x, z - COVA.y).length_squared() < LAGO_RAIO * LAGO_RAIO:
+			h = maxf(h, _nivel_lago + 0.03)   # onde lago_fundura() olha, o seco fica acima do nível
+		return h
 	var n := ruido()
-	var rasa := LAGO_RASA_M * tanh(a / 0.37)
-	rasa += 0.035 * n.get_noise_2d(x * 60.0 + 500.0, z * 60.0) * _ss(0.15, 0.45, a)
-	var funda := 0.0
-	var torce := 1.0 + 0.05 * n.get_noise_2d(x * 14.0 - 300.0, z * 14.0 + 120.0)
-	for b in LAGO_FUNDA_BOLHAS:
-		var d := pow(pow(absf(x - b.x), b.w) + pow(absf(z - b.y), b.w), 1.0 / b.w) * torce
-		funda = maxf(funda, 1.0 - _ss(b.z - LAGO_TALUDE_M, b.z, d))
-	funda *= _ss(0.30, 0.62, a)
-	return _nivel_lago - lerpf(rasa, LAGO_FUNDA_M, funda)
+	var f := perfil_fundura(s)
+	f += 0.035 * n.get_noise_2d(x * 60.0 + 500.0, z * 60.0) * _ss(0.15, 0.6, s) * (1.0 - _ss(LAGO_ANDAR_FIM, LAGO_TALUDE_FIM, s))
+	f += 0.07 * n.get_noise_2d(x * 14.0 - 300.0, z * 14.0 + 120.0) * _ss(LAGO_TALUDE_FIM, LAGO_FUNDA_PLENA, s)
+	return _nivel_lago - f
 
 
 ## A grelha fina cozida (N_FINO × N_FINO, linha a linha de norte para sul): a malha do chão e a
@@ -340,6 +415,13 @@ static func normal_38(x: float, z: float) -> Vector3:
 	var dx := altura_38(x + e, z) - altura_38(x - e, z)
 	var dz := altura_38(x, z + e) - altura_38(x, z - e)
 	return Vector3(-dx, 2.0 * e, -dz).normalized()
+
+
+## LAGO-MAIOR — quantos vértices da zona fina o lago (leito e barranco) mudou em relação ao relevo da Ordem 38.
+static func lago_vertices_mexidos() -> int:
+	if _fino.is_empty():
+		_cozer()
+	return _lago_mexidos
 
 
 ## Ordem 66 — o nível da água do LAGO (m).

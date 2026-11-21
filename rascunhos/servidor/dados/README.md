@@ -52,8 +52,20 @@ O pacote é o **mapa inteiro**; o servidor (`nucleo/terreno.js`) recorta dele a 
   por SHA às fontes do cliente). O servidor lê esse motivo como **casa de água** (`MOTIVOS_DE_AGUA` em
   `nucleo/terreno.js`): entra-se, ocupa-se e atravessa-se, com o **mesmo custo** de uma casa seca (o cânone diz
   «terreno difícil, não parede», sem número: [FALTA] o custo). `agua(x, y)` e `casasDeAgua()` na grelha recortada;
-  `agua` no juízo do terreno. A 1,5 m são as 21 casas de água funda; 50 a 1 m; 13 a 2 m.
+  `agua` no juízo do terreno. A 1,5 m são as 131 casas de água funda; 301 a 1 m; 75 a 2 m (ORDEM LAGO-MAIOR; antes
+  21 / 50 / 13).
 - Prova: `testes/ordem-mapa-jogavel.test.mjs`.
+
+## ORDEM LAGO-MAIOR (20/11/2026)
+
+- **O lago maior e mais fundo.** A margem é desenhada (`relevo_floresta.gd`, `LAGO_MARGEM_M`) e o leito é um perfil
+  pela distância à margem: a faixa de andar (0,48 m) tem a mesma área de antes (~162 m²); o resto é água de nadar
+  (~290 m², 2,45 m no meio). «Água funda» passou a ser **onde não se faz pé** (fundura no centro da casa > 1,25 m, a
+  fronteira do NADO), medida no lago novo — já não o charco da Ordem 38.
+- **A floresta de dentro do campo voltou.** O mapa só tira decoração do campo fixo da Ordem 42 (o quadrado de 30 × 30 m
+  do meio), com qualquer zona jogável: as árvores e as rochas do resto do mapa estão no pacote como casas bloqueadas
+  («tronco», «rocha», como já eram fora da zona). A 1,5 m, no mapa inteiro: 152 casas bloqueadas (eram 67) e 131 de
+  água. A grelha de sempre (20 × 20 de 1,5 m) continua sem casas bloqueadas.
 
 ## Refazer o pacote
 

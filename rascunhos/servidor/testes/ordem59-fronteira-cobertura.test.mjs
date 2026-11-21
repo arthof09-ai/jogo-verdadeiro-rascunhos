@@ -67,8 +67,9 @@ for (const [l, a, s, fronteira, nulasFronteiraAntes] of [
         if (soFronteira) {
           naFronteira += 1;
           assert.equal(g.cobertura(x, y), doMapa(g, x, y), `(${x},${y}) na faixa da fronteira: a do mapa`);
-          // antes (a regra da Ordem 48) era null aqui: o mapa não tem cobertura 2 nesta faixa
-          assert.equal(antigo.cobertura(x, y), null, `(${x},${y}) antes: null`);
+          // antes (a regra da Ordem 48) era null aqui, salvo onde o mapa tem cobertura 2 (essa afirmava-se sempre).
+          // LAGO-MAIOR: com a floresta devolvida há troncos e rochas na faixa da fronteira — cobertura 2 nalgumas casas.
+          assert.equal(antigo.cobertura(x, y), doMapa(g, x, y) === 2 ? 2 : null, `(${x},${y}) antes: null (ou 2, a do mapa)`);
         } else {
           assert.equal(g.cobertura(x, y), antigo.cobertura(x, y), `(${x},${y}) fora da faixa da fronteira: o mesmo juízo`);
         }

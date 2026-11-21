@@ -1,0 +1,92 @@
+{
+  "cabecalho": {
+    "ordem": "LAGO-MAIOR",
+    "render": "NVIDIA GeForce RTX 4060",
+    "prefixo": "",
+    "manequim": "Mannequin_F (UAL2) · ANDAR v3 · res://testes/manequim/andar-v3.glb",
+    "manequim_altura_m": 1.81,
+    "nivel_lago_m": -1.522,
+    "lago_centro": [
+      21.0,
+      -21.0
+    ]
+  },
+  "medidas": [
+    {
+      "foto": "1-mapa-inteiro",
+      "manequim": {
+        "x": 14.2,
+        "z": -18.52,
+        "fundura_m": 1.49,
+        "agua_acima_do_pe_m": 1.49,
+        "agua_em_fraccao_da_altura": 0.82
+      },
+      "png": {
+        "foto": "1-mapa-inteiro.png",
+        "ok": true,
+        "cores_amostra": 2195
+      }
+    },
+    {
+      "foto": "2-funda-pescoco",
+      "manequim": {
+        "x": 14.2,
+        "z": -18.52,
+        "fundura_m": 1.49,
+        "agua_acima_do_pe_m": 1.49,
+        "agua_em_fraccao_da_altura": 0.82
+      },
+      "png": {
+        "foto": "2-funda-pescoco.png",
+        "ok": true,
+        "cores_amostra": 2099
+      }
+    },
+    {
+      "foto": "3-funda-meio",
+      "manequim": {
+        "x": 21.0,
+        "z": -21.0,
+        "fundura_m": 2.45,
+        "agua_acima_do_pe_m": 2.45,
+        "agua_em_fraccao_da_altura": 1.36
+      },
+      "png": {
+        "foto": "3-funda-meio.png",
+        "ok": true,
+        "cores_amostra": 1131
+      }
+    },
+    {
+      "foto": "4-margem-rasa",
+      "manequim": {
+        "x": 12.27,
+        "z": -17.82,
+        "fundura_m": 0.42,
+        "agua_acima_do_pe_m": 0.42,
+        "agua_em_fraccao_da_altura": 0.23
+      },
+      "png": {
+        "foto": "4-margem-rasa.png",
+        "ok": true,
+        "cores_amostra": 2149
+      }
+    },
+    {
+      "foto": "5-floresta-ne",
+      "manequim": {
+        "x": 13.36,
+        "z": -14.59,
+        "fundura_m": 0.31,
+        "agua_acima_do_pe_m": 0.31,
+        "agua_em_fraccao_da_altura": 0.17
+      },
+      "png": {
+        "foto": "5-floresta-ne.png",
+        "ok": true,
+        "cores_amostra": 1854
+      }
+    }
+  ],
+  "falhas": 0
+}
