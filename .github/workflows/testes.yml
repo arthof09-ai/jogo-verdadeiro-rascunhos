@@ -145,6 +145,12 @@ jobs:
           set -o pipefail
           timeout 120 "$GODOT" --headless --path . -s res://testes/hud_acoes.gd 2>&1 | tee "$RUNNER_TEMP/hud_acoes.gd.log"
           ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/hud_acoes.gd.log"
+      - name: A caixa da ordem de turnos no HUD da jogadora (Ordem CAIXA-HUD-JOGADORA)
+        if: always()
+        run: |
+          set -o pipefail
+          timeout 120 "$GODOT" --headless --path . -s res://testes/caixa_jogadora.gd 2>&1 | tee "$RUNNER_TEMP/caixa_jogadora.gd.log"
+          ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/caixa_jogadora.gd.log"
       - name: Canário de privacidade no aparelho da jogadora (JV3.1 §7)
         if: always()
         run: |
