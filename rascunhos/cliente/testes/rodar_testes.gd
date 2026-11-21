@@ -76,6 +76,7 @@ func _initialize() -> void:
 	_teste_ordem_turnos_dinamica()
 	_teste_ordem_turnos_iniciativa()
 	_teste_retratos_do_modelo()
+	_teste_retrato_busto_em_pose()
 	_teste_caixa_ordem()
 	_teste_escala_do_mundo()
 	# ORDEM MAPA-JOGÁVEL: a grelha é o mapa inteiro e a água pisa-se (o lago segue nós na árvore: depois do quadro).
@@ -1056,7 +1057,8 @@ func _teste_retratos_do_modelo() -> void:
 	var fw := -cam.transform.basis.z
 	var h := Vector2(fw.x, fw.z).length()
 	var alvo_y := o.y + fw.y * (Vector2(o.x, o.z).length() / h)
-	_ok(alvo_y > 1.2 and alvo_y < 1.9, "retrato: de pé, o enquadramento é o do busto (olha a %.2f m de 2,25)" % alvo_y)
+	_ok(alvo_y > 1.6 and alvo_y < 2.25, "retrato: de pé, o enquadramento é o do busto — rosto e peitoral (olha a %.2f m de 2,25)" % alvo_y)
+	_ok(o.z < 0.0, "retrato: a câmara está do lado da frente da figura (-Z, a convenção da arena), a ver o rosto")
 	cam.free()
 	var r := Retratos.new()
 	get_root().add_child(r)
@@ -1071,6 +1073,46 @@ func _teste_retratos_do_modelo() -> void:
 	modelo.free()
 
 
+## Ordem CAIXA-PADRAO-BUSTO: o retrato de uma figura ESFOLADA mede-se na pose, não na malha em T. O manequim de
+## referência (Mannequin_F, ANDAR v3) tem a malha em T (1,76 m de largo × 1,81 de alto): pela caixa da malha não estaria
+## «de pé» e o retrato dava o corpo inteiro. Em pose (quadro 0 do ANDAR) é estreito e alto: busto, rosto e peitoral.
+func _teste_retrato_busto_em_pose() -> void:
+	var doc := GLTFDocument.new()
+	var est := GLTFState.new()
+	if doc.append_from_file("res://testes/manequim/andar-v3.glb", est) != OK:
+		_ok(false, "retrato em pose: o manequim de referência abriu")
+		return
+	var fig := Node3D.new()
+	fig.rotation_degrees.y = 90.0  # rodada na arena: a cópia do retrato assenta na origem, a rotação da figura sai
+	var m := doc.generate_scene(est) as Node3D
+	fig.add_child(m)
+	var anim := m.find_child("AnimationPlayer", true, false) as AnimationPlayer
+	anim.play("andar_v3")
+	anim.seek(0.0, true)
+	anim.speed_scale = 0.0
+	get_root().add_child(fig)
+	var copia := Retratos.copiar_modelo(fig)
+	var malha := m.find_children("*", "MeshInstance3D", true, false)[0] as MeshInstance3D
+	var em_t := malha.mesh.get_aabb()
+	var pose := Retratos.caixa_visivel(copia)
+	_ok(not Retratos.de_pe(em_t), "retrato em pose: pela malha em T (%.2f × %.2f m) o manequim NÃO estaria de pé — era o erro" % [em_t.size.x, em_t.size.y])
+	_ok(Retratos.de_pe(pose) and pose.size.x < 0.8, "retrato em pose: em pose o manequim está de pé (%.2f de largo × %.2f de alto)" % [pose.size.x, pose.size.y])
+	var cam := Camera3D.new()
+	Retratos.enquadrar(cam, copia)
+	var o := cam.transform.origin
+	var fw := -cam.transform.basis.z
+	var alvo_y := o.y + fw.y * (Vector2(o.x, o.z).length() / Vector2(fw.x, fw.z).length())
+	var j := Retratos.janela_busto(Retratos.caixas_em_pose(copia), pose)
+	_ok(alvo_y > pose.end.y - pose.size.y * 0.3 and alvo_y < pose.end.y,
+		"retrato em pose: a câmara olha para o rosto e o peito (%.2f m numa figura de %.2f)" % [alvo_y, pose.size.y])
+	_ok(j.position.y > pose.position.y + pose.size.y * 0.6 and j.size.y < pose.size.y * 0.4,
+		"retrato em pose: a janela é o busto (de %.2f a %.2f m), não o corpo inteiro" % [j.position.y, j.end.y])
+	_ok(o.z < 0.0, "retrato em pose: a câmara está à frente da figura (-Z), do lado do rosto")
+	cam.free()
+	copia.free()
+	fig.free()
+
+
 func _teste_caixa_ordem() -> void:
 	var c := CaixaOrdem.new()
 	get_root().add_child(c)
@@ -1078,6 +1120,16 @@ func _teste_caixa_ordem() -> void:
 	c.mostrar(ordem, "j2", {"j1": "Ong", "j2": "Ruiva", "m": "Lobo"}, {}, "dinamico")
 	_ok(c.ids_mostrados == ordem and c.vez_mostrada == "j2", "caixa: mostra a ordem e quem está na vez")
 	_ok(c.find_child("Fila", true, false).get_child_count() == 3, "caixa: um retrato por figura")
+	# Ordem CAIXA-PADRAO-BUSTO: todos os quadradinhos do mesmo tamanho, seja qual for o nome (e a figura na vez).
+	var ordem5: Array[String] = ["a", "b", "c", "d", "e"]
+	c.mostrar(ordem5, "c", {"a": "Arqueira de Prata Longa", "b": "Lobo", "c": "Espadachim", "d": "Ab", "e": "Bruto"}, {}, "iniciativa")
+	var tamanhos := {}
+	for slot in c.find_child("Fila", true, false).get_children():
+		var t: Vector2 = (slot as Control).get_combined_minimum_size()
+		tamanhos["%dx%d" % [int(t.x), int(t.y)]] = true
+	var cel := c.tamanho_celula()
+	_ok(tamanhos.size() == 1 and tamanhos.has("%dx%d" % [int(cel.x), int(cel.y)]),
+		"caixa: os 5 quadradinhos têm o MESMO tamanho, nomes curtos ou longos (%s; célula %dx%d)" % [tamanhos.keys(), int(cel.x), int(cel.y)])
 	var vazia: Array[String] = []
 	c.mostrar(vazia, "", {}, {}, "dinamico")
 	_ok(c.vez_mostrada == "" and (c.find_child("Vazia", true, false) as Label).visible, "caixa: sem acções, diz que a ordem se forma — nada inventado")

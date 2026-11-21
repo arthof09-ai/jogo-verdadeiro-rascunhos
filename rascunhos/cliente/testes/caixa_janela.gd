@@ -196,5 +196,7 @@ func _medir(hud: Node, n: int, tam: Vector2i) -> void:
 	_ok(linhas_ok, "%d figuras %dx%d: a caixa não passa de metade da altura (%d de %d u)" % [n, tam.x, tam.y, int(r.size.y), int(tela.size.y)])
 	_ok(livre >= precisa and not rf.intersects(r), "%d figuras %dx%d: a faixa tem %d u livres para a frase mais comprida (%d u), numa linha, sem passar por baixo da caixa (faixa %s)" % [
 		n, tam.x, tam.y, int(livre), int(precisa), rf])
-	_ok(absf(lado_retrato - float(hud._fonte) * 2.8) <= 1.0, "%d figuras %dx%d: a fila segue a letra de agora (retrato %d u = 2,8 × %d)" % [n, tam.x, tam.y, int(lado_retrato), hud._fonte])
+	# Ordem CAIXA-PADRAO-BUSTO: o lado mede-se pela constante da caixa (hoje 3,4 letras; era 2,8).
+	var em_letras: float = hud._caixa.LADO_RETRATO_EM_LETRAS
+	_ok(absf(lado_retrato - float(hud._fonte) * em_letras) <= 1.0, "%d figuras %dx%d: a fila segue a letra de agora (retrato %d u = %.1f × %d)" % [n, tam.x, tam.y, int(lado_retrato), em_letras, hud._fonte])
 	_ok(px_letra >= 13.0 - 0.01, "%d figuras %dx%d: a letra da faixa tem %.1f px reais (≥ 13)" % [n, tam.x, tam.y, px_letra])

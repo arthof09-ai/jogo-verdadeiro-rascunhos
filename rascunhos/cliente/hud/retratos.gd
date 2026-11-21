@@ -24,11 +24,21 @@ const COR_FUNDO_PADRAO := Apresentacao.COR_RETRATO_FUNDO
 const ESCURECER_FUNDO := 0.45
 ## Nós do modelo em cena que não entram no retrato: o que pertence ao chão e os rótulos.
 const NAO_ENTRAM := ["Anel", "Contacto", "Base", "Nome", "Rotulo"]
-## De onde a câmara olha (frente a três quartos, um pouco de cima) e a abertura.
-const DIRECAO_CAMARA := Vector3(0.45, 0.22, 1.0)
+## De onde a câmara olha (frente a três quartos, um pouco de cima) e a abertura. A FRENTE de uma figura é -Z (a arena
+## roda o nó com essa convenção, cenas/arena/arena.gd RUMO_ORIENTACAO): a câmara fica desse lado, para ver o ROSTO.
+## (Ordem CAIXA-PADRAO-BUSTO: antes estava em +Z — com a cápsula, simétrica, não se via; com o manequim eram as costas.)
+const DIRECAO_CAMARA := Vector3(0.45, 0.22, -1.0)
 const FOV := 28.0
-## Figura de pé: o retrato é do busto (a parte de cima do corpo, esta fracção da altura).
-const FRACAO_BUSTO := 0.62
+## Figura de pé: o retrato é do BUSTO — rosto e peitoral (palavra do Mestre, 21/11/2026 19:52: «mais fechada no rosto e
+## peitoral»). A janela vai do alto da cabeça até esta fracção da altura da figura EM POSE (cabeça ≈ 0,13; peito até
+## ≈ 0,30), e é quadrada: a largura dos braços não a abre.
+const FRACAO_BUSTO := 0.30
+## Folga por cima da cabeça (fracção da altura), para o alto da cabeça não tocar na moldura.
+const FOLGA_CIMA := 0.03
+## Folga à volta da janela do busto (1 = justa).
+const FOLGA_BUSTO := 1.08
+## De pé = a figura em pose é mais alta do que larga por este factor; senão (deitada, quadrúpede), o corpo inteiro.
+const DE_PE := 1.2
 
 var _palcos := {}  # id -> SubViewport
 var _chaves := {}  # id -> String
@@ -106,18 +116,80 @@ static func cor_de_fundo(modelo: Node3D) -> Color:
 	return COR_FUNDO_PADRAO
 
 
-## A caixa (no espaço do palco) das malhas visíveis da cópia.
+## A caixa (no espaço do palco) das malhas visíveis da cópia, NA POSE EM QUE ESTÃO (ver `caixas_em_pose`).
 static func caixa_visivel(no: Node3D) -> AABB:
+	return _juntar(caixas_em_pose(no))
+
+
+## As caixas das partes visíveis da cópia, no espaço do palco e na pose em que a figura está.
+## Uma malha rígida dá a sua caixa. Uma malha ESFOLADA (com esqueleto e skin) não pode usar `Mesh.get_aabb()`: essa é a
+## caixa da pose de repouso do ficheiro (num manequim, a pose em T, braços abertos: 1,76 m de largo). Em vez dela, cada
+## osso que deforma a malha dá a caixa dos vértices que move (`bone_aabbs` da superfície, a mesma conta que o motor faz
+## para a caixa da malha esfolada) levada pela pose actual desse osso. Assim o retrato enquadra a figura como ela está.
+static func caixas_em_pose(no: Node3D) -> Array[AABB]:
+	var saida: Array[AABB] = []
+	for mi in _malhas_visiveis(no, Transform3D.IDENTITY, []):
+		var t: Transform3D = mi[0]
+		var inst: MeshInstance3D = mi[2]
+		var ossos := _caixas_dos_ossos(no, inst)
+		if ossos.is_empty():
+			saida.append(t * (mi[1] as Mesh).get_aabb())
+		else:
+			saida.append_array(ossos)
+	return saida
+
+
+static func _juntar(caixas: Array[AABB]) -> AABB:
 	var caixa := AABB()
 	var primeira := true
-	for mi in _malhas_visiveis(no, Transform3D.IDENTITY, []):
-		var a: AABB = mi[0] * (mi[1] as Mesh).get_aabb()
+	for a in caixas:
 		if primeira:
 			caixa = a
 			primeira = false
 		else:
 			caixa = caixa.merge(a)
 	return caixa
+
+
+## A malha esfolada em pose: uma caixa por osso que a deforma, no espaço de `raiz`. Vazio se a malha não é esfolada
+## (ou o motor não deu as caixas dos ossos): quem chama usa então a caixa da malha.
+static func _caixas_dos_ossos(raiz: Node3D, inst: MeshInstance3D) -> Array[AABB]:
+	var saida: Array[AABB] = []
+	if inst.skin == null or inst.mesh == null or inst.skeleton.is_empty():
+		return saida
+	var esq := inst.get_node_or_null(inst.skeleton) as Skeleton3D
+	if esq == null:
+		return saida
+	var t_esq := _no_espaco_de(raiz, esq)
+	var skin := inst.skin
+	for s in inst.mesh.get_surface_count():
+		var sup: Dictionary = RenderingServer.mesh_get_surface(inst.mesh.get_rid(), s)
+		var caixas: Array = sup.get("bone_aabbs", [])
+		for i in mini(caixas.size(), skin.get_bind_count()):
+			var a: AABB = caixas[i]
+			if a.size.x < 0.0 or a.size.y < 0.0 or a.size.z < 0.0:
+				continue  # osso que não mexe nenhum vértice desta superfície
+			var b := skin.get_bind_bone(i)
+			if b < 0:
+				b = esq.find_bone(skin.get_bind_name(i))
+			if b < 0 or b >= esq.get_bone_count():
+				continue
+			saida.append(t_esq * esq.get_bone_global_pose(b) * skin.get_bind_pose(i) * a)
+	return saida
+
+
+## A transformação de `no` no espaço em que `_malhas_visiveis` mede (o pai de `raiz`; a cópia assenta na origem do
+## palco). A cópia pode ainda não estar na árvore.
+static func _no_espaco_de(raiz: Node3D, no: Node3D) -> Transform3D:
+	var t := Transform3D.IDENTITY
+	var n: Node = no
+	while n != null:
+		if n is Node3D:
+			t = (n as Node3D).transform * t
+		if n == raiz:
+			break
+		n = n.get_parent()
+	return t
 
 
 static func _malhas_visiveis(no: Node, pai: Transform3D, saida: Array) -> Array:
@@ -127,32 +199,63 @@ static func _malhas_visiveis(no: Node, pai: Transform3D, saida: Array) -> Array:
 			return saida
 		t = pai * (no as Node3D).transform
 	if no is MeshInstance3D and (no as MeshInstance3D).mesh != null:
-		saida.append([t, (no as MeshInstance3D).mesh])
+		saida.append([t, (no as MeshInstance3D).mesh, no])
 	for c in no.get_children():
 		_malhas_visiveis(c, t, saida)
 	return saida
 
 
-## Enquadramento fixo: de pé, o busto; deitada (ou mais larga do que alta), o corpo inteiro.
+## Ordem CAIXA-PADRAO-BUSTO: a figura está de pé? Mede-se na POSE (não na malha em T): mais alta do que larga.
+static func de_pe(c: AABB) -> bool:
+	return c.size.y > maxf(c.size.x, c.size.z) * DE_PE
+
+
+## A janela do busto (rosto e peitoral): do alto da figura em pose (mais FOLGA_CIMA) para baixo, FRACAO_BUSTO da
+## altura; quadrada; centrada (em x e z) nas partes da figura que entram nessa faixa — a cabeça e o peito, não os pés
+## de quem dá um passo.
+static func janela_busto(caixas: Array[AABB], c: AABB) -> AABB:
+	var alto := c.size.y * FRACAO_BUSTO
+	var base := c.end.y - alto
+	var faixa := AABB()
+	var primeira := true
+	for a in caixas:
+		if a.end.y <= base:
+			continue
+		var corte := AABB(Vector3(a.position.x, maxf(a.position.y, base), a.position.z),
+			Vector3(a.size.x, a.end.y - maxf(a.position.y, base), a.size.z))
+		if primeira:
+			faixa = corte
+			primeira = false
+		else:
+			faixa = faixa.merge(corte)
+	if primeira:
+		faixa = AABB(Vector3(c.position.x, base, c.position.z), Vector3(c.size.x, alto, c.size.z))
+	var centro := faixa.get_center()
+	var lado := alto + c.size.y * FOLGA_CIMA
+	return AABB(Vector3(centro.x - lado * 0.5, base, centro.z - lado * 0.5), Vector3(lado, lado, lado))
+
+
+## Enquadramento fixo: de pé, o BUSTO (rosto e peitoral, ver `janela_busto`); deitada (ou mais larga do que alta), o corpo
+## inteiro. Tudo medido na figura EM POSE (`caixas_em_pose`).
 static func enquadrar(cam: Camera3D, copia: Node3D) -> void:
-	var c := caixa_visivel(copia)
+	var caixas := caixas_em_pose(copia)
+	var c := _juntar(caixas)
 	if c.size == Vector3.ZERO:
 		c = AABB(Vector3(-0.5, 0.0, -0.5), Vector3(1.0, 2.0, 1.0))
+		caixas.clear()
+		caixas.append(c)
 	var alvo := c.get_center()
-	var alto := c.size.y
-	var largo := maxf(c.size.x, c.size.z)
 	var raio := 0.5 * c.size.length()
-	if alto > largo * 1.2:
-		var topo := c.end.y
-		alto = c.size.y * FRACAO_BUSTO
-		alvo.y = topo - alto * 0.5
-		raio = 0.5 * Vector2(largo, alto).length()
+	if de_pe(c):
+		var j := janela_busto(caixas, c)
+		alvo = j.get_center()
+		raio = 0.5 * j.size.y * FOLGA_BUSTO
 	var dist := raio / tan(deg_to_rad(FOV * 0.5)) * 1.05
 	cam.fov = FOV
 	var pos := alvo + DIRECAO_CAMARA.normalized() * dist
 	cam.transform = Transform3D(Basis.looking_at(alvo - pos, Vector3.UP), pos)
-	cam.near = maxf(0.01, dist - raio * 3.0)
-	cam.far = dist + raio * 3.0
+	cam.near = maxf(0.01, dist - maxf(raio, 0.5 * c.size.length()) * 3.0)
+	cam.far = dist + maxf(raio, 0.5 * c.size.length()) * 3.0
 
 
 func _novo_palco(id: String) -> SubViewport:
