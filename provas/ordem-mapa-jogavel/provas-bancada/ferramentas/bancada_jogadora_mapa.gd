@@ -28,6 +28,12 @@ extends SceneTree
 ##   (9) a SONDA varre também os TEXTOS que a Rede não põe nos sinais de mensagem: o texto das recusas
 ##       (recusa_recebida), o dos ERRO (erro_recebido) e o motivo do ROOM_PAUSED (sala_pausada).
 ##   A sonda do fio (sonda-fio.mjs, no servidor) varre o fio inteiro e confere os mesmos lotes do lado do servidor.
+## ORDEM-F3 — as posições que se gravam (o «antes» depois do passo e o nó de cada fase) só se lêem com os nós QUIETOS:
+##   a arena leva a figura ao pé da casa com um tween de 0,25 s (arena.gd `_atualizar_figura`), e o «assente» aceita-a
+##   a ≤ 1e-3 m do pé — ainda a deslizar, se um frame cai no último quarto de milissegundo do tween. Depois do
+##   «assente» (e da «pronta»), espera-se que a posição de cada nó fique igual em QUIETO_FRAMES leituras seguidas
+##   (`_esperar_quietos`); só então se lê. Não é uma verificação nova (os números da batalha continuam comparáveis com
+##   a primeira corrida); o registo vai para `quietos`. Se os nós não sossegam em 10 s, é uma FALHA.
 ## Sai com 0 se tudo passa, 1 se não.
 
 const CENA := "res://cenas/arena/arena.tscn"
@@ -38,6 +44,7 @@ const DESLOCAMENTO_M := 9.0      # heroina-teste.deslocamentoBase (dados-exemplo
 const ALCANCE_M := 9.0           # chicote-teste.alcanceM (idem)
 const FASES := [[1.5, 50, -37.5], [1.0, 75, -37.5], [2.0, 37, -37.0]]
 const ESPERA_S := 60.0
+const QUIETO_FRAMES := 3  # ORDEM-F3: leituras seguidas iguais (cada frame avança o tween, por isso um nó a deslizar muda)
 
 var _falhas := 0
 var _total := 0
@@ -45,7 +52,7 @@ var _msgs: Array = []
 var _mestre_msgs := 0
 var _recibos := {}
 var _arena: Node = null
-var _rel := {"fases": [], "verificacoes": [], "provocacoes": []}
+var _rel := {"fases": [], "verificacoes": [], "provocacoes": [], "quietos": []}
 var _textos: Array = []  # ORDEM-F2: recusas, ERRO e ROOM_PAUSED como chegaram pelos sinais da Rede
 var _erros: Array = []
 var _pausada := false
@@ -72,6 +79,42 @@ func _esperar(cond: Callable, rotulo: String, segundos: float = ESPERA_S, lista:
 			return false
 		await process_frame
 	_ok(true, "%s (%.1f s)" % [rotulo, (Time.get_ticks_msec() - t0) / 1000.0], lista)
+	return true
+
+
+## ORDEM-F3: espera que os nós `ids` fiquem quietos — a mesma posição (exacta) em QUIETO_FRAMES frames seguidos.
+## Regista em `quietos` o resto de cada nó ao pé da casa no momento em que se começou a esperar (o que o «assente» ou a
+## «pronta» aceitaram) e quantos frames foi preciso esperar. Não conta como verificação, salvo se esgota o tempo.
+func _esperar_quietos(ids: Array, alvos: Dictionary, rotulo: String, segundos: float = 10.0) -> bool:
+	var t0 := Time.get_ticks_msec()
+	var resto := {}
+	for id in ids:
+		resto[id] = var_to_str((_arena._nos[id] as Node3D).position - _arena.pe_figura(alvos[id]))
+	var ultima := {}
+	var iguais := 0
+	var frames := 0
+	while true:
+		var agora := {}
+		var mesmas := not ultima.is_empty()
+		for id in ids:
+			var no: Node3D = _arena._nos.get(id)
+			if no == null:
+				mesmas = false
+				continue
+			agora[id] = no.position
+			if mesmas and (not ultima.has(id) or ultima[id] != no.position):
+				mesmas = false
+		iguais = iguais + 1 if mesmas else 0
+		if iguais >= QUIETO_FRAMES - 1:
+			break
+		if Time.get_ticks_msec() - t0 > int(segundos * 1000.0):
+			_ok(false, rotulo + ": os nós não ficaram quietos (tempo esgotado)")
+			_rel["quietos"].append({"onde": rotulo, "resto": resto, "frames": frames, "quietos": false})
+			return false
+		ultima = agora
+		await process_frame
+		frames += 1
+	_rel["quietos"].append({"onde": rotulo, "resto": resto, "frames": frames, "quietos": true})
 	return true
 
 
@@ -131,6 +174,12 @@ func _correr() -> void:
 			return
 		for i in 10:
 			await process_frame
+		var casas_agora := {}
+		for id in est.figuras:
+			casas_agora[id] = est.casa_de(est.figuras[id])
+		if not await _esperar_quietos(est.figuras.keys(), casas_agora, "%s m: pronta" % cm):
+			_fim()
+			return
 		var orc := ""
 		for id in est.figuras:
 			if id != eu:
@@ -232,6 +281,13 @@ func _correr() -> void:
 			var no: Node3D = _arena._nos.get(eu)
 			return est.casa_de(est.figuras[eu]) == alvo and no != null and no.position.distance_to(_arena.pe_figura(alvo)) <= 1e-3
 		await _esperar(assente, "%s m: a heroína desenhada no pé da casa %s" % [cm, alvo], 10.0)
+		# ORDEM-F3: o «antes» só se lê com a heroína quieta (o «assente» aceita-a a ≤ 1e-3 m, ainda no fim do tween)
+		var casas_passo := {}
+		for id in est.figuras:
+			casas_passo[id] = est.casa_de(est.figuras[id])
+		if not await _esperar_quietos(est.figuras.keys(), casas_passo, "%s m: depois do passo" % cm):
+			_fim()
+			return
 		fase["passo"] = {"para": [alvo.x, alvo.y], "custoM": custo, "recibo": _recibos[id_int],
 			"agua": CampoDaMesa.casa_de_agua(_arena.mapa, _arena.origem, cm, alvo)}
 		for id in est.figuras:

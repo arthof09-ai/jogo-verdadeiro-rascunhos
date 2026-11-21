@@ -1,0 +1,26 @@
+== corrida 1 — início 08:26:06
+   bancada padrão: saída 0 — Mestre/espectador=0 jogadora=0 sonda-do-fio=0 erros-de-script=0 — bancada da jogadora: 49 de 49 verificações passaram.
+   guião do CI: saída 0 — terreno-original=0 terreno-adaptada=0 Mestre/espectador=0 jogadora=0 sonda-do-fio=0 erros-de-script=0
+   comparador: saída 0 — REPETE-SE — primeira × ci: números 461/461 iguais, bits 73/73 iguais (bits só registados)
+   quietos (bancada/ci): 1.5m pronta:2f 1.5m depois do passo:2f 1.0m pronta:2f 1.0m depois do passo:2f 2.0m pronta:2f 2.0m depois do passo:2f|1.5m pronta:2f 1.5m depois do passo:2f 1.0m pronta:2f 1.0m depois do passo:2f 2.0m pronta:2f 2.0m depois do passo:2f|
+== corrida 2 — início 08:29:16
+   bancada padrão: saída 0 — Mestre/espectador=0 jogadora=0 sonda-do-fio=0 erros-de-script=0 — bancada da jogadora: 49 de 49 verificações passaram.
+   guião do CI: saída 0 — terreno-original=0 terreno-adaptada=0 Mestre/espectador=0 jogadora=0 sonda-do-fio=0 erros-de-script=0
+   comparador: saída 0 — REPETE-SE — primeira × ci: números 461/461 iguais, bits 73/73 iguais (bits só registados)
+   quietos (bancada/ci): 1.5m pronta:2f 1.5m depois do passo:2f 1.0m pronta:2f 1.0m depois do passo:2f 2.0m pronta:2f 2.0m depois do passo:2f|1.5m pronta:2f 1.5m depois do passo:2f 1.0m pronta:2f 1.0m depois do passo:2f 2.0m pronta:2f 2.0m depois do passo:2f|
+== corrida 3 — início 08:32:39
+   bancada padrão: saída 0 — Mestre/espectador=0 jogadora=0 sonda-do-fio=0 erros-de-script=0 — bancada da jogadora: 49 de 49 verificações passaram.
+   guião do CI: saída 0 — terreno-original=0 terreno-adaptada=0 Mestre/espectador=0 jogadora=0 sonda-do-fio=0 erros-de-script=0
+   comparador: saída 0 — REPETE-SE — primeira × ci: números 461/461 iguais, bits 73/73 iguais (bits só registados)
+   quietos (bancada/ci): 1.5m pronta:2f 1.5m depois do passo:2f 1.0m pronta:2f 1.0m depois do passo:2f 2.0m pronta:2f 2.0m depois do passo:2f|1.5m pronta:2f 1.5m depois do passo:2f 1.0m pronta:2f 1.0m depois do passo:2f 2.0m pronta:2f 2.0m depois do passo:2f|
+== corrida 4 — início 08:35:44
+   bancada padrão: saída 0 — Mestre/espectador=0 jogadora=0 sonda-do-fio=0 erros-de-script=0 — bancada da jogadora: 49 de 49 verificações passaram.
+   guião do CI: saída 0 — terreno-original=0 terreno-adaptada=0 Mestre/espectador=0 jogadora=0 sonda-do-fio=0 erros-de-script=0
+   comparador: saída 0 — REPETE-SE — primeira × ci: números 461/461 iguais, bits 73/73 iguais (bits só registados)
+   quietos (bancada/ci): 1.5m pronta:2f 1.5m depois do passo:2f 1.0m pronta:2f 1.0m depois do passo:3f*RESTO* 2.0m pronta:2f 2.0m depois do passo:2f|1.5m pronta:2f 1.5m depois do passo:2f 1.0m pronta:2f 1.0m depois do passo:2f 2.0m pronta:2f 2.0m depois do passo:2f|
+== corrida 5 — início 08:38:38
+   bancada padrão: saída 0 — Mestre/espectador=0 jogadora=0 sonda-do-fio=0 erros-de-script=0 — bancada da jogadora: 49 de 49 verificações passaram.
+   guião do CI: saída 0 — terreno-original=0 terreno-adaptada=0 Mestre/espectador=0 jogadora=0 sonda-do-fio=0 erros-de-script=0
+   comparador: saída 0 — REPETE-SE — primeira × ci: números 461/461 iguais, bits 73/73 iguais (bits só registados)
+   quietos (bancada/ci): 1.5m pronta:2f 1.5m depois do passo:2f 1.0m pronta:2f 1.0m depois do passo:2f 2.0m pronta:2f 2.0m depois do passo:2f|1.5m pronta:2f 1.5m depois do passo:2f 1.0m pronta:2f 1.0m depois do passo:2f 2.0m pronta:2f 2.0m depois do passo:2f|
+== fim 08:41:33
