@@ -1,0 +1,84 @@
+From 61c9d6dafa3ba7d7141ac977a2f456ce5f9c77b5 Mon Sep 17 00:00:00 2001
+From: "Claude (conta 1)" <noreply@anthropic.com>
+Date: Sat, 21 Nov 2026 02:14:26 -0300
+Subject: [PATCH] Ordem PROVAS-MAPA-CORR9: job provas-mapa no CI (as provas do
+ mapa a cada push)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Corre provas/ordem-provas-mapa-corr9/ferramentas/correr-provas-mapa.sh no Linux (Godot 4.7.2
+fixo, Node 24): a ferramenta original e a cópia adaptada nas 18 grelhas e a batalha de bancada
+com a grelha-mapa e a escala 1,5 → 1 → 2 m; depois compara os números com os da primeira
+corrida (provas/ordem-mapa-jogavel/provas-bancada) com comparar-corridas.mjs. Os registos ficam
+no artefacto «provas-mapa». As impressões bit a bit são registadas, não portão (Windows × Linux).
+
+CORR9-CORRECOES (B3): o passo de import falha o job quando falha (set -o pipefail, sem «|| true»).
+O SHA-256 do zip do Godot é impresso no registo, não comparado.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ .github/workflows/testes.yml | 47 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+
+diff --git a/.github/workflows/testes.yml b/.github/workflows/testes.yml
+index 06c3bc0..1fe994e 100644
+--- a/.github/workflows/testes.yml
++++ b/.github/workflows/testes.yml
+@@ -248,6 +248,53 @@ jobs:
+           echo "motor falso=$R1 · VLAB real=$R2"
+           test "$R1" -eq 0 && test "$R2" -eq 0
+ 
++  provas-mapa:
++    # ORDEM PROVAS-MAPA-CORR9 (correcção 9 da conferência PROVAS-MAPA, C2-2): as provas do mapa a cada push, e não
++    # só uma vez no PC. Prova 1: servidor × arena casa a casa nas 18 grelhas, com a ferramenta original do cliente e
++    # com a cópia adaptada; prova 2: a batalha de bancada (servidor Node pela WebSocket + jogadora Godot com a arena
++    # real + Mestre e espectador Node, grelha-mapa, escala 1,5 → 1 → 2 m). As ferramentas são as da ORDEM-PROVAS-MAPA,
++    # tal como estão; o guião só muda a pasta de saída. Depois, os números desta corrida contra os da primeira
++    # (os registos de provas/ordem-mapa-jogavel/provas-bancada): têm de se repetir. As impressões bit a bit das
++    # alturas são registadas mas não são portão aqui (a primeira corrida foi no Windows; o CI é Linux).
++    runs-on: ubuntu-latest
++    timeout-minutes: 20
++    steps:
++      - uses: actions/checkout@v4
++      - uses: actions/setup-node@v4
++        with:
++          node-version: '24'
++      - name: Baixar o Godot 4.7.2 (linux, sem janela)
++        run: |
++          url="https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
++          curl -fsSL --retry 3 --max-time 120 -o "$RUNNER_TEMP/godot.zip" "$url"
++          sha256sum "$RUNNER_TEMP/godot.zip"
++          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
++          echo "GODOT=$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" >> "$GITHUB_ENV"
++      # O import falha o job quando falha: set -o pipefail e sem «|| true», como no passo «Importar o projeto
++      # (--headless --import)» do job godot-cliente. O SHA-256 do zip do Godot (passo acima) é impresso no registo,
++      # não comparado com um valor esperado, como nos jobs existentes.
++      - name: Importar o projeto do cliente
++        working-directory: rascunhos/cliente
++        run: |
++          set -o pipefail
++          timeout 300 "$GODOT" --headless --path . --import 2>&1 | tail -20
++      - name: As provas do mapa (ferramenta original + cópia adaptada + batalha de bancada)
++        run: |
++          R=0; bash provas/ordem-provas-mapa-corr9/ferramentas/correr-provas-mapa.sh "$RUNNER_TEMP/provas-mapa" 8794 || R=$?
++          for f in provar-terreno-servidor.log provar-terreno-servidor-adaptada.log; do echo "== $f"; grep -vE "^\s*$" "$RUNNER_TEMP/provas-mapa/$f" | tail -8; done
++          echo "== bancada-jogadora.log"; grep -vE "^\s*$" "$RUNNER_TEMP/provas-mapa/bancada-jogadora.log" | tail -50
++          echo "== bancada-mestre.log"; cat "$RUNNER_TEMP/provas-mapa/bancada-mestre.log"
++          exit $R
++      - name: Repetição — os números desta corrida contra os da primeira (PROVAS-MAPA)
++        if: always()
++        run: node provas/ordem-provas-mapa-corr9/ferramentas/comparar-corridas.mjs --md="$RUNNER_TEMP/provas-mapa/repeticao.md" primeira=provas/ordem-mapa-jogavel/provas-bancada ci="$RUNNER_TEMP/provas-mapa"
++      - uses: actions/upload-artifact@v4
++        if: always()
++        with:
++          name: provas-mapa
++          path: ${{ runner.temp }}/provas-mapa/
++          if-no-files-found: warn
++
+   foto-mestre:
+     # Fotos da arena do Mestre para o olho do Mestre (Plano B §B3/§B6; I0004, 08/11/2026): o cliente Godot com
+     # render de verdade (Compatibility / OpenGL 3, Mesa llvmpipe, num ecrã virtual xvfb), nunca --headless.
+-- 
+2.56.0.windows.4
+
