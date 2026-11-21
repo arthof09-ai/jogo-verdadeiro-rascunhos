@@ -4,7 +4,7 @@
    "casaM": 1.5,
    "lado": 50,
    "figuras": {
-    "f8549e8b782dd1c81": {
+    "ffc48e3b020f1dbf2": {
      "quem": "heroína",
      "casa": [
       38,
@@ -16,7 +16,7 @@
      ],
      "agua": false
     },
-    "f1c5f4ef77af5526f": {
+    "f22950cd977e23e62": {
      "quem": "orc",
      "casa": [
       38,
@@ -32,9 +32,9 @@
    "caminho": {
     "reservaM": 9.0,
     "maxCasas": 6,
-    "servidor": 80,
-    "cliente": 80,
-    "deAgua": 4,
+    "servidor": 70,
+    "cliente": 70,
+    "deAgua": 33,
     "soServidor": 0,
     "soCliente": 0,
     "custoDiferente": 0
@@ -52,14 +52,14 @@
     ],
     "custoM": 1.5,
     "recibo": "APLICADA",
-    "agua": false
+    "agua": true
    }
   },
   {
    "casaM": 1.0,
    "lado": 75,
    "figuras": {
-    "f8549e8b782dd1c81": {
+    "ffc48e3b020f1dbf2": {
      "quem": "heroína",
      "casa": [
       57,
@@ -69,7 +69,7 @@
       20.0,
       -29.0
      ],
-     "agua": false,
+     "agua": true,
      "antesXZ": [
       20.25,
       -29.25
@@ -79,7 +79,7 @@
       0.25
      ]
     },
-    "f1c5f4ef77af5526f": {
+    "f22950cd977e23e62": {
      "quem": "orc",
      "casa": [
       57,
@@ -103,9 +103,9 @@
    "caminho": {
     "reservaM": 7.5,
     "maxCasas": 7,
-    "servidor": 112,
-    "cliente": 112,
-    "deAgua": 9,
+    "servidor": 99,
+    "cliente": 99,
+    "deAgua": 58,
     "soServidor": 0,
     "soCliente": 0,
     "custoDiferente": 0
@@ -123,14 +123,14 @@
     ],
     "custoM": 1.0,
     "recibo": "APLICADA",
-    "agua": false
+    "agua": true
    }
   },
   {
    "casaM": 2.0,
    "lado": 37,
    "figuras": {
-    "f8549e8b782dd1c81": {
+    "ffc48e3b020f1dbf2": {
      "quem": "heroína",
      "casa": [
       28,
@@ -140,7 +140,7 @@
       20.0,
       -28.0
      ],
-     "agua": false,
+     "agua": true,
      "antesXZ": [
       20.0,
       -28.0
@@ -150,7 +150,7 @@
       0.0
      ]
     },
-    "f1c5f4ef77af5526f": {
+    "f22950cd977e23e62": {
      "quem": "orc",
      "casa": [
       28,
@@ -174,9 +174,9 @@
    "caminho": {
     "reservaM": 6.5,
     "maxCasas": 3,
-    "servidor": 24,
-    "cliente": 24,
-    "deAgua": 4,
+    "servidor": 20,
+    "cliente": 20,
+    "deAgua": 14,
     "soServidor": 0,
     "soCliente": 0,
     "custoDiferente": 0
@@ -190,9 +190,9 @@
    "passo": {
     "para": [
      28,
-     6
+     3
     ],
-    "custoM": 4.0,
+    "custoM": 2.0,
     "recibo": "APLICADA",
     "agua": true
    }
@@ -233,7 +233,7 @@
   },
   {
    "ok": true,
-   "texto": "1.5 m: caminho — o servidor oferece 80 casas (4 de água), o BFS do cliente (terreno da arena, 6 casas de alcance) dá 80; só no servidor 0, só no cliente 0, custo diferente 0"
+   "texto": "1.5 m: caminho — o servidor oferece 70 casas (33 de água), o BFS do cliente (terreno da arena, 6 casas de alcance) dá 70; só no servidor 0, só no cliente 0, custo diferente 0"
   },
   {
    "ok": true,
@@ -241,7 +241,7 @@
   },
   {
    "ok": true,
-   "texto": "1.5 m: a heroína pede o passo para (38, 5) (custo 1.5 m)"
+   "texto": "1.5 m: a heroína pede o passo para (38, 5) (custo 1.5 m, casa de água)"
   },
   {
    "ok": true,
@@ -257,7 +257,7 @@
   },
   {
    "ok": true,
-   "texto": "1.0 m: a arena refez a grelha (75 × 75), as figuras assentes e as opções da vez dela (0.6 s)"
+   "texto": "1.0 m: a arena refez a grelha (75 × 75), as figuras assentes e as opções da vez dela (0.8 s)"
   },
   {
    "ok": true,
@@ -289,7 +289,7 @@
   },
   {
    "ok": true,
-   "texto": "1.0 m: caminho — o servidor oferece 112 casas (9 de água), o BFS do cliente (terreno da arena, 7 casas de alcance) dá 112; só no servidor 0, só no cliente 0, custo diferente 0"
+   "texto": "1.0 m: caminho — o servidor oferece 99 casas (58 de água), o BFS do cliente (terreno da arena, 7 casas de alcance) dá 99; só no servidor 0, só no cliente 0, custo diferente 0"
   },
   {
    "ok": true,
@@ -297,7 +297,7 @@
   },
   {
    "ok": true,
-   "texto": "1.0 m: a heroína pede o passo para (57, 9) (custo 1.0 m)"
+   "texto": "1.0 m: a heroína pede o passo para (57, 9) (custo 1.0 m, casa de água)"
   },
   {
    "ok": true,
@@ -313,7 +313,7 @@
   },
   {
    "ok": true,
-   "texto": "2.0 m: a arena refez a grelha (37 × 37), as figuras assentes e as opções da vez dela (3.5 s)"
+   "texto": "2.0 m: a arena refez a grelha (37 × 37), as figuras assentes e as opções da vez dela (4.9 s)"
   },
   {
    "ok": true,
@@ -345,7 +345,7 @@
   },
   {
    "ok": true,
-   "texto": "2.0 m: caminho — o servidor oferece 24 casas (4 de água), o BFS do cliente (terreno da arena, 3 casas de alcance) dá 24; só no servidor 0, só no cliente 0, custo diferente 0"
+   "texto": "2.0 m: caminho — o servidor oferece 20 casas (14 de água), o BFS do cliente (terreno da arena, 3 casas de alcance) dá 20; só no servidor 0, só no cliente 0, custo diferente 0"
   },
   {
    "ok": true,
@@ -353,7 +353,7 @@
   },
   {
    "ok": true,
-   "texto": "2.0 m: a heroína pede o passo para (28, 6) (custo 4.0 m, casa de água)"
+   "texto": "2.0 m: a heroína pede o passo para (28, 3) (custo 2.0 m, casa de água)"
   },
   {
    "ok": true,
@@ -365,17 +365,102 @@
   },
   {
    "ok": true,
-   "texto": "2.0 m: a heroína desenhada no pé da casa (28, 6) (0.2 s)"
+   "texto": "2.0 m: a heroína desenhada no pé da casa (28, 3) (0.2 s)"
   },
   {
    "ok": true,
-   "texto": "a reserva no fim: 9 − 6.5 = 2.5 m (0.0 s)"
+   "texto": "a reserva no fim: 9 − 4.5 = 4.5 m (0.0 s)"
   },
   {
    "ok": true,
    "texto": "privacidade: 22 mensagens à jogadora, 0 achados, 0 mensagens de Mestre; mapas vistos {\"altura\":50.0,\"casaM\":1.5,\"largura\":50.0}, {\"altura\":75.0,\"casaM\":1.0,\"largura\":75.0}, {\"altura\":37.0,\"casaM\":2.0,\"largura\":37.0}"
   }
  ],
+ "provocacoes": [
+  {
+   "ok": true,
+   "texto": "F2 (7): a jogadora manda um MASTER_SUPERVISOR escala 1 m (cru, pela WebSocket)"
+  },
+  {
+   "ok": true,
+   "texto": "F2 (7): a resposta ao pedido da escala chegou (0.0 s)"
+  },
+  {
+   "ok": true,
+   "texto": "F2 (7): só o ERRO proibido «Só o Mestre.» (1 ERRO, 1 textos, 0 mensagens novas); a escala continua 2.0 m"
+  },
+  {
+   "ok": true,
+   "texto": "F2 (8): o ROOM_PAUSED chegou (o Mestre saiu depois da escala recusada) (1.1 s)"
+  },
+  {
+   "ok": true,
+   "texto": "F2 (9): privacidade nos textos — 2 ({\"ERRO\":1,\"ROOM_PAUSED\":1}), 0 achados"
+  }
+ ],
+ "quietos": [
+  {
+   "onde": "1.5 m: pronta",
+   "resto": {
+    "ffc48e3b020f1dbf2": "Vector3(0, 0, 0)",
+    "f22950cd977e23e62": "Vector3(0, 0, 0)"
+   },
+   "frames": 2,
+   "quietos": true
+  },
+  {
+   "onde": "1.5 m: depois do passo",
+   "resto": {
+    "ffc48e3b020f1dbf2": "Vector3(0, 0, 0)",
+    "f22950cd977e23e62": "Vector3(0, 0, 0)"
+   },
+   "frames": 2,
+   "quietos": true
+  },
+  {
+   "onde": "1.0 m: pronta",
+   "resto": {
+    "ffc48e3b020f1dbf2": "Vector3(0, 0, 0)",
+    "f22950cd977e23e62": "Vector3(0, 0, 0)"
+   },
+   "frames": 2,
+   "quietos": true
+  },
+  {
+   "onde": "1.0 m: depois do passo",
+   "resto": {
+    "ffc48e3b020f1dbf2": "Vector3(0, 0, 0)",
+    "f22950cd977e23e62": "Vector3(0, 0, 0)"
+   },
+   "frames": 2,
+   "quietos": true
+  },
+  {
+   "onde": "2.0 m: pronta",
+   "resto": {
+    "ffc48e3b020f1dbf2": "Vector3(0, 0, 0)",
+    "f22950cd977e23e62": "Vector3(0, 0, 0)"
+   },
+   "frames": 2,
+   "quietos": true
+  },
+  {
+   "onde": "2.0 m: depois do passo",
+   "resto": {
+    "ffc48e3b020f1dbf2": "Vector3(0, 0, 0)",
+    "f22950cd977e23e62": "Vector3(0, 0, 0)"
+   },
+   "frames": 2,
+   "quietos": true
+  }
+ ],
+ "pedidoEscala": {
+  "erro": [
+   "proibido",
+   "Só o Mestre."
+  ],
+  "mensagensNovas": 0
+ },
  "sonda": {
   "mensagens": 22,
   "mensagensDeMestre": 0,
@@ -407,5 +492,23 @@
     "soMestre"
    ]
   }
+ },
+ "sondaTextos": {
+  "textos": [
+   {
+    "type": "ERRO",
+    "codigo": "proibido",
+    "texto": "Só o Mestre."
+   },
+   {
+    "type": "ROOM_PAUSED",
+    "motivo": "mestre_desconectado"
+   }
+  ],
+  "porType": {
+   "ERRO": 1,
+   "ROOM_PAUSED": 1
+  },
+  "achados": []
  }
 }

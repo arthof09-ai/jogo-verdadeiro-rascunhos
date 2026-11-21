@@ -4,5 +4,7 @@
 [mestre] MASTER_PLACE {"fichaId":"orc-teste","casa":{"x":38,"y":11}} → ROOM_RECEIPT APLICADA
 [mestre] MASTER_SUPERVISOR {"op":"escala","casaM":1} → ROOM_RECEIPT APLICADA
 [mestre] MASTER_SUPERVISOR {"op":"escala","casaM":2} → ROOM_RECEIPT APLICADA
+[mestre] MASTER_SUPERVISOR {"op":"escala","casaM":3} → ROOM_REJECT acao_invalida
+[mestre] provocação (linha 3): escala 3 m → ROOM_REJECT acao_invalida; detalhe ao Mestre «ESCALA_INVALIDA: 3 m por casa; só valem 1 / 1.5 / 2 m»; espectador 0 mensagens
 [mestre] espectador: 12 mensagens, 0 achados; mapas vistos [{"largura":50,"altura":50,"casaM":1.5},{"largura":75,"altura":75,"casaM":1},{"largura":37,"altura":37,"casaM":2}]
 [mestre] TUDO PASSOU

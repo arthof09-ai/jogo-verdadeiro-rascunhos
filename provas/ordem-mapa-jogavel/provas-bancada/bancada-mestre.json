@@ -70,7 +70,7 @@
        "altura": 75
       },
       "vez": {
-       "figuraId": "f8549e8b782dd1c81",
+       "figuraId": "ffc48e3b020f1dbf2",
        "reservaM": 7.5,
        "andouM": 1.5,
        "casasQuePaga": 7
@@ -95,13 +95,13 @@
      },
      "figuras": [
       {
-       "id": "f8549e8b782dd1c81",
+       "id": "ffc48e3b020f1dbf2",
        "nome": "Heroína Teste",
        "x": 57,
        "y": 8
       },
       {
-       "id": "f1c5f4ef77af5526f",
+       "id": "f22950cd977e23e62",
        "nome": "Orc",
        "x": 57,
        "y": 17
@@ -123,7 +123,7 @@
        "altura": 37
       },
       "vez": {
-       "figuraId": "f8549e8b782dd1c81",
+       "figuraId": "ffc48e3b020f1dbf2",
        "reservaM": 6.5,
        "andouM": 2.5,
        "casasQuePaga": 3
@@ -140,13 +140,13 @@
      },
      "figuras": [
       {
-       "id": "f8549e8b782dd1c81",
+       "id": "ffc48e3b020f1dbf2",
        "nome": "Heroína Teste",
        "x": 57,
        "y": 8
       },
       {
-       "id": "f1c5f4ef77af5526f",
+       "id": "f22950cd977e23e62",
        "nome": "Orc",
        "x": 57,
        "y": 17
@@ -161,13 +161,13 @@
      },
      "figuras": [
       {
-       "id": "f8549e8b782dd1c81",
+       "id": "ffc48e3b020f1dbf2",
        "nome": "Heroína Teste",
        "x": 28,
        "y": 4
       },
       {
-       "id": "f1c5f4ef77af5526f",
+       "id": "f22950cd977e23e62",
        "nome": "Orc",
        "x": 28,
        "y": 8
@@ -178,7 +178,7 @@
   ],
   "movimentos": [
    {
-    "figuraId": "f8549e8b782dd1c81",
+    "figuraId": "ffc48e3b020f1dbf2",
     "de": {
      "x": 38,
      "y": 4
@@ -203,7 +203,7 @@
     "journalSeq": 6
    },
    {
-    "figuraId": "f8549e8b782dd1c81",
+    "figuraId": "ffc48e3b020f1dbf2",
     "de": {
      "x": 57,
      "y": 8
@@ -228,14 +228,14 @@
     "journalSeq": 8
    },
    {
-    "figuraId": "f8549e8b782dd1c81",
+    "figuraId": "ffc48e3b020f1dbf2",
     "de": {
      "x": 28,
      "y": 4
     },
     "para": {
      "x": 28,
-     "y": 6
+     "y": 3
     },
     "caminho": [
      {
@@ -244,15 +244,11 @@
      },
      {
       "x": 28,
-      "y": 5
-     },
-     {
-      "x": 28,
-      "y": 6
+      "y": 3
      }
     ],
-    "custoM": 4,
-    "reservaM": 2.5,
+    "custoM": 2,
+    "reservaM": 4.5,
     "soMestre": null,
     "journalSeq": 10
    }
@@ -273,13 +269,13 @@
    },
    "figuras": [
     {
-     "id": "f8549e8b782dd1c81",
+     "id": "ffc48e3b020f1dbf2",
      "nome": "Heroína Teste",
      "x": 28,
      "y": 4
     },
     {
-     "id": "f1c5f4ef77af5526f",
+     "id": "f22950cd977e23e62",
      "nome": "Orc",
      "x": 28,
      "y": 8
@@ -337,5 +333,26 @@
    {}
   ]
  },
- "falhas": []
+ "falhas": [],
+ "provocacao": {
+  "recibos": [
+   {
+    "type": "MASTER_SUPERVISOR",
+    "campos": {
+     "op": "escala",
+     "casaM": 3
+    },
+    "recibo": "ROOM_REJECT",
+    "estado": null,
+    "motivo": "acao_invalida"
+   }
+  ],
+  "casaM": 3,
+  "mestre": {
+   "recibo": "ROOM_REJECT",
+   "motivo": "acao_invalida",
+   "detalhe": "ESCALA_INVALIDA: 3 m por casa; só valem 1 / 1.5 / 2 m"
+  },
+  "espectadorDepois": []
+ }
 }

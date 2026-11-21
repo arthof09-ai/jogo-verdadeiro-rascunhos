@@ -1,0 +1,10 @@
+terreno-original=0 terreno-adaptada=0 Mestre/espectador=0 jogadora=0 sonda-do-fio=0 erros-de-script=0
+[sonda-do-fio]   ok    (A) fora: 0 achados 
+[sonda-do-fio]   ok    (A) mensagens MASTER_* no fio dela: 0
+[sonda-do-fio]   ok    (A) mensagens de teste no fio: 0 (a corrida padrão não as tem)
+[sonda-do-fio]   ok    (B) linha 3 — a escala recusada do Mestre (3 m): 1 lote(s); Mestre ["ROOM_EVENT:recusa","ROOM_REJECT"], jogadora 0, espectador 0
+[sonda-do-fio]   ok    (C) linha 4 — o pedido de escala da jogadora (MASTER_SUPERVISOR escala 1): 1 lote(s); ela recebe ["ERRO proibido «Só o Mestre.»"]; outros papéis []
+[sonda-do-fio]   ok    (D) ROOM_PAUSED no fio dela: 1 (n=23 conexaoFechada motivo=mestre_desconectado) — varrido em (A)
+[sonda-do-fio] TUDO PASSOU
+saida=0
+2026-11-21 09:03:53
