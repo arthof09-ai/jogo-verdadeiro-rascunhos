@@ -1,4 +1,4 @@
-# SHA-256 no 9cbaca8 (antes) dos 36 ficheiros que o ramo muda. Formato do MANIFESTO.
+# SHA-256 no 9cbaca8 (antes) dos 37 ficheiros que o ramo muda. Formato do MANIFESTO.
 6cfe2067be7e314d47c4177140463fb51612de93092818ed92a1a166f2e2d332  rascunhos/cliente/README.md
 13281c5dc903d06af3ade77b46193a4f83d4053b7fd54c79bb6d39b73a4e486a  rascunhos/cliente/arte/README.md
 2bfa5a08db447e18b5dacd867f0c2740350fa97f91438d7f8cc00fa37bd9dfc6  rascunhos/cliente/arte/ambiente/color_script.gd
@@ -35,3 +35,4 @@ ae0efdd89174a0c5f65305d29a424f23cf1f3a7cfc8d69284196e1a9d6f67ac1  rascunhos/serv
 b8d35363b9836616a54b42cf52d895bb6081dc8646e3043388f882d99e8fe050  rascunhos/servidor/testes/ajudantes.mjs
 6a18f561d77abee27e9fccca43dfdaab29ad6eb90a45f701ee1ca6a9bd44809c  rascunhos/servidor/testes/morte.test.mjs
 0ce94cf05b9f72107fe58e8adaf47a20d0f63e35c19ab7ad568f73d648967252  rascunhos/servidor/testes/motor-falso.mjs
+01755d40a7eb935745071db371bb65c6c7bbeb38363faeaaf07f71bab55e302f  rascunhos/servidor/testes/privacidade.test.mjs
