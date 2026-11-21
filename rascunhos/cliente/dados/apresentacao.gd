@@ -30,6 +30,15 @@ const COR_LENDARIO := Color("FF5E00")
 const COR_RARO := Color("4361EE")
 const COR_MAGICO := Color("9D4EDD")
 
+## As 3 cores da caixa da ordem e do retrato, pelos papéis da paleta C (palavra do Mestre, 21/11/2026 12:12, Ordem
+## PALETA-C ponto 2). Só a cor vem do papel: a transparência é a de antes (painel 0.78, moldura 0.18, retrato opaco).
+## Painel da caixa da ordem (hud/caixa_ordem.gd COR_PAINEL): sangue.
+const COR_CAIXA_PAINEL := Color(COR_SANGUE, 0.78)
+## Moldura das figuras da caixa da ordem (hud/caixa_ordem.gd COR_MOLDURA): ouro.
+const COR_CAIXA_MOLDURA := Color(COR_OURO, 0.18)
+## Fundo de recurso do retrato (hud/retratos.gd COR_FUNDO_PADRAO): raro, opaco.
+const COR_RETRATO_FUNDO := COR_RARO
+
 ## Fundo do ecrã de entrada (lobby).
 const COR_FUNDO := Color(0.10, 0.13, 0.18)
 ## Opacidade dos painéis e dos botões em repouso.
@@ -172,7 +181,8 @@ const ZOOM_PADRAO := 1.5  # palavra do Mestre
 # ================================================================ pendências (valores por fechar ou a conferir)
 # Registadas com o número; nenhuma se corrige nesta tabela.
 const PENDENCIAS := [
-	"Paleta: FECHADA pela Ordem PALETA-C (palavra do Mestre, 21/11/2026) — paleta C, Noite e Brasa: bronze CD7F32, ouro FFC93C, sangue C1121F, lendário FF5E00, raro 4361EE, mágico 9D4EDD (COR_BRONZE … COR_MAGICO acima). As 3 cores da caixa/retrato (caixa_ordem.gd COR_PAINEL, COR_MOLDURA; retratos.gd COR_FUNDO_PADRAO) continuam POR LIGAR: nenhum código nem passagem diz a que papel corresponde cada uma.",
+	"Paleta: FECHADA pela Ordem PALETA-C (palavra do Mestre, 21/11/2026) — paleta C, Noite e Brasa: bronze CD7F32, ouro FFC93C, sangue C1121F, lendário FF5E00, raro 4361EE, mágico 9D4EDD (COR_BRONZE … COR_MAGICO acima).",
+	"Cores da caixa/retrato: FECHADA pela Ordem PALETA-C ponto 2 (palavra do Mestre, 21/11/2026 12:12) — moldura = ouro, painel = sangue, fundo do retrato = raro; a transparência fica a de antes: caixa_ordem.gd COR_PAINEL = sangue C1121F a 0.78 (COR_CAIXA_PAINEL), COR_MOLDURA = ouro FFC93C a 0.18 (COR_CAIXA_MOLDURA), retratos.gd COR_FUNDO_PADRAO = raro 4361EE opaco (COR_RETRATO_FUNDO).",
 	"Casa: FECHADA pela Ordem ESCALA (palavra do Mestre, 20/11/2026) — a casa é a escala do mundo, 1 · 1,5 · 2 m, escolhida pelo Mestre; pré-definida 1,5 m (ESCALAS_CASA_M / CASA_M acima). A malha do mapa (grelha_floresta, relevo_floresta) continua a 1,5 m: ver a linha seguinte.",
 	"Casa no mapa: grelha_floresta.CASA_M e relevo_floresta.CASA_M (1,5 m) ficam no mapa, sem ler da tabela — os dois ficheiros são fontes do terreno do servidor (servidor/dados/terreno-floresta.json, conferido por SHA no rodar_testes); religá-los obriga a refazer o terreno com exportar_terreno.gd. Fica para quando o terreno se refizer por outra razão.",
 	"Degrau: não há tamanho de apresentação de degrau no cliente; o degrau de uma casa é medido do relevo (grelha_floresta.degrau) e o limite de passagem é regra do servidor.",

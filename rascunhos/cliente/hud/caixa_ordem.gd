@@ -22,12 +22,12 @@ const LADO_ACTIVA_EM_LETRAS := 4.6
 const MAX_LETRAS_NOME := 10
 ## Ordem CAIXA-PERSISTENTE: a tabela de apresentação da Ordem DADOS (dados/apresentacao.gd) aplica-se onde ela já
 ## define a cor: o realce da figura na vez é o anel de destino do site (Apresentacao.COR_MESTRE_ANEL = ffd28b, o mesmo
-## literal de antes, por isso o ecrã fica igual). O fundo do painel e a moldura da caixa NÃO estão na tabela: ficam os
-## literais da Ordem HUD, como pendência registada no ESTADO FINAL da ordem (nenhuma cor nova inventada aqui).
+## literal de antes, por isso o ecrã fica igual). O fundo do painel (sangue) e a moldura da caixa (ouro) vêm da tabela
+## desde a Ordem PALETA-C ponto 2 (palavra do Mestre, 21/11/2026), com a transparência de antes (0.78 e 0.18).
 const Apresentacao := preload("res://dados/apresentacao.gd")
-const COR_PAINEL := Color(0.07, 0.09, 0.12, 0.78)
+const COR_PAINEL := Apresentacao.COR_CAIXA_PAINEL
 const COR_REALCE := Apresentacao.COR_MESTRE_ANEL
-const COR_MOLDURA := Color(1, 1, 1, 0.18)
+const COR_MOLDURA := Apresentacao.COR_CAIXA_MOLDURA
 
 var modo := "dinamico"
 var com_botao := false

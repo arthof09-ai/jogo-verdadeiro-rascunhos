@@ -16,9 +16,10 @@ signal mudou(id: String)
 const TAMANHO := 160
 ## Fundo quando o modelo não traz cor de identificação (o anel do marcador do site).
 ## A cor de identificação já vem da tabela de apresentação (Apresentacao.PALETA_ANEIS, pelo material do anel do
-## marcador). Este fundo de recurso NÃO está na tabela da Ordem DADOS: fica o literal da Ordem HUD, como pendência
-## registada no ESTADO FINAL da Ordem CAIXA-PERSISTENTE (nenhuma cor nova inventada aqui).
-const COR_FUNDO_PADRAO := Color("27303a")
+## marcador). Este fundo de recurso também vem da tabela: o raro, opaco (Ordem PALETA-C ponto 2, palavra do Mestre,
+## 21/11/2026).
+const Apresentacao := preload("res://dados/apresentacao.gd")
+const COR_FUNDO_PADRAO := Apresentacao.COR_RETRATO_FUNDO
 ## Quanto o fundo escurece a cor de identificação, para a pedra do corpo se ler por cima.
 const ESCURECER_FUNDO := 0.45
 ## Nós do modelo em cena que não entram no retrato: o que pertence ao chão e os rótulos.
