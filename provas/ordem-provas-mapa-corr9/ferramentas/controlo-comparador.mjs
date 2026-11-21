@@ -52,9 +52,9 @@ function compara(bits, a, b) {
 const ref = copia('ref');
 const controlos = [
   { nome: 'K0 positivo: a corrida 1 contra si própria', bits: true, a: ref, b: copia('k0'), saida: 0, nao: 0 },
-  { nome: 'K1 número: grelha 11 (original), casas bloqueadas 156 → 157', bits: true, a: ref,
+  { nome: 'K1 número: grelha 11 (original), casas bloqueadas +1', bits: true, a: ref,
     b: copia('k1', mudaJson('terreno-servidor-arena.json', (j) => { j.grelhas[10].casasBloqueadas += 1; })), saida: 1, nao: 1 },
-  { nome: 'K2 floresta (B1): carga 11 da ferramenta original, casas_bloqueadas 88 → 89 (só no .log)', bits: true, a: ref,
+  { nome: 'K2 floresta (B1): carga 11 da ferramenta original, casas_bloqueadas +1 (só no .log)', bits: true, a: ref,
     b: copia('k2', mudaFloresta('provar-terreno-servidor.log', 11, 1)), saida: 1, nao: 1 },
   { nome: 'K3 floresta (B1): uma carga a menos na bancada (a 3.ª linha [floresta] apagada)', bits: true, a: ref,
     b: copia('k3', (d) => { const c = join(d, 'bancada-jogadora.log'); let k = 0;
