@@ -25,14 +25,16 @@ function copia(nome, muda) {
 const mudaJson = (f, fn) => (d) => {
   const c = join(d, f); const j = JSON.parse(readFileSync(c, 'utf8')); fn(j); writeFileSync(c, JSON.stringify(j, null, 1));
 };
-const mudaFloresta = (f, carga, de, para) => (d) => {
+// ORDEM-K2-DINAMICO: o valor de partida lê-se da própria referência (não fica preso ao terreno) e muda-se em +delta.
+const mudaFloresta = (f, carga, delta) => (d) => {
   const c = join(d, f); let k = 0;
   const linhas = readFileSync(c, 'utf8').split('\n').map((l) => {
     if (!l.startsWith('[floresta] pronta')) return l;
     k++;
     if (k !== carga) return l;
-    if (!l.includes(`"casas_bloqueadas":${de},`)) throw new Error(`carga ${carga} não tem casas_bloqueadas ${de}`);
-    return l.replace(`"casas_bloqueadas":${de},`, `"casas_bloqueadas":${para},`);
+    const m = l.match(/"casas_bloqueadas":(\d+),/);
+    if (!m) throw new Error(`carga ${carga} não tem casas_bloqueadas`);
+    return l.replace(m[0], `"casas_bloqueadas":${Number(m[1]) + delta},`);
   });
   writeFileSync(c, linhas.join('\n'));
 };
@@ -53,7 +55,7 @@ const controlos = [
   { nome: 'K1 número: grelha 11 (original), casas bloqueadas 156 → 157', bits: true, a: ref,
     b: copia('k1', mudaJson('terreno-servidor-arena.json', (j) => { j.grelhas[10].casasBloqueadas += 1; })), saida: 1, nao: 1 },
   { nome: 'K2 floresta (B1): carga 11 da ferramenta original, casas_bloqueadas 88 → 89 (só no .log)', bits: true, a: ref,
-    b: copia('k2', mudaFloresta('provar-terreno-servidor.log', 11, 88, 89)), saida: 1, nao: 1 },
+    b: copia('k2', mudaFloresta('provar-terreno-servidor.log', 11, 1)), saida: 1, nao: 1 },
   { nome: 'K3 floresta (B1): uma carga a menos na bancada (a 3.ª linha [floresta] apagada)', bits: true, a: ref,
     b: copia('k3', (d) => { const c = join(d, 'bancada-jogadora.log'); let k = 0;
       writeFileSync(c, readFileSync(c, 'utf8').split('\n').filter((l) => !(l.startsWith('[floresta] pronta') && ++k === 3)).join('\n')); }),
