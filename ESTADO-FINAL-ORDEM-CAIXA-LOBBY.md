@@ -118,3 +118,11 @@ Registos em `provas/ordem-caixa-lobby/suites/`.
 - `5808221` B7a e o teste de guarda do B6.
 - `cf800cd` listas da retoma e MANIFESTO (`actualizar-listas.py`).
 - o commit seguinte: a ordem, os registos das corridas e este ESTADO-FINAL (fora de `rascunhos/`, não mexe nas listas).
+
+## 7. CI do GitHub — VERIFICADO
+- No `a780d5e` (ramo `claude2/caixa-lobby`):
+  - **Testes dos rascunhos: success** (run 44961797194). Todos os jobs deram success: servidor, validador-glb,
+    motor-real, protocolo, cliente, godot-cliente, ponta-a-ponta, foto-mestre, provas-mapa e **retoma-pc**.
+  - **Sonda de privacidade: success** (run 44961797191).
+- Este parágrafo entra num commit só de documentação, por cima do `a780d5e`, e o CI corre outra vez nele.
+- Fusão: **não feita** (é do coordenador).
