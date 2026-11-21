@@ -7,8 +7,12 @@
 //  (b) ESCALA_JUNTA_FIGURAS dispara a subir (1,5 → 2 m) com duas figuras que caem na mesma casa, e a sala fica igual;
 //      a descer (2 → 1,5 m) nunca pode disparar: duas casas de 2 m nunca caem na mesma de 1,5 m;
 //  (c) ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS dispara a subir (1,5 → 2 m) com uma figura numa casa que a grelha de 2 m
-//      bloqueia, e a sala fica igual; a descer nunca pode disparar: nenhuma casa livre de 2 m cai numa bloqueada de
-//      1,5 m (provado no servidor, com uma figura em cada casa de 2 m que encosta ao que a 1,5 m bloqueia).
+//      bloqueia, e a sala fica igual; a descer nunca pode disparar: a prova é exaustiva e está no próprio teste —
+//      `caem == []` sobre as 1.326 casas livres de 2 m (nenhuma cai numa bloqueada de 1,5 m); no servidor corre só uma
+//      amostra de confirmação, até 60 das casas de risco (aqui 46 das 92, 1 em cada 2).
+// Estatuto da prova «a descer» (b) e (c): assenta na enumeração exaustiva + a confirmação no servidor. A réplica
+// `noLugar` abaixo partilha a fórmula com `casaNoLugar` (nucleo/sala.js), por isso o teste verifica que o servidor
+// APLICA a regra do sítio (§0), não a geometria da regra de forma independente.
 // O caso 1 → 2 m das duas recusas já está em ordem-mapa-jogavel.test.mjs (e) e o da grelha fixa em ordem62.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -198,10 +202,12 @@ test('CORR7 (c): ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS a subir 1,5 → 2 m �
   batalhaContinua(m, 'depois da recusa');
 });
 
-test('CORR7 (c): a descer 2 → 1,5 m, ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS nunca pode disparar — provado no servidor nas casas de risco', () => {
+test('CORR7 (c): a descer 2 → 1,5 m, ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS nunca pode disparar — provado por enumeração, confirmado no servidor numa amostra das casas de risco', () => {
   // no mapa todo: nenhuma casa livre de 2 m cai numa casa bloqueada de 1,5 m
   const livres2 = [];
   for (let y = 0; y < 37; y++) for (let x = 0; x < 37; x++) if (!G[2].bloqueada(x, y)) livres2.push({ x, y });
+  // 1.326 casas livres de 2 m no terreno actual (sonda-mapeamento.log); muda com a LAGO-MAIOR (seguimento S1)
+  assert.equal(livres2.length, 1326, 'as casas livres de 2 m do terreno actual (1.326)');
   const caem = livres2.filter((c) => { const n = noLugar(c, 2, 1.5); return G[1.5].bloqueada(n.x, n.y); });
   assert.deepEqual(caem, [], `nenhuma das ${livres2.length} casas livres de 2 m cai numa bloqueada de 1,5 m`);
   // as casas de risco: livres a 2 m cuja casa de 1,5 m encosta (8 vizinhas) a uma bloqueada a 1,5 m
@@ -210,10 +216,16 @@ test('CORR7 (c): a descer 2 → 1,5 m, ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS 
     return x >= 0 && y >= 0 && x < 50 && y < 50 && G[1.5].bloqueada(x, y);
   }));
   const risco = livres2.filter((c) => encosta(noLugar(c, 2, 1.5)) && !(c.x === 15 && c.y === 15));
-  assert.ok(risco.length >= 20, `há casas de risco (${risco.length})`);
-  // no servidor: uma figura em cada uma (até 60, espalhadas), a 2 m; o retorno passa e ninguém cai numa bloqueada
+  // O número exacto do terreno actual: 92 casas de risco (sonda-mapeamento.log: «de risco 92»). Antes era
+  // `risco.length >= 20`, frouxo de propósito: a LAGO-MAIOR, por fundir, muda o terreno (bloqueadas 67 → 152) e o
+  // número de casas de risco com ele. Agora está apertado ao exacto (sentença CORR7, R1): quando a LAGO-MAIOR
+  // fundir, este assert falha de propósito e obriga a correr outra vez a sonda e a registar o número novo (S1).
+  assert.equal(risco.length, 92, `as casas de risco do terreno actual (${risco.length})`);
+  // no servidor: uma amostra de confirmação (até 60, espalhadas — aqui 46, 1 em cada 2), a 2 m; o retorno passa e
+  // ninguém cai numa bloqueada. A prova é o `caem == []` acima; isto confirma que o servidor aplica a mesma regra.
   const passo = Math.max(1, Math.ceil(risco.length / 60));
   const escolhidas = risco.filter((_, i) => i % passo === 0);
+  assert.equal(escolhidas.length, 46, 'a amostra no servidor: 46 das 92 (1 em cada 2)');
   const m = mesaMapa({ casaHeroina: noLugarInverso({ x: 15, y: 15 }), casaM: 2, criaturas: escolhidas.map((c) => ['orc-teste', c]) });
   assert.deepEqual(emBloqueadas(m), [], 'a 2 m: todas em casas livres');
   const antes = JSON.parse(JSON.stringify(estado(m).figuras));

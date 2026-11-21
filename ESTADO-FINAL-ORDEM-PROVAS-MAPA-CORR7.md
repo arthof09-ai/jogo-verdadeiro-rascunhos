@@ -19,8 +19,9 @@ Marcas: VERIFICADO (corrido e conferido nesta sessão), ACHADO (para o coordenad
 
    Provei-o sobre o mapa inteiro e, no servidor, nas casas de risco (ver (b) e (c)). Por isso as provas (b) e (c)
    têm duas partes: a recusa a disparar **a subir** e a garantia de que **a descer** não dispara.
-   Para comparar, na sonda: 1 → 1,5 m também pode juntar figuras (3.125 colisões), mas nunca bloqueia;
-   2 → 1 m e 1,5 → 1 m não podem fazer nenhuma das duas coisas.
+   Para comparar, na sonda de mapeamento (`provas/ordem-provas-mapa-corr7/sonda-mapeamento.log`, terreno actual):
+   1 → 1,5 m também pode juntar figuras (3.125 colisões), mas nunca bloqueia (0 livres em bloqueadas);
+   2 → 1 m e 1,5 → 1 m não podem fazer nenhuma das duas coisas (0 colisões, 0 bloqueios).
 3. **ACHADO — a base `b7ecadd` já está vermelha no CI** (Testes dos rascunhos, run **44862505065**). O job que
    falha é `retoma-pc`: «PARAR: o clone nao bate com depois.txt». O `d21f734` (PROVAS-MAPA-CORRECÕES) mudou
    `rascunhos/cliente/cenas/arena/ferramentas/provar_terreno_servidor.gd` e não refez as listas da retoma.
@@ -79,6 +80,9 @@ Os registos com a saída real estão no commit, em `provas/ordem-provas-mapa-cor
 ## Resultado por prova — VERIFICADO
 
 ### (a) o retorno 2 → 1,5 m funciona
+**Âmbito:** o retorno aplica-se na **grelha-mapa**; na grelha fixa o 2 → 1,5 m recusa-se por desenho
+(`ordem62-escala-bloqueadas.test.mjs`: 2 → 1,5 m recusada, 5 figuras nomeadas).
+
 ```
 ✔ CORR7 (a): o retorno 2 → 1,5 m a meio da batalha (1,5 → 1 → 2 → 1,5) — ninguém muda de sítio, a grelha volta a 50 × 50, a batalha continua
 ✔ CORR7 (a): o retorno directo 2 → 1,5 m com a heroína a meio da vez — os metros andados a 2 m ficam em metros
@@ -112,7 +116,7 @@ Os registos com a saída real estão no commit, em `provas/ordem-provas-mapa-cor
 ### (c) `ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS` (a «ESCALA_BLOQUEADAS» da ordem)
 ```
 ✔ CORR7 (c): ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS a subir 1,5 → 2 m — recusada, a sala fica igual, e a batalha continua
-✔ CORR7 (c): a descer 2 → 1,5 m, ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS nunca pode disparar — provado no servidor nas casas de risco
+✔ CORR7 (c): a descer 2 → 1,5 m, ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS nunca pode disparar — provado por enumeração, confirmado no servidor numa amostra das casas de risco
 ```
 - **A subir.** O orc está na casa (12,11), livre a 1,5 m. A 2 m, essa casa cai na (9,8), que é bloqueada.
   - O pedido dá `ROOM_REJECT`/`acao_invalida`, com o detalhe
@@ -121,13 +125,20 @@ Os registos com a saída real estão no commit, em `provas/ordem-provas-mapa-cor
   - Figuras, mapa e vez ficam iguais, e a escala fica a 1,5 m. Ninguém fica numa casa bloqueada e a Party não vê
     o detalhe.
   - Depois da recusa, a batalha continua.
-- **A descer.** Há 1.326 casas livres a 2 m e nenhuma cai numa casa bloqueada a 1,5 m.
+- **A descer.** Há 1.326 casas livres a 2 m e nenhuma cai numa casa bloqueada a 1,5 m (`caem == []` — esta é a
+  prova, exaustiva).
   - Contei as casas de risco: livres a 2 m, cuja casa de 1,5 m encosta, pelas 8 vizinhas, a uma casa bloqueada.
     São 92.
-  - **No servidor**, pus 46 orcs (1 em cada 2 dessas casas) e a heroína numa batalha a 2 m, e pedi o retorno a
-    1,5 m.
+  - **No servidor** corre só uma amostra de confirmação: 46 orcs (1 em cada 2 dessas casas) e a heroína numa
+    batalha a 2 m, e pedi o retorno a 1,5 m.
   - Resultado: APLICADA, cada figura no mesmo sítio, nenhuma em casa bloqueada e nenhuma recusa `ESCALA_*`.
 - A grelha fixa (2 → 1,5 m com 5 recusadas) continua coberta pelo `ordem62`, que também passou.
+- **Estatuto da prova «a descer» (CORR7-CORRECOES, R2).** Assenta na enumeração exaustiva + a confirmação no
+  servidor. A réplica `noLugar` do teste partilha a fórmula com `casaNoLugar` (`nucleo/sala.js`), por isso o teste
+  verifica que o servidor **aplica** a regra do sítio, não a geometria da regra de forma independente.
+- **Os números ficam presos ao terreno actual (CORR7-CORRECOES, R1/N1):** o teste exige 1.326 livres, 92 de risco
+  e 46 na amostra. O guarda era `risco.length >= 20`, frouxo de propósito por causa da LAGO-MAIOR (que muda o
+  terreno); agora é `=== 92`, e quando a LAGO-MAIOR fundir falha de propósito e obriga a refazer a sonda (S1).
 
 ### Os testes mordem (controlo negativo) — VERIFICADO
 Fiz mutações temporárias em `nucleo/sala.js`, cada uma revertida com `git checkout` antes da seguinte. Nada disto
