@@ -1,0 +1,15 @@
+✔ CORR7 (a): o retorno 2 → 1,5 m a meio da batalha (1,5 → 1 → 2 → 1,5) — ninguém muda de sítio, a grelha volta a 50 × 50, a batalha continua (98.0097ms)
+✔ CORR7 (a): o retorno directo 2 → 1,5 m com a heroína a meio da vez — os metros andados a 2 m ficam em metros (33.1679ms)
+✔ CORR7 (b): ESCALA_JUNTA_FIGURAS a subir 1,5 → 2 m — recusada, a sala fica igual, e a batalha continua (20.5773ms)
+✔ CORR7 (b): a descer 2 → 1,5 m, ESCALA_JUNTA_FIGURAS nunca pode disparar — vizinhas a 2 m ficam vizinhas a 1,5 m (8.0692ms)
+✔ CORR7 (c): ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS a subir 1,5 → 2 m — recusada, a sala fica igual, e a batalha continua (40.2766ms)
+✔ CORR7 (c): a descer 2 → 1,5 m, ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS nunca pode disparar — provado por enumeração, confirmado no servidor numa amostra das casas de risco (1672.6399ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1972.7445
+exit 0

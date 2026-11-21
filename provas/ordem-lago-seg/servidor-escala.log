@@ -1,0 +1,51 @@
+✔ ordem ESCALA (a): as escalas que valem são 1 · 1,5 · 2 m e a sala nasce na pré-definida, 1,5 m (26.442ms)
+✔ ordem ESCALA (b): a 1 m por casa, 6 m de deslocamento cobrem 6 casas — opções e intenção (12.5075ms)
+✔ ordem ESCALA (b): a 1 m por casa, uma técnica de 6 m chega a 6 casas e não a 7 (15.7818ms)
+✔ ordem ESCALA (b): a 1.5 m por casa, 6 m de deslocamento cobrem 4 casas — opções e intenção (10.9293ms)
+✔ ordem ESCALA (b): a 1.5 m por casa, uma técnica de 6 m chega a 4 casas e não a 5 (5.9852ms)
+✔ ordem ESCALA (b): a 2 m por casa, 6 m de deslocamento cobrem 3 casas — opções e intenção (11.8365ms)
+✔ ordem ESCALA (b): a 2 m por casa, uma técnica de 6 m chega a 3 casas e não a 4 (13.6801ms)
+✔ ordem ESCALA (c): a escala é persistente na partida — de vez para vez, na reentrada e no restauro do journal (16.7397ms)
+✔ ordem ESCALA (d): só o Mestre muda a escala; a Party vê o resultado e nada de vida/alma nem a mecânica (15.7763ms)
+✔ MAPA-JOGÁVEL: os números do mapa — 75 / 50 / 37 casas, a água do lago em cada escala (12.791ms)
+✔ MAPA-JOGÁVEL (a): a sala com terreno nasce com a grelha = o mapa inteiro (50 × 50 de 1,5 m); sem terreno, a de sempre (36.5059ms)
+✔ MAPA-JOGÁVEL (a): mudar a escala com a grelha-mapa — 50 → 75 → 37 → 50, ninguém muda de sítio no mapa (90.5163ms)
+✔ MAPA-JOGÁVEL (b): a 1 m, uma figura atravessa o mapa inteiro (75 × 75) e entra no lago — nenhuma casa inalcançável (244.3905ms)
+✔ MAPA-JOGÁVEL (c): a 1 m, 6 m sobre a água cobrem 6 casas — mover e alcance (75.8481ms)
+✔ MAPA-JOGÁVEL (d): a 1 m, o ataque de oportunidade passa pela grelha-mapa — sair de ao pé do orc, dentro de água (16.951ms)
+✔ MAPA-JOGÁVEL (b): a 1.5 m, uma figura atravessa o mapa inteiro (50 × 50) e entra no lago — nenhuma casa inalcançável (84.6657ms)
+✔ MAPA-JOGÁVEL (c): a 1.5 m, 6 m sobre a água cobrem 4 casas — mover e alcance (46.2976ms)
+✔ MAPA-JOGÁVEL (d): a 1.5 m, o ataque de oportunidade passa pela grelha-mapa — sair de ao pé do orc, dentro de água (8.9337ms)
+✔ MAPA-JOGÁVEL (b): a 2 m, uma figura atravessa o mapa inteiro (37 × 37) e entra no lago — nenhuma casa inalcançável (51.459ms)
+✔ MAPA-JOGÁVEL (c): a 2 m, 6 m sobre a água cobrem 3 casas — mover e alcance (23.2252ms)
+✔ MAPA-JOGÁVEL (d): a 2 m, o ataque de oportunidade passa pela grelha-mapa — sair de ao pé do orc, dentro de água (11.4165ms)
+✔ MAPA-JOGÁVEL (e): as recusas da escala na grelha-mapa — juntas numa casa, ou numa casa bloqueada — deixam tudo igual (18.5966ms)
+✔ MAPA-JOGÁVEL (f): a Party recebe o mapa novo e o evento vazio; o antes/depois da grelha é só do Mestre (26.9213ms)
+✔ CORR7 (a): o retorno 2 → 1,5 m a meio da batalha (1,5 → 1 → 2 → 1,5) — ninguém muda de sítio, a grelha volta a 50 × 50, a batalha continua (157.2916ms)
+✔ CORR7 (a): o retorno directo 2 → 1,5 m com a heroína a meio da vez — os metros andados a 2 m ficam em metros (33.528ms)
+✔ CORR7 (b): ESCALA_JUNTA_FIGURAS a subir 1,5 → 2 m — recusada, a sala fica igual, e a batalha continua (27.2483ms)
+✔ CORR7 (b): a descer 2 → 1,5 m, ESCALA_JUNTA_FIGURAS nunca pode disparar — vizinhas a 2 m ficam vizinhas a 1,5 m (11.2331ms)
+✔ CORR7 (c): ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS a subir 1,5 → 2 m — recusada, a sala fica igual, e a batalha continua (69.9816ms)
+✔ CORR7 (c): a descer 2 → 1,5 m, ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS nunca pode disparar — provado por enumeração, confirmado no servidor numa amostra das casas de risco (1764.9382ms)
+✔ ordem 11 (P8a): a escala aceita 1, 1,5 e 2 m por casa (27.2953ms)
+✔ ordem 11 (P8a): qualquer outro valor é recusado com erro claro — a escala não muda (23.234ms)
+✔ ordem 11 (P8b): técnica de 1,5 m com casa de 1 m — chega à vizinha (1,5 casas); a diagonal e 2 casas não (ordem 15) (27.9517ms)
+✔ ordem 11 (P8b): técnica de 1,5 m com casa de 2 m — o piso de 1 casa dá-lhe a vizinha (antes: 2 m > 1,5 m, fora) (17.9182ms)
+✔ ordem 11 (P8b): na escala de sempre (1,5 m) nada muda — vizinha e diagonal sim, 2 casas não (23.0165ms)
+✔ ordem 11 (P8b): ataque de oportunidade com casa de 1 m — a técnica de 1,5 m continua a chegar à casa vizinha (5.9869ms)
+✔ ordem 11 (P8b): ataque de oportunidade com casa de 2 m — também chega (5.4664ms)
+✔ a sonda da Ordem 58 (1,5 → 2 m): a escala é recusada, nenhuma figura fica numa casa bloqueada, e cada uma vai nomeada ao Mestre (219.0545ms)
+✔ as 6 mudanças de escala: nenhuma deixa figuras em casas bloqueadas; as que não deixam passam como antes (650.8488ms)
+✔ tirada a figura do caminho, a escala muda (a recusa não prende o Mestre) (11.5585ms)
+✔ a Party não vê o porquê nem a lista (só o recibo fixo de sempre) (120.0668ms)
+✔ «Recomeçar» depois de a escala bloquear uma casa de colocação: recusado com o nome, ninguém volta à casa bloqueada (25.0109ms)
+✔ sem terreno a escala é como sempre (nenhum mapa a respeitar) (3.0768ms)
+ℹ tests 42
+ℹ suites 0
+ℹ pass 42
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2212.6565
+exit 0
