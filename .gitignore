@@ -8,3 +8,5 @@ pacotes/P-PC-01/saida/
 rascunhos/cliente/cenas/arena/capturas/_ensaio/
 # Ordem AUTOJOGO: o motor baixado e o módulo embrulhado do servidor de bancada (regeneráveis)
 rascunhos/servidor/autojogo/.cache/
+# Ordem CORR10-C1: ficheiros .uid que o Godot 4 gera ao importar (regeneráveis)
+*.uid
