@@ -1,4 +1,4 @@
-# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 412 ficheiros mudados ou novos em rascunhos/.
+# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 413 ficheiros mudados ou novos em rascunhos/.
 93c8f082052020ffc4a3a95831f74a5a16a295f366e54842045791c071fc83e4  rascunhos/cliente/README.md
 2a9bda1fa4349cfa9ece76842797ac96adc27ef919c525b3843a6f1cd01e58d5  rascunhos/cliente/arte/README.md
 2bc9bbf8ab270183116aa4eca383ce5b521fe7a466e9db9a065d96cca0da28fa  rascunhos/cliente/arte/ambiente/color_script.gd
@@ -370,6 +370,7 @@ a825516748641e10019efd688163d5ff79be44b8a85467baab5cb8e424a5363c  rascunhos/serv
 011e18b2a276fdf597d80aa42f55d1386f087c84e45678c8a142e58e3f0617b5  rascunhos/servidor/testes/ordem-escala.test.mjs
 8cbbb3418e09d1529bc9a983cfca58f3455ee0e83ff5dfe4de3ce4d12ce5bb6c  rascunhos/servidor/testes/ordem-mapa-jogavel.test.mjs
 389f00c7eba80a51cad1164a955c06b7dc06318096d0021e87957859ab593f02  rascunhos/servidor/testes/ordem-provas-mapa-corr7.test.mjs
+654da05eee92cb50b1828690705d67cde3ca4046d5fd4234d48ef4204c464798  rascunhos/servidor/testes/ordem-provas-mapa-corr8.test.mjs
 3902a10c5f10a4b90de2624caaa9bb89f8bb0062b554593154f9960e7652117e  rascunhos/servidor/testes/ordem11-escala.test.mjs
 d0fda20b1f8217e686d4f8900a3e21f95a072cfd6b9d83359a9f65aa83e05978  rascunhos/servidor/testes/ordem12-caida-atingida.test.mjs
 a0cbe15f0610f83129d9c63b93c1fc3a61a0698f17d144a6ebd0464e830d233e  rascunhos/servidor/testes/ordem13-ambiente.test.mjs

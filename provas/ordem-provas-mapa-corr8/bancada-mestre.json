@@ -1,0 +1,341 @@
+{
+ "mestre": {
+  "recibos": [
+   {
+    "type": "MASTER_LOBBY_SET",
+    "campos": {
+     "mapaId": "arena-teste",
+     "criaturasDisponiveis": [
+      "orc-teste"
+     ],
+     "npcsDisponiveis": []
+    },
+    "recibo": "ROOM_RECEIPT",
+    "estado": "APLICADA",
+    "motivo": null
+   },
+   {
+    "type": "MASTER_START",
+    "campos": {},
+    "recibo": "ROOM_RECEIPT",
+    "estado": "APLICADA",
+    "motivo": null
+   },
+   {
+    "type": "MASTER_PLACE",
+    "campos": {
+     "fichaId": "orc-teste",
+     "casa": {
+      "x": 38,
+      "y": 11
+     }
+    },
+    "recibo": "ROOM_RECEIPT",
+    "estado": "APLICADA",
+    "motivo": null
+   },
+   {
+    "type": "MASTER_SUPERVISOR",
+    "campos": {
+     "op": "escala",
+     "casaM": 1
+    },
+    "recibo": "ROOM_RECEIPT",
+    "estado": "APLICADA",
+    "motivo": null
+   },
+   {
+    "type": "MASTER_SUPERVISOR",
+    "campos": {
+     "op": "escala",
+     "casaM": 2
+    },
+    "recibo": "ROOM_RECEIPT",
+    "estado": "APLICADA",
+    "motivo": null
+   }
+  ],
+  "escalas": [
+   {
+    "evento": {
+     "soMestre": {
+      "casaMAntes": 1.5,
+      "casaM": 1,
+      "grelhaAntes": {
+       "largura": 50,
+       "altura": 50
+      },
+      "grelha": {
+       "largura": 75,
+       "altura": 75
+      },
+      "vez": {
+       "figuraId": "f34211c1096b1d3e6",
+       "reservaM": 7.5,
+       "andouM": 1.5,
+       "casasQuePaga": 7
+      }
+     },
+     "journalSeq": 7
+    },
+    "casaM": 1,
+    "antes": {
+     "mapa": {
+      "largura": 50,
+      "altura": 50,
+      "casaM": 1.5
+     },
+     "figuras": []
+    },
+    "depois": {
+     "mapa": {
+      "largura": 75,
+      "altura": 75,
+      "casaM": 1
+     },
+     "figuras": [
+      {
+       "id": "f34211c1096b1d3e6",
+       "nome": "Heroína Teste",
+       "x": 57,
+       "y": 8
+      },
+      {
+       "id": "f68aa80c33520bb3c",
+       "nome": "Orc",
+       "x": 57,
+       "y": 17
+      }
+     ]
+    }
+   },
+   {
+    "evento": {
+     "soMestre": {
+      "casaMAntes": 1,
+      "casaM": 2,
+      "grelhaAntes": {
+       "largura": 75,
+       "altura": 75
+      },
+      "grelha": {
+       "largura": 37,
+       "altura": 37
+      },
+      "vez": {
+       "figuraId": "f34211c1096b1d3e6",
+       "reservaM": 6.5,
+       "andouM": 2.5,
+       "casasQuePaga": 3
+      }
+     },
+     "journalSeq": 9
+    },
+    "casaM": 2,
+    "antes": {
+     "mapa": {
+      "largura": 75,
+      "altura": 75,
+      "casaM": 1
+     },
+     "figuras": [
+      {
+       "id": "f34211c1096b1d3e6",
+       "nome": "Heroína Teste",
+       "x": 57,
+       "y": 8
+      },
+      {
+       "id": "f68aa80c33520bb3c",
+       "nome": "Orc",
+       "x": 57,
+       "y": 17
+      }
+     ]
+    },
+    "depois": {
+     "mapa": {
+      "largura": 37,
+      "altura": 37,
+      "casaM": 2
+     },
+     "figuras": [
+      {
+       "id": "f34211c1096b1d3e6",
+       "nome": "Heroína Teste",
+       "x": 28,
+       "y": 4
+      },
+      {
+       "id": "f68aa80c33520bb3c",
+       "nome": "Orc",
+       "x": 28,
+       "y": 8
+      }
+     ]
+    }
+   }
+  ],
+  "movimentos": [
+   {
+    "figuraId": "f34211c1096b1d3e6",
+    "de": {
+     "x": 38,
+     "y": 4
+    },
+    "para": {
+     "x": 38,
+     "y": 5
+    },
+    "caminho": [
+     {
+      "x": 38,
+      "y": 4
+     },
+     {
+      "x": 38,
+      "y": 5
+     }
+    ],
+    "custoM": 1.5,
+    "reservaM": 7.5,
+    "soMestre": null,
+    "journalSeq": 6
+   },
+   {
+    "figuraId": "f34211c1096b1d3e6",
+    "de": {
+     "x": 57,
+     "y": 8
+    },
+    "para": {
+     "x": 57,
+     "y": 9
+    },
+    "caminho": [
+     {
+      "x": 57,
+      "y": 8
+     },
+     {
+      "x": 57,
+      "y": 9
+     }
+    ],
+    "custoM": 1,
+    "reservaM": 6.5,
+    "soMestre": null,
+    "journalSeq": 8
+   },
+   {
+    "figuraId": "f34211c1096b1d3e6",
+    "de": {
+     "x": 28,
+     "y": 4
+    },
+    "para": {
+     "x": 28,
+     "y": 6
+    },
+    "caminho": [
+     {
+      "x": 28,
+      "y": 4
+     },
+     {
+      "x": 28,
+      "y": 5
+     },
+     {
+      "x": 28,
+      "y": 6
+     }
+    ],
+    "custoM": 4,
+    "reservaM": 2.5,
+    "soMestre": null,
+    "journalSeq": 10
+   }
+  ],
+  "inicio": {
+   "mapa": {
+    "largura": 50,
+    "altura": 50,
+    "casaM": 1.5
+   },
+   "figuras": []
+  },
+  "final": {
+   "mapa": {
+    "largura": 37,
+    "altura": 37,
+    "casaM": 2
+   },
+   "figuras": [
+    {
+     "id": "f34211c1096b1d3e6",
+     "nome": "Heroína Teste",
+     "x": 28,
+     "y": 4
+    },
+    {
+     "id": "f68aa80c33520bb3c",
+     "nome": "Orc",
+     "x": 28,
+     "y": 8
+    }
+   ]
+  },
+  "sanidadeGrelhaAntes": true
+ },
+ "espectador": {
+  "mensagens": 12,
+  "canarios": {
+   "numeros": [
+    9137,
+    7777,
+    313,
+    5551,
+    5150,
+    4040
+   ],
+   "textos": [
+    "ESCALA_",
+    "CANARIO-FANTASMA",
+    "CANARIO-DESGRACA",
+    "CANARIO-SENHA",
+    "Orc Verdadeiro",
+    "90210777"
+   ],
+   "chaves": [
+    "casaMAntes",
+    "grelhaAntes",
+    "casasQuePaga",
+    "soMestre"
+   ]
+  },
+  "achados": [],
+  "mapasVistos": [
+   {
+    "largura": 50,
+    "altura": 50,
+    "casaM": 1.5
+   },
+   {
+    "largura": 75,
+    "altura": 75,
+    "casaM": 1
+   },
+   {
+    "largura": 37,
+    "altura": 37,
+    "casaM": 2
+   }
+  ],
+  "eventosEscala": [
+   {},
+   {}
+  ]
+ },
+ "falhas": []
+}

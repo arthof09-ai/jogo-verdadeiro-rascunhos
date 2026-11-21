@@ -1,0 +1,5 @@
+## controlo positivo: a regex do privacidade.yml numa pasta temporária com um endereço fictício
+/tmp/tmp.WoNaZ5qVpb/canario.txt:1:linha de teste: canario.teste@<dominio>.com
+APANHOU (código 0) — a sonda do CI falharia o push
+## o repositório (ramo, com os ficheiros novos)
+Sonda limpa: nenhum e-mail pessoal encontrado.
