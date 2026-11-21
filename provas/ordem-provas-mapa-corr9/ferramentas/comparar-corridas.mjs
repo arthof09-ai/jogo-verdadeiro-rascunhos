@@ -5,6 +5,8 @@
 // Compara-se o RESUMO de cada corrida (os números que o ESTADO-FINAL da ORDEM-PROVAS-MAPA regista) e não o JSON
 // bruto, porque este traz o que muda por natureza de corrida para corrida: os ids das figuras (aleatórios por sala)
 // e os tempos das verificações «(0.2 s)».
+// Dos registos (.log) lê-se ainda a sequência da floresta: o campo `casas_bloqueadas` de cada linha «[floresta]
+// pronta …» (uma por carga: 18 na ferramenta original, 18 na adaptada, 3 na bancada), comparada carga a carga.
 //   «números»: contagens, desvios, recusas, recibos, caminhos, alcances, passos, reservas e a privacidade — o portão.
 //   «bits»:    impressões SHA-256 das alturas desenhadas (figuras, marcos) e dos nós das figuras na bancada — a
 //              repetição bit a bit; só é portão com --bits.
@@ -25,11 +27,22 @@ if (corridas.length < 2) {
   process.exit(2);
 }
 
-const ler = (p, f) => {
+const lerTexto = (p, f) => {
   const c = join(p, f);
   if (!existsSync(c)) { console.error(`falta ${c}`); process.exit(2); }
-  return JSON.parse(readFileSync(c, 'utf8'));
+  return readFileSync(c, 'utf8');
 };
+const ler = (p, f) => JSON.parse(lerTexto(p, f));
+// CORR9-CORRECOES B1: a sequência da floresta. Cada carga da floresta escreve «[floresta] pronta em N ms | {json}»;
+// tira-se `casas_bloqueadas` de cada uma, pela ordem do registo. Uma linha «[floresta]» sem JSON legível ou sem o
+// campo conta como «(ilegível)», para que não passe calada.
+function floresta(texto) {
+  return texto.split(/\r?\n/).filter((l) => l.startsWith('[floresta] pronta')).map((l) => {
+    const i = l.indexOf('{');
+    try { const v = JSON.parse(l.slice(i)).casas_bloqueadas; return Number.isFinite(v) ? v : '(ilegível)'; }
+    catch { return '(ilegível)'; }
+  });
+}
 const sha = (v) => createHash('sha256').update(JSON.stringify(v)).digest('hex').slice(0, 16);
 const g3 = (g) => `${g.largura}×${g.altura} @ ${g.casaM}`;
 const cmpStr = (a, b) => (JSON.stringify(a) < JSON.stringify(b) ? -1 : 1);
@@ -46,7 +59,7 @@ function terreno(j) {
         'juízo≠ / motivo≠ / cob. afirmada≠': `${g.juizoDiferente} / ${g.motivosDiferentes} / ${g.coberturaAfirmadaDiferente}`,
         'cob. não afirmada (cli≠ref)': `${g.coberturaNaoAfirmada} (${g.coberturaNaoAfirmadaClienteDifereDaReferencia})`,
         faixa: `${ff.lados.join('+') || '—'}: ${ff.casas} casas, afirmada ${ff.coberturaAfirmada}, ≠ ${ff.coberturaAfirmadaDiferente}`,
-        'desvio altura / pé / figuras (m)': `${Math.max(g.desvioMaxAlturaM.dentro, g.desvioMaxAlturaM.fora)} / ${Math.max(g.desvioMaxPeM.dentro, g.desvioMaxPeM.fora)} / ${g.desvioMaxFigurasM}`,
+        'desvio altura dentro/fora · pé dentro/fora · figuras (m)': `${g.desvioMaxAlturaM.dentro}/${g.desvioMaxAlturaM.fora} · ${g.desvioMaxPeM.dentro}/${g.desvioMaxPeM.fora} · ${g.desvioMaxFigurasM}`,
         figuras: g.figuras.length,
         recusas: `${g.recusas.length} [${sha(g.recusas.map((r) => `${r.x},${r.y} ${r.detalhe}`).sort())}]`,
         'mover (bloq. no cli)': `${g.moverOferecidas} (${g.moverBloqueadas})`,
@@ -54,7 +67,7 @@ function terreno(j) {
       },
       b: {
         'figuras (x, y, desenhadaY, peM)': sha(g.figuras.map((f) => [f.x, f.y, f.desenhadaY, f.servidorPeM]).sort(cmpStr)),
-        'marcos (casa, alturas)': sha(g.marcos.map((m) => [m.casa, m.servidor.alturaM, m.cliente.alturaM])),
+        'marcos (casa, alturas)': sha(g.marcos.map((m) => [m.casa, m.servidor.alturaM, m.cliente.alturaM]).sort(cmpStr)),
       },
     };
   });
@@ -99,6 +112,11 @@ function resumo(pasta) {
       for (const [k, v] of Object.entries(g.n)) lin.n[`${pre} ${k}`] = v;
       for (const [k, v] of Object.entries(g.b)) lin.b[`${pre} ${k}`] = v;
     });
+  }
+  for (const [rot, f] of [['original', 'provar-terreno-servidor.log'], ['adaptada', 'provar-terreno-servidor-adaptada.log'], ['bancada', 'bancada-jogadora.log']]) {
+    const seq = floresta(lerTexto(pasta, f));
+    lin.n[`${rot} floresta: cargas`] = seq.length;
+    seq.forEach((v, i) => { lin.n[`${rot} floresta carga ${String(i + 1).padStart(2, '0')}: casas_bloqueadas`] = v; });
   }
   const bc = bancada(ler(pasta, 'bancada-jogadora.json'), ler(pasta, 'bancada-mestre.json'));
   for (const [k, v] of Object.entries(bc.n)) lin.n[`bancada ${k}`] = v;

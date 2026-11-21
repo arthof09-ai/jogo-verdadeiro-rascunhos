@@ -1,4 +1,4 @@
-From 382d256d083e8a181c16043e55559fd868436a8d Mon Sep 17 00:00:00 2001
+From 61c9d6dafa3ba7d7141ac977a2f456ce5f9c77b5 Mon Sep 17 00:00:00 2001
 From: "Claude (conta 1)" <noreply@anthropic.com>
 Date: Sat, 21 Nov 2026 02:14:26 -0300
 Subject: [PATCH] Ordem PROVAS-MAPA-CORR9: job provas-mapa no CI (as provas do
@@ -13,16 +13,19 @@ com a grelha-mapa e a escala 1,5 → 1 → 2 m; depois compara os números com o
 corrida (provas/ordem-mapa-jogavel/provas-bancada) com comparar-corridas.mjs. Os registos ficam
 no artefacto «provas-mapa». As impressões bit a bit são registadas, não portão (Windows × Linux).
 
+CORR9-CORRECOES (B3): o passo de import falha o job quando falha (set -o pipefail, sem «|| true»).
+O SHA-256 do zip do Godot é impresso no registo, não comparado.
+
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 ---
- .github/workflows/testes.yml | 42 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ .github/workflows/testes.yml | 47 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
 diff --git a/.github/workflows/testes.yml b/.github/workflows/testes.yml
-index 06c3bc0..815623f 100644
+index 06c3bc0..1fe994e 100644
 --- a/.github/workflows/testes.yml
 +++ b/.github/workflows/testes.yml
-@@ -248,6 +248,48 @@ jobs:
+@@ -248,6 +248,53 @@ jobs:
            echo "motor falso=$R1 · VLAB real=$R2"
            test "$R1" -eq 0 && test "$R2" -eq 0
  
@@ -48,9 +51,14 @@ index 06c3bc0..815623f 100644
 +          sha256sum "$RUNNER_TEMP/godot.zip"
 +          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
 +          echo "GODOT=$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" >> "$GITHUB_ENV"
++      # O import falha o job quando falha: set -o pipefail e sem «|| true», como no passo «Importar o projeto
++      # (--headless --import)» do job godot-cliente. O SHA-256 do zip do Godot (passo acima) é impresso no registo,
++      # não comparado com um valor esperado, como nos jobs existentes.
 +      - name: Importar o projeto do cliente
 +        working-directory: rascunhos/cliente
-+        run: timeout 300 "$GODOT" --headless --path . --import 2>&1 | tail -20 || true
++        run: |
++          set -o pipefail
++          timeout 300 "$GODOT" --headless --path . --import 2>&1 | tail -20
 +      - name: As provas do mapa (ferramenta original + cópia adaptada + batalha de bancada)
 +        run: |
 +          R=0; bash provas/ordem-provas-mapa-corr9/ferramentas/correr-provas-mapa.sh "$RUNNER_TEMP/provas-mapa" 8794 || R=$?
