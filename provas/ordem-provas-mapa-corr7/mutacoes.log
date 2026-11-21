@@ -1,0 +1,34 @@
+== M1 sem a recusa ESCALA_JUNTA_FIGURAS
+-    if (juntas.length) {
++    if (false && juntas.length) {
+✔ CORR7 (a): o retorno 2 → 1,5 m a meio da batalha (1,5 → 1 → 2 → 1,5) (80.8902ms)
+✔ CORR7 (a): o retorno directo 2 → 1,5 m com a heroína a meio da vez (21.1655ms)
+✖ CORR7 (b): ESCALA_JUNTA_FIGURAS a subir 1,5 → 2 m (6.6055ms)
+✔ CORR7 (b): a descer 2 → 1,5 m, ESCALA_JUNTA_FIGURAS nunca pode disparar (7.7582ms)
+✔ CORR7 (c): ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS a subir 1,5 → 2 m (25.6097ms)
+✔ CORR7 (c): a descer 2 → 1,5 m, ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS nunca pode disparar (1284.3007ms)
+ℹ pass 5
+ℹ fail 1
+== M2 sem a recusa ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS na grelha-mapa
+-    const bloq = casasBloqueadasDe(tNova, pares);
++    const bloq = [];
+✔ CORR7 (a): o retorno 2 → 1,5 m a meio da batalha (1,5 → 1 → 2 → 1,5) (79.1374ms)
+✔ CORR7 (a): o retorno directo 2 → 1,5 m com a heroína a meio da vez (22.4493ms)
+✔ CORR7 (b): ESCALA_JUNTA_FIGURAS a subir 1,5 → 2 m (12.6339ms)
+✔ CORR7 (b): a descer 2 → 1,5 m, ESCALA_JUNTA_FIGURAS nunca pode disparar (6.6559ms)
+✖ CORR7 (c): ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS a subir 1,5 → 2 m (12.019ms)
+✔ CORR7 (c): a descer 2 → 1,5 m, ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS nunca pode disparar (1216.847ms)
+ℹ pass 5
+ℹ fail 1
+== M3 mudar a escala pelo índice (sem casaNoLugar)
+-    const noLugar = (c) => casaNoLugar(c, de, para);
++    const noLugar = (c) => ({ x: Math.min(lado - 1, c.x), y: Math.min(lado - 1, c.y) });
+✖ CORR7 (a): o retorno 2 → 1,5 m a meio da batalha (1,5 → 1 → 2 → 1,5) (41.6766ms)
+✖ CORR7 (a): o retorno directo 2 → 1,5 m com a heroína a meio da vez (10.1621ms)
+✖ CORR7 (b): ESCALA_JUNTA_FIGURAS a subir 1,5 → 2 m (7.5169ms)
+✖ CORR7 (b): a descer 2 → 1,5 m, ESCALA_JUNTA_FIGURAS nunca pode disparar (9.0899ms)
+✖ CORR7 (c): ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS a subir 1,5 → 2 m (12.4784ms)
+✖ CORR7 (c): a descer 2 → 1,5 m, ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS nunca pode disparar (1205.3009ms)
+ℹ pass 0
+ℹ fail 6
+== depois: git status nucleo/ (vazio = reposto)
