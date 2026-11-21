@@ -30,14 +30,17 @@ const COR_LENDARIO := Color("FF5E00")
 const COR_RARO := Color("4361EE")
 const COR_MAGICO := Color("9D4EDD")
 
-## As 3 cores da caixa da ordem e do retrato, pelos papéis da paleta C (palavra do Mestre, 21/11/2026 12:12, Ordem
-## PALETA-C ponto 2). Só a cor vem do papel: a transparência é a de antes (painel 0.78, moldura 0.18, retrato opaco).
-## Painel da caixa da ordem (hud/caixa_ordem.gd COR_PAINEL): sangue.
-const COR_CAIXA_PAINEL := Color(COR_SANGUE, 0.78)
-## Moldura das figuras da caixa da ordem (hud/caixa_ordem.gd COR_MOLDURA): ouro.
-const COR_CAIXA_MOLDURA := Color(COR_OURO, 0.18)
-## Fundo de recurso do retrato (hud/retratos.gd COR_FUNDO_PADRAO): raro, opaco.
-const COR_RETRATO_FUNDO := COR_RARO
+## As cores da caixa da ordem e do retrato — TESTE VISUAL da Ordem CAIXA-TESTE-ESTETICA (21/11/2026): a linguagem do
+## protótipo (jogo.css dos mockups aprovados), «pergaminho e dourado sobre painéis escuros». Constantes PRÓPRIAS da
+## caixa: já não lêem dos papéis da paleta C (a tabela da paleta C acima não muda; os papéis ficam como acentos).
+## Painel da caixa da ordem (hud/caixa_ordem.gd COR_PAINEL): castanho quase preto rgba(16,12,8,.55).
+const COR_CAIXA_PAINEL := Color(Color8(16, 12, 8), 0.55)
+## Moldura das figuras da caixa da ordem (hud/caixa_ordem.gd COR_MOLDURA): ouro #c9a227 a .85.
+const COR_CAIXA_MOLDURA := Color(Color("c9a227"), 0.85)
+## Letras da caixa da ordem (título, modo, nomes, «na vez»): pergaminho #f3e9d2.
+const COR_CAIXA_TEXTO := Color("f3e9d2")
+## Fundo do retrato (hud/retratos.gd COR_FUNDO_PADRAO e o fundo da moldura em hud/caixa_ordem.gd): rgba(10,8,5,.82).
+const COR_RETRATO_FUNDO := Color(Color8(10, 8, 5), 0.82)
 
 ## Fundo do ecrã de entrada (lobby).
 const COR_FUNDO := Color(0.10, 0.13, 0.18)
@@ -182,7 +185,7 @@ const ZOOM_PADRAO := 1.5  # palavra do Mestre
 # Registadas com o número; nenhuma se corrige nesta tabela.
 const PENDENCIAS := [
 	"Paleta: FECHADA pela Ordem PALETA-C (palavra do Mestre, 21/11/2026) — paleta C, Noite e Brasa: bronze CD7F32, ouro FFC93C, sangue C1121F, lendário FF5E00, raro 4361EE, mágico 9D4EDD (COR_BRONZE … COR_MAGICO acima).",
-	"Cores da caixa/retrato: FECHADA pela Ordem PALETA-C ponto 2 (palavra do Mestre, 21/11/2026 12:12) — moldura = ouro, painel = sangue, fundo do retrato = raro; a transparência fica a de antes: caixa_ordem.gd COR_PAINEL = sangue C1121F a 0.78 (COR_CAIXA_PAINEL), COR_MOLDURA = ouro FFC93C a 0.18 (COR_CAIXA_MOLDURA), retratos.gd COR_FUNDO_PADRAO = raro 4361EE opaco (COR_RETRATO_FUNDO).",
+	"Cores da caixa/retrato: EM TESTE pela Ordem CAIXA-TESTE-ESTETICA (21/11/2026; antes: PALETA-C ponto 2, sangue 0.78 / ouro FFC93C 0.18 / raro opaco) — a linguagem do protótipo: painel rgba(16,12,8,.55), moldura ouro c9a227 a .85, letras pergaminho f3e9d2, fundo do retrato rgba(10,8,5,.82) (COR_CAIXA_PAINEL, COR_CAIXA_MOLDURA, COR_CAIXA_TEXTO, COR_RETRATO_FUNDO). Fecha-se com a palavra do Mestre sobre as fotos.",
 	"Casa: FECHADA pela Ordem ESCALA (palavra do Mestre, 20/11/2026) — a casa é a escala do mundo, 1 · 1,5 · 2 m, escolhida pelo Mestre; pré-definida 1,5 m (ESCALAS_CASA_M / CASA_M acima). A malha do mapa (grelha_floresta, relevo_floresta) continua a 1,5 m: ver a linha seguinte.",
 	"Casa no mapa: grelha_floresta.CASA_M e relevo_floresta.CASA_M (1,5 m) ficam no mapa, sem ler da tabela — os dois ficheiros são fontes do terreno do servidor (servidor/dados/terreno-floresta.json, conferido por SHA no rodar_testes); religá-los obriga a refazer o terreno com exportar_terreno.gd. Fica para quando o terreno se refizer por outra razão.",
 	"Degrau: não há tamanho de apresentação de degrau no cliente; o degrau de uma casa é medido do relevo (grelha_floresta.degrau) e o limite de passagem é regra do servidor.",

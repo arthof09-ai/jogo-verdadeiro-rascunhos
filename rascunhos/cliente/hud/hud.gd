@@ -26,8 +26,8 @@ const Apresentacao := preload("res://dados/apresentacao.gd")
 ## com o ecrã do Mestre (aba Sala). Os valores são os de antes.
 const EscolhaPerfil := preload("res://arte/perfis/escolha_perfil.gd")
 ## Ordem CAIXA-HUD-JOGADORA: o modelo da ordem, a caixa e os retratos — as MESMAS peças do ecrã do Mestre (Ordem HUD).
-## As cores da caixa: o realce lê da tabela (Apresentacao.COR_MESTRE_ANEL, em caixa_ordem.gd); o painel, a moldura e o
-## fundo do retrato ficam POR LIGAR — esperam a palavra do Mestre sobre os [FALTA] (nenhuma cor nova aqui).
+## As cores da caixa lêem todas da tabela (dados/apresentacao.gd, em caixa_ordem.gd e retratos.gd): painel, moldura,
+## letras e fundo do retrato (Ordem CAIXA-TESTE-ESTETICA, teste visual). Nenhuma cor nova aqui.
 ## Ordem CAIXA-JANELA (B3): a frase mais comprida da faixa em combate (`_texto_faixa`): a largura que se lhe guarda.
 const FAIXA_MAIS_LONGA := "A mesa está em pausa. O Mestre já volta."
 const OrdemTurnos := preload("res://hud/ordem_turnos.gd")
