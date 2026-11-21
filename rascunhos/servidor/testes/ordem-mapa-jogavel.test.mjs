@@ -84,6 +84,28 @@ function meioDoLago(casaM) {
 }
 
 /**
+ * LAGO-MAIOR: a casa do canto SO de `casaM` onde a criatura nasce por omissão — a do próprio canto se o sítio dela no
+ * mapa se pisa nas TRÊS escalas (a mudança de escala não a pode deixar numa casa bloqueada); senão a mais perto do
+ * canto que o faz. (Com a floresta devolvida, o canto SO a 2 m tem um abeto.)
+ */
+function cantoSO(casaM) {
+  const livreEmTodas = (px, pz) => MAPA_POR_ESCALA.every(({ casaM: s, lado, origem }) => {
+    const x = Math.floor((px - origem) / s);
+    const y = Math.floor((pz - origem) / s);
+    return x >= 0 && y >= 0 && x < lado && y < lado && !grelhaMapa(s).g.bloqueada(x, y);
+  });
+  const { lado, origem } = MAPA_POR_ESCALA.find((e) => e.casaM === casaM);
+  for (let d = 0; d < lado; d++) {
+    for (let k = 0; k <= d; k++) {
+      for (const [x, y] of [[k, lado - 1 - d], [d, lado - 1 - k]]) {
+        if (livreEmTodas(origem + (x + 0.5) * casaM, origem + (y + 0.5) * casaM)) return { x, y };
+      }
+    }
+  }
+  return null;
+}
+
+/**
  * Sala sem tamanho na config (= o mapa inteiro). A heroína nasce na casa `casaHeroina` da grelha-mapa de `casaM`; o
  * Mestre começa a batalha, muda a escala e só depois põe as criaturas (`criaturas` em casas da escala `casaM`).
  */
@@ -99,8 +121,8 @@ function mesaMapa(casaM, { casaHeroina = { x: 0, y: 0 }, criaturas = null, deslo
   if (casaM !== CASA_M) exigirAplicada(escala(m, casaM), 'escala ' + casaM);
   const eu = estado(m).figuras[m.clientes.heroina.figuraId];
   assert.deepEqual([eu.x, eu.y], [casaHeroina.x, casaHeroina.y], 'a heroína está na casa pedida');
-  // Por omissão a criatura fica longe, no canto SO (não se mete no caminho da prova).
-  for (const [fichaId, casa] of criaturas ?? [['orc-teste', { x: 0, y: MAPA_POR_ESCALA.find((e) => e.casaM === casaM).lado - 1 }]]) {
+  // Por omissão a criatura fica longe, no canto SO (não se mete no caminho da prova) — cantoSO().
+  for (const [fichaId, casa] of criaturas ?? [['orc-teste', cantoSO(casaM)]]) {
     exigirAplicada(m.mestre('MASTER_PLACE', { fichaId, casa }), 'PLACE ' + fichaId);
   }
   assert.equal(estado(m).vez?.figuraId, m.clientes.heroina.figuraId, 'a vez é da heroína');
@@ -127,12 +149,14 @@ test('MAPA-JOGÁVEL: os números do mapa — 75 / 50 / 37 casas, a água do lago
     assert.equal(pisaveis.length + g.casasBloqueadas(), lado * lado);
     assert.equal(g.casasDeAgua(), agua.length);
   }
-  // A 1,5 m cada casa da batalha é uma casa da malha: as 21 casas de água funda do pacote, todas.
+  // A 1,5 m cada casa da batalha é uma casa da malha: as 131 casas de água funda do pacote, todas.
   assert.equal(contas[1.5].agua, Object.values(PACOTE.mapa.motivos).filter((v) => v === 'água funda').length);
+  // LAGO-MAIOR: o lago maior (água: 50 / 21 / 13 → 301 / 131 / 75) e a floresta de dentro do campo devolvida (as
+  // casas de tronco e de rocha: bloqueadas 156 / 67 / 43 → 348 / 152 / 94).
   assert.deepEqual(contas, {
-    1: { casas: 5625, pisaveis: 5469, agua: 50, bloqueadas: 156 },
-    1.5: { casas: 2500, pisaveis: 2433, agua: 21, bloqueadas: 67 },
-    2: { casas: 1369, pisaveis: 1326, agua: 13, bloqueadas: 43 },
+    1: { casas: 5625, pisaveis: 5277, agua: 301, bloqueadas: 348 },
+    1.5: { casas: 2500, pisaveis: 2348, agua: 131, bloqueadas: 152 },
+    2: { casas: 1369, pisaveis: 1275, agua: 75, bloqueadas: 94 },
   });
 });
 

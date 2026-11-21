@@ -53,12 +53,15 @@ test('a sonda da Ordem 58 (1,5 → 2 m): a escala é recusada, nenhuma figura fi
   assert.deepEqual(emBloqueadas(m), [], 'depois: nenhuma figura numa casa bloqueada (antes da Ordem 62: 7, 3 delas no lago)');
   const rec = recusas(m).at(-1);
   const d = rec.soMestre.detalhe;
-  assert.match(d, /^ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS: 4 figuras ficavam em casas que o mapa bloqueia com 2 m por casa — /);
+  assert.match(d, /^ESCALA_DEIXA_FIGURAS_EM_CASAS_BLOQUEADAS: 10 figuras ficavam em casas que o mapa bloqueia com 2 m por casa — /);
   // ORDEM MAPA-JOGÁVEL: eram 7; as 3 do lago ((22,4), (24,4), (24,6) «água funda») são casas de água e pisam-se.
+  // LAGO-MAIOR: a floresta de fora do campo do meio voltou — mais 6 (rochas e troncos: (22,0), (28,10), (2,24), (20,24),
+  // (2,26), (10,28)); as 4 de antes continuam.
   const sete = ['(6,4) menir', '(22,22) escarpa', '(28,24) escarpa', '(6,28) tronco tombado'];
   assert.ok(!d.includes('água funda'), 'o lago não bloqueia');
   for (const c of sete) assert.ok(d.includes(`CASA_BLOQUEADA: ${c}`), `o porquê nomeia ${c} (o texto do MASTER_PLACE)`);
-  assert.equal(rec.soMestre.figuras.length, 4);
+  assert.equal(rec.soMestre.figuras.length, 10);
+  for (const c of ['(22,0) rocha', '(28,10) tronco', '(2,24) rocha', '(10,28) tronco']) assert.ok(d.includes(`CASA_BLOQUEADA: ${c}`), `nomeia ${c}`);
   const est = m.sala.depuracao.estado();
   for (const f of rec.soMestre.figuras) {
     assert.deepEqual(Object.keys(f).sort(), ['figuraId', 'motivo', 'x', 'y']);
@@ -70,7 +73,7 @@ test('a sonda da Ordem 58 (1,5 → 2 m): a escala é recusada, nenhuma figura fi
 
 test('as 6 mudanças de escala: nenhuma deixa figuras em casas bloqueadas; as que não deixam passam como antes', () => {
   // [de, para, figuras que a grelha nova bloqueava (medição de antes)]
-  for (const [de, para, n] of [[1.5, 2, 4], [1.5, 1, 0], [1, 1.5, 6], [1, 2, 5], [2, 1.5, 5], [2, 1, 0]]) { // MAPA-JOGÁVEL: 7/10/8/9 menos as do lago
+  for (const [de, para, n] of [[1.5, 2, 10], [1.5, 1, 0], [1, 1.5, 11], [1, 2, 11], [2, 1.5, 10], [2, 1, 0]]) { // MAPA-JOGÁVEL: 7/10/8/9 menos as do lago; LAGO-MAIOR: 4/6/5/5 → 10/11/11/10 (a floresta devolvida)
     const m = mesaCheia(de, para);
     const r = recibo(m.mestre('MASTER_SUPERVISOR', { op: 'escala', casaM: para }));
     assert.deepEqual(emBloqueadas(m), [], `${de} → ${para} m: nenhuma figura numa casa bloqueada`);

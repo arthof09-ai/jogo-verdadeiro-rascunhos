@@ -85,6 +85,11 @@ const CEU_ELEV_MIN := -6.0
 const MAPA_N := 512          # resolução do mapa do chão (luz / terra / copas / contacto)
 const MAPA_MEIO := 72.0      # o mapa do chão cobre [-72, 72] m
 const RELEVO_N := 120        # resolução da sombra e da oclusão do relevo (1,2 m)
+## Ordem 42 / LAGO-MAIOR: o CAMPO DA ORDEM 42 — o quadrado do meio (a grelha de sempre, 20 × 20 casas de 1,5 m,
+## centrada) onde o mapa não põe decoração solta. Fixo: o mesmo mapa para qualquer zona jogável (ver zona_jogo).
+const CAMPO_ORDEM_42 := Rect2(-15.0, -15.0, 30.0, 30.0)
+## LAGO-MAIOR: o rumo (graus, a partir do centro do lago, 0 = norte, para leste) da árvore seca da margem.
+const ARVORE_SECA_RUMO := 275.0
 const ESCARPA_M := 1.7       # desnível dentro de uma casa a partir do qual ela não se pisa
 
 ## A Árvore Ancestral: a que distância do centro da arena, a que altura tem o pé, e a rotação
@@ -132,9 +137,14 @@ const VISTAS: Array = [
 @export var no_camera: NodePath = ^"Camera"
 ## Teclas 1–9/0/F/L/M e a vista 0 na carga (só no mapa sozinho; na arena a câmara é a da mesa).
 @export var vistas_por_tecla: bool = true
-## A ZONA JOGÁVEL do jogo (x, z no mundo; vazia = nenhuma). Lá dentro o mapa não põe nada que
-## ocupe uma casa sem o servidor saber: nem pedras soltas, nem árvores, nem estrato; e o tronco
-## tombado da garganta acaba à entrada dela. Os marcos de relevo ficam (são chão).
+## A ZONA JOGÁVEL do jogo (x, z no mundo; vazia = nenhuma): a relva pisada e o rastro (abaixo).
+## ORDEM LAGO-MAIOR (Parte 2, palavra do Mestre 20/11/2026): a zona JÁ NÃO DECIDE A DECORAÇÃO. A regra da Ordem 42
+## («dentro do campo de batalha não fica decoração solta») vale para o CAMPO DA ORDEM 42 — o quadrado de 30 × 30 m do
+## meio (CAMPO_ORDEM_42, a grelha de sempre, 20 × 20 de 1,5 m) — e só para ele. A MAPA-JOGÁVEL aplicava-a à zona viva
+## (o mapa inteiro) e cortava 39 árvores, 66 rochas, 168 arbustos/fetos e 8,6 m do tronco tombado; o Mestre nunca o
+## pediu. Agora o mapa é o MESMO com qualquer zona — o de antes da MAPA-JOGÁVEL — e o que BLOQUEIA (tronco, rocha)
+## vai para a grelha e para o pacote do servidor (exportar_terreno.gd), como os marcos. O estrato é cenário leve:
+## não bloqueia (dá cobertura, como sempre).
 @export var zona_jogo: Rect2 = Rect2()
 ## A relva dentro da zona jogável fica a esta fracção da altura (pisada; continua a mexer).
 @export_range(0.1, 1.0) var relva_no_campo: float = 0.38
@@ -702,15 +712,24 @@ func _livre(tabela: Dictionary, x: float, z: float, folga: float) -> bool:
 	return true
 
 
-## Ordem 42: o ponto (x, z), com `raio` à volta, toca a zona jogável do jogo?
+## Ordem 42 / LAGO-MAIOR: o ponto (x, z), com `raio` à volta, toca o CAMPO DA ORDEM 42 (o quadrado do meio)?
+## Fixo: não depende da zona jogável viva (ver zona_jogo).
 func _na_zona(x: float, z: float, raio: float) -> bool:
-	if not zona_jogo.has_area():
-		return false
-	return zona_jogo.grow(raio + 0.25).has_point(Vector2(x, z))
+	return CAMPO_ORDEM_42.grow(raio + 0.25).has_point(Vector2(x, z))
 
 
 func _contar_tirado(o_que: String) -> void:
 	medidas["zona_tirados_" + o_que] = int(medidas.get("zona_tirados_" + o_que, 0)) + 1
+
+
+## LAGO-MAIOR: o ponto (x, z), com `raio` à volta, cai dentro da água do lago? (Uma árvore ou uma pedra não nasce
+## na água: o lugar fica ocupado e a semente gasta-se igual — o resto do mapa sai o MESMO.)
+func _na_agua(x: float, z: float, raio: float) -> bool:
+	return Relevo.distancia_margem(x, z) > -raio
+
+
+func _contar_na_agua(o_que: String) -> void:
+	medidas["lago_tirados_" + o_que] = int(medidas.get("lago_tirados_" + o_que, 0)) + 1
 
 
 # ------------------------------------------------------------------ mapa do chão
@@ -1120,17 +1139,17 @@ func _marco_garganta(madeira: Lote) -> void:
 	var a := Relevo.TRONCO_A
 	var b := Relevo.TRONCO_B
 	var raio := Relevo.TRONCO_RAIO
-	# Ordem 42: na arena, o tronco (a ponta da copa, a norte) acaba antes da zona jogável.
-	if zona_jogo.has_area():
-		var corte := 1.0
-		for s in 101:
-			var q := a.lerp(b, float(s) / 100.0)
-			if _na_zona(q.x, q.y, raio + 0.3):
-				corte = maxf(float(s - 1) / 100.0, 0.2)
-				break
-		if corte < 1.0:
-			b = a.lerp(b, corte)
-			medidas["zona_tronco_tombado_m"] = snappedf(a.distance_to(b), 0.1)
+	# Ordem 42: o tronco (a ponta da copa, a norte) acaba antes do campo da Ordem 42 (LAGO-MAIOR: o campo fixo do
+	# meio, já não a zona jogável viva — com a grelha-mapa a MAPA-JOGÁVEL deixava-o em 4,1 m).
+	var corte := 1.0
+	for s in 101:
+		var q := a.lerp(b, float(s) / 100.0)
+		if _na_zona(q.x, q.y, raio + 0.3):
+			corte = maxf(float(s - 1) / 100.0, 0.2)
+			break
+	if corte < 1.0:
+		b = a.lerp(b, corte)
+		medidas["zona_tronco_tombado_m"] = snappedf(a.distance_to(b), 0.1)
 	var ha := Relevo.altura(a.x, a.y)
 	var hb := Relevo.altura(b.x, b.y)
 	# assenta: o eixo nunca fica a mais de 0,8 raios do chão (nunca flutua; onde o chão sobe, enterra-se)
@@ -1180,14 +1199,21 @@ func _marco_charco(madeira: Lote, r: RandomNumberGenerator) -> void:
 	_mat_agua.set_shader_parameter("cor_funda", Paleta.AGUA)
 	_mat_agua.set_shader_parameter("cor_rasa", Paleta.AGUA_RASA)
 	_mat_agua.set_shader_parameter("cor_reflexo", Paleta.CEU_MEIO)
-	# a margem: lodo à mostra numa faixa estreita à volta da água
-	for i in 40:
-		var ang := TAU * float(i) / 40.0
-		_carimbo_max(1, c.x + cos(ang) * 5.1, c.y + sin(ang) * 5.1, 1.0, 0.62)
-	# a árvore seca, inclinada para a água
-	var ps := c + Vector2(4.9, 3.6)
+	# a margem: lodo à mostra numa faixa estreita à volta da água — LAGO-MAIOR: a mesma terra de margem (o mesmo
+	# carimbo), agora ao longo da margem nova, a 0,3 m para fora da linha de água
+	var lc := Relevo.LAGO_CENTRO
+	for i in 120:
+		var ang := TAU * float(i) / 120.0
+		var rr := Relevo.margem_raio(ang) + 0.3
+		_carimbo_max(1, lc.x + sin(ang) * rr, lc.y - cos(ang) * rr, 1.0, 0.62)
+	# a árvore seca, inclinada para a água — LAGO-MAIOR: o sítio antigo (a 6 m da cova) ficou debaixo de água; vai
+	# para a ponta da baía de oeste, a 0,9 m da água (o lugar da margem mais longe de árvores, rochas e trilho: 8 m),
+	# e continua inclinada para a água.
+	var ang_seca := deg_to_rad(ARVORE_SECA_RUMO)
+	var ps := Relevo.LAGO_CENTRO + Vector2(sin(ang_seca), -cos(ang_seca)) * (Relevo.margem_raio(ang_seca) + 0.9)
 	var pe := Vector3(ps.x, Relevo.altura(ps.x, ps.y), ps.y)
-	Formas.arvore_morta(madeira, pe, 8.0, Vector3(-0.16, 0.0, -0.10), r)
+	var para_agua := (Relevo.LAGO_CENTRO - ps).normalized() * 0.19
+	Formas.arvore_morta(madeira, pe, 8.0, Vector3(para_agua.x, 0.0, para_agua.y), r)
 	_ocupar(_tudo, ps.x, ps.y, 0.8)
 	_ocupar(_so_arvores, ps.x, ps.y, 0.4)
 	_troncos.append([ps, 0.4])
@@ -1223,11 +1249,18 @@ func _altura_familia(familia: int) -> float:
 func _arvore(lt: Lote, lc: Lote, x: float, z: float, h: float, familia: int, detalhe: int, sombra_fina: bool) -> void:
 	var pos := Vector3(x, Relevo.altura(x, z), z)
 	if _na_zona(x, z, Formas.raio_tronco(familia, h) + 0.5):
-		# Ordem 42: não se planta dentro da zona jogável — mas a semente gasta-se igual (o resto do
+		# Ordem 42: não se planta dentro do campo do meio — mas a semente gasta-se igual (o resto do
 		# mapa sai o MESMO) e o lugar fica ocupado (nada mais nasce ali).
 		Formas.arvore(Lote.new(), Lote.new(), familia, pos, h, detalhe, _rng)
 		_ocupar(_tudo, x, z, Formas.raio_tronco(familia, h) + 0.35)
 		_contar_tirado("arvores")
+		return
+	if _na_agua(x, z, Formas.raio_tronco(familia, h) + 0.5):
+		# LAGO-MAIOR: não se planta dentro de água — mas a semente gasta-se igual (o resto do mapa sai o MESMO) e o
+		# lugar fica ocupado (nada mais nasce ali).
+		Formas.arvore(Lote.new(), Lote.new(), familia, pos, h, detalhe, _rng)
+		_ocupar(_tudo, x, z, Formas.raio_tronco(familia, h) + 0.35)
+		_contar_na_agua("arvores")
 		return
 	var sombras: Array = Formas.arvore(lt, lc, familia, pos, h, detalhe, _rng)
 	var raio := Formas.raio_tronco(familia, h)
@@ -1411,7 +1444,10 @@ func _registar_rocha(x: float, z: float, tam: float) -> void:
 	var cor := Paleta.PEDRA.lerp(Paleta.PEDRA_QUENTE, _rf(0.0, 0.7))
 	var veio := _rf(0.0, 60.0)
 	if _na_zona(x, z, tam * 0.9):
-		_contar_tirado("rochas")   # Ordem 42: a semente gastou-se igual; a pedra não se põe
+		_contar_tirado("rochas")   # Ordem 42: a semente gastou-se igual; a pedra não se põe no campo do meio
+		return
+	if _na_agua(x, z, tam * 0.9):
+		_contar_na_agua("rochas")   # LAGO-MAIOR: a semente gastou-se igual; a pedra não se põe na água
 		return
 	_rochas.append([c, tam])
 	if tam >= 0.8:
@@ -1482,7 +1518,7 @@ func _criar_estrato() -> void:
 			var tom := _rf(0.86, 1.08)
 			var cor_e := Color(tom, tom * _rf(0.96, 1.04), tom * _rf(0.92, 1.0), 1.0)
 			if _na_zona(x, z, 0.9 * s):
-				_contar_tirado("estrato")   # Ordem 42: fora da zona jogável (a semente gastou-se igual)
+				_contar_tirado("estrato")   # Ordem 42: fora do campo do meio (a semente gastou-se igual)
 				postos += 1
 				continue
 			if Relevo.lago_fundura(x, z) > 0.0:
@@ -1574,7 +1610,10 @@ func _marcar_grelha() -> void:
 		for ci in Grelha.LADO:
 			var casa := Vector2i(ci, lj)
 			var c := Grelha.canto(casa) + Vector2(0.75, 0.75)
-			if Relevo.agua(c.x, c.y) > 0.40:
+			# LAGO-MAIOR: «água funda» = onde não se faz pé (a fronteira do NADO, LagoFloresta.FLUTUA_M) — no lago
+			# novo, medido no centro da casa. (Até aqui era o charco da Ordem 38 com mais de 0,40 m: 21 casas.) As
+			# arenas e o servidor lêem-nas como CASAS DE ÁGUA (entra-se nelas); as da faixa de andar são chão.
+			if Relevo.lago_fundura(c.x, c.y) > LagoFloresta.FLUTUA_M:
 				grelha.bloquear(casa, "água funda")
 			elif Grelha.degrau(casa) > ESCARPA_M:
 				grelha.bloquear(casa, "escarpa")

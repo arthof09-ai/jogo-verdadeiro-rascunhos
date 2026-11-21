@@ -1,0 +1,342 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+== Testes do cliente (JV2.1a) ==
+Sequência com buraco:
+  ok    o 11 aplica logo
+  ok    o movimento copia a casa que o servidor disse
+  ok    o 13 fica em espera (falta o 12)
+  ok    o buraco pede ROOM_RESYNC com lastSeq 11
+  ok    um só pedido enquanto o mesmo buraco existe
+  ok    o 12 fecha o buraco e aplica 13 e 14 por ordem
+  ok    sem buraco, sem pedido pendente
+Evento repetido:
+  ok    o 6 repetido e o 4 velho são descartados
+Snapshot no RESYNC:
+  ok    15 e 21 em espera
+  ok    o snapshot 20 substitui tudo até 20 e o 21 aplica a seguir
+  ok    espera limpa
+  ok    um snapshot mais velho é ignorado
+Eventos antes do snapshot:
+  ok    sem snapshot nada se aplica
+  ok    depois do snapshot 3, o 4 guardado aplica
+ROOM_OPTIONS por revisão:
+  ok    valem na revisão em que foram feitas
+  ok    deixam de valer quando a revisão muda
+Números de dano:
+  ok    um número por tipo; sem valor projetado, nada aparece
+  ok    golpe recebido marcado como dela
+Recibo duplicado (fila):
+  ok    o primeiro recibo conta
+  ok    o duplicado é ignorado
+  ok    terminal não muda
+  ok    AGUARDANDO_MESTRE conta
+  ok    AGUARDANDO_MESTRE repetido é ignorado
+  ok    o Mestre decide e passa a APLICADA
+Recibo duplicado (Rede, mensagem inteira):
+  ok    recibo_recebido sai uma vez só
+  ok    o ping não é tratado como mensagem
+Recibo de id alheio:
+  ok    id que não é nosso é ignorado
+  ok    recibo sem id é ignorado
+DESCONHECIDA e reenvio:
+  ok    a pendente entra no RECEIPT_QUERY
+  ok    servidor não viu: reenviar
+  ok    reenvia o MESMO texto (mesmo intentId)
+  ok    resposta repetida não reenvia duas vezes
+Queda da ligação:
+  ok    só a ENVIADA vira DESCONHECIDA
+  ok    estados certos
+  ok    as duas são consultadas ao religar
+Recusa duplicada:
+  ok    a primeira recusa conta
+  ok    a repetida é ignorada
+  ok    depois da recusa, nada a aplica
+intentId UUID v4:
+  ok    formato v4 (versão 4, variante RFC 4122)
+  ok    200 ids sem repetição
+Uma só tabela de perfis gráficos:
+  ok    o AplicadorPerfil tem baixo, medio e alto
+  ok    «Médio» da ⚙ chega como «medio»
+  ok    a arena tem o nó Perfis com o AplicadorPerfil
+  ok    o Sol está no grupo «sol»
+  ok    o Ambiente está no grupo «ambiente»
+  ok    a arena não tem números de perfil próprios
+  ok    a ⚙ do HUD oferece as mesmas três chaves
+Frases do site (texto exacto):
+  ok    cai (Ong)
+  ok    arma-cai (Ong)
+  ok    arma-quebra (Ong)
+  ok    acerta-se (Ong)
+  ok    acerta-se (Lobo)
+  ok    quebra-corpo (Ong)
+  ok    quebra-corpo (Ong, perde)
+  ok    quebra-corpo (Lobo)
+  ok    acerta-amigo (Ong)
+  ok    outra-coisa (Ong)
+  ok    apanhar a arma (Q8)
+  ok    cair
+  ok    teste ganho
+  ok    teste perdido
+  ok    estabilizou (frase do site REF_31, sem fim)
+  ok    estabilizada continua caída (site REF_31)
+  ok    fim por morte (frase completa do site)
+  ok    vitória (frase completa do site)
+  ok    fim declarado pelo Mestre (terminarBatalha do site)
+  ok    a cláusula do Recomeçar está ligada (N4)
+Frases a partir dos eventos:
+  ok    quebrar o corpo, com a perda só porque veio perdeQuarto
+  ok    a arma é a do último ataque dela
+  ok    apanhar a arma: a frase do site sai quando a arma volta à mão
+  ok    a desgraça do monstro, no masculino
+  ok    ao cair
+  ok    sem teste de morte nem mudança, nenhuma frase nova
+  ok    teste ganho
+  ok    teste perdido
+  ok    fim por morte (frase completa do site)
+  ok    fim declarado pelo Mestre → a frase do site
+  ok    nenhuma frase leva números
+  ok    estabilizou: a frase da regra Q4
+  ok    estabilizou: a batalha continua
+Raio e fogo na Party (ordem 13):
+  ok    o snapshot traz as casas a arder
+  ok    raio nela (frase do site)
+  ok    o número do raio sai como o de qualquer dano, nela
+  ok    o dano do raio não repete a frase
+  ok    o evento `fogo` substitui o fogo inteiro
+  ok    tick no lobo: a frase, sem número (não é dela)
+  ok    tick nela: a frase e o número dela
+  ok    sair para a chuva
+  ok    a chuva apaga a casa do lobo
+  ok    raio sem ninguém
+  ok    raio que mata o lobo
+  ok    raio que a deita: a frase da queda vem pelo `estado` dela, não aqui
+  ok    a chuva apaga quem arde fora do fogo
+  ok    o fogo deita o monstro
+Reentrada num servidor restaurado (ordem 19, V12):
+  ok    antes da queda: seq 21, revisão 10
+  ok    o snapshot da reentrada manda, mesmo com seq mais baixo
+  ok    a revisão passa a ser a do servidor
+  ok    a figura volta à casa que o servidor tem
+  ok    o evento seguinte do servidor aplica (não é tomado por repetido)
+  ok    as opções da revisão do servidor valem
+  ok    fora da reentrada, um snapshot mais velho continua ignorado
+Sala de espera antes do Mestre (ordem 22, 17-2):
+  ok    antes do Mestre: no lobby, sem figuras
+  ok    com o Mestre dentro: o snapshot da batalha (mesmo seq) tira-a do lobby
+  ok    e traz as figuras
+AGUARDANDO_MESTRE que o servidor restaurado não conhece (ordem 24, V19):
+  ok    a que espera o Mestre entra no RECEIPT_QUERY
+  ok    servidor não a viu: reenviar
+  ok    o MESMO texto (mesmo intentId)
+  ok    já não tranca a barra à espera do Mestre
+  ok    resposta repetida não reenvia duas vezes
+  ok    Rede: volta a ENVIADA, a barra destranca
+  ok    Rede: nenhum recibo mostrado à jogadora
+  ok    controlo: AGUARDANDO_MESTRE repetido continua à espera
+Validação da entrada no aparelho (ordem 34, N26-2):
+  ok    existe o validador da entrada (rede/validar_entrada.gd)
+  ok    nome de 1 a 64 letras: sem dica
+  ok    64 letras com acento valem 64 (caracteres, não bytes)
+  ok    65 letras: «Nome: até 64 letras»
+  ok    nome vazio (ou só espaços): fora
+  ok    senha vazia: «Falta a senha»
+  ok    senha de 1 a 128: sem dica
+  ok    129: «Senha: até 128 letras»
+  ok    PIN de 6 a 32 algarismos: sem dica
+  ok    PIN fora de ^[0-9]{6,32}$ (curto, comprido, letras, espaços, algarismos de outra escrita): «PIN: só números, 6 a 32»
+  ok    a entrada da jogadora só vale com os dois campos dentro
+  ok    Rede: com um campo fora, 0 ligações e 0 mensagens (nem o socket se abre)
+  ok    Rede: cada tentativa com um campo fora volta a pedir a entrada (6 de 6)
+Lobby: botão inactivo, campo marcado e dica debaixo do campo (ordem 34, N26-2):
+  ok    a Rede (autoload) existe
+  ok    o lobby tem os botões e as dicas por campo
+  ok    campos vazios: os dois botões de entrar inactivos
+  ok    sem senha: botão inactivo e «Falta a senha» debaixo da senha
+  ok    o nome está dentro: sem dica nesse campo
+  ok    o campo fora fica marcado; o que está dentro não
+  ok    nome com 65: botão inactivo e «Nome: até 64 letras»
+  ok    tudo dentro (64 letras com acento): botão activo, sem dicas
+  ok    senha com 129: «Senha: até 128 letras»
+  ok    PIN com letra: botão inactivo e «PIN: só números, 6 a 32»
+  ok    PIN dentro: botão activo, sem dica
+  ok    Enter com um campo fora: 0 ligações, 0 mensagens
+  ok    e o que ela escreveu fica no campo, para corrigir
+Clima (ordem 40): o deslocamento integra-se frame a frame — nenhum floco contra o vento
+  ok    3000 flocos × 60 frames com o vento a rodar 150° a meio: 179321 deslocamentos medidos
+  ok    0 deslocamentos contra o vento do frame (0.0%)
+  ok    nenhum floco sobe
+  ok    salto máximo entre frames abaixo de 0,25 m (0.113 m)
+  ok    300 flocos × 600 frames (10 s de rajadas): 0 contra o vento, nenhum sobe (179316 deslocamentos)
+  ok    controlo: a fórmula errada («vento × tempo total») anda contra este mesmo vento em 187 de 599 frames (31.2%)
+  ok    o vento cai para zero: o que o floco já andou fica onde está
+  ok    os pesos de 500 flocos: vento ≥ 0 (soma 12..16), queda 10..16, balanço −8..8, empacotados em inteiros até 2047
+Clima (ordem 40): liga, troca de clima, intensidade e perfil sem reiniciar; chão e figuras respondem
+  ok    desligado: não processa, não cria nós, não veste nada
+  ok    a caixa do clima cobre o campo inteiro (30×30 m) mais 4 m de folga, 12 m de altura
+WARNING: [clima] clima desconhecido: granizo forte
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] definir (res://arte/clima/clima.gd:232)
+       [1] _teste_clima_modulo (res://testes/rodar_testes.gd:736)
+       [2] _initialize (res://testes/rodar_testes.gd:71)
+WARNING: [clima] clima desconhecido: neve media
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] definir (res://arte/clima/clima.gd:232)
+       [1] _teste_clima_modulo (res://testes/rodar_testes.gd:736)
+       [2] _initialize (res://testes/rodar_testes.gd:71)
+  ok    clima ou intensidade desconhecidos: recusa e fica como estava
+  ok    neve forte: liga sem reiniciar a cena
+  ok    neve forte no perfil Médio: 6000 flocos (6000)
+  ok    a neve acumula aos poucos: 3 s de neve forte = 0.067 (45 s até cobrir)
+  ok    o chão e o corpo da figura ganham a camada do clima (material_overlay)
+  ok    o anel sem luz fica de fora e nenhum material da cena foi trocado
+  ok    2 nós vestidos (chão e corpo)
+  ok    neve fraca, sem reiniciar: 2000 flocos (2000)
+  ok    perfil Alto: 3000 flocos (3000)
+  ok    perfil Baixo: 1000 flocos (1000)
+  ok    «chuva-forte» pelo nome
+  ok    chuva forte no Médio: 5000 gotas e 350 salpicos; os flocos saíram (5000, 350, 0)
+  ok    o chão molha (0.33) e a neve pousada derrete (0.133 → 0.033)
+  ok    chuva fraca: 1600 gotas e 120 salpicos (1600, 120)
+  ok    o vento é um só: 90° e 4 m/s → (0, 4) no chão, para a chuva e para a neve
+  ok    desligado e seco: o módulo dorme outra vez
+  ok    e tira a camada do chão e da figura
+  ok    nenhuma partícula à vista
+  ok    o código do clima não toca no Estado nem na Rede (só apresentação)
+Clima (ordem 64): a chuva segue o vento do mundo; a neve e a falta da fonte ficam no vento manual
+  ok    só os tipos que existem entram na lista (["chuva"])
+  ok    o vento do mundo às 16:15 sopra a sério (7.85 m/s)
+  ok    a chuva: o vento do frame é o do mundo — (6.858, 3.811) = (6.858, 3.811)
+  ok    a neve fica no vento manual (200°, 1 m/s)
+  ok    3 s de chuva fraca: em 90 de 90 frames a gota anda com o vento do mundo desse frame
+  ok    o vento do mundo roda 90°: a chuva roda com ele
+  ok    seguir_vento(null): a chuva volta ao vento manual
+  ok    seguir_vento(fonte) sem lista: liga a chuva
+  ok    a fonte apagada: a chuva volta ao vento manual, sem erro
+WARNING: [clima] a fonte do vento não tem vetor(): fica o vento manual
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] seguir_vento (res://arte/clima/clima.gd:281)
+       [1] _teste_chuva_vento_do_mundo (res://testes/rodar_testes.gd:855)
+       [2] _initialize (res://testes/rodar_testes.gd:72)
+  ok    uma fonte sem vetor() é recusada (fica o vento manual)
+Clima (Ordem Neve, Fatia 1): neve_fraca e nevasca com o vento do mundo + troca viva dos 4 estados
+  ok    CampoDaMesa liga tanto a chuva como a neve ao vento do mundo
+  ok    estado neve_fraca liga sem reiniciar
+  ok    neve_fraca deriva exactamente no rumo do vento do mundo (1.88 m/s)
+  ok    troca viva neve_fraca → nevasca
+  ok    na nevasca o vento da queda varia de forma contínua entre calma e rajada (1.26 → 6.59 m/s; maior passo por quadro 0.176 m/s)
+  ok    troca viva nevasca → chuva sem reiniciar
+  ok    troca viva chuva → limpo sem reiniciar
+  ok    Fatia 2: a FÓRMULA neve_em dá centro >= 0,85 em F=1 e canto mais espesso (0.96; 2.01) — teste da fórmula, não medição visual
+  ok    Fatia 3: F = 0 imposto deterministicamente (t0)
+  ok    Fatia 3: F = 0,5 imposto deterministicamente (t1)
+  ok    Fatia 3: F = 1,0 imposto deterministicamente (t2)
+  ok    Fatia 3: transição nevasca → chuva derrete neve/congelamento gradualmente sem corte seco (neve 1.00, cong 1.00, molhado 0.01)
+  ok    Correcção 1c: o chão da neve recebe a cova e o nível da lagoa (máscara da água)
+  ok    o pacote do terreno do servidor lê-se (terreno/2)
+  ok    o terreno do servidor está em dia com as fontes do cliente (refazer com exportar_terreno.gd): 6 fontes iguais
+  ok    as origens do pacote são as da arena, nas 3 escalas (1.0 m: 1–75, 1.5 m: 1–50, 2.0 m: 1–37 casas de lado)
+  ok    o pacote leva o mapa inteiro (50 × 50 casas) e 9 redes
+  ok    a pegada tem 0,42 m de raio nas casas de 1,5 m
+  ok    no centro do prado a base assenta (enterra 0.006, flutua 0.006 m)
+  ok    a casa (0, 0) é a encosta do outeiro (35.7°)
+  ok    lá a base inclinada nem se enterra nem flutua (0.004 / 0.004 m; antes 0,60 m)
+  ok    no plano o corpo não sobe
+  ok    na encosta o corpo sobe 0.097 m para a cápsula tocar o plano sem o atravessar
+  ok    ordem HUD: por defeito o modo é o dinâmico (sem iniciativa)
+  ok    ordem HUD: sem acções, a caixa não inventa ordem nenhuma
+  ok    ordem HUD: a ordem emerge da sequência (1-2-3-monstro)
+  ok    ordem HUD: quem agiu por último está na vez; a volta ainda não fechou
+  ok    ordem HUD: a jogadora 1 volta a agir — a ordem repete-se igual
+  ok    ordem HUD: o Mestre dita outra sequência — a caixa segue a que aconteceu
+  ok    ordem HUD: só figuras que existem no espelho
+  ok    ordem HUD: o Recomeçar limpa a ordem formada
+  ok    ordem HUD: dano não é acção de ninguém
+  ok    ordem HUD: correr é a figura a agir
+  ok    ordem HUD: a decisão do Mestre não é ir
+  ok    ordem HUD: modo iniciativa mostra a ordem do servidor
+  ok    ordem HUD: modo iniciativa — na vez está o vezId do servidor
+  ok    ordem HUD: desligar a iniciativa volta à ordem formada pelas acções
+  ok    retrato: a cópia usa a MESMA malha do modelo em cena
+  ok    retrato: o anel e o contacto (do chão) não entram
+  ok    retrato: a cópia não fica em grupos do jogo (clima, perfil)
+  ok    retrato: a cópia assenta na origem do palco
+  ok    retrato: o fundo é a cor de identificação da figura (paleta do site), escurecida
+  ok    retrato: de pé, o enquadramento é o do busto (olha a 1.55 m de 2,25)
+  ok    retrato: a mesma chave não volta a desenhar
+  ok    retrato: a figura que saiu larga o retrato
+  ok    caixa: mostra a ordem e quem está na vez
+  ok    caixa: um retrato por figura
+  ok    caixa: sem acções, diz que a ordem se forma — nada inventado
+  ok    caixa: não rouba os toques ao tabuleiro
+Escala do mundo (Ordem ESCALA):
+  ok    a tabela tem as escalas 1 · 1,5 · 2 m (veio [1.0, 1.5, 2.0])
+  ok    a pré-definida é 1,5 m e é uma das que valem
+  ok    o servidor (sala.js ESCALAS_CASA_M) diz o mesmo que a tabela ([1.0, 1.5, 2.0])
+  ok    o servidor nasce na mesma escala pré-definida (sala.js CASA_M)
+  ok    o selector do Mestre (mestre.gd ESCALAS) é a lista da tabela
+  ok    o terreno do servidor é exportado para cada escala da tabela (exportar_terreno.ESCALAS)
+  ok    o pacote do terreno do servidor serve as três escalas ([1.0, 1.5, 2.0])
+  ok    sem escala do servidor, o Mestre vê a pré-definida (1,5)
+  ok    o Mestre vê a escala viva que o servidor mandou (1.0 m)
+  ok    o Mestre vê a escala viva que o servidor mandou (1.5 m)
+  ok    o Mestre vê a escala viva que o servidor mandou (2.0 m)
+  ok    arena.gd não guarda um 1,5 solto: lê a escala viva ou a tabela
+  ok    arena_mestre.gd não guarda um 1,5 solto: lê a escala viva ou a tabela
+  ok    mestre.gd não guarda um 1,5 solto: lê a escala viva ou a tabela
+  ok    hud.gd não guarda um 1,5 solto: lê a escala viva ou a tabela
+  ok    estado.gd não guarda um 1,5 solto: lê a escala viva ou a tabela
+  ok    a 1.0 m por casa, 6 m cobrem 6 casas (no mundo da arena: 6.000 m)
+  ok    a 1.0 m por casa, a grelha de 20 casas mede 20.0 m
+  ok    a 1.5 m por casa, 6 m cobrem 4 casas (no mundo da arena: 6.000 m)
+  ok    a 1.5 m por casa, a grelha de 20 casas mede 30.0 m
+  ok    a 2.0 m por casa, 6 m cobrem 3 casas (no mundo da arena: 6.000 m)
+  ok    a 2.0 m por casa, a grelha de 20 casas mede 40.0 m
+Todo o mapa jogável (ORDEM MAPA-JOGÁVEL) — a grelha-mapa:
+  ok    o mapa é 50 × 50 casas de 1,5 m = 75 m (a malha do relevo)
+  ok    a 1.0 m a grelha-mapa tem 75 casas de lado (o servidor: ladoMax)
+  ok    a 1.0 m cabe no mapa e o que sobra (0.0 m) é menos do que uma casa
+  ok    a 1.0 m a arena põe a grelha-mapa onde o servidor a tem (origem (-37.5, -37.5))
+  ok    a 1.0 m o lago tem 50 casas de água dentro da grelha (o servidor conta 50)
+  ok    a 1.5 m a grelha-mapa tem 50 casas de lado (o servidor: ladoMax)
+  ok    a 1.5 m cabe no mapa e o que sobra (0.0 m) é menos do que uma casa
+  ok    a 1.5 m a arena põe a grelha-mapa onde o servidor a tem (origem (-37.5, -37.5))
+  ok    a 1.5 m o lago tem 21 casas de água dentro da grelha (o servidor conta 21)
+  ok    a 2.0 m a grelha-mapa tem 37 casas de lado (o servidor: ladoMax)
+  ok    a 2.0 m cabe no mapa e o que sobra (1.0 m) é menos do que uma casa
+  ok    a 2.0 m a arena põe a grelha-mapa onde o servidor a tem (origem (-37.0, -37.0))
+  ok    a 2.0 m o lago tem 13 casas de água dentro da grelha (o servidor conta 13)
+  ok    os motivos de água são os mesmos no cliente e no servidor (terreno.js MOTIVOS_DE_AGUA)
+  ok    é esse o motivo que o mapa escreve no lago (campo_floresta.gd)
+  ok    água-reação: os sítios da prova (seco, rasa, funda) são o que dizem ser (lago_fundura / a_nadar)
+  ok    água-reação: em seco a água não reage
+  ok    água-reação: o salpico nasce no quadro em que a figura entra na água
+  ok    água-reação: ao entrar, 3 anéis (o salpico)
+  ok    água-reação: ao entrar, o agito vai a 1
+  ok    água-reação: uma entrada, um salpico
+  ok    água-reação: a vadear, agito 1 e anéis pelo caminho
+  ok    água-reação: devagar (0,09 m/s) o agito é pequeno (0.2): cresce com a velocidade
+  ok    água-reação: parada há 1.75 s, o agito vai a meio (0.5)
+  ok    água-reação: parada há mais de 3.5 s, o agito é 0 (a água acalmou)
+  ok    água-reação: parada, os anéis morrem e não nascem outros (só fica o vento)
+  ok    água-reação: andar e parar dentro de água não salpica
+  ok    água-reação: ao passar a nadar (a_nadar do NADO), um salpico — e só um
+  ok    água-reação: a nadar, agito 1
+  ok    água-reação: posta já dentro de água (parada) não salpica e a água fica calma
+  ok    água-reação: fora da água o agito é 0
+  ok    água-reação: o shader da água tem o uniforme corpos_agito
+Todo o mapa jogável (ORDEM MAPA-JOGÁVEL) — a água:
+  ok    na casa de água a figura põe-se de pé (não há recusa)
+  ok    e a casa é de água
+  ok    o menir continua a recusar (veio «FLORESTA-E08-CASA-BLOQUEADA: (2,2) menir»)
+  ok    a casa seca livre: nem recusa nem água
+  ok    a 1.0 m a casa (54, 15) (sobre a água do mapa) é de água e não recusa o pé
+  ok    a 2.0 m a casa (27, 7) (sobre a água do mapa) é de água e não recusa o pé
+  ok    a figura mexe o lago — ligada uma vez em 3 sincronizações
+  ok    o lago de um mapa refeito também a segue
+  ok    sem mapa não faz nada
+  ok    a figura libertada sai do lago no passo seguinte
+
+290 de 290 verificações passaram.
