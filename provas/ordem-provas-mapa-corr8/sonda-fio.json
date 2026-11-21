@@ -1,0 +1,842 @@
+{
+ "mensagens": 28,
+ "casos": [
+  "K1",
+  "K2",
+  "K3",
+  "K4",
+  "K5"
+ ],
+ "porCaso": {
+  "K1": [
+   "chave:casaMAntes",
+   "chave:casasQuePaga",
+   "chave:grelhaAntes",
+   "chave:soMestre"
+  ],
+  "K2": [
+   "texto:90210777",
+   "texto:CANARIO-FANTASMA",
+   "texto:ESCALA_",
+   "texto:Orc Verdadeiro"
+  ],
+  "K3": [
+   "numero:313",
+   "numero:7777",
+   "numero:9137"
+  ],
+  "K4": [
+   "numero:313",
+   "numero:7777",
+   "texto:Orc Verdadeiro"
+  ],
+  "K5": [
+   "texto:CANARIO-FANTASMA",
+   "texto:ESCALA_"
+  ]
+ },
+ "fora": [],
+ "escalas": [
+  [
+   {
+    "n": 10,
+    "lote": 12,
+    "onde": "receber",
+    "type": "ROOM_EVENT",
+    "tipo": "escala",
+    "seq": 6,
+    "revision": 5,
+    "canarioTeste": null,
+    "mapa": null,
+    "dados": {},
+    "vezId": null,
+    "orcamentoM": null,
+    "nMover": null,
+    "figuras": null
+   },
+   {
+    "n": 11,
+    "lote": 12,
+    "onde": "receber",
+    "type": "ROOM_EVENT",
+    "tipo": "escala",
+    "seq": 6,
+    "revision": 5,
+    "canarioTeste": "K1",
+    "mapa": null,
+    "dados": {
+     "soMestre": {
+      "casaMAntes": 1.5,
+      "casaM": 1,
+      "grelhaAntes": {
+       "largura": 50,
+       "altura": 50
+      },
+      "grelha": {
+       "largura": 75,
+       "altura": 75
+      },
+      "vez": {
+       "figuraId": "fb6677dffc5f3e878",
+       "reservaM": 7.5,
+       "andouM": 1.5,
+       "casasQuePaga": 7
+      }
+     },
+     "journalSeq": 7
+    },
+    "vezId": null,
+    "orcamentoM": null,
+    "nMover": null,
+    "figuras": null
+   },
+   {
+    "n": 12,
+    "lote": 12,
+    "onde": "receber",
+    "type": "ROOM_EVENT",
+    "tipo": "escala",
+    "seq": 6,
+    "revision": 5,
+    "canarioTeste": "K2",
+    "mapa": null,
+    "dados": {
+     "detalhe": "ESCALA_JUNTA_FIGURAS: 2 figuras ficavam juntas com 1 m por casa — teste",
+     "nome": "Orc Verdadeiro Teste",
+     "eco": "CANARIO-FANTASMA",
+     "pin": "90210777"
+    },
+    "vezId": null,
+    "orcamentoM": null,
+    "nMover": null,
+    "figuras": null
+   },
+   {
+    "n": 13,
+    "lote": 12,
+    "onde": "receber",
+    "type": "ROOM_EVENT",
+    "tipo": "escala",
+    "seq": 6,
+    "revision": 5,
+    "canarioTeste": "K3",
+    "mapa": null,
+    "dados": {
+     "vida": 7777,
+     "pa": 313,
+     "defesa": 9137
+    },
+    "vezId": null,
+    "orcamentoM": null,
+    "nMover": null,
+    "figuras": null
+   },
+   {
+    "n": 14,
+    "lote": 12,
+    "onde": "receber",
+    "type": "MASTER_VIEW",
+    "tipo": null,
+    "seq": null,
+    "revision": null,
+    "canarioTeste": "K4",
+    "mapa": {
+     "largura": 75,
+     "altura": 75,
+     "casaM": 1
+    },
+    "vezId": null,
+    "orcamentoM": null,
+    "nMover": null,
+    "figuras": [
+     "Heroína Teste(57,8)",
+     "Orc(57,17)"
+    ]
+   },
+   {
+    "n": 15,
+    "lote": 12,
+    "onde": "receber",
+    "type": "ROOM_REJECT",
+    "tipo": null,
+    "seq": null,
+    "revision": null,
+    "canarioTeste": "K5",
+    "mapa": null,
+    "vezId": null,
+    "orcamentoM": null,
+    "nMover": null,
+    "figuras": null
+   },
+   {
+    "n": 16,
+    "lote": 12,
+    "onde": "receber",
+    "type": "ROOM_SNAPSHOT",
+    "tipo": null,
+    "seq": 6,
+    "revision": 5,
+    "canarioTeste": null,
+    "mapa": {
+     "largura": 75,
+     "altura": 75,
+     "casaM": 1
+    },
+    "vezId": "fb6677dffc5f3e878",
+    "orcamentoM": null,
+    "nMover": null,
+    "figuras": [
+     "Heroína Teste(57,8)",
+     "Orc(57,17)"
+    ]
+   },
+   {
+    "n": 17,
+    "lote": 12,
+    "onde": "receber",
+    "type": "ROOM_OPTIONS",
+    "tipo": null,
+    "seq": null,
+    "revision": 5,
+    "canarioTeste": null,
+    "mapa": null,
+    "vezId": "fb6677dffc5f3e878",
+    "orcamentoM": 7.5,
+    "nMover": 112,
+    "figuras": null
+   }
+  ],
+  [
+   {
+    "n": 21,
+    "lote": 14,
+    "onde": "receber",
+    "type": "ROOM_EVENT",
+    "tipo": "escala",
+    "seq": 8,
+    "revision": 7,
+    "canarioTeste": null,
+    "mapa": null,
+    "dados": {},
+    "vezId": null,
+    "orcamentoM": null,
+    "nMover": null,
+    "figuras": null
+   },
+   {
+    "n": 22,
+    "lote": 14,
+    "onde": "receber",
+    "type": "ROOM_SNAPSHOT",
+    "tipo": null,
+    "seq": 8,
+    "revision": 7,
+    "canarioTeste": null,
+    "mapa": {
+     "largura": 37,
+     "altura": 37,
+     "casaM": 2
+    },
+    "vezId": "fb6677dffc5f3e878",
+    "orcamentoM": null,
+    "nMover": null,
+    "figuras": [
+     "Heroína Teste(28,4)",
+     "Orc(28,8)"
+    ]
+   },
+   {
+    "n": 23,
+    "lote": 14,
+    "onde": "receber",
+    "type": "ROOM_OPTIONS",
+    "tipo": null,
+    "seq": null,
+    "revision": 7,
+    "canarioTeste": null,
+    "mapa": null,
+    "vezId": "fb6677dffc5f3e878",
+    "orcamentoM": 6.5,
+    "nMover": 24,
+    "figuras": null
+   }
+  ]
+ ],
+ "cronologia": [
+  {
+   "n": 0,
+   "lote": 1,
+   "onde": "entrar",
+   "type": "ROOM_WELCOME",
+   "tipo": null,
+   "seq": null,
+   "revision": null,
+   "canarioTeste": null,
+   "mapa": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 1,
+   "lote": 1,
+   "onde": "entrar",
+   "type": "ROOM_SNAPSHOT",
+   "tipo": null,
+   "seq": 1,
+   "revision": 1,
+   "canarioTeste": null,
+   "mapa": {
+    "largura": 50,
+    "altura": 50,
+    "casaM": 1.5
+   },
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": []
+  },
+  {
+   "n": 2,
+   "lote": 9,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "colocacao",
+   "seq": 2,
+   "revision": 2,
+   "canarioTeste": null,
+   "mapa": null,
+   "dados": {
+    "figuraId": "fb6677dffc5f3e878",
+    "nomePublico": "Heroína Teste",
+    "lado": "jogadora",
+    "x": 38,
+    "y": 4,
+    "orientacao": "S",
+    "visivel": "de_pe"
+   },
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 3,
+   "lote": 9,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "turno",
+   "seq": 3,
+   "revision": 2,
+   "canarioTeste": null,
+   "mapa": null,
+   "dados": {
+    "figuraId": "fb6677dffc5f3e878",
+    "rodada": 1,
+    "narra": false
+   },
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 4,
+   "lote": 9,
+   "onde": "receber",
+   "type": "ROOM_OPTIONS",
+   "tipo": null,
+   "seq": null,
+   "revision": 2,
+   "canarioTeste": null,
+   "mapa": null,
+   "vezId": "fb6677dffc5f3e878",
+   "orcamentoM": 9,
+   "nMover": 80,
+   "figuras": null
+  },
+  {
+   "n": 5,
+   "lote": 10,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "colocacao",
+   "seq": 4,
+   "revision": 3,
+   "canarioTeste": null,
+   "mapa": null,
+   "dados": {
+    "figuraId": "ff5d0d9edb1b90945",
+    "nomePublico": "Orc",
+    "lado": "criatura",
+    "x": 38,
+    "y": 11,
+    "orientacao": "S",
+    "visivel": "de_pe"
+   },
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 6,
+   "lote": 10,
+   "onde": "receber",
+   "type": "ROOM_OPTIONS",
+   "tipo": null,
+   "seq": null,
+   "revision": 3,
+   "canarioTeste": null,
+   "mapa": null,
+   "vezId": "fb6677dffc5f3e878",
+   "orcamentoM": 9,
+   "nMover": 80,
+   "figuras": null
+  },
+  {
+   "n": 7,
+   "lote": 11,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "movimento",
+   "seq": 5,
+   "revision": 4,
+   "canarioTeste": null,
+   "mapa": null,
+   "dados": {
+    "figuraId": "fb6677dffc5f3e878",
+    "de": {
+     "x": 38,
+     "y": 4
+    },
+    "para": {
+     "x": 38,
+     "y": 5
+    },
+    "caminho": [
+     {
+      "x": 38,
+      "y": 4
+     },
+     {
+      "x": 38,
+      "y": 5
+     }
+    ],
+    "custoM": 1.5,
+    "reservaM": 7.5
+   },
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 8,
+   "lote": 11,
+   "onde": "receber",
+   "type": "ROOM_RECEIPT",
+   "tipo": null,
+   "seq": 5,
+   "revision": 4,
+   "canarioTeste": null,
+   "mapa": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 9,
+   "lote": 11,
+   "onde": "receber",
+   "type": "ROOM_OPTIONS",
+   "tipo": null,
+   "seq": null,
+   "revision": 4,
+   "canarioTeste": null,
+   "mapa": null,
+   "vezId": "fb6677dffc5f3e878",
+   "orcamentoM": 7.5,
+   "nMover": 60,
+   "figuras": null
+  },
+  {
+   "n": 10,
+   "lote": 12,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "escala",
+   "seq": 6,
+   "revision": 5,
+   "canarioTeste": null,
+   "mapa": null,
+   "dados": {},
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 11,
+   "lote": 12,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "escala",
+   "seq": 6,
+   "revision": 5,
+   "canarioTeste": "K1",
+   "mapa": null,
+   "dados": {
+    "soMestre": {
+     "casaMAntes": 1.5,
+     "casaM": 1,
+     "grelhaAntes": {
+      "largura": 50,
+      "altura": 50
+     },
+     "grelha": {
+      "largura": 75,
+      "altura": 75
+     },
+     "vez": {
+      "figuraId": "fb6677dffc5f3e878",
+      "reservaM": 7.5,
+      "andouM": 1.5,
+      "casasQuePaga": 7
+     }
+    },
+    "journalSeq": 7
+   },
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 12,
+   "lote": 12,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "escala",
+   "seq": 6,
+   "revision": 5,
+   "canarioTeste": "K2",
+   "mapa": null,
+   "dados": {
+    "detalhe": "ESCALA_JUNTA_FIGURAS: 2 figuras ficavam juntas com 1 m por casa — teste",
+    "nome": "Orc Verdadeiro Teste",
+    "eco": "CANARIO-FANTASMA",
+    "pin": "90210777"
+   },
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 13,
+   "lote": 12,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "escala",
+   "seq": 6,
+   "revision": 5,
+   "canarioTeste": "K3",
+   "mapa": null,
+   "dados": {
+    "vida": 7777,
+    "pa": 313,
+    "defesa": 9137
+   },
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 14,
+   "lote": 12,
+   "onde": "receber",
+   "type": "MASTER_VIEW",
+   "tipo": null,
+   "seq": null,
+   "revision": null,
+   "canarioTeste": "K4",
+   "mapa": {
+    "largura": 75,
+    "altura": 75,
+    "casaM": 1
+   },
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": [
+    "Heroína Teste(57,8)",
+    "Orc(57,17)"
+   ]
+  },
+  {
+   "n": 15,
+   "lote": 12,
+   "onde": "receber",
+   "type": "ROOM_REJECT",
+   "tipo": null,
+   "seq": null,
+   "revision": null,
+   "canarioTeste": "K5",
+   "mapa": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 16,
+   "lote": 12,
+   "onde": "receber",
+   "type": "ROOM_SNAPSHOT",
+   "tipo": null,
+   "seq": 6,
+   "revision": 5,
+   "canarioTeste": null,
+   "mapa": {
+    "largura": 75,
+    "altura": 75,
+    "casaM": 1
+   },
+   "vezId": "fb6677dffc5f3e878",
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": [
+    "Heroína Teste(57,8)",
+    "Orc(57,17)"
+   ]
+  },
+  {
+   "n": 17,
+   "lote": 12,
+   "onde": "receber",
+   "type": "ROOM_OPTIONS",
+   "tipo": null,
+   "seq": null,
+   "revision": 5,
+   "canarioTeste": null,
+   "mapa": null,
+   "vezId": "fb6677dffc5f3e878",
+   "orcamentoM": 7.5,
+   "nMover": 112,
+   "figuras": null
+  },
+  {
+   "n": 18,
+   "lote": 13,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "movimento",
+   "seq": 7,
+   "revision": 6,
+   "canarioTeste": null,
+   "mapa": null,
+   "dados": {
+    "figuraId": "fb6677dffc5f3e878",
+    "de": {
+     "x": 57,
+     "y": 8
+    },
+    "para": {
+     "x": 57,
+     "y": 9
+    },
+    "caminho": [
+     {
+      "x": 57,
+      "y": 8
+     },
+     {
+      "x": 57,
+      "y": 9
+     }
+    ],
+    "custoM": 1,
+    "reservaM": 6.5
+   },
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 19,
+   "lote": 13,
+   "onde": "receber",
+   "type": "ROOM_RECEIPT",
+   "tipo": null,
+   "seq": 7,
+   "revision": 6,
+   "canarioTeste": null,
+   "mapa": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 20,
+   "lote": 13,
+   "onde": "receber",
+   "type": "ROOM_OPTIONS",
+   "tipo": null,
+   "seq": null,
+   "revision": 6,
+   "canarioTeste": null,
+   "mapa": null,
+   "vezId": "fb6677dffc5f3e878",
+   "orcamentoM": 6.5,
+   "nMover": 84,
+   "figuras": null
+  },
+  {
+   "n": 21,
+   "lote": 14,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "escala",
+   "seq": 8,
+   "revision": 7,
+   "canarioTeste": null,
+   "mapa": null,
+   "dados": {},
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 22,
+   "lote": 14,
+   "onde": "receber",
+   "type": "ROOM_SNAPSHOT",
+   "tipo": null,
+   "seq": 8,
+   "revision": 7,
+   "canarioTeste": null,
+   "mapa": {
+    "largura": 37,
+    "altura": 37,
+    "casaM": 2
+   },
+   "vezId": "fb6677dffc5f3e878",
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": [
+    "Heroína Teste(28,4)",
+    "Orc(28,8)"
+   ]
+  },
+  {
+   "n": 23,
+   "lote": 14,
+   "onde": "receber",
+   "type": "ROOM_OPTIONS",
+   "tipo": null,
+   "seq": null,
+   "revision": 7,
+   "canarioTeste": null,
+   "mapa": null,
+   "vezId": "fb6677dffc5f3e878",
+   "orcamentoM": 6.5,
+   "nMover": 24,
+   "figuras": null
+  },
+  {
+   "n": 24,
+   "lote": 15,
+   "onde": "receber",
+   "type": "ROOM_EVENT",
+   "tipo": "movimento",
+   "seq": 9,
+   "revision": 8,
+   "canarioTeste": null,
+   "mapa": null,
+   "dados": {
+    "figuraId": "fb6677dffc5f3e878",
+    "de": {
+     "x": 28,
+     "y": 4
+    },
+    "para": {
+     "x": 28,
+     "y": 6
+    },
+    "caminho": [
+     {
+      "x": 28,
+      "y": 4
+     },
+     {
+      "x": 28,
+      "y": 5
+     },
+     {
+      "x": 28,
+      "y": 6
+     }
+    ],
+    "custoM": 4,
+    "reservaM": 2.5
+   },
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 25,
+   "lote": 15,
+   "onde": "receber",
+   "type": "ROOM_RECEIPT",
+   "tipo": null,
+   "seq": 9,
+   "revision": 8,
+   "canarioTeste": null,
+   "mapa": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  },
+  {
+   "n": 26,
+   "lote": 15,
+   "onde": "receber",
+   "type": "ROOM_OPTIONS",
+   "tipo": null,
+   "seq": null,
+   "revision": 8,
+   "canarioTeste": null,
+   "mapa": null,
+   "vezId": "fb6677dffc5f3e878",
+   "orcamentoM": 2.5,
+   "nMover": 4,
+   "figuras": null
+  },
+  {
+   "n": 27,
+   "lote": 17,
+   "onde": "conexaoFechada",
+   "type": "ROOM_PAUSED",
+   "tipo": null,
+   "seq": null,
+   "revision": null,
+   "canarioTeste": null,
+   "mapa": null,
+   "vezId": null,
+   "orcamentoM": null,
+   "nMover": null,
+   "figuras": null
+  }
+ ]
+}

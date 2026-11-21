@@ -1,0 +1,33 @@
+ rascunhos/servidor/nucleo/projecao.js | 2 +-
+ rascunhos/servidor/nucleo/sala.js     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+### M1: o evento escala da grelha-mapa leva casaMAntes à Party (fuga)
+✖ CORR8 (a): controlo positivo da sonda — o fio real da jogadora dá 0 achados; uma mensagem de teste com canário, de cada tipo, é apanhada (25.9032ms)
+✖ CORR8 (b): o que a jogadora DEVE receber numa mudança de escala aplicada (grelha-mapa) — evento vazio, snapshot e, na vez dela, as opções (12.5459ms)
+✔ CORR8 (b): o que a jogadora DEVE receber numa mudança de escala aplicada (grelha fixa 30 × 30) — evento vazio, snapshot e, na vez dela, as opções (9.6099ms)
+✔ CORR8 (c): o silêncio correcto — nas recusas da escala a jogadora e o espectador não recebem nada; o Mestre recebe a recusa (29.8903ms)
+ℹ pass 2
+ℹ fail 2
+✖ CORR8 (a): controlo positivo da sonda — o fio real da jogadora dá 0 achados; uma mensagem de teste com canário, de cada tipo, é apanhada (25.9032ms)
+✖ CORR8 (b): o que a jogadora DEVE receber numa mudança de escala aplicada (grelha-mapa) — evento vazio, snapshot e, na vez dela, as opções (12.5459ms)
+ rascunhos/servidor/nucleo/sala.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+### M2: a grelha-mapa não manda o snapshot novo (notificação em falta)
+✔ CORR8 (a): controlo positivo da sonda — o fio real da jogadora dá 0 achados; uma mensagem de teste com canário, de cada tipo, é apanhada (27.2624ms)
+✖ CORR8 (b): o que a jogadora DEVE receber numa mudança de escala aplicada (grelha-mapa) — evento vazio, snapshot e, na vez dela, as opções (12.8657ms)
+✔ CORR8 (b): o que a jogadora DEVE receber numa mudança de escala aplicada (grelha fixa 30 × 30) — evento vazio, snapshot e, na vez dela, as opções (9.801ms)
+✔ CORR8 (c): o silêncio correcto — nas recusas da escala a jogadora e o espectador não recebem nada; o Mestre recebe a recusa (30.1829ms)
+ℹ pass 3
+ℹ fail 1
+✖ CORR8 (b): o que a jogadora DEVE receber numa mudança de escala aplicada (grelha-mapa) — evento vazio, snapshot e, na vez dela, as opções (12.8657ms)
+ rascunhos/servidor/nucleo/projecao.js | 1 +
+ 1 file changed, 1 insertion(+)
+### M3: o evento interno recusa passa a sair para a Party (fuga na recusa)
+✖ CORR8 (a): controlo positivo da sonda — o fio real da jogadora dá 0 achados; uma mensagem de teste com canário, de cada tipo, é apanhada (28.4022ms)
+✔ CORR8 (b): o que a jogadora DEVE receber numa mudança de escala aplicada (grelha-mapa) — evento vazio, snapshot e, na vez dela, as opções (14.5132ms)
+✔ CORR8 (b): o que a jogadora DEVE receber numa mudança de escala aplicada (grelha fixa 30 × 30) — evento vazio, snapshot e, na vez dela, as opções (8.6711ms)
+✖ CORR8 (c): o silêncio correcto — nas recusas da escala a jogadora e o espectador não recebem nada; o Mestre recebe a recusa (20.1109ms)
+ℹ pass 2
+ℹ fail 2
+✖ CORR8 (a): controlo positivo da sonda — o fio real da jogadora dá 0 achados; uma mensagem de teste com canário, de cada tipo, é apanhada (28.4022ms)
+✖ CORR8 (c): o silêncio correcto — nas recusas da escala a jogadora e o espectador não recebem nada; o Mestre recebe a recusa (20.1109ms)

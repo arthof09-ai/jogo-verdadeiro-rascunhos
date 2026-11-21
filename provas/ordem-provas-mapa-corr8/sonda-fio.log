@@ -1,0 +1,22 @@
+== a sonda Node no fio da jogadora: 28 mensagens, casos de teste ["K1","K2","K3","K4","K5"] ==
+  ok    K1: no fio e APANHADO — ["chave:casaMAntes","chave:casasQuePaga","chave:grelhaAntes","chave:soMestre"]
+  ok    K2: no fio e APANHADO — ["texto:90210777","texto:CANARIO-FANTASMA","texto:ESCALA_","texto:Orc Verdadeiro"]
+  ok    K3: no fio e APANHADO — ["numero:313","numero:7777","numero:9137"]
+  ok    K4: no fio e APANHADO — ["numero:313","numero:7777","texto:Orc Verdadeiro"]
+  ok    K5: no fio e APANHADO — ["texto:CANARIO-FANTASMA","texto:ESCALA_"]
+  ok    fora das mensagens de teste: 0 achados []
+== o que chegou à jogadora em cada entrega com um evento `escala` (2) ==
+-- lote 12:
+   10 ROOM_EVENT:escala seq=6 rev=5 dados={}
+   11 ROOM_EVENT:escala seq=6 rev=5 [TESTE K1] dados={"soMestre":{"casaMAntes":1.5,"casaM":1,"grelhaAntes":{"largura":50,"altura":50}
+   12 ROOM_EVENT:escala seq=6 rev=5 [TESTE K2] dados={"detalhe":"ESCALA_JUNTA_FIGURAS: 2 figuras ficavam juntas com 1 m por casa — te
+   13 ROOM_EVENT:escala seq=6 rev=5 [TESTE K3] dados={"vida":7777,"pa":313,"defesa":9137}
+   14 MASTER_VIEW seq=null rev=null [TESTE K4] mapa={"largura":75,"altura":75,"casaM":1} figuras=Heroína Teste(57,8) Orc(57,17)
+   15 ROOM_REJECT seq=null rev=null [TESTE K5]
+   16 ROOM_SNAPSHOT seq=6 rev=5 mapa={"largura":75,"altura":75,"casaM":1} figuras=Heroína Teste(57,8) Orc(57,17)
+   17 ROOM_OPTIONS seq=null rev=5 orcamentoM=7.5 mover=112
+-- lote 14:
+   21 ROOM_EVENT:escala seq=8 rev=7 dados={}
+   22 ROOM_SNAPSHOT seq=8 rev=7 mapa={"largura":37,"altura":37,"casaM":2} figuras=Heroína Teste(28,4) Orc(28,8)
+   23 ROOM_OPTIONS seq=null rev=7 orcamentoM=6.5 mover=24
+TUDO PASSOU
