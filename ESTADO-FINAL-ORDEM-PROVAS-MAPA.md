@@ -101,7 +101,7 @@ de `ferramentas/tabela_grelhas.py`.
   da obsolescência uma coisa incondicional.
 - **Conclusão.** O caso `[50, 50, 1.0]` da ferramenta ficou obsoleto com a MAPA-JOGÁVEL (sob a condição acima). Uma grelha 50×50 @ 1 m
   deixou de existir no jogo: a sala nasce sempre a 1,5 m e uma 50×50 a 1,5 m é a grelha-mapa. Não é defeito do jogo,
-  por isso não parei. Fiz a cópia adaptada abaixo e o original ficou intocado.
+  por isso não parei. Fiz a cópia adaptada abaixo; a ferramenta original foi depois corrigida nas correcções da conferência (ver §5).
 
 ### 1c. A cópia adaptada (fora de `cliente/`): 18/18, TUDO PASSOU — 0 divergências
 `provas/ordem-mapa-jogavel/provas-bancada/ferramentas/provar_terreno_servidor_mapa.gd` muda uma coisa só: a arena
