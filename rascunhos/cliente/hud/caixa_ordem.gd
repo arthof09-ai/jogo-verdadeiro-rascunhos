@@ -20,14 +20,16 @@ const NA_VEZ := "na vez"
 const LADO_RETRATO_EM_LETRAS := 2.8
 const LADO_ACTIVA_EM_LETRAS := 4.6
 const MAX_LETRAS_NOME := 10
-## Ordem CAIXA-PERSISTENTE: a tabela de apresentação da Ordem DADOS (dados/apresentacao.gd) aplica-se onde ela já
-## define a cor: o realce da figura na vez é o anel de destino do site (Apresentacao.COR_MESTRE_ANEL = ffd28b, o mesmo
-## literal de antes, por isso o ecrã fica igual). O fundo do painel (sangue) e a moldura da caixa (ouro) vêm da tabela
-## desde a Ordem PALETA-C ponto 2 (palavra do Mestre, 21/11/2026), com a transparência de antes (0.78 e 0.18).
+## As cores vêm da tabela de apresentação (dados/apresentacao.gd). Ordem CAIXA-TESTE-ESTETICA (teste visual,
+## 21/11/2026): a linguagem do protótipo — painel castanho quase preto a .55, moldura ouro c9a227 a .85, letras
+## pergaminho f3e9d2, fundo do retrato rgba(10,8,5,.82). Nenhuma outra cor: a figura na vez destaca-se pela moldura de
+## ouro mais grossa (3 contra 1) e pelo nome a ouro; as outras levam o nome a pergaminho.
 const Apresentacao := preload("res://dados/apresentacao.gd")
 const COR_PAINEL := Apresentacao.COR_CAIXA_PAINEL
-const COR_REALCE := Apresentacao.COR_MESTRE_ANEL
 const COR_MOLDURA := Apresentacao.COR_CAIXA_MOLDURA
+const COR_REALCE := Apresentacao.COR_CAIXA_MOLDURA
+const COR_TEXTO := Apresentacao.COR_CAIXA_TEXTO
+const COR_FUNDO_RETRATO := Apresentacao.COR_RETRATO_FUNDO
 
 var modo := "dinamico"
 var com_botao := false
@@ -177,7 +179,7 @@ func _moldura(realce: bool) -> PanelContainer:
 	p.name = "Moldura"
 	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0, 0, 0, 0.35)
+	s.bg_color = COR_FUNDO_RETRATO
 	s.border_color = COR_REALCE if realce else COR_MOLDURA
 	s.set_border_width_all(3 if realce else 1)
 	s.set_corner_radius_all(6)
@@ -198,5 +200,6 @@ func _rotulo(pai: Node, nome: String, texto: String) -> Label:
 	l.name = nome
 	l.text = texto
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	l.add_theme_color_override("font_color", COR_TEXTO)
 	pai.add_child(l)
 	return l
