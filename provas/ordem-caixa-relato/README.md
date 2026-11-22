@@ -336,3 +336,30 @@ em **`b7-correcoes-4/`**. Nada do código do jogo, do HUD nem das cores.
 Correr de novo: `bash provas/ordem-caixa-relato/ferramentas/correr-mutacoes-b7-correcoes-4.sh <godot.exe> <pasta-saída>
 [<base> (c847966)] [<base-r1> (a12b905)]`; as provas vivas como acima, com `"$PWD/provas/ordem-caixa-relato/b7-correcoes-4"`.
 Os números estão no `ESTADO-FINAL-ORDEM-CAIXA-RELATO-B7-CORRECOES-4.md`, na raiz.
+
+---
+
+# Correcções B1–B4 da sentença da CAIXA-RELATO-CORRECOES-5 (Ordem CAIXA-RELATO-CORRECOES-6 · 22/11/2026, Claude conta 1, PC)
+
+Só as ferramentas desta pasta, as corridas em **`correcoes-6/`** e uma emenda ao ESTADO-FINAL da CORRECOES-5 (raiz).
+Nada do código do jogo, do HUD nem das cores. O registo `correcoes-4/mutacoes.log` não muda.
+
+- **B1** — `ESTADO-FINAL-ORDEM-CAIXA-RELATO-CORRECOES-5.md`, linha 55: o marcador aparece em 28 linhas (92 ocorrências).
+- **B2** — `conferir-registo.mjs` gera também os pedaços **a cavalo de palavras**: todo o pedaço contíguo do nome
+  inteiro com 4 ou mais letras (os espaços entram no pedaço, não contam para as 4). `--velho` corre o critério antigo,
+  para comparar. O registo regenerado dá **0** nos dois critérios (151 pedaços no alargado, 26 no antigo). O registo
+  antigo dá 18 nos dois. Numa linha sintética com um pedaço a cavalo de palavras, o alargado acha-o e o antigo não.
+- **B3** — o `cortar` do `correr-mutacoes.sh` conta **pontos de código**, não grafemas, e passa a cortar **só entre
+  grafemas** (`Intl.Segmenter`). Um grafema que não cabe inteiro fica de fora, por isso uma linha pode sair com menos
+  de 400 pontos de código, mas nunca com mais. O registo cometido passa por ele sem mudar um byte.
+- **B4** — `mutacoes.mjs`: os dois títulos que traziam o nome verdadeiro (inteiro e em minúsculas) dizem agora «o nome
+  verdadeiro n.º 1». O n.º é o mesmo do conferidor.
+
+Números (Godot 4.7.2 Windows, motor VLAB real `a91c021c…`, semente 7): teste `correcoes-6/teste-relato.log` **31/31**;
+prova HUD-JOGADORA `correcoes-6/cliente-hud/relato.txt` **43/43**, 68 linhas = 68 no ficheiro; prova MANEQUIM
+`correcoes-6/cliente-manequim/relato.txt` **53/53**, 78 = 78.
+
+Correr de novo: `bash provas/ordem-caixa-relato/ferramentas/correr-prova-caixa-relato.sh <godot.exe> <vlab-completo.js>
+<pasta-tmp> "$PWD/provas/ordem-caixa-relato/correcoes-6"`; `node provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs
+[--velho] provas/ordem-caixa-relato/correcoes-4/mutacoes.log`. Para as mutações, a pasta tmp tem de ser um **caminho
+absoluto**: o `--saida` da prova é lido a partir de `rascunhos/cliente`.

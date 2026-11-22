@@ -52,7 +52,7 @@ Este ficheiro não cita os nomes verdadeiros nem os fragmentos: diz só a linha,
     palavras dos dois nomes (não os cito aqui). Só aparecem as linhas 76 e 192, com o nome público por inteiro
     «Espadachim de Bancada» (ver B2).
   - Há 0 caracteres `�`. A linha mais comprida tem 400 caracteres.
-  - O marcador `‹nome verdadeiro›` aparece 28 vezes.
+  - O marcador `‹nome verdadeiro›` aparece em 28 linhas (92 ocorrências). *(Emenda CAIXA-RELATO-CORRECOES-6, B1: dizia «aparece 28 vezes». 28 é o n.º de linhas, por `grep -c`; as ocorrências, por `grep -o … | wc -l`, são 92.)*
   - Escrevi o cabeçalho do registo sem duas palavras correntes do português que o critério estrito acusa, para
     a regra continuar sem excepções.
 

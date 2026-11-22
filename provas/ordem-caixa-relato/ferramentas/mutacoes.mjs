@@ -12,6 +12,9 @@
 // `base` = os ficheiros da base (fable/integracao-50 6a87b9e, o código da CAIXA-RELATO-CORRECOES-2): as 6 mutações da
 // ordem anterior (B1, B2, B3 ×3, B5, B6), para os números dela terem registo, e as novas para mostrar que a base não as
 // apanhava. `novo` = o código desta ordem.
+// CAIXA-RELATO-CORRECOES-6 (B4): os títulos (`diz`) já não trazem o nome verdadeiro, nem inteiro nem em minúsculas:
+// dizem «o nome verdadeiro n.º K». K é a ordem do nome entre os nomes verdadeiros das fichas (nome ≠ nomePublico), a
+// mesma numeração do conferir-registo.mjs. É defesa em profundidade: o correr-mutacoes.sh já filtrava o título.
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const PROVA_HUD = 'provas/ordem-caixa-hud-jogadora/ferramentas/prova_caixa_jogadora.gd';
@@ -34,7 +37,7 @@ const FICHA_PUB = { f: FICHAS, de: '"nomePublico": "Espadachim de Bancada",', pa
 const comuns = {
   // ---- as 6 da ordem anterior (CAIXA-RELATO-CORRECOES-2)
   'B1-nome-verdadeiro': { corrida: 'hud', subs: [{ f: PROVA_HUD, de: NOME_PUB, para: 'var np = f.get("nome")' }],
-    diz: 'CORRECOES-2 B1: `_nome_publico` lê o `nome` (o verdadeiro) — o relato traz «Bruto de Bancada»' },
+    diz: 'CORRECOES-2 B1: `_nome_publico` lê o `nome` (o verdadeiro) — o relato traz o nome verdadeiro n.º 1' },
   'B2-fuga-linhas-hora': { corrida: 'teste', subs: [{ f: RELATO, de: ORIGEM, para: 'return ("nome " if _num(snap.get("seq")) == "13" else "") + "ROOM_SNAPSHOT seq %s' }],
     diz: 'CORRECOES-2 B2: uma fuga «nome » só nas linhas de seq 13 (as do caso da hora)' },
   'B3-caixaMestre': { corrida: 'teste', subs: [fuga('(caixaMestre)')], diz: 'CORRECOES-2 B3: «(caixaMestre)» na origem da linha' },
@@ -46,7 +49,7 @@ const comuns = {
   // ---- as desta ordem
   'N-B2-canario-minusculas-relato': { corrida: 'hud',
     subs: [{ f: PROVA_HUD, de: 'return str(np) if np is String and np != "" else id', para: 'return str(f.get("nome", "")).to_lower() if np is String and np != "" else id' }],
-    diz: 'CORRECOES-3 B2: o relato traz o nome verdadeiro em minúsculas («bruto de bancada»)' },
+    diz: 'CORRECOES-3 B2: o relato traz o nome verdadeiro n.º 1 em minúsculas' },
   'N-B2-canario-minusculas-caixa': { corrida: 'hud',
     subs: [{ f: PROVA_HUD, de: TEXTOS, para: TEXTOS + '\n\ttextos.append(str(canarios.filter(func(k): return not str(k).is_valid_int())[0]).to_lower())' }],
     diz: 'CORRECOES-3 B2: um texto da caixa traz o nome verdadeiro em minúsculas' },

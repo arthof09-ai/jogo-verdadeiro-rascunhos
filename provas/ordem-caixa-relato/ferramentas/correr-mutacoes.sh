@@ -19,6 +19,7 @@
 # nome como texto literal (sem metacaracteres de sed) e sem distinguir maiúsculas também fora do ASCII. B2 — o título
 # da mutação (o `diz`) e a linha «NÃO APLICOU» também passam pelo filtro, com os nomes verdadeiros das fichas limpas
 # (as cometidas): «Espadachim de Bancada», que nas fichas é o nome público, fica.
+# CAIXA-RELATO-CORRECOES-6: B3 — o `cortar` conta pontos de código (não grafemas) e corta só entre grafemas.
 cd "$(dirname "$0")/../../.." || exit 9
 G=${1:?godot}; MOTOR=${2:?motor}; T=${3:?tmp}; MODO=${4:?base|base4|novo}; LOG=${5:?registo}
 BASE=${6:-$([ "$MODO" = base4 ] && echo da6683e || echo 6a87b9e)}
@@ -80,11 +81,18 @@ filtrar() {  # stdin → stdout, com os nomes <nomes> (um por linha) trocados po
     let t = ""; process.stdin.setEncoding("utf8");
     process.stdin.on("data", (c) => (t += c)).on("end", () => process.stdout.write(re ? t.replace(re, "‹nome verdadeiro›") : t));'
 }
-cortar() {  # <n> — stdin → stdout, cada linha com no máximo <n> caracteres (pontos de código, não bytes)
+cortar() {  # <n> — stdin → stdout, cada linha com no máximo <n> pontos de código (não bytes), sem partir um grafema
+  # CAIXA-RELATO-CORRECOES-6 (B3): o limite <n> conta PONTOS DE CÓDIGO, não grafemas, mas o corte só cai ENTRE grafemas
+  # (Intl.Segmenter, granularity "grapheme"): um grafema que não cabe inteiro nos <n> fica todo de fora. Antes cortava-se
+  # ao ponto de código <n>, e uma letra com marca combinante (e + U+0301) a cavalo do limite perdia a marca — nunca dava
+  # «�», mas partia o grafema. A linha cortada pode, por isso, ter menos de <n> pontos de código; nunca mais.
   N="$1" node -e '
-    const n = Number(process.env.N); let t = ""; process.stdin.setEncoding("utf8");
-    process.stdin.on("data", (c) => (t += c)).on("end", () =>
-      process.stdout.write(t.split("\n").map((l) => Array.from(l).slice(0, n).join("")).join("\n")));'
+    const n = Number(process.env.N); const seg = new Intl.Segmenter("pt", { granularity: "grapheme" });
+    const corta = (l) => { let r = "", k = 0;
+      for (const { segment: g } of seg.segment(l)) { const c = Array.from(g).length; if (k + c > n) break; r += g; k += c; }
+      return r; };
+    let t = ""; process.stdin.setEncoding("utf8");
+    process.stdin.on("data", (c) => (t += c)).on("end", () => process.stdout.write(t.split("\n").map(corta).join("\n")));'
 }
 juntar_nomes() { printf '%s\n%s\n' "$1" "$2" | awk 'NF && !v[$0]++'; }
 repor_limpo
