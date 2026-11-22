@@ -137,4 +137,5 @@ o Node 26.13.0 e o motor VLAB real sha256 `a91c021c…3261`, semente 7. Os regis
 6. **A fronteira:** só mudaram o teste e o README de `provas/ordem-caixa-relato/`, as corridas novas em
    `provas/ordem-caixa-relato/b7-correcoes-2/` e a linha «Base» do ESTADO-FINAL da B7-CORRECOES (que é o B3). Não
    mexi em `rascunhos/`, no HUD, nas cores nem em `provas/ordem-caixa-janela/`.
-7. **Não mexi no `ORDEM.md` da sede**, como nas ordens anteriores; já termina com «Estado: NOVA».
+7. **Não mexi no `ORDEM.md` da sede**, como nas ordens anteriores. A última linha dele é o próprio item da ordem
+   que cita `<b>Estado: NOVA</b>`; a marca de estado é do coordenador.
