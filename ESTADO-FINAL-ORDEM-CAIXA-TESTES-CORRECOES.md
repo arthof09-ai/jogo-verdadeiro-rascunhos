@@ -137,20 +137,22 @@ As linhas da prova referem-se à versão deste ramo, e a tabela é a da corrida 
 | Conferência dos schemas (tráfego dos testes do servidor) | **0 falhas** nas mensagens que saem |
 | Cliente `rodar_testes.gd` (headless) | **290/290**, 0 erros de script |
 | Cliente `caixa_jogadora.gd` (headless) | **18/18**, 0 erros de script |
-| CI em `e00f708` | **verde**: 10/10 jobs, mais a sonda (secção abaixo) |
+| CI em `ffe144a` (ramo rebaseado) | **verde**: 10/10 jobs e a sonda; a «Prova da caixa» da B2 dá PROVA OK (secção abaixo) |
 
 O número de testes do servidor é o da base (418): esta ordem só aperta testes que já existiam. Antes do rebase, sobre
 `6381f50`, os números foram 416/416, 290/290 e 18/18, os schemas deram 0 falhas e o CI 10/10 verde, em `e00f708`.
 
 ## CI
 
-| Workflow em `e00f708` | Run | Resultado |
-|---|---|---|
-| «Testes dos rascunhos» | 44966609627 | **verde, 10/10 jobs**: servidor, protocolo, cliente, godot-cliente, ponta-a-ponta, foto-mestre, provas-mapa, motor-real, validador-glb, **retoma-pc** |
-| «Sonda de privacidade» | 44966609612 | **verde** |
+| Workflow | Commit | Run | Resultado |
+|---|---|---|---|
+| «Testes dos rascunhos» | `ffe144a` (sobre `0d26f9f`) | 44967351507 | **verde, 10/10 jobs**: servidor (com o passo «Prova da caixa» da B2: **PROVA OK**), protocolo, cliente, godot-cliente, ponta-a-ponta, foto-mestre, provas-mapa, motor-real, validador-glb, **retoma-pc** |
+| «Sonda de privacidade» | `ffe144a` | 44967351534 | **verde** |
+| «Testes dos rascunhos» | `e00f708` (antes do rebase, sobre `6381f50`) | 44966609627 | verde, 10/10 jobs |
+| «Sonda de privacidade» | `e00f708` | 44966609612 | verde |
 
-O commit deste ESTADO-FINAL só toca na raiz (não em `rascunhos/`), por isso as listas da retoma continuam certas. O CI
-corre outra vez com ele.
+O commit que fecha este ESTADO-FINAL só toca na raiz (não em `rascunhos/`), por isso as listas da retoma continuam
+certas. O CI corre outra vez com ele.
 
 ## Pontos para o coordenador
 
