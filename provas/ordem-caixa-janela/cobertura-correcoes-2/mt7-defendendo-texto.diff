@@ -1,0 +1,11 @@
+--- esta-ordem/nomes_relato.gd
++++ mt7-defendendo-texto/nomes_relato.gd
+@@ -119,7 +119,7 @@
+ 	"paGasto", "estadoMorte", "armaCaida", "armaQuebrada", "corpoPartido", "custoPA", "dano",
+ 	"custoM", "reservaM", "perdeQuarto", "reacaoDisponivel", "defendendo"]
+ ## As chaves que também são palavras portuguesas: só contam em forma de chave.
+-const CHAVES_PALAVRA := ["alma", "dano", "defendendo"]
++const CHAVES_PALAVRA := ["alma", "dano"]
+ ## As chaves com sufixo de unidade maiúsculo (`M` = metros): o sufixo só conta maiúsculo.
+ const CHAVES_SUFIXO := ["custoM", "reservaM"]
+ 

@@ -27,6 +27,8 @@ extends SceneTree
 ## «bancada:», que escreve o passo inteiro: um valor de PA posto no passo é FALHA.
 ## CAIXA-JANELA-COBERTURA-CORRECOES (B1): as chaves são 12 (vida, PA — incluindo `paGasto` e `custoPA` —, alma, dano,
 ## estado de morte, arma caída/quebrada, corpo partido); os rótulos dizem «chaves privadas do Mestre».
+## CAIXA-JANELA-COBERTURA-CORRECOES-2 (B1): 17 chaves (+ `custoM`, `reservaM`, `perdeQuarto`, `reacaoDisponivel`,
+## `defendendo`); o rótulo conta-as de `NomesRelato.CHAVES_PROIBIDAS`, por isso esta ferramenta não muda mais nada.
 ## Deixa em <pasta>: 1-janela-1280x720.png, 2-baixo-844x390.png, 3-baixo-780x360.png e relato.txt. Código 0 se tudo passa.
 
 const CENA := "res://cenas/arena/arena.tscn"

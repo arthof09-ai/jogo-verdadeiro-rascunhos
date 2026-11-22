@@ -1,0 +1,26 @@
+--- esta-ordem/prova_caixa_janela.gd
++++ m1c-esta-ordem/prova_caixa_janela.gd
+@@ -181,13 +181,22 @@
+ 	await _esperar(pronto, 5.0)
+ 	var d := IA.decidir(quem, figuras, lugar.opcoes, {"andou": false, "atacou": false, "accoes": 0})
+ 	for passo in [d["acao"], {"tipo": "encerrar"}]:
++		var _opc_antes: Dictionary = lugar.opcoes.duplicate(true)
+ 		var id := ""
+ 		if lugar.papel == "mestre":
+ 			id = lugar.comando("MASTER_ACT", {"figuraId": vez_id, "acao": passo})
+ 		else:
+ 			id = lugar.intencao(passo)
+ 		await _esperar(func(): return lugar.respostas.has(id), 10.0)
+-		_linha(NomesRelato.linha_bancada(quem, vez_id, passo, str(lugar.respostas.get(id, {}).get("estado", lugar.respostas.get(id, {}).get("motivo", "?")))))
++		# MUTACAO M1c: o passo «mover» escrito na linha «bancada:» leva o `custoM` REAL da casa de destino — o que o
++		# servidor deu em `opcoes.mover` (a casa com o mesmo x,y) a este lugar, antes do passo.
++		var _mp: Dictionary = passo
++		if passo.get("tipo") == "mover":
++			for _c in _opc_antes.get("mover", []):
++				if int(_c.get("x", -1)) == int(passo["destino"]["x"]) and int(_c.get("y", -1)) == int(passo["destino"]["y"]):
++					_mp = passo.merged({"custoM": _c.get("custoM")})
++			print("M1c valor posto no passo: custoM=%s (opcoes.mover do servidor, destino %d,%d)" % [str(_mp.get("custoM", "SEM")), int(passo["destino"]["x"]), int(passo["destino"]["y"])])
++		_linha(NomesRelato.linha_bancada(quem, vez_id, _mp, str(lugar.respostas.get(id, {}).get("estado", lugar.respostas.get(id, {}).get("motivo", "?")))))
+ 		if passo.get("tipo") == "encerrar":
+ 			break
+ 		await _vista_b()

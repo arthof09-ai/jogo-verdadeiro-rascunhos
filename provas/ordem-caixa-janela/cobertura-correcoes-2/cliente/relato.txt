@@ -1,0 +1,81 @@
+== Ordem CAIXA-JANELA — a janela lobby→arena e a caixa com 10 figuras em ecrãs baixos (cliente a sério) ==
+servidor ws://127.0.0.1:8793/ws · render NVIDIA GeForce RTX 4060 · Godot 4.7.2-stable (official)
+== 0. batalha de bancada com 10 figuras (IA de bancada, lugares próprios) ==
+  ok    a batalha tem 10 figuras (≥ 10)
+  bancada: Arqueira de Bancada → {"destino":{"x":11,"y":10},"tipo":"mover"} (APLICADA)
+  bancada: Arqueira de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Lobo → {"destino":{"x":12,"y":10},"tipo":"mover"} (APLICADA)
+  bancada: Lobo → {"tipo":"encerrar"} (APLICADA)
+  bancada: Lobo → {"destino":{"x":11,"y":11},"tipo":"mover"} (APLICADA)
+  bancada: Lobo → {"tipo":"encerrar"} (APLICADA)
+  bancada: Lobo → {"destino":{"x":9,"y":11},"tipo":"mover"} (APLICADA)
+  bancada: Lobo → {"tipo":"encerrar"} (APLICADA)
+  bancada: Lobo → {"destino":{"x":10,"y":10},"tipo":"mover"} (APLICADA)
+  bancada: Lobo → {"tipo":"encerrar"} (APLICADA)
+  bancada: Espadachim de Bancada → {"destino":{"x":10,"y":9},"tipo":"mover"} (APLICADA)
+  bancada: Espadachim de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Bruto → {"destino":{"x":10,"y":11},"tipo":"mover"} (APLICADA)
+  bancada: Bruto → {"tipo":"encerrar"} (APLICADA)
+  bancada: Bruto → {"destino":{"x":6,"y":12},"tipo":"mover"} (APLICADA)
+  bancada: Bruto → {"tipo":"encerrar"} (APLICADA)
+  bancada: Bruto → {"destino":{"x":14,"y":12},"tipo":"mover"} (APLICADA)
+  bancada: Bruto → {"tipo":"encerrar"} (APLICADA)
+  bancada: Bruto → {"destino":{"x":6,"y":11},"tipo":"mover"} (APLICADA)
+  bancada: Bruto → {"tipo":"encerrar"} (APLICADA)
+  a batalha a meio: fase combate, rodada 2.0, vez de Arqueira de Bancada, ordem dinâmica (Mestre) ["Arqueira de Bancada","Lobo","Lobo","Lobo","Lobo","Espadachim de Bancada","Bruto","Bruto","Bruto","Bruto"]
+  ok    batalha de bancada a meio: em combate e com a ordem dinâmica do servidor com 10 figuras (≥ 8)
+== 1. B1 — a janela: o snapshot chega, a batalha anda, e SÓ DEPOIS a arena (e o HUD) abre ==
+  ok    1: snapshot recebido (seq 33), ainda sem HUD e sem eventos depois dele
+  bancada: Arqueira de Bancada → {"alvoId":"f00d6f54afaa36569","arma":"tiro-certeiro-bancada","tipo":"atacar"} (APLICADA)
+  bancada: Arqueira de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Lobo → {"alvoId":"ff2acf60bd672e76e","arma":"mordida-bancada","tipo":"atacar"} (APLICADA)
+  bancada: Lobo → {"tipo":"encerrar"} (APLICADA)
+  bancada: Lobo → {"alvoId":"ff2acf60bd672e76e","arma":"mordida-bancada","tipo":"atacar"} (APLICADA)
+  bancada: Lobo → {"tipo":"encerrar"} (APLICADA)
+  na janela (sem HUD) a bancada jogou ["Arqueira de Bancada","Lobo","Lobo"]: 10 eventos chegaram ao Estado dela (seq 33 → 43)
+  ok    1: a batalha andou entre o snapshot e o HUD (3 vezes, 10 eventos)
+  ok    1: a arena abriu a meio da batalha (fase combate, rodada 2)
+  caixa da jogadora ao abrir: visível=true modo=dinamico ordem=["Arqueira de Bancada","Lobo","Lobo","Lobo","Lobo","Espadachim de Bancada","Bruto","Bruto","Bruto","Bruto"] vez=Lobo
+  ordem do servidor:          ["Arqueira de Bancada","Lobo","Lobo","Lobo","Lobo","Espadachim de Bancada","Bruto","Bruto","Bruto","Bruto"], vez Lobo
+  ok    1: ao abrir, a caixa já é a ordem do servidor com os eventos da janela (10 figuras, vez Lobo), sem esperar pelo snapshot seguinte
+  ok    1: nenhum snapshot novo chegou entretanto (os 10 eventos de depois do de seq 33 continuam por cima dele)
+  ok    1: nenhuma mensagem do Mestre chegou ao aparelho dela (11 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    1: o estado dela não guarda nada do Mestre
+  ok    1: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica
+  ok    1: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa (0 achado(s), textos [])
+  ok    1: nenhum número nos textos da caixa (15 textos; com dígito: [])
+  ok    1: nenhum nome verdadeiro no relato (46 linhas; canários: 2 nome(s) que diferem do público; 0 achado(s), linhas [])
+  ok    1: nenhuma chave privada do Mestre no relato (47 linhas; 17 chaves proibidas; 0 achado(s), linhas [])
+== 2. B3 — a caixa com 10 figuras em ecrãs baixos ==
+  MEDIDA viva 10 figuras · janela 1280x720 (unidades 1920x1080, escala 0.667): caixa 841x212 u = 560x141 px reais (44% x 20% do ecrã), 10 por linha, retrato 62 u = 41 px, nome 17 u = 11.3 px · faixa «O Mestre narra» livre 943 u (precisa 453 u) = 628 px reais, letra 14.7 px
+  ok    1280x720: a caixa com as 10 figuras cabe no ecrã
+  ok    1280x720: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    1280x720: a faixa tem 943 u para a frase mais comprida (453 u), numa linha, fora da caixa
+  ok    1280x720: a fila segue a letra de agora (retrato 62 u = 2,8 × 22)
+  ok    1280x720: a letra da faixa tem 14.7 px reais (≥ 13)
+  ok    captura 1-janela-1280x720.png (1280×720)
+  MEDIDA viva 10 figuras · janela 844x390 (unidades 2337x1080, escala 0.361): caixa 1326x323 u = 478x116 px reais (57% x 30% do ecrã), 10 por linha, retrato 101 u = 36 px, nome 27 u = 9.8 px · faixa «O Mestre narra» livre 819 u (precisa 729 u) = 295 px reais, letra 13.0 px
+  ok    844x390: a caixa com as 10 figuras cabe no ecrã
+  ok    844x390: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    844x390: a faixa tem 819 u para a frase mais comprida (729 u), numa linha, fora da caixa
+  ok    844x390: a fila segue a letra de agora (retrato 101 u = 2,8 × 36)
+  ok    844x390: a letra da faixa tem 13.0 px reais (≥ 13)
+  ok    captura 2-baixo-844x390.png (844×390)
+  MEDIDA viva 10 figuras · janela 780x360 (unidades 2340x1080, escala 0.333): caixa 1320x386 u = 440x128 px reais (56% x 36% do ecrã), 9 por linha, retrato 110 u = 37 px, nome 29 u = 9.7 px · faixa «O Mestre narra» livre 816 u (precisa 788 u) = 272 px reais, letra 13.0 px
+  ok    780x360: a caixa com as 10 figuras cabe no ecrã
+  ok    780x360: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    780x360: a faixa tem 816 u para a frase mais comprida (788 u), numa linha, fora da caixa
+  ok    780x360: a fila segue a letra de agora (retrato 110 u = 2,8 × 39)
+  ok    780x360: a letra da faixa tem 13.0 px reais (≥ 13)
+  ok    captura 3-baixo-780x360.png (780×360)
+  ok    2: nenhuma mensagem do Mestre chegou ao aparelho dela (11 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    2: o estado dela não guarda nada do Mestre
+  ok    2: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica
+  ok    2: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa (0 achado(s), textos [])
+  ok    2: nenhum número nos textos da caixa (15 textos; com dígito: [])
+  ok    2: nenhum nome verdadeiro no relato (75 linhas; canários: 2 nome(s) que diferem do público; 0 achado(s), linhas [])
+  ok    2: nenhuma chave privada do Mestre no relato (76 linhas; 17 chaves proibidas; 0 achado(s), linhas [])
+  ok    fim: o relato inteiro (77 linhas) não traz nenhum dos 2 nome(s) verdadeiro(s) (0 achado(s), linhas [])
+  ok    fim: o relato inteiro (78 linhas) não traz nenhuma das 17 chaves privadas do Mestre (0 achado(s), linhas [])
+
+prova da janela e da caixa com 10 figuras: 41 de 41 verificações passaram.

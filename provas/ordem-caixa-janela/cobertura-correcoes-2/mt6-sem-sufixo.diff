@@ -1,0 +1,11 @@
+--- esta-ordem/nomes_relato.gd
++++ mt6-sem-sufixo/nomes_relato.gd
+@@ -121,7 +121,7 @@
+ ## As chaves que também são palavras portuguesas: só contam em forma de chave.
+ const CHAVES_PALAVRA := ["alma", "dano", "defendendo"]
+ ## As chaves com sufixo de unidade maiúsculo (`M` = metros): o sufixo só conta maiúsculo.
+-const CHAVES_SUFIXO := ["custoM", "reservaM"]
++const CHAVES_SUFIXO := []
+ 
+ 
+ static func _re_chave(k: String) -> RegEx:

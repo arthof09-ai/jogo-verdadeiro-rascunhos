@@ -123,3 +123,22 @@ Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c�
   rc=1). Os relatos mutados estão cometidos inteiros. Também lá estão as mutações MT1–MT4 do teste (17, 22, 21 e 21 de 23,
   todas com rc=1).
 - `cobertura-correcoes/actualizar-listas.log`: o artefacto do `retoma-i0004/actualizar-listas.py` (B5).
+
+## cobertura-correcoes-2/ — Ordem CAIXA-JANELA-COBERTURA-CORRECOES-2 (22/11/2026, Claude conta 1, PC): B1–B5
+A varredura das chaves do relato passa de 12 para **17 chaves** (B1: `custoM`, `reservaM`, `perdeQuarto`,
+`reacaoDisponivel`, `defendendo` — privadas reais, latentes, não vivas). `custoM`/`reservaM` com o `M` final só maiúsculo
+(para «reservam»/«custom» não tropeçarem); `defendendo` só em forma de chave, como «alma»/«dano». Os limites novos (B2:
+`modo` não listável, kebab `alma-total`/`dano-total`, `m` minúsculo) e o falso alarme aceite «a alma 3 vezes» (B5) estão
+escritos em `ferramentas/nomes_relato.gd` e fixados no teste.
+
+Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c…`; semente 7):
+- `cobertura-correcoes-2/teste-nomes-relato.log`: **teste 25/25** (eram 23: + o caso do `custoM`, + o falso alarme B5).
+- `cobertura-correcoes-2/cliente/`: **prova viva 41/41**, 0 nomes verdadeiros e 0 das 17 chaves no relato. Capturas
+  (sha256, 16 primeiros): `1-janela-1280x720.png` `28a15fedf11d2e9e`, `2-baixo-844x390.png` `4053e9acff9e21be`,
+  `3-baixo-780x360.png` `875701c2187f2a0e`.
+- `cobertura-correcoes-2/mutacoes.log` + `cobertura-correcoes-2/m1c/`: a **M1c**, com o `custoM` real de `opcoes.mover`.
+  Na base (`ed3ae11`, 12 chaves) passa calada (41/41, rc=0). Nesta ordem dá FALHA em 1, em 2 e no fim (38/41, rc=1;
+  10 achados). Os relatos mutados diferem em **4 linhas** (as 3 verificações + o total). Também lá estão as mutações
+  MT5–MT8 do teste (20, 23, 23 e 23 de 25, todas com rc=1; diffs em `cobertura-correcoes-2/mt*.diff`).
+- `cobertura-correcoes-2/actualizar-listas.log`: o artefacto do `retoma-i0004/actualizar-listas.py` com a saída REAL
+  capturada de cada comando (B4).

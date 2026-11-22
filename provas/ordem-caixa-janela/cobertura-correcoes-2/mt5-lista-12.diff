@@ -1,0 +1,12 @@
+--- esta-ordem/nomes_relato.gd
++++ mt5-lista-12/nomes_relato.gd
+@@ -116,8 +116,7 @@
+ ## - falso alarme ACEITE (para o lado seguro): «alma»/«dano» nua seguida de número, em prosa («a alma 3 vezes»), É
+ ##   apanhada, porque `alma 3` é forma de chave (B2); a prosa da casa escreve «a alma, 3 vezes», que passa.
+ const CHAVES_PROIBIDAS := ["vidaActual", "vidaTotal", "paTotal", "paLivre", "alma",
+-	"paGasto", "estadoMorte", "armaCaida", "armaQuebrada", "corpoPartido", "custoPA", "dano",
+-	"custoM", "reservaM", "perdeQuarto", "reacaoDisponivel", "defendendo"]
++	"paGasto", "estadoMorte", "armaCaida", "armaQuebrada", "corpoPartido", "custoPA", "dano"]
+ ## As chaves que também são palavras portuguesas: só contam em forma de chave.
+ const CHAVES_PALAVRA := ["alma", "dano", "defendendo"]
+ ## As chaves com sufixo de unidade maiúsculo (`M` = metros): o sufixo só conta maiúsculo.

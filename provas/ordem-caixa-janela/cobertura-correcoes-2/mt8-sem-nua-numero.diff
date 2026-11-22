@@ -1,0 +1,11 @@
+--- esta-ordem/nomes_relato.gd
++++ mt8-sem-nua-numero/nomes_relato.gd
+@@ -127,7 +127,7 @@
+ static func _re_chave(k: String) -> RegEx:
+ 	if CHAVES_PALAVRA.has(k):
+ 		return RegEx.create_from_string(
+-			"(?<![A-Za-z0-9_])(?:%s[A-Z_][A-Za-z0-9_]*|\"%s\"|'%s'|%s[ \t]*[:=]|%s[ \t]*-?[0-9])" % [k, k, k, k, k])
++			"(?<![A-Za-z0-9_])(?:%s[A-Z_][A-Za-z0-9_]*|\"%s\"|'%s'|%s[ \t]*[:=])" % [k, k, k, k])
+ 	if CHAVES_SUFIXO.has(k):
+ 		return RegEx.create_from_string("(?<![A-Za-z0-9_])(?i:%s)%s" % [k.left(-1), k.right(1)])
+ 	return RegEx.create_from_string("(?i)(?<![A-Za-z0-9_])" + k)

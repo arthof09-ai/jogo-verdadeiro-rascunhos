@@ -98,16 +98,38 @@ static func diagnostico(relato: PackedStringArray, nomes: Array) -> String:
 ## - as 10 camelCase coladas a um prefixo (`figuraPaLivre`, `max_paGasto`) escapam — é o preço da lookbehind;
 ## - um VALOR sob uma chave que não está na lista (`"valor":16`, `"pv":22`) ou um número solto escapa: a varredura é
 ##   por nomes de chave, não por valores (R1 da RELATO-B7-CORRECOES; ver o ESTADO-FINAL, B6).
+## CAIXA-JANELA-COBERTURA-CORRECOES-2 (B1): de 12 para 17 chaves — as 5 privadas que ainda passavam (latentes, não
+## vivas): `custoM` e `reservaM` (a `propria` do evento `movimento`, `projecao.js:25`; o `custoM` também vem em cada casa
+## de `opcoes.mover`, `sala.js:889`), `perdeQuarto` (a `propria` da `desgraca`, `projecao.js:38`), `reacaoDisponivel` e
+## `defendendo` (por figura, `sala.js:551`).
+## - `custoM`/`reservaM` acabam no sufixo de unidade `M` (metros): o radical conta sem distinguir maiúsculas, o `M`
+##   final só maiúsculo (`(?i:custo)M`) — para que «reservam» (verbo) e «custom» não tropecem;
+## - `defendendo` também é palavra (gerúndio de «defender»): vai para a família de «alma»/«dano», só em forma de chave
+##   (os valores são booleanos: `"defendendo":true`, `defendendo=false`, `{ "defendendo": true }` são apanhados).
+## Limites que ficam, além dos de cima (B2 da CORRECOES-2; o teste §5 fixa-os):
+## - `modo` (H10: o modo da ordem, que só o Mestre vê) NÃO é listável: a linha legítima da prova «caixa da jogadora ao
+##   abrir: visível=true modo=dinamico …» tropeçaria em todas as corridas (`modo=` é forma de chave na própria linha);
+## - «alma»/«dano»/«defendendo» em kebab (`alma-total`, `dano-total`) escapam — a casa não escreve chaves em kebab, e o
+##   hífen é o da prosa composta;
+## - `custoM`/`reservaM` com o `m` final minúsculo (`reservam=3`, `custom: 1`) escapam — o preço de não tropeçar no
+##   verbo; «defendendo» nua seguida de booleano (`defendendo true`) escapa — é a forma da prosa;
+## - falso alarme ACEITE (para o lado seguro): «alma»/«dano» nua seguida de número, em prosa («a alma 3 vezes»), É
+##   apanhada, porque `alma 3` é forma de chave (B2); a prosa da casa escreve «a alma, 3 vezes», que passa.
 const CHAVES_PROIBIDAS := ["vidaActual", "vidaTotal", "paTotal", "paLivre", "alma",
-	"paGasto", "estadoMorte", "armaCaida", "armaQuebrada", "corpoPartido", "custoPA", "dano"]
+	"paGasto", "estadoMorte", "armaCaida", "armaQuebrada", "corpoPartido", "custoPA", "dano",
+	"custoM", "reservaM", "perdeQuarto", "reacaoDisponivel", "defendendo"]
 ## As chaves que também são palavras portuguesas: só contam em forma de chave.
-const CHAVES_PALAVRA := ["alma", "dano"]
+const CHAVES_PALAVRA := ["alma", "dano", "defendendo"]
+## As chaves com sufixo de unidade maiúsculo (`M` = metros): o sufixo só conta maiúsculo.
+const CHAVES_SUFIXO := ["custoM", "reservaM"]
 
 
 static func _re_chave(k: String) -> RegEx:
 	if CHAVES_PALAVRA.has(k):
 		return RegEx.create_from_string(
 			"(?<![A-Za-z0-9_])(?:%s[A-Z_][A-Za-z0-9_]*|\"%s\"|'%s'|%s[ \t]*[:=]|%s[ \t]*-?[0-9])" % [k, k, k, k, k])
+	if CHAVES_SUFIXO.has(k):
+		return RegEx.create_from_string("(?<![A-Za-z0-9_])(?i:%s)%s" % [k.left(-1), k.right(1)])
 	return RegEx.create_from_string("(?i)(?<![A-Za-z0-9_])" + k)
 
 
