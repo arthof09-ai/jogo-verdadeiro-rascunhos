@@ -1,6 +1,6 @@
 # o artefacto do retoma-i0004/actualizar-listas.py, com a saída REAL de cada comando capturada
-# (corrido na raiz do repo, sobre o HEAD 1b907bc mais a árvore de trabalho; cada bloco: o comando, a saída, o rc)
-# 2026-11-22T13:23:09Z · Python 3.12.10 · git version 2.56.0.windows.4 · PC (Git Bash)
+# (corrido na raiz do repo, sobre o HEAD 7f1dab7 mais a árvore de trabalho; cada bloco: o comando, a saída, o rc)
+# 2026-11-22T13:27:27Z · Python 3.12.10 · git version 2.56.0.windows.4 · PC (Git Bash)
 
 ## SHA-256 das 3 listas ANTES
 $ sha256sum retoma-i0004/antes.txt retoma-i0004/depois.txt MANIFESTO-SHA256.txt
@@ -41,21 +41,22 @@ rc=0
 
 ## tudo o que o ramo muda contra a base (árvore de trabalho; os não seguidos à parte)
 $ git diff --stat 1b907bc
- provas/ordem-caixa-janela/README.md | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ provas/ordem-caixa-janela/README.md                |  22 ++
+ .../cobertura-correcoes-6/actualizar-listas.log    |  43 +++
+ .../cliente/1-janela-1280x720.png                  | Bin 0 -> 1470451 bytes
+ .../cliente/2-baixo-844x390.png                    | Bin 0 -> 559347 bytes
+ .../cliente/3-baixo-780x360.png                    | Bin 0 -> 474203 bytes
+ .../cobertura-correcoes-6/cliente/relato.txt       |  81 ++++
+ .../cliente/servidor-info.json                     |   1 +
+ .../cobertura-correcoes-6/cliente/servidor.log     |   2 +
+ .../cobertura-correcoes-6/conferencia-fontes.log   | 156 ++++++++
+ .../cobertura-correcoes-6/godot-import.log         | 415 +++++++++++++++++++++
+ .../cobertura-correcoes-6/teste-nomes-relato.log   |  36 ++
+ 11 files changed, 756 insertions(+)
 rc=0
 
 $ git status --short --untracked-files=all
- M provas/ordem-caixa-janela/README.md
-?? provas/ordem-caixa-janela/cobertura-correcoes-6/actualizar-listas.log
-?? provas/ordem-caixa-janela/cobertura-correcoes-6/cliente/1-janela-1280x720.png
-?? provas/ordem-caixa-janela/cobertura-correcoes-6/cliente/2-baixo-844x390.png
-?? provas/ordem-caixa-janela/cobertura-correcoes-6/cliente/3-baixo-780x360.png
-?? provas/ordem-caixa-janela/cobertura-correcoes-6/cliente/relato.txt
-?? provas/ordem-caixa-janela/cobertura-correcoes-6/cliente/servidor-info.json
-?? provas/ordem-caixa-janela/cobertura-correcoes-6/cliente/servidor.log
-?? provas/ordem-caixa-janela/cobertura-correcoes-6/conferencia-fontes.log
-?? provas/ordem-caixa-janela/cobertura-correcoes-6/godot-import.log
-?? provas/ordem-caixa-janela/cobertura-correcoes-6/teste-nomes-relato.log
+ M provas/ordem-caixa-janela/cobertura-correcoes-6/actualizar-listas.log
+?? ESTADO-FINAL-ORDEM-CAIXA-JANELA-COBERTURA-CORRECOES-6.md
 rc=0
 
