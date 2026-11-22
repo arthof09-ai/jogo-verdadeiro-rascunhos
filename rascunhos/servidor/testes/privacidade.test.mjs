@@ -101,6 +101,11 @@ test('canários: nada do Mestre chega a nenhum papel da Party (jogadoras e espec
     assert.ok(caixas.some((c) => c.ligada === true && c.ordemPor === 'iniciativa'), k + ': snapshot da caixa em iniciativa');
     assert.ok(caixas.some((c) => c.ligada === false), k + ': snapshot da caixa desligada');
     assert.ok(caixas.some((c) => c.ordemDinamica.ordem.length > 0), k + ': a caixa varrida traz a ordem dinâmica da Party');
+    // B2 (CAIXA-TESTES-CORRECOES-2): o VALOR da ordem nos snapshots do escolherCaixa (os únicos em `iniciativa`) é o da
+    // ordemDinamicaParty do servidor (nada mexe nela depois das escolhas), com 2+ figuras para uma ordem trocada se ver.
+    const odParty = m.sala.depuracao.estado().ordemDinamicaParty.ordem;
+    assert.ok(odParty.length >= 2, 'a ordem da Party tem 2+ figuras');
+    for (const c of caixas.filter((x) => x.ordemPor === 'iniciativa')) assert.deepEqual(c.ordemDinamica.ordem, odParty, k + ': a ordem no snapshot do escolherCaixa');
     // B6 (CAIXA-TESTES-CORRECOES): as chaves exactas da caixa da Party em todos os snapshots — nada a mais, nada a menos.
     for (const c of caixas) {
       assert.deepEqual(Object.keys(c).sort(), ['ligada', 'ordemDinamica', 'ordemPor'], k + ': as chaves da caixa');

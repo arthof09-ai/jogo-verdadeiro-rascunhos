@@ -12,15 +12,41 @@ import { jsonCanonico } from '../nucleo/util.js';
 
 const PARTY = ['heroina', 'aliada', 'espectador'];
 // Canários do Mestre para a caixa da Party (o teste dos canários da caixa e, desde a B7, o snapshot do «voltar»).
+// A semente da sala usada como canário (a mesma de privacidade.test.mjs).
+const SEMENTE = 0xc0ffee11;
 const CHAVES_MESTRE_CAIXA = ['modo', 'vidaActual', 'vidaTotal', 'paGasto', 'paTotal', 'valor', 'vezes', 'soMestre', 'iniciativaValor', 'caixaMestre'];
-const NUMEROS_MESTRE_CAIXA = [7777, 313, 5150, 3579, 4040, 1357, 4848, ...Object.values(INICIATIVA)];
-// Só do Mestre, em qualquer parte de um snapshot da Party (subconjunto dos de privacidade.test.mjs): fichas dos inimigos,
-// valores de iniciativa, o modo e a escolha do Mestre, os campos internos.
-const CHAVES_SO_MESTRE = ['soMestre', 'semente', 'journalSeq', 'modo', 'fichaId', 'iniciativaValor', 'caixaMestre', 'vezes', 'razao', 'proposta', 'campoNovoDoMotor'];
-const NUMEROS_SO_MESTRE = [9137, 7777, 313, 4949, 4848, 6363, 6464, ...Object.values(INICIATIVA)];
+// Ordem CAIXA-TESTES-CORRECOES-2 (B4): também os números dos inimigos (orc CA 9137, lobo defesa 4949, bandido 6363/6464).
+const NUMEROS_MESTRE_CAIXA = [7777, 313, 5150, 3579, 4040, 1357, 4848, 9137, 4949, 6363, 6464, ...Object.values(INICIATIVA)];
+// Só do Mestre, em qualquer parte de um snapshot da Party. Ordem CAIXA-TESTES-CORRECOES-2 (B5): as mesmas chaves de
+// `CHAVES_MESTRE` de privacidade.test.mjs, todas (antes omitiam-se 7: recibo, verificacaoCritico, reacaoDefensiva,
+// desgracaProposta, mestre, contexto, tokenHash).
+const CHAVES_SO_MESTRE = [
+  'soMestre', 'semente', 'journalSeq', 'recibo', 'modo', 'verificacaoCritico', 'proposta', 'razao', 'fichaId',
+  'campoNovoDoMotor', 'reacaoDefensiva', 'desgracaProposta', 'mestre', 'contexto', 'iniciativaValor', 'tokenHash',
+  'caixaMestre', 'vezes',
+];
+// B3 (CAIXA-TESTES-CORRECOES-2): os números só do Mestre de privacidade.test.mjs, todos — fichas dos inimigos (orc CA,
+// Vida, PA, RD 41, bonusCD 61; a Vida do orc depois do golpe 6601; lobo; bandido), a semente e os valores de iniciativa.
+const NUMEROS_SO_MESTRE = [9137, 7777, 313, 41, 61, 6601, 4949, 4848, 6363, 6464, SEMENTE, ...Object.values(INICIATIVA)];
+// B6 (CAIXA-TESTES-CORRECOES-2): os textos só do Mestre (os de privacidade.test.mjs que esta mesa pode ter): o PIN, as
+// senhas de todos, a semente escrita, os nomes verdadeiros e os fichaId dos inimigos, as páginas.
+const TEXTOS_SO_MESTRE = [
+  PIN, SENHAS.heroina, SENHAS.aliada, SENHAS.espectador,
+  'c0ffee11', 'C0FFEE11', String(SEMENTE),
+  'Orc Verdadeiro', 'orc-teste', 'lobo-teste', 'bandido-teste', 'pagina-',
+];
+// B1 (CAIXA-TESTES-CORRECOES-2): os números de cada jogadora (os de privacidade.test.mjs). O snapshot de cada uma leva
+// os DELA em `propria` (por desenho); os da outra, nunca; o espectador não tem `propria` e não pode ter nenhum.
+const NUMEROS_HEROINA = [8642, 5551, 5150, 4040];
+const NUMEROS_ALIADA = [2468, 3579, 1357];
+const NUMEROS_PROIBIDOS_NO_SNAPSHOT = {
+  heroina: [...NUMEROS_SO_MESTRE, ...NUMEROS_ALIADA],
+  aliada: [...NUMEROS_SO_MESTRE, ...NUMEROS_HEROINA],
+  espectador: [...NUMEROS_SO_MESTRE, ...NUMEROS_HEROINA, ...NUMEROS_ALIADA],
+};
 
-function mesaEmCombate() {
-  const m = montarMesa({ comAliada: true, comEspectador: true, modoPadrao: 'manual' });
+function mesaEmCombate(opcoes = {}) {
+  const m = montarMesa({ comAliada: true, comEspectador: true, modoPadrao: 'manual', ...opcoes });
   m.entrarTodos();
   m.iniciarCombate([['orc-teste', { x: 8, y: 8 }], ['lobo-teste', { x: 12, y: 12 }]]);
   const H = m.clientes.heroina.figuraId;
@@ -230,7 +256,8 @@ test('caixa no HUD da jogadora: a jogadora que envia MASTER_SUPERVISOR op caixa 
 // Ordem CAIXA-TESTES (21/11/2026, correcção B5-c): o «voltar» repõe a ordemDinamicaParty do checkpoint (CHAVES_MUNDO) e o
 // snapshot que segue leva-a à Party — não a ordem de depois do ponto, nem uma ordem vazia.
 test('caixa no HUD da jogadora: o «voltar» repõe a ordemDinamicaParty do checkpoint e o snapshot seguinte leva-a à Party', () => {
-  const { m, H, A, estado, vista, caixa } = mesaEmCombate();
+  // B3 (CAIXA-TESTES-CORRECOES-2): a sala com a semente-canário, para a varredura do «voltar» a procurar a sério.
+  const { m, H, A, estado, vista, caixa } = mesaEmCombate({ rngSemente: () => SEMENTE });
   assert.equal(estado().vez?.figuraId, H, 'a batalha começa na heroína');
   // Agir: a heroína anda — o ponto a que se vai voltar (a ordem da Party é [H]).
   exigirAplicada(m.intencao('heroina', { tipo: 'mover', destino: { x: 3, y: 2 } }), 'mover heroína');
@@ -265,10 +292,17 @@ test('caixa no HUD da jogadora: o «voltar» repõe a ordemDinamicaParty do chec
     assert.deepEqual(snap.caixa.ordemDinamica, esperada, k + ': a ordem dinâmica da Party é a do checkpoint');
     assert.ok(!snap.caixa.ordemDinamica.ordem.includes(A), k + ': a aliada (andou depois do ponto) já não está');
     // B7: o snapshot do «voltar» varrido com os canários. A `caixa` com os da caixa (os do teste dos canários da caixa:
-    // nem a Vida/PA de ninguém); o snapshot inteiro com os que são SÓ do Mestre (o resto do snapshot leva, por desenho,
-    // a ficha da própria jogadora — `propria` —, por isso os números das jogadoras não entram aqui).
+    // nem a Vida/PA de ninguém).
     assert.deepEqual(procurarCanarios([snap.caixa], { chaves: CHAVES_MESTRE_CAIXA, numeros: NUMEROS_MESTRE_CAIXA }), [], k + ': canários na caixa do «voltar»');
-    assert.deepEqual(procurarCanarios([snap], { chaves: CHAVES_SO_MESTRE, numeros: NUMEROS_SO_MESTRE }), [], k + ': canários do Mestre no snapshot do «voltar»');
+    // B1 (CAIXA-TESTES-CORRECOES-2): o snapshot inteiro varre-se POR PAPEL. Cada jogadora recebe, por desenho, a ficha
+    // inteira DELA em `propria` (Vida, PA, perícias): só os números dela ficam de fora; os da outra jogadora e os do Mestre
+    // não podem estar. O espectador não tem `propria` (projecao.js): nenhum número de ninguém. B6: e os textos do Mestre.
+    assert.deepEqual(procurarCanarios([snap], { chaves: CHAVES_SO_MESTRE, numeros: NUMEROS_PROIBIDOS_NO_SNAPSHOT[k], textos: TEXTOS_SO_MESTRE }), [],
+      k + ': canários do Mestre (e da outra jogadora) no snapshot do «voltar»');
+    // Sanidade da exclusão: a própria vê a Vida dela (a varredura não está a excluir o que não existe); o espectador não.
+    if (k === 'heroina') assert.equal(snap.propria?.vidaTotal, 5150, 'a heroína vê a Vida dela em `propria`');
+    if (k === 'aliada') assert.equal(snap.propria?.vidaTotal, 3579, 'a aliada vê a Vida dela em `propria`');
+    if (k === 'espectador') assert.equal(snap.propria, undefined, 'o espectador não tem `propria`');
   }
   assert.deepEqual(estado().caixaMestre, { ligada: true, modo: 'iniciativa' }, 'a escolha do Mestre sobrevive ao «voltar»');
   // E quem volta a entrar depois do «voltar» recebe a mesma.

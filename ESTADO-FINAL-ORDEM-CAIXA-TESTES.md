@@ -71,6 +71,9 @@ e 4 (dentro da `caixa`), além da (b). Em ambas, a prova `prova-servidor.mjs` ta
 («nenhuma revisão mudou»: o hash da revisão, `snapshotParaRevisao` em `sala.js:980`, tira a `caixa` mas não uma chave no
 topo, por isso a revisão da Party sobe e daí vem o `ROOM_OPTIONS` a mais); dentro, na linha 69 (as chaves exactas da
 `caixa`).
+*Totais actuais (Ordem CAIXA-TESTES-CORRECOES-2, B7, 21/11/2026):* contando a (b), a (c) da B7 e o teste do lobby da
+CAIXA-LOBBY, falham hoje **5** testes com a `caixaMestre` no topo e **7** com ela dentro da `caixa` (M1 e M2 de
+`ESTADO-FINAL-ORDEM-CAIXA-TESTES-CORRECOES.md`).
 
 ² *Precisão da Ordem CAIXA-TESTES-CORRECOES (B4).* Fica **fora da `caixa`**: por isso o teste «nada do Mestre na caixa da
 Party (canários)», que só varre `x.caixa`, não a vê; e como só o snapshot do `escolherCaixa` a leva, quem não chama o op
