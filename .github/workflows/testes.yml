@@ -154,6 +154,12 @@ jobs:
           set -o pipefail
           timeout 120 "$GODOT" --headless --path . -s res://testes/caixa_jogadora.gd 2>&1 | tee "$RUNNER_TEMP/caixa_jogadora.gd.log"
           ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/caixa_jogadora.gd.log"
+      - name: Relato da caixa — o §4 marca o JSON desactualizado (Ordem CAIXA-RELATO, B7)
+        if: always()
+        run: |
+          set -o pipefail
+          timeout 120 "$GODOT" --headless --path . -s "$GITHUB_WORKSPACE/provas/ordem-caixa-relato/ferramentas/teste_relato_caixa.gd" 2>&1 | tee "$RUNNER_TEMP/teste_relato_caixa.gd.log"
+          ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/teste_relato_caixa.gd.log"
       - name: Canário de privacidade no aparelho da jogadora (JV3.1 §7)
         if: always()
         run: |
