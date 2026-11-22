@@ -18,6 +18,9 @@ jobs:
           node-version: '24'
       - name: Testes do núcleo (só leitura, sem rede, sem escrita)
         run: node --permission --allow-fs-read="$GITHUB_WORKSPACE/rascunhos/servidor/*" --test --test-isolation=none --test-timeout=30000 --test-reporter=spec "testes/*.test.mjs"
+      - name: Prova da caixa (B4 — não pode voltar a quebrar em silêncio)
+        run: node provas/ordem-caixa/ferramentas/prova-servidor.mjs
+        working-directory: ${{ github.workspace }}
   validador-glb:
     runs-on: ubuntu-latest
     timeout-minutes: 10
