@@ -108,9 +108,9 @@ listas a juntar ao commit. O retoma-pc passou.
    `mutacoes.mjs`, que já está cometido com esse texto. Não os filtrei: no N-B3, «Espadachim de Bancada» só é nome
    verdadeiro dentro da mutação, e filtrá-lo estragava a descrição. São valores-canário de bancada, fictícios. ~~As
    linhas FALHA e os resumos do registo não têm nenhum.~~
-   **Emenda (CAIXA-RELATO-CORRECOES-5, B3):** a frase riscada era falsa como estava escrita. O que se contou foi só
+   **Emenda (CAIXA-RELATO-CORRECOES-5, B3):** a frase com o risco era falsa como estava escrita. O que se contou foi só
    isto: o `conta_nomes` do harness conta os **nomes inteiros** nas **linhas FALHA**, **antes do filtro**, no
-   `relato.txt` e na consola de cada corrida (os números «nomes verdadeiros nas linhas FALHA: relato N, consola M»).
+   `relato.txt` e na consola das corridas (os números «nomes verdadeiros nas linhas FALHA: relato N, consola M»).
    Não vê fragmentos de nomes, não olha para os resumos e não olha para o registo que fica escrito. E o registo
    cometido, `correcoes-4/mutacoes.log`, tinha fragmentos: o harness cortava as linhas FALHA aos 400 **bytes** antes de
    filtrar, e o corte partia o nome. Ficaram fragmentos de 14 e de 7 caracteres de dois nomes verdadeiros (linhas
