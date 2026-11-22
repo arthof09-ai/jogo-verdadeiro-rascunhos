@@ -143,6 +143,30 @@ Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c�
 - `cobertura-correcoes-2/actualizar-listas.log`: o artefacto do `retoma-i0004/actualizar-listas.py` com a saída REAL
   capturada de cada comando (B4).
 
+## cobertura-correcoes-3/ — Ordem CAIXA-JANELA-COBERTURA-CORRECOES-3 (22/11/2026, Claude conta 2, PC): B1–B3
+(O ESTADO-FINAL desta ordem diz «conta 1», mas a ordem correu na conta 2, como a CORRECOES-4 registou na B4. Esta
+secção foi reposta pela CORRECOES-5, na B3, a partir dos registos da pasta e do
+`ESTADO-FINAL-ORDEM-CAIXA-JANELA-COBERTURA-CORRECOES-3.md`.)
+- **B1:** a tabela das 5 chaves novas da CORRECOES-2 dizia «só o Mestre vê» para todas, e isso é falso para 3 delas.
+  `custoM`, `reservaM` (`propria` do evento `movimento`; `custoM` em `opcoes.mover`, `reservaM` como `orcamentoM`) e
+  `perdeQuarto` (`propria` da `desgraca`) chegam também à dona. `reacaoDisponivel` e `defendendo` são mesmo só do
+  Mestre e nunca se projectam. O filtro não muda (as 17 continuam na lista). A tabela certa está no parágrafo
+  «CAIXA-JANELA-COBERTURA-CORRECOES-3 (B1)» de `ferramentas/nomes_relato.gd`.
+- **B2:** `modo` continua fora da lista, mas com a razão certa. O `modo=` do relato é o rótulo do cliente
+  (`ordem_turnos.modo`, carregado do `ordemPor` da caixa), não o H10 (o `modo` de cada figura, `manual`/`semi`/`auto`,
+  que nunca se projecta). O latente fica fixado no §5 do teste: os limites passam de 13 para **15 formas que escapam
+  por desenho** (`  x modo=auto`, `  x {"modo":"manual"}`).
+- **B3:** a prosa do §5 da CORRECOES-2 ganhou três linhas, não duas (o ESTADO-FINAL dessa ordem não se emenda).
+
+Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c…`; semente 7):
+- `cobertura-correcoes-3/teste-nomes-relato.log`: **teste 25/25** (as mesmas 25; a dos limites varre agora 15 formas).
+- `cobertura-correcoes-3/cliente/`: **prova viva 41/41**, 0 nomes verdadeiros e 0 das 17 chaves no relato (passagem 1:
+  47 linhas, passagem 2: 76, fim: 78). Capturas (sha256, 16 primeiros): `1-janela-1280x720.png` `6599f088d8e89519`,
+  `2-baixo-844x390.png` `0d79c56b84bf6f7c`, `3-baixo-780x360.png` `283606fe52605c00`.
+- `cobertura-correcoes-3/conferencia-fontes.log`: cada linha citada nas B1–B3, tirada da base `ba56b7e` com o comando
+  que a deu (`reacaoDisponivel`/`defendendo` ausentes de `projecao.js` e de `ordem-dinamica.js`).
+- `cobertura-correcoes-3/actualizar-listas.log`: o artefacto do `retoma-i0004/actualizar-listas.py` (0 novos, 0 tirados).
+
 ## cobertura-correcoes-4/ — Ordem CAIXA-JANELA-COBERTURA-CORRECOES-4 (22/11/2026, Claude conta 2, PC): B1–B4
 - **B1:** o parágrafo antigo do cabeçalho de `ferramentas/nomes_relato.gd` (as 12 chaves da CORRECOES, que dizia
   «só o Mestre vê») tem agora a tabela de quem recebe cada uma. **9 das 12 chegam à dona**: as 6 do `estado`
@@ -162,3 +186,22 @@ Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c�
 - `cobertura-correcoes-4/mutacoes.log`: as mutações MT9–MT11 da B3, com uma verificação apagada, o ciclo dos custos com
   2 voltas e uma verificação a mais. Dão 24 de 25, 24 de 25 e 26 de 27, todas com rc=1.
 - `cobertura-correcoes-4/actualizar-listas.log`: o artefacto do `retoma-i0004/actualizar-listas.py`.
+
+## cobertura-correcoes-5/ — Ordem CAIXA-JANELA-COBERTURA-CORRECOES-5 (22/11/2026, Claude conta 2, PC): B1–B3
+Só prosa e registo; o código do teste e da prova não muda.
+- **B1:** o parágrafo C1 do cabeçalho de `ferramentas/nomes_relato.gd` abria com «as CHAVES privadas do Mestre», o que a
+  tabela da CORRECOES-4, umas linhas abaixo, contradiz. Diz agora «as CHAVES privadas».
+- **B2:** o parêntese antes da tabela dizia «o Mestre recebe-as todas, na vista do Mestre». Diz agora que o Mestre
+  recebe **10 das 12** do servidor: 8 nas figuras da vista do Mestre, `paLivre` no evento `estado` e `dano` no
+  `soMestre`. A chave `custoPA` só a tem nas fichas que escreve e o servidor carrega, não na vista, e `alma` não existe. A
+  linha do `custoPA` na tabela diz «a dona (na ficha); o Mestre tem-na nas fichas que carrega, não na vista». A
+  conferência está em `cobertura-correcoes-5/conferencia-fontes.log`.
+- **B3:** a secção `cobertura-correcoes-3/` deste README, que faltava, foi reposta a partir dos registos dessa ordem.
+
+Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c…`; semente 7):
+- `cobertura-correcoes-5/teste-nomes-relato.log`: **teste 26/26**, igual ao da CORRECOES-4 linha a linha.
+- `cobertura-correcoes-5/cliente/`: **prova viva 41/41**, 0 nomes verdadeiros e 0 das 17 chaves no relato (passagem 1:
+  47 linhas, passagem 2: 76, fim: 78). O relato é igual byte a byte ao da CORRECOES-4. Capturas (sha256, 16
+  primeiros): `1-janela-1280x720.png` `6d9191e10994fe46`, `2-baixo-844x390.png` `99e615ac0c993d55`,
+  `3-baixo-780x360.png` `ca3ec3ee02df0441`.
+- `cobertura-correcoes-5/actualizar-listas.log`: o artefacto do `retoma-i0004/actualizar-listas.py`.

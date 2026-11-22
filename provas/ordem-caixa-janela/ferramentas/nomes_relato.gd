@@ -77,15 +77,18 @@ static func diagnostico(relato: PackedStringArray, nomes: Array) -> String:
 	return "%d achado(s), linhas %s" % [no_relato(relato, nomes).size(), JSON.stringify(linhas(relato, nomes))]
 
 
-## CAIXA-JANELA-COBERTURA (C1; as faltas 1 e 2 da B7 da CAIXA-JANELA-NOMES-CORRECOES): as CHAVES privadas do Mestre
+## CAIXA-JANELA-COBERTURA (C1; as faltas 1 e 2 da B7 da CAIXA-JANELA-NOMES-CORRECOES): as CHAVES privadas
 ## que nenhuma linha do relato pode trazer. A varredura é por chaves e não por valores: os valores de bancada
 ## (vida 16/22/30/34, PA 0/6) confundem-se com coordenadas, seq e medidas. Apanha também um valor que a IA ou o protocolo
 ## ponham no passo da linha «bancada:» (que é `JSON.stringify(passo)`), p. ex. um custo de PA como `"custoPA":2`.
 ## CAIXA-JANELA-COBERTURA-CORRECOES (B1): de 5 para 12 chaves — `paGasto` (a chave de PA que a vista do Mestre traz
 ## de facto), `estadoMorte`, `armaCaida`, `armaQuebrada`, `corpoPartido`; o `custoPA` das técnicas; e o `dano`.
 ## (CORRECOES-4, B1:) NÃO são todas «só do Mestre»: 9 das 12 chegam à DONA (a jogadora da própria figura). Quem recebe
-## cada uma (o Mestre recebe-as todas, na vista do Mestre; a conferência das fontes está em
-## `provas/ordem-caixa-janela/cobertura-correcoes-4/conferencia-fontes.log`):
+## cada uma (CORRECOES-5, B2: o Mestre recebe 10 das 12 do servidor — 8 nas figuras da vista do Mestre, `paLivre` no
+## evento `estado` e `dano` no `soMestre`; a chave `custoPA` tem-na nas fichas que escreve e o servidor carrega, não
+## na vista; `alma` não existe. A conferência das fontes está em
+## `provas/ordem-caixa-janela/cobertura-correcoes-4/conferencia-fontes.log` e em
+## `provas/ordem-caixa-janela/cobertura-correcoes-5/conferencia-fontes.log`):
 ##   chave          | onde chega à dona                                                    | quem a recebe
 ##   vidaActual     | `propria` do evento `estado` (`projecao.js:37`); `base.propria` do    | o Mestre e a dona
 ##                  | snapshot (`projecao.js:218`)                                         |
@@ -96,8 +99,9 @@ static func diagnostico(relato: PackedStringArray, nomes: Array) -> String:
 ##   corpoPartido   | idem (`projecao.js:37`; `projecao.js:225`)                           | o Mestre e a dona
 ##   vidaTotal      | só no `base.propria` do snapshot (`projecao.js:219`)                 | o Mestre e a dona
 ##   paTotal        | só no `base.propria` do snapshot (`projecao.js:221`)                 | o Mestre e a dona
-##   custoPA        | dentro da própria ficha (`ficha: clonarJson(ficha)`, `projecao.js:226`; | o Mestre e a dona
-##                  | um campo de cada técnica); não vai nas opções de ataque/cura          |
+##   custoPA        | dentro da própria ficha (`ficha: clonarJson(ficha)`, `projecao.js:226`; | a dona (na ficha); o Mestre
+##                  | um campo de cada técnica); não vai nas opções de ataque/cura          | tem-na nas fichas que
+##                  |                                                                      | carrega, não na vista
 ##   paGasto        | não chega: à dona vai só o `paLivre` (= paTotal − paGasto)           | só o Mestre
 ##   alma           | não chega: nenhum campo de alma nas fontes (a chave fica de guarda)  | ninguém (guarda)
 ##   dano           | não chega como chave: o evento `dano` leva `valor`/`tipos`; a ficha  | só o Mestre (o `dano:`

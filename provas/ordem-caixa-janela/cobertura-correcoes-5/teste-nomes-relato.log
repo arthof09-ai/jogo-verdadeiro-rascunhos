@@ -1,0 +1,36 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+== Ordem CAIXA-JANELA-NOMES — os nomes do relato da prova da caixa-janela ==
+  ok    as fichas de bancada têm o Bruto e o Lobo (4 fichas)
+== 1. os canários: os nomes verdadeiros que diferem do público ==
+  ok    1: «Bruto de Bancada» e «Lobo de Bancada» são canários ["Bruto de Bancada", "Lobo de Bancada"]
+  ok    1: as heroínas (nome = nome público) não são canários
+  ok    1: uma ficha repetida não repete o canário (aqui as 4 fichas + 1 Bruto repetido; na prova viva, 10 figuras de 4 fichas)
+== 2. a fonte: o relato escreve o nome PÚBLICO ==
+  ok    2: _nome() da prova dá «Bruto» e «Lobo» (o público)
+  ok    2: figura que não está na vista → o id
+  ok    2: sem nomePublico → o id, nunca o nome verdadeiro
+  ok    2: nomePublico vazio → o id
+  ok    2: a linha «bancada:» traz o público: «  bancada: Lobo → {"tipo":"encerrar"} (APLICADA)»
+== 3. o canário do relato ==
+  ok    3: o relato escrito pela fonte (nome público) passa o canário (0 achado(s), linhas [])
+  ok    3: «Bruto de Bancada» na linha 5 → o canário FALHA (1 achado(s), linhas [5])
+  ok    3: dentro de JSON também se apanha («Lobo de Bancada»)
+  ok    3: sem canários não há achados (por isso a prova exige ≥ 1 canário)
+== 4. o caso medido: o relato da CAIXA-JANELA de antes da CAIXA-JANELA-NOMES (congelado: RELATO_VELHO) ==
+  ok    4: o canário apanha no relato antigo 22 achados (28 ocorrências brutas), o 1.º «Lobo de Bancada na linha 7» (22 achado(s), linhas [7,8,9,10,11,12,13,14,17,18,19,20,21,22,23,24,25,31,32,33,34]; 28 brutas)
+== 5. C1 (+ B1–B4 das CORRECOES, B1/B2/B5 das CORRECOES-2) — as 17 chaves privadas no relato ==
+  ok    5: as chaves proibidas são as 17 privadas (vida, PA, alma, dano, morte, arma, corpo, movimento, desgraça, reacção, defesa) — 17
+  ok    5: o relato da fonte e o relato antigo (76 linhas) não têm chaves (0 achado(s), linhas []; 0 achado(s), linhas [])
+  ok    5: um passo «bancada:» com um custo (a 1.ª chave de custo) → a varredura FALHA (1 achado(s), linhas [5])
+  ok    5: um passo «bancada:» com um custo (a 2.ª chave de custo) → a varredura FALHA (1 achado(s), linhas [5])
+  ok    5: um passo «bancada:» com um custo (a 3.ª chave de custo) → a varredura FALHA (1 achado(s), linhas [5])
+  ok    5: cada uma das 17 chaves é apanhada em JSON, em str() de Dictionary, em k= e em k: (e «almaLivre») — 69 linhas (esperadas 69 = 17×4+1), 69 achado(s)
+  ok    5: «vida», «PA», «alma», «dano», «morte», «arma», «reservam», «defendendo» como palavras, e as chaves a meio de outra palavra, não são chaves (0 achado(s), linhas [])
+  ok    5: «alma»/«dano»/«defendendo» em forma de chave (k_snake, k nua com número, kCamel, 'k', JSON) são apanhadas — 14 de 14
+  ok    5: as chaves camelCase com outras maiúsculas (VidaActual, vidaactual, PALIVRE, CUSTOM, …) são apanhadas — 10 de 10
+  ok    5: limites registados — 15 formas escapam por desenho (valor genérico, Alma/Dano maiúsculos, palavra + pontuação, chave com prefixo, modo (rótulo e H10 latente), kebab, m minúsculo, defendendo + booleano)
+  ok    5: a prosa «a alma 3 vezes» (sem vírgula) É apanhada — falso alarme aceite, para o lado seguro (2 achado(s), linhas [1,2])
+  ok    fim: correram as 25 verificações do teste (esperadas 25)
+
+teste dos nomes do relato da caixa-janela: 26 de 26 verificações passaram.

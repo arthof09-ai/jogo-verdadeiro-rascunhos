@@ -1,0 +1,107 @@
+# Ordem CAIXA-JANELA-COBERTURA-CORRECOES-5, B2 — o que o Mestre recebe das 12 chaves da CAIXA-JANELA-COBERTURA-CORRECOES
+# cada linha tirada da base 3b84797 (git show 3b84797:<ficheiro>), com o comando que a deu; 2026-11-22T12:15:50Z · PC (Git Bash)
+
+## (a) a vista do Mestre: mestre.figuras = figuraDoMestre(f) de cada figura (projecao.js)
+$ git show 3b84797:rascunhos/servidor/nucleo/projecao.js | grep -n 'figuras: Object.values(mundo.figuras).map((f) => figuraDoMestre(f, fichas))'
+190:      figuras: Object.values(mundo.figuras).map((f) => figuraDoMestre(f, fichas)),
+rc=0
+
+$ git show 3b84797:rascunhos/servidor/nucleo/projecao.js | sed -n '149,164p'
+export function figuraDoMestre(fig, fichas) {
+  const ficha = fichas[fig.fichaId];
+  return {
+    ...clonarJson(fig),
+    nome: ficha?.nome ?? null,
+    nomePublico: nomePublicoDe(ficha),
+    vidaTotal: ficha?.vidaTotal ?? null,
+    paTotal: ficha?.paTotal ?? null,
+    // Plano B: o desenho da figura na arena do Mestre (marcador do site; sem ficha visual, o cliente usa o padrão).
+    alturaM: Number.isFinite(ficha?.visual?.alturaM) ? ficha.visual.alturaM : null,
+    marcador: ficha?.visual?.marcador ?? null,
+    // Ordem 13 (parte C; site FRASES_IA): os verbos do golpe de cada monstro, da ficha. null = o cliente diz «acerta».
+    verbos: ficha?.verbos ? clonarJson(ficha.verbos) : null,
+  };
+}
+rc=0
+
+   (figuraDoMestre = a figura interna inteira + nome, nomePublico, vidaTotal, paTotal, alturaM, marcador, verbos — NÃO a ficha)
+
+## (b) a figura interna (novaFigura, sala.js): das 12, traz vidaActual, paGasto, estadoMorte, armaCaida, armaQuebrada, corpoPartido
+$ git show 3b84797:rascunhos/servidor/nucleo/sala.js | grep -n -A9 '^  function novaFigura'
+543:  function novaFigura(id, ficha, casa) {
+544-    const lado = ficha.papel; // jogadora | criatura | npc
+545-    return {
+546-      id, fichaId: ficha.id, lado, colocada: false,
+547-      x: Number.isInteger(casa?.x) ? casa.x : 0, y: Number.isInteger(casa?.y) ? casa.y : 0, orientacao: 'S',
+548-      casaInicial: casa && Number.isInteger(casa.x) && Number.isInteger(casa.y) ? { x: casa.x, y: casa.y } : null,
+549-      vidaActual: ficha.vidaTotal, paGasto: 0, vivo: true, caido: false, estadoMorte: null,
+550-      armaCaida: false, armaQuebrada: false, corpoPartido: false, transformada: false,
+551-      reacaoDisponivel: true, defendendo: false,
+552-      modo: lado === 'jogadora' ? null : modoPadrao, // H10, nunca projetado (E-P11)
+rc=0
+
+   => na vista: 6 da figura interna + vidaTotal + paTotal = 8 das 12
+
+## (c) paLivre: não está na vista (a vista traz paGasto); chega ao Mestre no evento `estado` (o Mestre recebe os dados inteiros)
+$ git show 3b84797:rascunhos/servidor/nucleo/projecao.js | grep -n -A4 '^export function projetarEvento'
+117:export function projetarEvento(evento, dest) {
+118-  if (dest.papel === 'mestre') {
+119-    // O Mestre vê tudo, incluindo o journalSeq interno (E-P4) e o soMestre.
+120-    return { ...clonarJson(evento.dados ?? {}), soMestre: clonarJson(evento.soMestre ?? null), journalSeq: evento.journalSeq };
+121-  }
+rc=0
+
+$ git show 3b84797:rascunhos/servidor/nucleo/sala.js | grep -n 'dados.paLivre = paLivre(f)'
+1315:      dados.paLivre = paLivre(f);
+rc=0
+
+## (d) dano: só como chave do soMestre (3.º argumento de tx.emitir), que o Mestre recebe (projetarEvento, acima)
+$ git show 3b84797:rascunhos/servidor/nucleo/sala.js | grep -c 'rd: 0, dano: r.aplicado'
+3
+rc=0
+
+## (e) custoPA: não vai na vista do Mestre (nem figuraDoMestre nem a figura interna o têm; a ficha não vai na vista)
+$ git show 3b84797:rascunhos/servidor/nucleo/projecao.js | sed -n '149,164p' | grep -n 'custoPA\|ficha: '
+(saída vazia: 0 bytes)
+rc=1
+
+$ git show 3b84797:rascunhos/servidor/nucleo/sala.js | grep -n -A9 '^  function novaFigura' | grep -n 'custoPA'
+(saída vazia: 0 bytes)
+rc=1
+
+   as fichas vêm do carregador (o Mestre escreve-as; o servidor carrega-as congeladas):
+$ git show 3b84797:rascunhos/servidor/nucleo/sala.js | grep -n 'saída de carregarFichas().fichas'
+278: * @param {Object} p.fichas  mapa id → ficha, CONGELADO (saída de carregarFichas().fichas)
+rc=0
+
+$ git show 3b84797:rascunhos/servidor/autojogo/fichas-bancada.json | grep -c '"custoPA"'
+6
+rc=0
+
+   todas as ocorrências de custoPA no núcleo do servidor: o esquema das fichas, os filtros das opções, a entrada do
+   motor da cura e o débito do paGasto — nenhuma é um campo emitido (vista ou evento):
+$ git grep -n custoPA 3b84797 -- rascunhos/servidor/nucleo/
+3b84797:rascunhos/servidor/nucleo/carregar-fichas.js:36:  required: ['id', 'nome', 'expressaoAtaque', 'custoPA', 'alcanceM'],
+3b84797:rascunhos/servidor/nucleo/carregar-fichas.js:55:    custoPA: { type: 'integer', minimum: 0 },
+3b84797:rascunhos/servidor/nucleo/sala.js:903:        if (f.lado === 'jogadora' && t.custoPA > paLivre(f)) continue; // os monstros não gastam PA
+3b84797:rascunhos/servidor/nucleo/sala.js:920:        if (f.lado === 'jogadora' && t.custoPA > paLivre(f)) continue; // o motor recusa PA_INSUFICIENTE; não forçamos
+3b84797:rascunhos/servidor/nucleo/sala.js:1713:   *   custoPA, magia, contexto:{semente|faces}}) → {curaRolada:null, publico:{recibo}, soDoMestre:{curaRolada,
+3b84797:rascunhos/servidor/nucleo/sala.js:1728:        custoPA: Number.isInteger(t.custoPA) ? t.custoPA : 0,
+3b84797:rascunhos/servidor/nucleo/sala.js:1937:    if (f.lado === 'jogadora') f.paGasto += t.custoPA; // debita-se só no Confirmar
+3b84797:rascunhos/servidor/nucleo/sala.js:2096:    if (f.lado === 'jogadora') f.paGasto += Number.isInteger(sm.pa?.custo) ? sm.pa.custo : (Number.isInteger(t.custoPA) ? t.custoPA : 0);
+rc=0
+
+## (f) alma: não existe em lado nenhum das fontes do servidor
+$ git show 3b84797:rascunhos/servidor/nucleo/projecao.js | grep -n 'alma'
+(saída vazia: 0 bytes)
+rc=1
+
+$ git show 3b84797:rascunhos/servidor/nucleo/sala.js | grep -n "\balma\s*:\|'alma'\|\"alma\""
+(saída vazia: 0 bytes)
+rc=1
+
+$ git show 3b84797:rascunhos/servidor/autojogo/fichas-bancada.json | grep -c '"alma"'
+0
+rc=1
+
+## Conta: 8 na vista (a) + paLivre (c) + dano (d) = 10 das 12 recebidas do servidor; custoPA nas fichas (e); alma em lado nenhum (f).
