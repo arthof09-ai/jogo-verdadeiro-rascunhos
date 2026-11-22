@@ -54,6 +54,17 @@ também o caminho do teste de morte (`sala.js` l. 1494).
   `origem, canarios, mestre, lobby, agir, jogadora`. «Fora desse cenário não vê nada» só vale para as mensagens da
   jogadora.
 
+  **Precisado na CAIXA-TESTES-CORRECOES-10 (B2), 22/11/2026:** a enumeração acima lê-se como 4 itens. Os 5 cenários
+  são as 5 funções que `gerar()` corre:
+  1. `cenarioDesgraca()`, guardado em `mestre.vista`, `mestre.snapshot` e `mestre.cartoes.desgraca`;
+  2. `cenarioIA()`, guardado em `mestre.cartoes.ia`;
+  3. `cenarioDados()`, guardado em `mestre.cartoes.dados`;
+  4. `cenarioLobby()`, guardado em `lobby`;
+  5. `cenarioAgir()`, guardado em `agir`.
+
+  O `mestre` conta por 3: a desgraça, mais `cartoes.ia` e `cartoes.dados`. A chave `jogadora` não é um sexto cenário.
+  Guarda as mensagens da heroína no cenário 1.
+
 **Corrigido:** a frase da CORRECOES-8 ficou riscada. Por baixo, com nota datada («Apertado na
 CAIXA-TESTES-CORRECOES-9 (B3), 22/11/2026»), a frase da ordem: «a fixture compara o ficheiro inteiro — qualquer mudança
 (chave ou valor) nas mensagens da jogadora do cenário da desgraça aí guardadas fá-la falhar; mensagens da jogadora fora

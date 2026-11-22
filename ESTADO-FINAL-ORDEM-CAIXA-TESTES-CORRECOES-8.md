@@ -30,6 +30,11 @@ ficheiro inteiro do cenário da desgraça — qualquer mudança (chave ou valor)
 fá-la falhar; fora desse cenário não vê nada; e não distingue fuga de mudança legítima, por isso não é guarda.» A
 conclusão (não é guarda) fica igual.
 
+**Nota da CAIXA-TESTES-CORRECOES-10 (B1), 22/11/2026:** a frase citada acima já não é a que está em vigor. A
+CAIXA-TESTES-CORRECOES-9 (B3) riscou-a no ESTADO-FINAL-7 (ponto 2 para o coordenador) e pôs por baixo, com a nota
+«Apertado na CAIXA-TESTES-CORRECOES-9 (B3), 22/11/2026», a frase em vigor. O erro estava em «fora desse cenário não vê
+nada», que só vale para as mensagens da jogadora: a fixture guarda 5 cenários. Ver o ESTADO-FINAL-9, B3.
+
 ### B2: o 51 no inventário do comentário
 **Prova:** o inventário da CORRECOES-7 (ESTADO-FINAL-7, B2) já registava o 51 em `vidaActual`, só nas mensagens da
 própria aliada, no guião da M51b. O histórico da aliada nesse guião é `51, 1227, 2403, 3579`. O 51 é o único valor do
@@ -60,6 +65,16 @@ mensagens da própria aliada no guião da M51b — é dela, não é colisão (CA
 - **Comentário de `historicoVida`:** «emitem só `revertido` / `recomeco`» passou a «o «voltar» emite `revertido` (mais
   `cartao_fechado`/`cartao` para os cartões) e o «recomeçar» emite `recomeco`, nenhum emite `estado`». O resto do
   parágrafo (porque é que hoje não abre buraco no histórico) fica.
+
+**Nota da CAIXA-TESTES-CORRECOES-10 (B1), 22/11/2026:** as duas frases citadas acima já não são as que estão em vigor.
+A CAIXA-TESTES-CORRECOES-9 (B1) completou-as nos dois sítios: «o «recomeçar» emite `recomeco` (mais `cartao_fechado`
+para os cartões abertos e `turno` para a vez nova)».
+- No ESTADO-FINAL-7, B3, a frase da CORRECOES-8 ficou riscada. Por baixo está a nota «Completado na
+  CAIXA-TESTES-CORRECOES-9 (B1), 22/11/2026».
+- No comentário de `historicoVida`, o cabeçalho regista «e na CAIXA-TESTES-CORRECOES-9 (B1)».
+
+A justificação riscada mais acima (`caido: false`) também foi corrigida na CORRECOES-9 (B2). Ver o ESTADO-FINAL-9, B1
+e B2.
 
 **Privacidade:** não houve fuga nem mutação nesta ordem. Os números citados (51, 1227, 2403, 3579, 5150) são os
 valores-canário de bancada das fichas de teste.
