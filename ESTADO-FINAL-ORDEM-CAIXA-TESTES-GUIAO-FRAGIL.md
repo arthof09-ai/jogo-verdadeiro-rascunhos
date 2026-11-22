@@ -6,6 +6,8 @@
 > **Corrigido pela Ordem CAIXA-TESTES-GUIAO-FRAGIL-CORRECOES** (sentença da conferência da CAIXA-TESTES-GUIAO-FRAGIL,
 > B1 e B3): a errata da secção B1 e do ponto 2 e a frase do ponto 4 levam a marca «[GUIAO-FRAGIL-CORRECOES Bn]».
 > Ver `ESTADO-FINAL-ORDEM-CAIXA-TESTES-GUIAO-FRAGIL-CORRECOES.md`.
+> **Corrigido de novo pela Ordem CAIXA-TESTES-GUIAO-FRAGIL-CORRECOES-2** (C1): a conclusão do ponto 4 passa à forma
+> condicional, com a marca «[GUIAO-FRAGIL-CORRECOES-2 C1]». Ver `ESTADO-FINAL-ORDEM-CAIXA-TESTES-GUIAO-FRAGIL-CORRECOES-2.md`.
 **Commits:** `0368a78` (B1–B3: teste + provas) e o commit das listas da retoma + este ESTADO-FINAL (o último do ramo).
 
 **Território mexido:** em `rascunhos/` só `rascunhos/servidor/testes/privacidade.test.mjs`. Fora de `rascunhos/`:
@@ -126,7 +128,9 @@ depois `conferirCanariosDoMestre(m)` inteiro. Passa. A M51b (com «voltar») con
    250 ms). ~~Com um relógio parado, o instante sai cedo demais e a sanidade falha alto, não calada.~~
    [GUIAO-FRAGIL-CORRECOES B1] Com um relógio parado, o instante sai **tarde demais**: pela fórmula `e.ts <= s.ts`,
    com os `ts` todos empatados, o instante salta para o **último evento do journal** (o fim), não para um ponto
-   anterior. A conclusão prática mantém-se: em geral a sanidade falha alto, não calada.
+   anterior. ~~A conclusão prática mantém-se: em geral a sanidade falha alto, não calada.~~
+   [GUIAO-FRAGIL-CORRECOES-2 C1] A conclusão prática mantém-se, na forma condicional:
+   A sanidade compara contra uma ordem posterior: falha alto em geral, e só passaria calada se essa ordem posterior coincidisse de novo com a do snapshot.
 5. **Margem do canário 51:** não mexi. Com o controlo, o guião vai além do `seq` 38 (o caminho da M51b já ia); os
    contadores `seq` < 100 estão isentos em `procurarCanarios`, e o controlo passa.
 6. **O CI** do último commit não fica registado aqui, porque o commit das listas tem de ser o último. O resultado vai

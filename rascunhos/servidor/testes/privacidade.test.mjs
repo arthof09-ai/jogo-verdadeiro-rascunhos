@@ -220,9 +220,10 @@ function conferirCanariosDoMestre(m) {
   }
   // Sanidade da reconstrução (B2, CAIXA-TESTES-GUIAO-FRAGIL): pelo journal inteiro, ordemPartyRegistada chega à ordem da
   // Party que a sala tem agora — a função não se desvia da regra do servidor (se se desviar, falha aqui, alto).
-  // Limite (CAIXA-TESTES-GUIAO-FRAGIL-CORRECOES, B2): só compara o estado FINAL do journal. Um desvio num instante
-  // intermédio que reconvirja até ao fim escapava a esta guarda; fica mitigado pelas mutações M1/M2/M5 da
-  // CAIXA-TESTES-GUIAO-FRAGIL (o controlo B3 e a M5 mordem nos instantes intermédios).
+  // Limite (CAIXA-TESTES-GUIAO-FRAGIL-CORRECOES, B2; CORRECOES-2, C2+C3): só compara o estado FINAL do journal.
+  // Um desvio num instante intermédio que reconvirja até ao fim escapa a esta guarda; fica mitigado pelas mutações
+  // M1/M2/M5 da CAIXA-TESTES-GUIAO-FRAGIL, não eliminado.
+  // (o controlo B3 morde nos instantes intermédios; a M5 morde na guarda final)
   const { ordem, fechada, ultimo, vezes } = m.sala.depuracao.estado().ordemDinamicaParty;
   assert.deepEqual(ordemPartyRegistada(m, m.sala.depuracao.journalSeq()), { ordem, fechada, ultimo, vezes }, 'a ordem reconstruída do journal = a da sala');
 }

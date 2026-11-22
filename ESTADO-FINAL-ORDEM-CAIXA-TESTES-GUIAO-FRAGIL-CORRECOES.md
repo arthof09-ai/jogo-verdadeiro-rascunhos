@@ -1,8 +1,12 @@
 # ESTADO-FINAL — ORDEM-CAIXA-TESTES-GUIAO-FRAGIL-CORRECOES (22/11/2026)
 
+> **Corrigido pela Ordem CAIXA-TESTES-GUIAO-FRAGIL-CORRECOES-2** (C1 e C4): o cabeçalho, a secção B1 e o ponto 5 levam
+> a marca «[GUIAO-FRAGIL-CORRECOES-2 Cn]». Ver `ESTADO-FINAL-ORDEM-CAIXA-TESTES-GUIAO-FRAGIL-CORRECOES-2.md`.
+
 **Executor:** conta 2.
 **Ramo:** `claude2/caixa-testes-guiao-fragil-correcoes`, sobre `fable/integracao-50` @ `1b907bc` (a ponta à hora do
-lançamento; já contém a CAIXA-TESTES-GUIAO-FRAGIL, `3e096ee`).
+lançamento; ~~já contém a CAIXA-TESTES-GUIAO-FRAGIL, `3e096ee`~~ [GUIAO-FRAGIL-CORRECOES-2 C4] já contém a
+CAIXA-TESTES-GUIAO-FRAGIL (forma rebaseda sobre a linha; `3e096ee` é a ponta original antes do rebase, não um antepassado)).
 **Não fundido** — a fusão é do coordenador.
 **Commits:** `b700bf4` (correcções B1–B3) e, por último, o das listas da retoma + este ESTADO-FINAL.
 
@@ -16,6 +20,8 @@ No ponto 4 dos «Pontos para o coordenador» do ESTADO-FINAL da GUIAO-FRAGIL, a 
 ficou riscada, e logo a seguir vem a correcção com a marca `[GUIAO-FRAGIL-CORRECOES B1]`: o instante sai **tarde
 demais**. Com os `ts` todos empatados, `e.ts <= s.ts` é verdade para todos os eventos, e o `Math.max` dá o **último
 evento do journal**. A conclusão prática não muda: em geral, a sanidade falha alto.
+[GUIAO-FRAGIL-CORRECOES-2 C1] Na forma condicional, por extenso:
+A sanidade compara contra uma ordem posterior: falha alto em geral, e só passaria calada se essa ordem posterior coincidisse de novo com a do snapshot.
 
 *Prova:* `journalSeqDoSnapshot` (`privacidade.test.mjs` L127–132) faz
 `for (const e of eventos()) if (e.ts <= s.ts) seq = Math.max(seq, e.journalSeq)`. Com um `ts` igual para todos, o
@@ -75,5 +81,6 @@ No topo do ESTADO-FINAL da GUIAO-FRAGIL há também uma nota «Corrigido pela Or
    LEVE 1 da M3) não foram tocadas.
 4. O CI do último commit não fica registado aqui, porque o commit das listas tem de ser o último. O resultado vai na
    resposta da corrida.
-5. O `ORDEM.md` da sede não foi tocado. Já termina com a linha `- O ficheiro da ordem termina com a linha exacta:
-   <b>Estado: NOVA</b>`.
+5. ~~O `ORDEM.md` da sede não foi tocado. Já termina com a linha `- O ficheiro da ordem termina com a linha exacta:
+   <b>Estado: NOVA</b>`.~~ [GUIAO-FRAGIL-CORRECOES-2 C4] Numa só linha:
+   O ficheiro da ordem (`ORDEM.md`, a cópia na sede `ordem-caixa-testes-guiao-fragil-correcoes\`) não foi tocado; a sua última linha é `- O ficheiro da ordem termina com a linha exacta: <b>Estado: NOVA</b>`.
