@@ -15,8 +15,8 @@ Nenhuma linha de código mudou. Não toquei em código do jogo, no HUD, nas core
   2. Este ficheiro, com as listas da retoma. Corri `actualizar-listas.py` depois do commit 1 e outra vez antes deste
      commit.
 - **Conferência:** `~/workspace/conferencias/caixa-testes-correcoes-9/` não está neste PC. Trabalhei pelo texto da
-  ordem, que traz os pontos exactos. Conferi cada afirmação no repositório (`testes/fixture-mestre.test.mjs` e
-  `dados-exemplo/mesa-mestre.json`, só leitura).
+  ordem, que traz os pontos exactos. Conferi cada afirmação no repositório (`rascunhos/servidor/testes/fixture-mestre.test.mjs` e
+  `rascunhos/servidor/dados-exemplo/mesa-mestre.json`, só leitura).
 
 ## Ponto a ponto
 
