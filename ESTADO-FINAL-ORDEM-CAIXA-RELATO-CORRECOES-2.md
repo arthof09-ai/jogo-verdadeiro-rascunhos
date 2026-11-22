@@ -8,14 +8,14 @@ avançou durante a ordem) · **commit do trabalho:** `7f2adc4` · **não fundido
 - **B1 (Privacidade D1) — os nomes do relato passam a `nomePublico` e o canário estende-se ao relato (as duas coisas).**
   - `_nome()` (`prova_caixa_jogadora.gd`, `prova_caixa_manequim.gd`) e a linha «bancada: …» de `_jogar_vez()` liam o
     `nome` da vista do Mestre. Agora lêem o `nomePublico` por um ajudante novo, `_nome_publico(f, id)`, que devolve o
-    id quando não há nome público. No relato novo lê-se «Bruto» e «Lobo», e não «Bruto de Bancada» nem «Lobo de Bancada».
+    id quando não há nome público. No relato novo lê-se «Bruto» e «Lobo», e não os nomes verdadeiros n.º 1 e n.º 2.
   - O canário: em cada `_privacidade` (§1, §4, §5), uma verificação nova confere que nenhuma linha do relato escrita até
     ali traz um nome verdadeiro (os que diferem do `nomePublico` na vista do Mestre) e que há pelo menos um canário. Em
     `_fim()`, outra confere o relato inteiro. Só os nomes entram nesta varredura: vida e PA são números pequenos que o
     relato tem por outras razões (coordenadas, seq, revisões), e esses continuam a ser procurados nos textos da caixa,
     como antes. São 4 verificações novas por prova.
   - **Mutação ao vivo:** com `_nome_publico` a ler `nome`, a prova HUD deu **39/43**. As 4 verificações novas falharam,
-    com as linhas exactas («Lobo de Bancada na linha 6», …). Reverti a mutação.
+    com as linhas exactas («‹o nome verdadeiro n.º 2› na linha 6», …). Reverti a mutação.
 - **B2 (Privacidade D2) — o teste varre as 6 linhas.** As duas linhas do caso da hora (`lh1`, `lh2`) entram em `linhas`,
   e a asserção passou a «6 linhas, 5 JSON actual». **Mutação:** uma fuga («nome ») só nas linhas de seq 13 (as do caso
   da hora) dá 22/23 no teste novo e passava **21/21 no teste da base**.

@@ -102,11 +102,11 @@ listas a juntar ao commit. O retoma-pc passou.
    CORRECOES-3 fez o mesmo. Fora disto, só mexi em `provas/ordem-caixa-relato/` (README, `mutacoes.mjs`,
    `correr-mutacoes.sh`, `correcoes-4/`) e neste ficheiro. Não mexi no código do jogo, no HUD, nas cores, no workflow
    nem em `rascunhos/`.
-2. **O registo de mutações ainda tem nomes-canário de bancada, em 6 títulos** (3 por modo). São as descrições
+2. **O registo de mutações ainda tem nomes-canário (o nome verdadeiro n.º 1 e um nome público), em 6 títulos** (3 por modo). São as descrições
    («diz») de `B1-nome-verdadeiro` e `N-B2-canario-minusculas-relato` (o nome verdadeiro n.º 1, inteiro e em minúsculas) e de
    `N-B3-heroina-nome-publico-hud` («Espadachim de Bancada»). Vêm de
    `mutacoes.mjs`, que já está cometido com esse texto. Não os filtrei: no N-B3, «Espadachim de Bancada» só é nome
-   verdadeiro dentro da mutação, e filtrá-lo estragava a descrição. São valores-canário de bancada, fictícios. ~~As
+   verdadeiro dentro da mutação, e filtrá-lo estragava a descrição. São valores-canário (o nome verdadeiro n.º 1 e um nome público), fictícios. ~~As
    linhas FALHA e os resumos do registo não têm nenhum.~~
    **Emenda (CAIXA-RELATO-CORRECOES-5, B3):** a frase com o risco era falsa como estava escrita. O que se contou foi só
    isto: o `conta_nomes` do harness conta os **nomes inteiros** nas **linhas FALHA**, **antes do filtro**, no

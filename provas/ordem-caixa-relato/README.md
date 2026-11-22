@@ -454,3 +454,40 @@ Verificar: `bash provas/ordem-caixa-relato/ferramentas/verificar-pin-b7-correcoe
 contagens: tira os dois valores dos objectos do git e nunca os escreve. O registo está em
 `b7-correcoes-6/verificacao-pin.log`. As provas vivas correm como acima, com `"$PWD/provas/ordem-caixa-relato/b7-correcoes-6"`.
 Os números estão no `ESTADO-FINAL-ORDEM-CAIXA-RELATO-B7-CORRECOES-6.md`, na raiz.
+
+# Correcções B1–B5 da sentença da CAIXA-RELATO-CORRECOES-7 (Ordem CAIXA-RELATO-CORRECOES-8 · 22/11/2026, Claude conta 1, PC)
+
+Só as ferramentas desta pasta, as corridas em **`correcoes-8/`**, este README e emendas de texto a ESTADO-FINAL antigos
+(raiz: CORRECOES-2, -3, -4 e -7). Nada do código do jogo, do HUD nem das cores.
+
+- **B1** — o ESTADO-FINAL da CORRECOES-7 (§1 B1) dizia «os 36 resumos». O registo tem 36 blocos, 36 `rc=` e **38**
+  linhas-resumo. Ficou emendado com uma nota (¹).
+- **B2** — no §3.2 do ESTADO-FINAL da CORRECOES-4, as linhas 105 e 109 já não têm os pedaços de 12 caracteres. Dizem
+  «o nome verdadeiro n.º 1 e um nome público», como a linha 106.
+- **B3** — os dois scripts usam agora a mesma função, **`ferramentas/absolutizar.sh`**, para os caminhos da linha de
+  comandos. Os casos de canto passam a ser tratados assim:
+  - `~` e `~/…` → `$HOME/…`;
+  - `\pasta\…` → a raiz da unidade da pasta de onde se chamou o script;
+  - `\servidor\…` e `//…` (rede), `C:pasta` (relativo à pasta corrente de uma unidade) e `~utilizador` →
+    **falham** com mensagem e rc=2, antes de se escrever o que quer que seja;
+  - o resto, como antes.
+
+  Antes, `C:pasta` e `//…` passavam por absolutos. `~/…`, `\\servidor\…` e `\pasta\…` iam parar debaixo da pasta de
+  onde se chamou o script: havia o aviso de «relativa», mas o sítio estava errado. Com `C:pasta`, o script antigo
+  criou uma pasta `Cpasta` (o MSYS troca o `:`). O Godot falhou ao criar `rascunhos/cliente/C:pasta`, a prova deu
+  0 de 2, e o script saiu com 0. O registo, dado como `tmp/…`, não ficou escrito: contava a partir da raiz do clone,
+  onde não há `tmp/` (é a B4). Foi medido; ver o ESTADO-FINAL da CORRECOES-8.
+- **B4** — o `<registo.log>` do `correr-mutacoes.sh` também passa pela `absolutizar`. Antes contava a partir da raiz do
+  clone.
+
+**Decisão de âmbito (sentença da CORRECOES-7).** O critério estrito (`conferir-registo.mjs`, critério alargado)
+aplica-se **ao registo** (`correcoes-4/mutacoes.log`) **e à fonte** (ferramentas, README, ESTADO-FINAL). **Não se
+aplica** à saída do jogo (os `relato.txt` e os `teste-relato.log` das corridas), nem ao diff que a inclui. Na saída, os
+achados do conferidor são artefactos: os nomes públicos, a palavra do cenário, palavras correntes. Foram medidos e
+classificados um a um, e **0 são nomes verdadeiros inteiros** (ESTADO-FINAL-6 §2; secção CORRECOES-7 acima). Quem
+contar os achados num diff que traga relatos novos vai achar dezenas, e não são fugas.
+
+Números (Godot 4.7.2 Windows, motor VLAB real `a91c021c…`, semente 7): teste `correcoes-8/teste-relato.log` **31/31**;
+prova HUD-JOGADORA `correcoes-8/cliente-hud/relato.txt` **43/43**, 68 linhas; prova MANEQUIM
+`correcoes-8/cliente-manequim/relato.txt` **53/53**, 78 linhas. Os relatos são iguais aos da CORRECOES-7, tirando as
+horas. Registo `correcoes-4/mutacoes.log`: conferidor **0/0** (critério alargado e `--velho`).

@@ -14,7 +14,11 @@
 # `rascunhos/cliente/<pasta>/`. Um caminho relativo conta agora a partir da pasta de onde se chamou o script.
 # Ordem CAIXA-RELATO-B7-CORRECOES-5: B1 — o PIN de bancada foi rodado e os 58 info/log antigos com o PIN velho saíram
 # do ramo; B3 — o info imprime-se no stdout SEM a chave "pin".
+# Ordem CAIXA-RELATO-CORRECOES-8 (B3): o `absoluto()` daqui dava `C:pasta` por absoluto e punha `~/…`, `\\servidor\…`
+# e `\pasta\…` debaixo da ORIGEM, em silêncio. Agora usa-se a função `absolutizar` (absolutizar.sh, a mesma do
+# correr-mutacoes.sh): torna o caminho absoluto ou falha com mensagem, antes de se escrever o que quer que seja.
 ORIGEM=$PWD
+. "$(dirname "$0")/absolutizar.sh" || exit 9
 cd "$(dirname "$0")/../../.." || exit 9
 # Ordem CAIXA-RELATO-B7-CORRECOES-6 (B1/B2): o PIN do Mestre é FRESCO em cada corrida (20 dígitos de crypto.randomInt) e
 # só passa por --pin= ao servidor e à prova — não está no repositório e nunca se escreve nele. O info imprime-se sem a
@@ -24,9 +28,8 @@ PIN=$(node -e 'const c = require("crypto"); let s = ""; for (let i = 0; i < 20; 
 G=${1:?godot}; MOTOR=${2:?motor}; T=${3:?tmp}
 P=$PWD/provas/ordem-caixa-relato
 O=${4:-$P}
-absoluto() { case "$1" in /*|[A-Za-z]:*) printf '%s' "$1" ;; *) printf '%s/%s' "$ORIGEM" "$1" ;; esac; }
-[ "$(absoluto "$T")" != "$T" ] && { T=$(absoluto "$T"); echo "pasta tmp relativa — uso o caminho absoluto $T" >&2; }
-[ "$(absoluto "$O")" != "$O" ] && { O=$(absoluto "$O"); echo "pasta de saída relativa — uso o caminho absoluto $O" >&2; }
+absolutizar T "pasta tmp" || exit 2
+absolutizar O "pasta de saída" || exit 2
 mkdir -p "$T" "$O"
 rc_total=0
 

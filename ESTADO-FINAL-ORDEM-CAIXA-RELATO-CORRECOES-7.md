@@ -30,7 +30,15 @@ emendado.
     fora das chaves e palavras permitidas» e um contador «palavra(s) fora da lista». Vêm do `teste_relato_caixa.gd`
     da linha B7 (`9a980a0`, `28af7b4`), que entrou depois de `7ce6df3`. A ordem pede a fonte actual, e o modo `novo`
     corre os ficheiros como estão.
-  - **Os 36 resumos «N de M» e os 36 rc** são iguais aos do registo cometido.
+  - **Os ~~36~~ **38**¹ resumos «N de M» e os 36 rc** são iguais aos do registo cometido.
+
+  ¹ **Emenda (Ordem CAIXA-RELATO-CORRECOES-8, B1).** O registo tem 36 blocos (18 por parte), 36 linhas `rc=` e
+  **38** linhas-resumo «N de M». Na parte 1 (`base4`), os blocos `N-B1-canario-na-linha-em-branco` e
+  `N4-B1-canario-na-linha-em-branco-manequim` têm 2 resumos por bloco. O `relato.txt` dessas corridas tem duas
+  linhas-resumo («2 resumo(s)»): uma escrita antes da re-varredura (43 de 43; 53 de 53) e outra depois de ela achar o
+  canário (43 de 44; 53 de 54). O harness copia as duas. Na parte 2 (`novo`), o relato tem só uma.
+  Os 38 são iguais, linha a linha, aos do registo cometido antes da regeneração (`fe4a84d`), e os 36 `rc=` também.
+  Contado na CORRECOES-8 com `grep -c` e um `diff` dos títulos, resumos e `rc=`.
 - **O marcador do filtro:** passa de 28 linhas e 92 ocorrências para **24 linhas e 88 ocorrências**. Saíram as 4 dos
   títulos. As que ficam estão nas linhas FALHA e nos resumos.
 - **O conferidor** no registo regenerado (251 linhas): **0 achados, rc=0** no critério alargado (151 pedaços) e

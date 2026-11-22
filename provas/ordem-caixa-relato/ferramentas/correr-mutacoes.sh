@@ -23,10 +23,16 @@
 # CAIXA-RELATO-CORRECOES-7: B5 — a <pasta-tmp> é absolutizada à entrada. O Godot corre com `--path rascunhos/cliente` e
 # lê o `--saida` a partir daí: com um caminho relativo, as saídas iam parar a `rascunhos/cliente/<tmp>/`. Um caminho
 # relativo conta agora a partir da pasta de onde se chamou o script (antes do `cd` para a raiz).
+# CAIXA-RELATO-CORRECOES-8: B3 — os casos de canto (`~/…`, `\\servidor\…`, `C:pasta`, `\pasta\…`) já não caem em
+# silêncio no sítio errado: a função `absolutizar` (absolutizar.sh, a mesma do correr-prova-caixa-relato.sh) torna-os
+# absolutos ou falha com mensagem, antes de se escrever o que quer que seja. B4 — o <registo.log> também: antes contava
+# a partir da raiz do clone (depois do `cd`), e não da pasta de onde se chamou o script.
 ORIGEM=$PWD
+. "$(dirname "$0")/absolutizar.sh" || exit 9
 cd "$(dirname "$0")/../../.." || exit 9
 G=${1:?godot}; MOTOR=${2:?motor}; T=${3:?tmp}; MODO=${4:?base|base4|novo}; LOG=${5:?registo}
-case "$T" in /*|[A-Za-z]:*) ;; *) T=$ORIGEM/$T; echo "pasta tmp relativa — uso o caminho absoluto $T" >&2 ;; esac
+absolutizar T "pasta tmp" || exit 2
+absolutizar LOG "registo" || exit 2
 BASE=${6:-$([ "$MODO" = base4 ] && echo da6683e || echo 6a87b9e)}
 M=provas/ordem-caixa-relato/ferramentas/mutacoes.mjs
 FICH=(provas/ordem-caixa-hud-jogadora/ferramentas/prova_caixa_jogadora.gd provas/ordem-caixa-manequim/ferramentas/prova_caixa_manequim.gd

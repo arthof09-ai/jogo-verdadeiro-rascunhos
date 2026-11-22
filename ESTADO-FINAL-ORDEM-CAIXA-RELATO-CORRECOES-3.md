@@ -31,7 +31,7 @@ ordem, que trazem o ficheiro e a linha de cada defeito.
   `_nomes_em(linhas, nomes)`, que o `_fim()` também usa. O mesmo vale para a varredura dos textos da caixa
   (`_privacidade`).
 - **Prova:**
-  - Mutação com o nome verdadeiro em minúsculas no relato («bruto de bancada», via `_nome_publico`): HUD **39/43**,
+  - Mutação com o nome verdadeiro em minúsculas no relato (o nome verdadeiro n.º 1 em minúsculas, via `_nome_publico`): HUD **39/43**,
     rc=1. Na base passava 43/43.
   - Mutação com o nome em minúsculas num texto da caixa: HUD **36/43**, rc=1. Falham as 3 verificações dos textos da
     caixa e, em cascata, as do relato, porque a linha FALHA cita o texto. Na base passava 43/43.
