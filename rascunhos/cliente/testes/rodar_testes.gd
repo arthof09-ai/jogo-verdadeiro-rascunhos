@@ -24,6 +24,8 @@ const GrelhaMapa := preload("res://mapa/floresta/grelha_floresta.gd")
 const OrdemTurnos := preload("res://hud/ordem_turnos.gd")
 const Retratos := preload("res://hud/retratos.gd")
 const CaixaOrdem := preload("res://hud/caixa_ordem.gd")
+## Ordem CAIXA-PADRAO-CORRECOES: os casos do enquadramento dos retratos (passada, arma, braço, deitada, quadrúpede, esfola).
+const CasosRetrato := preload("res://testes/casos_retrato.gd")
 const MarcadorSite := preload("res://cenas/comum/marcador_figura.gd")
 ## Ordem ÁGUA-REAÇÃO: o lago reage ao estado das figuras (salpico, agito que acalma).
 const LagoFloresta := preload("res://mapa/floresta/lago_floresta.gd")
@@ -77,6 +79,10 @@ func _initialize() -> void:
 	_teste_ordem_turnos_iniciativa()
 	_teste_retratos_do_modelo()
 	_teste_retrato_busto_em_pose()
+	_teste_retrato_casos_passada()
+	_teste_retrato_casos_corpo()
+	_teste_retrato_casos_corpo_inteiro()
+	_teste_retrato_casos_esfola()
 	_teste_caixa_ordem()
 	_teste_escala_do_mundo()
 	# ORDEM MAPA-JOGÁVEL: a grelha é o mapa inteiro e a água pisa-se (o lago segue nós na árvore: depois do quadro).
@@ -1113,6 +1119,210 @@ func _teste_retrato_busto_em_pose() -> void:
 	fig.free()
 
 
+## Ordem CAIXA-PADRAO-CORRECOES (B1): o «de pé» não cai a meio da passada. (a) O ciclo inteiro do ANDAR v3, quadro a
+## quadro (30 q/s): a profundidade máxima da figura toda e a margem ao limiar (altura / DE_PE), e o tronco. (b) Uma passada
+## LONGA (as coxas abertas 60° para a frente e para trás): pela caixa toda já não contaria como de pé; pelo tronco conta,
+## e o retrato continua a ser o busto.
+func _teste_retrato_casos_passada() -> void:
+	var d := CasosRetrato.manequim(0.0)
+	if d.is_empty():
+		_ok(false, "casos (B1): o manequim de referência abriu")
+		return
+	get_root().add_child(d["fig"])
+	var anim: AnimationPlayer = d["anim"]
+	var a := anim.get_animation(CasosRetrato.ANIM)
+	var n := int(round(a.length * 30.0))
+	var fundo_max := 0.0
+	var q_max := -1
+	var limiar_q := 0.0
+	var tronco_max := 0.0
+	var margem_min := 99.0
+	var todos := true
+	for i in n + 1:
+		anim.seek(minf(a.length, float(i) / 30.0), true)
+		var cpq := Retratos.copiar_modelo(d["fig"])
+		var cxs := Retratos.caixas_do_corpo(cpq)
+		var cq := Retratos.caixa_do_corpo(cpq)
+		var fundo := maxf(cq.size.x, cq.size.z)
+		if fundo > fundo_max:
+			fundo_max = fundo
+			q_max = i
+			limiar_q = cq.size.y / Retratos.DE_PE
+		margem_min = minf(margem_min, cq.size.y / Retratos.DE_PE - fundo)
+		tronco_max = maxf(tronco_max, Retratos.largura_tronco(cxs, cq))
+		todos = todos and Retratos.de_pe(cq, cxs) and Retratos.de_pe(cq)
+		cpq.free()
+	_ok(todos and n + 1 >= 40,
+		"casos (B1): nos %d quadros do ANDAR a figura está sempre de pé, pela caixa toda e pelo tronco" % (n + 1))
+	_ok(margem_min > 0.4,
+		"casos (B1): a profundidade máxima do ANDAR é %.3f m (quadro %d), a %.3f m do limiar %.3f m; margem mínima no ciclo %.3f m; o tronco não passa de %.3f m" % [
+			fundo_max, q_max, limiar_q - fundo_max, limiar_q, margem_min, tronco_max])
+	# (b) a passada longa, sobre o quadro mais estreito do ciclo
+	anim.seek(0.3, true)
+	CasosRetrato.parar(d)
+	CasosRetrato.passada_longa(d, 60.0)
+	var cp := Retratos.copiar_modelo(d["fig"])
+	var caixas := Retratos.caixas_do_corpo(cp)
+	var c := Retratos.caixa_do_corpo(cp)
+	_ok(not Retratos.de_pe(c) and Retratos.de_pe(c, caixas),
+		"casos (B1): a meio de uma passada longa (%.2f m de fundo, %.2f de alto) a caixa toda já não diria «de pé» (%s); pelo tronco (%.2f m) diz (%s)" % [
+			maxf(c.size.x, c.size.z), c.size.y, Retratos.de_pe(c), Retratos.largura_tronco(caixas, c), Retratos.de_pe(c, caixas)])
+	var e := CasosRetrato.enquadramento(cp)
+	var b := CasosRetrato.conferir_busto(e["cam"], c)
+	_ok(e["de_pe"] and b["dentro"] and b["fora"] and (e["cam"] as Camera3D).transform.origin.z < c.get_center().z,
+		"casos (B1): e nessa passada o retrato é o busto — alto da cabeça, rosto e peito no quadro; cintura, joelhos e pés fora; de frente %s" % [b["falta"]])
+	(e["cam"] as Camera3D).free()
+	cp.free()
+	(d["fig"] as Node).free()
+
+
+## Ordem CAIXA-PADRAO-CORRECOES (B2): o que não é corpo fica fora da faixa e da altura. Uma arma RÍGIDA empunhada e
+## levantada acima da cabeça desenha-se, mas não sobe a janela do busto. O braço levantado É corpo: sobe a altura; o rosto
+## fica no quadro e o peito pode sair (o limite, medido e documentado em hud/retratos.gd `caixas_do_corpo`).
+func _teste_retrato_casos_corpo() -> void:
+	var d := CasosRetrato.manequim(0.3)
+	if d.is_empty():
+		_ok(false, "casos (B2): o manequim de referência abriu")
+		return
+	get_root().add_child(d["fig"])
+	CasosRetrato.parar(d)
+	var cp0 := Retratos.copiar_modelo(d["fig"])
+	var c0 := Retratos.caixa_do_corpo(cp0)
+	var j0 := Retratos.janela_busto(Retratos.caixas_do_corpo(cp0), c0)
+	cp0.free()
+	CasosRetrato.arma_levantada(d, 0.6)
+	var cp := Retratos.copiar_modelo(d["fig"])
+	var tudo := Retratos.caixa_visivel(cp)
+	var c := Retratos.caixa_do_corpo(cp)
+	var j := Retratos.janela_busto(Retratos.caixas_do_corpo(cp), c)
+	var j_tudo := Retratos.janela_busto(Retratos.caixas_em_pose(cp), tudo)
+	_ok(tudo.end.y > c.end.y + 0.5 and c.is_equal_approx(c0) and j.is_equal_approx(j0),
+		"casos (B2): com a arma levantada (a ponta a %.2f m, a cabeça a %.2f m), o corpo e a janela do busto não mudam (janela de %.2f a %.2f m; contando a arma iria de %.2f a %.2f m)" % [
+			tudo.end.y, c.end.y, j.position.y, j.end.y, j_tudo.position.y, j_tudo.end.y])
+	var e := CasosRetrato.enquadramento(cp)
+	var b := CasosRetrato.conferir_busto(e["cam"], c)
+	var arma := cp.find_child("Arma", true, false) as Node3D
+	_ok(e["de_pe"] and b["dentro"] and b["fora"] and arma != null and arma.visible,
+		"casos (B2): e o retrato com a arma continua o busto (rosto e peito no quadro, cintura e pés fora %s); a arma desenha-se (é a figura em cena)" % [b["falta"]])
+	(e["cam"] as Camera3D).free()
+	cp.free()
+	(d["fig"] as Node).free()
+	# O braço levantado (corpo): o limite.
+	d = CasosRetrato.manequim(0.3)
+	get_root().add_child(d["fig"])
+	CasosRetrato.parar(d)
+	var esq := d["esqueleto"] as Skeleton3D
+	var cabeca := Retratos._no_espaco_de(d["fig"], esq) * esq.get_bone_global_pose(esq.find_bone(CasosRetrato.CABECA)).origin
+	CasosRetrato.braco_levantado(d)
+	cp = Retratos.copiar_modelo(d["fig"])
+	c = Retratos.caixa_do_corpo(cp)
+	e = CasosRetrato.enquadramento(cp)
+	var cam := e["cam"] as Camera3D
+	var peito := cabeca + Vector3(0, -0.25, 0)
+	_ok(e["de_pe"] and CasosRetrato.ve(cam, cabeca + Vector3(0, 0.1, 0)) and CasosRetrato.ve(cam, cabeca + Vector3(0, 0.2, 0)),
+		"casos (B2, limite): com o braço levantado a figura sobe a %.2f m (era %.2f); continua de pé e o rosto fica no quadro; o peito %s (limite documentado)" % [
+			c.end.y, c0.end.y, "também" if CasosRetrato.ve(cam, peito) else "sai do quadro"])
+	cam.free()
+	cp.free()
+	(d["fig"] as Node).free()
+
+
+## Ordem CAIXA-PADRAO-CORRECOES (B4): o ramo «corpo inteiro». O manequim DEITADO e um QUADRÚPEDE esfolado (feito em código:
+## o repositório não tem um modelo de quadrúpede) não estão de pé: o retrato é o corpo inteiro, todo no quadro. Sem nada
+## visível (caixa zero), o enquadramento usa a figura de recurso e a câmara fica bem posta.
+func _teste_retrato_casos_corpo_inteiro() -> void:
+	var d := CasosRetrato.manequim(0.0)
+	if d.is_empty():
+		_ok(false, "casos (B4): o manequim de referência abriu")
+		return
+	get_root().add_child(d["fig"])
+	CasosRetrato.parar(d)
+	CasosRetrato.deitar(d)
+	var cp := Retratos.copiar_modelo(d["fig"])
+	var e := CasosRetrato.enquadramento(cp)
+	var c: AABB = e["corpo"]
+	_ok(not e["de_pe"] and CasosRetrato.caixa_no_quadro(e["cam"], c),
+		"casos (B4): o manequim deitado (%.2f × %.2f × %.2f m) não está de pé e o retrato é o corpo inteiro, todo no quadro" % [c.size.x, c.size.y, c.size.z])
+	(e["cam"] as Camera3D).free()
+	cp.free()
+	(d["fig"] as Node).free()
+	var q := CasosRetrato.quadrupede()
+	get_root().add_child(q)
+	var cq := Retratos.copiar_modelo(q)
+	var mi := cq.find_child("Corpo", true, false) as MeshInstance3D
+	var ossos := Retratos._caixas_dos_ossos(cq, mi)
+	e = CasosRetrato.enquadramento(cq)
+	c = e["corpo"]
+	_ok(ossos.size() == 7 and Retratos.caixas_do_corpo(cq).size() == 7,
+		"casos (B4): o quadrúpede é ESFOLADO — o motor dá as caixas dos seus 7 ossos (%d) e o corpo mede-se por elas" % ossos.size())
+	_ok(not e["de_pe"] and not Retratos.de_pe(c) and CasosRetrato.caixa_no_quadro(e["cam"], c),
+		"casos (B4): o quadrúpede (%.2f de largo × %.2f de alto × %.2f de comprido) não está de pé (nem pelo tronco: %.2f m) e o retrato é o corpo inteiro, todo no quadro" % [
+			c.size.x, c.size.y, c.size.z, Retratos.largura_tronco(Retratos.caixas_do_corpo(cq), c)])
+	(e["cam"] as Camera3D).free()
+	cq.free()
+	q.free()
+	var nada := Node3D.new()
+	var cam := Camera3D.new()
+	Retratos.enquadrar(cam, nada)
+	var o := cam.transform.origin
+	var fw := -cam.transform.basis.z
+	var alvo_y := o.y + fw.y * (Vector2(o.x, o.z).length() / Vector2(fw.x, fw.z).length())
+	_ok(Retratos.caixa_visivel(nada).size == Vector3.ZERO and o.is_finite() and o.z < 0.0 and alvo_y > 1.3 and alvo_y < 2.0 and cam.near > 0.0 and cam.far > cam.near,
+		"casos (B4): caixa zero (nada visível) — a figura de recurso de 2 m: a câmara à frente, a olhar o busto (%.2f m), planos %.2f–%.2f m" % [alvo_y, cam.near, cam.far])
+	cam.free()
+	nada.free()
+
+
+## Ordem CAIXA-PADRAO-CORRECOES (B5): (a) em pose, a caixa do retrato contra a malha ESFOLADA vértice a vértice: tem de a
+## conter, com pouca folga. Sem ecrã (o CI) a referência é a esfola por CPU (a mesma conta do motor); com render, também a
+## do próprio motor (bake_mesh_from_current_skeleton_pose) — a prova viva confronta as duas. (b) A validação em repouso,
+## cometida: com a pose de repouso, a conta por ossos dá a caixa da malha do ficheiro (a pose em T).
+func _teste_retrato_casos_esfola() -> void:
+	var d := CasosRetrato.manequim(0.0)
+	if d.is_empty():
+		_ok(false, "casos (B5): o manequim de referência abriu")
+		return
+	get_root().add_child(d["fig"])
+	var mi := d["malha"] as MeshInstance3D
+	var anim: AnimationPlayer = d["anim"]
+	var linhas: Array = []
+	var contem := true
+	var folga_max := 0.0
+	var motor_igual := true
+	var com_motor := 0
+	for t in [0.0, 0.3, 0.6, 1.0]:
+		anim.seek(t, true)
+		var cpt := Retratos.copiar_modelo(d["fig"])
+		var ct := Retratos.caixa_do_corpo(cpt)
+		var esf := CasosRetrato.esfolar_cpu(cpt, cpt.find_children("*", "MeshInstance3D", true, false)[0] as MeshInstance3D)
+		var mot := CasosRetrato.esfolar_motor(d["fig"], mi)
+		if mot.size != Vector3.ZERO:
+			com_motor += 1
+			motor_igual = motor_igual and mot.position.distance_to(esf.position) < 0.002 and mot.size.distance_to(esf.size) < 0.002
+		contem = contem and ct.grow(0.001).encloses(esf)
+		var folga := ct.size - esf.size
+		folga_max = maxf(folga_max, maxf(folga.x, maxf(folga.y, folga.z)))
+		linhas.append("%.1f s: %.3f×%.3f×%.3f contra %.3f×%.3f×%.3f" % [t, ct.size.x, ct.size.y, ct.size.z, esf.size.x, esf.size.y, esf.size.z])
+		cpt.free()
+	# A folga é a das caixas por osso (uma por osso: a caixa dos vértices que ele move, levada inteira): medida ≤ 0,143 m.
+	_ok(contem and folga_max < 0.2 and motor_igual,
+		"casos (B5): em pose, a caixa do retrato contém a malha esfolada vértice a vértice, com folga ≤ %.3f m (%s; esfola %s)" % [
+			folga_max, "; ".join(linhas), ("do motor igual à de CPU em %d poses" % com_motor) if com_motor > 0 else "por CPU — sem ecrã o motor não coze a malha"])
+	CasosRetrato.parar(d)
+	(d["esqueleto"] as Skeleton3D).reset_bone_poses()
+	var cp := Retratos.copiar_modelo(d["fig"])
+	var r := Retratos.caixa_do_corpo(cp)
+	var micp := cp.find_children("*", "MeshInstance3D", true, false)[0] as MeshInstance3D
+	var m := mi.mesh.get_aabb()
+	var esf_r := CasosRetrato.esfolar_cpu(cp, micp)
+	_ok(r.position.distance_to(m.position) < 0.001 and r.size.distance_to(m.size) < 0.001 and esf_r.size.distance_to(m.size) < 0.001
+		and not Retratos.de_pe(r, Retratos.caixas_do_corpo(cp)),
+		"casos (B5): em repouso a conta por ossos dá a caixa da malha do ficheiro (%.3f × %.3f × %.3f contra %.3f × %.3f × %.3f m; a esfola também) — a pose em T, que não está de pé" % [
+			r.size.x, r.size.y, r.size.z, m.size.x, m.size.y, m.size.z])
+	cp.free()
+	(d["fig"] as Node).free()
+
+
 func _teste_caixa_ordem() -> void:
 	var c := CaixaOrdem.new()
 	get_root().add_child(c)
@@ -1130,6 +1340,24 @@ func _teste_caixa_ordem() -> void:
 	var cel := c.tamanho_celula()
 	_ok(tamanhos.size() == 1 and tamanhos.has("%dx%d" % [int(cel.x), int(cel.y)]),
 		"caixa: os 5 quadradinhos têm o MESMO tamanho, nomes curtos ou longos (%s; célula %dx%d)" % [tamanhos.keys(), int(cel.x), int(cel.y)])
+	# Ordem CAIXA-PADRAO-CORRECOES (B3): o que a linha de nome MOSTRA (cortado com «…» na largura da célula), não o `text`.
+	var visiveis: Array = []
+	var cortes_ok := true
+	for slot in c.find_child("Fila", true, false).get_children():
+		var l := slot.get_node("Nome") as Label
+		var v := CaixaOrdem.texto_visivel(l)
+		visiveis.append(v)
+		var fonte := l.get_theme_font("font")
+		var tam := l.get_theme_font_size("font_size")
+		if v != l.text:
+			# cortado: é o começo do nome com «…»; com mais uma letra já não caberia na célula
+			var sem := v.trim_suffix(l.ellipsis_char)
+			var mais := l.text.substr(0, sem.length() + 1) + l.ellipsis_char
+			cortes_ok = cortes_ok and v.ends_with(l.ellipsis_char) and l.text.begins_with(sem) and fonte.get_string_size(mais, HORIZONTAL_ALIGNMENT_LEFT, -1, tam).x > l.size.x
+		else:
+			cortes_ok = cortes_ok and fonte.get_string_size(v, HORIZONTAL_ALIGNMENT_LEFT, -1, tam).x <= l.size.x
+	_ok(cortes_ok and visiveis[3] == "Ab" and (visiveis[0] as String).length() < 10,
+		"caixa: os nomes à vista são os cortados na célula %s (não o texto anterior ao corte)" % [visiveis])
 	var vazia: Array[String] = []
 	c.mostrar(vazia, "", {}, {}, "dinamico")
 	_ok(c.vez_mostrada == "" and (c.find_child("Vazia", true, false) as Label).visible, "caixa: sem acções, diz que a ordem se forma — nada inventado")

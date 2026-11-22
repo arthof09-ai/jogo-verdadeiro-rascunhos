@@ -13,7 +13,9 @@ extends SceneTree
 ##    As medidas saem no registo (MEDIDA ...). O critério está em provas/ordem-caixa-hud-jogadora/medicao-8-figuras/CRITERIO.md.
 ##    Ordem CAIXA-HUD-JOGADORA-TECTO-DESVIO-PONTO-4: o desvio do centro da faixa tem um TECTO por resolução (não pior que
 ##    hoje: 539,0 / 576,0 / 350,5 u), que conta. É um tripwire, não a fasquia (a fasquia do critério é ≤ 1 u); quando o
-##    EXPANDE entrar, o tecto actualiza-se com a nova medição. A variante estrita (o ponto 4 a contar, ≤ 1 u, em vez do
+##    EXPANDE entrar, o tecto actualiza-se com a nova medição.
+##    Ordem CAIXA-PADRAO-CORRECOES (B9): os tectos passam a 542,5 / 587,5 / 343,5 u — não pior que a caixa do
+##    padrão-busto (ver TECTO_DESVIO_8). A variante estrita (o ponto 4 a contar, ≤ 1 u, em vez do
 ##    tecto) corre-se com `-- --estrita` (o CI corre sem a opção):
 ##      godot --headless --path cliente -s res://testes/caixa_jogadora.gd -- --estrita
 ## Código de saída 0 se tudo passa, 1 se algo falha.
@@ -27,8 +29,16 @@ var _seq := 0
 var _figs: Array = []
 ## §8: nomes públicos genéricos, até 10 letras (o corte da caixa), para encher a fila.
 const NOMES_8 := ["Espadachim", "Arqueira", "Criatura", "Criatura", "Personagem", "Criatura", "Criatura", "Criatura"]
-## §8: o tecto do desvio do centro da faixa (u), por resolução: o desvio medido na MEDICAO-8-FIGURAS (não pior que hoje).
-const TECTO_DESVIO_8 := {Vector2i(844, 390): 539.0, Vector2i(780, 360): 576.0, Vector2i(1920, 1080): 350.5}
+## §8: o tecto do desvio do centro da faixa (u), por resolução: o desvio medido (não pior que hoje).
+## Ordem CAIXA-PADRAO-CORRECOES (B9): NÃO PIOR QUE A CAIXA DO PADRÃO-BUSTO. A caixa fundida (células de tamanho fixo,
+## retrato com LADO_RETRATO_EM_LETRAS = 3,4 letras) mudou a largura da caixa com 8 figuras: 1186 → 1193 u (844×390),
+## 1269 → 1292 u (780×360), 767 → 753 u (1920×1080). A faixa centra-se entre a ⚙ e a caixa (hud.gd _posicionar_caixa:
+## margem direita = largura da caixa + folga), por isso o desvio é (margem dir − margem esq) / 2 e muda METADE do que a
+## caixa muda: +3,5 / +11,5 / −7,0 u — os 539,0 / 576,0 / 350,5 da MEDICAO-8-FIGURAS passam aos medidos com a caixa nova.
+## A recentragem que não encolhe a caixa (pôr a faixa o mais perto do centro do ecrã que o espaço livre deixa) muda o
+## desenho da faixa da CAIXA-JANELA B3, que espera o olho do Mestre (o EXPANDE): não se fez; está registada no
+## ESTADO-FINAL da ordem. A guarda dispara a +0,5 u (provas/ordem-caixa-padrao-correcoes/tecto/sensibilidade.log).
+const TECTO_DESVIO_8 := {Vector2i(844, 390): 542.5, Vector2i(780, 360): 587.5, Vector2i(1920, 1080): 343.5}
 ## §8: a variante estrita (`-- --estrita`): o ponto 4 conta com a fasquia do critério (≤ 1 u), em vez do tecto.
 var _estrita := OS.get_cmdline_user_args().has("--estrita")
 
@@ -274,6 +284,6 @@ func _medir_8(hud: Node, tam: Vector2i) -> void:
 			tam.x, tam.y, desvio_centro, int(faixa.offset_left), int(-faixa.offset_right)])
 	else:
 		var tecto: float = TECTO_DESVIO_8[tam]
-		_ok(desvio_centro <= tecto, "8 figuras %dx%d: o desvio do centro da faixa não piora (%.1f u ≤ tecto %.1f u; não pior que hoje)" % [
+		_ok(desvio_centro <= tecto, "8 figuras %dx%d: o desvio do centro da faixa não piora (%.1f u ≤ tecto %.1f u; não pior que a caixa do padrão-busto)" % [
 			tam.x, tam.y, desvio_centro, tecto])
 	_ok(cabe, "8 figuras %dx%d: nada cortado (caixa no ecrã %s, quadradinhos fora %s, faixa %d ≥ %d u)" % [tam.x, tam.y, tela.encloses(r), slots_fora, int(livre), int(precisa)])

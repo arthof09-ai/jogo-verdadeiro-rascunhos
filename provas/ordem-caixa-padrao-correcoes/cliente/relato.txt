@@ -1,0 +1,171 @@
+== Ordem CAIXA-PADRAO-CORRECOES — os 5 momentos da caixa no HUD da jogadora (manequim de referência) e os casos do retrato ==
+servidor ws://127.0.0.1:8794/ws · render NVIDIA GeForce RTX 4060
+  ok    o manequim de referência abriu (Mannequin_F · UAL2 · ANDAR v3 · sha256 8413b0395d6b9f16…)
+== 0. batalha de bancada (IA de bancada, lugares próprios) ==
+  IA: Arqueira de Bancada → {"destino":{"x":11,"y":10},"tipo":"mover"} (APLICADA)
+  IA: Arqueira de Bancada → {"tipo":"encerrar"} (APLICADA)
+  IA: Lobo → {"destino":{"x":12,"y":10},"tipo":"mover"} (APLICADA)
+  IA: Lobo → {"tipo":"encerrar"} (APLICADA)
+  IA: Espadachim de Bancada → {"destino":{"x":11,"y":8},"tipo":"mover"} (APLICADA)
+  IA: Espadachim de Bancada → {"tipo":"encerrar"} (APLICADA)
+  a batalha a meio: fase combate, rodada 1.0, vez de Bruto, ordem dinâmica (Mestre) ["Arqueira de Bancada","Lobo","Espadachim de Bancada"]
+  ok    batalha de bancada a meio: em combate e com a ordem dinâmica formada no servidor (≥ 2 figuras)
+== 1. a jogadora (a heroína 1 do cenário) entra pelo ecrã a sério ==
+  ok    1: a jogadora entrou a meio da batalha (fase combate, rodada 1)
+  caixa da jogadora: visível=true modo=dinamico ordem=["Arqueira de Bancada","Lobo","Espadachim de Bancada"] vez=Espadachim de Bancada
+  ok    1: a caixa aparece no HUD dela como o Mestre a tem (ligada, dinâmico)
+  ok    1: a ordem é a do servidor ["Arqueira de Bancada","Lobo","Espadachim de Bancada"]
+  ok    1: a figura na vez (dinâmico: quem agiu por último) é a do servidor (Espadachim de Bancada)
+  ok    1: a própria jogadora está na ordem (agiu antes de entrar, pelo lugar de bancada)
+  ok    1: nenhuma mensagem do Mestre chegou ao aparelho dela (1 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    1: o estado dela não guarda nada do Mestre
+  ok    1: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica {"ligada":true,"ordemDinamica":{"fechada":false,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"],"ultimo":"f20af3254ba898103"},"ordemPor":"dinamico"}
+  ok    1: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa (0 achados; o texto achado não se repete aqui)
+  ok    1: as 4 figuras em cena vestem o manequim de referência, nenhuma cápsula à vista (4 com manequim, 0 cápsulas)
+  ok    1: os 3 retratos da caixa são do manequim, nenhum da cápsula []
+  ok    1: a tabela tem as cores do protótipo (painel 100c088c, moldura c9a227d9, letras f3e9d2ff, retrato 0a0805d1)
+  ok    1: o painel da caixa é rgba(16,12,8,.55)
+  ok    1: 6 letras a pergaminho (a da vez a ouro) e 4 molduras a ouro .85 com o fundo do retrato, nenhuma outra cor []
+  ok    1: a figura na vez destaca-se com a moldura de ouro grossa (2)
+  escala HUD→janela 0.5354 (janela 1028x720, área do HUD 1920x1344 u)
+  quadradinhos (px reais da janela): «Arqueir…» (7 letras à vista) 46x60 px (85x112 u), «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Espada…» (6 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · célula fixa 85x112 u · cartão na vez 62x62 px
+  ok    1: os 3 quadradinhos têm TODOS o mesmo tamanho, ao píxel (["46x60"]; retrato ["46x46"])
+  ok    1: e esse tamanho é a célula fixa da caixa (85x112 u)
+  ok    1: o cartão grande da figura na vez continua maior (62x62 px contra 46)
+    retrato Arqueira de Bancada: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Lobo: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Espadachim de Bancada: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+  ok    1: os 3 retratos são busto — rosto e peitoral no quadro; cintura, joelhos e pés fora; de frente []
+    esfola figura ff2acf60bd672e76e: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f08e6e9dc41e7a378: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f20af3254ba898103: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+  ok    1: a caixa dos 3 retratos contém, um a um, a malha esfolada pelo motor, e a esfola por CPU é igual à do motor []
+  ok    captura 1-entrou-dinamica.png (1028×720)
+== 2. o Mestre carrega em «Modo iniciativa» ==
+  ok    2: o servidor aceitou a escolha do Mestre (ligada, iniciativa)
+  ok    2: a caixa da jogadora passou ao modo iniciativa
+  caixa da jogadora: visível=true modo=iniciativa ordem=["Arqueira de Bancada","Lobo","Espadachim de Bancada","Bruto"] vez=Bruto
+  ok    2: a ordem é a de iniciativa do servidor ["Arqueira de Bancada","Lobo","Espadachim de Bancada","Bruto"] e a vez é a do servidor (Bruto)
+  ok    2: nenhuma mensagem do Mestre chegou ao aparelho dela (2 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    2: o estado dela não guarda nada do Mestre
+  ok    2: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica {"ligada":true,"ordemDinamica":{"fechada":false,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"],"ultimo":"f20af3254ba898103"},"ordemPor":"iniciativa"}
+  ok    2: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa (0 achados; o texto achado não se repete aqui)
+  ok    2: as 4 figuras em cena vestem o manequim de referência, nenhuma cápsula à vista (4 com manequim, 0 cápsulas)
+  ok    2: os 4 retratos da caixa são do manequim, nenhum da cápsula []
+  ok    2: a tabela tem as cores do protótipo (painel 100c088c, moldura c9a227d9, letras f3e9d2ff, retrato 0a0805d1)
+  ok    2: o painel da caixa é rgba(16,12,8,.55)
+  ok    2: 7 letras a pergaminho (a da vez a ouro) e 5 molduras a ouro .85 com o fundo do retrato, nenhuma outra cor []
+  ok    2: a figura na vez destaca-se com a moldura de ouro grossa (2)
+  escala HUD→janela 0.5354 (janela 1028x720, área do HUD 1920x1344 u)
+  quadradinhos (px reais da janela): «Arqueir…» (7 letras à vista) 46x60 px (85x112 u), «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Espada…» (6 letras à vista) 46x60 px (85x112 u), «Bruto» (5 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · célula fixa 85x112 u · cartão na vez 62x62 px
+  ok    2: os 4 quadradinhos têm TODOS o mesmo tamanho, ao píxel (["46x60"]; retrato ["46x46"])
+  ok    2: e esse tamanho é a célula fixa da caixa (85x112 u)
+  ok    2: o cartão grande da figura na vez continua maior (62x62 px contra 46)
+    retrato Arqueira de Bancada: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Lobo: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Espadachim de Bancada: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Bruto: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+  ok    2: os 4 retratos são busto — rosto e peitoral no quadro; cintura, joelhos e pés fora; de frente []
+    esfola figura ff2acf60bd672e76e: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f08e6e9dc41e7a378: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f20af3254ba898103: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f1c67641aa5cdfe28: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+  ok    2: a caixa dos 4 retratos contém, um a um, a malha esfolada pelo motor, e a esfola por CPU é igual à do motor []
+  ok    captura 2-iniciativa.png (1028×720)
+== 3. o Mestre desliga a caixa ==
+  ok    3: o servidor aceitou (desligada)
+  ok    3: a caixa desapareceu do HUD da jogadora
+  ok    3: as 4 figuras em cena vestem o manequim de referência, nenhuma cápsula à vista (4 com manequim, 0 cápsulas)
+  ok    captura 3-desligada.png (1028×720)
+== 4. o Mestre volta a ligar no modo dinâmico; a bancada joga mais duas vezes ==
+  ok    4: o servidor aceitou (ligada, dinâmico)
+  ok    4: a caixa voltou ao HUD dela no modo dinâmico
+  IA: Bruto → {"destino":{"x":10,"y":10},"tipo":"mover"} (APLICADA)
+  IA: Bruto → {"tipo":"encerrar"} (APLICADA)
+  ok    4: a bancada jogou a vez de Bruto
+  IA: Arqueira de Bancada → {"alvoId":"f08e6e9dc41e7a378","arma":"tiro-certeiro-bancada","tipo":"atacar"} (APLICADA)
+  IA: Arqueira de Bancada → {"tipo":"encerrar"} (APLICADA)
+  ok    4: a bancada jogou a vez de Arqueira de Bancada
+  caixa da jogadora: visível=true modo=dinamico ordem=["Arqueira de Bancada","Lobo","Espadachim de Bancada","Bruto"] vez=Arqueira de Bancada
+  ok    4: pelos eventos que recebeu, a caixa dela adiantou-se e é igual à ordem do servidor ["Arqueira de Bancada","Lobo","Espadachim de Bancada","Bruto"] (vez: Arqueira de Bancada, fechada: true)
+  ok    4: nenhuma mensagem do Mestre chegou ao aparelho dela (9 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    4: o estado dela não guarda nada do Mestre
+  ok    4: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica {"ligada":true,"ordemDinamica":{"fechada":false,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"],"ultimo":"f20af3254ba898103"},"ordemPor":"dinamico"}
+  ok    4: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa (0 achados; o texto achado não se repete aqui)
+  ok    4: as 4 figuras em cena vestem o manequim de referência, nenhuma cápsula à vista (4 com manequim, 0 cápsulas)
+  ok    4: os 4 retratos da caixa são do manequim, nenhum da cápsula []
+  ok    4: a tabela tem as cores do protótipo (painel 100c088c, moldura c9a227d9, letras f3e9d2ff, retrato 0a0805d1)
+  ok    4: o painel da caixa é rgba(16,12,8,.55)
+  ok    4: 7 letras a pergaminho (a da vez a ouro) e 5 molduras a ouro .85 com o fundo do retrato, nenhuma outra cor []
+  ok    4: a figura na vez destaca-se com a moldura de ouro grossa (2)
+  escala HUD→janela 0.5354 (janela 1028x720, área do HUD 1920x1344 u)
+  quadradinhos (px reais da janela): «Arqueir…» (7 letras à vista) 46x60 px (85x112 u), «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Espada…» (6 letras à vista) 46x60 px (85x112 u), «Bruto» (5 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · célula fixa 85x112 u · cartão na vez 62x62 px
+  ok    4: os 4 quadradinhos têm TODOS o mesmo tamanho, ao píxel (["46x60"]; retrato ["46x46"])
+  ok    4: e esse tamanho é a célula fixa da caixa (85x112 u)
+  ok    4: o cartão grande da figura na vez continua maior (62x62 px contra 46)
+    retrato Arqueira de Bancada: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Lobo: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Espadachim de Bancada: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Bruto: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+  ok    4: os 4 retratos são busto — rosto e peitoral no quadro; cintura, joelhos e pés fora; de frente []
+    esfola figura ff2acf60bd672e76e: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f08e6e9dc41e7a378: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f20af3254ba898103: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f1c67641aa5cdfe28: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+  ok    4: a caixa dos 4 retratos contém, um a um, a malha esfolada pelo motor, e a esfola por CPU é igual à do motor []
+  ok    captura 4-religada-avancou.png (1028×720)
+== 5. a jogadora sai e volta a entrar ==
+  ok    5: a jogadora saiu
+  ok    5: a jogadora entrou a meio da batalha (fase combate, rodada 2)
+  caixa da jogadora: visível=true modo=dinamico ordem=["Arqueira de Bancada","Lobo","Espadachim de Bancada","Bruto"] vez=Arqueira de Bancada
+  ok    5: a caixa reconstruiu-se do snapshot, igual à de antes de sair
+  ok    5: nenhuma mensagem do Mestre chegou ao aparelho dela (1 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    5: o estado dela não guarda nada do Mestre
+  ok    5: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica {"ligada":true,"ordemDinamica":{"fechada":true,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103","f1c67641aa5cdfe28"],"ultimo":"ff2acf60bd672e76e"},"ordemPor":"dinamico"}
+  ok    5: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa (0 achados; o texto achado não se repete aqui)
+  ok    5: as 4 figuras em cena vestem o manequim de referência, nenhuma cápsula à vista (4 com manequim, 0 cápsulas)
+  ok    5: os 4 retratos da caixa são do manequim, nenhum da cápsula []
+  ok    5: a tabela tem as cores do protótipo (painel 100c088c, moldura c9a227d9, letras f3e9d2ff, retrato 0a0805d1)
+  ok    5: o painel da caixa é rgba(16,12,8,.55)
+  ok    5: 7 letras a pergaminho (a da vez a ouro) e 5 molduras a ouro .85 com o fundo do retrato, nenhuma outra cor []
+  ok    5: a figura na vez destaca-se com a moldura de ouro grossa (2)
+  escala HUD→janela 0.5354 (janela 1028x720, área do HUD 1920x1344 u)
+  quadradinhos (px reais da janela): «Arqueir…» (7 letras à vista) 46x60 px (85x112 u), «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Espada…» (6 letras à vista) 46x60 px (85x112 u), «Bruto» (5 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · célula fixa 85x112 u · cartão na vez 62x62 px
+  ok    5: os 4 quadradinhos têm TODOS o mesmo tamanho, ao píxel (["46x60"]; retrato ["46x46"])
+  ok    5: e esse tamanho é a célula fixa da caixa (85x112 u)
+  ok    5: o cartão grande da figura na vez continua maior (62x62 px contra 46)
+    retrato Arqueira de Bancada: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Lobo: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Espadachim de Bancada: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Bruto: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+  ok    5: os 4 retratos são busto — rosto e peitoral no quadro; cintura, joelhos e pés fora; de frente []
+    esfola figura ff2acf60bd672e76e: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f08e6e9dc41e7a378: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f20af3254ba898103: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f1c67641aa5cdfe28: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+  ok    5: a caixa dos 4 retratos contém, um a um, a malha esfolada pelo motor, e a esfola por CPU é igual à do motor []
+  ok    captura 5-reentrou.png (1028×720)
+== 6. os casos do retrato, com o render a sério (B1, B2, B4, B5) ==
+  ok    6 (B1): o manequim da figura ff2acf60bd672e76e, nos 42 quadros do ANDAR, está sempre de pé (pela caixa toda e pelo tronco)
+  ok    6 (B1): a profundidade máxima do ANDAR é 1.008 m (quadro 0), a 0.466 m do limiar 1.474 m; o tronco não passa de 0.653 m
+    retrato do caso guardado em retratos/casos/passada-longa.png: true
+  ok    6 (B1): a passada longa (1.59 m de fundo, 1.58 de alto): pela caixa toda não diria «de pé», pelo tronco (0.92 m) diz, e no render o retrato é o busto []
+    retrato do caso guardado em retratos/casos/arma-levantada.png: true
+  ok    6 (B2): com a arma levantada (ponta a 2.40 m, cabeça a 1.80 m) o corpo não muda e no render o retrato continua o busto []
+    retrato do caso guardado em retratos/casos/braco-levantado.png: true
+  ok    6 (B2, limite): com o braço levantado a figura sobe a 2.13 m; o rosto fica no quadro, o peito sai (limite documentado)
+    retrato do caso guardado em retratos/casos/deitada.png: true
+  ok    6 (B4): o manequim deitado (0.48 × 1.01 × 1.77 m) dá o corpo inteiro, todo no quadro
+    retrato do caso guardado em retratos/casos/quadrupede.png: true
+  ok    6 (B4): o quadrúpede esfolado (0.45 × 1.23 × 1.80 m) dá o corpo inteiro, todo no quadro; o motor esfola-o (0.45 × 1.23 × 1.80 m, dentro da caixa)
+    retrato do caso guardado em retratos/casos/caixa-zero.png: true
+  ok    6 (B4): a caixa zero (nada visível) desenha a figura de recurso sem erro (câmara à frente, planos 0.01–5.18 m)
+  ok    6 (B5): em repouso, a conta por ossos dá a caixa da malha (1.762 × 1.806 × 0.309 m contra 1.762 × 1.806 × 0.309), e a esfola do motor também (1.762 × 1.806 × 0.309)
+
+tamanhos medidos dos quadradinhos (px reais da janela) e os nomes À VISTA (B3), por momento:
+  1: «Arqueir…» (7 letras à vista) 46x60 px (85x112 u), «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Espada…» (6 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · cartão na vez 62x62
+  2: «Arqueir…» (7 letras à vista) 46x60 px (85x112 u), «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Espada…» (6 letras à vista) 46x60 px (85x112 u), «Bruto» (5 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · cartão na vez 62x62
+  4: «Arqueir…» (7 letras à vista) 46x60 px (85x112 u), «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Espada…» (6 letras à vista) 46x60 px (85x112 u), «Bruto» (5 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · cartão na vez 62x62
+  5: «Arqueir…» (7 letras à vista) 46x60 px (85x112 u), «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Espada…» (6 letras à vista) 46x60 px (85x112 u), «Bruto» (5 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · cartão na vez 62x62
+letras à vista por nome, em todos os momentos: [7, 4, 6, 7, 4, 6, 5, 7, 4, 6, 5, 7, 4, 6, 5] (LADO_RETRATO_EM_LETRAS = 3.4; a escolha 7 ou 10 letras é do Mestre)
+prova da caixa (padrão-correcções, com os manequins): 95 de 95 verificações passaram.

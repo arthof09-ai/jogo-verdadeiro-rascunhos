@@ -39,6 +39,11 @@ const FOLGA_CIMA := 0.03
 const FOLGA_BUSTO := 1.08
 ## De pé = a figura em pose é mais alta do que larga por este factor; senão (deitada, quadrúpede), o corpo inteiro.
 const DE_PE := 1.2
+## Ordem CAIXA-PADRAO-CORRECOES (B1): a largura que conta para o «de pé» é a do TRONCO — as partes da figura acima desta
+## fracção da altura (de cima para baixo: a metade de cima). As pernas e os pés de quem dá um passo ficam fora da medida.
+## Medido no ANDAR v3 inteiro (42 quadros): o fundo da figura toda chega a 1,008 m (quadro 0), a 0,466 m do limiar
+## (1,769 / 1,2 = 1,474 m); o tronco não passa de 0,653 m. Uma figura deitada ou um quadrúpede são largos também em cima.
+const FRACAO_TRONCO := 0.5
 
 var _palcos := {}  # id -> SubViewport
 var _chaves := {}  # id -> String
@@ -119,6 +124,30 @@ static func cor_de_fundo(modelo: Node3D) -> Color:
 ## A caixa (no espaço do palco) das malhas visíveis da cópia, NA POSE EM QUE ESTÃO (ver `caixas_em_pose`).
 static func caixa_visivel(no: Node3D) -> AABB:
 	return _juntar(caixas_em_pose(no))
+
+
+## Ordem CAIXA-PADRAO-CORRECOES (B2): a caixa do CORPO da figura em pose (ver `caixas_do_corpo`) — a que o enquadramento
+## mede (a altura, a faixa do busto e o «de pé»).
+static func caixa_do_corpo(no: Node3D) -> AABB:
+	return _juntar(caixas_do_corpo(no))
+
+
+## Ordem CAIXA-PADRAO-CORRECOES (B2): as caixas do que é CORPO. Se a figura tem malhas esfoladas (um corpo com esqueleto,
+## como o manequim), o corpo são elas; as malhas RÍGIDAS que leva (uma arma empunhada, um escudo, um adereço preso a um
+## osso) não são corpo: desenham-se no retrato, mas não contam para a altura nem para a faixa — uma espada levantada
+## não sobe a janela do busto. Uma figura só de malhas rígidas (a cápsula, o marcador) é toda corpo.
+## Limites (documentados, não resolvidos): uma capa ESFOLADA conta como corpo; um braço levantado É corpo e sobe a
+## altura (o rosto fica no quadro, o peito pode sair: medido no teste `_teste_retrato_casos_corpo`).
+static func caixas_do_corpo(no: Node3D) -> Array[AABB]:
+	var esfoladas: Array[AABB] = []
+	var rigidas: Array[AABB] = []
+	for mi in _malhas_visiveis(no, Transform3D.IDENTITY, []):
+		var ossos := _caixas_dos_ossos(no, mi[2] as MeshInstance3D)
+		if ossos.is_empty():
+			rigidas.append((mi[0] as Transform3D) * (mi[1] as Mesh).get_aabb())
+		else:
+			esfoladas.append_array(ossos)
+	return esfoladas if not esfoladas.is_empty() else rigidas
 
 
 ## As caixas das partes visíveis da cópia, no espaço do palco e na pose em que a figura está.
@@ -206,16 +235,23 @@ static func _malhas_visiveis(no: Node, pai: Transform3D, saida: Array) -> Array:
 
 
 ## Ordem CAIXA-PADRAO-BUSTO: a figura está de pé? Mede-se na POSE (não na malha em T): mais alta do que larga.
-static func de_pe(c: AABB) -> bool:
-	return c.size.y > maxf(c.size.x, c.size.z) * DE_PE
+## Ordem CAIXA-PADRAO-CORRECOES (B1): com as `caixas` da figura, a largura é a do TRONCO (`largura_tronco`): a passada
+## (as pernas abertas para a frente e para trás) já não conta. Sem elas, a largura é a da caixa toda (como antes).
+static func de_pe(c: AABB, caixas: Array[AABB] = []) -> bool:
+	return c.size.y > largura_tronco(caixas, c) * DE_PE
 
 
-## A janela do busto (rosto e peitoral): do alto da figura em pose (mais FOLGA_CIMA) para baixo, FRACAO_BUSTO da
-## altura; quadrada; centrada (em x e z) nas partes da figura que entram nessa faixa — a cabeça e o peito, não os pés
-## de quem dá um passo.
-static func janela_busto(caixas: Array[AABB], c: AABB) -> AABB:
-	var alto := c.size.y * FRACAO_BUSTO
-	var base := c.end.y - alto
+## Ordem CAIXA-PADRAO-CORRECOES (B1): a largura (o maior de x e z) das partes da figura acima de FRACAO_TRONCO da altura
+## (a metade de cima: cabeça, tronco e braços), sem as pernas nem os pés. Sem `caixas`, a da caixa toda.
+static func largura_tronco(caixas: Array[AABB], c: AABB) -> float:
+	var cima := _faixa(caixas, c.end.y - c.size.y * FRACAO_TRONCO)
+	if cima.size == Vector3.ZERO:
+		return maxf(c.size.x, c.size.z)
+	return maxf(cima.size.x, cima.size.z)
+
+
+## As partes das `caixas` acima de `base`, cortadas em `base` e juntas numa caixa (vazia se nenhuma chega lá).
+static func _faixa(caixas: Array[AABB], base: float) -> AABB:
 	var faixa := AABB()
 	var primeira := true
 	for a in caixas:
@@ -228,7 +264,17 @@ static func janela_busto(caixas: Array[AABB], c: AABB) -> AABB:
 			primeira = false
 		else:
 			faixa = faixa.merge(corte)
-	if primeira:
+	return faixa
+
+
+## A janela do busto (rosto e peitoral): do alto da figura em pose (mais FOLGA_CIMA) para baixo, FRACAO_BUSTO da
+## altura; quadrada; centrada (em x e z) nas partes da figura que entram nessa faixa — a cabeça e o peito, não os pés
+## de quem dá um passo.
+static func janela_busto(caixas: Array[AABB], c: AABB) -> AABB:
+	var alto := c.size.y * FRACAO_BUSTO
+	var base := c.end.y - alto
+	var faixa := _faixa(caixas, base)
+	if faixa.size == Vector3.ZERO:
 		faixa = AABB(Vector3(c.position.x, base, c.position.z), Vector3(c.size.x, alto, c.size.z))
 	var centro := faixa.get_center()
 	var lado := alto + c.size.y * FOLGA_CIMA
@@ -236,9 +282,10 @@ static func janela_busto(caixas: Array[AABB], c: AABB) -> AABB:
 
 
 ## Enquadramento fixo: de pé, o BUSTO (rosto e peitoral, ver `janela_busto`); deitada (ou mais larga do que alta), o corpo
-## inteiro. Tudo medido na figura EM POSE (`caixas_em_pose`).
+## inteiro. Tudo medido no CORPO da figura EM POSE (`caixas_do_corpo`: sem as armas e os adereços rígidos; B2).
+## Sem nada visível (caixa zero), enquadra uma figura de recurso de 1 × 2 × 1 m assente na origem.
 static func enquadrar(cam: Camera3D, copia: Node3D) -> void:
-	var caixas := caixas_em_pose(copia)
+	var caixas := caixas_do_corpo(copia)
 	var c := _juntar(caixas)
 	if c.size == Vector3.ZERO:
 		c = AABB(Vector3(-0.5, 0.0, -0.5), Vector3(1.0, 2.0, 1.0))
@@ -246,7 +293,7 @@ static func enquadrar(cam: Camera3D, copia: Node3D) -> void:
 		caixas.append(c)
 	var alvo := c.get_center()
 	var raio := 0.5 * c.size.length()
-	if de_pe(c):
+	if de_pe(c, caixas):
 		var j := janela_busto(caixas, c)
 		alvo = j.get_center()
 		raio = 0.5 * j.size.y * FOLGA_BUSTO

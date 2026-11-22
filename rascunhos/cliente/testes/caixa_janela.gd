@@ -200,3 +200,17 @@ func _medir(hud: Node, n: int, tam: Vector2i) -> void:
 	var em_letras: float = hud._caixa.LADO_RETRATO_EM_LETRAS
 	_ok(absf(lado_retrato - float(hud._fonte) * em_letras) <= 1.0, "%d figuras %dx%d: a fila segue a letra de agora (retrato %d u = %.1f × %d)" % [n, tam.x, tam.y, int(lado_retrato), em_letras, hud._fonte])
 	_ok(px_letra >= 13.0 - 0.01, "%d figuras %dx%d: a letra da faixa tem %.1f px reais (≥ 13)" % [n, tam.x, tam.y, px_letra])
+	# Ordem CAIXA-PADRAO-CORRECOES (B6): a LARGURA RENDERIZADA slot a slot (não só a altura da moldura do 1.º):
+	# o rectângulo que um quadradinho ocupa no ecrã, e a moldura nele, têm sempre a largura da célula fixa da caixa.
+	var cel: Vector2 = hud._caixa.tamanho_celula()
+	var larguras := {}
+	var maus: Array = []
+	for s in fila.get_children():
+		var rs := (s as Control).get_global_rect()
+		var rm := (s.get_node("Moldura") as Control).get_global_rect()
+		larguras["%.1f" % rs.size.x] = true
+		if absf(rs.size.x - cel.x) > 0.5 or absf(rm.size.x - cel.x) > 0.5 or absf(rm.size.y - cel.x) > 0.5:
+			maus.append("%s %.1f/%.1f" % [s.name, rs.size.x, rm.size.x])
+	_ok(maus.is_empty() and larguras.size() == 1 and fila.get_child_count() == n,
+		"%d figuras %dx%d: os %d slots renderizam com a largura da célula (%s u = %.1f px reais por slot; moldura quadrada) %s" % [
+			n, tam.x, tam.y, fila.get_child_count(), larguras.keys(), cel.x * escala, maus])

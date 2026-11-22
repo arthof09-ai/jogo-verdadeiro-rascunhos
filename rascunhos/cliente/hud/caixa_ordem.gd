@@ -169,6 +169,23 @@ func tamanho_celula() -> Vector2:
 	return Vector2(lado, lado + ceilf(_medida_nome.get_minimum_size().y))
 
 
+## Ordem CAIXA-PADRAO-CORRECOES (B3): o texto que uma linha de nome MOSTRA de facto — depois do corte com «…» dentro da
+## largura fixa da célula —, e não o `text` (o nome antes desse corte, só cortado aos MAX_LETRAS_NOME). Faz a mesma conta
+## que a Label faz para desenhar: a linha com a fonte, a letra e a largura dela, cortada com o mesmo `text_overrun_behavior`.
+static func texto_visivel(l: Label) -> String:
+	var linha := TextLine.new()
+	linha.add_string(l.text, l.get_theme_font("font"), l.get_theme_font_size("font_size"))
+	var est := l.get_theme_stylebox("normal")
+	linha.width = l.size.x - (est.get_minimum_size().x if est != null else 0.0)
+	linha.text_overrun_behavior = l.text_overrun_behavior
+	linha.ellipsis_char = l.ellipsis_char
+	linha.get_size()  # a linha só se molda (e corta) quando se lhe pede uma medida
+	var corte := TextServerManager.get_primary_interface().shaped_text_get_trim_pos(linha.get_rid())
+	if corte < 0 or corte >= l.text.length():
+		return l.text
+	return l.text.substr(0, corte) + l.ellipsis_char
+
+
 func _letra_nome() -> int:
 	return maxi(1, int(round(_fonte * LETRA_NOME)))
 
