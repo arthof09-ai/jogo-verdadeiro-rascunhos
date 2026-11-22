@@ -237,6 +237,9 @@ func _montar_batalha() -> bool:
 			break
 		jogaram.append(quem)
 	var fim := await _vista_b()
+	# CAIXA-RELATO-CORRECOES-3 (B3): o nome que o relato dá à jogadora é o PÚBLICO (`_nome` → `_nome_publico`), não o
+	# `nome` do cenário — que é o do lugar (o login) e pode diferir do `nomePublico` da ficha.
+	_jogadora["nomePublico"] = _nome(fim, str(_jogadora["figuraId"]))
 	var od = fim.get("ordemDinamica", {})
 	_linha("  a batalha a meio: fase %s, rodada %s, vez de %s, ordem dinâmica (Mestre) %s" % [fim.get("fase"), fim.get("rodada"),
 		_nome(fim, str(fim.get("vezId"))), JSON.stringify((od.get("ordem", []) as Array).map(func(x): return _nome(fim, x)))])
@@ -428,7 +431,8 @@ func _privacidade(rotulo: String) -> void:
 	var achados: Array = []
 	for t in textos:
 		for k in canarios:
-			if str(t).contains(k):
+			# CAIXA-RELATO-CORRECOES-3 (B2): sem distinguir maiúsculas («bruto de bancada» também é o canário).
+			if str(t).to_lower().contains(str(k).to_lower()):
 				achados.append("%s em «%s»" % [k, t])
 	_ok(achados.is_empty(), rotulo + ": nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa %s" % [achados])
 	# CAIXA-RELATO-CORRECOES-2 (B1): o canário estende-se ao RELATO (o que fica cometido): nenhum nome verdadeiro em
@@ -447,10 +451,17 @@ func _privacidade(rotulo: String) -> void:
 
 ## As linhas do relato que trazem algum dos nomes dados (o texto da própria verificação ainda não está lá).
 func _nomes_no_relato(nomes: Array) -> Array:
+	return _nomes_em(_relato, nomes)
+
+
+## CAIXA-RELATO-CORRECOES-3 (B1/B2): as linhas de `linhas` que trazem algum dos nomes — sem distinguir maiúsculas dos
+## dois lados (um canário escrito «lobo de bancada» é o mesmo nome verdadeiro). Linhas numeradas a partir de 1.
+func _nomes_em(linhas: PackedStringArray, nomes: Array) -> Array:
 	var achados: Array = []
-	for i in _relato.size():
+	for i in linhas.size():
+		var l := linhas[i].to_lower()
 		for k in nomes:
-			if _relato[i].contains(k):
+			if l.contains(str(k).to_lower()):
 				achados.append("%s na linha %d" % [k, i + 1])
 	return achados
 
@@ -494,7 +505,7 @@ func _correr() -> void:
 		_fim()
 		return
 
-	_linha("== 1. a jogadora (%s) entra pelo ecrã a sério ==" % _jogadora["nome"])
+	_linha("== 1. a jogadora (%s) entra pelo ecrã a sério ==" % _jogadora.get("nomePublico", _jogadora["figuraId"]))
 	if not await _entrar_jogadora("1"):
 		_fim()
 		return
@@ -582,11 +593,28 @@ func _correr() -> void:
 
 func _fim() -> void:
 	# CAIXA-RELATO-CORRECOES-2 (B1): a varredura final do relato INTEIRO (incluindo o que se escreveu depois do §5).
+	# CAIXA-RELATO-CORRECOES-3 (B1): «inteiro» é agora o ficheiro TODO. Antes, esta verificação, a linha em branco e o
+	# resumo ficavam fora da varredura (o relato dizia «65 linhas» e o ficheiro tinha 68). As 3 linhas finais compõem-se
+	# primeiro, a varredura corre sobre o relato + elas (o que vai ficar no ficheiro) e a contagem diz esse tamanho.
+	# Depois de TODAS as _linha(), o relato volta a ser varrido (abaixo): se aí aparecer um nome, a prova falha.
+	var resumo := "prova da caixa com os manequins: %d de %d verificações passaram."
+	var pre_ok := true
 	if not _canarios_nomes.is_empty():
-		var no_relato := _nomes_no_relato(_canarios_nomes)
-		_ok(no_relato.is_empty(), "fim: o relato inteiro (%d linhas) não traz nenhum dos %d nome(s) verdadeiro(s) %s" % [_relato.size(), _canarios_nomes.size(), no_relato])
+		var n := _relato.size() + 3
+		var texto := "fim: o relato inteiro (%d linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos %d nome(s) verdadeiro(s) %s"
+		var finais := PackedStringArray(["  ok    " + texto % [n, _canarios_nomes.size(), []], "", resumo % [_total + 1 - _falhas, _total + 1]])
+		var achados := _nomes_em(_relato + finais, _canarios_nomes)
+		pre_ok = achados.is_empty()
+		_ok(pre_ok, texto % [n, _canarios_nomes.size(), achados])
 	_linha("")
-	_linha("prova da caixa com os manequins: %d de %d verificações passaram." % [_total - _falhas, _total])
+	_linha(resumo % [_total - _falhas, _total])
+	# B1: re-varrer DEPOIS de todas as _linha() — o relato em memória é agora o ficheiro inteiro. (Se a varredura de
+	# cima já falhou, a prova já falha e as linhas de falha trazem os nomes; não se repete.)
+	if pre_ok and not _canarios_nomes.is_empty():
+		var depois := _nomes_no_relato(_canarios_nomes)
+		if not depois.is_empty():
+			_ok(false, "fim: a re-varredura do relato escrito (%d linhas) achou nome(s) verdadeiro(s) %s" % [_relato.size(), depois])
+			_linha(resumo % [_total - _falhas, _total])
 	for l in _herois.values():
 		l.fechar()
 	if _mestre_b != null:

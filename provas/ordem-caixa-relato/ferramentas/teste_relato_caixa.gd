@@ -20,6 +20,18 @@ extends SceneTree
 ##    a linha do relato tal como as provas a escreveriam (a caixa do Estado, a origem do snapshot e a caixa actual do
 ##    modelo do HUD) e varre-as com a MESMA lista de proibidas (`PROIBIDAS`) — 2 verificações novas (28 → 30).
 ##  - B3: «o snapshot DESTE CASO não traz `propria` nem nomes» — é o que o teste monta, não uma regra do protocolo.
+## Ordem CAIXA-RELATO-CORRECOES-3 (sentença da CAIXA-RELATO-CORRECOES-2):
+##  - B4 (só comentário): a eficácia de "master", "caixaMestre" e "pa" na lista das proibidas assenta nas MUTAÇÕES do
+##    executor (fugas «(master)», «(caixaMestre)», «(PA 3)» postas de propósito na origem da linha, cada uma 22/23 —
+##    `provas/ordem-caixa-relato/correcoes-3/mutacoes.log`), não em nada que este teste gere por si: nenhuma linha
+##    honesta as contém. E o "pa" SOZINHO vale só aqui, nas linhas sintéticas deste teste (palavras fixas e ids
+##    hexadecimais): NUNCA migra para o canário vivo das provas — no relato vivo «pa» ocorre 23× como substring, sem
+##    distinguir maiúsculas, de texto honesto (`correcoes-2/cliente-hud/relato.txt`: 13× «Espadachim», 3× «aparelho»,
+##    3× o «PA» do próprio texto das verificações de privacidade, «aparece», «desapareceu», «passaram», «passou») e
+##    daria falsos positivos. O canário vivo procura os nomes verdadeiros (e, nos textos da caixa, os números de
+##    vida/PA), não a palavra «pa».
+##  - B6: a conta do fuso confere-se com um instante e um fuso INJECTADOS (`hora_ms(unix, bias_min)`, bias −180 e
+##    +330): não depende do fuso da máquina, e um `hora_ms()` que esquecesse o fuso falha também no CI (UTC).
 ##
 ## Correr (na raiz do repo):
 ##   godot --headless --path rascunhos/cliente -s "$PWD/provas/ordem-caixa-relato/ferramentas/teste_relato_caixa.gd"
@@ -93,6 +105,12 @@ func _init() -> void:
 	_ok(h1 >= antes1 and h1 <= depois1 and h2 >= antes2 and h2 <= depois2,
 		"a hora é a LOCAL do sistema (fuso %s, bias %s min): %s ∈ [%s, %s] e %s ∈ [%s, %s]" % [
 			fuso.get("name", "?"), fuso.get("bias", "?"), h1, antes1, depois1, h2, antes2, depois2])
+	# B6 (CORRECOES-3): o fuso injectado — a mesma conta com bias ≠ 0 em qualquer máquina (no CI, UTC, o caso de cima
+	# não distingue «somar o bias» de «esquecê-lo»). 1795000000.25 s = 2026-11-18 11:06:40.250 UTC.
+	var inj_sp: String = R.hora_ms(1795000000.25, -180)
+	var inj_in: String = R.hora_ms(1795000000.25, 330)
+	_ok(inj_sp == "08:06:40.250" and inj_in == "16:36:40.250",
+		"a hora soma o fuso INJECTADO (não depende do fuso desta máquina): bias −180 → %s (08:06:40.250), bias +330 → %s (16:36:40.250)" % [inj_sp, inj_in])
 	var lh1: String = R.linha("x", snap_caixa, s1, act)
 	var lh2: String = R.linha("x", snap_caixa, s2, act)
 	linhas.append(lh1)  # B2: as duas linhas do caso da hora também passam pela varredura de privacidade

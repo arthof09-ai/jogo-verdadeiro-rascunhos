@@ -1,0 +1,16 @@
+
+comparar capturas (algum canal RGB > 0.060): provas/ordem-caixa-relato/correcoes/cliente-hud ↔ provas/ordem-caixa-relato/correcoes-2/cliente-hud
+  1-entrou-dinamica.png      13.9 %  (103002 de 740160 píxeis, 1028×720)
+  2-iniciativa.png            3.5 %  (26058 de 740160 píxeis, 1028×720)
+  3-desligada.png             0.4 %  (3178 de 740160 píxeis, 1028×720)
+  4-religada-avancou.png      0.6 %  (4398 de 740160 píxeis, 1028×720)
+  5-reentrou.png             32.1 %  (237922 de 740160 píxeis, 1028×720)
+  intervalo: 0.4–32.1 %
+
+comparar capturas (algum canal RGB > 0.060): provas/ordem-caixa-relato/correcoes/cliente-manequim ↔ provas/ordem-caixa-relato/correcoes-2/cliente-manequim
+  1-entrou-dinamica.png       8.3 %  (61216 de 740160 píxeis, 1028×720)
+  2-iniciativa.png            1.8 %  (13402 de 740160 píxeis, 1028×720)
+  3-desligada.png             0.6 %  (4694 de 740160 píxeis, 1028×720)
+  4-religada-avancou.png      1.4 %  (10426 de 740160 píxeis, 1028×720)
+  5-reentrou.png             23.8 %  (176237 de 740160 píxeis, 1028×720)
+  intervalo: 0.6–23.8 %

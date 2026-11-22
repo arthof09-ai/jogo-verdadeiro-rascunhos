@@ -76,10 +76,15 @@ static func _num(v) -> String:
 
 
 ## A hora local com milissegundos («HH:MM:SS.mmm») — B3.
-static func hora_ms() -> String:
+## CAIXA-RELATO-CORRECOES-3 (B6): o instante e o fuso podem ser INJECTADOS (`unix` em segundos, `bias_min` em minutos,
+## como o `bias` de `Time.get_time_zone_from_system()`), para o teste conferir a conta do fuso com um fuso não nulo em
+## qualquer máquina — no CI (UTC, bias 0) um `hora_ms()` que esquecesse o fuso dava o mesmo e passava. Sem argumentos:
+## o relógio e o fuso do sistema, como antes (é o que as provas usam).
+static func hora_ms(unix: float = -1.0, bias_min = null) -> String:
 	# Um só instante para os segundos e os milissegundos (duas leituras do relógio podiam cair em segundos diferentes).
-	var t := Time.get_unix_time_from_system()
-	var local := int(floor(t)) + int(Time.get_time_zone_from_system().get("bias", 0)) * 60
+	var t := unix if unix >= 0.0 else Time.get_unix_time_from_system()
+	var bias: int = int(bias_min) if bias_min != null else int(Time.get_time_zone_from_system().get("bias", 0))
+	var local := int(floor(t)) + bias * 60
 	return "%s.%03d" % [Time.get_time_string_from_unix_time(local), int(fmod(t, 1.0) * 1000.0)]
 
 

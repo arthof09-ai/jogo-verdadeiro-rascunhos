@@ -1,0 +1,8 @@
+
+comparar capturas (algum canal RGB > 0.060): provas/ordem-caixa-relato/cliente-hud ↔ provas/ordem-caixa-relato/correcoes/cliente-hud
+  1-entrou-dinamica.png      20.2 %  (149145 de 740160 píxeis, 1028×720)
+  2-iniciativa.png            3.2 %  (23648 de 740160 píxeis, 1028×720)
+  3-desligada.png             1.4 %  (10099 de 740160 píxeis, 1028×720)
+  4-religada-avancou.png      1.0 %  (7519 de 740160 píxeis, 1028×720)
+  5-reentrou.png             13.7 %  (101510 de 740160 píxeis, 1028×720)
+  intervalo: 1.0–20.2 %

@@ -141,3 +141,46 @@ Correr de novo: `bash provas/ordem-caixa-relato/ferramentas/correr-prova-caixa-r
 <pasta-tmp> "$PWD/provas/ordem-caixa-relato/b7-correcoes"`. **O 4.º argumento tem de ser absoluto:** relativo, o
 `--saida` da prova é resolvido pelo Godot a partir de `rascunhos/cliente/` (aconteceu nesta corrida; os `relato.txt`
 foram movidos à mão para `b7-correcoes/` e as capturas para a pasta tmp — nada ficou em `rascunhos/`).
+# Correcções B1–B7 da sentença da CAIXA-RELATO-CORRECOES-2 (Ordem CAIXA-RELATO-CORRECOES-3 · 22/11/2026, Claude conta 1, PC)
+
+As corridas estão em **`correcoes-3/`**. As de cima ficam como estavam.
+
+- **B1 — a varredura final cobre o ficheiro todo.** Em `_fim()`, as 3 linhas finais (a verificação, a linha em branco e
+  o resumo) compõem-se primeiro e a varredura corre sobre o relato mais essas 3. A contagem diz agora esse tamanho:
+  **68 linhas** na HUD e **78** no manequim, que são as do ficheiro (antes dizia 65 e 75). Depois de **todas** as
+  `_linha()`, o relato volta a ser varrido; se aí aparecer um nome, entra uma linha FALHA e a prova sai com 1.
+  Mutações: com um canário no resumo, a HUD dá 42/43 e o manequim 52/53. Com um canário na linha em branco (que só
+  a re-varredura vê), dá 43/44 e rc=1. Na base, as três passavam 43/43 e 53/53.
+- **B2 — o canário não distingue maiúsculas.** Há um `to_lower()` dos dois lados em `_nomes_no_relato` (agora
+  `_nomes_em`) e na varredura dos textos da caixa. Mutações: com o nome verdadeiro em minúsculas no relato, a HUD dá
+  39/43; com ele num texto da caixa, dá 36/43. Na base, as duas passavam 43/43.
+- **B3 — o cabeçalho do §1 usa o nome público.** Usa `_nome(vista, figuraId)` → `_nome_publico`, guardado no fim da
+  montagem, e não o `nome` do cenário (que é o do lugar, o login). Prova: um cenário em que a espadachim tem
+  `nomePublico` «Espadachim» (diferente do `nome`) dá «== 1. a jogadora (Espadachim) …» e 43/43 e 53/53; na base, dá
+  39/43 e 49/53, porque o cabeçalho trazia o nome verdadeiro.
+- **B4 — só comentário**, em `teste_relato_caixa.gd`. Diz que a eficácia de `"master"`/`"caixaMestre"`/`"pa"` assenta
+  nas mutações do executor, e que o `"pa"` sozinho nunca migra para o canário vivo: ocorre 23× como substring no
+  relato vivo («Espadachim», «aparelho», «PA», …).
+- **B5 — o «1,0 %» tem prova no ramo (caminho a).** Cometi as 10 capturas da corrida CORRECOES-2
+  (`correcoes-2/cliente-hud/`, `correcoes-2/cliente-manequim/`; os SHA-256 batem com os da pasta tmp dessa ordem) e a
+  comparação `correcoes/` ↔ `correcoes-2/` (`correcoes-3/comparacao-correcoes-vs-correcoes-2.log`). **Essa comparação
+  não dá 1,0 %:** no §4 da HUD dá **0,6 %**, e o intervalo é 0,4–32,1 % na HUD e 0,6–23,8 % no manequim. O 1,0 % é da
+  corrida **CAIXA-RELATO (21:02) ↔ `correcoes/`**, como o texto do §4.2 diz. Por isso cometi também as 5 capturas da
+  HUD dessa corrida (`cliente-hud/*.png`, ao lado do relato dela, que lhes corresponde) e a comparação
+  `correcoes-3/comparacao-caixa-relato-vs-correcoes.log`, que dá **4-religada-avancou.png 1,0 %** (7519 de 740160
+  píxeis). Os 1,0 % do §4.2 e da B5 ficam como estão.
+- **B6 — a hora com fuso injectável.** `hora_ms(unix, bias_min)` aceita um instante e um fuso; sem argumentos usa os do
+  sistema, como antes. O teste ganhou uma verificação com bias −180 e +330 (valores esperados escritos à mão) que não
+  depende do fuso da máquina. Mutação «`hora_ms()` sem o fuso» com o aparelho simulado em UTC (o caso do CI): o teste
+  da base dava **23/23** (cego) e o novo dá **23/24**. Não há remendo ao workflow.
+- **B7 — `correcoes-3/mutacoes.log`.** Estão lá as caudas das mutações, na base e no código novo. As 6 da ordem
+  anterior reproduzem, na base, **B1 39/43, B2 22/23, B3 ×3 22/23, B5 22/23, B6 21/23**. Para correr de novo:
+  `bash provas/ordem-caixa-relato/ferramentas/correr-mutacoes.sh <godot.exe> <vlab-completo.js> <pasta-tmp> <base|novo> <registo.log>`.
+  As mutações estão escritas em `ferramentas/mutacoes.mjs`.
+
+Números (Godot 4.7.2 Windows, motor VLAB real `a91c021c…`, semente 7):
+- teste do registo `correcoes-3/teste-relato.log`: **24/24** (eram 23; +1 do fuso injectado);
+- prova HUD-JOGADORA `correcoes-3/cliente-hud/relato.txt`: **43/43**, 68 linhas varridas = 68 no ficheiro;
+- prova MANEQUIM `correcoes-3/cliente-manequim/relato.txt`: **53/53**, 78 = 78;
+- suites `correcoes-3/suites/`: servidor 418/418, prova da caixa do servidor PROVA OK, rodar_testes 290/290,
+  caixa_jogadora 18/18, caixa_janela 69/69, hud_acoes 50/50, canario_privacidade 10/10, abrir_scripts 107 / 0 falhas.
