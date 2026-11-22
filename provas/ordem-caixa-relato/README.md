@@ -304,3 +304,35 @@ com os mesmos resultados, um a um, do registo da CORRECOES-4.
 Correr de novo: `bash provas/ordem-caixa-relato/ferramentas/correr-prova-caixa-relato.sh <godot.exe> <vlab-completo.js>
 <pasta-tmp> "$PWD/provas/ordem-caixa-relato/correcoes-5"`; as mutações como na secção anterior; e
 `node provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs provas/ordem-caixa-relato/correcoes-4/mutacoes.log`.
+
+---
+
+# Correcções B1–B5 da sentença da CAIXA-RELATO-B7-CORRECOES-3 (Ordem CAIXA-RELATO-B7-CORRECOES-4 · 22/11/2026, Claude conta 1, PC)
+
+Só o teste do registo, os dois scripts das ferramentas (o das mutações, novo, e o lançador das provas) e as corridas
+em **`b7-correcoes-4/`**. Nada do código do jogo, do HUD nem das cores.
+
+- **B1 (D1) — a forma dos valores.** As listas permitidas viam as chaves e as palavras, não o valor: «"ultimo":
+  "turno"» e «"ultimo": 42» passavam 31/31 e ecoavam. O limite fica escrito ao lado de `CHAVES_PERMITIDAS` e fecha-se
+  com `_forma_fora`: cada objecto JSON da linha lê-se e percorre-se. Em cima só pode haver `ligada` (booleano),
+  `ordemPor` (só `"dinamico"`) e `ordemDinamica` (um objecto). Dentro dele só pode haver `ordem` (lista de ids de
+  17 hex), `fechada` (booleano) e `ultimo` (id de 17 hex). Também conta uma chave no nível errado, um objecto que não
+  se lê, e uma chave «"k":» escrita fora de qualquer objecto. O que não tem a forma conta-se («valor(es) fora da forma:
+  N»), retém a linha e não se imprime. O total continua **31**.
+- **B2 (D2) — o limite dos 17 hex**, escrito ao lado de `RE_ID`: qualquer 17-hex passa por id. A mutação
+  `b2-ultimo-17hex` dá 31/31, com eco, nos dois testes.
+- **B3 (D3) — o PIN.** O `correr-prova-caixa-relato.sh` deixa de copiar o `servidor-info.json` e o `servidor.log` para a
+  pasta de saída: ficam na pasta tmp. `b7-correcoes-4/` não os tem. Os das ordens anteriores ficam como estavam.
+- **B4 (D4) — o script de mutações** `ferramentas/correr-mutacoes-b7-correcoes-4.sh`. Usa uma pasta própria por
+  corrida (`mktemp -d`), com a cópia mutada e o `relato_caixa.gd` da mesma versão; nada se escreve em `ferramentas/`.
+  Cada mutação tem um resultado esperado. O script sai com 0 só se tudo bater; sai com 1 se alguma não bater (a linha
+  leva `NAO-BATE`) e com 2–9 se a própria corrida falhar.
+- **B5 (D5) — os acentos.** O `_SEM_ACENTO` passa a cobrir o latim-1 e o latim alargado A, incluindo o s longo U+017F.
+  As marcas combinantes caem em 5 blocos (U+0300–036F, 1AB0–1AFF, 1DC0–1DFF, 20D0–20FF, FE20–FE2F). Isto não é uma
+  normalização Unicode completa, e fica documentado. A rede de segurança é a lista permitida. Um carácter não-ASCII que
+  sobre depois de `_normal` (fora o «—» e o «·» das palavras fixas) deixou de servir de separador: antes, «1ȷe» dava
+  «1» e «e», as duas permitidas, e ecoava.
+
+Correr de novo: `bash provas/ordem-caixa-relato/ferramentas/correr-mutacoes-b7-correcoes-4.sh <godot.exe> <pasta-saída>
+[<base> (c847966)] [<base-r1> (a12b905)]`; as provas vivas como acima, com `"$PWD/provas/ordem-caixa-relato/b7-correcoes-4"`.
+Os números estão no `ESTADO-FINAL-ORDEM-CAIXA-RELATO-B7-CORRECOES-4.md`, na raiz.

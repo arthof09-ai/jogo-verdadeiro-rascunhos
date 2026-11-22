@@ -1,0 +1,12 @@
+nada                     teste novo   rc=0  31 de 31 verificações passaram FALHA=0 RETIDA=0  Canario-R1=0  "própria"=0  combinante=0
+r1-alcunha               teste novo   rc=1  30 de 31 verificações passaram FALHA=2 RETIDA=2  Canario-R1=0  "própria"=0  combinante=0
+b2-propria-acento        teste novo   rc=1  30 de 31 verificações passaram FALHA=2 RETIDA=2  Canario-R1=0  "própria"=0  combinante=0
+b2-propria-combinante    teste novo   rc=1  30 de 31 verificações passaram FALHA=2 RETIDA=2  Canario-R1=0  "própria"=0  combinante=0
+b5-sem-uma-verificacao   teste novo   rc=1  30 de 30 verificações passaram FALHA=2 RETIDA=0  Canario-R1=0  "própria"=0  combinante=0
+b4-passo-3-igual-ao-2    teste novo   rc=0  31 de 31 verificações passaram FALHA=0 RETIDA=0  Canario-R1=0  "própria"=0  combinante=0
+nada                     teste antigo rc=0  31 de 31 verificações passaram FALHA=0 RETIDA=0  Canario-R1=0  "própria"=0  combinante=0
+r1-alcunha               teste antigo rc=0  31 de 31 verificações passaram FALHA=0 RETIDA=0  Canario-R1=2  "própria"=0  combinante=0
+b2-propria-acento        teste antigo rc=0  31 de 31 verificações passaram FALHA=0 RETIDA=0  Canario-R1=0  "própria"=2  combinante=0
+b2-propria-combinante    teste antigo rc=0  31 de 31 verificações passaram FALHA=0 RETIDA=0  Canario-R1=0  "própria"=0  combinante=2
+b5-sem-uma-verificacao   teste antigo rc=0  30 de 30 verificações passaram FALHA=0 RETIDA=0  Canario-R1=0  "própria"=0  combinante=0
+b4-passo-3-igual-ao-2    teste antigo rc=0  31 de 31 verificações passaram FALHA=0 RETIDA=0  Canario-R1=0  "própria"=0  combinante=0

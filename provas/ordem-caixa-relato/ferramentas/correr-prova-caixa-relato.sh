@@ -7,6 +7,8 @@
 #   bash provas/ordem-caixa-relato/ferramentas/correr-prova-caixa-relato.sh <godot.exe> <vlab-completo.js> <pasta-tmp> [<pasta-saída>]
 # Ordem CAIXA-RELATO-CORRECOES: o 4.º argumento (opcional) muda a pasta de saída (por omissão provas/ordem-caixa-relato/);
 # as corridas das correcções foram para provas/ordem-caixa-relato/correcoes/, sem reescrever as da ordem anterior.
+# Ordem CAIXA-RELATO-B7-CORRECOES-4 (B3): `servidor-info.json` e `servidor.log` deixam de ir para a pasta de saída (o
+# PIN); as das ordens anteriores ficam como estavam (pré-existentes, servidor efémero), não se repetem.
 cd "$(dirname "$0")/../../.." || exit 9
 G=${1:?godot}; MOTOR=${2:?motor}; T=${3:?tmp}
 P=$PWD/provas/ordem-caixa-relato
@@ -29,8 +31,8 @@ correr() {  # <nome> <ferramenta.gd> <porta>
     -s "$PWD/$2" -- --servidor=127.0.0.1:$3 --saida="$S" > "$T/prova-$1.log" 2>&1
   local r=$?
   kill $SRV 2>/dev/null
-  cp "$T/info-$1.json" "$S/servidor-info.json" 2>/dev/null
-  cp "$T/servidor-$1.log" "$S/servidor.log" 2>/dev/null
+  # B7-CORRECOES-4 (B3): o info e o log do servidor trazem o PIN da sala (servidor local efémero) — ficam na pasta tmp
+  # (`$T/info-$1.json`, `$T/servidor-$1.log`) e já NÃO se copiam para a pasta de saída, que é a que se comete.
   # As capturas não são o objecto desta ordem (só o registo): ficam na pasta tmp, não no ramo.
   mkdir -p "$T/capturas-$1"; mv -f "$S"/*.png "$T/capturas-$1/" 2>/dev/null
   echo "$1 rc=$r"; [ $r -ne 0 ] && rc_total=1

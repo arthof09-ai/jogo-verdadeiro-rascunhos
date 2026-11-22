@@ -53,6 +53,17 @@ extends SceneTree
 ##  - B5: o total de verificações é afirmado (`TOTAL_ESPERADO`): uma verificação removida já não passa calada com
 ##    «30 de 30» — o teste sai com código 1. São 31, não 30: na `fable/integracao-50` as 30 da B7-CORRECOES-2 juntaram-se
 ##    à verificação do fuso injectado da CORRECOES-3 (B6). Continua 31/31.
+## Ordem CAIXA-RELATO-B7-CORRECOES-4 (sentença da CAIXA-RELATO-B7-CORRECOES-3):
+##  - B1 (D1): as listas viam as chaves e as palavras, não o TIPO nem a FORMA do valor — «"ultimo": "turno"» (só
+##    palavras permitidas) e «"ultimo": 42» (um número) passavam e ecoavam. Agora a forma de cada valor confere-se
+##    (`_forma_fora`, ao lado de `CHAVES_PERMITIDAS`): `ordem` só lista de ids de 17 hex, `ultimo` só id de 17 hex,
+##    `ligada`/`fechada` só booleanos, `ordemPor` só "dinamico", `ordemDinamica` só objecto, e cada chave no seu nível.
+##  - B2 (D2): registado ao lado de `RE_ID` — qualquer 17-hex passa por id.
+##  - B5 (D5): `_SEM_ACENTO` com o latim alargado A (e o s longo U+017F), e as marcas combinantes em todos os blocos
+##    (U+0300–036F, 1AB0–1AFF, 1DC0–1DFF, 20D0–20FF, FE20–FE2F). O mapa NÃO é uma normalização Unicode completa: a rede
+##    de segurança é a lista permitida, e um carácter não-ASCII que sobre depois de `_normal` (fora o «—» e o «·» das
+##    palavras fixas) já não serve de separador — conta como palavra fora da lista e retém a linha.
+##    Continua 31/31: nenhuma verificação nova, a forma e o resíduo não-ASCII entram em `_achados_em`.
 ##
 ## Correr (na raiz do repo):
 ##   godot --headless --path rascunhos/cliente -s "$PWD/provas/ordem-caixa-relato/ferramentas/teste_relato_caixa.gd"
@@ -69,7 +80,16 @@ const PROIBIDAS := ["nome", "vida", "alma", "pa", "pa\"", "paTotal", "vidaActual
 ## B7-CORRECOES-3 (B1, R1): o que uma linha PODE ter. Tudo o resto retém a linha. Nenhum campo novo entra na caixa sem
 ## passar pela conferência: acrescentá-lo aqui é a mudança que a conferência vê.
 ## As chaves JSON da caixa da Party (projecao.js `caixa`) — as 3 de cima e as 3 da `ordemDinamica`.
+## B7-CORRECOES-4 (B1, D1) — O LIMITE: a chave estar nesta lista não diz nada do VALOR. Até à B7-CORRECOES-3 um valor
+## feito só de palavras permitidas, ou um número, debaixo de uma chave permitida passava e ecoava («"ultimo": "turno"»,
+## «"ultimo": 42» → 31/31, ecoados). Fecha-se com a FORMA de cada valor (`_forma_fora`): o que não
+## tem a forma conta-se e retém a linha, sem se imprimir. A forma é a das linhas DESTE teste (ids de 17 hex, modo
+## dinâmico): uma linha real com `"ultimo": null` (o servidor manda null antes da primeira vez) ou `"ordemPor":
+## "iniciativa"` ficaria retida — alargá-la é, outra vez, uma mudança que a conferência vê.
 const CHAVES_PERMITIDAS := ["ligada", "ordemPor", "ordemDinamica", "ordem", "fechada", "ultimo"]
+## B7-CORRECOES-4 (B1): em que nível vive cada chave — as 3 da caixa em cima, as 3 da `ordemDinamica` dentro dela.
+const CHAVES_CAIXA := ["ligada", "ordemPor", "ordemDinamica"]
+const CHAVES_ORDEM_DINAMICA := ["ordem", "fechada", "ultimo"]
 ## As palavras (já normalizadas por `_normal`: minúsculas, sem acentos) que `relato_caixa.linha()` e `_origem()` escrevem,
 ## os valores JSON da caixa, os tipos de evento e os rótulos deste teste. Números e ids hexadecimais de 17 à parte.
 const PALAVRAS_PERMITIDAS := [
@@ -86,6 +106,10 @@ const PALAVRAS_PERMITIDAS := [
 	"x", "b7",
 ]
 ## Os ids opacos (hexadecimais de 17, como os da prova). Os números (seq, revisão, hora) são só dígitos.
+## B7-CORRECOES-4 (B2, D2) — O LIMITE: a regra é a FORMA de um id, não a lista dos ids deste teste. Qualquer 17-hex
+## passa por id, como palavra solta e como valor de `ordem`/`ultimo` («"ultimo": "0123456789abcdef0"» → 31/31, ecoado).
+## Um valor que fosse, por acaso ou de propósito, 17 caracteres hexadecimais em minúsculas não se distingue de um id.
+## Nos valores em causa (nomes, vida, PA) não há nenhum assim; fica registado, não fechado.
 const RE_ID := "^[0-9a-f]{17}$"
 const RE_NUM := "^[0-9]+$"
 ## B7-CORRECOES-3 (B5): quantas verificações o teste tem. Uma a menos (ou a mais) sem mudar este número = o teste falha.
@@ -262,9 +286,33 @@ func _init() -> void:
 
 ## B7-CORRECOES-3 (B2): o texto em minúsculas e sem acentos — as letras acentuadas passam à letra de base, e as marcas
 ## combinantes (U+0300–U+036F, o acento escrito à parte) caem. «"própria"», «PRÓPRIA» e «própria» dão «propria».
+## B7-CORRECOES-4 (B5, D5): o mapa cobre o latim-1 e o latim alargado A (U+0100–U+017F, com o s longo «ſ» → «s»), e as
+## marcas combinantes caem em todos os blocos delas (`_COMBINANTES`). NÃO é uma normalização Unicode completa (não há
+## NFKD em GDScript): letras de outros blocos (o «о» cirílico, as de largura dupla «ｐ», o «ȷ» U+0237…) não se
+## traduzem. Para essas a rede de segurança é a lista permitida: o que sobra fora do ASCII depois de `_normal` conta
+## como palavra fora da lista (`_fora_da_lista`) e retém a linha — não fica nomeado pela `PROIBIDAS`, mas não se ecoa.
 const _SEM_ACENTO := {"á": "a", "à": "a", "â": "a", "ã": "a", "ä": "a", "å": "a", "é": "e", "è": "e", "ê": "e", "ë": "e",
 	"í": "i", "ì": "i", "î": "i", "ï": "i", "ó": "o", "ò": "o", "ô": "o", "õ": "o", "ö": "o", "ú": "u", "ù": "u",
-	"û": "u", "ü": "u", "ç": "c", "ñ": "n", "ý": "y", "ÿ": "y"}
+	"û": "u", "ü": "u", "ç": "c", "ñ": "n", "ý": "y", "ÿ": "y",
+	# B5: o resto do latim-1 (minúsculas; `to_lower` já passou as maiúsculas)
+	"ø": "o", "æ": "ae", "œ": "oe", "ß": "ss", "ð": "d", "þ": "th",
+	# B5: o latim alargado A (U+0100–U+017F), as minúsculas
+	"ā": "a", "ă": "a", "ą": "a", "ć": "c", "ĉ": "c", "ċ": "c", "č": "c", "ď": "d", "đ": "d", "ē": "e", "ĕ": "e",
+	"ė": "e", "ę": "e", "ě": "e", "ĝ": "g", "ğ": "g", "ġ": "g", "ģ": "g", "ĥ": "h", "ħ": "h", "ĩ": "i", "ī": "i",
+	"ĭ": "i", "į": "i", "ı": "i", "ĳ": "ij", "ĵ": "j", "ķ": "k", "ĸ": "k", "ĺ": "l", "ļ": "l", "ľ": "l", "ŀ": "l",
+	"ł": "l", "ń": "n", "ņ": "n", "ň": "n", "ŉ": "n", "ŋ": "n", "ō": "o", "ŏ": "o", "ő": "o", "ŕ": "r", "ŗ": "r",
+	"ř": "r", "ś": "s", "ŝ": "s", "ş": "s", "š": "s", "ţ": "t", "ť": "t", "ŧ": "t", "ũ": "u", "ū": "u", "ŭ": "u",
+	"ů": "u", "ű": "u", "ų": "u", "ŵ": "w", "ŷ": "y", "ź": "z", "ż": "z", "ž": "z", "ſ": "s"}
+## B7-CORRECOES-4 (B5): os blocos de marcas combinantes — as diacríticas (U+0300–036F), as alargadas (U+1AB0–1AFF), o
+## suplemento (U+1DC0–1DFF), as dos símbolos (U+20D0–20FF, a da sonda U+20D0) e as meias marcas (U+FE20–FE2F).
+const _COMBINANTES := [[0x300, 0x36F], [0x1AB0, 0x1AFF], [0x1DC0, 0x1DFF], [0x20D0, 0x20FF], [0xFE20, 0xFE2F]]
+
+
+func _combinante(cp: int) -> bool:
+	for r in _COMBINANTES:
+		if cp >= int(r[0]) and cp <= int(r[1]):
+			return true
+	return false
 
 
 func _normal(s: String) -> String:
@@ -272,7 +320,7 @@ func _normal(s: String) -> String:
 	var out := ""
 	for i in range(low.length()):
 		var cp := low.unicode_at(i)
-		if cp >= 0x300 and cp <= 0x36F:
+		if _combinante(cp):
 			continue
 		var c := low.substr(i, 1)
 		out += str(_SEM_ACENTO.get(c, c))
@@ -304,11 +352,111 @@ func _fora_da_lista(lx: String) -> Dictionary:
 	var palavras := 0
 	var re_id := RegEx.create_from_string(RE_ID)
 	var re_num := RegEx.create_from_string(RE_NUM)
-	var re_sep := RegEx.create_from_string("[^a-z0-9_]+")
+	# B7-CORRECOES-4 (B5): separam só o ASCII que não é letra/dígito/«_» e o «—»/«·» das palavras fixas de `linha()`.
+	# Qualquer outro carácter não-ASCII que `_normal` não traduziu fica DENTRO da palavra — e uma palavra com ele não
+	# está na lista: retém a linha. Antes servia de separador («a» + «ȷ» + «e» dava «a» e «e», as duas permitidas).
+	var re_sep := RegEx.create_from_string("(?:[^a-z0-9_\\x{80}-\\x{10FFFF}]|[\\x{2014}\\x{00B7}])+")
 	for p in re_sep.sub(_normal(lx), " ", true).split(" ", false):
 		if not (PALAVRAS_PERMITIDAS.has(p) or re_num.search(p) != null or re_id.search(p) != null):
 			palavras += 1
-	return {"chaves": chaves, "palavras": palavras}
+	return {"chaves": chaves, "palavras": palavras, "forma": _forma_fora(lx)}
+
+
+## B7-CORRECOES-4 (B1, D1): quantos valores da caixa NÃO têm a forma da caixa deste teste. Cada objecto JSON da linha
+## (o `JSON.stringify` da caixa do snapshot e da actual) lê-se com `JSON.parse_string` e percorre-se:
+##  - em cima só `ligada` (booleano), `ordemPor` (só "dinamico") e `ordemDinamica` (objecto);
+##  - dentro da `ordemDinamica` só `ordem` (lista de ids de 17 hex), `fechada` (booleano) e `ultimo` (id de 17 hex);
+##  - uma chave permitida no nível errado, um objecto que não se lê, e uma chave «"k":» da linha que não esteja dentro
+##    de nenhum objecto lido (escrita à mão no texto, fora do JSON) contam também.
+## Devolve SÓ a contagem — o valor fora da forma, num vazamento, é o próprio valor, e não se imprime. As chaves fora de
+## `CHAVES_PERMITIDAS` contam-se em `_fora_da_lista`; aqui só a forma do que é permitido.
+func _forma_fora(lx: String) -> int:
+	var fora := 0
+	var vistas := [0]  # as chaves percorridas nos objectos lidos
+	for obj in _objectos_json(lx):
+		var v = JSON.parse_string(obj)
+		if v == null:
+			fora += 1  # um objecto que não se lê não se confere
+			continue
+		fora += _andar_forma(v, "caixa", vistas)
+	var re_chave := RegEx.create_from_string("\"((?:[^\"\\\\]|\\\\.)*)\"\\s*:")
+	fora += maxi(0, re_chave.search_all(lx).size() - int(vistas[0]))
+	return fora
+
+
+## B7-CORRECOES-4 (B1): percorre um valor lido do JSON; `nivel` = "caixa" (o objecto de topo), "od" (dentro de uma
+## `ordemDinamica` com a forma certa) ou "" (qualquer outro sítio). Conta em `vistas[0]` as chaves que percorre.
+func _andar_forma(v, nivel: String, vistas: Array) -> int:
+	var n := 0
+	if v is Array:
+		for x in v:
+			n += _andar_forma(x, "", vistas)
+	elif v is Dictionary:
+		for k in v:
+			vistas[0] += 1
+			var x = v[k]
+			var ks := str(k)
+			if not CHAVES_PERMITIDAS.has(ks):
+				n += _andar_forma(x, "", vistas)  # fora da lista: já conta em `_fora_da_lista`; aqui só o de dentro
+				continue
+			var no_nivel := (nivel == "caixa" and CHAVES_CAIXA.has(ks)) or (nivel == "od" and CHAVES_ORDEM_DINAMICA.has(ks))
+			var forma_ok := false
+			match ks:
+				"ligada", "fechada":
+					forma_ok = typeof(x) == TYPE_BOOL
+				"ordemPor":
+					forma_ok = x is String and x == "dinamico"
+				"ultimo":
+					forma_ok = _e_id(x)
+				"ordem":
+					forma_ok = x is Array
+					if forma_ok:
+						for y in x:
+							forma_ok = forma_ok and _e_id(y)
+				"ordemDinamica":
+					forma_ok = x is Dictionary
+			if not (no_nivel and forma_ok):
+				n += 1
+			n += _andar_forma(x, "od" if ks == "ordemDinamica" and forma_ok else "", vistas)
+	return n
+
+
+## B7-CORRECOES-4 (B1): um id = texto de 17 hexadecimais (o limite B2 está em `RE_ID`).
+func _e_id(v) -> bool:
+	return v is String and RegEx.create_from_string(RE_ID).search(v) != null
+
+
+## B7-CORRECOES-4 (B1): os objectos JSON de topo da linha («{…}», com as chavetas e as aspas emparelhadas). Uma
+## chaveta que não fecha dá o resto da linha (que depois não se lê, e conta).
+func _objectos_json(lx: String) -> Array:
+	var objs: Array = []
+	var fundo := 0
+	var em_texto := false
+	var escapado := false
+	var ini := -1
+	for i in range(lx.length()):
+		var c := lx[i]
+		if em_texto:
+			if escapado:
+				escapado = false
+			elif c == "\\":
+				escapado = true
+			elif c == "\"":
+				em_texto = false
+			continue
+		if c == "\"" and fundo > 0:
+			em_texto = true
+		elif c == "{":
+			if fundo == 0:
+				ini = i
+			fundo += 1
+		elif c == "}" and fundo > 0:
+			fundo -= 1
+			if fundo == 0:
+				objs.append(lx.substr(ini, i - ini + 1))
+	if fundo > 0:
+		objs.append(lx.substr(ini))
+	return objs
 
 
 ## Tudo o que retém as linhas: as proibidas achadas (pelo nome, da lista) e, à parte, as CONTAGENS do que está fora das
@@ -317,14 +465,18 @@ func _achados_em(linhas_v: Array) -> Array:
 	var achados: Array = _proibidas_em(linhas_v)
 	var chaves := 0
 	var palavras := 0
+	var forma := 0
 	for linha_r in linhas_v:
 		var f := _fora_da_lista(str(linha_r))
 		chaves += int(f["chaves"])
 		palavras += int(f["palavras"])
+		forma += int(f["forma"])
 	if chaves > 0:
 		achados.append("chave(s) fora da lista: %d" % chaves)
 	if palavras > 0:
 		achados.append("palavra(s) fora da lista: %d" % palavras)
+	if forma > 0:
+		achados.append("valor(es) fora da forma: %d" % forma)  # B7-CORRECOES-4 (B1): só a contagem
 	return achados
 
 
