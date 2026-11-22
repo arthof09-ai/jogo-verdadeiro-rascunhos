@@ -1,0 +1,11 @@
+# actualizar-listas.py depois de 9427cb5
+antes.txt: 37 · depois.txt: 415 · MANIFESTO: 459 ficheiros (0 novos, 0 tirados nesta passagem)
+## diff das listas (só as linhas mudadas)
+-19f759370c62f8187f89fb3e2b59dc35315016426c0cf184b666fd167e805ec3  rascunhos/cliente/autojogo/autojogo.gd
++247f508cc5d338d665183c1a1ce06f7f48fccfe237fc60d7c309b40f2801068a  rascunhos/cliente/autojogo/autojogo.gd
+-ce1be3449c402b16fe52c717487b9b856b76a7831f16427302c84b146bef36bf  rascunhos/servidor/autojogo/servidor-autojogo.mjs
++5b310cafb0247e7ce9a4e8c5b76b065f2c56f75ba291202cf90f4003d7110c87  rascunhos/servidor/autojogo/servidor-autojogo.mjs
+-19f759370c62f8187f89fb3e2b59dc35315016426c0cf184b666fd167e805ec3  rascunhos/cliente/autojogo/autojogo.gd
++247f508cc5d338d665183c1a1ce06f7f48fccfe237fc60d7c309b40f2801068a  rascunhos/cliente/autojogo/autojogo.gd
+-ce1be3449c402b16fe52c717487b9b856b76a7831f16427302c84b146bef36bf  rascunhos/servidor/autojogo/servidor-autojogo.mjs
++5b310cafb0247e7ce9a4e8c5b76b065f2c56f75ba291202cf90f4003d7110c87  rascunhos/servidor/autojogo/servidor-autojogo.mjs
