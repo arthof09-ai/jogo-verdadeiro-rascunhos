@@ -8,7 +8,7 @@ correr-prova-caixa-relato.sh (saída nesta pasta)     rc=0
   teste_relato_caixa                                 31 de 31   teste-relato.log
   cliente-hud                                        43 de 43   cliente-hud/relato.txt (68 linhas)
   cliente-manequim                                   53 de 53   cliente-manequim/relato.txt (78 linhas)
-correr-prova-caixa-janela.sh (saída nesta pasta)     rc=0   41 de 41   cliente-janela/relato.txt (82 linhas; B6/O2)
+correr-prova-caixa-janela.sh (saída nesta pasta)     rc=0   41 de 41   cliente-janela/relato.txt (81 linhas; B6/O2)
 correr-prova-caixa.sh — o 4.º lançador (B1/JD2)       rc=0   23 de 23   lancador-caixa.log
 autojogo.gd, semente 1 (B3/JD4, PIN sem enviesamento) rc=0   vitória em 14 turnos; 109 linhas
   = provas/ordem-autojogo/s1.jsonl linha a linha, tirando a linha «inicio» (só muda o cenarioSha256, como na -6)
