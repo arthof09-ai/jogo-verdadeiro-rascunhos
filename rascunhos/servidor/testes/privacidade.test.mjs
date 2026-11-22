@@ -4,8 +4,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  montarMesa, exigirAplicada, procurarCanarios, recibo, PIN, SENHAS,
-  SEMENTE, NUMEROS_SO_MESTRE, TEXTOS_SO_MESTRE, CHAVES_SO_MESTRE, NUMEROS_HEROINA, NUMEROS_ALIADA,
+  montarMesa, exigirAplicada, procurarCanarios, recibo, varrer, PIN, SENHAS,
+  SEMENTE, NUMEROS_SO_MESTRE, TEXTOS_SO_MESTRE, CHAVES_SO_MESTRE, NUMEROS_HEROINA, NUMEROS_ALIADA, TEXTOS_HEROINA,
 } from './ajudantes.mjs';
 import { CAMPOS_PERMITIDOS } from '../nucleo/projecao.js';
 
@@ -128,6 +128,56 @@ test('canários: "outra jogadora" e espectador não veem a ficha, a Vida nem o d
   }
   // A própria vê a sua ficha (com a perícia 8642).
   assert.ok(JSON.stringify(h.msgs).includes('1d20+8642'));
+  // Ordem CAIXA-TESTES-CORRECOES-4 (B2): a perícia 8642 também como TEXTO ('1d20+8642' na ficha). NUMEROS_HEROINA só a
+  // apanha como número; a aliada e o espectador não a podem ver em string nenhuma. (A heroína fica de fora: é dela.)
+  const txt = (textos) => ({ numeros: [], textos, chaves: [] });
+  assert.deepEqual(procurarCanarios(m.clientes.aliada.msgs, txt(TEXTOS_HEROINA)), [], 'a aliada não vê a perícia da heroína em texto');
+  assert.deepEqual(procurarCanarios(m.clientes.espectador.msgs, txt(TEXTOS_HEROINA)), [], 'o espectador não vê a perícia da heroína em texto');
+});
+
+// Ordem CAIXA-TESTES-CORRECOES-4 (B1): a Vida VARIÁVEL. NUMEROS_HEROINA/NUMEROS_ALIADA só têm a Vida máxima (5150/3579):
+// a `vidaActual` de uma jogadora ferida (no guião, a aliada fica com 2403 = 3579 − 1176) posta no snapshot da outra
+// passava calada. Duas guardas: (1) o VALOR — a Vida actual de cada jogadora, lida do estado da sala no fim do guião,
+// não chega à outra nem ao espectador, em mensagem nenhuma; (2) a FORMA — cada ROOM_SNAPSHOT da Party mostra só as
+// `vidaActual` que esse papel pode ver (a própria, em `propria`; nenhuma ao espectador) e as figuras públicas têm as
+// chaves exactas de projecao.js figuraPublica (sem Vida de ninguém). A figura não tem `vidaTotal` (sala.js novaFigura):
+// a Vida máxima vem da ficha.
+test('canários: a Vida actual (variável) de uma jogadora ferida não chega à outra jogadora nem ao espectador', () => {
+  const m = guiao();
+  const est = m.sala.depuracao.estado();
+  const figuraDe = { heroina: m.clientes.heroina.figuraId, aliada: m.clientes.aliada.figuraId };
+  const vidaActual = (k) => est.figuras[figuraDe[k]].vidaActual;
+  const vidaTotal = (k) => m.fichas[est.figuras[figuraDe[k]].fichaId].vidaTotal;
+  // Sanidade: o canário variável está vivo — a aliada está ferida (Vida actual ≠ a máxima das listas fixas).
+  assert.ok(vidaActual('aliada') < vidaTotal('aliada'), `a aliada está ferida (${vidaActual('aliada')}/${vidaTotal('aliada')})`);
+  // (1) O valor, em tudo o que chegou (snapshots e eventos).
+  const cfg = (numeros) => ({ numeros, textos: [], chaves: [] });
+  for (const [dona, outros] of [['heroina', ['aliada', 'espectador']], ['aliada', ['heroina', 'espectador']]]) {
+    for (const k of outros) {
+      assert.deepEqual(procurarCanarios(m.clientes[k].msgs, cfg([vidaActual(dona)])), [], `${k} viu a Vida actual de ${dona} (${vidaActual(dona)})`);
+    }
+  }
+  // (2) A forma, snapshot a snapshot.
+  const CHAVES_FIGURA_PUBLICA = ['id', 'lado', 'nomePublico', 'orientacao', 'visivel', 'x', 'y'];
+  for (const k of ['heroina', 'aliada', 'espectador']) {
+    const snaps = m.clientes[k].msgs.filter((x) => x.type === 'ROOM_SNAPSHOT');
+    assert.ok(snaps.length >= 2, k + ': snapshots varridos');
+    for (const s of snaps) {
+      const vidas = [];
+      varrer(s, ({ chave, valor, ehChave }) => { if (!ehChave && chave === 'vidaActual') vidas.push(valor); });
+      if (k === 'espectador') {
+        assert.equal(s.propria, undefined, 'o espectador não tem `propria`');
+        assert.deepEqual(vidas, [], 'o espectador não vê Vida actual nenhuma');
+      } else {
+        assert.equal(s.propria?.figuraId, figuraDe[k], k + ': a `propria` é a dela');
+        assert.deepEqual(vidas, [s.propria.vidaActual], k + ': só a Vida actual dela, em `propria`');
+      }
+      for (const f of s.figuras) assert.deepEqual(Object.keys(f).sort(), CHAVES_FIGURA_PUBLICA, k + ': as chaves da figura pública');
+    }
+    // Sanidade da exclusão: no último snapshot (o do RESYNC no fim do guião) a jogadora vê a Vida actual DELA — a ferida
+    // vê o 2403.
+    if (k !== 'espectador') assert.equal(snaps.at(-1).propria.vidaActual, vidaActual(k), k + ': vê a Vida actual dela');
+  }
 });
 
 test('lista de campos permitidos: todo o ROOM_EVENT da Party só tem campos da lista do seu tipo', () => {

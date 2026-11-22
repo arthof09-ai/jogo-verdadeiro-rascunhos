@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import {
   montarMesa, exigirAplicada, procurarCanarios, PIN, SENHAS, fichasDeTeste, rngDeterministico, relogio, INICIATIVA,
-  SEMENTE, CHAVES_SO_MESTRE, NUMEROS_SO_MESTRE, TEXTOS_SO_MESTRE, NUMEROS_HEROINA, NUMEROS_ALIADA,
+  SEMENTE, CHAVES_SO_MESTRE, NUMEROS_SO_MESTRE, TEXTOS_SO_MESTRE, NUMEROS_HEROINA, NUMEROS_ALIADA, TEXTOS_HEROINA,
 } from './ajudantes.mjs';
 import { criarSala } from '../nucleo/sala.js';
 import { criarMotorFalso } from './motor-falso.mjs';
@@ -18,16 +18,23 @@ const PARTY = ['heroina', 'aliada', 'espectador'];
 // Ordem CAIXA-TESTES-CORRECOES-3 (B7): SEMENTE, CHAVES_SO_MESTRE, NUMEROS_SO_MESTRE, TEXTOS_SO_MESTRE e os números das
 // jogadoras (NUMEROS_HEROINA, NUMEROS_ALIADA) vêm de ajudantes.mjs — a mesma fonte de privacidade.test.mjs.
 const CHAVES_MESTRE_CAIXA = ['modo', 'vidaActual', 'vidaTotal', 'paGasto', 'paTotal', 'valor', 'vezes', 'soMestre', 'iniciativaValor', 'caixaMestre'];
-// Ordem CAIXA-TESTES-CORRECOES-2 (B4): também os números dos inimigos (orc CA 9137, lobo defesa 4949, bandido 6363/6464).
-// Ordem CAIXA-TESTES-CORRECOES-3 (B2): e os quatro que faltavam — orc RD 41 e bonusCD 61, a Vida do orc depois do golpe
-// 6601, a semente.
-const NUMEROS_MESTRE_CAIXA = [7777, 313, 41, 61, 6601, 5150, 3579, 4040, 1357, 4848, 9137, 4949, 6363, 6464, SEMENTE, ...Object.values(INICIATIVA)];
+// Ordem CAIXA-TESTES-CORRECOES-4 (B5): os números da caixa DERIVAM das listas partilhadas (antes eram uma cópia à mão,
+// que já tinha derivado: ficavam de fora 8642, 5551 e 2468). A caixa da Party não leva número de ninguém — nem do
+// Mestre, nem de jogadora nenhuma —, por isso a lista é a união das três (a mesma do espectador abaixo).
+const NUMEROS_MESTRE_CAIXA = Object.freeze([...NUMEROS_SO_MESTRE, ...NUMEROS_HEROINA, ...NUMEROS_ALIADA]);
 // B1 (CAIXA-TESTES-CORRECOES-2): o snapshot de cada jogadora leva os números DELA em `propria` (por desenho); os da
 // outra, nunca; o espectador não tem `propria` e não pode ter nenhum.
 const NUMEROS_PROIBIDOS_NO_SNAPSHOT = {
   heroina: [...NUMEROS_SO_MESTRE, ...NUMEROS_ALIADA],
   aliada: [...NUMEROS_SO_MESTRE, ...NUMEROS_HEROINA],
-  espectador: [...NUMEROS_SO_MESTRE, ...NUMEROS_HEROINA, ...NUMEROS_ALIADA],
+  espectador: NUMEROS_MESTRE_CAIXA,
+};
+// CAIXA-TESTES-CORRECOES-4 (B2): os textos, pela mesma regra — a perícia da heroína em texto ('1d20+8642', na `propria`
+// dela) é proibida à aliada e ao espectador, não a ela.
+const TEXTOS_PROIBIDOS_NO_SNAPSHOT = {
+  heroina: TEXTOS_SO_MESTRE,
+  aliada: [...TEXTOS_SO_MESTRE, ...TEXTOS_HEROINA],
+  espectador: [...TEXTOS_SO_MESTRE, ...TEXTOS_HEROINA],
 };
 
 // `casaOrc`: CAIXA-TESTES-CORRECOES-3 (B1) — a (c) põe o orc ao alcance do chicote da heroína (a casa do guião de
@@ -249,6 +256,18 @@ test('caixa no HUD da jogadora: o «voltar» repõe a ordemDinamicaParty do chec
   // B1 (CAIXA-TESTES-CORRECOES-3): ANTES do ponto, a heroína ataca o orc — uma resolução, para a semente ser sorteada
   // (sortearSemente → SEMENTE, gravada no journal) e o orc ficar com 6601 de Vida (7777 − 1176). Sem isto, `SEMENTE` e
   // `6601` não existiam em lado nenhum da sala e eram canários mortos na varredura do «voltar».
+  // B6 (CAIXA-TESTES-CORRECOES-4, fragilidade): este ataque está EXACTAMENTE no limite do alcance. A aliada em (2,4) tapa
+  // a linha recta de (2,2) a (2,6), por isso o caminho das casas (sala.js distanciaCasas, BFS de 4 vizinhos) dá 6 passos,
+  // e o chicote chega a 9 m / 1,5 m = 6 casas (alcanceEmCasas). Qualquer mudança na escala, no alcance do chicote, nas
+  // casas ou no bloqueio parte o ataque (acao_invalida) e a B1 da CORRECOES-3 deixa de ter canários vivos. Estas
+  // pré-condições dizem logo porquê; se alguma mudar, re-verifica a geometria (e a do guião de privacidade.test.mjs,
+  // que é a mesma).
+  const fig = estado().figuras;
+  const chicote = m.fichas['heroina-teste'].tecnicas.find((t) => t.id === 'chicote-teste');
+  const geometria = { casaM: estado().mapa.casaM, alcanceM: chicote?.alcanceM,
+    H: [fig[H].x, fig[H].y], A: [fig[A].x, fig[A].y], orc: [fig[orc].x, fig[orc].y] };
+  assert.deepEqual(geometria, { casaM: 1.5, alcanceM: 9, H: [2, 2], A: [2, 4], orc: [2, 6] },
+    'B6: a geometria do ataque (6 passos = 6 casas, no limite) mudou — re-verifica o alcance antes de mexer na (c)');
   exigirAplicada(m.intencao('heroina', { tipo: 'atacar', alvoId: orc, arma: 'chicote-teste' }), 'ataque da heroína ao orc');
   assert.equal(estado().figuras[orc].vidaActual, 6601, 'o orc ficou com 6601 (o canário está vivo)');
   assert.ok(m.sala.depuracao.eventos().some((e) => e.soMestre?.semente === SEMENTE), 'a semente-canário está no journal');
@@ -290,7 +309,8 @@ test('caixa no HUD da jogadora: o «voltar» repõe a ordemDinamicaParty do chec
     // B1 (CAIXA-TESTES-CORRECOES-2): o snapshot inteiro varre-se POR PAPEL. Cada jogadora recebe, por desenho, a ficha
     // inteira DELA em `propria` (Vida, PA, perícias): só os números dela ficam de fora; os da outra jogadora e os do Mestre
     // não podem estar. O espectador não tem `propria` (projecao.js): nenhum número de ninguém. B6: e os textos do Mestre.
-    assert.deepEqual(procurarCanarios([snap], { chaves: CHAVES_SO_MESTRE, numeros: NUMEROS_PROIBIDOS_NO_SNAPSHOT[k], textos: TEXTOS_SO_MESTRE }), [],
+    // B2 (CAIXA-TESTES-CORRECOES-4): os textos também por papel (a perícia da heroína em texto só a ela).
+    assert.deepEqual(procurarCanarios([snap], { chaves: CHAVES_SO_MESTRE, numeros: NUMEROS_PROIBIDOS_NO_SNAPSHOT[k], textos: TEXTOS_PROIBIDOS_NO_SNAPSHOT[k] }), [],
       k + ': canários do Mestre (e da outra jogadora) no snapshot do «voltar»');
     // Sanidade da exclusão: a própria vê a Vida dela (a varredura não está a excluir o que não existe); o espectador não.
     if (k === 'heroina') assert.equal(snap.propria?.vidaTotal, 5150, 'a heroína vê a Vida dela em `propria`');
@@ -305,7 +325,7 @@ test('caixa no HUD da jogadora: o «voltar» repõe a ordemDinamicaParty do chec
   assert.deepEqual(sa.caixa, { ligada: true, ordemPor: 'iniciativa', ordemDinamica: esperada });
   // B6 (CAIXA-TESTES-CORRECOES-3): o snapshot da re-entrada da aliada varre-se como o do «voltar» (chaves, números da
   // aliada de fora, textos), com a mesma sanidade da exclusão.
-  assert.deepEqual(procurarCanarios([sa], { chaves: CHAVES_SO_MESTRE, numeros: NUMEROS_PROIBIDOS_NO_SNAPSHOT.aliada, textos: TEXTOS_SO_MESTRE }), [],
+  assert.deepEqual(procurarCanarios([sa], { chaves: CHAVES_SO_MESTRE, numeros: NUMEROS_PROIBIDOS_NO_SNAPSHOT.aliada, textos: TEXTOS_PROIBIDOS_NO_SNAPSHOT.aliada }), [],
     'aliada: canários do Mestre (e da heroína) no snapshot da re-entrada depois do «voltar»');
   assert.equal(sa.propria?.vidaTotal, 3579, 'a aliada vê a Vida dela em `propria` na re-entrada');
 });

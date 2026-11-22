@@ -8,8 +8,11 @@ Não mudou nenhum código do jogo, do HUD, das cores ou do protocolo. A prova `p
 - **Base:** `origin/fable/integracao-50` @ `6a87b9e` (a ponta à hora do lançamento, e ainda a ponta à hora do commit).
   Clone novo, `core.autocrlf=false`.
 - **Ramo:** `claude2/caixa-testes-correcoes-3`, **não fundido** (a fusão é do coordenador).
-- **Commits:** primeiro o dos testes, da nota ¹ e deste ESTADO-FINAL; por último o das listas da retoma
-  (`actualizar-listas.py`).
+- **Commits** (corrigido pela Ordem CAIXA-TESTES-CORRECOES-4, B4: as listas **não** são o último commit), por esta
+  ordem: `38f0c48` (os testes, a nota ¹ e este ESTADO-FINAL), `eb74bb7` (as listas da retoma, `actualizar-listas.py`)
+  e `c835986` (o resultado do CI neste ESTADO-FINAL; só toca neste ficheiro). Depois da publicação, o ramo foi
+  reescrito por cima de `15eab43` (o rebase do coordenador, com as mesmas datas de autor): no ramo e em
+  `fable/integracao-50` são hoje `8870275`, `ae62dd9` e `f049089`, pela mesma ordem.
 - A conferência (`~/workspace/conferencias/caixa-testes-correcoes-2/`) não está neste PC nem no repositório. Trabalhei
   pelo resumo dos defeitos que vem na ordem.
 
@@ -65,8 +68,11 @@ Não mudou nenhum código do jogo, do HUD, das cores ou do protocolo. A prova `p
 
 ### B4: a linha «Servidor 418/418», com os números certos por job
 - Os ESTADO-FINAL anteriores davam «Servidor 418/418», mas esse número vem da corrida local sem `--permission`. No CI:
-  - **job `servidor`** (`node --permission --allow-fs-read=… --test`, sem rede): **408 passam + 10 saltados** (os testes
-    de rede saltam-se sob `--permission`), de 418;
+  - **job `servidor`** (`node --permission --allow-fs-read=… --test`, só leitura): **408 passam + 10 saltados** de 418.
+    (Corrigido pela Ordem CAIXA-TESTES-CORRECOES-4, B3: os 10 saltados **não** são de rede. São **8 de disco**
+    (`SEM_DISCO`: 5 da ordem 16 em `ordem16-journal-disco.test.mjs` e 3 da ordem 17 em `ordem17-varredura.test.mjs`,
+    sem escrita) e **2 de leitura de `../protocolo`** (`SEM_PROTOCOLO`: os N19-1 e N19-2 de `ordem21-decisoes.test.mjs`,
+    fora do `--allow-fs-read`). Os 10 correm no job `protocolo`. Os testes de rede **passam** no job `servidor`.)
   - **job `protocolo`** (a recolha do tráfego, `PROTOCOLO_DUMP=… node --test … "servidor/testes/*.test.mjs"`, sem
     `--permission`): **418/418**.
 - Esta ordem não muda o número de testes (só aperta os que já havia), por isso os dois números ficam: **408 + 10
@@ -112,8 +118,12 @@ os valores-canário de bancada das fichas de teste. As fugas das mutações M13�
 | Conferência dos schemas (`PROTOCOLO_DUMP` + `conferir-schemas.py`) | **0 falhas** nas mensagens que saem (exit 0) |
 
 No PC, a corrida **com** `--permission` dá 401 passam e 7 falham, todos testes de rede (V20 e ordem 30). É o mesmo
-problema do ambiente registado nas ordens anteriores: o Node 26 daqui recusa a rede nesse modo. No CI (Node 24) esses
-testes saltam-se (ver B4). Não corri os testes Godot do cliente porque nada do cliente mudou; quem os cobre é o CI.
+problema do ambiente registado nas ordens anteriores: o Node 26 daqui recusa a rede nesse modo. ~~No CI (Node 24) esses
+testes saltam-se (ver B4).~~ (Corrigido pela Ordem CAIXA-TESTES-CORRECOES-4, B3. A frase dos «7 falham, todos de
+rede» foi **re-verificada** no PC a 22/11/2026 sobre `f747427`: 401 passam, 7 falham, 10 saltados, e as 7 falhas são
+todas `ERR_ACCESS_DENIED` com `permission: 'Net'`, ou seja, os 4 V20 e os 3 da ordem 30. O erro estava na frase
+seguinte. No CI (Node 24) esses 7 testes de rede **passam**; os 10 **saltados** são outros, 8 de disco e 2 de leitura
+de `../protocolo` (ver B4).) Não corri os testes Godot do cliente porque nada do cliente mudou; quem os cobre é o CI.
 
 ## CI deste ramo (em `eb74bb7`, o commit das listas)
 
@@ -148,6 +158,8 @@ testes saltam-se (ver B4). Não corri os testes Godot do cliente porque nada do 
    - `41`/`61` são frágeis como canários.
    - O tripwire `contexto` é fail-closed por desenho.
 4. **`NUMEROS_MESTRE_CAIXA` e `CHAVES_MESTRE_CAIXA` ficaram locais** em `caixa-hud-jogadora.test.mjs`. Só esse ficheiro
-   as usa, por isso não há cópia nenhuma que possa derivar.
+   as usa, por isso não há cópia nenhuma que possa derivar. (Corrigido pela Ordem CAIXA-TESTES-CORRECOES-4, B5: para
+   `NUMEROS_MESTRE_CAIXA` isto era falso. Os valores eram cópia à mão dos das listas partilhadas e já tinham derivado:
+   faltavam 8642, 5551 e 2468. A lista passou a derivar-se delas. `CHAVES_MESTRE_CAIXA` é própria e fica.)
 5. **Ambiente do PC:** os números são da corrida sem `--permission` (ver acima).
 6. O `ORDEM.md` da sede não foi tocado.

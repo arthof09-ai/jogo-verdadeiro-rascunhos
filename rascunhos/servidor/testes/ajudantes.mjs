@@ -56,6 +56,11 @@ export const CHAVES_SO_MESTRE = Object.freeze([
 // Da heroína: só ela os vê (perícia 8642, …). Da aliada: só ela (os de listaDeFichas).
 export const NUMEROS_HEROINA = Object.freeze([8642, 5551, 5150, 4040]);
 export const NUMEROS_ALIADA = Object.freeze([2468, 3579, 1357]);
+// Ordem CAIXA-TESTES-CORRECOES-4 (B2): os textos que só a heroína pode ver. A perícia 8642 chega-lhe por desenho como
+// TEXTO ('1d20+8642', na ficha dela em `propria`), e a varredura de NUMEROS_HEROINA não a vê dentro de uma string. NÃO vai
+// em TEXTOS_SO_MESTRE (essa lista varre-se também na heroína: falso positivo na `propria` dela); vale só para a aliada e o
+// espectador.
+export const TEXTOS_HEROINA = Object.freeze(['8642']);
 
 export function rngDeterministico(semente = 0x9e3779b9) {
   let x = semente >>> 0 || 1;
