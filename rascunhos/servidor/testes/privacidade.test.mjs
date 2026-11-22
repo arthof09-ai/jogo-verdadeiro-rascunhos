@@ -137,8 +137,8 @@ test('canários: "outra jogadora" e espectador não veem a ficha, a Vida nem o d
 
 // Ordem CAIXA-TESTES-CORRECOES-4 (B1): a Vida VARIÁVEL. NUMEROS_HEROINA/NUMEROS_ALIADA só têm a Vida máxima (5150/3579):
 // a `vidaActual` de uma jogadora ferida (no guião, a aliada fica com 2403 = 3579 − 1176) posta no snapshot da outra
-// passava calada. Duas guardas: (1) o VALOR — a Vida actual de cada jogadora, lida do estado da sala no fim do guião,
-// não chega à outra nem ao espectador, em mensagem nenhuma; (2) a FORMA — cada ROOM_SNAPSHOT da Party mostra só as
+// passava calada. Duas guardas: (1) o VALOR — cada Vida actual que cada jogadora teve no guião (CORRECOES-5, B4: o
+// histórico, não só a do fim), não chega à outra nem ao espectador, em mensagem nenhuma; (2) a FORMA — cada ROOM_SNAPSHOT da Party mostra só as
 // `vidaActual` que esse papel pode ver (a própria, em `propria`; nenhuma ao espectador) e as figuras públicas têm as
 // chaves exactas de projecao.js figuraPublica (sem Vida de ninguém). A figura não tem `vidaTotal` (sala.js novaFigura):
 // a Vida máxima vem da ficha.
@@ -150,11 +150,32 @@ test('canários: a Vida actual (variável) de uma jogadora ferida não chega à 
   const vidaTotal = (k) => m.fichas[est.figuras[figuraDe[k]].fichaId].vidaTotal;
   // Sanidade: o canário variável está vivo — a aliada está ferida (Vida actual ≠ a máxima das listas fixas).
   assert.ok(vidaActual('aliada') < vidaTotal('aliada'), `a aliada está ferida (${vidaActual('aliada')}/${vidaTotal('aliada')})`);
-  // (1) O valor, em tudo o que chegou (snapshots e eventos).
+  // Ordem CAIXA-TESTES-CORRECOES-5 (B4): a guarda (1) varre TODOS os valores que a Vida actual de cada jogadora teve no
+  // guião, não só o do fim. Hoje a aliada fere-se num só passo (3579 → 2403), e aí o valor final é o único intermédio;
+  // mas um segundo golpe (ou uma cura) depois de um snapshot com fuga deixava o valor que fugiu ≠ o do fim, e uma guarda
+  // só com o do fim passava calada. O histórico vem de: a Vida máxima (o valor de partida, da ficha), cada evento
+  // `estado` do journal com a `vidaActual` dessa figura (é o evento que regista cada mudança da Vida), a `propria` de
+  // cada snapshot que a própria recebeu, e o valor final do estado da sala. Valores < 100 ficam de fora: não são
+  // canários (colidem com contadores, coordenadas e o 0 de quem cai) — a Vida das fichas de teste fica toda acima.
+  const historicoVida = (k) => {
+    const fig = figuraDe[k];
+    const v = new Set([vidaTotal(k), vidaActual(k)]);
+    for (const e of m.sala.depuracao.eventos()) {
+      if (e.tipo === 'estado' && e.dados?.figuraId === fig && typeof e.dados.vidaActual === 'number') v.add(e.dados.vidaActual);
+    }
+    for (const s of m.clientes[k].msgs) if (s.type === 'ROOM_SNAPSHOT' && typeof s.propria?.vidaActual === 'number') v.add(s.propria.vidaActual);
+    return [...v].filter((x) => x >= 100).sort((a, b) => a - b);
+  };
+  // Sanidade do histórico: a fonte não está morta — a aliada passou pela máxima e pela ferida (hoje [2403, 3579]).
+  assert.ok(historicoVida('aliada').includes(vidaActual('aliada')) && historicoVida('aliada').includes(vidaTotal('aliada')),
+    `o histórico da Vida da aliada tem a de partida e a do fim (${historicoVida('aliada')})`);
+  assert.ok(m.sala.depuracao.eventos().some((e) => e.tipo === 'estado' && e.dados?.figuraId === figuraDe.aliada && e.dados.vidaActual === vidaActual('aliada')),
+    'o journal regista a Vida ferida da aliada num evento `estado` (a fonte dos intermédios)');
+  // (1) O valor — cada valor do histórico —, em tudo o que chegou (snapshots e eventos).
   const cfg = (numeros) => ({ numeros, textos: [], chaves: [] });
   for (const [dona, outros] of [['heroina', ['aliada', 'espectador']], ['aliada', ['heroina', 'espectador']]]) {
     for (const k of outros) {
-      assert.deepEqual(procurarCanarios(m.clientes[k].msgs, cfg([vidaActual(dona)])), [], `${k} viu a Vida actual de ${dona} (${vidaActual(dona)})`);
+      assert.deepEqual(procurarCanarios(m.clientes[k].msgs, cfg(historicoVida(dona))), [], `${k} viu uma Vida actual de ${dona} (${historicoVida(dona)})`);
     }
   }
   // (2) A forma, snapshot a snapshot.

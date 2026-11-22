@@ -14,7 +14,12 @@ este ficheiro. Nenhum código do jogo, do HUD, das cores ou do protocolo foi toc
      último. Depois dele corri o `actualizar-listas` outra vez e as listas não mudaram.
 - **Conferência:** `~/workspace/conferencias/caixa-testes-correcoes-3/` não está neste PC nem no repositório. Trabalhei
   pelo resumo da ordem. Os números da conferência (2403, os «15 snapshots, 5 ao espectador», os «17/17») bateram com o
-  que encontrei: a aliada fica com 2403, e o guião de `privacidade` dá 5 snapshots a cada papel da Party.
+  que encontrei: a aliada fica com 2403, e o guião de `privacidade` dá ~~5 snapshots a cada papel da Party~~.
+  - **Corrigido na ORDEM CAIXA-TESTES-CORRECOES-5 (B1):** o guião de `privacidade` dá **6 snapshots por papel** da
+    Party (**1 do lobby + 3 da caixa + 2 do RESYNC**), **18 no total**. Os «15 snapshots, 5 ao espectador» da sentença
+    da CORRECOES-3 contam **só os da batalha** (3 da caixa + 2 do RESYNC = 5 por papel, 15 nos três papéis), sem o
+    snapshot do lobby que cada papel recebe ao entrar. Contado na CORRECOES-5 sobre `2140e6b`, papel a papel
+    (heroína, aliada e espectador: `lobby, combate × 5`).
 
 ## Ponto a ponto
 
@@ -40,7 +45,15 @@ este ficheiro. Nenhum código do jogo, do HUD, das cores ou do protocolo foi toc
   | Mutação (temporária, no código do jogo) | `privacidade` nova | `privacidade` antiga (`f747427`) | Suite nova |
   |---|---|---|---|
   | **M18** (a da conferência): `fugaB1` = a `vidaActual` das jogadoras feridas (`[2403]`) no topo de todo o ROOM_SNAPSHOT da Party (`sala.js` `mensagemSnapshot`) | **falha**, 8/9, no teste novo, l. 157: «heroina viu a Vida actual de aliada (2403)» | **passa calada** (8/8) | 417/419: o teste novo e a fixture do ecrã do Mestre |
-  | **M18b**: `vidaActual` com a chave verdadeira na figura pública de cada jogadora (`projecao.js` `figuraPublica`) | **falha**, 7/9: o teste novo e o da «outra jogadora» | falha (7/8), mas só pelo 5150 da heroína, que é um valor fixo | 415/419 |
+  | **M18b**: `vidaActual` com a chave verdadeira na figura pública **só das figuras com `lado === 'jogadora'`** (`projecao.js` `figuraPublica`; ver a nota da CORRECOES-5 abaixo) | **falha**, 7/9: o teste novo e o da «outra jogadora» | falha (7/8), mas só pelo 5150 da heroína, que é um valor fixo | 415/419 |
+
+  **Nota da ORDEM CAIXA-TESTES-CORRECOES-5 (B2), o âmbito da M18b:** a mutação põe o campo **só nas figuras com
+  `lado === 'jogadora'`** (`...(fig.lado === 'jogadora' ? { vidaActual: fig.vidaActual } : {})`), porque o que se queria
+  provar é a fuga da Vida **de uma jogadora** para a outra. A implementação natural — o campo em `figuraPublica` para
+  **todas** as figuras — dá outros números: `privacidade` **6/9** e a suite **408/419**, não 7/9 e 415/419. O 6601 do
+  orc (e o 4848 do lobo) passam a ir na figura pública, e isso rebenta também «canários: nada do Mestre chega a nenhum
+  papel da Party» e mais 6 testes de fora destes dois ficheiros (CORR8 (a) × 2, CORR8 (b) × 2, MAPA-JOGÁVEL (f) e
+  ordem ESCALA (d)). As duas variantes foram re-executadas na CORRECOES-5; os números estão no ESTADO-FINAL dela.
 
   A (c) de `caixa-hud-jogadora` não apanha a M18, e não tem de apanhar: nela ninguém da Party está ferido. A guarda
   está no guião de `privacidade`, que é onde há uma jogadora ferida.
@@ -133,7 +146,7 @@ bancada das fichas de teste.
 | | Mutação | Suite nova | `privacidade` antiga | (c) antiga |
 |---|---|---|---|---|
 | M18 | `vidaActual` da jogadora ferida (2403) no topo do snapshot da Party | 417/419: o teste novo da B1 e a fixture do Mestre | **passa calada** | passa calada |
-| M18b | `vidaActual` (com a chave) na figura pública das jogadoras | 415/419 | falha (só pelo 5150) | falha |
+| M18b | `vidaActual` (com a chave) na figura pública **só das figuras com `lado === 'jogadora'`** (com todas: 408/419, nota da CORRECOES-5 na B1) | 415/419 | falha (só pelo 5150) | falha |
 | M19 | `'1d20+8642'` em todo o ROOM_SNAPSHOT | 416/419: a (c) (aliada), a «outra jogadora» e a fixture do Mestre | **passa calada** | **passa calada** |
 
 ## Pontos para o coordenador

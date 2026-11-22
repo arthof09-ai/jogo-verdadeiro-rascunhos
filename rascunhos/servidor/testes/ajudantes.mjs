@@ -60,6 +60,11 @@ export const NUMEROS_ALIADA = Object.freeze([2468, 3579, 1357]);
 // TEXTO ('1d20+8642', na ficha dela em `propria`), e a varredura de NUMEROS_HEROINA não a vê dentro de uma string. NÃO vai
 // em TEXTOS_SO_MESTRE (essa lista varre-se também na heroína: falso positivo na `propria` dela); vale só para a aliada e o
 // espectador.
+// Ordem CAIXA-TESTES-CORRECOES-5 (B5): a substring é a NUA, '8642', e não '1d20+8642', de propósito: apanha a perícia
+// em qualquer texto ('1d20+8642', 'perícia 8642', '+8642'…), não só na forma da ficha. RISCO CONHECIDO E ACEITE: é um
+// `includes` sobre todas as strings, por isso um texto legítimo que contenha estes quatro dígitos (p. ex. um id, um
+// carimbo ou um número como '18642') dá um falso positivo. Se isso acontecer, a falha é alta (o teste parte, não
+// cala) — muda-se então o canário da ficha (fichasDeTeste) ou estreita-se aqui, nunca se tira a guarda.
 export const TEXTOS_HEROINA = Object.freeze(['8642']);
 
 export function rngDeterministico(semente = 0x9e3779b9) {

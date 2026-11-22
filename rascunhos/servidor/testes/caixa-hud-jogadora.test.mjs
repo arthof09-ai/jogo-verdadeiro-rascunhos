@@ -251,7 +251,7 @@ test('caixa no HUD da jogadora: a jogadora que envia MASTER_SUPERVISOR op caixa 
 // snapshot que segue leva-a à Party — não a ordem de depois do ponto, nem uma ordem vazia.
 test('caixa no HUD da jogadora: o «voltar» repõe a ordemDinamicaParty do checkpoint e o snapshot seguinte leva-a à Party', () => {
   // B3 (CAIXA-TESTES-CORRECOES-2): a sala com a semente-canário.
-  const { m, H, A, orc, estado, vista, caixa } = mesaEmCombate({ rngSemente: () => SEMENTE, casaOrc: { x: 2, y: 6 } });
+  const { m, H, A, orc, lobo, estado, vista, caixa } = mesaEmCombate({ rngSemente: () => SEMENTE, casaOrc: { x: 2, y: 6 } });
   assert.equal(estado().vez?.figuraId, H, 'a batalha começa na heroína');
   // B1 (CAIXA-TESTES-CORRECOES-3): ANTES do ponto, a heroína ataca o orc — uma resolução, para a semente ser sorteada
   // (sortearSemente → SEMENTE, gravada no journal) e o orc ficar com 6601 de Vida (7777 − 1176). Sem isto, `SEMENTE` e
@@ -262,11 +262,20 @@ test('caixa no HUD da jogadora: o «voltar» repõe a ordemDinamicaParty do chec
   // casas ou no bloqueio parte o ataque (acao_invalida) e a B1 da CORRECOES-3 deixa de ter canários vivos. Estas
   // pré-condições dizem logo porquê; se alguma mudar, re-verifica a geometria (e a do guião de privacidade.test.mjs,
   // que é a mesma).
+  // Ordem CAIXA-TESTES-CORRECOES-5 (B3): a guarda prende também o CAMINHO, não só as pontas. A BFS de distanciaCasas
+  // depende de tudo o que bloqueia: as OUTRAS figuras vivas colocadas (aqui também o lobo, em (12,12)) e as casas
+  // passáveis (sala.js passavel: o tamanho do mapa e o terreno). Por isso entram no deepEqual o lobo, a lista inteira das
+  // figuras vivas colocadas (uma figura nova no mapa muda o caminho), o mapa (largura, altura, casaM) e o juízo do
+  // terreno (null: esta mesa não tem pacote de terreno; com um, uma rocha no caminho mudava os 6 passos).
   const fig = estado().figuras;
   const chicote = m.fichas['heroina-teste'].tecnicas.find((t) => t.id === 'chicote-teste');
   const geometria = { casaM: estado().mapa.casaM, alcanceM: chicote?.alcanceM,
-    H: [fig[H].x, fig[H].y], A: [fig[A].x, fig[A].y], orc: [fig[orc].x, fig[orc].y] };
-  assert.deepEqual(geometria, { casaM: 1.5, alcanceM: 9, H: [2, 2], A: [2, 4], orc: [2, 6] },
+    H: [fig[H].x, fig[H].y], A: [fig[A].x, fig[A].y], orc: [fig[orc].x, fig[orc].y], lobo: [fig[lobo].x, fig[lobo].y],
+    vivasColocadas: Object.values(fig).filter((f) => f.colocada && f.vivo).map((f) => [f.x, f.y]).sort((a, b) => a[0] - b[0] || a[1] - b[1]),
+    mapa: estado().mapa, terreno: m.sala.depuracao.juizoTerreno() };
+  assert.deepEqual(geometria, { casaM: 1.5, alcanceM: 9, H: [2, 2], A: [2, 4], orc: [2, 6], lobo: [12, 12],
+    vivasColocadas: [[2, 2], [2, 4], [2, 6], [12, 12]],
+    mapa: { largura: 20, altura: 20, casaM: 1.5 }, terreno: null },
     'B6: a geometria do ataque (6 passos = 6 casas, no limite) mudou — re-verifica o alcance antes de mexer na (c)');
   exigirAplicada(m.intencao('heroina', { tipo: 'atacar', alvoId: orc, arma: 'chicote-teste' }), 'ataque da heroína ao orc');
   assert.equal(estado().figuras[orc].vidaActual, 6601, 'o orc ficou com 6601 (o canário está vivo)');
