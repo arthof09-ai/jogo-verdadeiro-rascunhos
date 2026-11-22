@@ -78,6 +78,10 @@ Nos §1 e §5 (snapshot acabado de chegar) a linha diz «— JSON actual (do ROO
    (o job `cliente` corre com `working-directory: rascunhos/cliente` — conferido; por isso `--path .` e o caminho absoluto do teste).
 4. As capturas das corridas novas não entram no ramo (12 MB, iguais em conteúdo às das ordens antigas — nada de HUD
    mudou); ficaram na pasta tmp da sede.
+6. **A linha avançou durante a ordem:** `fable/integracao-50` está agora em `6381f50` (CAIXA-TESTES: `f0d24ac`,
+   `7008328`, `6381f50`), por cima da minha base `7c97b48`. Conferido: `git merge-tree` sem conflitos; nenhum
+   ficheiro em comum (a CAIXA-TESTES mexe nas listas da retoma, este ramo não). Não é fast-forward — a fusão precisa
+   de merge ou de rebase; deixei para o coordenador.
 5. Privacidade: a linha só ganha a origem do snapshot (seq, revisão, hora, nº de eventos) e ids opacos — nenhum nome
    verdadeiro, vida, alma ou PA (o teste confere).
 
