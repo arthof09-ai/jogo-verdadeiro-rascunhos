@@ -76,10 +76,10 @@ do HUD, das cores ou do protocolo foi tocado, e a prova também não.
   | Mutação | `privacidade` nova | `privacidade` antiga (`2140e6b`) | Suite nova |
   |---|---|---|---|
   | **M20-controlo**: só o segundo golpe (sem fuga) | 9/9 (sem falso positivo) | 9/9 | 419/419 |
-  | **M20**: M18 + o segundo golpe | **falha**, 8/9, l. 178: «heroina viu uma Vida actual de aliada (1227,2403,3579)» | **passa calada** (9/9) | 417/419: o teste da B1 e a fixture do ecrã do Mestre |
+  | **M20**: M18 + o segundo golpe | **falha**, 8/9, l. 178: «heroina viu uma Vida actual de aliada (1227,2403,3579)» | **passa calada** (9/9) (só com a chave `fugaB1` da M18; com a chave `vidaActual` no topo, a antiga falha 8/9 pela forma (2) — nota da CORRECOES-6, B4) | 417/419: o teste da B1 e a fixture do ecrã do Mestre |
   | **M18** (a da conferência, sem segundo golpe) | falha, 8/9 | falha, 8/9 | 417/419 |
 
-### B5: a substring nua `'8642'` em `TEXTOS_HEROINA` (`ajudantes.mjs`, l. 63)
+### B5: a substring nua `'8642'` em `TEXTOS_HEROINA` (`ajudantes.mjs`, ~~l. 63~~ l. 63–68: o comentário começa na 63, o export está na 68 — CORRECOES-6, B6)
 - Fica a substring **nua**, de propósito: apanha a perícia em qualquer texto (`'1d20+8642'`, `'perícia 8642'`,
   `'+8642'`), e `'1d20+8642'` só apanhava a forma da ficha. O comentário regista o **risco conhecido e aceite**: é um
   `includes` sobre todas as strings, por isso um texto legítimo com estes quatro dígitos (p. ex. `'18642'`, um id ou um
@@ -103,11 +103,11 @@ números e os nomes são os valores-canário de bancada das fichas de teste.
 
 | | Mutação | Suite nova | `privacidade` nova / antiga | (c) nova / antiga |
 |---|---|---|---|---|
-| M18 | `vidaActual` da ferida (2403) no topo do snapshot da Party | 417/419 | 8/9 / 8/9 | 9/9 / 9/9 |
+| M18 | ~~`vidaActual` da ferida (2403) no topo do snapshot da Party~~ `fugaB1: [2403]` (a Vida da ferida, numa chave que não é `vidaActual`) no topo do snapshot da Party | 417/419 | 8/9 / 8/9 | 9/9 / 9/9 |
 | M18b | `vidaActual` na figura pública, só `lado === 'jogadora'` | 415/419 | 7/9 / 7/9 | 8/9 / 8/9 |
 | M18b-todas | `vidaActual` na figura pública de todas as figuras | 408/419 | 6/9 / 6/9 | 8/9 / 8/9 |
 | M20-controlo | segundo golpe na aliada, sem fuga | 419/419 | 9/9 / 9/9 | 9/9 / 9/9 |
-| M20 | M18 + segundo golpe (fuga de um intermédio) | 417/419 | **8/9 / 9/9 (calada)** | 9/9 / 9/9 |
+| M20 | M18 + segundo golpe (fuga de um intermédio) | 417/419 | **8/9 / 9/9 (calada)** (só com a chave `fugaB1` da M18; com a chave `vidaActual` no topo, a antiga falha 8/9 pela forma (2) — nota da CORRECOES-6, B4) | 9/9 / 9/9 |
 | M21 | o lobo em (12,13) na (c) | 418/419 | 9/9 / 9/9 | **8/9 / 9/9 (calada)** |
 | M22 | o mapa 21 × 20 na (c) | 418/419 | 9/9 / 9/9 | **8/9 / 9/9 (calada)** |
 

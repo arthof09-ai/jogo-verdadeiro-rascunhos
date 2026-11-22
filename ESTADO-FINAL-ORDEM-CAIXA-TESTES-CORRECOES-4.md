@@ -145,9 +145,17 @@ bancada das fichas de teste.
 
 | | Mutação | Suite nova | `privacidade` antiga | (c) antiga |
 |---|---|---|---|---|
-| M18 | `vidaActual` da jogadora ferida (2403) no topo do snapshot da Party | 417/419: o teste novo da B1 e a fixture do Mestre | **passa calada** | passa calada |
-| M18b | `vidaActual` (com a chave) na figura pública **só das figuras com `lado === 'jogadora'`** (com todas: 408/419, nota da CORRECOES-5 na B1) | 415/419 | falha (só pelo 5150) | falha |
+| M18 | ~~`vidaActual` da jogadora ferida (2403) no topo do snapshot da Party~~ `fugaB1: [2403]` (a Vida da jogadora ferida) no topo do snapshot da Party — numa chave que **não** é `vidaActual` (nota da CORRECOES-6, abaixo) | 417/419: o teste novo da B1 e a fixture do Mestre | **passa calada** | passa calada |
+| M18b | `vidaActual` (com a chave) na figura pública **só das figuras com `lado === 'jogadora'`** (com todas: 408/419, nota da CORRECOES-5 na ~~B1~~ B2) | 415/419 | falha (só pelo 5150) | falha |
 | M19 | `'1d20+8642'` em todo o ROOM_SNAPSHOT | 416/419: a (c) (aliada), a «outra jogadora» e a fixture do Mestre | **passa calada** | **passa calada** |
+
+**Nota da ORDEM CAIXA-TESTES-CORRECOES-6 (B4, B5), a chave da M18:** a fuga da M18 vai numa chave **própria**, `fugaB1`
+(um array com as `vidaActual` das jogadoras feridas, `[2403]`), como diz a tabela da B1 — **não** numa chave
+`vidaActual`. A linha da M18 acima dizia só «`vidaActual` … no topo» e lia-se como a chave; corrigida. A diferença conta:
+a forma (2) da guarda só vê chaves `vidaActual`. Re-executado na CORRECOES-6 contra a `privacidade` de `2140e6b`: com a
+M20 (a M18 + um segundo golpe, ESTADO-FINAL da CORRECOES-5), a chave `fugaB1` passa calada (9/9) e a chave `vidaActual`
+no topo falha 8/9 pela forma (2) («heroina: só a Vida actual dela, em `propria`»). Na linha da M18b, «na B1» passou a
+«na B2» (a nota do âmbito da M18b é da B2 da CORRECOES-5).
 
 ## Pontos para o coordenador
 

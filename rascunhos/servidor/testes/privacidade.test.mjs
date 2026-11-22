@@ -20,7 +20,7 @@ const TEXTOS_MESTRE = [
 const CHAVES_MESTRE = CHAVES_SO_MESTRE;
 // Da heroína: só ela os vê. Da aliada: só ela. (NUMEROS_HEROINA / NUMEROS_ALIADA, de ajudantes.mjs.)
 
-function guiao() {
+function guiao({ m51b = false } = {}) {
   const m = montarMesa({ comAliada: true, comEspectador: true, rngSemente: () => SEMENTE });
   m.entrarTodos();
   // Lobby com o bandido disponível, mas NUNCA colocado (CANARIO-FANTASMA).
@@ -72,7 +72,56 @@ function guiao() {
     m.enviar(k, { type: 'ROOM_RESYNC' });
     m.enviar(k, { type: 'RECEIPT_QUERY', intentIds: ['aliada-fc', 'oculto-1'] });
   }
+  // Ordem CAIXA-TESTES-CORRECOES-6 (B1): o caminho da M51b, sem fuga — a aliada desce a uma Vida BAIXA, é fotografada
+  // num RESYNC e o Mestre volta ao fim do guião (2403). Só no teste da Vida baixa; o guião de sempre não muda.
+  // O caminho: uma volta inteira (o orc acerta-lhe: 2403 → 1227); na volta seguinte o lobo, já ao pé, acerta-lhe
+  // primeiro (1227 → 51) — o RESYNC é logo aí, antes de o orc jogar (o orc levava-a a −1125).
+  if (m51b) {
+    const vidaAliada = () => m.sala.depuracao.estado().figuras[m.clientes.aliada.figuraId].vidaActual;
+    const fimDoGuiao = m.sala.depuracao.journalSeq();
+    voltaInteira(m);
+    voltaInteira(m, () => vidaAliada() !== 1227);
+    assert.equal(vidaAliada(), 51, 'M51b: o lobo levou a aliada a 51');
+    for (const k of ['heroina', 'aliada', 'espectador']) m.enviar(k, { type: 'ROOM_RESYNC' });
+    exigirAplicada(m.mestre('MASTER_SUPERVISOR', { op: 'voltar', ateSeq: fimDoGuiao }), 'voltar ao fim do guião');
+  }
   return m;
+}
+
+// Uma volta da ordem: as duas jogadoras encerram e o Mestre aprova as propostas do lobo (semi) até a vez passar; o orc
+// (auto) joga sozinho. Cada golpe na aliada tira 1176 (o motor falso). `parar` corta a volta a meio (depois de uma
+// aprovação), para fotografar um estado intermédio.
+function voltaInteira(m, parar = () => false) {
+  exigirAplicada(m.intencao('heroina', { tipo: 'encerrar' }));
+  exigirAplicada(m.intencao('aliada', { tipo: 'encerrar' }));
+  for (let i = 0; i < 8; i++) {
+    const c = m.clientes.mestre.ultimo('MASTER_CARD');
+    if (!m.sala.depuracao.estado().cartoes.some((x) => x.cartaoId === c.cartaoId && x.estado === 'aberto')) break;
+    exigirAplicada(m.mestre('MASTER_APPROVE', { cartaoId: c.cartaoId, decisao: 'aprovar' }));
+    if (parar()) return;
+  }
+}
+
+// Ordem CAIXA-TESTES-CORRECOES-5 (B4): todos os valores que a Vida actual da jogadora `k` teve no guião, não só o do
+// fim. Um segundo golpe (ou uma cura, ou um «voltar») depois de um snapshot com fuga deixa o valor que fugiu ≠ o do fim,
+// e uma guarda só com o do fim passava calada. O histórico vem de: a Vida máxima (o valor de partida, da ficha), cada
+// evento `estado` do journal com a `vidaActual` dessa figura (é o evento que regista cada mudança da Vida; o journal
+// nunca apaga história, nem no «voltar»), o valor final do estado da sala e — com `proprias` — a `propria` de cada
+// snapshot que a própria recebeu.
+// Ordem CAIXA-TESTES-CORRECOES-6 (B1): só o 0 fica de fora — é o único valor que colide de facto (o 0 de quem cai, e os
+// contadores e coordenadas a 0 de qualquer mensagem). O corte antigo (< 100) deixava passar calada a fuga de um
+// intermédio baixo: a M51b (a aliada a 51, fotografada num RESYNC, depois «voltar» a 2403) ficava viva com este
+// ficheiro 9/9 e a suite verde. Se um valor baixo do histórico colidir um dia com um número legítimo, a falha é ALTA,
+// não calada: muda-se o guião, nunca se volta ao corte.
+function historicoVida(m, k, { proprias = true } = {}) {
+  const est = m.sala.depuracao.estado();
+  const fig = m.clientes[k].figuraId;
+  const v = new Set([m.fichas[est.figuras[fig].fichaId].vidaTotal, est.figuras[fig].vidaActual]);
+  for (const e of m.sala.depuracao.eventos()) {
+    if (e.tipo === 'estado' && e.dados?.figuraId === fig && typeof e.dados.vidaActual === 'number') v.add(e.dados.vidaActual);
+  }
+  if (proprias) for (const s of m.clientes[k].msgs) if (s.type === 'ROOM_SNAPSHOT' && typeof s.propria?.vidaActual === 'number') v.add(s.propria.vidaActual);
+  return [...v].filter((x) => x !== 0).sort((a, b) => a - b);
 }
 
 test('canários: nada do Mestre chega a nenhum papel da Party (jogadoras e espectador)', () => {
@@ -150,32 +199,19 @@ test('canários: a Vida actual (variável) de uma jogadora ferida não chega à 
   const vidaTotal = (k) => m.fichas[est.figuras[figuraDe[k]].fichaId].vidaTotal;
   // Sanidade: o canário variável está vivo — a aliada está ferida (Vida actual ≠ a máxima das listas fixas).
   assert.ok(vidaActual('aliada') < vidaTotal('aliada'), `a aliada está ferida (${vidaActual('aliada')}/${vidaTotal('aliada')})`);
-  // Ordem CAIXA-TESTES-CORRECOES-5 (B4): a guarda (1) varre TODOS os valores que a Vida actual de cada jogadora teve no
-  // guião, não só o do fim. Hoje a aliada fere-se num só passo (3579 → 2403), e aí o valor final é o único intermédio;
-  // mas um segundo golpe (ou uma cura) depois de um snapshot com fuga deixava o valor que fugiu ≠ o do fim, e uma guarda
-  // só com o do fim passava calada. O histórico vem de: a Vida máxima (o valor de partida, da ficha), cada evento
-  // `estado` do journal com a `vidaActual` dessa figura (é o evento que regista cada mudança da Vida), a `propria` de
-  // cada snapshot que a própria recebeu, e o valor final do estado da sala. Valores < 100 ficam de fora: não são
-  // canários (colidem com contadores, coordenadas e o 0 de quem cai) — a Vida das fichas de teste fica toda acima.
-  const historicoVida = (k) => {
-    const fig = figuraDe[k];
-    const v = new Set([vidaTotal(k), vidaActual(k)]);
-    for (const e of m.sala.depuracao.eventos()) {
-      if (e.tipo === 'estado' && e.dados?.figuraId === fig && typeof e.dados.vidaActual === 'number') v.add(e.dados.vidaActual);
-    }
-    for (const s of m.clientes[k].msgs) if (s.type === 'ROOM_SNAPSHOT' && typeof s.propria?.vidaActual === 'number') v.add(s.propria.vidaActual);
-    return [...v].filter((x) => x >= 100).sort((a, b) => a - b);
-  };
+  // A guarda (1) varre o histórico da Vida (historicoVida, acima: CORRECOES-5 B4, CORRECOES-6 B1). Hoje a aliada
+  // fere-se num só passo (3579 → 2403), e aí o valor final é o único intermédio.
+  const historico = (k) => historicoVida(m, k);
   // Sanidade do histórico: a fonte não está morta — a aliada passou pela máxima e pela ferida (hoje [2403, 3579]).
-  assert.ok(historicoVida('aliada').includes(vidaActual('aliada')) && historicoVida('aliada').includes(vidaTotal('aliada')),
-    `o histórico da Vida da aliada tem a de partida e a do fim (${historicoVida('aliada')})`);
+  assert.ok(historico('aliada').includes(vidaActual('aliada')) && historico('aliada').includes(vidaTotal('aliada')),
+    `o histórico da Vida da aliada tem a de partida e a do fim (${historico('aliada')})`);
   assert.ok(m.sala.depuracao.eventos().some((e) => e.tipo === 'estado' && e.dados?.figuraId === figuraDe.aliada && e.dados.vidaActual === vidaActual('aliada')),
     'o journal regista a Vida ferida da aliada num evento `estado` (a fonte dos intermédios)');
   // (1) O valor — cada valor do histórico —, em tudo o que chegou (snapshots e eventos).
   const cfg = (numeros) => ({ numeros, textos: [], chaves: [] });
   for (const [dona, outros] of [['heroina', ['aliada', 'espectador']], ['aliada', ['heroina', 'espectador']]]) {
     for (const k of outros) {
-      assert.deepEqual(procurarCanarios(m.clientes[k].msgs, cfg(historicoVida(dona))), [], `${k} viu uma Vida actual de ${dona} (${historicoVida(dona)})`);
+      assert.deepEqual(procurarCanarios(m.clientes[k].msgs, cfg(historico(dona))), [], `${k} viu uma Vida actual de ${dona} (${historico(dona)})`);
     }
   }
   // (2) A forma, snapshot a snapshot.
@@ -195,9 +231,37 @@ test('canários: a Vida actual (variável) de uma jogadora ferida não chega à 
       }
       for (const f of s.figuras) assert.deepEqual(Object.keys(f).sort(), CHAVES_FIGURA_PUBLICA, k + ': as chaves da figura pública');
     }
-    // Sanidade da exclusão: no último snapshot (o do RESYNC no fim do guião) a jogadora vê a Vida actual DELA — a ferida
-    // vê o 2403.
-    if (k !== 'espectador') assert.equal(snaps.at(-1).propria.vidaActual, vidaActual(k), k + ': vê a Vida actual dela');
+    // Sanidade da exclusão (re-ancorada na CAIXA-TESTES-CORRECOES-6, B2): cada `propria` mostra uma Vida que a SALA
+    // registou para essa jogadora (a de partida, um evento `estado` do journal ou a do fim — sem as próprias `propria`,
+    // que seria circular). Antes comparava-se o ÚLTIMO snapshot com a Vida do fim, o que só vale se o guião acabar num
+    // snapshot. O guião PODE acabar sem RESYNC: uma acção depois do último snapshot muda a Vida sem snapshot novo (a M20
+    // sem RESYNC: 2403 no último snapshot ≠ 1227 no fim), e aí a sanidade antiga falhava em falso positivo, sem fuga.
+    if (k !== 'espectador') {
+      const registadas = historicoVida(m, k, { proprias: false });
+      for (const s of snaps) assert.ok(registadas.includes(s.propria.vidaActual), `${k}: a \`propria\` (${s.propria.vidaActual}) é uma Vida registada dela (${registadas})`);
+    }
+  }
+  // E a ferida vê-se ferida: algum snapshot da aliada mostra-lhe uma Vida abaixo da máxima (a exclusão não lhe tira a dela).
+  assert.ok(m.clientes.aliada.msgs.some((s) => s.type === 'ROOM_SNAPSHOT' && s.propria.vidaActual < vidaTotal('aliada')),
+    'aliada: vê a Vida ferida dela num snapshot');
+});
+
+// Ordem CAIXA-TESTES-CORRECOES-6 (B1, a M51b como regressão na suite): a Vida BAIXA de um intermédio. A aliada desce a
+// 51 (3579 → 2403 → 1227 → 51), é fotografada num RESYNC com essa Vida e o Mestre «volta» ao fim do guião (2403). O 51
+// nunca é o valor do fim: só o histórico o tem, e o corte antigo (< 100) tirava-o de lá. Sem fuga, ninguém da Party
+// além dela vê o 51 nem o 1227; o teste prende também que o histórico os TEM (se o corte voltar, isto falha alto).
+test('canários: a Vida baixa de um intermédio (51, depois «voltar») não chega à outra jogadora nem ao espectador', () => {
+  const m = guiao({ m51b: true });
+  const est = m.sala.depuracao.estado();
+  const aliada = m.clientes.aliada;
+  // Sanidades do caminho: o «voltar» repôs a Vida do fim do guião, e a aliada recebeu o snapshot com o 51.
+  assert.equal(est.figuras[aliada.figuraId].vidaActual, 2403, 'o «voltar» repôs a aliada no 2403');
+  assert.ok(aliada.msgs.some((s) => s.type === 'ROOM_SNAPSHOT' && s.propria?.vidaActual === 51), 'a aliada foi fotografada com 51');
+  const hist = historicoVida(m, 'aliada');
+  for (const v of [51, 1227, 2403, 3579]) assert.ok(hist.includes(v), `o histórico da aliada tem o ${v} (${hist})`);
+  const cfg = (numeros) => ({ numeros, textos: [], chaves: [] });
+  for (const k of ['heroina', 'espectador']) {
+    assert.deepEqual(procurarCanarios(m.clientes[k].msgs, cfg(hist)), [], `${k} viu uma Vida actual da aliada (${hist})`);
   }
 });
 
