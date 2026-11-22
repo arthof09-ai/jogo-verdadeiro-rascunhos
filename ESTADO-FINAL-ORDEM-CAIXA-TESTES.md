@@ -59,10 +59,22 @@ O que mudou em `provas/ordem-caixa/ferramentas/prova-servidor.mjs`:
 
 | Mutação | Apanhada por |
 |---|---|
-| a projecção da Party leva a `caixaMestre` no snapshot | (b) canários, e 2 testes antigos da caixa |
+| a projecção da Party leva a `caixaMestre` **no topo** do ROOM_SNAPSHOT (`projecao.js:209`, `base.caixaMestre = …`, ao lado de `base.caixa`)¹ | (b) canários; dos testes antigos, **3** (não 2): «o snapshot da Party traz a escolha do Mestre por omissão» (por desenho: `s.caixaMestre === undefined`), «a escolha do Mestre segue para a Party num snapshot» (por efeito lateral: um `ROOM_OPTIONS` a mais) e «fixture do ecrã do Mestre: o ficheiro guardado é o que o servidor gera hoje» (diferença de texto) |
+| a projecção da Party leva a `caixaMestre` **dentro** da `caixa` (`projecao.js:209`, `base.caixa = { ...caixaParaParty(…), caixaMestre }`)¹ | (b) canários; dos testes antigos, **4**: «… por omissão», «nada do Mestre na caixa da Party (canários)» (chaves exactas da `caixa`), «a ordem da Party sobrevive ao journal…» e a fixture do ecrã do Mestre |
 | `ordemDinamicaParty` tirada das `CHAVES_MUNDO` (o «voltar» deixa de a repor) | (c), **só** este |
 | o op `caixa` deixa de exigir o papel Mestre | (a), **só** este |
-| fuga (`modo`) **só** no snapshot que o `escolherCaixa` manda | (b) com o guião novo; o guião **antigo passa calado** (8/8). É a lacuna que a B5-b fecha |
+| fuga (`modo`) **só** no snapshot que o `escolherCaixa` manda: `sala.js:1186`, no ramo `else if (tx.snapshotsParty)` da entrega dos snapshots, `msg: { ...mensagemSnapshot(m, s, tx.ts), modo: m.caixaMestre.modo }` — uma chave `modo` no **topo** do ROOM_SNAPSHOT, **fora da `caixa`**² | (b) com o guião novo, **só** este (415/416); o guião **antigo passa calado** (416/416, `privacidade` 8/8). É a lacuna que a B5-b fecha |
+
+¹ *Precisão da Ordem CAIXA-TESTES-CORRECOES (B3, 21/11/2026), refeita no PC sobre os testes de `6381f50`.* A linha
+original dizia «no snapshot» sem dizer onde, e «2 testes antigos». Repetidas as duas formas, a contagem certa é 3 (topo)
+e 4 (dentro da `caixa`), além da (b). Em ambas, a prova `prova-servidor.mjs` também falha no passo 3: no topo, na linha 65
+(«nenhuma revisão mudou»: o hash da revisão, `snapshotParaRevisao` em `sala.js:980`, tira a `caixa` mas não uma chave no
+topo, por isso a revisão da Party sobe e daí vem o `ROOM_OPTIONS` a mais); dentro, na linha 69 (as chaves exactas da
+`caixa`).
+
+² *Precisão da Ordem CAIXA-TESTES-CORRECOES (B4).* Fica **fora da `caixa`**: por isso o teste «nada do Mestre na caixa da
+Party (canários)», que só varre `x.caixa`, não a vê; e como só o snapshot do `escolherCaixa` a leva, quem não chama o op
+`caixa` a meio do guião também não. Só a (b), que varre a mensagem inteira depois de 3 escolhas da caixa, a apanha.
 
 ## Números das corridas
 
