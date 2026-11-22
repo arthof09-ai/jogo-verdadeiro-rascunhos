@@ -1,0 +1,7 @@
+# B3 — o lançador imprimia o info do servidor tal como está (com a chave "pin") no stdout
+## base 6148f79, a linha que imprimia:
+29:  cat "$T/info-$1.json"; echo
+## o info que essa linha imprimia (os desta corrida, na pasta tmp da sede): quantas chaves "pin"
+info-cliente-hud.json: 1
+info-cliente-manequim.json: 1
+## depois (este ramo): linhas com cat do info: 0; chave "pin" no stdout do lançador desta corrida: 0

@@ -1,0 +1,16 @@
+# B1 — verificação por grep na árvore do ramo (git grep: ficheiros seguidos; fora do histórico). Só contagens,
+# nunca o valor. Este ficheiro não conta para si mesmo.
+ficheiros com o PIN antigo 20261116: 0
+ficheiros com o PIN novo: 5
+  provas/ordem-caixa-hud-jogadora/ferramentas/prova_caixa_jogadora.gd
+  provas/ordem-caixa-janela/ferramentas/prova_caixa_janela.gd
+  provas/ordem-caixa-manequim/ferramentas/prova_caixa_manequim.gd
+  provas/ordem-caixa/ferramentas/prova_caixa_reentrar.gd
+  rascunhos/servidor/autojogo/cenario-bancada.json
+ocorrências do PIN novo: 6
+o PIN novo nos registos de b7-correcoes-5/: 0
+chave "pin" com valor ("pin":) nos registos de b7-correcoes-5/: 0
+servidor-info.json no ramo: 0
+ficheiros de provas/ com o caminho da casa do PC (C:/Users/<utilizador>): 38
+  (38 na base 6148f79 também: nenhum dos 58 apagados pela B1 trazia o caminho, e nada desta ordem o traz)
+ficheiros de b7-correcoes-5/ com o nome do utilizador ou AppData: 0

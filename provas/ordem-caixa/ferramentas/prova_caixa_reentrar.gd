@@ -5,7 +5,7 @@ extends SceneTree
 ##
 ##   node provas/ordem-caixa/ferramentas/servidor-bancada-prova.mjs --porta=8791 --semente=7 --info=<f> --motor=<vlab>
 ##   xvfb-run -s "-screen 0 1280x720x24" godot --rendering-driver opengl3 --resolution 1280x720 \
-##     --path rascunhos/cliente -s <esta ferramenta> -- --servidor=127.0.0.1:8791 --saida=<pasta> [--pin=20261116]
+##     --path rascunhos/cliente -s <esta ferramenta> -- --servidor=127.0.0.1:8791 --saida=<pasta> [--pin=81052918516180889851]
 ##
 ## Passos (as jogadas da bancada vão por lugares próprios, como no autojogo; o Mestre que sai e entra é o ecrã a sério):
 ##   0. o Mestre da bancada põe as criaturas e começa; a IA de bancada joga as primeiras vezes (a ordem dinâmica forma-se
@@ -27,7 +27,7 @@ const VEZES_A_JOGAR := 3
 var _args := {}
 var _saida := ""
 var _url := ""
-var _pin := "20261116"
+var _pin := "81052918516180889851"
 var _total := 0
 var _falhas := 0
 var _relato: PackedStringArray = []

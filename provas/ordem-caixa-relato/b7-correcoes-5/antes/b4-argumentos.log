@@ -1,0 +1,12 @@
+# B4 — o script da B7-CORRECOES-4 (antes) e o da B7-CORRECOES-5 (depois), com argumentos errados
+## correr-mutacoes-b7-correcoes-4.sh
+sem argumentos: rc=1
+só um argumento: rc=1
+## correr-mutacoes-b7-correcoes-5.sh
+sem argumentos: rc=2
+só um argumento: rc=2
+godot que não existe: rc=2
+base desconhecida: rc=3
+argumentos a mais: rc=2
+## a mensagem do novo, sem argumentos (stderr)
+uso: correr-mutacoes-b7-correcoes-5.sh <godot.exe> <pasta-saída> [<base>] [<base-r1>]

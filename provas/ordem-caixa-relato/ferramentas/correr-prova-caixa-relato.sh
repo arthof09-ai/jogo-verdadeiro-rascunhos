@@ -12,6 +12,8 @@
 # Ordem CAIXA-RELATO-CORRECOES-7 (B5): a <pasta-tmp> e a <pasta-saída> são absolutizadas à entrada. O Godot corre com
 # `--path rascunhos/cliente` e lê o `--saida` a partir daí: com um caminho relativo, as saídas iam parar a
 # `rascunhos/cliente/<pasta>/`. Um caminho relativo conta agora a partir da pasta de onde se chamou o script.
+# Ordem CAIXA-RELATO-B7-CORRECOES-5: B1 — o PIN de bancada foi rodado e os 58 info/log antigos com o PIN velho saíram
+# do ramo; B3 — o info imprime-se no stdout SEM a chave "pin".
 ORIGEM=$PWD
 cd "$(dirname "$0")/../../.." || exit 9
 G=${1:?godot}; MOTOR=${2:?motor}; T=${3:?tmp}
@@ -33,7 +35,9 @@ correr() {  # <nome> <ferramenta.gd> <porta>
     --motor="$MOTOR" --vida-max-s=900 > "$T/servidor-$1.log" 2>&1 &
   local SRV=$!
   for i in $(seq 1 30); do [ -f "$T/info-$1.json" ] && break; sleep 1; done
-  cat "$T/info-$1.json"; echo
+  # B7-CORRECOES-5 (B3): o info já não se imprime tal como está (trazia a chave "pin" para o stdout) — só sem ela.
+  node -e 'const i = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")); delete i.pin; console.log(JSON.stringify(i))' \
+    "$T/info-$1.json" || echo "(info do servidor ilegível: $T/info-$1.json)"
   timeout 900 "$G" --resolution 1280x720 --path rascunhos/cliente \
     -s "$PWD/$2" -- --servidor=127.0.0.1:$3 --saida="$S" > "$T/prova-$1.log" 2>&1
   local r=$?

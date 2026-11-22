@@ -399,3 +399,33 @@ Correr de novo: `bash provas/ordem-caixa-relato/ferramentas/correr-prova-caixa-r
 <pasta-tmp> provas/ordem-caixa-relato/correcoes-7`; `bash provas/ordem-caixa-relato/ferramentas/correr-mutacoes.sh
 <godot.exe> <vlab-completo.js> <pasta-tmp> <base4|novo> <registo.log>`; `node
 provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs [--velho] provas/ordem-caixa-relato/correcoes-4/mutacoes.log`.
+
+# Correcções B1–B6 da conferência da B7-CORRECOES-4 (Ordem CAIXA-RELATO-B7-CORRECOES-5 · 22/11/2026, Claude conta 1, PC)
+
+As corridas estão em **`b7-correcoes-5/`** (as de cima ficam como estavam).
+
+- **B1 (D1) — o PIN de bancada foi rodado, e só depois se apagaram os ficheiros com o antigo.** O valor novo é
+  aleatório, de 20 dígitos (não é uma data). Tem de ser só de dígitos: a sala exige `/^\d{6,}$/` para o PIN do Mestre
+  (E-P9, `rascunhos/servidor/nucleo/sala.js`), e o código do servidor não é desta ordem. Está só como literal em
+  `rascunhos/servidor/autojogo/cenario-bancada.json` e nos 4 `.gd` das provas (`prova_caixa_jogadora.gd`,
+  `prova_caixa_janela.gd`, `prova_caixa_manequim.gd`, `prova_caixa_reentrar.gd`), nunca em logs cometidos. Depois de
+  rodar, saíram do ramo os **58** `servidor-info.json` + `servidor.log` (29 + 29) que traziam o antigo, aqui e nas pastas
+  `provas/ordem-caixa*/`. As referências antigas a `servidor-info.json` nos README dessas ordens ficam como registo; o
+  histórico do git guarda o valor antigo, que já não abre nada.
+- **B2 (D2) — os logs das mutações saem sem a pasta temporária.** `ferramentas/correr-mutacoes-b7-correcoes-5.sh` troca a
+  pasta (nas três grafias) por `<tmp>` em cada log, e sai com 6 se algum log ainda levar a pasta, a casa ou o nome do
+  utilizador.
+- **B3 (D3) — o lançador já não imprime o PIN.** O `correr-prova-caixa-relato.sh` imprime o info do servidor sem a chave
+  `"pin"` (antes era `cat` do ficheiro).
+- **B4 (D4) — argumentos validados no início:** em falta, a mais ou um `<godot>` que não existe → código 2; uma base que o
+  git não conhece → 3.
+- **B5 (D5) — uma corrida que morre a meio não é «NAO-BATE».** Código do Godot ≠ 0 e ≠ 1, log vazio ou sem a linha «N de M
+  verificações passaram» → a linha diz `FALHA-DA-CORRIDA (motivo)` e o script sai com 4. Com um Godot cujo log se corta
+  e que sai com 1, o script antigo chegava a dar **13 BATE falsos**; o novo dá 34 `FALHA-DA-CORRIDA`
+  (`b7-correcoes-5/antes/b5-*.log`). A correcção do separador não-ASCII da B7-CORRECOES-4 conta como parte da B5.
+- **B6 (D6 + D7)** — corrigidos no `ESTADO-FINAL-ORDEM-CAIXA-RELATO-B7-CORRECOES-4.md`: 8 → 2 ecos (com a nota da
+  primeira corrida) e 36 → 38 ficheiros com o caminho da casa do PC.
+
+Correr de novo: `bash provas/ordem-caixa-relato/ferramentas/correr-mutacoes-b7-correcoes-5.sh <godot.exe> <pasta-saída>
+[<base> (c847966)] [<base-r1> (a12b905)]`; as provas vivas como acima, com `"$PWD/provas/ordem-caixa-relato/b7-correcoes-5"`.
+Os números estão no `ESTADO-FINAL-ORDEM-CAIXA-RELATO-B7-CORRECOES-5.md`, na raiz.

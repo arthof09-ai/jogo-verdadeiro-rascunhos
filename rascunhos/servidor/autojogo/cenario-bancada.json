@@ -4,7 +4,7 @@
   "fichas": "fichas-bancada.json",
   "mapa": { "largura": 20, "altura": 20 },
   "mapaId": "floresta",
-  "pin": "20261116",
+  "pin": "81052918516180889851",
   "iniciativa": { "arqueira-bancada": 16, "lobo-bancada": 14, "espadachim-bancada": 12, "bruto-bancada": 10 },
   "heroinas": [
     { "fichaId": "espadachim-bancada", "nome": "Espadachim de Bancada", "senha": "bancada-espadachim", "casa": { "x": 8, "y": 5 } },

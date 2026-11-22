@@ -1,0 +1,78 @@
+
+== Ordem CAIXA-RELATO — o registo da caixa da jogadora no relato da prova ==
+  ok    acabado de chegar: o JSON do snapshot é a caixa actual
+  ok    acabado de chegar: a linha diz «JSON actual», sem «DESACTUALIZADO»
+  ok    acabado de chegar: a linha diz de que snapshot é (seq, revisão, hora com ms, 0 eventos, nenhum tipo, 0 de actor)
+  ok    acabado de chegar: a linha traz o JSON do snapshot tal como chegou
+  ok    a hora é HH:MM:SS.mmm (08:41:38.644)
+  ok    a hora é a LOCAL do sistema (fuso Hora oficial do Brasil, bias -180 min): 08:41:38 ∈ [08:41:38, 08:41:38] e 08:41:38 ∈ [08:41:38, 08:41:38]
+  ok    a hora soma o fuso INJECTADO (não depende do fuso desta máquina): bias −180 → 08:06:40.250 (08:06:40.250), bias +330 → 16:36:40.250 (16:36:40.250)
+  ok    dois snapshots com o mesmo seq e revisão, a 20 ms um do outro, dão linhas diferentes (08:41:38.644 ≠ 08:41:38.664)
+  ok    um `encerrar` (o `turno` que produz): exactamente 1 evento, de tipo turno, 0 de actor
+  ok    um `encerrar` não muda a caixa: o JSON continua o actual e a linha diz «1 evento … [turno], 0 de actor» (sem «que a adiantaram»)
+  ok    um evento de actor que não muda a caixa: o JSON continua o actual (e diz que houve 1 evento, de actor)
+  ok    o modelo do HUD adiantou-se pelos eventos de actor: 4 figuras, fechada true, Arqueira na vez (a caixa actual)
+  ok    o evento `estado` (com figuraId) não é de actor
+  ok    contagem exacta: 7 eventos aplicados, 3 de actor, os tipos pela ordem (com o `estado`)
+  ok    depois dos eventos: o JSON do snapshot já NÃO é a caixa actual
+  ok    a linha marca «DESACTUALIZADO» ANTES do JSON velho (lê-se a marca primeiro)
+  ok    a mesma linha imprime a caixa ACTUAL depois do JSON velho
+  ok    lêem-se as duas: a velha (fechada false) e a actual (fechada true)
+  ok    a linha diz de que snapshot é o velho (seq 9, revisão 31, 7 eventos com os tipos, 3 de actor) e a revisão da actual (35)
+  ok    o JSON velho nunca passa por actual; a linha não diz «que a adiantaram»
+  ok    seq e revisão (floats do JSON) escritos como inteiros
+  ok    sem caixa no snapshot: nada desactualizado
+  ok    a privacidade varre as 6 linhas, 5 delas «JSON actual» (não só a do §4; 6 linhas, 5 actuais)
+  ok    nenhuma linha ganha nomes, vida, alma nem PA, nem nada fora das chaves e palavras permitidas []
+  linha: 1: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica — JSON actual (do ROOM_SNAPSHOT seq 9, revisão 31, aplicado às 21:30:00.125; 0 evento(s) aplicado(s) depois dele [], 0 de actor (só esses podem adiantá-la); a caixa dela é esta): {"ligada":true,"ordemDinamica":{"fechada":false,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"],"ultimo":"f20af3254ba898103"},"ordemPor":"dinamico"}
+  linha: x: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica — JSON actual (do ROOM_SNAPSHOT seq 13, revisão 10, aplicado às 08:41:38.644; 0 evento(s) aplicado(s) depois dele [], 0 de actor (só esses podem adiantá-la); a caixa dela é esta): {"ligada":true,"ordemDinamica":{"fechada":false,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"],"ultimo":"f20af3254ba898103"},"ordemPor":"dinamico"}
+  linha: x: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica — JSON actual (do ROOM_SNAPSHOT seq 13, revisão 10, aplicado às 08:41:38.664; 0 evento(s) aplicado(s) depois dele [], 0 de actor (só esses podem adiantá-la); a caixa dela é esta): {"ligada":true,"ordemDinamica":{"fechada":false,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"],"ultimo":"f20af3254ba898103"},"ordemPor":"dinamico"}
+  linha: e: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica — JSON actual (do ROOM_SNAPSHOT seq 9, revisão 31, aplicado às 21:30:01.000; 1 evento(s) aplicado(s) depois dele [turno], 0 de actor (só esses podem adiantá-la); a caixa dela é esta): {"ligada":true,"ordemDinamica":{"fechada":false,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"],"ultimo":"f20af3254ba898103"},"ordemPor":"dinamico"}
+  linha: x: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica — JSON actual (do ROOM_SNAPSHOT seq 9, revisão 31, aplicado às 21:30:02.000; 1 evento(s) aplicado(s) depois dele [movimento], 1 de actor (só esses podem adiantá-la); a caixa dela é esta): {"ligada":true,"ordemDinamica":{"fechada":false,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"],"ultimo":"f20af3254ba898103"},"ordemPor":"dinamico"}
+  linha: 4: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica — JSON DESACTUALIZADO (é o do ROOM_SNAPSHOT seq 9, revisão 31, aplicado às 21:30:00.125; 7 evento(s) aplicado(s) depois dele [movimento, turno, movimento, ataque, dano, estado, turno], 3 de actor (só esses podem adiantá-la)): {"ligada":true,"ordemDinamica":{"fechada":false,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"],"ultimo":"f20af3254ba898103"},"ordemPor":"dinamico"} · a caixa ACTUAL dela (revisão 35): {"ligada":true,"ordemDinamica":{"fechada":true,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103","f1c67641aa5cdfe28"],"ultimo":"ff2acf60bd672e76e"},"ordemPor":"dinamico"}
+SCRIPT ERROR: Invalid operands 'int' and 'bool' in operator '=='.
+   at: carregar_do_servidor (res://hud/ordem_turnos.gd:128)
+   GDScript backtrace (most recent call first):
+       [0] carregar_do_servidor (res://hud/ordem_turnos.gd:128)
+       [1] <anonymous lambda> (<tmp>/novo/_mutacao_teste.gd:534)
+       [2] _caso_limpar (<tmp>/novo/_mutacao_teste.gd:549)
+       [3] _init (<tmp>/novo/_mutacao_teste.gd:275)
+SCRIPT ERROR: Invalid operands 'int' and 'bool' in operator '=='.
+   at: _od_normal (<tmp>/novo/relato_caixa.gd:60)
+   GDScript backtrace (most recent call first):
+       [0] _od_normal (<tmp>/novo/relato_caixa.gd:60)
+       [1] desactualizado (<tmp>/novo/relato_caixa.gd:67)
+       [2] linha (<tmp>/novo/relato_caixa.gd:119)
+       [3] <anonymous lambda> (<tmp>/novo/_mutacao_teste.gd:539)
+       [4] _caso_limpar (<tmp>/novo/_mutacao_teste.gd:549)
+       [5] _init (<tmp>/novo/_mutacao_teste.gd:275)
+  ok    B7 antes do limpar(): a verificação B2 passa — 2 evento(s) ["movimento","turno"] no relato = os 2 ["movimento","turno"] que o Estado guarda desde o snapshot (esperados ["movimento","turno"])
+  ok    B7: depois do limpar() o Estado fica sem snapshot e sem eventos de depois dele (ficaram 0; antes da B7 ficavam os 2 do snapshot velho)
+  ok    B7 limpar() sem snapshot novo: a verificação B2 passa — 0 evento(s) [] no relato = os 0 [] que o Estado guarda desde o snapshot (esperados [])
+  ok    B7 um evento depois do limpar(), ainda sem snapshot: a verificação B2 passa — 0 evento(s) [] no relato = os 0 [] que o Estado guarda desde o snapshot (esperados [])
+SCRIPT ERROR: Invalid operands 'int' and 'bool' in operator '=='.
+   at: carregar_do_servidor (res://hud/ordem_turnos.gd:128)
+   GDScript backtrace (most recent call first):
+       [0] carregar_do_servidor (res://hud/ordem_turnos.gd:128)
+       [1] <anonymous lambda> (<tmp>/novo/_mutacao_teste.gd:534)
+       [2] _caso_limpar (<tmp>/novo/_mutacao_teste.gd:558)
+       [3] _init (<tmp>/novo/_mutacao_teste.gd:275)
+SCRIPT ERROR: Invalid operands 'int' and 'bool' in operator '=='.
+   at: _od_normal (<tmp>/novo/relato_caixa.gd:60)
+   GDScript backtrace (most recent call first):
+       [0] _od_normal (<tmp>/novo/relato_caixa.gd:60)
+       [1] desactualizado (<tmp>/novo/relato_caixa.gd:67)
+       [2] linha (<tmp>/novo/relato_caixa.gd:119)
+       [3] <anonymous lambda> (<tmp>/novo/_mutacao_teste.gd:539)
+       [4] _caso_limpar (<tmp>/novo/_mutacao_teste.gd:558)
+       [5] _init (<tmp>/novo/_mutacao_teste.gd:275)
+  ok    B7 o snapshot novo e um evento: a verificação B2 passa — 1 evento(s) ["turno"] no relato = os 1 ["turno"] que o Estado guarda desde o snapshot (esperados ["turno"])
+  ok    B7-CORRECOES: a varredura do caso do limpar() cobre as 4 linhas do relato, cada uma presa pelo rótulo e pela origem (B7-1 seq 1, B7-2 seq 0, B7-3 seq 0 com o mesmo corpo da B7-2, B7-4 seq 5; 4 linhas)
+  FALHA B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria`, nem nada fora das chaves e palavras permitidas ["valor(es) fora da forma: 3"]
+  FALHA B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria`, nem nada fora das chaves e palavras permitidas ["valor(es) fora da forma: 3"]
+  linha B7-1: RETIDA (não se imprime; tem ["valor(es) fora da forma: 1"])
+  linha: B7-2: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica — JSON actual (do ROOM_SNAPSHOT seq 0, revisão ?, aplicado às 08:41:39.167; 0 evento(s) aplicado(s) depois dele [], 0 de actor (só esses podem adiantá-la); a caixa dela é esta): {}
+  linha: B7-3: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica — JSON actual (do ROOM_SNAPSHOT seq 0, revisão ?, aplicado às 08:41:39.167; 0 evento(s) aplicado(s) depois dele [], 0 de actor (só esses podem adiantá-la); a caixa dela é esta): {}
+  linha B7-4: RETIDA (não se imprime; tem ["valor(es) fora da forma: 2"])
+
+teste do relato da caixa: 30 de 31 verificações passaram.
