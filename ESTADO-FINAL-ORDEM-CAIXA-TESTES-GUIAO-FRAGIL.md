@@ -2,6 +2,10 @@
 
 **Ramo:** `claude1/caixa-testes-guiao-fragil`, sobre `fable/integracao-50` @ `5bc5c72` (a ponta à hora do lançamento).
 **Não fundido** — a fusão é do coordenador.
+
+> **Corrigido pela Ordem CAIXA-TESTES-GUIAO-FRAGIL-CORRECOES** (sentença da conferência da CAIXA-TESTES-GUIAO-FRAGIL,
+> B1 e B3): a errata da secção B1 e do ponto 2 e a frase do ponto 4 levam a marca «[GUIAO-FRAGIL-CORRECOES Bn]».
+> Ver `ESTADO-FINAL-ORDEM-CAIXA-TESTES-GUIAO-FRAGIL-CORRECOES.md`.
 **Commits:** `0368a78` (B1–B3: teste + provas) e o commit das listas da retoma + este ESTADO-FINAL (o último do ramo).
 
 **Território mexido:** em `rascunhos/` só `rascunhos/servidor/testes/privacidade.test.mjs`. Fora de `rascunhos/`:
@@ -10,6 +14,12 @@
 (a mutação M3 tocou `nucleo/ordem-dinamica.js` só durante a corrida e foi revertida com `git checkout`).
 
 ## B1 — reproduzir primeiro (executada antes e depois da correcção)
+
+> **Errata [GUIAO-FRAGIL-CORRECOES B3].** Pela letra da ordem, «duas voltas» são voltas **inteiras** — e essas
+> (variante B) **não** reproduzem a fragilidade. As «duas voltas» desta ordem ficam lidas como as do **caminho da
+> M51b** (variante A): é a reprodução válida, o único caminho onde a ordem da Party muda depois das escolhas. A
+> variante B é **informativa** e não parte o 1.º teste. O juiz aceitou esta leitura; a sanidade nova é independente
+> do caminho (só depende do instante do snapshot).
 
 Guião: `provas/ordem-caixa-testes-guiao-fragil/b1-repro.py` (gera cópias do `privacidade.test.mjs` do repo com o
 guião estendido, corre-as com `node --test` e escreve o log). Logs cometidos: `b1-antes.log` (HEAD `5bc5c72`, sem
@@ -101,7 +111,9 @@ depois `conferirCanariosDoMestre(m)` inteiro. Passa. A M51b (com «voltar») con
 1. **420 vs 421.** A ordem pede «420/420 com o controlo novo incluído». A base já tem 420; o controlo é um teste
    novo, por isso o ramo dá **421/421**. Pus o controlo num teste à parte (falha com nome próprio) em vez de o meter
    dentro de outro teste só para o total dar 420. Se o coordenador o quiser dentro do 1.º teste, é mudar uma linha.
-2. **O caminho exacto da fragilidade.** A conferência não está neste PC. Fui pela letra da ordem e da nota do
+2. **O caminho exacto da fragilidade.** (Errata [GUIAO-FRAGIL-CORRECOES B3]: as «duas voltas» da ordem são as do
+   caminho da M51b — variante A, a reprodução válida; a variante B, voltas inteiras, é informativa e não parte o 1.º
+   teste. Ver a errata no topo da secção B1.) A conferência não está neste PC. Fui pela letra da ordem e da nota do
    ESTADO-FINAL-6. Duas voltas **inteiras** sem «voltar» **não** partem o 1.º teste (variante B). O que parte são as
    duas voltas da M51b sem «voltar» (variante A), em que a ordem da Party troca o lobo e o orc. Se o caminho dos
    críticos for outro, vale a pena corrê-lo contra este ramo: a sanidade nova não depende da volta em que o guião
@@ -111,7 +123,10 @@ depois `conferirCanariosDoMestre(m)` inteiro. Passa. A M51b (com «voltar») con
    guarda «reconstruída = a da sala» falha alto se a regra do servidor mudar sem a função acompanhar. Limite
    declarado: duas batalhas no mesmo journal sem `recomeco` falham alto (não modelado).
 4. **O instante pelo `ts`** pressupõe o relógio da mesa a andar a cada transacção (`ajudantes.mjs` `relogio`, passo
-   250 ms). Com um relógio parado, o instante sai cedo demais e a sanidade falha alto, não calada.
+   250 ms). ~~Com um relógio parado, o instante sai cedo demais e a sanidade falha alto, não calada.~~
+   [GUIAO-FRAGIL-CORRECOES B1] Com um relógio parado, o instante sai **tarde demais**: pela fórmula `e.ts <= s.ts`,
+   com os `ts` todos empatados, o instante salta para o **último evento do journal** (o fim), não para um ponto
+   anterior. A conclusão prática mantém-se: em geral a sanidade falha alto, não calada.
 5. **Margem do canário 51:** não mexi. Com o controlo, o guião vai além do `seq` 38 (o caminho da M51b já ia); os
    contadores `seq` < 100 estão isentos em `procurarCanarios`, e o controlo passa.
 6. **O CI** do último commit não fica registado aqui, porque o commit das listas tem de ser o último. O resultado vai
