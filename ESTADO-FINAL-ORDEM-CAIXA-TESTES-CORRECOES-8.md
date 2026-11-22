@@ -43,9 +43,13 @@ mensagens da própria aliada no guião da M51b — é dela, não é colisão (CA
 - `voltar` (l. 3190): emite `cartao_fechado` para os cartões abertos nascidos depois de `ateSeq` (l. 3208),
   `revertido` (l. 3212) e `cartao` para os cartões reabertos (l. 3227). Não chama `emitirEstado`.
 - `recomecarBatalha` (l. 2887): emite `recomeco` (l. 2920). Também fecha os cartões abertos (`fecharCartoesAbertos`,
-  `cartao_fechado`) e abre a vez (`iniciarVez`, `turno`). O `emitirEstado` de `iniciarVez` só corre para uma figura
-  `caido`, e a `novaFigura` (l. 549) põe `caido: false`. O fogo é limpo antes, por isso o tick não deita ninguém.
+  `cartao_fechado`) e abre a vez (`iniciarVez`, `turno`). ~~O `emitirEstado` de `iniciarVez` só corre para uma figura
+  `caido`, e a `novaFigura` (l. 549) põe `caido: false`.~~ O fogo é limpo antes, por isso o tick não deita ninguém.
   Nenhum `estado`.
+  **Corrigido na CAIXA-TESTES-CORRECOES-9 (B2), 22/11/2026:** a `novaFigura` (`sala.js` l. 549) repõe `caido: false`
+  **e** `estadoMorte: null`. O primeiro fecha o `emitirEstado` do ramo da figura caída em `iniciarVez` (l. 1447); o
+  segundo fecha o caminho do teste de morte (`iniciarVez` → `testeDeMorte` só com `estadoMorte.fase === 'aMorrer'`, e
+  `testeDeMorte` chama `emitirEstado` na l. 1494).
 - O `revertido` sai com `tx.emitir('revertido', {}, { ateSeq })`: os dados do evento são `{}`. O `(`{ ateSeq }`)` do
   texto antigo também não era exacto. Saiu.
 

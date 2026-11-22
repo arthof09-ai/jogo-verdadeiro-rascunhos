@@ -97,9 +97,12 @@ datada, no ESTADO-FINAL-6 (B1). Fica a regra: se um valor baixo colidir, a falha
 - ~~`voltar` emite só `revertido` (`{ ateSeq }`), mais um `cartao_fechado` para os cartões que nasceram depois. Repõe a
   Vida do checkpoint sem `estado`.~~
 - ~~`recomecar` emite só `recomeco` (`{}`). Repõe a Vida máxima pela `novaFigura`, sem `estado`.~~
-- **Corrigido na CAIXA-TESTES-CORRECOES-8 (B3), 22/11/2026:** o «voltar» emite `revertido` (mais
-  `cartao_fechado`/`cartao` para os cartões) e o «recomeçar» emite `recomeco`, nenhum emite `estado`. O «voltar» repõe a
-  Vida do checkpoint; o «recomeçar» repõe a Vida máxima pela `novaFigura`.
+- **Corrigido na CAIXA-TESTES-CORRECOES-8 (B3), 22/11/2026:** ~~o «voltar» emite `revertido` (mais
+  `cartao_fechado`/`cartao` para os cartões) e o «recomeçar» emite `recomeco`, nenhum emite `estado`.~~ O «voltar» repõe
+  a Vida do checkpoint; o «recomeçar» repõe a Vida máxima pela `novaFigura`.
+- **Completado na CAIXA-TESTES-CORRECOES-9 (B1), 22/11/2026:** o «voltar» emite `revertido` (mais
+  `cartao_fechado`/`cartao` para os cartões) e o «recomeçar» emite `recomeco` (mais `cartao_fechado` para os cartões
+  abertos e `turno` para a vez nova), nenhum emite `estado`.
 - O `estado` vem de `emitirEstado`, chamado pelas acções do jogo.
 
 **Corrigido:** o comentário já não diz que o `estado` regista cada mudança. Diz que o «voltar» e o «recomeçar» mudam a
@@ -126,9 +129,13 @@ estado da sala.
    conferência puser a chave só quando há valor, a conferência e o PC batem certo, linha a linha.
 2. **A fixture como detector, só de passagem.** ~~`fixture-mestre` apanha qualquer chave nova no snapshot da jogadora,
    mesmo vazia, mas não o valor. Não é guarda de privacidade e não conta como tal.~~
-   **Corrigido na CAIXA-TESTES-CORRECOES-8 (B1), 22/11/2026:** a fixture compara o ficheiro inteiro do cenário da
+   **Corrigido na CAIXA-TESTES-CORRECOES-8 (B1), 22/11/2026:** ~~a fixture compara o ficheiro inteiro do cenário da
    desgraça — qualquer mudança (chave ou valor) nas mensagens da jogadora aí guardadas fá-la falhar; fora desse cenário
-   não vê nada; e não distingue fuga de mudança legítima, por isso não é guarda.
+   não vê nada; e não distingue fuga de mudança legítima, por isso não é guarda.~~
+   **Apertado na CAIXA-TESTES-CORRECOES-9 (B3), 22/11/2026:** a fixture compara o ficheiro inteiro — qualquer mudança
+   (chave ou valor) nas mensagens da jogadora do cenário da desgraça aí guardadas fá-la falhar; mensagens da jogadora
+   fora desse cenário não são guardadas, por isso não as vê; e não distingue fuga de mudança legítima, por isso não é
+   guarda.
 3. **A fragilidade do guião** (duas voltas sem «voltar» partem «a ordem no snapshot do escolherCaixa») fica, como
    decidido, para uma ordem futura. Aparece outra vez aqui, na M51-fim e na M51-fim+M51.
 4. **O ESTADO-FINAL-4 l. 42** fica como registo histórico, como decidido.

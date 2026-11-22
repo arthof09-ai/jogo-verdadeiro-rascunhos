@@ -150,9 +150,10 @@ function voltaInteira(m, parar = () => false) {
 // e uma guarda só com o do fim passava calada. O histórico vem de: a Vida máxima (o valor de partida, da ficha), cada
 // evento `estado` do journal com a `vidaActual` dessa figura, o valor final do estado da sala e — com `proprias` — a
 // `propria` de cada snapshot que a própria recebeu. O journal nunca apaga história, nem no «voltar».
-// Ordem CAIXA-TESTES-CORRECOES-7 (B3), precisado na CAIXA-TESTES-CORRECOES-8 (B3): o `estado` NÃO regista todas as
-// mudanças da Vida. As acções do jogo emitem-no, mas o «voltar» e o «recomeçar» mudam a Vida sem ele: o «voltar» emite
-// `revertido` (mais `cartao_fechado`/`cartao` para os cartões) e o «recomeçar» emite `recomeco`, nenhum emite `estado`.
+// Ordem CAIXA-TESTES-CORRECOES-7 (B3), precisado na CAIXA-TESTES-CORRECOES-8 (B3) e na CAIXA-TESTES-CORRECOES-9 (B1): o
+// `estado` NÃO regista todas as mudanças da Vida. As acções do jogo emitem-no, mas o «voltar» e o «recomeçar» mudam a
+// Vida sem ele: o «voltar» emite `revertido` (mais `cartao_fechado`/`cartao` para os cartões) e o «recomeçar» emite
+// `recomeco` (mais `cartao_fechado` para os cartões abertos e `turno` para a vez nova), nenhum emite `estado`.
 // Hoje isso não abre buraco: o «voltar» repõe a Vida de um instante anterior do guião, o «recomeçar» repõe a máxima (a
 // de partida), e a Vida do fim entra sempre pelo estado da sala.
 // Ordem CAIXA-TESTES-CORRECOES-6 (B1), parágrafo reescrito na CAIXA-TESTES-CORRECOES-7 (B2): só o 0 fica de fora. NÃO é o
