@@ -44,6 +44,9 @@ for f in "${FICH[@]}"; do k=$(echo "$f" | tr / _)
 done
 repor_limpo() { for f in "${FICH[@]}"; do k=$(echo "$f" | tr / _); cp "$T/limpo/$k" "$f"; done; }
 
+# B7-CORRECOES-6 (B1): PIN fresco por corrida (o servidor e as provas já não têm PIN no repositório; nunca se escreve).
+PIN=$(node -e 'const c = require("crypto"); let s = ""; for (let i = 0; i < 20; i++) s += c.randomInt(10); process.stdout.write(s)') || exit 9
+
 correr_teste() {  # <saída>
   timeout 120 "$G" --headless --path rascunhos/cliente -s "$PWD/provas/ordem-caixa-relato/ferramentas/teste_relato_caixa.gd" > "$1" 2>&1
 }
@@ -51,11 +54,11 @@ correr_prova() {  # <hud|manequim> <saída> <porta>
   local fer=provas/ordem-caixa-hud-jogadora/ferramentas/prova_caixa_jogadora.gd
   [ "$1" = manequim ] && fer=provas/ordem-caixa-manequim/ferramentas/prova_caixa_manequim.gd
   local S="$T/saida-$1"; rm -rf "$S"; mkdir -p "$S"; rm -f "$T/info-mut.json"
-  node provas/ordem-caixa-hud-jogadora/ferramentas/servidor-bancada-prova.mjs --porta=$3 --semente=7 --info="$T/info-mut.json" \
+  node provas/ordem-caixa-hud-jogadora/ferramentas/servidor-bancada-prova.mjs --porta=$3 --semente=7 --info="$T/info-mut.json" --pin="$PIN" \
     --motor="$MOTOR" --vida-max-s=900 > "$T/servidor-mut.log" 2>&1 &
   local SRV=$!
   for i in $(seq 1 30); do [ -f "$T/info-mut.json" ] && break; sleep 1; done
-  timeout 900 "$G" --resolution 1280x720 --path rascunhos/cliente -s "$PWD/$fer" -- --servidor=127.0.0.1:$3 --saida="$S" > "$2" 2>&1
+  timeout 900 "$G" --resolution 1280x720 --path rascunhos/cliente -s "$PWD/$fer" -- --servidor=127.0.0.1:$3 --saida="$S" --pin="$PIN" > "$2" 2>&1
   local r=$?
   kill $SRV 2>/dev/null; wait $SRV 2>/dev/null
   return $r

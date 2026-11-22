@@ -48,6 +48,7 @@ var _t0 := 0
 var _limite_ms := 600000
 var _vezes: Dictionary = {}  # "rodada|figuraId" → {andou, atacou, accoes}
 var _ordem_vezes: Array = []
+var _pin := ""  # B7-CORRECOES-6 (B1): o PIN do Mestre gera-se fresco por partida (já não está no cenário cometido)
 var _parado := false  # uma falha pára tudo (o quit só acontece depois do fecho do servidor)
 
 
@@ -204,7 +205,12 @@ func _correr() -> void:
 	var info_path := caminho_registo + ".info.json"
 	if FileAccess.file_exists(info_path):
 		DirAccess.remove_absolute(info_path)
-	var a_srv := [script_srv, "--porta=%d" % porta, "--semente=%d" % _semente, "--info=" + info_path,
+	# B7-CORRECOES-6 (B1): o PIN do Mestre é fresco por partida (20 dígitos, do Crypto) e só vive na memória dos dois
+	# processos — não se escreve no registo nem no repositório. Não toca no dado semeado (o rng da sala é outro).
+	var bytes := Crypto.new().generate_random_bytes(20)
+	for i in bytes.size():
+		_pin += str(bytes[i] % 10)
+	var a_srv := [script_srv, "--porta=%d" % porta, "--semente=%d" % _semente, "--info=" + info_path, "--pin=" + _pin,
 		"--cenario=" + caminho_cenario, "--vida-max-s=%d" % int(_limite_ms / 1000 + 60)]
 	if _args.has("motor"):
 		a_srv.append("--motor=" + str(_arg("motor")))
@@ -230,7 +236,7 @@ func _correr() -> void:
 
 	# 2. o Mestre da bancada (primeiro: as entradas sempre pela mesma ordem, para o dado semeado andar igual)
 	_mestre = Lugar.new("mestre", _semente)
-	_mestre.ligar(_url, {"v": 2, "type": "ROOM_JOIN", "papel": "mestre", "pin": str(_cenario["pin"]), "cliente": Lugar.VERSAO})
+	_mestre.ligar(_url, {"v": 2, "type": "ROOM_JOIN", "papel": "mestre", "pin": _pin, "cliente": Lugar.VERSAO})
 	if not await _esperar(func(): return _mestre.na_mesa and _mestre.vistas_recebidas > 0, 20.0):
 		_falhar("o Mestre da bancada não entrou: %s" % [_mestre.erros])
 		return

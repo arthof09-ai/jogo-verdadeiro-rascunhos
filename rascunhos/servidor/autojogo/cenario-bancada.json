@@ -1,10 +1,9 @@
 {
   "formato": "cenario-autojogo/1",
-  "nota": "Cenário de bancada FICTÍCIO (Ordem AUTOJOGO): 2 heroínas contra 2 criaturas na grelha 20 x 20 da arena. Nada daqui é cânone. O PIN e as senhas são da bancada (servidor só em 127.0.0.1, uma partida, fecha no fim).",
+  "nota": "Cenário de bancada FICTÍCIO (Ordem AUTOJOGO): 2 heroínas contra 2 criaturas na grelha 20 x 20 da arena. Nada daqui é cânone. As senhas são da bancada (servidor só em 127.0.0.1, uma partida, fecha no fim). O PIN do Mestre NÃO está aqui (Ordem CAIXA-RELATO-B7-CORRECOES-6): quem lança o servidor gera um fresco por corrida e passa-o por --pin=.",
   "fichas": "fichas-bancada.json",
   "mapa": { "largura": 20, "altura": 20 },
   "mapaId": "floresta",
-  "pin": "81052918516180889851",
   "iniciativa": { "arqueira-bancada": 16, "lobo-bancada": 14, "espadachim-bancada": 12, "bruto-bancada": 10 },
   "heroinas": [
     { "fichaId": "espadachim-bancada", "nome": "Espadachim de Bancada", "senha": "bancada-espadachim", "casa": { "x": 8, "y": 5 } },

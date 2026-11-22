@@ -5,7 +5,7 @@ extends SceneTree
 ##
 ##   node provas/ordem-caixa/ferramentas/servidor-bancada-prova.mjs --porta=8791 --semente=7 --info=<f> --motor=<vlab>
 ##   xvfb-run -s "-screen 0 1280x720x24" godot --rendering-driver opengl3 --resolution 1280x720 \
-##     --path rascunhos/cliente -s <esta ferramenta> -- --servidor=127.0.0.1:8791 --saida=<pasta> [--pin=81052918516180889851]
+##     --path rascunhos/cliente -s <esta ferramenta> -- --servidor=127.0.0.1:8791 --saida=<pasta> --pin=<PIN da corrida>
 ##
 ## Passos (as jogadas da bancada vão por lugares próprios, como no autojogo; o Mestre que sai e entra é o ecrã a sério):
 ##   0. o Mestre da bancada põe as criaturas e começa; a IA de bancada joga as primeiras vezes (a ordem dinâmica forma-se
@@ -27,7 +27,7 @@ const VEZES_A_JOGAR := 3
 var _args := {}
 var _saida := ""
 var _url := ""
-var _pin := "81052918516180889851"
+var _pin := ""  # B7-CORRECOES-6 (B1): sem literal — o PIN da corrida vem por --pin= (o lançador gera-o)
 var _total := 0
 var _falhas := 0
 var _relato: PackedStringArray = []
@@ -257,6 +257,10 @@ func _correr() -> void:
 	DirAccess.make_dir_recursive_absolute(_saida)
 	_url = "ws://%s/ws" % srv
 	_pin = str(_args.get("pin", _pin))
+	if _pin.length() < 6 or not _pin.lstrip("0123456789").is_empty():
+		printerr("falta --pin=<PIN da corrida> (6 dígitos ou mais; o lançador gera-o — já não há PIN no repositório)")
+		quit(2)
+		return
 	_rede = root.get_node("Rede")
 	_estado = root.get_node("Estado")
 	_rede.persistir = false

@@ -1,0 +1,29 @@
+# verificação do PIN (Ordem CAIXA-RELATO-B7-CORRECOES-6) · 276c579 · base 1b907bc
+# só contagens; os valores nunca se escrevem. O PIN antigo vem de 1b907bc, o PIN novo de 20 dígitos de e8f1a42.
+PIN novo de 20 dígitos — ficheiros na árvore de trabalho (seguidos ou não): 0 (esperado 0) ok
+PIN novo de 20 dígitos — ocorrências na árvore de trabalho: 0 (esperado 0) ok
+PIN novo de 20 dígitos — ficheiros seguidos (git grep): 0 (esperado 0) ok
+PIN antigo — ficheiros na árvore de trabalho (seguidos ou não): 0 (esperado 0) ok
+PIN antigo — ocorrências na árvore de trabalho: 0 (esperado 0) ok
+PIN antigo — ficheiros novos ou mudados desde a base (74 ficheiros): 0 (esperado 0) ok
+chave "pin" no cenário de bancada: false (esperado false) ok
+servidor-info.json seguidos: 0 (esperado 0) ok
+servidor.log seguidos fora de suites/: 0 (esperado 0) ok
+cp do info ou do log do servidor nos 5 lançadores: 0 (esperado 0) ok
+cat do info nos 5 lançadores: 0 (esperado 0) ok
+chave "pin" nos registos de b7-correcoes-6/: 0 (esperado 0) ok
+provas/ordem-caixa-hud-jogadora/ferramentas/servidor-bancada-prova.mjs sem --pin → código: 2 (esperado 2) ok
+provas/ordem-caixa-hud-jogadora/ferramentas/servidor-bancada-prova.mjs com --pin que não é só dígitos → código: 2 (esperado 2) ok
+provas/ordem-caixa/ferramentas/servidor-bancada-prova.mjs sem --pin → código: 2 (esperado 2) ok
+provas/ordem-caixa/ferramentas/servidor-bancada-prova.mjs com --pin que não é só dígitos → código: 2 (esperado 2) ok
+info escrito por um servidor recusado: 0 (esperado 0) ok
+servidor-autojogo.mjs sem --pin → recusa (código ≠ 0): recusa (esperado recusa) ok
+arranque vivo (cenário novo, PIN fresco): info pronto: true (esperado true) ok
+arranque vivo: chave "pin" no info: 0 (esperado 0) ok
+arranque vivo: o PIN da corrida no info ou no log do servidor: 0 (esperado 0) ok
+arranque vivo: linha pronto- no log: 1 (esperado 1) ok
+provas/ordem-caixa-hud-jogadora/ferramentas/prova_caixa_jogadora.gd sem --pin → código: 2 (esperado 2) ok
+provas/ordem-caixa-janela/ferramentas/prova_caixa_janela.gd sem --pin → código: 2 (esperado 2) ok
+provas/ordem-caixa-manequim/ferramentas/prova_caixa_manequim.gd sem --pin → código: 2 (esperado 2) ok
+provas/ordem-caixa/ferramentas/prova_caixa_reentrar.gd sem --pin → código: 2 (esperado 2) ok
+falhas: 0

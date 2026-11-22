@@ -7,7 +7,11 @@
 // A ferramenta de medição do autojogo fica intacta (não se mexeu nela).
 //
 //   node provas/ordem-caixa/ferramentas/servidor-bancada-prova.mjs --porta=8791 --semente=7 --info=<ficheiro>
-//        [--motor-falso | --motor=<vlab-completo.js>] [--vida-max-s=600]
+//        --pin=<PIN da corrida> [--motor-falso | --motor=<vlab-completo.js>] [--vida-max-s=600]
+//
+// Ordem CAIXA-RELATO-B7-CORRECOES-6 (B1/B2): o PIN do Mestre JÁ NÃO está no cenário cometido. Vem por `--pin=` (o
+// lançador gera um fresco em cada corrida e nunca o escreve no repositório); sem ele, ou fora de /^\d{6,}$/, o servidor
+// sai com 2. O info (--info) e a linha «pronto-…» já NÃO levam o PIN.
 import { readFileSync, writeFileSync, renameSync, existsSync, mkdirSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import path from 'node:path';
@@ -21,6 +25,8 @@ const { embrulhar } = await import(new URL('motores/embrulhar.mjs', SRV).href);
 const args = Object.fromEntries(process.argv.slice(2).map((x) => /^--([a-z-]+)(?:=(.*))?$/.exec(x)).filter(Boolean).map((m) => [m[1], m[2] ?? true]));
 const porta = Number(args.porta ?? 8791);
 const semente = Number(args.semente ?? 7);
+const pin = typeof args.pin === 'string' ? args.pin : '';
+if (!/^\d{6,}$/.test(pin)) { console.error('[prova] falta --pin=<6 dígitos ou mais> (o PIN da corrida; o cenário já não o traz)'); process.exit(2); }
 const caminhoCenario = new URL('autojogo/cenario-bancada.json', SRV).pathname;
 const { cenario, fichas, shaCenario, shaFichas } = lerCenario(caminhoCenario);
 
@@ -43,7 +49,7 @@ async function motor() {
 const m = await motor();
 const terreno = JSON.parse(readFileSync(new URL('dados/terreno-floresta.json', SRV), 'utf8'));
 const lugares = cenario.heroinas.map((h) => ({ papel: 'jogadora', nome: h.nome, senha: h.senha, fichaId: h.fichaId, casa: h.casa }));
-lugares.push({ papel: 'mestre', nome: 'Mestre da bancada', pin: cenario.pin });
+lugares.push({ papel: 'mestre', nome: 'Mestre da bancada', pin });
 const sala = criarSala({
   terreno, motores: m.motores, fichas, rng: rngSemeado(semente), agora: (() => { let t = Date.UTC(2026, 10, 19, 12, 0, 0); return () => (t += 250); })(),
   config: { roomId: 'bancada-caixa-s' + semente, teste: true, mapa: cenario.mapa ?? { largura: 20, altura: 20 }, iniciativa: cenario.iniciativa ?? {}, modoPadrao: 'manual', lugares },
@@ -52,7 +58,7 @@ const servidor = criarServidor({ sala, registo: (t) => console.log('[servidor]',
 setTimeout(() => { console.log('[prova] vida máxima esgotada: fecho'); process.exit(3); }, Number(args['vida-max-s'] ?? 600) * 1000).unref();
 process.on('SIGTERM', () => process.exit(0));
 servidor.listen(porta, '127.0.0.1', () => {
-  const info = { pronto: true, porta, semente, roomId: sala.roomId, motor: m.rotulo, motorSha256: m.sha, cenarioSha256: shaCenario, fichasSha256: shaFichas, pin: cenario.pin };
+  const info = { pronto: true, porta, semente, roomId: sala.roomId, motor: m.rotulo, motorSha256: m.sha, cenarioSha256: shaCenario, fichasSha256: shaFichas };
   if (typeof args.info === 'string') { writeFileSync(args.info + '.tmp', JSON.stringify(info)); renameSync(args.info + '.tmp', args.info); }
   console.log('pronto-prova-caixa ' + JSON.stringify(info));
 });

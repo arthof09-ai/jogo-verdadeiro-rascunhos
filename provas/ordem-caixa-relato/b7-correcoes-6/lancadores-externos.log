@@ -1,0 +1,21 @@
+# B1/B2 (Ordem CAIXA-RELATO-B7-CORRECOES-6): os 3 lançadores externos e o autojogo, corridos neste PC sobre a árvore de
+# trabalho (base 276c579, com as correcções), Godot 4.7.2 win64, motor VLAB real a91c021c…, semente 7. Em cada corrida
+# o PIN é fresco e nunca se escreve. Só se registam contagens e códigos.
+#
+# A pasta tmp de cada lançador ficou FORA do repositório. Os relatos que o HUD-JOGADORA e o MANEQUIM escreveram nas
+# pastas cometidas deles (cliente/) foram repostos com git checkout depois da contagem: não são o objecto desta ordem.
+# A JANELA escreveu numa pasta de saída fora do repositório (4.º argumento).
+
+correr-prova-caixa-hud.sh       rc=0   43 de 43 verificações passaram
+correr-prova-caixa-janela.sh    rc=0   41 de 41 verificações passaram
+correr-prova-caixa-manequim.sh  rc=0   53 de 53 verificações passaram
+
+chave "pin" no stdout dos 3 lançadores:                         0
+chave "pin" no info.json dos 3 (pasta tmp):                     0
+chave "pin" no servidor-prova.log dos 3 (pasta tmp):            0
+ficheiros novos (não seguidos) nas pastas cometidas depois das 3 corridas: 0 (nenhum servidor-info.json nem servidor.log)
+
+autojogo (autojogo.gd → servidor-autojogo.mjs --pin=<fresco>), semente 1, motor real:
+  rc=0 · «partida acabada: semente 1, desfecho vitoria, 14 turnos»
+  registo de 109 linhas = provas/ordem-autojogo/s1.jsonl linha a linha, tirando a linha «inicio»
+  linha «inicio»: só muda o cenarioSha256 (o cenário perdeu a chave "pin")

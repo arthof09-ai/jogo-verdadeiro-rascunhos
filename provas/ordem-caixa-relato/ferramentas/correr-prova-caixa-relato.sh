@@ -16,6 +16,11 @@
 # do ramo; B3 — o info imprime-se no stdout SEM a chave "pin".
 ORIGEM=$PWD
 cd "$(dirname "$0")/../../.." || exit 9
+# Ordem CAIXA-RELATO-B7-CORRECOES-6 (B1/B2): o PIN do Mestre é FRESCO em cada corrida (20 dígitos de crypto.randomInt) e
+# só passa por --pin= ao servidor e à prova — não está no repositório e nunca se escreve nele. O info imprime-se sem a
+# chave "pin" (o servidor já não a põe; o filtro fica de cinto) e o info/log do servidor ficam na pasta tmp: já NÃO se
+# copiam para a pasta de saída (a que se comete).
+PIN=$(node -e 'const c = require("crypto"); let s = ""; for (let i = 0; i < 20; i++) s += c.randomInt(10); process.stdout.write(s)') || exit 9
 G=${1:?godot}; MOTOR=${2:?motor}; T=${3:?tmp}
 P=$PWD/provas/ordem-caixa-relato
 O=${4:-$P}
@@ -31,7 +36,7 @@ grep -v "^Godot Engine" "$T/teste-relato.log" > "$O/teste-relato.log"
 
 correr() {  # <nome> <ferramenta.gd> <porta>
   local S=$O/$1; mkdir -p "$S"; rm -f "$T/info-$1.json"
-  node provas/ordem-caixa-hud-jogadora/ferramentas/servidor-bancada-prova.mjs --porta=$3 --semente=7 --info="$T/info-$1.json" \
+  node provas/ordem-caixa-hud-jogadora/ferramentas/servidor-bancada-prova.mjs --porta=$3 --semente=7 --info="$T/info-$1.json" --pin="$PIN" \
     --motor="$MOTOR" --vida-max-s=900 > "$T/servidor-$1.log" 2>&1 &
   local SRV=$!
   for i in $(seq 1 30); do [ -f "$T/info-$1.json" ] && break; sleep 1; done
@@ -39,7 +44,7 @@ correr() {  # <nome> <ferramenta.gd> <porta>
   node -e 'const i = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")); delete i.pin; console.log(JSON.stringify(i))' \
     "$T/info-$1.json" || echo "(info do servidor ilegível: $T/info-$1.json)"
   timeout 900 "$G" --resolution 1280x720 --path rascunhos/cliente \
-    -s "$PWD/$2" -- --servidor=127.0.0.1:$3 --saida="$S" > "$T/prova-$1.log" 2>&1
+    -s "$PWD/$2" -- --servidor=127.0.0.1:$3 --saida="$S" --pin="$PIN" > "$T/prova-$1.log" 2>&1
   local r=$?
   kill $SRV 2>/dev/null
   # B7-CORRECOES-4 (B3): o info e o log do servidor trazem o PIN da sala (servidor local efémero) — ficam na pasta tmp

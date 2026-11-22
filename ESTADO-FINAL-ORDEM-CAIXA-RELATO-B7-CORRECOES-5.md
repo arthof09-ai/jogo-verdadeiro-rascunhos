@@ -47,13 +47,18 @@ As pastas abaixo são relativas a `provas/ordem-caixa-relato/`, salvo se disser 
 
 | Na árvore do ramo (`git grep`, fora do histórico) | Ficheiros |
 |---|---|
-| com o PIN antigo `20261116` | **0** |
+| com o PIN antigo¹ | **0** |
 | com o PIN novo | **5** (os pedidos), 6 ocorrências |
 | registos de `b7-correcoes-5/` com o PIN novo | **0** |
 | registos de `b7-correcoes-5/` com uma chave `"pin":` | **0** |
 | `servidor-info.json` seguidos | **0** |
 
 O histórico do git fica com o valor antigo, como a ordem aceita. Esse valor já não abre a sala de bancada.
+
+¹ *Emenda da Ordem CAIXA-RELATO-B7-CORRECOES-6 (B3):* esta linha e a linha 3 do `verificacao-pin.log` escreviam o PIN
+antigo por extenso, contra a letra da ordem — e, por isso, a contagem «0» era falsa: este ficheiro e o log tinham-no.
+O valor saiu dos dois; com ele saído, a contagem bate. O PIN novo de 20 dígitos destas tabelas também já não está
+no ramo: a CAIXA-RELATO-B7-CORRECOES-6 tirou-o dos 5 ficheiros (o PIN passa a ser gerado por corrida).
 
 ### B2 (D2) — a pasta temporária nos logs das mutações
 
@@ -81,7 +86,9 @@ o registo dessa ordem. As mutações e os esperados são os mesmos 34.
 
 ### B4 (D4) — os argumentos
 
-**Feito.** Os argumentos validam-se antes do `cd` e antes de criar qualquer pasta. O registo está em
+**Feito.** O número de argumentos e o `<godot>` validam-se antes do `cd`. A base valida-se logo a seguir ao `cd`,
+porque o git precisa da raiz do repositório. Tudo isto acontece antes de se criar qualquer pasta. *(Emenda da
+CAIXA-RELATO-B7-CORRECOES-6, B4: a frase dizia que os argumentos todos se validavam antes do `cd`.)* O registo está em
 `b7-correcoes-5/antes/b4-argumentos.log`.
 
 | Chamada | Script da -4 | Script da -5 |

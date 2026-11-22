@@ -1,0 +1,6 @@
+teste_relato_caixa rc=0
+{"pronto":true,"porta":8796,"semente":7,"roomId":"bancada-caixa-hud-s7","motor":"vlab-real","motorSha256":"a91c021cda11df675c78c63277e6f2679faa79c716c7ba104373198689993261","cenarioSha256":"7037229e559e49bf27f7cb1cdf219758c0a9ab10bd2c84af93d36c75d9718995","fichasSha256":"3c498137411950a2d765d81ecdc3bf663ba1f1c568075b180a4b52dd57e0b501"}
+cliente-hud rc=0
+{"pronto":true,"porta":8797,"semente":7,"roomId":"bancada-caixa-hud-s7","motor":"vlab-real","motorSha256":"a91c021cda11df675c78c63277e6f2679faa79c716c7ba104373198689993261","cenarioSha256":"7037229e559e49bf27f7cb1cdf219758c0a9ab10bd2c84af93d36c75d9718995","fichasSha256":"3c498137411950a2d765d81ecdc3bf663ba1f1c568075b180a4b52dd57e0b501"}
+cliente-manequim rc=0
+rc=0

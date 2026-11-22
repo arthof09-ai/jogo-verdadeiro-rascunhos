@@ -30,7 +30,7 @@ const VEZES_A_JOGAR := 3
 var _args := {}
 var _saida := ""
 var _url := ""
-var _pin := "81052918516180889851"
+var _pin := ""  # B7-CORRECOES-6 (B1): sem literal — o PIN da corrida vem por --pin= (o lançador gera-o)
 var _total := 0
 var _falhas := 0
 var _relato: PackedStringArray = []
@@ -407,6 +407,10 @@ func _correr() -> void:
 	DirAccess.make_dir_recursive_absolute(_saida)
 	_url = "ws://%s/ws" % srv
 	_pin = str(_args.get("pin", _pin))
+	if _pin.length() < 6 or not _pin.lstrip("0123456789").is_empty():
+		printerr("falta --pin=<PIN da corrida> (6 dígitos ou mais; o lançador gera-o — já não há PIN no repositório)")
+		quit(2)
+		return
 	_rede = root.get_node("Rede")
 	_estado = root.get_node("Estado")
 	_rede.persistir = false

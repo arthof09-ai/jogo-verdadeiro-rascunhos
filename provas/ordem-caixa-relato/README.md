@@ -429,3 +429,28 @@ As corridas estão em **`b7-correcoes-5/`** (as de cima ficam como estavam).
 Correr de novo: `bash provas/ordem-caixa-relato/ferramentas/correr-mutacoes-b7-correcoes-5.sh <godot.exe> <pasta-saída>
 [<base> (c847966)] [<base-r1> (a12b905)]`; as provas vivas como acima, com `"$PWD/provas/ordem-caixa-relato/b7-correcoes-5"`.
 Os números estão no `ESTADO-FINAL-ORDEM-CAIXA-RELATO-B7-CORRECOES-5.md`, na raiz.
+
+---
+
+# Correcções B1–B5 da sentença da B7-CORRECOES-5 (Ordem CAIXA-RELATO-B7-CORRECOES-6 · 22/11/2026, Claude conta 1, PC)
+
+As corridas estão em **`b7-correcoes-6/`**. A rotação da -5 não fechava o D1: o PIN novo ficava em claro em 5 ficheiros
+seguidos. Agora **não há PIN nenhum no repositório**.
+
+- **B1 (D1)** — o `pin` saiu do `cenario-bancada.json` e os 4 `.gd` das provas ficaram sem literal (`var _pin := ""`).
+  Cada lançador gera um **PIN fresco por corrida** (20 dígitos de `crypto.randomInt`) e passa-o por `--pin=` ao servidor
+  e à prova. Os dois `servidor-bancada-prova.mjs` exigem `--pin=` e saem com 2 sem ele, antes de lerem o cenário. As 4
+  provas `.gd` também saem com 2. O autojogo (`servidor-autojogo.mjs` + `autojogo.gd`) lia o PIN do mesmo cenário:
+  agora o `autojogo.gd` gera-o por partida (`Crypto`) e passa-o por `--pin=`.
+- **B2 (D2)** — os 3 lançadores externos (HUD-JOGADORA, JANELA, MANEQUIM) e o `correr-prova-caixa.sh` deixaram de fazer
+  `cat` do info: imprimem-no sem a chave `"pin"`. Os 3 externos deixaram de copiar o info/log do servidor para a pasta
+  cometida. O servidor já não põe o `pin` no info nem na linha `pronto-…`. Saíram do ramo os 2 ficheiros que a
+  CAIXA-JANELA-COBERTURA-CORRECOES-5 tinha voltado a cometer com o PIN antigo (`cobertura-correcoes-5/cliente/`).
+- **B3/B4** — emendados o `b7-correcoes-5/verificacao-pin.log` e o `ESTADO-FINAL-ORDEM-CAIXA-RELATO-B7-CORRECOES-5.md`
+  (o PIN antigo sem o valor; a frase da ordem das validações).
+- **B5** — o histórico fica como está. O PIN antigo está morto. O PIN novo de 20 dígitos é público e nunca se reutiliza.
+
+Verificar: `bash provas/ordem-caixa-relato/ferramentas/verificar-pin-b7-correcoes-6.sh [<godot.exe>]`. Só imprime
+contagens: tira os dois valores dos objectos do git e nunca os escreve. O registo está em
+`b7-correcoes-6/verificacao-pin.log`. As provas vivas correm como acima, com `"$PWD/provas/ordem-caixa-relato/b7-correcoes-6"`.
+Os números estão no `ESTADO-FINAL-ORDEM-CAIXA-RELATO-B7-CORRECOES-6.md`, na raiz.

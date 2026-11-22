@@ -1,6 +1,6 @@
 # B1 — verificação por grep na árvore do ramo (git grep: ficheiros seguidos; fora do histórico). Só contagens,
-# nunca o valor. Este ficheiro não conta para si mesmo.
-ficheiros com o PIN antigo 20261116: 0
+# nunca o valor.
+ficheiros com o PIN antigo: 0
 ficheiros com o PIN novo: 5
   provas/ordem-caixa-hud-jogadora/ferramentas/prova_caixa_jogadora.gd
   provas/ordem-caixa-janela/ferramentas/prova_caixa_janela.gd
@@ -14,3 +14,6 @@ servidor-info.json no ramo: 0
 ficheiros de provas/ com o caminho da casa do PC (C:/Users/<utilizador>): 38
   (38 na base 6148f79 também: nenhum dos 58 apagados pela B1 trazia o caminho, e nada desta ordem o traz)
 ficheiros de b7-correcoes-5/ com o nome do utilizador ou AppData: 0
+# Emenda da Ordem CAIXA-RELATO-B7-CORRECOES-6 (B3/B4): a linha 3 trazia o PIN antigo por extenso no rótulo, e o
+# cabeçalho avisava que «este ficheiro não conta para si mesmo» — um rótulo que se contava a si mesmo. O valor saiu
+# do rótulo e o aviso também. As contagens são as da corrida da -5; a verificação nova está em b7-correcoes-6/.

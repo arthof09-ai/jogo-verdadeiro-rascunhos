@@ -10,7 +10,9 @@
 //   - o motor é o VLAB real (o mesmo ficheiro público que o CI baixa), embrulhado por motores/embrulhar.mjs.
 // As REGRAS continuam todas aqui, no servidor: esta ferramenta só escolhe a semente, o cenário e o motor.
 //
-//   node servidor/autojogo/servidor-autojogo.mjs --porta=8790 --semente=7 [--cenario=<json>] [--motor=<vlab-completo.js>]
+//   node servidor/autojogo/servidor-autojogo.mjs --porta=8790 --semente=7 --pin=<PIN da partida> [--cenario=<json>] [--motor=<vlab-completo.js>]
+//   (Ordem CAIXA-RELATO-B7-CORRECOES-6: o PIN do Mestre já não vem do cenário cometido; o autojogo.gd gera um fresco por
+//   partida e passa-o por --pin=. Sem ele, ou fora de /^\d{6,}$/, sai com erro.)
 //        [--info=<ficheiro>] [--vida-max-s=900] [--motor-falso]
 //
 // --info: quando o servidor está a ouvir, escreve aqui um JSON com a semente, a sala, o SHA do motor e o das fichas
@@ -109,12 +111,14 @@ async function principal() {
   if (!Number.isInteger(semente) || semente < 0) throw new Error('--semente tem de ser um inteiro ≥ 0');
   const caminhoCenario = path.resolve(typeof args.cenario === 'string' ? args.cenario : path.join(AQUI, 'cenario-bancada.json'));
   const { cenario, fichas, shaCenario, shaFichas } = lerCenario(caminhoCenario);
+  const pin = typeof args.pin === 'string' ? args.pin : '';
+  if (!/^\d{6,}$/.test(pin)) throw new Error('falta --pin=<6 dígitos ou mais> (o PIN da partida; o cenário já não o traz)');
   const motor = await carregarMotor(args);
   const terreno = JSON.parse(readFileSync(new URL('../dados/terreno-floresta.json', import.meta.url), 'utf8'));
   const roomId = 'autojogo-s' + semente;
 
   const lugares = cenario.heroinas.map((h) => ({ papel: 'jogadora', nome: h.nome, senha: h.senha, fichaId: h.fichaId, casa: h.casa }));
-  lugares.push({ papel: 'mestre', nome: 'Mestre da bancada', pin: cenario.pin });
+  lugares.push({ papel: 'mestre', nome: 'Mestre da bancada', pin });
   const salaReal = criarSala({
     terreno,
     motores: motor.motores,
