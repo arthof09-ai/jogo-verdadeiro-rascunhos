@@ -1,0 +1,15 @@
+# actualizar-listas.py depois de 930faec
+antes.txt: 37 · depois.txt: 415 · MANIFESTO: 459 ficheiros (0 novos, 0 tirados nesta passagem)
+## diff das listas (só as linhas mudadas)
+-ffcb11f44a32ae7a71fb4d264399a1e8730d09a9d6f45a90916c78873fff2c28  rascunhos/cliente/autojogo/autojogo.gd
++19f759370c62f8187f89fb3e2b59dc35315016426c0cf184b666fd167e805ec3  rascunhos/cliente/autojogo/autojogo.gd
+-2cab6459b35260ac9d84d4787e3a5cecda150f0c6f257882f0a7d044cdb9afd4  rascunhos/servidor/autojogo/cenario-bancada.json
++7037229e559e49bf27f7cb1cdf219758c0a9ab10bd2c84af93d36c75d9718995  rascunhos/servidor/autojogo/cenario-bancada.json
+-789afa56e21f0b0d9f2ca1863df67df282b5d9f05124a7697df2e980066ec9b7  rascunhos/servidor/autojogo/servidor-autojogo.mjs
++ce1be3449c402b16fe52c717487b9b856b76a7831f16427302c84b146bef36bf  rascunhos/servidor/autojogo/servidor-autojogo.mjs
+-ffcb11f44a32ae7a71fb4d264399a1e8730d09a9d6f45a90916c78873fff2c28  rascunhos/cliente/autojogo/autojogo.gd
++19f759370c62f8187f89fb3e2b59dc35315016426c0cf184b666fd167e805ec3  rascunhos/cliente/autojogo/autojogo.gd
+-2cab6459b35260ac9d84d4787e3a5cecda150f0c6f257882f0a7d044cdb9afd4  rascunhos/servidor/autojogo/cenario-bancada.json
++7037229e559e49bf27f7cb1cdf219758c0a9ab10bd2c84af93d36c75d9718995  rascunhos/servidor/autojogo/cenario-bancada.json
+-789afa56e21f0b0d9f2ca1863df67df282b5d9f05124a7697df2e980066ec9b7  rascunhos/servidor/autojogo/servidor-autojogo.mjs
++ce1be3449c402b16fe52c717487b9b856b76a7831f16427302c84b146bef36bf  rascunhos/servidor/autojogo/servidor-autojogo.mjs
