@@ -1,6 +1,6 @@
 # o artefacto do retoma-i0004/actualizar-listas.py, com a saída REAL de cada comando capturada
-# (corrido na raiz do repo, sobre o HEAD 3b84797 mais a árvore de trabalho; cada bloco: o comando, a saída, o rc)
-# 2026-11-22T12:17:38Z · Python 3.12.10 · git version 2.56.0.windows.4 · PC (Git Bash)
+# (corrido na raiz do repo, sobre o HEAD a2e0ba9 mais a árvore de trabalho; cada bloco: o comando, a saída, o rc)
+# 2026-11-22T12:21:34Z · Python 3.12.10 · git version 2.56.0.windows.4 · PC (Git Bash)
 
 ## SHA-256 das 3 listas ANTES
 $ sha256sum retoma-i0004/antes.txt retoma-i0004/depois.txt MANIFESTO-SHA256.txt
@@ -41,22 +41,22 @@ rc=0
 
 ## tudo o que o ramo muda contra a base (árvore de trabalho; os não seguidos à parte)
 $ git diff --stat 3b84797
- provas/ordem-caixa-janela/README.md                | 43 ++++++++++++++++++++++
- .../ordem-caixa-janela/ferramentas/nomes_relato.gd | 14 ++++---
- 2 files changed, 52 insertions(+), 5 deletions(-)
+ provas/ordem-caixa-janela/README.md                |  43 +++++++++
+ .../cobertura-correcoes-5/actualizar-listas.log    |  43 +++++++++
+ .../cliente/1-janela-1280x720.png                  | Bin 0 -> 1469451 bytes
+ .../cliente/2-baixo-844x390.png                    | Bin 0 -> 559369 bytes
+ .../cliente/3-baixo-780x360.png                    | Bin 0 -> 474181 bytes
+ .../cobertura-correcoes-5/cliente/relato.txt       |  81 ++++++++++++++++
+ .../cliente/servidor-info.json                     |   1 +
+ .../cobertura-correcoes-5/cliente/servidor.log     |   2 +
+ .../cobertura-correcoes-5/conferencia-fontes.log   | 107 +++++++++++++++++++++
+ .../cobertura-correcoes-5/teste-nomes-relato.log   |  36 +++++++
+ .../ordem-caixa-janela/ferramentas/nomes_relato.gd |  14 ++-
+ 11 files changed, 322 insertions(+), 5 deletions(-)
 rc=0
 
 $ git status --short --untracked-files=all
- M provas/ordem-caixa-janela/README.md
- M provas/ordem-caixa-janela/ferramentas/nomes_relato.gd
-?? provas/ordem-caixa-janela/cobertura-correcoes-5/actualizar-listas.log
-?? provas/ordem-caixa-janela/cobertura-correcoes-5/cliente/1-janela-1280x720.png
-?? provas/ordem-caixa-janela/cobertura-correcoes-5/cliente/2-baixo-844x390.png
-?? provas/ordem-caixa-janela/cobertura-correcoes-5/cliente/3-baixo-780x360.png
-?? provas/ordem-caixa-janela/cobertura-correcoes-5/cliente/relato.txt
-?? provas/ordem-caixa-janela/cobertura-correcoes-5/cliente/servidor-info.json
-?? provas/ordem-caixa-janela/cobertura-correcoes-5/cliente/servidor.log
-?? provas/ordem-caixa-janela/cobertura-correcoes-5/conferencia-fontes.log
-?? provas/ordem-caixa-janela/cobertura-correcoes-5/teste-nomes-relato.log
+ M provas/ordem-caixa-janela/cobertura-correcoes-5/actualizar-listas.log
+?? ESTADO-FINAL-ORDEM-CAIXA-JANELA-COBERTURA-CORRECOES-5.md
 rc=0
 
