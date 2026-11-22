@@ -9,7 +9,7 @@ listas da retoma, fora de `rascunhos/`). Nenhum código do jogo, de HUD, de core
   Clone novo, `core.autocrlf=false`.
 - **Ramo:** `claude2/caixa-testes-correcoes-2`, **não fundido** (a fusão é do coordenador).
 - **Commits:** o dos testes + B7 + este ESTADO-FINAL; depois o das listas da retoma (`actualizar-listas.py`:
-  `MANIFESTO-SHA256.txt`, `retoma-i0004/depois.txt`, `retoma-i0004/antes.txt`), que é o último.
+  `MANIFESTO-SHA256.txt`, `retoma-i0004/depois.txt`; o `antes.txt` não mudou), que é o último.
 
 ## Ponto a ponto
 
