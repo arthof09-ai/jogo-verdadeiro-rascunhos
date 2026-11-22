@@ -1,6 +1,6 @@
 # o artefacto do retoma-i0004/actualizar-listas.py, com a saída REAL de cada comando capturada
-# (corrido na raiz do repo, sobre o HEAD 30a16b5 mais a árvore de trabalho; cada bloco: o comando, a saída, o rc)
-# 2026-11-22T11:02:12Z · Python 3.12.10 · git version 2.56.0.windows.4 · PC (Git Bash)
+# (corrido na raiz do repo, sobre o HEAD e323042 mais a árvore de trabalho; cada bloco: o comando, a saída, o rc)
+# 2026-11-22T11:06:39Z · Python 3.12.10 · git version 2.56.0.windows.4 · PC (Git Bash)
 
 ## SHA-256 das 3 listas ANTES
 $ sha256sum retoma-i0004/antes.txt retoma-i0004/depois.txt MANIFESTO-SHA256.txt
@@ -41,27 +41,25 @@ rc=0
 
 ## tudo o que o ramo muda contra a base (árvore de trabalho; os não seguidos à parte)
 $ git diff --stat 30a16b5
- provas/ordem-caixa-janela/README.md                | 20 +++++++++++++++++
- .../ordem-caixa-janela/ferramentas/nomes_relato.gd | 25 +++++++++++++++++++---
- .../ferramentas/prova_caixa_janela.gd              | 16 ++++++++------
- .../ferramentas/teste_nomes_relato.gd              | 17 +++++++++++++--
- 4 files changed, 67 insertions(+), 11 deletions(-)
+ provas/ordem-caixa-janela/README.md                |  20 +++
+ .../cobertura-correcoes-4/actualizar-listas.log    |  43 ++++++
+ .../cliente/1-janela-1280x720.png                  | Bin 0 -> 1469858 bytes
+ .../cliente/2-baixo-844x390.png                    | Bin 0 -> 559694 bytes
+ .../cliente/3-baixo-780x360.png                    | Bin 0 -> 474194 bytes
+ .../cobertura-correcoes-4/cliente/relato.txt       |  81 ++++++++++++
+ .../cliente/servidor-info.json                     |   1 +
+ .../cobertura-correcoes-4/cliente/servidor.log     |   2 +
+ .../cobertura-correcoes-4/conferencia-fontes.log   | 145 +++++++++++++++++++++
+ .../cobertura-correcoes-4/mutacoes.log             |  37 ++++++
+ .../cobertura-correcoes-4/teste-nomes-relato.log   |  36 +++++
+ .../ordem-caixa-janela/ferramentas/nomes_relato.gd |  25 +++-
+ .../ferramentas/prova_caixa_janela.gd              |  16 ++-
+ .../ferramentas/teste_nomes_relato.gd              |  17 ++-
+ 14 files changed, 412 insertions(+), 11 deletions(-)
 rc=0
 
 $ git status --short --untracked-files=all
- M provas/ordem-caixa-janela/README.md
- M provas/ordem-caixa-janela/ferramentas/nomes_relato.gd
- M provas/ordem-caixa-janela/ferramentas/prova_caixa_janela.gd
- M provas/ordem-caixa-janela/ferramentas/teste_nomes_relato.gd
-?? provas/ordem-caixa-janela/cobertura-correcoes-4/actualizar-listas.log
-?? provas/ordem-caixa-janela/cobertura-correcoes-4/cliente/1-janela-1280x720.png
-?? provas/ordem-caixa-janela/cobertura-correcoes-4/cliente/2-baixo-844x390.png
-?? provas/ordem-caixa-janela/cobertura-correcoes-4/cliente/3-baixo-780x360.png
-?? provas/ordem-caixa-janela/cobertura-correcoes-4/cliente/relato.txt
-?? provas/ordem-caixa-janela/cobertura-correcoes-4/cliente/servidor-info.json
-?? provas/ordem-caixa-janela/cobertura-correcoes-4/cliente/servidor.log
-?? provas/ordem-caixa-janela/cobertura-correcoes-4/conferencia-fontes.log
-?? provas/ordem-caixa-janela/cobertura-correcoes-4/mutacoes.log
-?? provas/ordem-caixa-janela/cobertura-correcoes-4/teste-nomes-relato.log
+ M provas/ordem-caixa-janela/cobertura-correcoes-4/actualizar-listas.log
+?? ESTADO-FINAL-ORDEM-CAIXA-JANELA-COBERTURA-CORRECOES-4.md
 rc=0
 
