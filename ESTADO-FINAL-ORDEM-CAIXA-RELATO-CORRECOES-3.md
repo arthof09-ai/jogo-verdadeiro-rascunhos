@@ -137,7 +137,13 @@ Nenhum registo tem «SCRIPT ERROR», «Parse Error» nem «Compile Error».
 
 ## 3. CI
 
-PENDENTE — preenchido depois do push.
+Commit `3c88709` (código, provas, capturas, registos e este ficheiro):
+- **Testes dos rascunhos: success, 10/10 jobs** (run 44979383503): cliente, motor-real, provas-mapa, servidor,
+  protocolo, godot-cliente, foto-mestre, **retoma-pc**, validador-glb e ponta-a-ponta.
+- No log do job `cliente`, o passo «Relato da caixa», a correr no runner UTC, dá «a hora soma o fuso INJECTADO …
+  08:06:40.250 … 16:36:40.250» e **24 de 24**. A verificação nova corre no CI.
+- **Sonda de privacidade: success** (run 44979383448).
+- O commit seguinte só muda este ficheiro (este §3).
 
 ## 4. Para o coordenador
 
