@@ -59,7 +59,7 @@ A chave `jogadora` guarda `d.jogadora`, as mensagens da heroína no cenário da 
 riscada, porque não está errada: só se lia como 4 itens.
 
 **Privacidade:** não houve fuga nem mutação nesta ordem. Nenhum número novo. Os valores citados nos ESTADOS-FINAIS são
-os valores-canário de bancada.
+os valores-canário das fichas de teste.
 
 ## Números das corridas (PC, Node 26.13.0, sobre `5e67145` + `839b9a0`)
 
