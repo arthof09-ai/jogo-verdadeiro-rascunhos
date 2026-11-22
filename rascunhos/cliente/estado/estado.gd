@@ -235,6 +235,9 @@ func limpar() -> void:
 	_reentrada = false
 	_espera.clear()
 	_resync_pendente = false
+	# Ordem CAIXA-RELATO-B7 (D4): sem snapshot não há «depois do snapshot» — os eventos do snapshot velho saem com ele,
+	# antes do sinal (quem o ouve, como o _registar_snapshot das provas, recomeça a contagem do zero, como o Estado).
+	eventos_desde_snapshot = []
 	_definir_pausa(false)
 	snapshot_aplicado.emit()
 	opcoes_mudaram.emit()

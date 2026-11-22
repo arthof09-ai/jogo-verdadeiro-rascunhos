@@ -13,6 +13,8 @@ extends SceneTree
 ##    (um `hora_ms()` que esquecesse o fuso — `bias` a zero — dava a hora UTC e passava; agora não passa fora de UTC).
 ##  - B6: o §4 leva um evento `estado` (como o do caso vivo: o ataque produz-o). Traz `figuraId` mas não é de actor —
 ##    contá-lo como de actor muda a contagem e adianta o modelo.
+## Ordem CAIXA-RELATO-B7: com o Estado REAL, a verificação B2 continua a passar depois de um `limpar()` sem snapshot
+## novo (D4 da conferência da CAIXA-RELATO-CORRECOES: o `limpar()` deixava `eventos_desde_snapshot` do snapshot velho).
 ##
 ## Correr (na raiz do repo):
 ##   godot --headless --path rascunhos/cliente -s "$PWD/provas/ordem-caixa-relato/ferramentas/teste_relato_caixa.gd"
@@ -177,6 +179,53 @@ func _init() -> void:
 		"a privacidade varre as 6 linhas, 5 delas «JSON actual» (não só a do §4; %d linhas, %d actuais)" % [linhas.size(), actuais])
 	_ok(achadas.is_empty(), "nenhuma linha ganha nomes, vida, alma nem PA %s" % [achadas])
 
+	_caso_limpar(R)
+
 	print("")
 	print("teste do relato da caixa: %d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 or _total == 0 else 0)
+
+
+## Ordem CAIXA-RELATO-B7 (Mecânica D4 da conferência da CAIXA-RELATO-CORRECOES): `Estado.limpar()` emite
+## `snapshot_aplicado` — as provas recomeçam aí o contador (`_registar_snapshot` → novo_snap) — mas deixava
+## `eventos_desde_snapshot` com os eventos do snapshot de ANTES. A verificação B2 das provas (a contagem e os tipos do
+## relato = os que o Estado aplicou desde o snapshot) falhava depois de um `limpar()` sem snapshot novo. Aqui com o
+## ESTADO REAL (res://estado/estado.gd, fora da árvore: sem Rede, sem Mestre) e a mesma ligação das provas.
+## Só ids opacos: o snapshot não traz `propria` nem nomes; nada de vida, alma ou PA.
+func _caso_limpar(R) -> void:
+	var est = load("res://estado/estado.gd").new()
+	var ctx := {"snap": {}}
+	est.snapshot_aplicado.connect(func(): ctx["snap"] = R.novo_snap(est.ultimo_seq, est.revisao))
+	est.evento_aplicado.connect(func(e: Dictionary): R.anotar_evento(ctx["snap"], e))
+	var a := "f1c67641aa5cdfe28"
+	var b := "ff2acf60bd672e76e"
+	var snapshot := func(seq: int) -> void:
+		est.aplicar_snapshot({"type": "ROOM_SNAPSHOT", "seq": seq, "revision": seq, "fase": "combate", "rodada": 1,
+			"figuras": [{"id": a, "lado": "jogadora", "x": 1, "y": 1}, {"id": b, "lado": "criatura", "x": 3, "y": 3}],
+			"iniciativa": [a, b], "vezId": a,
+			"caixa": {"ligada": true, "ordemPor": "dinamico", "ordemDinamica": {"ordem": [a], "fechada": false, "ultimo": a}}})
+	var evento := func(seq: int, tipo: String, fid: String) -> void:
+		est.receber_evento({"type": "ROOM_EVENT", "seq": seq, "revision": seq, "tipo": tipo, "dados": {"figuraId": fid, "rodada": 1}})
+	# A verificação B2 das provas (prova_caixa_jogadora.gd / prova_caixa_manequim.gd, §4), sem o «2 de actor» do caso vivo.
+	var b2 := func(rotulo: String, esperados: Array) -> void:
+		var sn: Dictionary = ctx["snap"]
+		var tipos_rel: Array = sn.get("tipos", [])
+		var tipos_est: Array = est.eventos_desde_snapshot.map(func(e): return str(e.get("tipo", "?")))
+		_ok(int(sn.get("eventos", -1)) == tipos_est.size() and tipos_rel == tipos_est and tipos_rel == esperados,
+			"B7 %s: a verificação B2 passa — %d evento(s) %s no relato = os %d %s que o Estado guarda desde o snapshot (esperados %s)" % [
+				rotulo, int(sn.get("eventos", -1)), JSON.stringify(tipos_rel), tipos_est.size(), JSON.stringify(tipos_est), JSON.stringify(esperados)])
+
+	snapshot.call(1)
+	evento.call(2, "movimento", b)
+	evento.call(3, "turno", b)
+	b2.call("antes do limpar()", ["movimento", "turno"])
+	est.limpar()
+	_ok(not est.tem_snapshot and est.eventos_desde_snapshot.is_empty(),
+		"B7: depois do limpar() o Estado fica sem snapshot e sem eventos de depois dele (ficaram %d; antes da B7 ficavam os 2 do snapshot velho)" % est.eventos_desde_snapshot.size())
+	b2.call("limpar() sem snapshot novo", [])
+	evento.call(4, "movimento", a)  # sem snapshot o evento fica à espera (não é aplicado): nada muda
+	b2.call("um evento depois do limpar(), ainda sem snapshot", [])
+	snapshot.call(5)
+	evento.call(6, "turno", a)
+	b2.call("o snapshot novo e um evento", ["turno"])
+	est.free()
