@@ -1,0 +1,67 @@
+# CAIXA-JANELA-COBERTURA-CORRECOES — as mutações (todas em cópias em tmp/; nenhuma cometida no código)
+
+## M1b (B3) — a prova viva com um passo «bancada:» que traz os valores REAIS de custo de PA
+Mutação (a mesma nas duas cópias; diffs em m1b/mutacao-base.diff e m1b/mutacao-esta-ordem.diff): em _jogar_vez, o passo
+escrito na linha «bancada:» leva `paGasto` = o valor da figura na vista do Mestre e `custoPA` = o custoPA da técnica do
+passo (passo sem técnica: o maior custoPA da ficha), menos no «encerrar». O marcador da mutação vai para o stdout, NÃO
+para o relato — por isso as linhas do relato mutado são as do relato real (47 / 76 / 78), sem a «+1» da M1.
+Servidor de bancada real, porta 8793, semente 7, motor VLAB real sha256 a91c021c…3261.
+Relatos mutados INTEIROS cometidos: m1b/relato-mutado-base.txt e m1b/relato-mutado-esta-ordem.txt.
+
+Valores postos no passo (stdout da cópia; iguais nas duas versões, 13 passos):
+      2 M1b valores postos no passo: paGasto=0.0 (vista do Mestre) custoPA=0 (da técnica)
+      8 M1b valores postos no passo: paGasto=0.0 (vista do Mestre) custoPA=0 (o maior da ficha)
+      1 M1b valores postos no passo: paGasto=0.0 (vista do Mestre) custoPA=2 (da técnica)
+      2 M1b valores postos no passo: paGasto=0.0 (vista do Mestre) custoPA=2 (o maior da ficha)
+
+As 13 linhas «bancada:» com os valores, no relato mutado desta ordem:
+5:  bancada: Arqueira de Bancada → {"custoPA":2,"destino":{"x":11,"y":10},"paGasto":0.0,"tipo":"mover"} (APLICADA)
+7:  bancada: Lobo → {"custoPA":0,"destino":{"x":12,"y":10},"paGasto":0.0,"tipo":"mover"} (APLICADA)
+9:  bancada: Lobo → {"custoPA":0,"destino":{"x":11,"y":11},"paGasto":0.0,"tipo":"mover"} (APLICADA)
+11:  bancada: Lobo → {"custoPA":0,"destino":{"x":9,"y":11},"paGasto":0.0,"tipo":"mover"} (APLICADA)
+13:  bancada: Lobo → {"custoPA":0,"destino":{"x":10,"y":10},"paGasto":0.0,"tipo":"mover"} (APLICADA)
+15:  bancada: Espadachim de Bancada → {"custoPA":2,"destino":{"x":10,"y":9},"paGasto":0.0,"tipo":"mover"} (APLICADA)
+17:  bancada: Bruto → {"custoPA":0,"destino":{"x":10,"y":11},"paGasto":0.0,"tipo":"mover"} (APLICADA)
+19:  bancada: Bruto → {"custoPA":0,"destino":{"x":6,"y":12},"paGasto":0.0,"tipo":"mover"} (APLICADA)
+21:  bancada: Bruto → {"custoPA":0,"destino":{"x":14,"y":12},"paGasto":0.0,"tipo":"mover"} (APLICADA)
+23:  bancada: Bruto → {"custoPA":0,"destino":{"x":6,"y":11},"paGasto":0.0,"tipo":"mover"} (APLICADA)
+29:  bancada: Arqueira de Bancada → {"alvoId":"f00d6f54afaa36569","arma":"tiro-certeiro-bancada","custoPA":2,"paGasto":0.0,"tipo":"atacar"} (APLICADA)
+31:  bancada: Lobo → {"alvoId":"ff2acf60bd672e76e","arma":"mordida-bancada","custoPA":0,"paGasto":0.0,"tipo":"atacar"} (APLICADA)
+33:  bancada: Lobo → {"alvoId":"ff2acf60bd672e76e","arma":"mordida-bancada","custoPA":0,"paGasto":0.0,"tipo":"atacar"} (APLICADA)
+
+### versão da base (b36566d: 5 chaves) — rc=0, a fuga NÃO é vista
+  ok    1: nenhuma chave de vida/PA/alma no relato (47 linhas; 5 chaves proibidas; 0 achado(s), linhas [])
+  ok    2: nenhuma chave de vida/PA/alma no relato (76 linhas; 5 chaves proibidas; 0 achado(s), linhas [])
+  ok    fim: o relato inteiro (78 linhas) não traz nenhuma das 5 chaves de vida/PA/alma (0 achado(s), linhas [])
+prova da janela e da caixa com 10 figuras: 41 de 41 verificações passaram.
+
+### versão desta ordem (12 chaves) — rc=1, FALHA em 1, 2 e fim (26 achados = 13 linhas × 2 chaves)
+  FALHA 1: nenhuma chave privada do Mestre no relato (47 linhas; 12 chaves proibidas; 26 achado(s), linhas [5,7,9,11,13,15,17,19,21,23,29,31,33])
+  FALHA 2: nenhuma chave privada do Mestre no relato (76 linhas; 12 chaves proibidas; 26 achado(s), linhas [5,7,9,11,13,15,17,19,21,23,29,31,33])
+  FALHA fim: o relato inteiro (78 linhas) não traz nenhuma das 12 chaves privadas do Mestre (26 achado(s), linhas [5,7,9,11,13,15,17,19,21,23,29,31,33])
+prova da janela e da caixa com 10 figuras: 38 de 41 verificações passaram.
+
+## Mutações do teste (cópias em tmp/ do teste + nomes_relato.gd desta ordem; nenhuma cometida)
+
+### MT1 (B1): CHAVES_PROIBIDAS de volta às 5 de antes — rc=1
+  FALHA 5: as chaves proibidas são as 12 privadas do Mestre (vida, PA, alma, dano, morte, arma, corpo) — 5
+  FALHA 5: um passo «bancada:» com um custo de PA (a 1.ª chave de custo) → a varredura FALHA (0 achado(s), linhas [])
+  FALHA 5: um passo «bancada:» com um custo de PA (a 2.ª chave de custo) → a varredura FALHA (0 achado(s), linhas [])
+  FALHA 5: cada uma das 12 chaves é apanhada em JSON, em str() de Dictionary, em k= e em k: (e «almaLivre») — 21 linhas (esperadas 49 = 12×4+1), 21 achado(s)
+  FALHA 5: «alma»/«dano» em forma de chave (k_snake, k nua com número, kCamel, 'k', JSON) são apanhadas — 4 de 10
+  FALHA 5: as chaves camelCase com outras maiúsculas (VidaActual, vidaactual, PALIVRE, …) são apanhadas — 3 de 6
+teste dos nomes do relato da caixa-janela: 17 de 23 verificações passaram.
+
+### MT2 (B4): sem (?i) nas 10 regexes de substring — rc=1
+  FALHA 5: as chaves camelCase com outras maiúsculas (VidaActual, vidaactual, PALIVRE, …) são apanhadas — 0 de 6
+teste dos nomes do relato da caixa-janela: 22 de 23 verificações passaram.
+
+### MT3 (B2): sem a lookbehind (?<![A-Za-z0-9_]) nas 10 camelCase — rc=1
+  FALHA 5: «vida», «PA», «alma», «dano», «morte», «arma» como palavras, e as chaves a meio de outra palavra, não são chaves (4 achado(s), linhas [6])
+  FALHA 5: limites registados — 6 formas escapam por desenho (valor genérico, Alma/Dano maiúsculos, palavra + pontuação, chave com prefixo)
+teste dos nomes do relato da caixa-janela: 21 de 23 verificações passaram.
+
+### MT4 (B1/B2): «dano» procurado como substring simples (fora de CHAVES_PALAVRA) — rc=1
+  FALHA 5: «vida», «PA», «alma», «dano», «morte», «arma» como palavras, e as chaves a meio de outra palavra, não são chaves (1 achado(s), linhas [5])
+  FALHA 5: limites registados — 6 formas escapam por desenho (valor genérico, Alma/Dano maiúsculos, palavra + pontuação, chave com prefixo)
+teste dos nomes do relato da caixa-janela: 21 de 23 verificações passaram.

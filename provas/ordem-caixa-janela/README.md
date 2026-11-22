@@ -105,3 +105,21 @@ Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c�
     a chave). Agora dá FALHA em 1, em 2 e no fim (38/41, rc=1).
   - **M2:** a chave do PA livre tirada da lista. O teste dá 17/19, rc=1.
   - **M3:** «alma» procurada como texto simples. O teste dá 18/19, rc=1, porque os rótulos em palavra tropeçam.
+
+## cobertura-correcoes/ — Ordem CAIXA-JANELA-COBERTURA-CORRECOES (22/11/2026, Claude conta 2, PC): B1–B6
+A varredura das chaves do relato passa de 5 para **12 chaves** (B1: `paGasto`, `estadoMorte`, `armaCaida`,
+`armaQuebrada`, `corpoPartido`, `custoPA`, `dano`). As 10 camelCase contam sem distinguir maiúsculas (B4, `(?i)`) e não a
+meio de outra palavra (B2, lookbehind: `capaLivre` passa). «alma» e «dano» só em forma de chave (B2: `"k"`, `'k'`, `k:`,
+`k=`, `kCamel`, `k_snake`, `k` nua + número). Os limites que ficam estão escritos em `ferramentas/nomes_relato.gd` e
+fixados no teste.
+
+Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c…`; semente 7):
+- `cobertura-correcoes/teste-nomes-relato.log`: **teste 23/23** (os 14 de antes, iguais, + 9 do §5; eram 5).
+- `cobertura-correcoes/cliente/`: **prova viva 41/41**, 0 nomes verdadeiros e 0 das 12 chaves no relato. Capturas
+  (sha256, 16 primeiros): `1-janela-1280x720.png` `88c434c6d428352c`, `2-baixo-844x390.png` `f9c92f6d42f8c7fc`,
+  `3-baixo-780x360.png` `8fcff83eae9c3f93`.
+- `cobertura-correcoes/mutacoes.log` + `cobertura-correcoes/m1b/`: a **M1b**, com valores reais (`paGasto` da vista do
+  Mestre, `custoPA` da técnica). Na base passa calada (41/41, rc=0). Nesta ordem dá FALHA em 1, em 2 e no fim (38/41,
+  rc=1). Os relatos mutados estão cometidos inteiros. Também lá estão as mutações MT1–MT4 do teste (17, 22, 21 e 21 de 23,
+  todas com rc=1).
+- `cobertura-correcoes/actualizar-listas.log`: o artefacto do `retoma-i0004/actualizar-listas.py` (B5).

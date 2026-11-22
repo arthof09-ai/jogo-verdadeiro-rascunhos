@@ -10,6 +10,8 @@ extends SceneTree
 ## (`vista_do_elenco`, B6); os diagnósticos dizem a contagem e as linhas, não os nomes (`diagnostico`, B4).
 ## CAIXA-JANELA-COBERTURA (C1): §5 — a varredura do relato por CHAVES proibidas de vida/PA/alma
 ## (`chaves_no_relato`, a mesma que a prova corre), com o caso de um passo «bancada:» que traz um custo de PA.
+## CAIXA-JANELA-COBERTURA-CORRECOES: 12 chaves (B1), o caso testa o CUSTO (`custoPA`/`paGasto`), 49 formas (12×4+1),
+## as formas de chave de «alma»/«dano» e a prosa (B2), as maiúsculas (B4) e os limites registados (B2/B6).
 ## No CI: job `cliente`, passo «Nomes do relato da caixa-janela» (B1).
 ##
 ## Correr (na raiz do repo):
@@ -99,18 +101,24 @@ func _init() -> void:
 		"4: o canário apanha no relato antigo 22 achados (28 ocorrências brutas), o 1.º «Lobo de Bancada na linha 7» (%s; %d brutas)" % [
 		N.diagnostico(velho, canarios), brutas])
 
-	print("== 5. C1 — as chaves proibidas de vida/PA/alma no relato ==")
+	print("== 5. C1 (+ B1–B4 das CORRECOES) — as 12 chaves privadas do Mestre no relato ==")
 	var chaves: Array = N.CHAVES_PROIBIDAS
-	_ok(chaves == ["vidaActual", "vidaTotal", "paTotal", "paLivre", "alma"], "5: as chaves proibidas são as 5 de vida/PA/alma %s" % [chaves])
+	_ok(chaves == ["vidaActual", "vidaTotal", "paTotal", "paLivre", "alma",
+		"paGasto", "estadoMorte", "armaCaida", "armaQuebrada", "corpoPartido", "custoPA", "dano"],
+		"5: as chaves proibidas são as 12 privadas do Mestre (vida, PA, alma, dano, morte, arma, corpo) — %d" % chaves.size())
 	# O relato escrito pela fonte e o relato antigo inteiro (com os seus rótulos «vida, PA» em palavra) passam.
 	_ok(N.chaves_no_relato(limpo).is_empty() and N.chaves_no_relato(velho).is_empty(),
 		"5: o relato da fonte e o relato antigo (%d linhas) não têm chaves (%s; %s)" % [velho.size(), N.diagnostico_chaves(limpo), N.diagnostico_chaves(velho)])
-	# O caso: a IA ou o protocolo põem um custo de PA no passo; a linha «bancada:» escreve o passo inteiro.
-	var passo_pa := {"tipo": "mover", "destino": {"x": 11, "y": 10}, "paLivre": 4}
-	var com_pa := limpo.duplicate()
-	com_pa.append(N.linha_bancada(lobo, "lobo-bancada", passo_pa, "APLICADA"))
-	_ok(N.chaves_no_relato(com_pa) == ["paLivre na linha 5"] and N.diagnostico_chaves(com_pa) == "1 achado(s), linhas [5]",
-		"5: um passo «bancada:» com um custo de PA → a varredura FALHA (%s)" % N.diagnostico_chaves(com_pa))
+	# O caso (B1): a IA ou o protocolo põem no passo o CUSTO de PA — o `custoPA` da técnica ou o `paGasto` da figura
+	# (a chave de PA que a vista do Mestre traz); a linha «bancada:» escreve o passo inteiro.
+	for k in ["custoPA", "paGasto"]:
+		var passo_pa := {"tipo": "atacar", "alvoId": "f00d", "arma": "golpe-forte-bancada", k: 2}
+		var com_pa := limpo.duplicate()
+		com_pa.append(N.linha_bancada(lobo, "lobo-bancada", passo_pa, "APLICADA"))
+		_ok(N.chaves_no_relato(com_pa) == ["%s na linha 5" % k] and N.diagnostico_chaves(com_pa) == "1 achado(s), linhas [5]"
+			and not N.diagnostico_chaves(com_pa).contains(k),
+			"5: um passo «bancada:» com um custo de PA (a %s chave de custo) → a varredura FALHA (%s)" % [
+				"1.ª" if k == "custoPA" else "2.ª", N.diagnostico_chaves(com_pa)])
 	# Cada chave, nas formas em que pode chegar a uma linha: JSON, `str()` de um Dictionary do Godot, `k=`/`k:` à mão.
 	var formas := PackedStringArray()
 	for k in chaves:
@@ -122,17 +130,39 @@ func _init() -> void:
 	var por_forma: Array = []
 	for i in formas.size():
 		por_forma.append(N.chaves_no_relato(PackedStringArray([formas[i]])).size())
-	_ok(not por_forma.has(0) and N.diagnostico_chaves(formas) == "%d achado(s), linhas %s" % [formas.size(), JSON.stringify(range(1, formas.size() + 1))],
-		"5: cada uma das 5 chaves é apanhada em JSON, em str() de Dictionary, em k= e em k: (e «almaLivre») — %d linhas, %s" % [formas.size(), N.diagnostico_chaves(formas)])
+	_ok(formas.size() == 49 and not por_forma.has(0) and N.diagnostico_chaves(formas) == "%d achado(s), linhas %s" % [formas.size(), JSON.stringify(range(1, formas.size() + 1))],
+		"5: cada uma das 12 chaves é apanhada em JSON, em str() de Dictionary, em k= e em k: (e «almaLivre») — %d linhas (esperadas 49 = 12×4+1), %d achado(s)" % [formas.size(), N.chaves_no_relato(formas).size()])
 	# As palavras não tropeçam (os rótulos usam-nas), e o diagnóstico não escreve a chave achada.
 	var prosa := PackedStringArray([
 		"  ok    1: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa (0 achado(s), textos [])",
+		"  ok    1: nenhuma chave privada do Mestre no relato (40 linhas; 12 chaves proibidas; 0 achado(s), linhas [])",
 		"  ok    1: nenhuma chave de vida/PA/alma no relato (40 linhas; 5 chaves proibidas; 0 achado(s), linhas [])",
-		"  a alma do Lobo, com calma, na palma da mão; Alma; almas; vida total; PA livre"])
-	_ok(N.chaves_no_relato(prosa).is_empty() and not N.diagnostico_chaves(com_pa).contains("paLivre"),
-		"5: «vida», «PA» e «alma» como palavras não são chaves, e o diagnóstico não escreve a chave (%s)" % N.diagnostico_chaves(prosa))
+		"  a alma do Lobo, com calma, na palma da mão; Alma; almas; vida total; PA livre; PA gasto; custo de PA",
+		"  os números de dano do Lobo; o dano, 3 vezes; danos; abandono; Dano; dano (2d8+3); estado de morte; arma caída",
+		"  a alma, 3 vezes; capaLivre; escapaTotal; mapaGasto; recustoPA"])
+	_ok(N.chaves_no_relato(prosa).is_empty(),
+		"5: «vida», «PA», «alma», «dano», «morte», «arma» como palavras, e as chaves a meio de outra palavra, não são chaves (%s)" % N.diagnostico_chaves(prosa))
+	# B2: as formas seguras de chave de «alma»/«dano» (snake_case, nua seguida de número, camelCase) — apanhadas.
+	var formas_palavra := PackedStringArray(["  x alma_livre 3", "  x alma 3", "  x alma -1", "  x almaTotal",
+		"  x dano_total 4", "  x dano 7", "  x dano=-2", "  x danoTotal", "  x 'dano'", "  x {\"dano\":5}"])
+	var por_palavra: Array = []
+	for f in formas_palavra:
+		por_palavra.append(N.chaves_no_relato(PackedStringArray([f])).size())
+	_ok(not por_palavra.has(0), "5: «alma»/«dano» em forma de chave (k_snake, k nua com número, kCamel, 'k', JSON) são apanhadas — %d de %d" % [
+		por_palavra.count(1), formas_palavra.size()])
+	# B4: as chaves camelCase não escapam por mudar maiúsculas/minúsculas.
+	var caixa := PackedStringArray(["  x VidaActual 3", "  x vidaactual 3", "  x PALIVRE 3", "  x CustoPa 2", "  x PaGasto 1", "  x EstadoMorte"])
+	var por_caixa: Array = []
+	for f in caixa:
+		por_caixa.append(N.chaves_no_relato(PackedStringArray([f])).size())
+	_ok(not por_caixa.has(0), "5: as chaves camelCase com outras maiúsculas (VidaActual, vidaactual, PALIVRE, …) são apanhadas — %d de %d" % [
+		por_caixa.count(1), caixa.size()])
+	# B2/B6: os limites que ficam, fixados para que mudem só de propósito (ver nomes_relato.gd e o ESTADO-FINAL):
+	# um valor sob uma chave genérica, «Alma»/«Dano» com maiúscula, a palavra seguida de pontuação, a chave com prefixo.
+	var limites := PackedStringArray(["  x {\"valor\":16}", "  x {\"Alma\":3}", "  x Dano: 4", "  x alma, 3", "  x figuraPaLivre 2", "  x max_paGasto 1"])
+	_ok(N.chaves_no_relato(limites).is_empty(),
+		"5: limites registados — %d formas escapam por desenho (valor genérico, Alma/Dano maiúsculos, palavra + pontuação, chave com prefixo)" % limites.size())
 	_fim()
-
 
 func _fim() -> void:
 	print("")

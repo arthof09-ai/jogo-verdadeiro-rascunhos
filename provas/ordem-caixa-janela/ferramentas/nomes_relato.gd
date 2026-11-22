@@ -77,21 +77,38 @@ static func diagnostico(relato: PackedStringArray, nomes: Array) -> String:
 	return "%d achado(s), linhas %s" % [no_relato(relato, nomes).size(), JSON.stringify(linhas(relato, nomes))]
 
 
-## CAIXA-JANELA-COBERTURA (C1; fecha as faltas 1 e 2 da B7 da CAIXA-JANELA-NOMES-CORRECOES): as CHAVES de vida, PA e
-## alma que nenhuma linha do relato pode trazer. A varredura é por chaves e não por valores: os valores de bancada
+## CAIXA-JANELA-COBERTURA (C1; as faltas 1 e 2 da B7 da CAIXA-JANELA-NOMES-CORRECOES): as CHAVES privadas do Mestre
+## que nenhuma linha do relato pode trazer. A varredura é por chaves e não por valores: os valores de bancada
 ## (vida 16/22/30/34, PA 0/6) confundem-se com coordenadas, seq e medidas. Apanha também um valor que a IA ou o protocolo
-## ponham no passo da linha «bancada:» (que é `JSON.stringify(passo)`), p. ex. um custo de PA como `"paLivre":4`.
-## Os rótulos das verificações usam «vida», «PA» e «alma» como PALAVRAS, e não tropeçam: as chaves camelCase só
-## aparecem como chaves; e «alma», que também é palavra portuguesa, só conta em posição de chave (`"alma"`, `'alma'`,
-## `alma:` / `alma=`) ou como início de um identificador camelCase (`almaLivre`, `almaTotal`: a forma da chave de alma
-## ainda não existe em ficha nenhuma; ver a C2).
-const CHAVES_PROIBIDAS := ["vidaActual", "vidaTotal", "paTotal", "paLivre", "alma"]
+## ponham no passo da linha «bancada:» (que é `JSON.stringify(passo)`), p. ex. um custo de PA como `"custoPA":2`.
+## CAIXA-JANELA-COBERTURA-CORRECOES (B1): de 5 para 12 chaves — as que o servidor guarda por figura e só o Mestre vê
+## (`sala.js`, `projecao.js` → `propria`): `paGasto` (a chave de PA que a vista do Mestre traz de facto), `estadoMorte`,
+## `armaCaida`, `armaQuebrada`, `corpoPartido`; o `custoPA` das técnicas; e o `dano`.
+## Duas famílias de regex (`_re_chave`):
+## - as 10 camelCase: em qualquer sítio da linha, sem distinguir maiúsculas (`(?i)`, B4: `VidaActual`/`vidaactual`),
+##   mas não a meio de um identificador (`(?<![A-Za-z0-9_])`, B2: `capaLivre` não é `paLivre`);
+## - «alma» e «dano», que também são palavras portuguesas (os rótulos dizem «vida, PA, alma»; a prosa diz «números de
+##   dano»): só em FORMA DE CHAVE (B2) — `"k"`, `'k'`, `k:` / `k=`, `kCamel` (`almaLivre`, `danoTotal`), `k_snake`
+##   (`alma_livre`) e `k` nua seguida de um número (`alma 3`, `dano -2`). Sempre com maiúscula/minúscula como estão
+##   (`Alma` e `Dano` em início de frase são prosa).
+## Limites que ficam (B2/B6; o teste §5 fixa-os):
+## - «alma»/«dano» com maiúscula inicial em posição de chave (`"Alma":3`, `Dano: 4`) escapam — a casa escreve as
+##   chaves em camelCase com minúscula, e a maiúscula é o início de frase da prosa;
+## - «alma»/«dano» seguidos de pontuação e número (`alma, 3`; `dano (2d8)`) escapam — é a forma da prosa;
+## - as 10 camelCase coladas a um prefixo (`figuraPaLivre`, `max_paGasto`) escapam — é o preço da lookbehind;
+## - um VALOR sob uma chave que não está na lista (`"valor":16`, `"pv":22`) ou um número solto escapa: a varredura é
+##   por nomes de chave, não por valores (R1 da RELATO-B7-CORRECOES; ver o ESTADO-FINAL, B6).
+const CHAVES_PROIBIDAS := ["vidaActual", "vidaTotal", "paTotal", "paLivre", "alma",
+	"paGasto", "estadoMorte", "armaCaida", "armaQuebrada", "corpoPartido", "custoPA", "dano"]
+## As chaves que também são palavras portuguesas: só contam em forma de chave.
+const CHAVES_PALAVRA := ["alma", "dano"]
 
 
 static func _re_chave(k: String) -> RegEx:
-	if k == "alma":
-		return RegEx.create_from_string("(?<![A-Za-z0-9_])(?:alma[A-Z][A-Za-z0-9_]*|\"alma\"|'alma'|alma[ \\t]*[:=])")
-	return RegEx.create_from_string(k)
+	if CHAVES_PALAVRA.has(k):
+		return RegEx.create_from_string(
+			"(?<![A-Za-z0-9_])(?:%s[A-Z_][A-Za-z0-9_]*|\"%s\"|'%s'|%s[ \t]*[:=]|%s[ \t]*-?[0-9])" % [k, k, k, k, k])
+	return RegEx.create_from_string("(?i)(?<![A-Za-z0-9_])" + k)
 
 
 ## As chaves proibidas nas linhas do relato («<chave> na linha <n>», uma entrada por linha × chave). Vazio = limpo.

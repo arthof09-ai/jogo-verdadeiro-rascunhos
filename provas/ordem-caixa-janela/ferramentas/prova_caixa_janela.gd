@@ -25,6 +25,8 @@ extends SceneTree
 ## CAIXA-JANELA-COBERTURA (C1): o relato também é varrido por CHAVES proibidas de vida/PA/alma
 ## (`NomesRelato.CHAVES_PROIBIDAS`) — em cada passagem (1, 2) e no fim, incondicional como a dos nomes. Cobre a linha
 ## «bancada:», que escreve o passo inteiro: um valor de PA posto no passo é FALHA.
+## CAIXA-JANELA-COBERTURA-CORRECOES (B1): as chaves são 12 (vida, PA — incluindo `paGasto` e `custoPA` —, alma, dano,
+## estado de morte, arma caída/quebrada, corpo partido); os rótulos dizem «chaves privadas do Mestre».
 ## Deixa em <pasta>: 1-janela-1280x720.png, 2-baixo-844x390.png, 3-baixo-780x360.png e relato.txt. Código 0 se tudo passa.
 
 const CENA := "res://cenas/arena/arena.tscn"
@@ -338,9 +340,10 @@ func _privacidade(rotulo: String) -> void:
 	var no_relato: Array = NomesRelato.no_relato(_relato, nomes)
 	_ok(not nomes.is_empty() and no_relato.is_empty(),
 		rotulo + ": nenhum nome verdadeiro no relato (%d linhas; canários: %d nome(s) que diferem do público; %s)" % [_relato.size(), nomes.size(), NomesRelato.diagnostico(_relato, nomes)])
-	# CAIXA-JANELA-COBERTURA (C1): e nenhuma chave de vida/PA/alma em nenhuma linha do relato até aqui.
+	# CAIXA-JANELA-COBERTURA (C1; B1 das CORRECOES: 12 chaves): e nenhuma chave privada do Mestre em nenhuma linha do
+	# relato até aqui.
 	_ok(NomesRelato.chaves_no_relato(_relato).is_empty(),
-		rotulo + ": nenhuma chave de vida/PA/alma no relato (%d linhas; %d chaves proibidas; %s)" % [_relato.size(), NomesRelato.CHAVES_PROIBIDAS.size(), NomesRelato.diagnostico_chaves(_relato)])
+		rotulo + ": nenhuma chave privada do Mestre no relato (%d linhas; %d chaves proibidas; %s)" % [_relato.size(), NomesRelato.CHAVES_PROIBIDAS.size(), NomesRelato.diagnostico_chaves(_relato)])
 
 
 func _correr() -> void:
@@ -464,9 +467,9 @@ func _fim() -> void:
 	var no_relato: Array = NomesRelato.no_relato(_relato, _canarios_nomes)
 	_ok(not _canarios_nomes.is_empty() and no_relato.is_empty(), "fim: o relato inteiro (%d linhas) não traz nenhum dos %d nome(s) verdadeiro(s) (%s)" % [
 		_relato.size(), _canarios_nomes.size(), NomesRelato.diagnostico(_relato, _canarios_nomes)])
-	# CAIXA-JANELA-COBERTURA (C1): a varredura final das chaves de vida/PA/alma, também incondicional (não precisa de
+	# CAIXA-JANELA-COBERTURA (C1; B1 das CORRECOES: 12 chaves): a varredura final das chaves privadas, também incondicional (não precisa de
 	# canários: as chaves são fixas). Corre antes da linha de baixo, sobre o relato inteiro.
-	_ok(NomesRelato.chaves_no_relato(_relato).is_empty(), "fim: o relato inteiro (%d linhas) não traz nenhuma das %d chaves de vida/PA/alma (%s)" % [
+	_ok(NomesRelato.chaves_no_relato(_relato).is_empty(), "fim: o relato inteiro (%d linhas) não traz nenhuma das %d chaves privadas do Mestre (%s)" % [
 		_relato.size(), NomesRelato.CHAVES_PROIBIDAS.size(), NomesRelato.diagnostico_chaves(_relato)])
 	_linha("")
 	_linha("prova da janela e da caixa com 10 figuras: %d de %d verificações passaram." % [_total - _falhas, _total])

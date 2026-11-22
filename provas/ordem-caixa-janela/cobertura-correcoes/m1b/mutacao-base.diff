@@ -1,0 +1,19 @@
+186c186,201
+< 		_linha(NomesRelato.linha_bancada(quem, vez_id, passo, str(lugar.respostas.get(id, {}).get("estado", lugar.respostas.get(id, {}).get("motivo", "?")))))
+---
+> 		# MUTACAO M1b: o passo escrito na linha «bancada:» leva os valores REAIS de custo de PA — o `paGasto` da figura na
+> 		# vista do Mestre e o `custoPA` da técnica usada (sem técnica no passo: o maior `custoPA` da ficha), menos no «encerrar».
+> 		var _mp: Dictionary = passo
+> 		if passo.get("tipo") != "encerrar":
+> 			var _custo := -1
+> 			var _maxc := 0
+> 			var _fx = JSON.parse_string(FileAccess.get_file_as_string(ProjectSettings.globalize_path("res://").path_join("../servidor/autojogo/fichas-bancada.json").simplify_path()))
+> 			for _fi in _fx["fichas"]:
+> 				if str(_fi.get("id", "")) == str(quem.get("fichaId", "")):
+> 					for _t in _fi.get("tecnicas", []):
+> 						_maxc = maxi(_maxc, int(_t.get("custoPA", 0)))
+> 						if str(_t.get("id", "")) == str(passo.get("arma", "")):
+> 							_custo = int(_t.get("custoPA", 0))
+> 			_mp = passo.merged({"paGasto": quem.get("paGasto"), "custoPA": _custo if _custo >= 0 else _maxc})
+> 			print("M1b valores postos no passo: paGasto=%s (vista do Mestre) custoPA=%d (%s)" % [str(quem.get("paGasto")), _mp["custoPA"], "da técnica" if _custo >= 0 else "o maior da ficha"])
+> 		_linha(NomesRelato.linha_bancada(quem, vez_id, _mp, str(lugar.respostas.get(id, {}).get("estado", lugar.respostas.get(id, {}).get("motivo", "?")))))
