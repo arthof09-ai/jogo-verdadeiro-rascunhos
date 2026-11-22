@@ -1,0 +1,53 @@
+# CAIXA-JANELA-COBERTURA-CORRECOES-3 — as fontes da tabela da B1 e da razão da B2, conferidas na base ba56b7e
+# (cada bloco: o comando e a sua saída tal como saiu)
+
+## B1 — custoM/reservaM: propria do movimento; perdeQuarto: propria da desgraca
+
+$ grep -n "movimento: Object\|desgraca: Object" rascunhos/servidor/nucleo/projecao.js
+25:  movimento: Object.freeze({ todos: ['figuraId', 'de', 'para', 'caminho'], propria: ['custoM', 'reservaM'] }),
+38:  desgraca: Object.freeze({ todos: ['figuraId', 'efeito'], propria: ['perdeQuarto'] }), // só a desgraça APLICADA; REF_19
+
+## B1 — o custoM em cada casa de opcoes.mover; a reservaM como orcamentoM; as opções vão à jogadora da vez
+
+$ grep -n "custoM: arred\|orcamentoM: arred\|if (s.papel === 'jogadora') return" rascunhos/servidor/nucleo/sala.js
+889:        mover.push({ x: c.x, y: c.y, custoM: arred(d * casaDe(m)) });
+947:    return { vezId: figuraId, orcamentoM: arred(v.reservaM), mover, ataques, curas, consumiveis: [], acoes, reacoes: [] };
+965:    if (s.papel === 'jogadora') return s.figuraId === vezFig.id ? calcularOpcoes(m, vezFig.id) : null;
+
+## B1 — reacaoDisponivel/defendendo: por figura, e AUSENTES da projecção (só do Mestre)
+
+$ grep -n "reacaoDisponivel: true" rascunhos/servidor/nucleo/sala.js
+551:      reacaoDisponivel: true, defendendo: false,
+
+$ grep -n "reacaoDisponivel\|defendendo" rascunhos/servidor/nucleo/projecao.js rascunhos/servidor/nucleo/ordem-dinamica.js
+(saída vazia: 0 bytes)
+
+## B2 — o H10 nunca projectado; os seus valores
+
+$ grep -n "H10, nunca\|^const MODOS" rascunhos/servidor/nucleo/sala.js
+62:const MODOS = Object.freeze(['manual', 'semi', 'auto']);
+552:      modo: lado === 'jogadora' ? null : modoPadrao, // H10, nunca projetado (E-P11)
+
+## B2 — o modo= do relato: o rótulo do cliente para o ordemPor da caixa
+
+$ grep -n "ordemPor: c.modo" rascunhos/servidor/nucleo/ordem-dinamica.js
+166:  return { ligada: c.ligada, ordemPor: c.modo, ordemDinamica: ordemParaVista(odParty, figuras) };
+
+$ grep -n 'definir_modo(str(c.get("ordemPor"\|"modo": ordem_turnos.modo' rascunhos/cliente/hud/hud.gd
+955:		ordem_turnos.definir_modo(str(c.get("ordemPor", "")))
+1049:		"modo": ordem_turnos.modo,
+
+$ grep -n 'modo=%s' provas/ordem-caixa-janela/ferramentas/prova_caixa_janela.gd
+287:	return "visível=%s modo=%s ordem=%s vez=%s" % [c["visivel"], c["modo"], _nomes_ids(c["ids"]), _estado.nome_de(c["vez"])]
+
+$ grep -n 'modo=' provas/ordem-caixa-janela/cobertura-correcoes-3/cliente/relato.txt
+38:  caixa da jogadora ao abrir: visível=true modo=dinamico ordem=["Arqueira de Bancada","Lobo","Lobo","Lobo","Lobo","Espadachim de Bancada","Bruto","Bruto","Bruto","Bruto"] vez=Lobo
+
+## B3 — as linhas que a prosa do §5 ganhou na CORRECOES-2 (o commit 6652f02 na linha de integração): três
+
+$ git show 6652f02 -- provas/ordem-caixa-janela/ferramentas/teste_nomes_relato.gd | grep -A11 'var prosa := ' | grep '^+'
++		"  ok    1: nenhuma chave privada do Mestre no relato (40 linhas; 17 chaves proibidas; 0 achado(s), linhas [])",
++		"  a alma, 3 vezes; capaLivre; escapaTotal; mapaGasto; recustoPA",
++		"  as figuras reservam 3 m; custom; o custo em m; a reserva em metros; perde um quarto; reacção disponível",
++		"  a Arqueira está defendendo; Defendendo, o Bruto; defendendo o Lobo; incustoM; areservaM"])
+(3 linhas novas: a 1.ª (o rótulo das 17 chaves), a 3.ª («reservam») e a 4.ª («defendendo»); a 2.ª, «recustoPA», já lá estava — o «+» é só a vírgula nova no fim)

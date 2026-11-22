@@ -170,13 +170,16 @@ func _init() -> void:
 		por_caixa.count(1), caixa.size()])
 	# B2/B6 (e B2 da CORRECOES-2): os limites que ficam, fixados para que mudem só de propósito (ver nomes_relato.gd e os
 	# ESTADO-FINAL): um valor sob uma chave genérica, «Alma»/«Dano» com maiúscula, a palavra seguida de pontuação, a
-	# chave com prefixo; `modo` (H10, só do Mestre, não listável: a linha legítima «modo=dinamico»), «alma»/«dano» em
-	# kebab, `custoM`/`reservaM` com `m` minúsculo, «defendendo» nua com booleano.
+	# chave com prefixo; `modo` (não listável: a linha legítima «modo=dinamico» é o rótulo do cliente para o
+	# `ordemPor`, visível à Party — não o H10 da figura, B2 da CORRECOES-3), «alma»/«dano» em kebab, `custoM`/`reservaM`
+	# com `m` minúsculo, «defendendo» nua com booleano.
+	# B2 da CORRECOES-3: o LATENTE — o `modo` H10 de uma figura (`modo=auto`, `"modo":"manual"`) também escaparia.
 	var limites := PackedStringArray(["  x {\"valor\":16}", "  x {\"Alma\":3}", "  x Dano: 4", "  x alma, 3", "  x figuraPaLivre 2", "  x max_paGasto 1",
 		"  caixa da jogadora ao abrir: visível=true modo=dinamico vez=Lobo", "  x {\"modo\":\"dinamico\"}",
-		"  x alma-total 3", "  x dano-total 4", "  x reservam=3", "  x custom: 1", "  x defendendo true"])
+		"  x alma-total 3", "  x dano-total 4", "  x reservam=3", "  x custom: 1", "  x defendendo true",
+		"  x modo=auto", "  x {\"modo\":\"manual\"}"])
 	_ok(N.chaves_no_relato(limites).is_empty(),
-		"5: limites registados — %d formas escapam por desenho (valor genérico, Alma/Dano maiúsculos, palavra + pontuação, chave com prefixo, modo, kebab, m minúsculo, defendendo + booleano)" % limites.size())
+		"5: limites registados — %d formas escapam por desenho (valor genérico, Alma/Dano maiúsculos, palavra + pontuação, chave com prefixo, modo (rótulo e H10 latente), kebab, m minúsculo, defendendo + booleano)" % limites.size())
 	# B5 da CORRECOES-2: o falso alarme aceite, para o lado seguro — «alma»/«dano» nua seguida de número é forma de chave
 	# (B2), por isso a prosa SEM vírgula («a alma 3 vezes») tropeça. Fixado: se isto mudar, muda de propósito.
 	var alarme := PackedStringArray(["  a alma 3 vezes", "  o dano 3 vezes"])

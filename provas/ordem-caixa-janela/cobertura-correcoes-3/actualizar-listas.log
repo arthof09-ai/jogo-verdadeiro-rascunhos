@@ -1,0 +1,62 @@
+# o artefacto do retoma-i0004/actualizar-listas.py, com a saída REAL de cada comando capturada
+# (corrido na raiz do repo, sobre o HEAD ba56b7e mais a árvore de trabalho; cada bloco: o comando, a saída, o rc)
+# 2026-11-22T09:41:23Z · Python 3.12.10 · git version 2.56.0.windows.4 · PC (Git Bash)
+
+## SHA-256 das 3 listas ANTES
+$ sha256sum retoma-i0004/antes.txt retoma-i0004/depois.txt MANIFESTO-SHA256.txt
+cf3b16fa1b1b924b4e75376022c7a997cc678083ccbfd4fac64915ce05f69d46 *retoma-i0004/antes.txt
+e387a4681b5a6156adfc50a876ce4ae822bcd39668619433b0a579b97d47f448 *retoma-i0004/depois.txt
+a3bfde23e00b534e6d7ad4e793e2c27308e4334ade2fc6ff6c7dd23d450e2b39 *MANIFESTO-SHA256.txt
+rc=0
+
+## o script (PYTHONIOENCODING=utf-8)
+$ env PYTHONIOENCODING=utf-8 python retoma-i0004/actualizar-listas.py
+antes.txt: 37 · depois.txt: 415 · MANIFESTO: 459 ficheiros (0 novos, 0 tirados nesta passagem)
+rc=0
+
+## SHA-256 das 3 listas DEPOIS
+$ sha256sum retoma-i0004/antes.txt retoma-i0004/depois.txt MANIFESTO-SHA256.txt
+cf3b16fa1b1b924b4e75376022c7a997cc678083ccbfd4fac64915ce05f69d46 *retoma-i0004/antes.txt
+e387a4681b5a6156adfc50a876ce4ae822bcd39668619433b0a579b97d47f448 *retoma-i0004/depois.txt
+a3bfde23e00b534e6d7ad4e793e2c27308e4334ade2fc6ff6c7dd23d450e2b39 *MANIFESTO-SHA256.txt
+rc=0
+
+## o estado das listas (saída vazia = o script não mudou nada)
+$ git status --short --untracked-files=all retoma-i0004 MANIFESTO-SHA256.txt
+(saída vazia: 0 bytes)
+rc=0
+
+$ git diff --stat -- retoma-i0004 MANIFESTO-SHA256.txt
+(saída vazia: 0 bytes)
+rc=0
+
+## o território: nada em rascunhos/ nem .github/ (árvore de trabalho contra a base ba56b7e)
+$ git diff --stat ba56b7e -- rascunhos/ .github/
+(saída vazia: 0 bytes)
+rc=0
+
+$ git status --short --untracked-files=all -- rascunhos/ .github/
+(saída vazia: 0 bytes)
+rc=0
+
+## tudo o que o ramo muda contra a base (árvore de trabalho; os não seguidos à parte)
+$ git diff --stat ba56b7e
+ provas/ordem-caixa-janela/ferramentas/nomes_relato.gd       | 13 +++++++++++--
+ provas/ordem-caixa-janela/ferramentas/teste_nomes_relato.gd | 11 +++++++----
+ 2 files changed, 18 insertions(+), 6 deletions(-)
+rc=0
+
+$ git status --short --untracked-files=all
+ M provas/ordem-caixa-janela/ferramentas/nomes_relato.gd
+ M provas/ordem-caixa-janela/ferramentas/teste_nomes_relato.gd
+?? provas/ordem-caixa-janela/cobertura-correcoes-3/actualizar-listas.log
+?? provas/ordem-caixa-janela/cobertura-correcoes-3/cliente/1-janela-1280x720.png
+?? provas/ordem-caixa-janela/cobertura-correcoes-3/cliente/2-baixo-844x390.png
+?? provas/ordem-caixa-janela/cobertura-correcoes-3/cliente/3-baixo-780x360.png
+?? provas/ordem-caixa-janela/cobertura-correcoes-3/cliente/relato.txt
+?? provas/ordem-caixa-janela/cobertura-correcoes-3/cliente/servidor-info.json
+?? provas/ordem-caixa-janela/cobertura-correcoes-3/cliente/servidor.log
+?? provas/ordem-caixa-janela/cobertura-correcoes-3/conferencia-fontes.log
+?? provas/ordem-caixa-janela/cobertura-correcoes-3/teste-nomes-relato.log
+rc=0
+

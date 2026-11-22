@@ -102,13 +102,22 @@ static func diagnostico(relato: PackedStringArray, nomes: Array) -> String:
 ## vivas): `custoM` e `reservaM` (a `propria` do evento `movimento`, `projecao.js:25`; o `custoM` também vem em cada casa
 ## de `opcoes.mover`, `sala.js:889`), `perdeQuarto` (a `propria` da `desgraca`, `projecao.js:38`), `reacaoDisponivel` e
 ## `defendendo` (por figura, `sala.js:551`).
+## CAIXA-JANELA-COBERTURA-CORRECOES-3 (B1): quem recebe cada uma — NÃO são todas «só do Mestre». `custoM`/`reservaM`
+## são `propria` do `movimento` (`projecao.js:25`): a própria jogadora recebe-as no evento; o `custoM` vai-lhe também
+## em cada casa de `opcoes.mover` (`sala.js:889`) e a `reservaM` chega-lhe como `orcamentoM` (`sala.js:947`).
+## `perdeQuarto` é `propria` da `desgraca` (`projecao.js:38`). Só `reacaoDisponivel`/`defendendo` (`sala.js:551`)
+## não constam de `projecao.js` e são mesmo só do Mestre. O filtro não muda: o relato é cometido e lido por quem não
+## é a dona dos valores, por isso exclui as 5 na mesma.
 ## - `custoM`/`reservaM` acabam no sufixo de unidade `M` (metros): o radical conta sem distinguir maiúsculas, o `M`
 ##   final só maiúsculo (`(?i:custo)M`) — para que «reservam» (verbo) e «custom» não tropecem;
 ## - `defendendo` também é palavra (gerúndio de «defender»): vai para a família de «alma»/«dano», só em forma de chave
 ##   (os valores são booleanos: `"defendendo":true`, `defendendo=false`, `{ "defendendo": true }` são apanhados).
 ## Limites que ficam, além dos de cima (B2 da CORRECOES-2; o teste §5 fixa-os):
-## - `modo` (H10: o modo da ordem, que só o Mestre vê) NÃO é listável: a linha legítima da prova «caixa da jogadora ao
-##   abrir: visível=true modo=dinamico …» tropeçaria em todas as corridas (`modo=` é forma de chave na própria linha);
+## - `modo` NÃO é listável: a linha legítima da prova «caixa da jogadora ao abrir: visível=true modo=dinamico …»
+##   tropeçaria em todas as corridas (`modo=` é forma de chave na própria linha). (CORRECOES-3, B2:) esse `modo=` NÃO é
+##   o H10 da figura (nunca projectado, `sala.js:552`): é o rótulo do cliente (`ordem_turnos.modo`) para o `ordemPor`
+##   da caixa (`ordem-dinamica.js:166`), que a Party vê por desenho. LATENTE: uma futura linha com o `modo` H10 de uma
+##   figura (`modo=auto`, `"modo":"manual"`; valores em `sala.js:62`) escaparia à varredura;
 ## - «alma»/«dano»/«defendendo» em kebab (`alma-total`, `dano-total`) escapam — a casa não escreve chaves em kebab, e o
 ##   hífen é o da prosa composta;
 ## - `custoM`/`reservaM` com o `m` final minúsculo (`reservam=3`, `custom: 1`) escapam — o preço de não tropeçar no
