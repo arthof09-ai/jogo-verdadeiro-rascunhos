@@ -63,7 +63,7 @@ O que mudou em `provas/ordem-caixa/ferramentas/prova-servidor.mjs`:
 | a projecção da Party leva a `caixaMestre` **dentro** da `caixa` (`projecao.js:209`, `base.caixa = { ...caixaParaParty(…), caixaMestre }`)¹ | (b) canários; dos testes antigos, **4**: «… por omissão», «nada do Mestre na caixa da Party (canários)» (chaves exactas da `caixa`), «a ordem da Party sobrevive ao journal…» e a fixture do ecrã do Mestre |
 | `ordemDinamicaParty` tirada das `CHAVES_MUNDO` (o «voltar» deixa de a repor) | (c), **só** este |
 | o op `caixa` deixa de exigir o papel Mestre | (a), **só** este |
-| fuga (`modo`) **só** no snapshot que o `escolherCaixa` manda: `sala.js:1186`, no ramo `else if (tx.snapshotsParty)` da entrega dos snapshots, `msg: { ...mensagemSnapshot(m, s, tx.ts), modo: m.caixaMestre.modo }` — uma chave `modo` no **topo** do ROOM_SNAPSHOT, **fora da `caixa`**² | (b) com o guião novo, **só** este (415/416); o guião **antigo passa calado** (416/416, `privacidade` 8/8). É a lacuna que a B5-b fecha |
+| fuga (`modo`) **só** no snapshot que o `escolherCaixa` manda: `sala.js:1187`, no ramo `else if (tx.snapshotsParty)` da entrega dos snapshots, `msg: { ...mensagemSnapshot(m, s, tx.ts), modo: m.caixaMestre.modo }` — uma chave `modo` no **topo** do ROOM_SNAPSHOT, **fora da `caixa`**² | (b) com o guião novo, **só** este (415/416); o guião **antigo passa calado** (416/416, `privacidade` 8/8). É a lacuna que a B5-b fecha |
 
 ¹ *Precisão da Ordem CAIXA-TESTES-CORRECOES (B3, 21/11/2026), refeita no PC sobre os testes de `6381f50`.* A linha
 original dizia «no snapshot» sem dizer onde, e «2 testes antigos». Repetidas as duas formas, a contagem certa é 3 (topo)
