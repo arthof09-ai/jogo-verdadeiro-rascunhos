@@ -6,7 +6,7 @@ durante a ordem) · **commit do trabalho:** `25c97ae` · **não fundido.**
 ## 1. O que mudou
 
 O relato da prova da caixa-janela (`provas/ordem-caixa-janela/cliente/relato.txt`) trazia os nomes verdadeiros das
-criaturas de bancada: 22 ocorrências de «Lobo de Bancada» e «Bruto de Bancada». Havia duas fontes, ambas a ler o `nome`
+criaturas de bancada: 22 ocorrências dos nomes verdadeiros n.º 2 e n.º 1. Havia duas fontes, ambas a ler o `nome`
 da vista do Mestre: o `_nome()` (`prova_caixa_janela.gd:141`, usado na linha «a batalha a meio … ordem dinâmica») e a
 linha «bancada: …» de `_jogar_vez()` (`:173`). O canário só varria os textos da caixa, por isso não apanhava nenhuma das
 duas.
@@ -44,16 +44,16 @@ Não toquei em `rascunhos/`, no HUD, nas cores nem no servidor.
 
 O teste (`teste_nomes_relato.gd`) reproduz o caso de duas maneiras:
 - **§3:** um relato limpo, escrito pela fonte, passa. O mesmo relato com
-  `  bancada: Bruto de Bancada → {"tipo":"encerrar"} (APLICADA)` dá `["Bruto de Bancada na linha 5"]`, ou seja, o
-  canário falha. Também apanha «Lobo de Bancada» dentro de JSON.
+  uma linha «bancada:» suja (o passo `encerrar`, aplicado, escrito com o nome n.º 1) dá um só achado, o nome n.º 1 na
+  linha 5, ou seja, o canário falha. Também apanha o nome n.º 2 dentro de JSON.
 - **§4 (o caso medido):** corre o canário sobre o relato cometido da CAIXA-JANELA (`cliente/relato.txt`, a corrida de
-  antes desta ordem) e encontra **22 nomes verdadeiros**, o 1.º «Lobo de Bancada na linha 7».
+  antes desta ordem) e encontra **22 nomes verdadeiros**, o 1.º é o nome n.º 2 na linha 7.
 
 Mutações, todas revertidas (o `git status` ficou limpo antes do commit):
 
 | Mutação | Teste | Prova viva |
 |---|---|---|
-| `nome_publico` lê `nome` em vez de `nomePublico` (a fuga de volta) | **8/14** (6 falhas, §2 e §3) | **35/38**: as 3 novas falham («Lobo de Bancada na linha 7», …) |
+| `nome_publico` lê `nome` em vez de `nomePublico` (a fuga de volta) | **8/14** (6 falhas, §2 e §3) | **35/38**: as 3 novas falham (a 1.ª acusa o nome n.º 2 na linha 7, …) |
 | canário cego (`no_relato` nunca acha nada) | **11/14** (§3 sujo, §3 JSON, §4) | — (a fonte limpa passaria; é o teste que o apanha) |
 
 ## 3. Corridas (PC, Godot 4.7.2 Windows `Godot_v4.7.2-stable_win64_console.exe`; motor VLAB real sha256 `a91c021c…3261`; semente 7)
@@ -61,7 +61,7 @@ Mutações, todas revertidas (o `git status` ficou limpo antes do commit):
 | Corrida | Resultado | Registo |
 |---|---|---|
 | Teste dos nomes do relato (novo) | **14/14** | `provas/ordem-caixa-janela/nomes/teste-nomes-relato.log` |
-| Prova viva da caixa-janela | **38/38** (eram 35; +3 do canário do relato); 0 «Lobo/Bruto de Bancada» no relato | `nomes/cliente/relato.txt` |
+| Prova viva da caixa-janela | **38/38** (eram 35; +3 do canário do relato); 0 nomes verdadeiros (n.º 1 / n.º 2) no relato | `nomes/cliente/relato.txt` |
 | rodar_testes | 290/290 | `nomes/suites/rodar_testes.log` |
 | abrir_scripts | 107 scripts, 0 falhas | `nomes/suites/abrir_scripts.log` |
 | caixa_janela · caixa_jogadora · hud_acoes · canario_privacidade | 69/69 · 18/18 · 50/50 · 10/10 | `nomes/suites/` |
@@ -69,7 +69,7 @@ Mutações, todas revertidas (o `git status` ficou limpo antes do commit):
 | `actualizar-listas` (retoma) | 0 novos, 0 tirados, sem diferenças (o ramo não toca em `rascunhos/`) | — |
 
 Capturas da prova viva (sha256, 16 primeiros): `13ea9aa6ade3a432`, `9125924cc4b1e23e` e `b4d327e1b0c34764`. Vi a de
-780×360: a caixa mostra «Lobo» e «Bruto», partida em 9 + 1.
+780×360: a caixa mostra os nomes públicos das duas criaturas de bancada, partida em 9 + 1.
 
 Não corri as suites do servidor (`node --test`), porque nenhum ficheiro do servidor mudou. O CI corre-as.
 

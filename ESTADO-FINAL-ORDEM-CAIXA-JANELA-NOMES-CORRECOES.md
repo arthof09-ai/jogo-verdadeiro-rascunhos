@@ -33,7 +33,7 @@ casa é que o coordenador aplique o remendo.
 **A prova, como pude fazê-la:** tirei o corpo exacto do passo do workflow remendado e corri-o como o runner o corre
 (`bash --noprofile --norc -e`, a partir de `rascunhos/cliente`, com `GODOT` = Godot 4.7.2 `_console.exe`):
 - **verde:** rc=0, 14 de 14;
-- **canário mudado** (na fixture, linha 7: «Lobo de Bancada» → «Lobo da Bancada»): **rc=1**, 13 de 14. O §4 acusa
+- **canário mudado** (na fixture, linha 7: o nome n.º 2 com a preposição trocada, «de» → «da»): **rc=1**, 13 de 14. O §4 acusa
   «21 achado(s) … 27 brutas». Reposto com `cp`, e o `cmp` confirma que ficou igual.
 - Registo: `nomes-correcoes/mutacoes.log`.
 
@@ -45,11 +45,11 @@ aplicar o remendo. Ver §4, ponto 1.
 - O relato antigo está **congelado dentro do teste**: `const RELATO_VELHO`, igual byte a byte a
   `provas/ordem-caixa-janela/cliente/relato.txt` (sha256 `6df653c41a29e23a…` nos dois; comparado à máquina).
 - O §4 já não lê o ficheiro. Afirma, numa verificação só (o teste continua com 14):
-  - `achados.size() == 22`;
-  - `achados[0] == "Lobo de Bancada na linha 7"`;
+  - que há 22 achados;
+  - que o 1.º achado é o nome n.º 2 na linha 7;
   - **28 ocorrências brutas**.
 - **«22 ocorrências» passou a «22 achados (28 brutas)».** Um achado é um par linha × nome. A linha 25, a da ordem
-  dinâmica, tem 4 «Lobo de Bancada» e 4 «Bruto de Bancada»: conta 2 achados e 8 ocorrências.
+  dinâmica, tem 4 vezes o nome n.º 2 e 4 vezes o nome n.º 1: conta 2 achados e 8 ocorrências.
   - Corrigido no teste e no README novo.
   - O ESTADO-FINAL da CAIXA-JANELA-NOMES (§1 e §2) ainda diz «22 ocorrências» / «22 nomes verdadeiros». Não o
     reescrevi, porque é o registo daquela ordem. Fica dito aqui.
@@ -86,8 +86,8 @@ prova a parar logo depois do passo 0. Corri as duas versões ao vivo, com o serv
 
 ### B5 — o rótulo
 
-«figuras repetidas (as 8 criaturas da prova)» passou a «uma ficha repetida não repete o canário (aqui as 4 fichas + 1
-Bruto repetido; na prova viva, 10 figuras de 4 fichas)». O 4 vem de `figuras.size()`, por isso não pode ficar
+O rótulo que falava de figuras repetidas e das 8 criaturas da prova passou a dizer que uma ficha repetida não repete o
+canário: aqui as 4 fichas mais uma criatura de bancada repetida; na prova viva, 10 figuras de 4 fichas. O 4 vem de `figuras.size()`, por isso não pode ficar
 desactualizado.
 
 ### B6 (opcional) — os canários a partir do elenco: **feito**
@@ -138,7 +138,7 @@ vida, PA ou alma entra nos ficheiros desta ordem.
 | Corrida | Resultado | Registo |
 |---|---|---|
 | Teste dos nomes do relato | **14/14** | `provas/ordem-caixa-janela/nomes-correcoes/teste-nomes-relato.log` |
-| Prova viva da caixa-janela | **38/38**, rc=0; 0 «Lobo/Bruto de Bancada» no relato | `nomes-correcoes/cliente/relato.txt` |
+| Prova viva da caixa-janela | **38/38**, rc=0; 0 nomes verdadeiros (n.º 1 / n.º 2) no relato | `nomes-correcoes/cliente/relato.txt` |
 | Teste do relato da caixa (passo «Relato da caixa») | **28/28** | `nomes-correcoes/suites/teste_relato_caixa.log` |
 | Servidor, `node --test --test-isolation=none` | **418/418**, 0 falhas | `nomes-correcoes/suites/servidor-node-test.log` |
 | `prova-servidor.mjs` (passo «Prova da caixa») | **PROVA OK** | `nomes-correcoes/suites/prova-servidor.log` |
@@ -147,7 +147,7 @@ vida, PA ou alma entra nos ficheiros desta ordem.
 | `actualizar-listas` (retoma) | 0 novos, 0 tirados, sem diferenças: o ramo não toca em `rascunhos/`, por isso não havia listas para juntar | — |
 
 - **Capturas da prova viva** (sha256, 16 primeiros): `0086b0edbd6a8051`, `b46e4b57b68effbb` e `79f7c54d69c4c0db`. Vi a
-  de 780×360: «Lobo», «Bruto», «Arqueira …», «Espadachi…», partida em 9 + 1.
+  de 780×360: os nomes públicos das duas criaturas de bancada, «Arqueira …», «Espadachi…», partida em 9 + 1.
 - **Os servidores correram sem `--permission`**, como nas ordens anteriores. Com essa opção, o Node 26 deste PC recusa
   a rede.
 - **O clone era fresco.** A 1.ª tentativa da prova viva falhou com `Could not find type "AplicadorPerfil"`, porque os
