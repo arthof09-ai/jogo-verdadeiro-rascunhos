@@ -15,11 +15,20 @@ extends SceneTree
 ##    contá-lo como de actor muda a contagem e adianta o modelo.
 ## Ordem CAIXA-RELATO-B7: com o Estado REAL, a verificação B2 continua a passar depois de um `limpar()` sem snapshot
 ## novo (D4 da conferência da CAIXA-RELATO-CORRECOES: o `limpar()` deixava `eventos_desde_snapshot` do snapshot velho).
+## Ordem CAIXA-RELATO-B7-CORRECOES (sentença da conferência da CAIXA-RELATO-B7):
+##  - B2: o caso do `limpar()` corre DEPOIS da varredura de privacidade do §B6 e não era varrido. Agora gera, a cada passo,
+##    a linha do relato tal como as provas a escreveriam (a caixa do Estado, a origem do snapshot e a caixa actual do
+##    modelo do HUD) e varre-as com a MESMA lista de proibidas (`PROIBIDAS`) — 2 verificações novas (28 → 30).
+##  - B3: «o snapshot DESTE CASO não traz `propria` nem nomes» — é o que o teste monta, não uma regra do protocolo.
 ##
 ## Correr (na raiz do repo):
 ##   godot --headless --path rascunhos/cliente -s "$PWD/provas/ordem-caixa-relato/ferramentas/teste_relato_caixa.gd"
 
 const OrdemTurnos := preload("res://hud/ordem_turnos.gd")
+
+## As palavras que nenhuma linha do relato pode ter (B6; CORRECOES-2 B3). Partilhada pela varredura do §B6 e pela do
+## caso do `limpar()` (B7-CORRECOES B2).
+const PROIBIDAS := ["nome", "vida", "alma", "pa", "pa\"", "paTotal", "vidaActual", "mestre", "master", "caixaMestre"]
 
 var _total := 0
 var _falhas := 0
@@ -166,15 +175,11 @@ func _init() -> void:
 	# --- Privacidade (B6; CORRECOES-2 B2/B3): TODAS as linhas — as «JSON actual» (§1/§5, as duas do caso da hora, o
 	# `encerrar`, a mesma vez) e a do §4 — só têm ids opacos, os campos da caixa e a origem do snapshot: nenhum nome,
 	# vida, alma, PA nem nada do Mestre. "pa" sozinho: nenhuma palavra fixa da linha o tem (e os ids são hexadecimais).
-	var proibidas := ["nome", "vida", "alma", "pa", "pa\"", "paTotal", "vidaActual", "mestre", "master", "caixaMestre"]
-	var achadas: Array = []
+	var achadas: Array = _proibidas_em(linhas)
 	var actuais := 0
 	for linha_r in linhas:
 		if str(linha_r).contains("JSON actual"):
 			actuais += 1
-		for p in proibidas:
-			if str(linha_r).to_lower().contains(p.to_lower()):
-				achadas.append(p)
 	_ok(linhas.size() == 6 and actuais == 5,
 		"a privacidade varre as 6 linhas, 5 delas «JSON actual» (não só a do §4; %d linhas, %d actuais)" % [linhas.size(), actuais])
 	_ok(achadas.is_empty(), "nenhuma linha ganha nomes, vida, alma nem PA %s" % [achadas])
@@ -186,12 +191,23 @@ func _init() -> void:
 	quit(1 if _falhas > 0 or _total == 0 else 0)
 
 
+## As palavras de PROIBIDAS que aparecem nas linhas (sem distinguir maiúsculas), uma entrada por achado.
+func _proibidas_em(linhas_v: Array) -> Array:
+	var achadas: Array = []
+	for linha_r in linhas_v:
+		for p in PROIBIDAS:
+			if str(linha_r).to_lower().contains(str(p).to_lower()):
+				achadas.append(p)
+	return achadas
+
+
 ## Ordem CAIXA-RELATO-B7 (Mecânica D4 da conferência da CAIXA-RELATO-CORRECOES): `Estado.limpar()` emite
 ## `snapshot_aplicado` — as provas recomeçam aí o contador (`_registar_snapshot` → novo_snap) — mas deixava
 ## `eventos_desde_snapshot` com os eventos do snapshot de ANTES. A verificação B2 das provas (a contagem e os tipos do
 ## relato = os que o Estado aplicou desde o snapshot) falhava depois de um `limpar()` sem snapshot novo. Aqui com o
 ## ESTADO REAL (res://estado/estado.gd, fora da árvore: sem Rede, sem Mestre) e a mesma ligação das provas.
-## Só ids opacos: o snapshot não traz `propria` nem nomes; nada de vida, alma ou PA.
+## Só ids opacos: o snapshot DESTE CASO (o que o teste monta) não traz `propria` nem nomes; nada de vida, alma ou PA.
+## B7-CORRECOES (B2): as linhas do relato deste caso também passam pela varredura de privacidade (no fim do caso).
 func _caso_limpar(R) -> void:
 	var est = load("res://estado/estado.gd").new()
 	var ctx := {"snap": {}}
@@ -207,8 +223,21 @@ func _caso_limpar(R) -> void:
 	var evento := func(seq: int, tipo: String, fid: String) -> void:
 		est.receber_evento({"type": "ROOM_EVENT", "seq": seq, "revision": seq, "tipo": tipo, "dados": {"figuraId": fid, "rodada": 1}})
 	# A verificação B2 das provas (prova_caixa_jogadora.gd / prova_caixa_manequim.gd, §4), sem o «2 de actor» do caso vivo.
+	var linhas_b7: Array = []
 	var b2 := func(rotulo: String, esperados: Array) -> void:
 		var sn: Dictionary = ctx["snap"]
+		# B7-CORRECOES (B2): a linha do relato deste passo, como as provas a escrevem — a caixa do Estado, a origem do
+		# snapshot e a caixa actual (o modelo do HUD carregado da caixa do Estado e adiantado pelos eventos desde o
+		# snapshot). Sem caixa (depois do `limpar()`) a linha sai com `{}`.
+		var mod := OrdemTurnos.new()
+		mod.definir_modo("dinamico")
+		if est.caixa.get("ordemDinamica") is Dictionary:
+			mod.carregar_do_servidor(est.caixa["ordemDinamica"])
+		for e in est.eventos_desde_snapshot:
+			mod.registar_evento(e)
+		var sl: Dictionary = sn.duplicate(true)
+		sl["revisao_actual"] = est.revisao
+		linhas_b7.append(R.linha("B7-%d" % (linhas_b7.size() + 1), est.caixa, sl, R.caixa_actual(est.caixa, mod)))
 		var tipos_rel: Array = sn.get("tipos", [])
 		var tipos_est: Array = est.eventos_desde_snapshot.map(func(e): return str(e.get("tipo", "?")))
 		_ok(int(sn.get("eventos", -1)) == tipos_est.size() and tipos_rel == tipos_est and tipos_rel == esperados,
@@ -228,4 +257,11 @@ func _caso_limpar(R) -> void:
 	snapshot.call(5)
 	evento.call(6, "turno", a)
 	b2.call("o snapshot novo e um evento", ["turno"])
+	# B7-CORRECOES (B2): a varredura de privacidade do §B6, estendida a este caso — as 4 linhas, a mesma lista.
+	for lb in linhas_b7:
+		print("  linha: ", lb)
+	_ok(linhas_b7.size() == 4 and str(linhas_b7[1]).contains("seq 0") and str(linhas_b7[3]).contains("seq 5"),
+		"B7-CORRECOES: a varredura do caso do limpar() cobre as 4 linhas do relato (antes, o limpar() sem snapshot, o evento à espera, o snapshot novo; %d linhas)" % linhas_b7.size())
+	var achadas_b7: Array = _proibidas_em(linhas_b7)
+	_ok(achadas_b7.is_empty(), "B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma nem PA %s" % [achadas_b7])
 	est.free()

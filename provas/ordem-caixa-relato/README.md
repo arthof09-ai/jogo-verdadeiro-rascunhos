@@ -115,3 +115,29 @@ Correr de novo: `bash provas/ordem-caixa-relato/ferramentas/correr-prova-caixa-r
 <pasta-tmp> "$PWD/provas/ordem-caixa-relato/correcoes-2"`. Comparar as capturas:
 `godot --headless -s provas/ordem-caixa-relato/ferramentas/comparar_capturas.gd -- <pasta-a> <pasta-b>`. As capturas
 desta corrida não entram no ramo: a ordem não as pede e o lançador move-as para a pasta tmp.
+
+---
+
+# Correcções B1–B4 da sentença da CAIXA-RELATO-B7 (Ordem CAIXA-RELATO-B7-CORRECOES · 22/11/2026, Claude conta 2, PC)
+
+Só registo e teste; nada do código do jogo muda. As corridas estão em **`b7-correcoes/`**.
+
+- **B2 — a varredura de privacidade cobre o caso do `limpar()`.** O `_caso_limpar` (B7) corria depois da varredura do
+  B6 e não era varrido. Agora gera a linha do relato em cada um dos 4 passos (como as provas a escrevem) e varre-as
+  com a mesma lista (`PROIBIDAS`, partilhada). Teste: **30/30** (eram 28 na linha integrada).
+  - Mutação «sem a correcção B7» (`eventos_desde_snapshot = []` do `limpar()` tirado): **27/30**, as 3 falhas da B7
+    (`b7-correcoes/mutacao-1-sem-B7.log`).
+  - Mutação «canário na caixa do snapshot do caso» (`"nome": "Canario-Bancada"`): **29/30**, a varredura nova acusa
+    `["nome", "nome"]` (`b7-correcoes/mutacao-2-canario.log`).
+- **B3** — «o snapshot **deste caso**» no comentário do teste.
+- **B1, B3, B4** — no `ESTADO-FINAL-ORDEM-CAIXA-RELATO-B7.md` (raiz).
+
+Números (Godot 4.7.2 Windows, motor VLAB real `a91c021c…`, semente 7): teste `b7-correcoes/teste-relato.log`
+**30/30**; prova HUD-JOGADORA `b7-correcoes/cliente-hud/relato.txt` **43/43**; prova MANEQUIM
+`b7-correcoes/cliente-manequim/relato.txt` **53/53**; suites `b7-correcoes/suites/`: caixa_janela 69/69,
+caixa_jogadora 18/18.
+
+Correr de novo: `bash provas/ordem-caixa-relato/ferramentas/correr-prova-caixa-relato.sh <godot.exe> <vlab-completo.js>
+<pasta-tmp> "$PWD/provas/ordem-caixa-relato/b7-correcoes"`. **O 4.º argumento tem de ser absoluto:** relativo, o
+`--saida` da prova é resolvido pelo Godot a partir de `rascunhos/cliente/` (aconteceu nesta corrida; os `relato.txt`
+foram movidos à mão para `b7-correcoes/` e as capturas para a pasta tmp — nada ficou em `rascunhos/`).

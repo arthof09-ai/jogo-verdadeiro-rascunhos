@@ -3,6 +3,10 @@
 `Estado.limpar()` limpa `eventos_desde_snapshot` (D4 da conferência da CAIXA-RELATO-CORRECOES; o defeito estava
 latente e nunca chegou a disparar).
 
+> **Corrigido pela Ordem CAIXA-RELATO-B7-CORRECOES** (sentença da conferência da CAIXA-RELATO-B7, B1–B4): o §1
+> (razões 1 e 2), o §2, o §4.2 e o §4.3 foram reescritos; as passagens mudadas levam a marca
+> «[B7-CORRECOES Bn]». Ver `ESTADO-FINAL-ORDEM-CAIXA-RELATO-B7-CORRECOES.md`.
+
 - **Executor:** conta 2, no PC do cunhado.
 - **Base:** `0418d18`, a ponta de `fable/integracao-50` à hora do lançamento. A linha não avançou durante a ordem.
 - **Ramo:** `claude2/caixa-relato-b7`, sem fusão.
@@ -22,16 +26,22 @@ latente e nunca chegou a disparar).
 
 ### Porque escolhi corrigir o `limpar()` e não o `_registar_snapshot`
 
-A ordem deixava escolher entre as duas correcções. Escolhi a do `limpar()` por quatro razões:
+A ordem deixava escolher entre as duas correcções. Escolhi a do `limpar()` pelas razões abaixo (a razão 2 foi
+retirada pela B7-CORRECOES — era impossível; ficam três):
 
 1. **O defeito está no Estado, não nas provas.** Depois de um `limpar()` o Estado diz que não tem snapshot
    (`tem_snapshot = false`), e mesmo assim guardava a lista dos eventos «desde o snapshot». Essa lista vinha de um
-   snapshot que já não existe. O `limpar()` repõe todo o resto do estado (`_espera`, `_arma_de`, `caixa`…); este campo
-   era o único que ficava para trás.
-2. **Há um consumidor no jogo, além das provas.** O HUD repete esta lista quando nasce
-   (`hud.gd` `_repetir_eventos_antes_do_hud`). O `limpar()` corre quando a jogadora sai ou muda de lugar
-   (`rede.gd:152` e `rede.gd:362`). Se um HUD nascesse depois disso e antes de um snapshot novo, repetiria eventos da
-   sessão de antes. Corrigir só o `_registar_snapshot` deixava este caminho aberto.
+   snapshot que já não existe. O `limpar()` repõe todo o resto do estado **observável** (`_espera`, `_arma_de`,
+   `caixa`…); este campo era o único campo **observável** que ficava para trás. **[B7-CORRECOES B3]** Não era o único
+   campo: o `_tempo_resync` também sobrevive ao `limpar()`, mas fica inerte — o `_process` só o lê com
+   `_resync_pendente` (que o `limpar()` põe a `false`), e volta a `0.0` quando um resync novo começa
+   (`estado.gd:93-99`, `:382-383`). Não se toca nele (fora da fronteira desta ordem e da das correcções).
+2. ~~**Há um consumidor no jogo, além das provas.**~~ **[B7-CORRECOES B3] Retirada — era impossível.** O texto dizia
+   que o HUD, ao nascer depois de um `limpar()` e antes de um snapshot novo, repetiria a lista velha
+   (`_repetir_eventos_antes_do_hud`). Mas o HUD só a repete com `Estado.tem_snapshot` (`hud.gd:175-180`), e o
+   `limpar()` põe `tem_snapshot = false`; o primeiro snapshot novo esvazia a lista antes do sinal
+   (`estado.gd:159`). Nessa janela o HUD não repete nada, com ou sem a correcção. O HUD não era um consumidor
+   exposto ao defeito, e esta razão não sustenta a escolha.
 3. **O `_registar_snapshot` não está em `rascunhos/`.** Vive nas ferramentas das provas
    (`prova_caixa_jogadora.gd:245` e `prova_caixa_manequim.gd:333`), por isso seriam duas cópias a emendar.
    E ignorar o sinal deixaria o contador do relato preso ao snapshot velho, enquanto o Estado já não tem snapshot
@@ -58,7 +68,8 @@ têm de ser iguais aos de `Estado.eventos_desde_snapshot`, pela mesma ordem.
 - **Antes da correcção** (o teste novo sobre o `estado.gd` da base): **23/26**, com as 3 falhas acima.
 - **Depois da correcção:** **26/26**.
 
-As figuras do caso só têm ids opacos e o snapshot não traz `propria` nem nomes. Não há vida, alma, PA nem dados do
+As figuras do caso só têm ids opacos e o snapshot **deste caso** (o que o teste monta) não traz `propria` nem nomes
+**[B7-CORRECOES B3]** — é uma afirmação sobre a bancada do teste, não sobre o protocolo. Não há vida, alma, PA nem dados do
 Mestre no teste nem no registo.
 
 ## 3. Corridas
@@ -69,7 +80,7 @@ Todas correram neste PC, sobre `61f1d7c`, com o Godot 4.7.2 (`Godot_v4.7.2-stabl
 |---|---|
 | Servidor (`node --test --test-isolation=none testes/*.test.mjs`) | **418/418** |
 | Prova da caixa do servidor (`prova-servidor.mjs`) | PROVA OK |
-| Teste do relato (`teste_relato_caixa.gd`) | **26/26** (eram 21; o caso B7 acrescenta 5) |
+| Teste do relato (`teste_relato_caixa.gd`) | **26/26** (eram 21; o caso B7 acrescenta 5) — na base `0418d18`, sem a CORRECOES-2; na linha integrada (com os 23 da CORRECOES-2) são **28/28** (CI da `15eab43`) |
 | `rodar_testes` | 290/290 |
 | `caixa_janela` | 69/69 |
 | `caixa_jogadora` | 18/18 |
@@ -86,10 +97,29 @@ Todas correram neste PC, sobre `61f1d7c`, com o Godot 4.7.2 (`Godot_v4.7.2-stabl
 
 1. **Escolhi corrigir o `limpar()`** (ver a §1). As ferramentas das provas não mudaram e continuam a ouvir
    `snapshot_aplicado`. Com a correcção, o «zero» do relato e o do Estado coincidem depois de um `limpar()`.
-2. **O caminho do HUD (§1, ponto 2) também ficou fechado.** Não escrevi um teste próprio para ele, porque seria um
-   teste de HUD e ficava fora da fronteira. O teste novo prova que a lista fica vazia, e é dessa lista que o HUD lê.
-3. **Não toquei no HUD, nas cores nem no protocolo.** As provas vivas da caixa (HUD-JOGADORA e MANEQUIM) não voltaram
-   a correr. Elas não chamam `limpar()`, por isso esta correcção não muda o que mostram.
+2. **[B7-CORRECOES B4] O caminho do HUD: fecho por LEITURA DE CÓDIGO, não por teste.** Não há teste próprio para o
+   caminho do HUD (seria um teste de HUD — fora da fronteira desta ordem e da das correcções). O teste novo prova só
+   que a lista do Estado fica vazia depois do `limpar()`. Que o HUD não a repete na janela `limpar()` → snapshot novo
+   lê-se no código: `hud.gd:175-180` só chama `_repetir_eventos_antes_do_hud` com `Estado.tem_snapshot` (ver o §1,
+   razão 2, retirada). Nenhuma corrida o mostrou.
+3. **[B7-CORRECOES B1] Não toquei no HUD, nas cores nem no protocolo.** As provas vivas da caixa (HUD-JOGADORA e
+   MANEQUIM) não voltaram a correr nesta ordem. ~~Elas não chamam `limpar()`.~~ **Falso:** chamam-no indirectamente
+   em cada entrada e em cada saída da jogadora — `_entrar_jogadora` → `Rede.entrar` → `_comecar_entrada` →
+   `est.limpar()` (`rede.gd:362`), e `_sair_jogadora` → `Rede.sair` → `est.limpar()` (`rede.gd:152`); nas provas,
+   `prova_caixa_jogadora.gd:254/:270` e `prova_caixa_manequim.gd:342/:358` na base desta ordem (`0418d18`; `:264/:280`
+   e `:352/:368` na `15eab43`). **A premissa verdadeira:** nenhum leitor da lista a observa na janela `limpar()` →
+   snapshot novo. As provas só a lêem no `_privacidade` (`prova_caixa_jogadora.gd:325`, `prova_caixa_manequim.gd:413`
+   na `15eab43`), que corre depois de `_entrar_jogadora` esperar por `_estado.tem_snapshot` — e esse snapshot já
+   esvaziou a lista (`estado.gd:159`); a arena (com o HUD) é libertada antes do `sair()` e só nasce depois desse
+   snapshot. O contador do relato recomeça no sinal do `limpar()` (`novo_snap(0, null)`) e outra vez no do snapshot
+   novo, que é o que a linha lê. Por isso a correcção não muda o que mostram, e **a decisão de não as re-correr
+   mantém-se**. **Cobertura real:** no CI, o `limpar()` alterado é exercitado pelo `pecas_mestre` (286/286; chama
+   `_estado.limpar()` em `pecas_mestre.gd:174`, passo «Ecrã do Mestre» do job cliente) e pelo teste do relato
+   (passo «Relato da caixa»: o caso B7 pelo Estado real). O `caixa_janela` (69/69) cobre a lista
+   (`eventos_desde_snapshot` guarda e recomeça no snapshot, `caixa_janela.gd:118/:130`) mas não chama o `limpar()` e
+   não é um passo do CI — corre à mão (69/69 aqui, na `15eab43`).
+   (A ordem das correcções correu as duas provas vivas sobre a `15eab43` + o teste alterado, por ser a prova que pede:
+   **43/43** e **53/53**, verdes — ver o ESTADO-FINAL da B7-CORRECOES. Não muda a decisão desta ordem.)
 4. **Ambiente:** este PC continua sem o `_console.exe` do Godot e com o Node 26. O servidor correu sem
    `--permission`, como nas ordens anteriores.
 
