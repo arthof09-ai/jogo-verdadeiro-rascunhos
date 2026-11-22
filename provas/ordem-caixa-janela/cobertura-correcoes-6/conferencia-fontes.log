@@ -1,0 +1,156 @@
+# Ordem CAIXA-JANELA-COBERTURA-CORRECOES-6 — a conferência das fontes de novo, com B1 (§f) e B3 (§d) da sentença da CORRECOES-5
+# cada linha tirada da base 1b907bc (git show 1b907bc:<ficheiro>), com o comando que a deu; 2026-11-22T13:22:38Z · PC (Git Bash)
+# o registo da CORRECOES-5 (cobertura-correcoes-5/conferencia-fontes.log, base 3b84797) é registo cometido e não se emenda;
+# este substitui-o como o «próximo conferencia-fontes.log» que a sentença pede.
+
+## (0) as fontes citadas não mudaram de 3b84797 (base da CORRECOES-5) para 1b907bc (base desta ordem)
+$ git diff --stat 3b84797 1b907bc -- rascunhos/servidor/nucleo/ rascunhos/servidor/autojogo/fichas-bancada.json
+(saída vazia: 0 bytes)
+rc=0
+
+## (a) a vista do Mestre: mestre.figuras = figuraDoMestre(f) de cada figura (projecao.js)
+$ git show 1b907bc:rascunhos/servidor/nucleo/projecao.js | grep -n 'figuras: Object.values(mundo.figuras).map((f) => figuraDoMestre(f, fichas))'
+190:      figuras: Object.values(mundo.figuras).map((f) => figuraDoMestre(f, fichas)),
+rc=0
+
+$ git show 1b907bc:rascunhos/servidor/nucleo/projecao.js | sed -n '149,164p'
+export function figuraDoMestre(fig, fichas) {
+  const ficha = fichas[fig.fichaId];
+  return {
+    ...clonarJson(fig),
+    nome: ficha?.nome ?? null,
+    nomePublico: nomePublicoDe(ficha),
+    vidaTotal: ficha?.vidaTotal ?? null,
+    paTotal: ficha?.paTotal ?? null,
+    // Plano B: o desenho da figura na arena do Mestre (marcador do site; sem ficha visual, o cliente usa o padrão).
+    alturaM: Number.isFinite(ficha?.visual?.alturaM) ? ficha.visual.alturaM : null,
+    marcador: ficha?.visual?.marcador ?? null,
+    // Ordem 13 (parte C; site FRASES_IA): os verbos do golpe de cada monstro, da ficha. null = o cliente diz «acerta».
+    verbos: ficha?.verbos ? clonarJson(ficha.verbos) : null,
+  };
+}
+rc=0
+
+   (figuraDoMestre = a figura interna inteira + nome, nomePublico, vidaTotal, paTotal, alturaM, marcador, verbos — NÃO a ficha)
+
+## (b) a figura interna (novaFigura, sala.js): das 12, traz vidaActual, paGasto, estadoMorte, armaCaida, armaQuebrada, corpoPartido
+$ git show 1b907bc:rascunhos/servidor/nucleo/sala.js | grep -n -A9 '^  function novaFigura'
+543:  function novaFigura(id, ficha, casa) {
+544-    const lado = ficha.papel; // jogadora | criatura | npc
+545-    return {
+546-      id, fichaId: ficha.id, lado, colocada: false,
+547-      x: Number.isInteger(casa?.x) ? casa.x : 0, y: Number.isInteger(casa?.y) ? casa.y : 0, orientacao: 'S',
+548-      casaInicial: casa && Number.isInteger(casa.x) && Number.isInteger(casa.y) ? { x: casa.x, y: casa.y } : null,
+549-      vidaActual: ficha.vidaTotal, paGasto: 0, vivo: true, caido: false, estadoMorte: null,
+550-      armaCaida: false, armaQuebrada: false, corpoPartido: false, transformada: false,
+551-      reacaoDisponivel: true, defendendo: false,
+552-      modo: lado === 'jogadora' ? null : modoPadrao, // H10, nunca projetado (E-P11)
+rc=0
+
+   => na vista: 6 da figura interna + vidaTotal + paTotal = 8 das 12
+
+## (c) paLivre: não está na vista (a vista traz paGasto); chega ao Mestre no evento `estado` (o Mestre recebe os dados inteiros)
+$ git show 1b907bc:rascunhos/servidor/nucleo/projecao.js | grep -n -A4 '^export function projetarEvento'
+117:export function projetarEvento(evento, dest) {
+118-  if (dest.papel === 'mestre') {
+119-    // O Mestre vê tudo, incluindo o journalSeq interno (E-P4) e o soMestre.
+120-    return { ...clonarJson(evento.dados ?? {}), soMestre: clonarJson(evento.soMestre ?? null), journalSeq: evento.journalSeq };
+121-  }
+rc=0
+
+$ git show 1b907bc:rascunhos/servidor/nucleo/sala.js | grep -n 'dados.paLivre = paLivre(f)'
+1315:      dados.paLivre = paLivre(f);
+rc=0
+
+## (d) dano: só como chave do soMestre (3.º argumento de tx.emitir), que o Mestre recebe (projetarEvento, acima)
+   CORRECOES-6, B3: os eventos que o levam são `raio` (1 linha) e `dano_ambiente` (2 linhas: origem raio e origem fogo);
+   o evento chamado `dano` NÃO o leva — emite-se com soMestre null (os seus dados são alvoId, autorId, valor, tipos).
+$ git show 1b907bc:rascunhos/servidor/nucleo/sala.js | grep -c 'rd: 0, dano: r.aplicado'
+3
+rc=0
+
+   as 3 linhas, e o evento a que cada uma pertence (o tx.emitir que a abre):
+$ git show 1b907bc:rascunhos/servidor/nucleo/sala.js | grep -n -E "tx.emitir\('(raio|dano_ambiente)'|rd: 0, dano: r.aplicado" | cut -c1-90
+1351:        tx.emitir('raio', dados, {
+1353:          ...(r.alvoId ? { tipo: Amb.TIPO_RAIO, bruto: Amb.DANO_RAIO, rd: 0, dano: r.
+1357:          tx.emitir('dano_ambiente', {
+1359:          }, { tipo: Amb.TIPO_RAIO, bruto: Amb.DANO_RAIO, rd: 0, dano: r.aplicado, vi
+1365:        tx.emitir('dano_ambiente', {
+1367:        }, { tipo: Amb.TIPO_FOGO, expressao: '1d' + Amb.FACES_FOGO, faces: r.faces, b
+rc=0
+
+   => 1351 raio → 1353 (soMestre do raio, só com alvo); 1357 dano_ambiente → 1359 (origem raio); 1365 dano_ambiente → 1367 (origem fogo)
+
+   todas as chaves `dano:` do sala.js são essas 3 (nenhuma noutro evento):
+$ git show 1b907bc:rascunhos/servidor/nucleo/sala.js | grep -n -o -E '\bdano: [a-zA-Z.]+'
+1353:dano: r.aplicado
+1359:dano: r.aplicado
+1367:dano: r.aplicado
+rc=0
+
+   o evento `dano`: soMestre null (o 3.º argumento):
+$ git show 1b907bc:rascunhos/servidor/nucleo/sala.js | grep -n "tx.emitir('dano'," | grep -o "^[0-9]*:.*tx.emitir('dano', {[^}]*}, null);" | sed -E 's/^([0-9]+):\s*/\1: /'
+1918: tx.emitir('dano', { alvoId: pendente.quem.id, autorId: atacante.id, valor: pendente.efectivo, tipos: saida.desgracaPendente.tipos ?? [] }, null);
+1925: if (dano > 0) tx.emitir('dano', { alvoId: alvo.id, autorId: atacante.id, valor: dano, tipos: tiposDe(t) }, null);
+rc=0
+
+## (e) custoPA: não vai na vista do Mestre (nem figuraDoMestre nem a figura interna o têm; a ficha não vai na vista)
+$ git show 1b907bc:rascunhos/servidor/nucleo/projecao.js | sed -n '149,164p' | grep -n 'custoPA\|ficha: '
+(saída vazia: 0 bytes)
+rc=1
+
+$ git show 1b907bc:rascunhos/servidor/nucleo/sala.js | grep -n -A9 '^  function novaFigura' | grep -n 'custoPA'
+(saída vazia: 0 bytes)
+rc=1
+
+   as fichas vêm do carregador (o Mestre escreve-as; o servidor carrega-as congeladas):
+$ git show 1b907bc:rascunhos/servidor/nucleo/sala.js | grep -n 'saída de carregarFichas().fichas'
+278: * @param {Object} p.fichas  mapa id → ficha, CONGELADO (saída de carregarFichas().fichas)
+rc=0
+
+$ git show 1b907bc:rascunhos/servidor/autojogo/fichas-bancada.json | grep -c '"custoPA"'
+6
+rc=0
+
+   todas as ocorrências de custoPA no núcleo do servidor: o esquema das fichas, os filtros das opções, a entrada do
+   motor da cura e o débito do paGasto — nenhuma é um campo emitido (vista ou evento):
+$ git grep -n custoPA 1b907bc -- rascunhos/servidor/nucleo/
+1b907bc:rascunhos/servidor/nucleo/carregar-fichas.js:36:  required: ['id', 'nome', 'expressaoAtaque', 'custoPA', 'alcanceM'],
+1b907bc:rascunhos/servidor/nucleo/carregar-fichas.js:55:    custoPA: { type: 'integer', minimum: 0 },
+1b907bc:rascunhos/servidor/nucleo/sala.js:903:        if (f.lado === 'jogadora' && t.custoPA > paLivre(f)) continue; // os monstros não gastam PA
+1b907bc:rascunhos/servidor/nucleo/sala.js:920:        if (f.lado === 'jogadora' && t.custoPA > paLivre(f)) continue; // o motor recusa PA_INSUFICIENTE; não forçamos
+1b907bc:rascunhos/servidor/nucleo/sala.js:1713:   *   custoPA, magia, contexto:{semente|faces}}) → {curaRolada:null, publico:{recibo}, soDoMestre:{curaRolada,
+1b907bc:rascunhos/servidor/nucleo/sala.js:1728:        custoPA: Number.isInteger(t.custoPA) ? t.custoPA : 0,
+1b907bc:rascunhos/servidor/nucleo/sala.js:1937:    if (f.lado === 'jogadora') f.paGasto += t.custoPA; // debita-se só no Confirmar
+1b907bc:rascunhos/servidor/nucleo/sala.js:2096:    if (f.lado === 'jogadora') f.paGasto += Number.isInteger(sm.pa?.custo) ? sm.pa.custo : (Number.isInteger(t.custoPA) ? t.custoPA : 0);
+rc=0
+
+## (f) alma: não existe como chave/campo (a palavra ocorre 1× num comentário TODO, sala.js:615)
+   CORRECOES-6, B1: o registo da CORRECOES-5 dizia «não existe em lado nenhum»; como chave é verdade, como palavra não.
+   a palavra, nas 3 fontes desta conferência (projecao.js, sala.js, fichas-bancada.json):
+$ git show 1b907bc:rascunhos/servidor/nucleo/projecao.js | grep -n -i 'alma'
+(saída vazia: 0 bytes)
+rc=1
+
+$ git show 1b907bc:rascunhos/servidor/nucleo/sala.js | grep -n -i 'alma'
+615:    // TODO(JV1.x): "comprometido" da alma (REF_7 §7) ainda não modelado.
+rc=0
+
+$ git show 1b907bc:rascunhos/servidor/autojogo/fichas-bancada.json | grep -c -i 'alma'
+0
+rc=1
+
+   como chave/campo (alma: · 'alma' · "alma" · .alma), em todo o servidor:
+$ git grep -n -E "\balma\s*:|'alma'|\"alma\"|\.alma\b" 1b907bc -- rascunhos/servidor/
+(saída vazia: 0 bytes)
+rc=1
+
+   fora das 3 fontes, a palavra ainda ocorre em comentários de outros ficheiros do núcleo (prosa das regras, não chave):
+$ git grep -n -w -i 'alma' 1b907bc -- rascunhos/servidor/nucleo/ ':!rascunhos/servidor/nucleo/sala.js' | cut -c1-150
+1b907bc:rascunhos/servidor/nucleo/ordem-dinamica.js:19:// Só ids, um booleano e um contador. NENHUM valor de vida ou de alma — regra da casa (a ord
+1b907bc:rascunhos/servidor/nucleo/ordem-dinamica.js:126:// booleano e um modo — nenhum valor de vida ou de alma. Só o Mestre a vê e só ele a muda
+1b907bc:rascunhos/servidor/nucleo/ordem-dinamica.js:156:// Só ids, um booleano e um modo — nunca vida, alma, valores de iniciativa, nem nada técni
+rc=0
+
+## Conta: 8 na vista (a) + paLivre (c) + dano (d, soMestre de raio/dano_ambiente) = 10 das 12 recebidas do servidor;
+## custoPA nas fichas (e); alma não existe como chave/campo — a palavra só em comentários (f; nas 3 fontes, 1× em sala.js:615).

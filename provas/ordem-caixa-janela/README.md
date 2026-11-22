@@ -205,3 +205,25 @@ Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c�
   primeiros): `1-janela-1280x720.png` `6d9191e10994fe46`, `2-baixo-844x390.png` `99e615ac0c993d55`,
   `3-baixo-780x360.png` `ca3ec3ee02df0441`.
 - `cobertura-correcoes-5/actualizar-listas.log`: o artefacto do `retoma-i0004/actualizar-listas.py`.
+
+## cobertura-correcoes-6/ — Ordem CAIXA-JANELA-COBERTURA-CORRECOES-6 (22/11/2026, Claude conta 2, PC): B1–B3
+Só registo. O código do teste e da prova não muda, e o registo cometido da CORRECOES-5 também não.
+- **B1 e B3:** a conferência das fontes foi tirada de novo da base `1b907bc`, que tem as mesmas fontes que `3b84797`
+  (diff vazio, §0 do log), e está em `cobertura-correcoes-6/conferencia-fontes.log`.
+  - **§(f), B1:** «`alma`: não existe como chave/campo (a palavra ocorre 1× num comentário TODO, `sala.js:615`)». Nas
+    3 fontes da conferência, a palavra só aparece nessa linha. Como chave (`alma:`, `'alma'`, `"alma"`, `.alma`) não
+    aparece em lado nenhum de `rascunhos/servidor/`. Fora dessas fontes, aparece ainda em 3 comentários de
+    `ordem-dinamica.js`, que são prosa das regras e não chaves.
+  - **§(d), B3:** o `dano:` do `soMestre` vem nos eventos `raio` (`sala.js:1353`) e `dano_ambiente` (`:1359`, com
+    origem raio, e `:1367`, com origem fogo). O evento chamado `dano` não o leva, porque emite com `soMestre` `null`
+    (`:1918`, `:1925`).
+- **B2:** a saída do `godot --headless --path rascunhos/cliente --import`, corrido no clone novo e sem `.godot/`, está
+  em `cobertura-correcoes-6/godot-import.log`: rc=0 e 0 SCRIPT ERROR.
+
+Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c…`; semente 7):
+- `cobertura-correcoes-6/teste-nomes-relato.log`: **teste 26/26**, igual byte a byte ao da CORRECOES-5.
+- `cobertura-correcoes-6/cliente/`: **prova viva 41/41**, 0 nomes verdadeiros e 0 das 17 chaves no relato (passagem 1:
+  47 linhas, passagem 2: 76, fim: 78). O relato é igual byte a byte ao da CORRECOES-5. Capturas (sha256, 16
+  primeiros): `1-janela-1280x720.png` `9fc06ba84c04ed5d`, `2-baixo-844x390.png` `e3f8a21e3cde48a6`,
+  `3-baixo-780x360.png` `a43957257b8f8bab`.
+- `cobertura-correcoes-6/actualizar-listas.log`: o artefacto do `retoma-i0004/actualizar-listas.py`.
