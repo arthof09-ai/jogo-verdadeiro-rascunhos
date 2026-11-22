@@ -1,0 +1,24 @@
+P01  OK   correr-prova-caixa-relato.sh   rc=2  pasta tmp «~root/x»: ~utilizador não é suportado — dá um caminho absoluto
+P02  OK   correr-prova-caixa-relato.sh   rc=2  pasta tmp «\\servidor\partilha\tmp»: caminho de rede (UNC) não é suportado — usa uma pasta local
+P03  OK   correr-prova-caixa-relato.sh   rc=2  pasta tmp «//servidor/partilha/tmp»: caminho de rede (UNC) não é suportado — usa uma pasta local
+P04  OK   correr-prova-caixa-relato.sh   rc=2  pasta tmp «\/servidor/partilha»: caminho de rede (UNC) não é suportado — usa uma pasta local
+P05  OK   correr-prova-caixa-relato.sh   rc=2  pasta tmp «C:tmp»: «C:» sem barra é relativo à pasta corrente dessa unidade, que não sei — escreve C:/… ou um caminho relativo
+P06  OK   correr-prova-caixa-relato.sh   rc=2  pasta tmp «C:»: «C:» sem barra é relativo à pasta corrente dessa unidade, que não sei — escreve C:/… ou um caminho relativo
+P07  OK   correr-mutacoes.sh             rc=2  pasta tmp «~root/x»: ~utilizador não é suportado — dá um caminho absoluto
+P08  OK   correr-mutacoes.sh             rc=2  pasta tmp «\\servidor\partilha\tmp»: caminho de rede (UNC) não é suportado — usa uma pasta local
+P09  OK   correr-mutacoes.sh             rc=2  pasta tmp «//servidor/partilha/tmp»: caminho de rede (UNC) não é suportado — usa uma pasta local
+P10  OK   correr-mutacoes.sh             rc=2  pasta tmp «\/servidor/partilha»: caminho de rede (UNC) não é suportado — usa uma pasta local
+P11  OK   correr-mutacoes.sh             rc=2  pasta tmp «C:tmp»: «C:» sem barra é relativo à pasta corrente dessa unidade, que não sei — escreve C:/… ou um caminho relativo
+P12  OK   correr-mutacoes.sh             rc=2  pasta tmp «C:»: «C:» sem barra é relativo à pasta corrente dessa unidade, que não sei — escreve C:/… ou um caminho relativo
+P13  OK   correr-prova-caixa-relato.sh   rc=2  pasta tmp «~/x»: começa por ~ mas o $HOME («casa-relativa») não é absoluto — dá um caminho absoluto
+H01  OK   correr-prova-caixa-relato.sh   rc=2  pasta tmp «~/x»: começa por ~ mas o $HOME («/») é a raiz, não uma pasta pessoal — dá um caminho absoluto
+H02  OK   correr-mutacoes.sh             rc=2  pasta tmp «~/x»: começa por ~ mas o $HOME («/») é a raiz, não uma pasta pessoal — dá um caminho absoluto
+H03  OK   correr-mutacoes.sh             rc=2  registo «~/x.log»: começa por ~ mas o $HOME («/») é a raiz, não uma pasta pessoal — dá um caminho absoluto
+P14  OK   correr-prova-caixa-relato.sh   rc=2  pasta tmp «/\x»: caminho de rede (UNC) não é suportado — usa uma pasta local
+P15  OK   correr-mutacoes.sh             rc=2  pasta tmp «/\x»: caminho de rede (UNC) não é suportado — usa uma pasta local
+P16  OK   correr-mutacoes.sh             rc=2  pasta tmp «~/x»: começa por ~ mas o $HOME («casa-relativa») não é absoluto — dá um caminho absoluto
+R01  OK   correr-prova-caixa-relato.sh   rc=2  pasta tmp «~/x»: começa por ~ mas o $HOME («C:/») é a raiz da unidade C:, não uma pasta pessoal — dá um caminho absoluto
+R02  OK   correr-mutacoes.sh             rc=2  pasta tmp «~/x»: começa por ~ mas o $HOME («C:/») é a raiz da unidade C:, não uma pasta pessoal — dá um caminho absoluto
+RESULTADO B2: 19 de 19
+EXTRA B1 (scripts verdadeiros): 2 de 2
+NADA ESCRITO (listagem da sede e git status do clone iguais)

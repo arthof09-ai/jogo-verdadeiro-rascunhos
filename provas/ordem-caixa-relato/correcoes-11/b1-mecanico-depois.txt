@@ -1,0 +1,63 @@
+M01  OK    HOME=«/c/Users/t» «~/x/tmp»                esperado: /c/Users/t/x/tmp
+                                      obtido:   /c/Users/t/x/tmp
+M02  OK    HOME=«/c/Users/t» «~»                      esperado: /c/Users/t
+                                      obtido:   /c/Users/t
+M03  OK    HOME=«/c/Users/t» «~\x»                    esperado: /c/Users/t/x
+                                      obtido:   /c/Users/t/x
+M04  OK    HOME=«/c/Users/t» «~root/x»                esperado: FALHA:~utilizador não é suportado
+                                      obtido:   FALHA rc=1 — caso «~root/x»: ~utilizador não é suportado — dá um caminho absoluto
+M05  OK    HOME=«/c/Users/t» «\\servidor\partilha\tmp» esperado: FALHA:caminho de rede (UNC)
+                                      obtido:   FALHA rc=1 — caso «\\servidor\partilha\tmp»: caminho de rede (UNC) não é suportado — usa uma pasta local
+M06  OK    HOME=«/c/Users/t» «//servidor/partilha/tmp» esperado: FALHA:caminho de rede (UNC)
+                                      obtido:   FALHA rc=1 — caso «//servidor/partilha/tmp»: caminho de rede (UNC) não é suportado — usa uma pasta local
+M07  OK    HOME=«/c/Users/t» «\/servidor/partilha»    esperado: FALHA:caminho de rede (UNC)
+                                      obtido:   FALHA rc=1 — caso «\/servidor/partilha»: caminho de rede (UNC) não é suportado — usa uma pasta local
+M08  OK    HOME=«/c/Users/t» «/\x»                    esperado: FALHA:caminho de rede (UNC)
+                                      obtido:   FALHA rc=1 — caso «/\x»: caminho de rede (UNC) não é suportado — usa uma pasta local
+M09  OK    HOME=«/c/Users/t» «C:tmp»                  esperado: FALHA:sem barra é relativo à pasta corrente
+                                      obtido:   FALHA rc=1 — caso «C:tmp»: «C:» sem barra é relativo à pasta corrente dessa unidade, que não sei — escreve C:/… ou um caminho relativo
+M10  OK    HOME=«/c/Users/t» «C:»                     esperado: FALHA:sem barra é relativo à pasta corrente
+                                      obtido:   FALHA rc=1 — caso «C:»: «C:» sem barra é relativo à pasta corrente dessa unidade, que não sei — escreve C:/… ou um caminho relativo
+M11  OK    HOME=«/c/Users/t» «\tmp\sub»               esperado: C:/tmp/sub
+                                      obtido:   C:/tmp/sub
+M12  OK    HOME=«/c/Users/t» «/c/abs/tmp»             esperado: /c/abs/tmp
+                                      obtido:   /c/abs/tmp
+M13  OK    HOME=«/c/Users/t» «C:/abs/tmp»             esperado: C:/abs/tmp
+                                      obtido:   C:/abs/tmp
+M14  OK    HOME=«/c/Users/t» «C:\abs\tmp»             esperado: C:/abs/tmp
+                                      obtido:   C:/abs/tmp
+M15  OK    HOME=«/c/Users/t» «tmp/rel»                esperado: /c/Users/t/origem/tmp/rel
+                                      obtido:   /c/Users/t/origem/tmp/rel
+M16  OK    HOME=«/c/Users/t» «./tmp»                  esperado: /c/Users/t/origem/./tmp
+                                      obtido:   /c/Users/t/origem/./tmp
+M17  OK    HOME=«/c/Users/t» «..\tmp\rel»             esperado: /c/Users/t/origem/../tmp/rel
+                                      obtido:   /c/Users/t/origem/../tmp/rel
+M18  OK    HOME=«/c/Users/t» «/tmp/x»                 esperado: /tmp/x
+                                      obtido:   /tmp/x
+M19  OK    HOME=«casa-relativa» «~/x»                    esperado: FALHA:não é absoluto
+                                      obtido:   FALHA rc=1 — caso «~/x»: começa por ~ mas o $HOME («casa-relativa») não é absoluto — dá um caminho absoluto
+M20  OK    HOME=«C:/Users/t» «~/x»                    esperado: C:/Users/t/x
+                                      obtido:   C:/Users/t/x
+M21  OK    HOME=«C:\Users\t» «~\x»                    esperado: C:/Users/t/x
+                                      obtido:   C:/Users/t/x
+M22  OK    HOME=«/c/Users/t/» «~/x»                    esperado: /c/Users/t//x
+                                      obtido:   /c/Users/t//x
+H01  OK    HOME=«/»          «~/x»                    esperado: FALHA:é a raiz, não uma pasta pessoal
+                                      obtido:   FALHA rc=1 — caso «~/x»: começa por ~ mas o $HOME («/») é a raiz, não uma pasta pessoal — dá um caminho absoluto
+R01  OK    HOME=«C:/»        «~/x»                    esperado: FALHA:é a raiz da unidade C:, não uma pasta pessoal
+                                      obtido:   FALHA rc=1 — caso «~/x»: começa por ~ mas o $HOME («C:/») é a raiz da unidade C:, não uma pasta pessoal — dá um caminho absoluto
+R02  OK    HOME=«C:\»        «~/x»                    esperado: FALHA:é a raiz da unidade C:, não uma pasta pessoal
+                                      obtido:   FALHA rc=1 — caso «~/x»: começa por ~ mas o $HOME («C:\») é a raiz da unidade C:, não uma pasta pessoal — dá um caminho absoluto
+R03  OK    HOME=«C:»         «~/x»                    esperado: FALHA:não é absoluto
+                                      obtido:   FALHA rc=1 — caso «~/x»: começa por ~ mas o $HOME («C:») não é absoluto — dá um caminho absoluto
+R04  OK    HOME=«C://»       «~/x»                    esperado: FALHA:é a raiz da unidade C:, não uma pasta pessoal
+                                      obtido:   FALHA rc=1 — caso «~/x»: começa por ~ mas o $HOME («C://») é a raiz da unidade C:, não uma pasta pessoal — dá um caminho absoluto
+R05  OK    HOME=«C:\\»       «~/x»                    esperado: FALHA:é a raiz da unidade C:, não uma pasta pessoal
+                                      obtido:   FALHA rc=1 — caso «~/x»: começa por ~ mas o $HOME («C:\\») é a raiz da unidade C:, não uma pasta pessoal — dá um caminho absoluto
+R06  OK    HOME=«c://»       «~/x»                    esperado: FALHA:é a raiz da unidade c:, não uma pasta pessoal
+                                      obtido:   FALHA rc=1 — caso «~/x»: começa por ~ mas o $HOME («c://») é a raiz da unidade c:, não uma pasta pessoal — dá um caminho absoluto
+X01  OK    HOME=«C:///»      «~/x»                    esperado: FALHA:é a raiz da unidade C:, não uma pasta pessoal
+                                      obtido:   FALHA rc=1 — caso «~/x»: começa por ~ mas o $HOME («C:///») é a raiz da unidade C:, não uma pasta pessoal — dá um caminho absoluto
+X02  OK    HOME=«C://Users/t» «~/x»                    esperado: C://Users/t/x
+                                      obtido:   C://Users/t/x
+RESULTADO: 31 de 31
