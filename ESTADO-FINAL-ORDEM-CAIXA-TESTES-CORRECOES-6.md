@@ -22,8 +22,11 @@ mudaram `ESTADO-FINAL-ORDEM-CAIXA-TESTES-CORRECOES-4.md` (B4, B5), `ESTADO-FINAL
 ## Ponto a ponto
 
 ### B1 (obrigatória): o corte `x >= 100` em `historicoVida` deixava calada a fuga de um intermédio baixo
-- **Corrigido:** `historicoVida` filtra só o `0` (`x !== 0`). O 0 é o único valor que colide de facto: é o de quem
-  cai, e aparece em contadores e coordenadas. O comentário foi reescrito. Diz porque é que o corte saiu (a M51b) e
+- **Corrigido:** `historicoVida` filtra só o `0` (`x !== 0`). ~~O 0 é o único valor que colide de facto: é o de quem
+  cai, e aparece em contadores e coordenadas.~~ *(Corrigido na CAIXA-TESTES-CORRECOES-7, B2, 22/11/2026, pelo
+  inventário medido: o 0 não é o único que colide. Sob chaves não-isentas, as jogadoras recebem também 2, 3, 6, 9, 14,
+  18, 20 e 23. O 0 é só o único que **tem de ser excluído**, porque é uma Vida alcançável (a de quem cai) e o
+  `geral: 0` vai em todos os snapshots das jogadoras. Os contadores e coordenadas a 0 não colidem: são isentos.)* O comentário foi reescrito. Diz porque é que o corte saiu (a M51b) e
   regista que, se um valor baixo colidir um dia com um número legítimo, a falha é **alta**: muda-se o guião e não se
   volta ao corte.
 - **Também (opcional, recomendado):** `historicoVida(m, k, { proprias })` passou ao nível do módulo e a M51b entrou na
@@ -45,14 +48,17 @@ mudaram `ESTADO-FINAL-ORDEM-CAIXA-TESTES-CORRECOES-4.md` (B4, B5), `ESTADO-FINAL
 
   | Mutação | `privacidade` nova | `privacidade` antiga (`8894caa`) | Suite nova |
   |---|---|---|---|
-  | **M51b**: M51 + o caminho (51, RESYNC, «voltar» a 2403) | **falha, 8/10**: o teste da Vida («heroina viu uma Vida actual de aliada (51,1227,2403,3579)») e o teste novo da M51b | **passa calada, 9/9** — a fuga viva da sentença | 417/420 |
+  | **M51b**: M51 + o caminho (51, RESYNC, «voltar» a 2403) | **falha, 8/10**: o teste da Vida («heroina viu uma Vida actual de aliada (51,1227,2403,3579)») e o teste novo da M51b | **passa calada, 9/9** — a fuga viva da sentença | 417/420 (¹) |
   | M51b-sem-fuga (só o caminho) | 10/10 | 9/9 | 420/420 |
-  | M51-controlo (a fuga M51 no guião de sempre) | 9/10: só o teste novo da M51b (o único com alguém à beira da morte) | 9/9 | 418/420 |
+  | M51-controlo (a fuga M51 no guião de sempre) | 9/10: só o teste novo da M51b (o único com alguém à beira da morte) | 9/9 | 418/420 (¹) |
   | corte-100 (o `>= 100` de volta, só no novo) | **9/10**: o teste novo falha, «o histórico da aliada tem o 51 (1227,2403,3579)» | — | 419/420 |
 
   O «deve falhar 8/9» da ordem é o ficheiro sem o teste novo, em que só falha o teste da Vida. Com o teste novo, o
   ficheiro tem 10 testes e a M51b falha em dois (8/10). A última linha mostra que o teste novo prende o filtro: se o
   corte voltar, a suite deixa de estar verde.
+
+  (¹) Ver a nota (¹) abaixo da tabela-resumo das mutações. A falha a mais da suite é a da fixture do Mestre, e não a da
+  privacidade (CAIXA-TESTES-CORRECOES-7, B1).
 
 ### B2 (obrigatória): a sanidade «último snapshot `propria` == Vida actual»
 - **Re-ancorada:** cada `propria` de cada snapshot da jogadora tem de ser uma Vida que **a sala registou** para ela: a
@@ -66,8 +72,10 @@ mudaram `ESTADO-FINAL-ORDEM-CAIXA-TESTES-CORRECOES-4.md` (B4, B5), `ESTADO-FINAL
   | Mutação | `privacidade` nova | `privacidade` antiga (`8894caa`) | Suite nova |
   |---|---|---|---|
   | **M20-semRESYNC** (o 2.º golpe, 2403 → 1227, sem snapshot depois, sem fuga) | **10/10** (o 9/9 da ordem, mais o teste novo) | **falha 8/9** em falso positivo: «aliada: vê a Vida actual dela» | 420/420 |
-  | M20-semRESYNC + M18 (com fuga) | falha 8/10, «heroina viu uma Vida actual de aliada (1227,2403,3579)» | falha 8/9 | 417/420 |
+  | M20-semRESYNC + M18 (com fuga) | falha 8/10, «heroina viu uma Vida actual de aliada (1227,2403,3579)» | falha 8/9 | 417/420 (¹) |
   | M20-controlo (o 2.º golpe com o RESYNC da aliada, sem fuga) | 10/10 | 9/9 | 420/420 |
+
+  (¹) Ver a nota (¹) abaixo da tabela-resumo das mutações (CAIXA-TESTES-CORRECOES-7, B1).
 
 ### B3: a sanidade do histórico com uma Vida final < 100, depois da B1
 - **Verificado (executado):** a M51-fim faz o caminho até 51 **sem** «voltar», e a aliada acaba o guião com 51.
@@ -123,19 +131,43 @@ Os números são os valores-canário de bancada das fichas de teste.
 
 | | Mutação | Suite nova | `privacidade` nova / antiga (`8894caa`) |
 |---|---|---|---|
-| M18 | `fugaB1` = Vida das feridas no topo do snapshot | 417/420 | 8/10 / 8/9 |
-| M18v | a mesma fuga, com a chave `vidaActual` | 417/420 | 8/10 / 8/9 |
-| M20 | M18 + 2.º golpe + RESYNC da aliada | 417/420 | 8/10 / 8/9 (a antiga `2140e6b`: 9/9 calada) |
-| M20v | M18v + 2.º golpe + RESYNC da aliada | 417/420 | 8/10 / 8/9 (a antiga `2140e6b`: 8/9 pela forma) |
+| M18 | `fugaB1` = Vida das feridas no topo do snapshot | 417/420 (¹) | 8/10 / 8/9 |
+| M18v | a mesma fuga, com a chave `vidaActual` | 417/420 (¹) | 8/10 / 8/9 |
+| M20 | M18 + 2.º golpe + RESYNC da aliada | 417/420 (¹) | 8/10 / 8/9 (a antiga `2140e6b`: 9/9 calada) |
+| M20v | M18v + 2.º golpe + RESYNC da aliada | 417/420 (¹) | 8/10 / 8/9 (a antiga `2140e6b`: 8/9 pela forma) |
 | M20-controlo | 2.º golpe + RESYNC, sem fuga | 420/420 | 10/10 / 9/9 |
 | M20-semRESYNC | 2.º golpe sem snapshot depois, sem fuga | 420/420 | **10/10 / 8/9 (falso positivo)** |
-| M20-semRESYNC+M18 | o mesmo, com fuga | 417/420 | 8/10 / 8/9 |
-| M51-controlo | fuga M51 no guião de sempre | 418/420 | 9/10 / 9/9 |
+| M20-semRESYNC+M18 | o mesmo, com fuga | 417/420 (¹) | 8/10 / 8/9 |
+| M51-controlo | fuga M51 no guião de sempre | 418/420 (¹) | 9/10 / 9/9 |
 | M51b-sem-fuga | 51, RESYNC, «voltar», sem fuga | 420/420 | 10/10 / 9/9 |
-| **M51b** | M51 + 51, RESYNC, «voltar» a 2403 | 417/420 | **8/10 / 9/9 (calada)** |
+| **M51b** | M51 + 51, RESYNC, «voltar» a 2403 | 417/420 (¹) | **8/10 / 9/9 (calada)** |
 | M51-fim | Vida final 51, sem fuga | 419/420 | 9/10 / 7/9 (ver a B3) |
-| M51-fim+M51 | Vida final 51, com fuga | 416/420 | 7/10 / 7/9 |
+| M51-fim+M51 | Vida final 51, com fuga | 416/420 (¹) | 7/10 / 7/9 |
 | corte-100 | o `>= 100` de volta, só no novo | 419/420 | 9/10 / — |
+
+(¹) *Nota da CAIXA-TESTES-CORRECOES-7 (B1), 22/11/2026.* Os números da coluna «Suite nova» nas linhas com fuga são os
+do log do PC (`tmp/mutar.log` da sede da CORRECOES-6), e foram re-medidos na CORRECOES-7 (`tmp/mutar.log` da sede da
+CORRECOES-7: os mesmos 417/417/417/417/417/418/417/416). Mas incluem uma falha que **não é da privacidade**:
+`fixture-mestre.test.mjs`, «fixture do ecrã do Mestre: o ficheiro guardado é o que o servidor gera hoje». A fuga real
+do `mutar.py` junta a chave (`fugaB1` ou `vidaActual`) a **todos** os ROOM_SNAPSHOT da Party, mesmo quando o array vai
+vazio (`[]`). Isso muda as mensagens da jogadora que a fixture `mesa-mestre.json` guarda, e a fixture falha. Com a
+chave só quando o array não vai vazio (variante «c», `tmp/mutar-condicional.log` da CORRECOES-7), a fixture passa e a
+suite dá os valores medidos pela conferência:
+
+| Linha | Suite nova, fuga sempre com chave (PC) | Suite nova, chave só com valor | Falhas da suite (só com valor) |
+|---|---|---|---|
+| M18 | 417/420 | **418/420** | o teste da Vida e o da M51b |
+| M18v | 417/420 | 418/420 | idem |
+| M20 | 417/420 | 418/420 | idem |
+| M20v | 417/420 | 418/420 | idem |
+| M20-semRESYNC+M18 | 417/420 | 418/420 | idem |
+| M51-controlo | 418/420 | **419/420** | o da M51b |
+| M51b | 417/420 | **418/420** | o teste da Vida e o da M51b |
+| M51-fim+M51 | 416/420 | **417/420** | «nada do Mestre», o teste da Vida e o da M51b |
+
+A `privacidade` nova e a antiga dão os mesmos números nas duas variantes, linha a linha (os da tabela acima). Só a fixture
+muda.
+As linhas sem fuga (controlo, M20-controlo, M20-semRESYNC, M51b-sem-fuga, M51-fim, corte-100) não mudam.
 
 ## Pontos para o coordenador
 
