@@ -1,0 +1,41 @@
+# B1 (JD2, Ordem CAIXA-RELATO-B7-CORRECOES-7): o 4.º lançador, provas/ordem-caixa/ferramentas/correr-prova-caixa.sh, corrido
+# neste PC (Windows 11, Git Bash, Godot 4.7.2 win64_console, motor VLAB real a91c021c…, semente 7), com os argumentos
+# novos: <godot> <vlab-completo.js> <pasta-tmp fora do repo> <pasta-saída fora da pasta cometida da CAIXA-PERSISTENTE>.
+# O servidor é a cópia provas/ordem-caixa/ferramentas/servidor-bancada-prova.mjs, já com fileURLToPath (antes, com o
+# `.pathname`, não abria o cenário no Windows). PIN fresco por invocação, só por --pin=; nunca se escreveu.
+# O relato.txt da prova NÃO se comete: é a vista do Mestre e traz os 2 nomes verdadeiros inteiros (como o
+# provas/ordem-caixa/cliente/relato.txt já cometido, com que se compara abaixo). Ficou na pasta tmp, com as 5 capturas.
+# Só se registam o código, o resumo, contagens, o sha256 e o diff contra o relato cometido (as linhas do diff não têm nomes).
+
+stdout do lançador: 2 linhas; a última: rc=0
+info (stdout, sem a chave pin): pronto=true · cenarioSha256 7037229e… · motor vlab-real
+chave "pin" no stdout / no info / no log do servidor (pasta tmp): 0 / 0 / 0
+cadeias de 20+ dígitos no stdout / no info / no log do servidor / no relato: 0 / 0 / 0 / 0
+resumo: prova da caixa (cliente): 23 de 23 verificações passaram.
+relato.txt: 40 linhas · sha256 56e89fd525d1a963… · linhas FALHA: 0
+o relato cometido da CAIXA-PERSISTENTE (Linux, xvfb): 40 linhas, prova da caixa (cliente): 23 de 23 verificações passaram.
+diff contra provas/ordem-caixa/cliente/relato.txt (só o render e o tamanho das capturas — a janela fica a 1028 de largura neste PC, como nas outras provas daqui):
+    2c2
+    < servidor ws://127.0.0.1:8791/ws · render llvmpipe (LLVM 20.1.2, 256 bits)
+    ---
+    > servidor ws://127.0.0.1:8791/ws · render NVIDIA GeForce RTX 4060
+    15c15
+    <   ok    captura 1-entrou.png (1280×720)
+    ---
+    >   ok    captura 1-entrou.png (1028×720)
+    18c18
+    <   ok    captura 2-iniciativa.png (1280×720)
+    ---
+    >   ok    captura 2-iniciativa.png (1028×720)
+    24c24
+    <   ok    captura 3-reentrou-iniciativa.png (1280×720)
+    ---
+    >   ok    captura 3-reentrou-iniciativa.png (1028×720)
+    30c30
+    <   ok    captura 4-reentrou-desligada.png (1280×720)
+    ---
+    >   ok    captura 4-reentrou-desligada.png (1028×720)
+    35c35
+    <   ok    captura 5-religada.png (1280×720)
+    ---
+    >   ok    captura 5-religada.png (1028×720)

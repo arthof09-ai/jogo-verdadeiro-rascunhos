@@ -1,0 +1,27 @@
+# Ordem CAIXA-RELATO-B7-CORRECOES-7: as corridas, neste PC (Windows 11, Git Bash), Godot 4.7.2 win64_console, motor VLAB
+# real a91c021c…, semente 7. Correram sobre a árvore de trabalho da ponta bfe4c3c, com as correcções por cometer. Cada
+# invocação de lançador gera o seu PIN e nunca o escreve. Só se registam códigos, resumos e contagens.
+# As pastas tmp ficaram FORA do repositório. As capturas PNG ficaram na pasta tmp, e o relato da caixa também, porque é
+# a vista do Mestre e tem nomes verdadeiros (ver lancador-caixa.log).
+
+correr-prova-caixa-relato.sh (saída nesta pasta)     rc=0
+  teste_relato_caixa                                 31 de 31   teste-relato.log
+  cliente-hud                                        43 de 43   cliente-hud/relato.txt (68 linhas)
+  cliente-manequim                                   53 de 53   cliente-manequim/relato.txt (78 linhas)
+correr-prova-caixa-janela.sh (saída nesta pasta)     rc=0   41 de 41   cliente-janela/relato.txt (82 linhas; B6/O2)
+correr-prova-caixa.sh — o 4.º lançador (B1/JD2)       rc=0   23 de 23   lancador-caixa.log
+autojogo.gd, semente 1 (B3/JD4, PIN sem enviesamento) rc=0   vitória em 14 turnos; 109 linhas
+  = provas/ordem-autojogo/s1.jsonl linha a linha, tirando a linha «inicio» (só muda o cenarioSha256, como na -6)
+suite do servidor (node --test testes/*.test.mjs)    421 testes, 421 passaram, 0 falharam
+provas/ordem-caixa/ferramentas/prova-servidor.mjs    PROVA OK
+correr-mutacoes.sh base4 + novo (B4/JD5)             36 mutações; ver mutacoes.log
+verificar-pin-b7-correcoes-7.sh                      ver verificacao-pin.log (4 falhas, todas do achado fora do território)
+
+Comparação com as corridas cometidas antes:
+  teste, HUD e MANEQUIM: iguais aos de b7-correcoes-6/, tirando as horas.
+  JANELA: igual, linha a linha, a provas/ordem-caixa-janela/cobertura-correcoes-6/cliente/relato.txt.
+  caixa: igual a provas/ordem-caixa/cliente/relato.txt, tirando o render e o tamanho das capturas.
+  mutações: os 36 blocos iguais aos de correcoes-4/mutacoes.log, tirando as horas da B5-bias-zero.
+
+cadeias de 20+ dígitos (o tamanho do PIN de corrida) nos ficheiros desta pasta: 0
+chave "pin" nos ficheiros desta pasta: 0

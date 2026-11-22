@@ -1,0 +1,240 @@
+# Ordem CAIXA-RELATO-B7-CORRECOES-7 (B4/JD5) — as mutações, corridas com o correr-mutacoes.sh tal como a -6 o deixou (PIN
+# fresco por invocação, passado por --pin= ao servidor e às provas vivas; nunca escrito). PC Windows, Git Bash, Godot 4.7.2,
+# motor VLAB real a91c021c…. Corridas sobre a árvore de trabalho da ponta bfe4c3c, com as correcções desta ordem por cometer.
+# Parte 1 — modo base4 (os ficheiros das provas de da6683e); Parte 2 — modo novo (os ficheiros das provas como estão).
+# Comparado bloco a bloco com provas/ordem-caixa-relato/correcoes-4/mutacoes.log (a última corrida registada): os 36
+# blocos dão o mesmo rc, os mesmos resumos «N de M» e as mesmas linhas FALHA; só mudam as horas na mutação B5-bias-zero
+# (é a hora da corrida) e as linhas de cabeçalho. Os nomes verdadeiros saem trocados por «‹nome verdadeiro›».
+
+# mutações — modo base4 (ficheiros das provas de da6683e) · 2026-11-22 13:22:19 -0300 · bfe4c3c
+# Godot: 4.7.2.stable.official.ed1daf0bf  ·  motor sha256 a91c021cda11…
+
+== B1-nome-verdadeiro (hud) — CORRECOES-2 B1: `_nome_publico` lê o `nome` (o verdadeiro) — o relato traz o nome verdadeiro n.º 1
+rc=1
+relato.txt: 68 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 34, consola 68
+  FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["‹nome verdadeiro› na linha 6", "‹nome verdadeiro› na linha 7", "‹nome verdadeiro› na linha 10", "‹nome verdadeiro› na linha 10"]
+  FALHA 4: nenhum nome verdadeiro no relato (49 linhas; canários: 2 nome(s) que diferem do público) ["‹nome verdadeiro› na linha 6", "‹nome verdadeiro› na linha 7", "‹nome verdadeiro› na linha 10", "‹nome verdadeiro› na linha 10", "‹nome verdadeiro› na linha 23", "‹nome verdadeiro› na linha 23", "‹nome verdadeiro› na linha 38", "‹nome verdadeiro› na linha 39"]
+  FALHA 5: nenhum nome verdadeiro no relato (62 linhas; canários: 2 nome(s) que diferem do público) ["‹nome verdadeiro› na linha 6", "‹nome verdadeiro› na linha 7", "‹nome verdadeiro› na linha 10", "‹nome verdadeiro› na linha 10", "‹nome verdadeiro› na linha 23", "‹nome verdadeiro› na linha 23", "‹nome verdadeiro› na linha 38", "‹nome verdadeiro› na linha 39", "‹nome verdadeiro› na linha 50", "‹no
+  FALHA fim: o relato inteiro (68 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["‹nome verdadeiro› na linha 6", "‹nome verdadeiro› na linha 7", "‹nome verdadeiro› na linha 10", "‹nome verdadeiro› na linha 10", "‹nome verdadeiro› na linha 23", "‹nome verdadeiro› na linha 23", "‹nome verdadeiro› na linha 38", "‹nome verdadeiro› na linha 39",
+prova da caixa no HUD da jogadora: 39 de 43 verificações passaram.
+
+== B2-fuga-linhas-hora (teste) — CORRECOES-2 B2: uma fuga «nome » só nas linhas de seq 13 (as do caso da hora)
+rc=1
+  FALHA nenhuma linha ganha nomes, vida, alma nem PA ["nome", "nome"]
+teste do relato da caixa: 30 de 31 verificações passaram.
+
+== B3-caixaMestre (teste) — CORRECOES-2 B3: «(caixaMestre)» na origem da linha
+rc=1
+  FALHA nenhuma linha ganha nomes, vida, alma nem PA ["mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre"]
+  FALHA B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria` ["mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre"]
+teste do relato da caixa: 29 de 31 verificações passaram.
+
+== B3-master (teste) — CORRECOES-2 B3: «(master)» na origem da linha
+rc=1
+  FALHA nenhuma linha ganha nomes, vida, alma nem PA ["master", "master", "master", "master", "master", "master"]
+  FALHA B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria` ["master", "master", "master", "master"]
+teste do relato da caixa: 29 de 31 verificações passaram.
+
+== B3-PA (teste) — CORRECOES-2 B3: «(PA 3)» na origem da linha
+rc=1
+  FALHA nenhuma linha ganha nomes, vida, alma nem PA ["pa", "pa", "pa", "pa", "pa", "pa"]
+  FALHA B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria` ["pa", "pa", "pa", "pa"]
+teste do relato da caixa: 29 de 31 verificações passaram.
+
+== B6-estado-de-actor (teste) — CORRECOES-2 B6: `anotar_evento` conta o `estado` como de actor
+rc=1
+  FALHA contagem exacta: 7 eventos aplicados, 3 de actor, os tipos pela ordem (com o `estado`)
+  FALHA a linha diz de que snapshot é o velho (seq 9, revisão 31, 7 eventos com os tipos, 3 de actor) e a revisão da actual (35)
+teste do relato da caixa: 29 de 31 verificações passaram.
+
+== N-B2-canario-minusculas-relato (hud) — CORRECOES-3 B2: o relato traz o nome verdadeiro n.º 1 em minúsculas
+rc=1
+relato.txt: 68 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 34, consola 68
+  FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["‹nome verdadeiro› na linha 6", "‹nome verdadeiro› na linha 7", "‹nome verdadeiro› na linha 10", "‹nome verdadeiro› na linha 10"]
+  FALHA 4: nenhum nome verdadeiro no relato (49 linhas; canários: 2 nome(s) que diferem do público) ["‹nome verdadeiro› na linha 6", "‹nome verdadeiro› na linha 7", "‹nome verdadeiro› na linha 10", "‹nome verdadeiro› na linha 10", "‹nome verdadeiro› na linha 23", "‹nome verdadeiro› na linha 23", "‹nome verdadeiro› na linha 38", "‹nome verdadeiro› na linha 39"]
+  FALHA 5: nenhum nome verdadeiro no relato (62 linhas; canários: 2 nome(s) que diferem do público) ["‹nome verdadeiro› na linha 6", "‹nome verdadeiro› na linha 7", "‹nome verdadeiro› na linha 10", "‹nome verdadeiro› na linha 10", "‹nome verdadeiro› na linha 23", "‹nome verdadeiro› na linha 23", "‹nome verdadeiro› na linha 38", "‹nome verdadeiro› na linha 39", "‹nome verdadeiro› na linha 50", "‹no
+  FALHA fim: o relato inteiro (68 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["‹nome verdadeiro› na linha 6", "‹nome verdadeiro› na linha 7", "‹nome verdadeiro› na linha 10", "‹nome verdadeiro› na linha 10", "‹nome verdadeiro› na linha 23", "‹nome verdadeiro› na linha 23", "‹nome verdadeiro› na linha 38", "‹nome verdadeiro› na linha 39",
+prova da caixa no HUD da jogadora: 39 de 43 verificações passaram.
+
+== N-B2-canario-minusculas-caixa (hud) — CORRECOES-3 B2: um texto da caixa traz o nome verdadeiro em minúsculas
+rc=1
+relato.txt: 68 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 21, consola 42
+  FALHA 1: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa ["‹nome verdadeiro› em «‹nome verdadeiro›»"]
+  FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["‹nome verdadeiro› na linha 22"]
+  FALHA 4: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa ["‹nome verdadeiro› em «‹nome verdadeiro›»"]
+  FALHA 4: nenhum nome verdadeiro no relato (49 linhas; canários: 2 nome(s) que diferem do público) ["‹nome verdadeiro› na linha 22", "‹nome verdadeiro› na linha 23", "‹nome verdadeiro› na linha 49"]
+  FALHA 5: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa ["‹nome verdadeiro› em «‹nome verdadeiro›»"]
+  FALHA 5: nenhum nome verdadeiro no relato (62 linhas; canários: 2 nome(s) que diferem do público) ["‹nome verdadeiro› na linha 22", "‹nome verdadeiro› na linha 23", "‹nome verdadeiro› na linha 49", "‹nome verdadeiro› na linha 50", "‹nome verdadeiro› na linha 62"]
+  FALHA fim: o relato inteiro (68 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["‹nome verdadeiro› na linha 22", "‹nome verdadeiro› na linha 23", "‹nome verdadeiro› na linha 49", "‹nome verdadeiro› na linha 50", "‹nome verdadeiro› na linha 62", "‹nome verdadeiro› na linha 63"]
+prova da caixa no HUD da jogadora: 36 de 43 verificações passaram.
+
+== N-B3-heroina-nome-publico-hud (hud) — CORRECOES-3 B3: cenário com a heroína que entra com nome ≠ nomePublico («Espadachim de Bancada» / «Espadachim») — sem mutação de código
+rc=0
+relato.txt: 68 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
+prova da caixa no HUD da jogadora: 43 de 43 verificações passaram.
+
+== N-B3-heroina-nome-publico-manequim (manequim) — CORRECOES-3 B3: o mesmo cenário — manequim
+rc=0
+relato.txt: 78 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
+prova da caixa com os manequins: 53 de 53 verificações passaram.
+
+== N-B6-utc-e-sem-fuso (teste) — CORRECOES-3 B6: o caso do CI — aparelho em UTC (simulado no teste) e `hora_ms()` sem o fuso
+rc=1
+  FALHA a hora soma o fuso INJECTADO (não depende do fuso desta máquina): bias −180 → 11:06:40.250 (08:06:40.250), bias +330 → 11:06:40.250 (16:36:40.250)
+teste do relato da caixa: 30 de 31 verificações passaram.
+
+== B5-bias-zero (teste) — CORRECOES-2 B5: `hora_ms()` esquece o fuso (bias → 0)
+rc=1
+  FALHA a hora é a LOCAL do sistema (fuso Hora oficial do Brasil, bias -180 min): 16:23:08 ∈ [13:23:08, 13:23:08] e 16:23:08 ∈ [13:23:08, 13:23:08]
+  FALHA a hora soma o fuso INJECTADO (não depende do fuso desta máquina): bias −180 → 11:06:40.250 (08:06:40.250), bias +330 → 11:06:40.250 (16:36:40.250)
+teste do relato da caixa: 29 de 31 verificações passaram.
+
+== N-B1-canario-na-linha-em-branco (hud) — CORRECOES-3 B1: a linha em branco final traz um canário (só a escrita; a pré-varredura não o vê — apanha-o a re-varredura)
+rc=1
+relato.txt: 70 linhas, 2 resumo(s); nomes verdadeiros nas linhas FALHA: relato 1, consola 2
+  FALHA fim: a re-varredura do relato escrito (68 linhas) achou nome(s) verdadeiro(s) ["‹nome verdadeiro› na linha 67"]
+prova da caixa no HUD da jogadora: 43 de 43 verificações passaram.
+prova da caixa no HUD da jogadora: 43 de 44 verificações passaram.
+
+== N-B1-canario-no-resumo-hud (hud) — CORRECOES-3 B1: a última linha do relato (o resumo) traz um canário
+rc=1
+relato.txt: 68 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 1, consola 2
+  FALHA fim: o relato inteiro (68 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["‹nome verdadeiro› na linha 68"]
+prova da caixa no HUD da jogadora: 42 de 43 verificações passaram. ‹nome verdadeiro›
+
+== N-B1-canario-no-resumo-manequim (manequim) — CORRECOES-3 B1: a última linha do relato (o resumo) traz um canário — manequim
+rc=1
+relato.txt: 78 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 1, consola 2
+  FALHA fim: o relato inteiro (78 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["‹nome verdadeiro› na linha 78"]
+prova da caixa com os manequins: 52 de 53 verificações passaram. ‹nome verdadeiro›
+
+== N4-B3-sem-canarios-hud (hud) — CORRECOES-4 B3: `_canarios_nomes` fica vazio (o canário do `_privacidade` não junta nenhum nome) — o portão do `_fim()`
+rc=0
+relato.txt: 67 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
+prova da caixa no HUD da jogadora: 42 de 42 verificações passaram.
+
+== N4-B3-sem-canarios-manequim (manequim) — CORRECOES-4 B3: o mesmo — manequim
+rc=0
+relato.txt: 77 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
+prova da caixa com os manequins: 52 de 52 verificações passaram.
+
+== N4-B1-canario-na-linha-em-branco-manequim (manequim) — CORRECOES-4 B1: a linha em branco final traz um canário (só a re-varredura o vê) — manequim
+rc=1
+relato.txt: 80 linhas, 2 resumo(s); nomes verdadeiros nas linhas FALHA: relato 1, consola 2
+  FALHA fim: a re-varredura do relato escrito (78 linhas) achou nome(s) verdadeiro(s) ["‹nome verdadeiro› na linha 77"]
+prova da caixa com os manequins: 53 de 53 verificações passaram.
+prova da caixa com os manequins: 53 de 54 verificações passaram.
+# mutações — modo novo · 2026-11-22 13:23:58 -0300 · bfe4c3c
+# Godot: 4.7.2.stable.official.ed1daf0bf  ·  motor sha256 a91c021cda11…
+
+== B1-nome-verdadeiro (hud) — CORRECOES-2 B1: `_nome_publico` lê o `nome` (o verdadeiro) — o relato traz o nome verdadeiro n.º 1
+rc=1
+relato.txt: 68 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
+  FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["nome verdadeiro n.º 2 na linha 6", "nome verdadeiro n.º 2 na linha 7", "nome verdadeiro n.º 1 na linha 10", "nome verdadeiro n.º 2 na linha 10"]
+  FALHA 4: nenhum nome verdadeiro no relato (49 linhas; canários: 2 nome(s) que diferem do público) ["nome verdadeiro n.º 2 na linha 6", "nome verdadeiro n.º 2 na linha 7", "nome verdadeiro n.º 1 na linha 10", "nome verdadeiro n.º 2 na linha 10", "nome verdadeiro n.º 1 na linha 38", "nome verdadeiro n.º 1 na linha 39"]
+  FALHA 5: nenhum nome verdadeiro no relato (62 linhas; canários: 2 nome(s) que diferem do público) ["nome verdadeiro n.º 2 na linha 6", "nome verdadeiro n.º 2 na linha 7", "nome verdadeiro n.º 1 na linha 10", "nome verdadeiro n.º 2 na linha 10", "nome verdadeiro n.º 1 na linha 38", "nome verdadeiro n.º 1 na linha 39"]
+  FALHA fim: o relato inteiro (68 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["nome verdadeiro n.º 2 na linha 6", "nome verdadeiro n.º 2 na linha 7", "nome verdadeiro n.º 1 na linha 10", "nome verdadeiro n.º 2 na linha 10", "nome verdadeiro n.º 1 na linha 38", "nome verdadeiro n.º 1 na linha 39"]
+prova da caixa no HUD da jogadora: 39 de 43 verificações passaram.
+
+== B2-fuga-linhas-hora (teste) — CORRECOES-2 B2: uma fuga «nome » só nas linhas de seq 13 (as do caso da hora)
+rc=1
+  FALHA nenhuma linha ganha nomes, vida, alma nem PA, nem nada fora das chaves e palavras permitidas ["nome", "nome", "palavra(s) fora da lista: 2"]
+teste do relato da caixa: 30 de 31 verificações passaram.
+
+== B3-caixaMestre (teste) — CORRECOES-2 B3: «(caixaMestre)» na origem da linha
+rc=1
+  FALHA nenhuma linha ganha nomes, vida, alma nem PA, nem nada fora das chaves e palavras permitidas ["mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "palavra(s) fora da lista: 6"]
+  FALHA B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria`, nem nada fora das chaves e palavras permitidas ["mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "palavra(s) fora da lista: 4"]
+teste do relato da caixa: 29 de 31 verificações passaram.
+
+== B3-master (teste) — CORRECOES-2 B3: «(master)» na origem da linha
+rc=1
+  FALHA nenhuma linha ganha nomes, vida, alma nem PA, nem nada fora das chaves e palavras permitidas ["master", "master", "master", "master", "master", "master", "palavra(s) fora da lista: 6"]
+  FALHA B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria`, nem nada fora das chaves e palavras permitidas ["master", "master", "master", "master", "palavra(s) fora da lista: 4"]
+teste do relato da caixa: 29 de 31 verificações passaram.
+
+== B3-PA (teste) — CORRECOES-2 B3: «(PA 3)» na origem da linha
+rc=1
+  FALHA nenhuma linha ganha nomes, vida, alma nem PA, nem nada fora das chaves e palavras permitidas ["pa", "pa", "pa", "pa", "pa", "pa", "palavra(s) fora da lista: 6"]
+  FALHA B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria`, nem nada fora das chaves e palavras permitidas ["pa", "pa", "pa", "pa", "palavra(s) fora da lista: 4"]
+teste do relato da caixa: 29 de 31 verificações passaram.
+
+== B6-estado-de-actor (teste) — CORRECOES-2 B6: `anotar_evento` conta o `estado` como de actor
+rc=1
+  FALHA contagem exacta: 7 eventos aplicados, 3 de actor, os tipos pela ordem (com o `estado`)
+  FALHA a linha diz de que snapshot é o velho (seq 9, revisão 31, 7 eventos com os tipos, 3 de actor) e a revisão da actual (35)
+teste do relato da caixa: 29 de 31 verificações passaram.
+
+== N-B2-canario-minusculas-relato (hud) — CORRECOES-3 B2: o relato traz o nome verdadeiro n.º 1 em minúsculas
+rc=1
+relato.txt: 68 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
+  FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["nome verdadeiro n.º 2 na linha 6", "nome verdadeiro n.º 2 na linha 7", "nome verdadeiro n.º 1 na linha 10", "nome verdadeiro n.º 2 na linha 10"]
+  FALHA 4: nenhum nome verdadeiro no relato (49 linhas; canários: 2 nome(s) que diferem do público) ["nome verdadeiro n.º 2 na linha 6", "nome verdadeiro n.º 2 na linha 7", "nome verdadeiro n.º 1 na linha 10", "nome verdadeiro n.º 2 na linha 10", "nome verdadeiro n.º 1 na linha 38", "nome verdadeiro n.º 1 na linha 39"]
+  FALHA 5: nenhum nome verdadeiro no relato (62 linhas; canários: 2 nome(s) que diferem do público) ["nome verdadeiro n.º 2 na linha 6", "nome verdadeiro n.º 2 na linha 7", "nome verdadeiro n.º 1 na linha 10", "nome verdadeiro n.º 2 na linha 10", "nome verdadeiro n.º 1 na linha 38", "nome verdadeiro n.º 1 na linha 39"]
+  FALHA fim: o relato inteiro (68 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["nome verdadeiro n.º 2 na linha 6", "nome verdadeiro n.º 2 na linha 7", "nome verdadeiro n.º 1 na linha 10", "nome verdadeiro n.º 2 na linha 10", "nome verdadeiro n.º 1 na linha 38", "nome verdadeiro n.º 1 na linha 39"]
+prova da caixa no HUD da jogadora: 39 de 43 verificações passaram.
+
+== N-B2-canario-minusculas-caixa (hud) — CORRECOES-3 B2: um texto da caixa traz o nome verdadeiro em minúsculas
+rc=1
+relato.txt: 68 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
+  FALHA 1: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa ["canário n.º 5 (nome) no texto n.º 9 da caixa"]
+  FALHA 4: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa ["canário n.º 5 (nome) no texto n.º 10 da caixa"]
+  FALHA 5: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa ["canário n.º 5 (nome) no texto n.º 10 da caixa"]
+prova da caixa no HUD da jogadora: 40 de 43 verificações passaram.
+
+== N-B3-heroina-nome-publico-hud (hud) — CORRECOES-3 B3: cenário com a heroína que entra com nome ≠ nomePublico («Espadachim de Bancada» / «Espadachim») — sem mutação de código
+rc=0
+relato.txt: 68 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
+prova da caixa no HUD da jogadora: 43 de 43 verificações passaram.
+
+== N-B3-heroina-nome-publico-manequim (manequim) — CORRECOES-3 B3: o mesmo cenário — manequim
+rc=0
+relato.txt: 78 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
+prova da caixa com os manequins: 53 de 53 verificações passaram.
+
+== N-B6-utc-e-sem-fuso (teste) — CORRECOES-3 B6: o caso do CI — aparelho em UTC (simulado no teste) e `hora_ms()` sem o fuso
+rc=1
+  FALHA a hora soma o fuso INJECTADO (não depende do fuso desta máquina): bias −180 → 11:06:40.250 (08:06:40.250), bias +330 → 11:06:40.250 (16:36:40.250)
+teste do relato da caixa: 30 de 31 verificações passaram.
+
+== B5-bias-zero (teste) — CORRECOES-2 B5: `hora_ms()` esquece o fuso (bias → 0)
+rc=1
+  FALHA a hora é a LOCAL do sistema (fuso Hora oficial do Brasil, bias -180 min): 16:24:46 ∈ [13:24:46, 13:24:46] e 16:24:46 ∈ [13:24:46, 13:24:46]
+  FALHA a hora soma o fuso INJECTADO (não depende do fuso desta máquina): bias −180 → 11:06:40.250 (08:06:40.250), bias +330 → 11:06:40.250 (16:36:40.250)
+teste do relato da caixa: 29 de 31 verificações passaram.
+
+== N-B1-canario-na-linha-em-branco (hud) — CORRECOES-3 B1: a linha em branco final traz um canário (só a escrita; a pré-varredura não o vê — apanha-o a re-varredura)
+rc=1
+relato.txt: 68 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
+  FALHA fim: o relato inteiro (68 linhas — todas as do ficheiro, contando esta e as 2 finais) traz nome(s) verdadeiro(s), achados só pela re-varredura do que se escreveu ["nome verdadeiro n.º 1 na linha 67"]
+prova da caixa no HUD da jogadora: 42 de 43 verificações passaram.
+
+== N-B1-canario-no-resumo-hud (hud) — CORRECOES-3 B1: a última linha do relato (o resumo) traz um canário
+rc=1
+relato.txt: 68 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
+  FALHA fim: o relato inteiro (68 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["nome verdadeiro n.º 1 na linha 68"]
+prova da caixa no HUD da jogadora: 42 de 43 verificações passaram. ‹nome verdadeiro›
+
+== N-B1-canario-no-resumo-manequim (manequim) — CORRECOES-3 B1: a última linha do relato (o resumo) traz um canário — manequim
+rc=1
+relato.txt: 78 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
+  FALHA fim: o relato inteiro (78 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["nome verdadeiro n.º 1 na linha 78"]
+prova da caixa com os manequins: 52 de 53 verificações passaram. ‹nome verdadeiro›
+
+== N4-B3-sem-canarios-hud (hud) — CORRECOES-4 B3: `_canarios_nomes` fica vazio (o canário do `_privacidade` não junta nenhum nome) — o portão do `_fim()`
+rc=1
+relato.txt: 68 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
+  FALHA fim: a varredura do relato inteiro não tem nenhum nome verdadeiro para procurar (o canário não juntou nenhum) — não pode passar sem verificar
+prova da caixa no HUD da jogadora: 42 de 43 verificações passaram.
+
+== N4-B3-sem-canarios-manequim (manequim) — CORRECOES-4 B3: o mesmo — manequim
+rc=1
+relato.txt: 78 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
+  FALHA fim: a varredura do relato inteiro não tem nenhum nome verdadeiro para procurar (o canário não juntou nenhum) — não pode passar sem verificar
+prova da caixa com os manequins: 52 de 53 verificações passaram.
+
+== N4-B1-canario-na-linha-em-branco-manequim (manequim) — CORRECOES-4 B1: a linha em branco final traz um canário (só a re-varredura o vê) — manequim
+rc=1
+relato.txt: 78 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
+  FALHA fim: o relato inteiro (78 linhas — todas as do ficheiro, contando esta e as 2 finais) traz nome(s) verdadeiro(s), achados só pela re-varredura do que se escreveu ["nome verdadeiro n.º 1 na linha 77"]
+prova da caixa com os manequins: 52 de 53 verificações passaram.

@@ -207,9 +207,15 @@ func _correr() -> void:
 		DirAccess.remove_absolute(info_path)
 	# B7-CORRECOES-6 (B1): o PIN do Mestre é fresco por partida (20 dígitos, do Crypto) e só vive na memória dos dois
 	# processos — não se escreve no registo nem no repositório. Não toca no dado semeado (o rng da sala é outro).
-	var bytes := Crypto.new().generate_random_bytes(20)
-	for i in bytes.size():
-		_pin += str(bytes[i] % 10)
+	# B7-CORRECOES-7 (B3/JD4): sem enviesamento — os bytes ≥ 250 rejeitam-se ANTES do `% 10` (250 = 25 × 10, por isso
+	# cada dígito sai com 25/250 exactos); e o `_pin` repõe-se a "" antes de se gerar (nunca se acumula entre chamadas).
+	_pin = ""
+	var cripto := Crypto.new()
+	while _pin.length() < 20:
+		var bytes := cripto.generate_random_bytes(32)
+		for i in bytes.size():
+			if bytes[i] < 250 and _pin.length() < 20:
+				_pin += str(bytes[i] % 10)
 	var a_srv := [script_srv, "--porta=%d" % porta, "--semente=%d" % _semente, "--info=" + info_path, "--pin=" + _pin,
 		"--cenario=" + caminho_cenario, "--vida-max-s=%d" % int(_limite_ms / 1000 + 60)]
 	if _args.has("motor"):

@@ -1,0 +1,54 @@
+# verificação do PIN (Ordem CAIXA-RELATO-B7-CORRECOES-7) · bfe4c3c · base bfe4c3c
+# só contagens; os valores nunca se escrevem. O PIN antigo vem de 1b907bc, o PIN novo de 20 dígitos de e8f1a42.
+PIN novo de 20 dígitos — ficheiros na árvore de trabalho (seguidos ou não): 0 (esperado 0) ok
+PIN novo de 20 dígitos — ocorrências na árvore de trabalho: 0 (esperado 0) ok
+PIN novo de 20 dígitos — ficheiros seguidos (git grep): 0 (esperado 0) ok
+PIN antigo — ficheiros na árvore de trabalho (seguidos ou não): 2 (esperado 0) FALHA
+PIN antigo — ocorrências na árvore de trabalho: 2 (esperado 0) FALHA
+PIN antigo — ficheiros novos ou mudados desde a base (11 ficheiros): 0 (esperado 0) ok
+PIN de corrida — cadeias de 20+ dígitos seguidos nos ficheiros novos: 0 (esperado 0) ok
+(informativo) cadeias de 6+ dígitos seguidos nos ficheiros novos: 27 — números de linhas, sha, horas; nenhuma é um PIN (o antigo e o novo contam-se acima e o de corrida tem 20)
+chave "pin" no cenário de bancada: false (esperado false) ok
+servidor-info.json seguidos: 1 (esperado 0) FALHA
+servidor.log seguidos fora de suites/: 1 (esperado 0) FALHA
+cp do info ou do log do servidor nos 5 lançadores: 0 (esperado 0) ok
+cat do info nos 5 lançadores: 0 (esperado 0) ok
+chave "pin" nos registos de b7-correcoes-7/: 0 (esperado 0) ok
+`.pathname` no código de provas/ordem-caixa/ferramentas/servidor-bancada-prova.mjs: 0 (esperado 0) ok
+fileURLToPath no código de provas/ordem-caixa/ferramentas/servidor-bancada-prova.mjs: 3 (esperado 3) ok
+autojogo.gd: `_pin = ""` antes da geração: sim (esperado sim) ok
+autojogo.gd: rejeição dos bytes ≥ 250 antes do % 10: 1 (esperado 1) ok
+autojogo.gd: `% 10` sem a rejeição na mesma linha ou na de cima: 0 (esperado 0) ok
+provas/ordem-caixa-hud-jogadora/ferramentas/servidor-bancada-prova.mjs sem --pin → código: 2 (esperado 2) ok
+provas/ordem-caixa-hud-jogadora/ferramentas/servidor-bancada-prova.mjs com --pin que não é só dígitos → código: 2 (esperado 2) ok
+provas/ordem-caixa/ferramentas/servidor-bancada-prova.mjs sem --pin → código: 2 (esperado 2) ok
+provas/ordem-caixa/ferramentas/servidor-bancada-prova.mjs com --pin que não é só dígitos → código: 2 (esperado 2) ok
+rascunhos/servidor/autojogo/servidor-autojogo.mjs sem --pin → código: 2 (esperado 2) ok
+rascunhos/servidor/autojogo/servidor-autojogo.mjs sem --pin → a mensagem «falta --pin»: 1 (esperado 1) ok
+rascunhos/servidor/autojogo/servidor-autojogo.mjs com --pin que não é só dígitos → código: 2 (esperado 2) ok
+rascunhos/servidor/autojogo/servidor-autojogo.mjs sem --pin e com um --cenario que não existe → código (o PIN valida-se antes do cenário): 2 (esperado 2) ok
+info escrito por um servidor recusado: 0 (esperado 0) ok
+arranque vivo do servidor do HUD (cenário novo, PIN fresco): info pronto: true (esperado true) ok
+arranque vivo do servidor do HUD: chave "pin" no info: 0 (esperado 0) ok
+arranque vivo do servidor do HUD: o PIN da corrida no info ou no log do servidor: 0 (esperado 0) ok
+arranque vivo do servidor do HUD: linha pronto-prova-caixa-hud no log: 1 (esperado 1) ok
+arranque vivo do servidor da caixa (cenário novo, PIN fresco): info pronto: true (esperado true) ok
+arranque vivo do servidor da caixa: chave "pin" no info: 0 (esperado 0) ok
+arranque vivo do servidor da caixa: o PIN da corrida no info ou no log do servidor: 0 (esperado 0) ok
+arranque vivo do servidor da caixa: linha pronto-prova-caixa no log: 1 (esperado 1) ok
+arranque vivo do servidor do autojogo (cenário novo, PIN fresco): info pronto: true (esperado true) ok
+arranque vivo do servidor do autojogo: chave "pin" no info: 0 (esperado 0) ok
+arranque vivo do servidor do autojogo: o PIN da corrida no info ou no log do servidor: 0 (esperado 0) ok
+arranque vivo do servidor do autojogo: linha pronto-autojogo no log: 1 (esperado 1) ok
+provas/ordem-caixa-hud-jogadora/ferramentas/prova_caixa_jogadora.gd sem --pin → código: 2 (esperado 2) ok
+provas/ordem-caixa-janela/ferramentas/prova_caixa_janela.gd sem --pin → código: 2 (esperado 2) ok
+provas/ordem-caixa-manequim/ferramentas/prova_caixa_manequim.gd sem --pin → código: 2 (esperado 2) ok
+provas/ordem-caixa/ferramentas/prova_caixa_reentrar.gd sem --pin → código: 2 (esperado 2) ok
+falhas: 4
+
+# Nota (Ordem CAIXA-RELATO-B7-CORRECOES-7): as 4 FALHAS acima são UM achado, fora do território desta ordem, e não vêm
+# das correcções dela. São 2 ficheiros seguidos de provas/ordem-caixa-janela/cobertura-correcoes-6/cliente/
+# (servidor-info.json e servidor.log), cometidos pela CAIXA-JANELA-COBERTURA-CORRECOES-6 (e4072d0) em paralelo com a
+# B7-CORRECOES-6, e cada um tem 1 ocorrência do PIN antigo. Na ponta do ramo da -6 (5282c99) a contagem dava 0. Na ponta
+# da linha depois da fusão (880f601) e na base desta ordem (bfe4c3c) dá 2. Os ficheiros novos ou mudados por esta ordem
+# têm 0. Não se apagaram, porque estão fora do território. A decisão é do coordenador (ver o ESTADO-FINAL).

@@ -12,7 +12,7 @@
 //
 //   node servidor/autojogo/servidor-autojogo.mjs --porta=8790 --semente=7 --pin=<PIN da partida> [--cenario=<json>] [--motor=<vlab-completo.js>]
 //   (Ordem CAIXA-RELATO-B7-CORRECOES-6: o PIN do Mestre já não vem do cenário cometido; o autojogo.gd gera um fresco por
-//   partida e passa-o por --pin=. Sem ele, ou fora de /^\d{6,}$/, sai com erro.)
+//   partida e passa-o por --pin=. Sem ele, ou fora de /^\d{6,}$/, sai com 2 — antes de ler o cenário; B7-CORRECOES-7.)
 //        [--info=<ficheiro>] [--vida-max-s=900] [--motor-falso]
 //
 // --info: quando o servidor está a ouvir, escreve aqui um JSON com a semente, a sala, o SHA do motor e o das fichas
@@ -109,10 +109,15 @@ async function principal() {
   const porta = Number(args.porta ?? 8790);
   const semente = Number(args.semente ?? 1);
   if (!Number.isInteger(semente) || semente < 0) throw new Error('--semente tem de ser um inteiro ≥ 0');
+  // Ordem CAIXA-RELATO-B7-CORRECOES-7 (B2/JD3): o --pin= valida-se ANTES de se ler o cenário e a recusa sai com 2,
+  // como nos dois servidor-bancada-prova.mjs (antes lançava erro depois do lerCenario e saía com 1).
+  const pin = typeof args.pin === 'string' ? args.pin : '';
+  if (!/^\d{6,}$/.test(pin)) {
+    console.error('[autojogo] falta --pin=<6 dígitos ou mais> (o PIN da partida; o cenário já não o traz)');
+    process.exit(2);
+  }
   const caminhoCenario = path.resolve(typeof args.cenario === 'string' ? args.cenario : path.join(AQUI, 'cenario-bancada.json'));
   const { cenario, fichas, shaCenario, shaFichas } = lerCenario(caminhoCenario);
-  const pin = typeof args.pin === 'string' ? args.pin : '';
-  if (!/^\d{6,}$/.test(pin)) throw new Error('falta --pin=<6 dígitos ou mais> (o PIN da partida; o cenário já não o traz)');
   const motor = await carregarMotor(args);
   const terreno = JSON.parse(readFileSync(new URL('../dados/terreno-floresta.json', import.meta.url), 'utf8'));
   const roomId = 'autojogo-s' + semente;

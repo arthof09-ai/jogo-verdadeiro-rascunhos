@@ -12,8 +12,11 @@
 // Ordem CAIXA-RELATO-B7-CORRECOES-6 (B1/B2): o PIN do Mestre JÁ NÃO está no cenário cometido. Vem por `--pin=` (o
 // lançador gera um fresco em cada corrida e nunca o escreve no repositório); sem ele, ou fora de /^\d{6,}$/, o servidor
 // sai com 2. O info (--info) e a linha «pronto-…» já NÃO levam o PIN.
+// Ordem CAIXA-RELATO-B7-CORRECOES-7 (B1/JD2): os caminhos passam por fileURLToPath, como na cópia do HUD
+// (provas/ordem-caixa-hud-jogadora/ferramentas/servidor-bancada-prova.mjs). O `.pathname` do URL dava, no Windows,
+// «/C:/…» (e %-escapes nos acentos), que o fs não abre: o cenário não se lia e o 4.º lançador não corria fora do Linux.
 import { readFileSync, writeFileSync, renameSync, existsSync, mkdirSync } from 'node:fs';
-import { pathToFileURL } from 'node:url';
+import { pathToFileURL, fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const SRV = new URL('../../../rascunhos/servidor/', import.meta.url);
@@ -27,7 +30,7 @@ const porta = Number(args.porta ?? 8791);
 const semente = Number(args.semente ?? 7);
 const pin = typeof args.pin === 'string' ? args.pin : '';
 if (!/^\d{6,}$/.test(pin)) { console.error('[prova] falta --pin=<6 dígitos ou mais> (o PIN da corrida; o cenário já não o traz)'); process.exit(2); }
-const caminhoCenario = new URL('autojogo/cenario-bancada.json', SRV).pathname;
+const caminhoCenario = fileURLToPath(new URL('autojogo/cenario-bancada.json', SRV));
 const { cenario, fichas, shaCenario, shaFichas } = lerCenario(caminhoCenario);
 
 async function motor() {
@@ -35,10 +38,10 @@ async function motor() {
     const { criarMotorFalso } = await import(new URL('testes/motor-falso.mjs', SRV).href);
     return { motores: criarMotorFalso(), rotulo: 'falso', sha: null };
   }
-  const fonte = typeof args.motor === 'string' ? path.resolve(args.motor) : new URL('autojogo/.cache/vlab-completo.js', SRV).pathname;
+  const fonte = typeof args.motor === 'string' ? path.resolve(args.motor) : fileURLToPath(new URL('autojogo/.cache/vlab-completo.js', SRV));
   if (!existsSync(fonte)) throw new Error('motor não encontrado: ' + fonte + ' (passe --motor=<vlab-completo.js> ou --motor-falso)');
   const { sha, codigo } = embrulhar(readFileSync(fonte));
-  const dir = new URL('autojogo/.cache/', SRV).pathname;
+  const dir = fileURLToPath(new URL('autojogo/.cache/', SRV));
   mkdirSync(dir, { recursive: true });
   const modulo = path.join(dir, `motores-${sha.slice(0, 16)}.mjs`);
   if (!existsSync(modulo)) writeFileSync(modulo, codigo);
