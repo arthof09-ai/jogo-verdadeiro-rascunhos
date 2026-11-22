@@ -87,7 +87,13 @@ ficheiros, **0 diferenças**. O ramo não toca em `rascunhos/`, por isso não ha
 
 ## 3. Commits e CI
 - `1c4d9f8`: as correcções, o teste, as corridas, as capturas, o README e a renumeração.
-- O commit seguinte traz este ESTADO-FINAL.
+- `b675eb5`: este ESTADO-FINAL. O ramo está publicado e a `fable/integracao-50` não foi tocada (continua em `e0e2510`).
+- **CI em `b675eb5`: VERIFICADO.**
+  - **Testes dos rascunhos: success** (run 44969814375). Os 10 jobs passaram: godot-cliente, provas-mapa, servidor,
+    foto-mestre, **retoma-pc**, validador-glb, protocolo, ponta-a-ponta, cliente e motor-real. No job `cliente`, o passo
+    B7 dá «teste do relato da caixa: 21 de 21 verificações passaram».
+  - **Sonda de privacidade: success** (run 44969814327).
+  - O commit que traz este registo só muda este ficheiro.
 
 ## 4. Para o coordenador
 1. **Mexi nas duas ferramentas das provas vivas**, fora de `provas/ordem-caixa-relato/`. O contador da B1 vive lá
