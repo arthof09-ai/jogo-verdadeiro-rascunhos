@@ -7,9 +7,11 @@ este ficheiro. Nenhum código do jogo, do HUD, das cores ou do protocolo foi toc
 
 - **Base:** `origin/fable/integracao-50` @ `f747427` (a ponta à hora do lançamento). Clone novo, `core.autocrlf=false`.
 - **Ramo:** `claude2/caixa-testes-correcoes-4`, **não fundido** (a fusão é do coordenador).
-- **Commits, por ordem:** `18da5a6` (os testes e o ESTADO-FINAL da CORRECOES-3) e depois o commit das listas da
-  retoma (`actualizar-listas.py`), que traz também este ficheiro. Se depois disto entrar um commit só com o resultado do
-  CI, isso fica escrito no fim deste ficheiro, com a ordem certa.
+- **Commits, por ordem:**
+  1. `18da5a6`: os testes e o ESTADO-FINAL da CORRECOES-3.
+  2. `9f2380e`: as listas da retoma (`actualizar-listas.py`) e este ficheiro.
+  3. Um último commit **só com a secção do CI** deste ficheiro (fora de `rascunhos/`). O commit das listas **não** é o
+     último. Depois dele corri o `actualizar-listas` outra vez e as listas não mudaram.
 - **Conferência:** `~/workspace/conferencias/caixa-testes-correcoes-3/` não está neste PC nem no repositório. Trabalhei
   pelo resumo da ordem. Os números da conferência (2403, os «15 snapshots, 5 ao espectador», os «17/17») bateram com o
   que encontrei: a aliada fica com 2403, e o guião de `privacidade` dá 5 snapshots a cada papel da Party.
@@ -115,8 +117,16 @@ bancada das fichas de teste.
 | Conferência dos schemas (`PROTOCOLO_DUMP` + `conferir-schemas.py`) | **0 falhas** nas mensagens que saem (exit 0) |
 | Servidor **com** `--permission` (na base, para a B3) | 401 passam, 7 falham (todos `permission: 'Net'`), 10 saltados (8 de disco e 2 de `../protocolo`) |
 
-**No CI espero:** no job `servidor`, **409 passam + 10 saltados**, de 419; no job `protocolo`, **419/419**. O número sobe
-1 por causa do teste novo da B1.
+## CI deste ramo (em `9f2380e`, o commit das listas)
+
+- **«Testes dos rascunhos»**, run 44985070818: **10/10 jobs verdes** (servidor, validador-glb, motor-real, protocolo,
+  cliente, godot-cliente, ponta-a-ponta, provas-mapa, foto-mestre, **retoma-pc**).
+  - job `servidor`: `tests 419 · pass 409 · fail 0 · skipped 10`; a Prova da caixa dá **PROVA OK**.
+  - job `protocolo`: `tests 419 · pass 419 · fail 0 · skipped 0`.
+  - Subiu 1 em relação aos 418 da CORRECOES-3: é o teste novo da B1.
+- **«Sonda de privacidade»**, run 44985070786: verde.
+- Esta secção entrou num commit a seguir que só toca neste ficheiro (ver «Commits»). O CI desse commit não está
+  registado aqui.
 
 ### As mutações (resumo)
 
