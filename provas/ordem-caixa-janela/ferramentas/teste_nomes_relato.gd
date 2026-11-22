@@ -3,8 +3,12 @@ extends SceneTree
 ## Usa o ajudante que a prova usa (`nomes_relato.gd`) e as FICHAS DE BANCADA reais
 ## (`rascunhos/servidor/autojogo/fichas-bancada.json`: «Bruto de Bancada»/«Bruto», «Lobo de Bancada»/«Lobo» — os
 ## valores-canário). Reproduz o defeito medido: o relato cometido da CAIXA-JANELA (`provas/ordem-caixa-janela/cliente/
-## relato.txt`, a corrida de antes desta ordem) traz os nomes verdadeiros, e o canário do relato tem de os apanhar.
-## Um nome verdadeiro de bancada numa linha do relato = o canário dá achados = a prova FALHA.
+## relato.txt`, a corrida de antes da CAIXA-JANELA-NOMES) traz os nomes verdadeiros, e o canário do relato tem de os
+## apanhar. Um nome verdadeiro de bancada numa linha do relato = o canário dá achados = a prova FALHA.
+## CAIXA-JANELA-NOMES-CORRECOES: esse relato está CONGELADO aqui dentro (RELATO_VELHO, B2), para o §4 não depender do
+## ficheiro (que é registo histórico e pode ser limpo por outra ordem); a vista vem do elenco pelo ajudante da prova
+## (`vista_do_elenco`, B6); os diagnósticos dizem a contagem e as linhas, não os nomes (`diagnostico`, B4).
+## No CI: job `cliente`, passo «Nomes do relato da caixa-janela» (B1).
 ##
 ## Correr (na raiz do repo):
 ##   godot --headless --path rascunhos/cliente -s "$PWD/provas/ordem-caixa-janela/ferramentas/teste_nomes_relato.gd"
@@ -35,18 +39,13 @@ func _init() -> void:
 		return
 	print("== Ordem CAIXA-JANELA-NOMES — os nomes do relato da prova da caixa-janela ==")
 
-	# Uma vista do Mestre como a da bancada: uma figura por ficha (id = o fichaId), com nome e nomePublico das fichas.
-	var figuras: Array = []
+	# Uma vista do Mestre como a da bancada: uma figura por ficha (id = o id da ficha), só com nome e nomePublico — a
+	# mesma que a prova faz do elenco para os seus canários (nomes_relato.gd, vista_do_elenco; B6).
+	var vista: Dictionary = N.vista_do_elenco(fichas_json)
+	var figuras: Array = vista["mestre"]["figuras"]
 	var por_id := {}
-	var lista = fichas_json.get("fichas", fichas_json.get("lista", []))
-	if lista is Dictionary:
-		lista = lista.values()
-	for f in lista:
-		if f is Dictionary and f.has("nome"):
-			var fig := {"id": str(f["id"]), "nome": f["nome"], "nomePublico": f.get("nomePublico"), "vidaActual": 9}
-			figuras.append(fig)
-			por_id[str(f["id"])] = fig
-	var vista := {"mestre": {"figuras": figuras}}
+	for fig in figuras:
+		por_id[str(fig["id"])] = fig
 	_ok(por_id.has("bruto-bancada") and por_id.has("lobo-bancada"), "as fichas de bancada têm o Bruto e o Lobo (%d fichas)" % figuras.size())
 	if not (por_id.has("bruto-bancada") and por_id.has("lobo-bancada")):
 		_fim()
@@ -60,7 +59,7 @@ func _init() -> void:
 	_ok(not canarios.has("Espadachim de Bancada") and not canarios.has("Arqueira de Bancada"),
 		"1: as heroínas (nome = nome público) não são canários")
 	var dup := {"mestre": {"figuras": figuras + [bruto.duplicate()]}}
-	_ok(N.nomes_verdadeiros(dup).size() == canarios.size(), "1: figuras repetidas (as 8 criaturas da prova) não repetem o canário")
+	_ok(N.nomes_verdadeiros(dup).size() == canarios.size(), "1: uma ficha repetida não repete o canário (aqui as %d fichas + 1 Bruto repetido; na prova viva, 10 figuras de 4 fichas)" % figuras.size())
 
 	print("== 2. a fonte: o relato escreve o nome PÚBLICO ==")
 	_ok(N.nome(vista, "bruto-bancada") == "Bruto" and N.nome(vista, "lobo-bancada") == "Lobo",
@@ -76,25 +75,27 @@ func _init() -> void:
 	print("== 3. o canário do relato ==")
 	var limpo := PackedStringArray(["== prova ==", lb, N.linha_bancada(bruto, "bruto-bancada", {"tipo": "mover"}, "APLICADA"), la])
 	var achados_limpo: Array = N.no_relato(limpo, canarios)
-	_ok(achados_limpo.is_empty(), "3: o relato escrito pela fonte (nome público) passa o canário %s" % [achados_limpo])
+	_ok(achados_limpo.is_empty(), "3: o relato escrito pela fonte (nome público) passa o canário (%s)" % N.diagnostico(limpo, canarios))
 	# O caso: um nome verdadeiro de bancada no relato tem de falhar.
 	var sujo := limpo.duplicate()
 	sujo.append("  bancada: Bruto de Bancada → {\"tipo\":\"encerrar\"} (APLICADA)")
 	var achados_sujo: Array = N.no_relato(sujo, canarios)
-	_ok(achados_sujo == ["Bruto de Bancada na linha 5"], "3: «Bruto de Bancada» na linha 5 → o canário FALHA %s" % [achados_sujo])
+	_ok(achados_sujo == ["Bruto de Bancada na linha 5"], "3: «Bruto de Bancada» na linha 5 → o canário FALHA (%s)" % N.diagnostico(sujo, canarios))
 	var sujo2 := PackedStringArray(['  ordem ["Lobo","Lobo de Bancada"]'])
 	_ok(N.no_relato(sujo2, canarios) == ["Lobo de Bancada na linha 1"], "3: dentro de JSON também se apanha («Lobo de Bancada»)")
 	_ok(N.no_relato(sujo, []).is_empty(), "3: sem canários não há achados (por isso a prova exige ≥ 1 canário)")
 
-	print("== 4. o caso medido: o relato cometido da CAIXA-JANELA de antes desta ordem ==")
-	var velho_p := ProjectSettings.globalize_path("res://").path_join("../../provas/ordem-caixa-janela/cliente/relato.txt").simplify_path()
-	var velho := FileAccess.get_file_as_string(velho_p)
-	if velho == "":
-		_ok(false, "4: abriu %s" % velho_p)
-	else:
-		var achados_velho: Array = N.no_relato(PackedStringArray(velho.split("\n")), canarios)
-		_ok(not achados_velho.is_empty(), "4: o canário apanha os nomes verdadeiros no relato antigo (%d achados; o 1.º: %s)" % [
-			achados_velho.size(), achados_velho[0] if not achados_velho.is_empty() else "-"])
+	print("== 4. o caso medido: o relato da CAIXA-JANELA de antes da CAIXA-JANELA-NOMES (congelado: RELATO_VELHO) ==")
+	# B2: preso ao caso medido — 22 achados (linha × nome; 28 ocorrências brutas, porque a linha da ordem dinâmica traz
+	# 4 «Lobo de Bancada» e 4 «Bruto de Bancada»), o 1.º «Lobo de Bancada na linha 7».
+	var velho := PackedStringArray(RELATO_VELHO.split("\n"))
+	var achados_velho: Array = N.no_relato(velho, canarios)
+	var brutas := 0
+	for k in canarios:
+		brutas += RELATO_VELHO.count(str(k))
+	_ok(achados_velho.size() == 22 and achados_velho[0] == "Lobo de Bancada na linha 7" and brutas == 28,
+		"4: o canário apanha no relato antigo 22 achados (28 ocorrências brutas), o 1.º «Lobo de Bancada na linha 7» (%s; %d brutas)" % [
+		N.diagnostico(velho, canarios), brutas])
 	_fim()
 
 
@@ -102,3 +103,84 @@ func _fim() -> void:
 	print("")
 	print("teste dos nomes do relato da caixa-janela: %d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 or _total == 0 else 0)
+
+
+## B2 — o relato cometido da Ordem CAIXA-JANELA (`provas/ordem-caixa-janela/cliente/relato.txt`, blob `2b919f6b45f0`), congelado
+## byte a byte. Traz os nomes verdadeiros de bancada (valores-canário, fichas fictícias) — é o caso que o §4 mede. Só
+## nomes de bancada, coordenadas, seq e medidas: nenhuma vida, PA ou outro dado do Mestre.
+const RELATO_VELHO := """== Ordem CAIXA-JANELA — a janela lobby→arena e a caixa com 10 figuras em ecrãs baixos (cliente a sério) ==
+servidor ws://127.0.0.1:8793/ws · render NVIDIA GeForce RTX 4060 · Godot 4.7.2-stable (official)
+== 0. batalha de bancada com 10 figuras (IA de bancada, lugares próprios) ==
+  ok    a batalha tem 10 figuras (≥ 10)
+  bancada: Arqueira de Bancada → {"destino":{"x":11,"y":10},"tipo":"mover"} (APLICADA)
+  bancada: Arqueira de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Lobo de Bancada → {"destino":{"x":12,"y":10},"tipo":"mover"} (APLICADA)
+  bancada: Lobo de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Lobo de Bancada → {"destino":{"x":11,"y":11},"tipo":"mover"} (APLICADA)
+  bancada: Lobo de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Lobo de Bancada → {"destino":{"x":9,"y":11},"tipo":"mover"} (APLICADA)
+  bancada: Lobo de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Lobo de Bancada → {"destino":{"x":10,"y":10},"tipo":"mover"} (APLICADA)
+  bancada: Lobo de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Espadachim de Bancada → {"destino":{"x":10,"y":9},"tipo":"mover"} (APLICADA)
+  bancada: Espadachim de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Bruto de Bancada → {"destino":{"x":10,"y":11},"tipo":"mover"} (APLICADA)
+  bancada: Bruto de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Bruto de Bancada → {"destino":{"x":6,"y":12},"tipo":"mover"} (APLICADA)
+  bancada: Bruto de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Bruto de Bancada → {"destino":{"x":14,"y":12},"tipo":"mover"} (APLICADA)
+  bancada: Bruto de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Bruto de Bancada → {"destino":{"x":6,"y":11},"tipo":"mover"} (APLICADA)
+  bancada: Bruto de Bancada → {"tipo":"encerrar"} (APLICADA)
+  a batalha a meio: fase combate, rodada 2.0, vez de Arqueira de Bancada, ordem dinâmica (Mestre) ["Arqueira de Bancada","Lobo de Bancada","Lobo de Bancada","Lobo de Bancada","Lobo de Bancada","Espadachim de Bancada","Bruto de Bancada","Bruto de Bancada","Bruto de Bancada","Bruto de Bancada"]
+  ok    batalha de bancada a meio: em combate e com a ordem dinâmica do servidor com 10 figuras (≥ 8)
+== 1. B1 — a janela: o snapshot chega, a batalha anda, e SÓ DEPOIS a arena (e o HUD) abre ==
+  ok    1: snapshot recebido (seq 33), ainda sem HUD e sem eventos depois dele
+  bancada: Arqueira de Bancada → {"alvoId":"f00d6f54afaa36569","arma":"tiro-certeiro-bancada","tipo":"atacar"} (APLICADA)
+  bancada: Arqueira de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Lobo de Bancada → {"alvoId":"ff2acf60bd672e76e","arma":"mordida-bancada","tipo":"atacar"} (APLICADA)
+  bancada: Lobo de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: Lobo de Bancada → {"alvoId":"ff2acf60bd672e76e","arma":"mordida-bancada","tipo":"atacar"} (APLICADA)
+  bancada: Lobo de Bancada → {"tipo":"encerrar"} (APLICADA)
+  na janela (sem HUD) a bancada jogou ["Arqueira de Bancada","Lobo","Lobo"]: 10 eventos chegaram ao Estado dela (seq 33 → 43)
+  ok    1: a batalha andou entre o snapshot e o HUD (3 vezes, 10 eventos)
+  ok    1: a arena abriu a meio da batalha (fase combate, rodada 2)
+  caixa da jogadora ao abrir: visível=true modo=dinamico ordem=["Arqueira de Bancada","Lobo","Lobo","Lobo","Lobo","Espadachim de Bancada","Bruto","Bruto","Bruto","Bruto"] vez=Lobo
+  ordem do servidor:          ["Arqueira de Bancada","Lobo","Lobo","Lobo","Lobo","Espadachim de Bancada","Bruto","Bruto","Bruto","Bruto"], vez Lobo
+  ok    1: ao abrir, a caixa já é a ordem do servidor com os eventos da janela (10 figuras, vez Lobo), sem esperar pelo snapshot seguinte
+  ok    1: nenhum snapshot novo chegou entretanto (os 10 eventos de depois do de seq 33 continuam por cima dele)
+  ok    1: nenhuma mensagem do Mestre chegou ao aparelho dela (11 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    1: o estado dela não guarda nada do Mestre
+  ok    1: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica
+  ok    1: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa []
+  ok    1: nenhum número nos textos da caixa (15 textos) []
+== 2. B3 — a caixa com 10 figuras em ecrãs baixos ==
+  MEDIDA viva 10 figuras · janela 1280x720 (unidades 1920x1080, escala 0.667): caixa 841x212 u = 560x141 px reais (44% x 20% do ecrã), 10 por linha, retrato 62 u = 41 px, nome 17 u = 11.3 px · faixa «O Mestre narra» livre 943 u (precisa 453 u) = 628 px reais, letra 14.7 px
+  ok    1280x720: a caixa com as 10 figuras cabe no ecrã
+  ok    1280x720: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    1280x720: a faixa tem 943 u para a frase mais comprida (453 u), numa linha, fora da caixa
+  ok    1280x720: a fila segue a letra de agora (retrato 62 u = 2,8 × 22)
+  ok    1280x720: a letra da faixa tem 14.7 px reais (≥ 13)
+  ok    captura 1-janela-1280x720.png (1280×720)
+  MEDIDA viva 10 figuras · janela 844x390 (unidades 2337x1080, escala 0.361): caixa 1326x323 u = 478x116 px reais (57% x 30% do ecrã), 10 por linha, retrato 101 u = 36 px, nome 27 u = 9.8 px · faixa «O Mestre narra» livre 819 u (precisa 729 u) = 295 px reais, letra 13.0 px
+  ok    844x390: a caixa com as 10 figuras cabe no ecrã
+  ok    844x390: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    844x390: a faixa tem 819 u para a frase mais comprida (729 u), numa linha, fora da caixa
+  ok    844x390: a fila segue a letra de agora (retrato 101 u = 2,8 × 36)
+  ok    844x390: a letra da faixa tem 13.0 px reais (≥ 13)
+  ok    captura 2-baixo-844x390.png (844×390)
+  MEDIDA viva 10 figuras · janela 780x360 (unidades 2340x1080, escala 0.333): caixa 1320x386 u = 440x128 px reais (56% x 36% do ecrã), 9 por linha, retrato 110 u = 37 px, nome 29 u = 9.7 px · faixa «O Mestre narra» livre 816 u (precisa 788 u) = 272 px reais, letra 13.0 px
+  ok    780x360: a caixa com as 10 figuras cabe no ecrã
+  ok    780x360: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    780x360: a faixa tem 816 u para a frase mais comprida (788 u), numa linha, fora da caixa
+  ok    780x360: a fila segue a letra de agora (retrato 110 u = 2,8 × 39)
+  ok    780x360: a letra da faixa tem 13.0 px reais (≥ 13)
+  ok    captura 3-baixo-780x360.png (780×360)
+  ok    2: nenhuma mensagem do Mestre chegou ao aparelho dela (11 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    2: o estado dela não guarda nada do Mestre
+  ok    2: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica
+  ok    2: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa []
+  ok    2: nenhum número nos textos da caixa (15 textos) []
+
+prova da janela e da caixa com 10 figuras: 35 de 35 verificações passaram.
+"""

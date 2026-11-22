@@ -34,7 +34,24 @@ static func nomes_verdadeiros(v: Dictionary) -> Array:
 	return nomes
 
 
+## CAIXA-JANELA-NOMES-CORRECOES (B6): uma vista do Mestre feita do ELENCO (as fichas, p. ex. `fichas-bancada.json`):
+## uma figura por ficha (id = o id da ficha), só com `id`, `nome` e `nomePublico` — nada de vida, PA ou outro campo.
+## Serve para tirar os canários antes de haver vista nenhuma (`nomes_verdadeiros(vista_do_elenco(...))`).
+static func vista_do_elenco(fichas_json) -> Dictionary:
+	var figuras: Array = []
+	if fichas_json is Dictionary:
+		var lista = fichas_json.get("fichas", fichas_json.get("lista", []))
+		if lista is Dictionary:
+			lista = lista.values()
+		if lista is Array:
+			for f in lista:
+				if f is Dictionary and f.has("nome"):
+					figuras.append({"id": str(f.get("id", "")), "nome": f["nome"], "nomePublico": f.get("nomePublico")})
+	return {"mestre": {"figuras": figuras}}
+
+
 ## As linhas do relato que trazem algum dos nomes dados («<nome> na linha <n>»). Vazio = o relato está limpo.
+## Só para o teste conferir o caso: o diagnóstico que vai para um relato ou registo é o de `diagnostico()`, sem nomes.
 static func no_relato(relato: PackedStringArray, nomes: Array) -> Array:
 	var achados: Array = []
 	for i in relato.size():
@@ -42,3 +59,19 @@ static func no_relato(relato: PackedStringArray, nomes: Array) -> Array:
 			if relato[i].contains(str(k)):
 				achados.append("%s na linha %d" % [k, i + 1])
 	return achados
+
+
+## CAIXA-JANELA-NOMES-CORRECOES (B4): os números das linhas com achados (sem repetidos, por ordem).
+static func linhas(relato: PackedStringArray, nomes: Array) -> Array:
+	var ls: Array = []
+	for i in relato.size():
+		for k in nomes:
+			if relato[i].contains(str(k)) and not ls.has(i + 1):
+				ls.append(i + 1)
+	return ls
+
+
+## CAIXA-JANELA-NOMES-CORRECOES (B4): o diagnóstico de uma varredura — a contagem de achados e as linhas, NUNCA os
+## nomes (o diagnóstico vai para o relato e para os registos, que são cometidos: escrever lá o nome achado era a fuga).
+static func diagnostico(relato: PackedStringArray, nomes: Array) -> String:
+	return "%d achado(s), linhas %s" % [no_relato(relato, nomes).size(), JSON.stringify(linhas(relato, nomes))]

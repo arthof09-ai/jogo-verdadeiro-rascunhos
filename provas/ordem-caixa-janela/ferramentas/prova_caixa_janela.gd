@@ -18,6 +18,10 @@ extends SceneTree
 ## Em todos: nada do Mestre chega ao aparelho dela; nenhum texto da caixa mostra nome verdadeiro, vida ou PA.
 ## CAIXA-JANELA-NOMES: o relato escreve só o nome PÚBLICO das figuras (ferramentas/nomes_relato.gd), e o canário varre
 ## também o relato — em cada passagem (1, 2) e no fim, o relato inteiro: um nome verdadeiro de bancada nele é FALHA.
+## CAIXA-JANELA-NOMES-CORRECOES: os canários do relato vêm primeiro do ELENCO (as fichas de bancada, antes de haver
+## batalha; B6), e a varredura final em _fim() é INCONDICIONAL (corre em todos os caminhos, também quando a prova pára
+## no passo 0 ou 1, antes de qualquer passagem do canário; B3). Os diagnósticos dizem a contagem e as linhas, nunca os
+## nomes achados (B4) — o diagnóstico vai para o relato, que é cometido.
 ## Deixa em <pasta>: 1-janela-1280x720.png, 2-baixo-844x390.png, 3-baixo-780x360.png e relato.txt. Código 0 se tudo passa.
 
 const CENA := "res://cenas/arena/arena.tscn"
@@ -54,7 +58,8 @@ var _jogadora: Dictionary = {}  # a heroína que entra pelo ecrã a sério (a 1.
 var _recebido: Array = []  # tudo o que chegou ao aparelho da jogadora (JSON)
 ## CAIXA-JANELA-NOMES: os nomes do relato e o canário do relato (ferramentas/nomes_relato.gd, partilhado com o teste).
 var NomesRelato
-## Os nomes verdadeiros (os que diferem do público) juntados a cada passagem do canário, para a varredura final em _fim().
+## Os nomes verdadeiros (os que diferem do público): os do elenco no arranque (B6) e os de cada vista do Mestre que o
+## canário vê, para a varredura final em _fim().
 var _canarios_nomes: Array = []
 
 
@@ -307,14 +312,20 @@ func _privacidade(rotulo: String) -> void:
 	var textos: Array = []
 	_textos(_arena.hud.get_node("Raiz/Seguro/Camadas/CaixaOrdem"), textos)
 	var achados: Array = []
-	for t in textos:
+	var em_textos: Array = []  # B4: o diagnóstico diz quantos achados e em que textos (índice), nunca o valor nem o texto
+	for i in textos.size():
 		# Os números de vida/PA não podem aparecer como palavra nos textos da caixa (nem um dígito: a caixa não tem números).
 		for k in canarios:
-			if str(t).contains(k):
-				achados.append("%s em «%s»" % [k, t])
-	_ok(achados.is_empty(), rotulo + ": nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa %s" % [achados])
-	var com_digito: Array = textos.filter(func(t): return RegEx.create_from_string("[0-9]").search(str(t)) != null)
-	_ok(com_digito.is_empty(), rotulo + ": nenhum número nos textos da caixa (%d textos) %s" % [textos.size(), com_digito])
+			if str(textos[i]).contains(k):
+				achados.append(i)
+				if not em_textos.has(i):
+					em_textos.append(i)
+	_ok(achados.is_empty(), rotulo + ": nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa (%d achado(s), textos %s)" % [achados.size(), JSON.stringify(em_textos)])
+	var com_digito: Array = []
+	for i in textos.size():
+		if RegEx.create_from_string("[0-9]").search(str(textos[i])) != null:
+			com_digito.append(i)
+	_ok(com_digito.is_empty(), rotulo + ": nenhum número nos textos da caixa (%d textos; com dígito: %s)" % [textos.size(), JSON.stringify(com_digito)])
 	# CAIXA-JANELA-NOMES: o canário estende-se ao RELATO (o que fica cometido): nenhum nome verdadeiro em nenhuma linha
 	# até aqui. Só os nomes — vida e PA são números pequenos que o relato tem por outras razões (coordenadas, seq,
 	# medidas); esses ficam para a varredura dos textos da caixa, acima.
@@ -323,7 +334,7 @@ func _privacidade(rotulo: String) -> void:
 			_canarios_nomes.append(n)
 	var no_relato: Array = NomesRelato.no_relato(_relato, nomes)
 	_ok(not nomes.is_empty() and no_relato.is_empty(),
-		rotulo + ": nenhum nome verdadeiro no relato (%d linhas; canários: %d nome(s) que diferem do público) %s" % [_relato.size(), nomes.size(), no_relato])
+		rotulo + ": nenhum nome verdadeiro no relato (%d linhas; canários: %d nome(s) que diferem do público; %s)" % [_relato.size(), nomes.size(), NomesRelato.diagnostico(_relato, nomes)])
 
 
 func _correr() -> void:
@@ -352,6 +363,9 @@ func _correr() -> void:
 	_rede.mestre_recebido.connect(_registar)
 	var raiz := ProjectSettings.globalize_path("res://").path_join("..").simplify_path()
 	_cenario = JSON.parse_string(FileAccess.get_file_as_string(raiz.path_join("servidor/autojogo/cenario-bancada.json")))
+	# B6: os canários do relato a partir do elenco (as fichas de bancada), antes de qualquer linha do relato.
+	var elenco = JSON.parse_string(FileAccess.get_file_as_string(raiz.path_join("servidor/autojogo/fichas-bancada.json")))
+	_canarios_nomes = NomesRelato.nomes_verdadeiros(NomesRelato.vista_do_elenco(elenco))
 	_linha("== Ordem CAIXA-JANELA — a janela lobby→arena e a caixa com 10 figuras em ecrãs baixos (cliente a sério) ==")
 	_linha("servidor %s · render %s · Godot %s" % [_url, RenderingServer.get_video_adapter_name(), str(Engine.get_version_info().get("string", "?"))])
 
@@ -439,9 +453,11 @@ func _medir_vivo(tam: Vector2i, nome: String) -> void:
 
 func _fim() -> void:
 	# CAIXA-JANELA-NOMES: a varredura final do relato INTEIRO (incluindo o que se escreveu depois do último canário).
-	if not _canarios_nomes.is_empty():
-		var no_relato: Array = NomesRelato.no_relato(_relato, _canarios_nomes)
-		_ok(no_relato.is_empty(), "fim: o relato inteiro (%d linhas) não traz nenhum dos %d nome(s) verdadeiro(s) %s" % [_relato.size(), _canarios_nomes.size(), no_relato])
+	# B3: INCONDICIONAL — corre em todos os caminhos que chegam aqui (também quando a prova pára no passo 0 ou 1, antes
+	# de qualquer passagem do canário); sem canários (elenco ilegível e nenhuma vista) é FALHA, nunca um salto calado.
+	var no_relato: Array = NomesRelato.no_relato(_relato, _canarios_nomes)
+	_ok(not _canarios_nomes.is_empty() and no_relato.is_empty(), "fim: o relato inteiro (%d linhas) não traz nenhum dos %d nome(s) verdadeiro(s) (%s)" % [
+		_relato.size(), _canarios_nomes.size(), NomesRelato.diagnostico(_relato, _canarios_nomes)])
 	_linha("")
 	_linha("prova da janela e da caixa com 10 figuras: %d de %d verificações passaram." % [_total - _falhas, _total])
 	for l in _herois.values():

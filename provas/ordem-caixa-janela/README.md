@@ -52,3 +52,27 @@ Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c�
 O `cliente/` de cima fica como estava (o registo da Ordem CAIXA-JANELA, com os nomes verdadeiros de bancada).
 Correr o teste (raiz do repo): `godot --headless --path rascunhos/cliente -s "$PWD/provas/ordem-caixa-janela/ferramentas/teste_nomes_relato.gd"`.
 A prova: o lançador aceita agora um 4.º argumento, a pasta de saída (sem ele, `provas/ordem-caixa-janela/cliente`).
+
+## nomes-correcoes/ — Ordem CAIXA-JANELA-NOMES-CORRECOES (22/11/2026, Claude conta 1, PC): as correcções B1–B7
+- **B1:** o teste dos nomes entra no CI (job `cliente`, a seguir ao passo «Relato da caixa»). O remendo ao workflow é
+  `nomes-correcoes/remendo-ci-testes.yml.patch` — aplica-o o coordenador (token `workflow`). O corpo exacto do passo,
+  corrido aqui, dá rc=0 e rc=1 com um canário mudado (`nomes-correcoes/mutacoes.log`).
+- **B2:** o §4 do teste já não lê `cliente/relato.txt`: o relato antigo está congelado dentro do teste (`RELATO_VELHO`,
+  igual byte a byte, sha256 `6df653c41a29e23a…`), e o §4 afirma **22 achados** (28 ocorrências brutas), o 1.º «Lobo de
+  Bancada na linha 7». O `cliente/relato.txt` pode ser limpo por outra ordem sem tocar no teste.
+- **B3:** a varredura final da prova (`_fim()`) é incondicional; sem canários é FALHA.
+- **B4:** os diagnósticos das varreduras (relato e textos da caixa) dizem a contagem e as linhas/índices, nunca o nome.
+- **B5:** o rótulo «as 8 criaturas da prova» passou a «aqui as 4 fichas + 1 Bruto repetido; na prova viva, 10 figuras
+  de 4 fichas».
+- **B6:** os canários da prova vêm do elenco (as fichas de bancada) no arranque, pelo mesmo ajudante que o teste usa
+  (`nomes_relato.gd`, `vista_do_elenco`), além dos de cada vista do Mestre.
+
+Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c…`; semente 7):
+- `nomes-correcoes/teste-nomes-relato.log` — **teste 14/14**.
+- `nomes-correcoes/cliente/` — **prova viva 38/38**; 0 nomes verdadeiros no relato. Capturas (sha256, 16 primeiros):
+  `1-janela-1280x720.png` `0086b0edbd6a8051`, `2-baixo-844x390.png` `b46e4b57b68effbb`, `3-baixo-780x360.png`
+  `79f7c54d69c4c0db`.
+- `nomes-correcoes/suites/` — servidor (`node --test`) 418/418 · prova-servidor PROVA OK · teste_relato_caixa 28/28 ·
+  rodar_testes 290/290 · abrir_scripts 107/0 falhas · caixa_jogadora 18/18 · hud_acoes 50/50 · canario_privacidade 10/10.
+- `nomes-correcoes/mutacoes.log` — as provas da B1 (o passo verde/vermelho) e da B3 (a fuga com paragem no passo 0:
+  calada na base, FALHA «fim» agora).

@@ -1,0 +1,19 @@
+# CAIXA-JANELA-NOMES-CORRECOES — as mutações (todas em cópias ou repostas; nenhuma cometida)
+
+## B1 — o passo novo do CI, corrido localmente com o corpo exacto do remendo (bash -e; GODOT = Godot 4.7.2 _console.exe)
+### verde (o teste como está): rc=0
+teste dos nomes do relato da caixa-janela: 14 de 14 verificações passaram.
+### canário mudado (na fixture, linha 7: «Lobo de Bancada» → «Lobo da Bancada»; reposto com cp, cmp igual): rc=1
+  FALHA 4: o canário apanha no relato antigo 22 achados (28 ocorrências brutas), o 1.º «Lobo de Bancada na linha 7» (21 achado(s), linhas [8,9,10,11,12,13,14,17,18,19,20,21,22,23,24,25,31,32,33,34]; 27 brutas)
+  ok    3: «Bruto de Bancada» na linha 5 → o canário FALHA (1 achado(s), linhas [5])
+teste dos nomes do relato da caixa-janela: 13 de 14 verificações passaram.
+
+## B3 — fuga de volta (nome_publico lê «nome») + a prova pára no passo 0, antes de qualquer passagem do canário
+### versão da base (15eab43, varredura final condicional): rc=1, a fuga não é vista
+  FALHA MUTACAO: a prova pára no passo 0 (antes de qualquer passagem do canário)
+prova da janela e da caixa com 10 figuras: 2 de 3 verificações passaram.
+  (linhas do relato com nome verdadeiro: 17; nenhuma verificação «fim»)
+### versão desta ordem (varredura final incondicional, canários do elenco): rc=1, a fuga é FALHA
+  FALHA MUTACAO: a prova pára no passo 0 (antes de qualquer passagem do canário)
+  FALHA fim: o relato inteiro (27 linhas) não traz nenhum dos 2 nome(s) verdadeiro(s) (18 achado(s), linhas [7,8,9,10,11,12,13,14,17,18,19,20,21,22,23,24,25])
+prova da janela e da caixa com 10 figuras: 2 de 4 verificações passaram.
