@@ -24,3 +24,10 @@ medir_mestre 0 falhas · arranque «pronto».
 
 Correr de novo (Git Bash, na raiz do repo):
 `bash provas/ordem-caixa-hud-jogadora/ferramentas/correr-prova-caixa-hud.sh <Godot_console.exe> <vlab-completo.js> <pasta-tmp>`
+
+## Nota da Ordem CAIXA-RELATO (B7b, 21/11/2026)
+No `cliente/relato.txt` desta pasta, a linha do §4 «a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica
+{…"fechada":false…}» imprime o JSON do **último ROOM_SNAPSHOT** (o da religação), que os eventos seguintes já tinham
+adiantado — **não** é a caixa actual dela (essa é a da linha de cima, «fechada: true»). O relato é o registo do que se
+viu a 20/11 e fica como está. A ferramenta foi corrigida (a linha diz de que snapshot é o JSON, marca-o
+«DESACTUALIZADO» e imprime a caixa actual); a corrida nova está em `provas/ordem-caixa-relato/cliente-hud/` (38/38).

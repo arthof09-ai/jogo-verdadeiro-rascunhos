@@ -30,3 +30,10 @@ retrato da caixa copiado de um modelo com o manequim e sem a cápsula.
 
 Correr de novo (Git Bash, na raiz do repo; num clone novo, primeiro `godot --headless --path rascunhos/cliente --import`):
 `bash provas/ordem-caixa-manequim/ferramentas/correr-prova-caixa-manequim.sh <Godot_console.exe> <vlab-completo.js> <pasta-tmp>`
+
+## Nota da Ordem CAIXA-RELATO (B7b, 21/11/2026)
+No `cliente/relato.txt` desta pasta, a linha do §4 «a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica
+{…"fechada":false…}» imprime o JSON do **último ROOM_SNAPSHOT** (o da religação), que os eventos seguintes já tinham
+adiantado — **não** é a caixa actual dela (essa é a da linha de cima, «fechada: true»). O relato fica como está. A
+ferramenta foi corrigida (a mesma correcção da `prova_caixa_jogadora.gd`); a corrida nova está em
+`provas/ordem-caixa-relato/cliente-manequim/` (48/48).

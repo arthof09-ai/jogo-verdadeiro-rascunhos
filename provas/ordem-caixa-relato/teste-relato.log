@@ -1,0 +1,21 @@
+
+== Ordem CAIXA-RELATO — o registo da caixa da jogadora no relato da prova ==
+  linha: 1: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica — JSON actual (do ROOM_SNAPSHOT seq 9, revisão 31, chegou às 21:30:00; 0 evento(s) depois dele; a caixa dela é esta): {"ligada":true,"ordemDinamica":{"fechada":false,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"],"ultimo":"f20af3254ba898103"},"ordemPor":"dinamico"}
+  ok    acabado de chegar: o JSON do snapshot é a caixa actual
+  ok    acabado de chegar: a linha diz «JSON actual», sem «DESACTUALIZADO»
+  ok    acabado de chegar: a linha diz de que snapshot é (seq, revisão, hora, 0 eventos depois)
+  ok    acabado de chegar: a linha traz o JSON do snapshot tal como chegou
+  linha: 4: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica — JSON DESACTUALIZADO (é o do ROOM_SNAPSHOT seq 9, revisão 31, chegou às 21:30:00; 3 evento(s) depois dele, que a adiantaram): {"ligada":true,"ordemDinamica":{"fechada":false,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"],"ultimo":"f20af3254ba898103"},"ordemPor":"dinamico"} · a caixa ACTUAL dela (revisão 35): {"ligada":true,"ordemDinamica":{"fechada":true,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103","f1c67641aa5cdfe28"],"ultimo":"ff2acf60bd672e76e"},"ordemPor":"dinamico"}
+  ok    o modelo do HUD adiantou-se pelos eventos: 4 figuras, fechada true, Arqueira na vez (a caixa actual)
+  ok    depois dos eventos: o JSON do snapshot já NÃO é a caixa actual
+  ok    a linha marca «DESACTUALIZADO» ANTES do JSON velho (lê-se a marca primeiro)
+  ok    a mesma linha imprime a caixa ACTUAL depois do JSON velho
+  ok    lêem-se as duas: a velha (fechada false) e a actual (fechada true)
+  ok    a linha diz de que snapshot é o velho (seq 9, revisão 31, 3 eventos depois) e a revisão da actual (35)
+  ok    o JSON velho nunca passa por actual
+  ok    seq e revisão (floats do JSON) escritos como inteiros
+  ok    um evento que não muda a caixa: o JSON continua o actual (e diz que houve 1 evento)
+  ok    sem caixa no snapshot: nada desactualizado
+  ok    a linha não ganha nomes, vida, alma nem PA []
+
+teste do relato da caixa: 15 de 15 verificações passaram.

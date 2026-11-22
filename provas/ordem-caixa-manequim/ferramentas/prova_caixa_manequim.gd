@@ -48,6 +48,10 @@ var _a_entrar = null
 var _cenario: Dictionary = {}
 var _jogadora: Dictionary = {}  # a heroína que entra pelo ecrã a sério (a 1.ª do cenário)
 var _recebido: Array = []  # tudo o que chegou ao aparelho da jogadora (JSON)
+## Ordem CAIXA-RELATO (B7b): de que snapshot é a caixa que o relato imprime — {seq, revisao, hora, eventos depois}.
+var _snap := {}
+var RelatoCaixa  # provas/ordem-caixa-relato/ferramentas/relato_caixa.gd
+var _caixa_relatada := {}  # a última linha da caixa: {desactualizado, snapshot, actual}
 var _gltf_doc: GLTFDocument
 var _gltf_estado: GLTFState
 
@@ -323,6 +327,15 @@ func _registar(msg: Dictionary) -> void:
 	_recebido.append(JSON.stringify(msg))
 
 
+## Ordem CAIXA-RELATO (B7b): a origem da caixa do Estado (o último ROOM_SNAPSHOT) e quantos eventos chegaram depois.
+func _registar_snapshot(msg: Dictionary) -> void:
+	_snap = {"seq": msg.get("seq"), "revisao": msg.get("revision"), "hora": Time.get_time_string_from_system(), "eventos": 0}
+
+
+func _registar_evento(_msg: Dictionary) -> void:
+	_snap["eventos"] = int(_snap.get("eventos", 0)) + 1
+
+
 func _entrar_jogadora(rotulo: String) -> bool:
 	_rede.entrar(_jogadora["nome"], _jogadora["senha"])
 	var dentro := func(): return _rede.na_mesa() and _estado.tem_snapshot and _estado.minha_figura_id == _jogadora["figuraId"]
@@ -379,7 +392,13 @@ func _privacidade(rotulo: String) -> void:
 	_ok(_estado.mestre.is_empty(), rotulo + ": o estado dela não guarda nada do Mestre")
 	var c: Dictionary = _estado.caixa
 	var chaves_ok: bool = c.is_empty() or (c.keys().size() == 3 and c.has("ligada") and c.has("ordemPor") and c.has("ordemDinamica"))
-	_ok(chaves_ok, rotulo + ": a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica %s" % JSON.stringify(c))
+	# Ordem CAIXA-RELATO (B7b): o JSON é o do último snapshot; a linha diz de qual e, se os eventos o adiantaram,
+	# marca-o DESACTUALIZADO e imprime a caixa actual dela (o modelo do HUD).
+	var snap := _snap.duplicate()
+	snap["revisao_actual"] = _estado.revisao
+	var actual: Dictionary = RelatoCaixa.caixa_actual(c, _arena.hud.ordem_turnos)
+	_caixa_relatada = {"desactualizado": RelatoCaixa.desactualizado(c, actual), "snapshot": c, "actual": actual, "snap": snap}
+	_ok(chaves_ok, RelatoCaixa.linha(rotulo, c, snap, actual))
 	var v := await _vista_b()
 	var canarios: Array = []
 	for f in v.get("mestre", {}).get("figuras", []):
@@ -416,6 +435,13 @@ func _correr() -> void:
 	_rede.definir_servidor(srv)
 	_rede.snapshot_recebido.connect(_registar)
 	_rede.evento_recebido.connect(_registar)
+	_rede.snapshot_recebido.connect(_registar_snapshot)
+	_rede.evento_recebido.connect(_registar_evento)
+	RelatoCaixa = load(str(get_script().resource_path).get_base_dir().path_join("../../ordem-caixa-relato/ferramentas/relato_caixa.gd").simplify_path())
+	if RelatoCaixa == null:
+		printerr("não abriu provas/ordem-caixa-relato/ferramentas/relato_caixa.gd")
+		quit(2)
+		return
 	_rede.opcoes_recebidas.connect(_registar)
 	_rede.mestre_recebido.connect(_registar)
 	var raiz := ProjectSettings.globalize_path("res://").path_join("..").simplify_path()
@@ -477,6 +503,15 @@ func _correr() -> void:
 	_ok(c["ids"] == od.get("ordem", []) and c["vez"] == str(od.get("ultimo", "")),
 		"4: pelos eventos que recebeu, a caixa dela adiantou-se e é igual à ordem do servidor %s (vez: %s, fechada: %s)" % [_nomes_ids(od.get("ordem", [])), _estado.nome_de(str(od.get("ultimo", ""))), od.get("fechada")])
 	await _privacidade("4")
+	# Ordem CAIXA-RELATO (B7b): aqui o JSON do snapshot (o da religação) é velho — a volta fechou pelos eventos. O
+	# relato tem de o dizer na linha e imprimir a caixa actual dela, que é a do servidor (fechada: true).
+	var cr := _caixa_relatada
+	var od_snap: Dictionary = cr.get("snapshot", {}).get("ordemDinamica", {})
+	var od_act: Dictionary = cr.get("actual", {}).get("ordemDinamica", {})
+	_ok(cr.get("desactualizado") == true and int(cr.get("snap", {}).get("eventos", 0)) > 0 and od_snap.get("fechada") != od_act.get("fechada")
+		and od_act.get("ordem", []) == od.get("ordem", []) and od_act.get("fechada") == od.get("fechada") and od_act.get("ultimo", "") == str(od.get("ultimo", "")),
+		"4: o relato marca o JSON do snapshot como DESACTUALIZADO (%d eventos depois dele; fechada %s → %s) e a caixa actual que imprime é a do servidor" % [
+			int(cr.get("snap", {}).get("eventos", 0)), od_snap.get("fechada"), od_act.get("fechada")])
 	await _conferir_manequins("4")
 	await _gravar("4-religada-avancou.png")
 
@@ -492,6 +527,7 @@ func _correr() -> void:
 	_ok(c["visivel"] and c["modo"] == "dinamico" and c["ids"] == antes["ids"] and c["vez"] == antes["vez"],
 		"5: a caixa reconstruiu-se do snapshot, igual à de antes de sair")
 	await _privacidade("5")
+	_ok(_caixa_relatada.get("desactualizado") == false, "5: o relato dá o JSON do snapshot da reentrada como o actual (não marcado)")
 	await _conferir_manequins("5")
 	await _gravar("5-reentrou.png")
 	_fim()
