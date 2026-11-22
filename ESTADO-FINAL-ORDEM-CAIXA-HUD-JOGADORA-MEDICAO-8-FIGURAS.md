@@ -15,7 +15,7 @@ Este ficheiro não leva nomes verdadeiros nem o valor de nenhum PIN.
   - a caixa ligada, em combate;
   - medida em 844×390, 780×360 e 1920×1080 (controlo);
   - a faixa medida com a frase mais comprida que mostra (`FAIXA_MAIS_LONGA`).
-  Os §1–§7 não mudaram. O teste continua a ser o mesmo ficheiro que o CI já corre, e o workflow não foi tocado.
+  O helper partilhado `_snapshot` mudou em 2 linhas; os §§1–7 passam iguais (18/18 nas duas corridas). O teste continua a ser o mesmo ficheiro que o CI já corre, e o workflow não foi tocado.
 - **A corrida:** Godot 4.7.2 do PC (`Godot_v4.7.2-stable_win64.exe`, `4.7.2.stable.official.ed1daf0bf`),
   `--headless`, sem GPU. Primeiro `--import` (rc 0). Depois `-s res://testes/caixa_jogadora.gd` com `--path rascunhos/cliente`.
   A medição é exequível em headless: o critério de morte não se aplicou.
@@ -62,11 +62,12 @@ vermelha. A faixa descentrada vem do desenho da Ordem CAIXA-JANELA B3 (`hud.gd _
 centrada não cabe, centra-se entre a ⚙ e a caixa. Essa decisão está à espera do olho do Mestre, e esta ordem não a pode
 corrigir. Por isso o teste mede-a e regista-a numa linha `REGISTO (não conta)` nas 3 resoluções. Os pontos 1, 2, 3 e 5
 continuam a ser verificações que contam e guardam contra regressões. A corrida do critério sem esta mudança fica
-cometida como prova (33/36).
+cometida como prova (33/36). A variante do teste com o ponto 4 a contar não foi cometada — só o seu log
+(`corrida-1-criterio.log`).
 
 **Mudanças de redacção feitas depois da 1.ª corrida, só para o conferidor dar 0 achados:**
 - no teste, a frase da barra ficou «barra inferior»;
-- no `CRITERIO.md`, o mesmo, e também as linhas 10 e 22.
+- no `CRITERIO.md`, o mesmo (ponto 2, «não tapa a barra inferior»).
 
 Não mudou o sentido de nenhum ponto nem nenhuma conta.
 
@@ -78,8 +79,8 @@ Não mudou o sentido de nenhum ponto nem nenhuma conta.
    | Resolução | Caixa máxima para centrar | Caixa com 8 | Excesso | Desvio do centro da faixa |
    |---|---|---|---|---|
    | 844×390 | 762 u | 1186 u | **424 u** | 539 u |
-   | 780×360 | 732 u | 1269 u | **537 u** | 576 u |
-   | 1920×1080 | 698 u | 767 u | **69 u** | 350,5 u |
+   | 780×360 | 732,5 u | 1269 u | **536,5 u** | 576 u |
+   | 1920×1080 | 698,5 u | 767 u | **68,5 u** | 350,5 u |
 
    A correcção é o EXPANDE, pendente do veredicto do Mestre às fotos do PADRAO-BUSTO. Não se corrigiu aqui.
    O `ESTADO-FINAL-ORDEM-CAIXA-JANELA.md` (linhas 78–79) já dizia que a faixa descentra com a caixa larga. Esta medição
@@ -101,16 +102,17 @@ Não mudou o sentido de nenhum ponto nem nenhuma conta.
     território declarado, mas é a própria regra da casa que manda corrê-lo, e o job `retoma-pc` do CI exige-o.
 - **Commits, directamente na linha `fable/integracao-50`, sem ramo lateral:**
   - `dca5694`: o teste (§8) e a pasta de provas;
-  - o commit seguinte: as listas da retoma e este ESTADO-FINAL.
+  - `3203d83`: as listas da retoma e este ESTADO-FINAL;
+  - `7f7ab32`: só o §5 deste ficheiro.
   Antes de publicar: `fetch` e depois `rebase` sobre a ponta. A ponta continuava em `5a29112`: nada a rebasear e
   nenhum conflito.
-- **Publicado:** push `5a29112..3203d83 -> fable/integracao-50`. `git ls-remote`: `fable/integracao-50` =
-  `3203d8331e2c47f79d8c575f7da8ad6a40d5bbbf`. O commit `3203d83` leva as listas e este ESTADO-FINAL.
+- **Publicado:** push `5a29112..7f7ab32 -> fable/integracao-50`. `git ls-remote`: `fable/integracao-50` =
+  `7f7ab32e3206c4347736ad3f797f82fb85fb8230`.
 
-## 5. CI da ponta: VERIFICADO
-- No `3203d83`: **Testes dos rascunhos success** (run 45067277410; servidor, validador-glb, motor-real, protocolo,
-  cliente, godot-cliente, ponta-a-ponta, foto-mestre, retoma-pc e provas-mapa, todos success) e **Sonda de privacidade
-  success** (run 45067277477).
+## 5. CI verificado no `7f7ab32`
+- No `7f7ab32`: **Testes dos rascunhos success** (run 45067521621) e **Sonda de privacidade success**
+  (run 45067521656) — 11/11 check-runs.
+- No `3203d83` também estava verde: Testes run 45067277410 e Sonda run 45067277477.
 - No job `cliente`, o `caixa_jogadora.gd` dá **33 de 33**. As 3 linhas `REGISTO (não conta)` têm os mesmos números do
   PC (margens 126/1204, 136/1288 e 77/778 u).
-- Este parágrafo segue num commit só deste ficheiro, por cima do `3203d83`.
+- §5 actualizado no commit documental da conferência (F1) para citar o CI da ponta `7f7ab32`.
