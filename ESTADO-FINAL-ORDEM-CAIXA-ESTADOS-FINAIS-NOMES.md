@@ -81,4 +81,9 @@ O conferidor também passou sobre este ESTADO-FINAL (§3).
 
 ## 5. CI
 
-A preencher depois do `push` (commit seguinte).
+| Workflow | Commit | Corrida | Resultado |
+|---|---|---|---|
+| «Testes dos rascunhos» | `4c32d69` | 45059631776 | **verde, 10/10 jobs**: cliente, servidor, ponta-a-ponta, motor-real, validador-glb, protocolo, **retoma-pc**, foto-mestre, provas-mapa, godot-cliente |
+| «Sonda de privacidade» | `4c32d69` | 45059631773 | **verde** |
+
+`4c32d69` é a ponta com a emenda e este ESTADO-FINAL; o commit que acrescenta esta tabela só mexe neste ficheiro.
