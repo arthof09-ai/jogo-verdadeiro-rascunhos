@@ -239,13 +239,15 @@ func _registar(msg: Dictionary) -> void:
 	_recebido.append(JSON.stringify(msg))
 
 
-## Ordem CAIXA-RELATO (B7b): a origem da caixa do Estado (o último ROOM_SNAPSHOT) e quantos eventos chegaram depois.
-func _registar_snapshot(msg: Dictionary) -> void:
-	_snap = {"seq": msg.get("seq"), "revisao": msg.get("revision"), "hora": Time.get_time_string_from_system(), "eventos": 0}
+## Ordem CAIXA-RELATO (B7b): a origem da caixa do Estado (o último ROOM_SNAPSHOT) e os eventos depois dele.
+## Ordem CAIXA-RELATO-CORRECOES (B1/B3): ouve a APLICAÇÃO no Estado (snapshot_aplicado / evento_aplicado), não a
+## recepção na Rede; a hora leva milissegundos; cada evento guarda o tipo e conta à parte se tiver actor.
+func _registar_snapshot() -> void:
+	_snap = RelatoCaixa.novo_snap(_estado.ultimo_seq, _estado.revisao)
 
 
-func _registar_evento(_msg: Dictionary) -> void:
-	_snap["eventos"] = int(_snap.get("eventos", 0)) + 1
+func _registar_evento(msg: Dictionary) -> void:
+	RelatoCaixa.anotar_evento(_snap, msg)
 
 
 func _entrar_jogadora(rotulo: String) -> bool:
@@ -306,8 +308,11 @@ func _privacidade(rotulo: String) -> void:
 	var chaves_ok: bool = c.is_empty() or (c.keys().size() == 3 and c.has("ligada") and c.has("ordemPor") and c.has("ordemDinamica"))
 	# Ordem CAIXA-RELATO (B7b): o JSON é o do último snapshot; a linha diz de qual e, se os eventos o adiantaram,
 	# marca-o DESACTUALIZADO e imprime a caixa actual dela (o modelo do HUD).
-	var snap := _snap.duplicate()
+	var snap := _snap.duplicate(true)  # fundo: os `tipos` continuam a crescer depois desta linha
 	snap["revisao_actual"] = _estado.revisao
+	# CAIXA-RELATO-CORRECOES (B2): o Estado guarda, à parte, os eventos aplicados desde o snapshot — a contagem e os
+	# tipos do relato têm de bater com eles exactamente (a verificação do §4 confere).
+	snap["tipos_estado"] = _estado.eventos_desde_snapshot.map(func(e): return str(e.get("tipo", "?")))
 	var actual: Dictionary = RelatoCaixa.caixa_actual(c, _arena.hud.ordem_turnos)
 	_caixa_relatada = {"desactualizado": RelatoCaixa.desactualizado(c, actual), "snapshot": c, "actual": actual, "snap": snap}
 	_ok(chaves_ok, RelatoCaixa.linha(rotulo, c, snap, actual))
@@ -347,13 +352,13 @@ func _correr() -> void:
 	_rede.definir_servidor(srv)
 	_rede.snapshot_recebido.connect(_registar)
 	_rede.evento_recebido.connect(_registar)
-	_rede.snapshot_recebido.connect(_registar_snapshot)
-	_rede.evento_recebido.connect(_registar_evento)
 	RelatoCaixa = load(str(get_script().resource_path).get_base_dir().path_join("../../ordem-caixa-relato/ferramentas/relato_caixa.gd").simplify_path())
 	if RelatoCaixa == null:
 		printerr("não abriu provas/ordem-caixa-relato/ferramentas/relato_caixa.gd")
 		quit(2)
 		return
+	_estado.snapshot_aplicado.connect(_registar_snapshot)  # CAIXA-RELATO-CORRECOES (B1): a aplicação, não a recepção
+	_estado.evento_aplicado.connect(_registar_evento)
 	_rede.opcoes_recebidas.connect(_registar)
 	_rede.mestre_recebido.connect(_registar)
 	var raiz := ProjectSettings.globalize_path("res://").path_join("..").simplify_path()
@@ -418,6 +423,16 @@ func _correr() -> void:
 		and od_act.get("ordem", []) == od.get("ordem", []) and od_act.get("fechada") == od.get("fechada") and od_act.get("ultimo", "") == str(od.get("ultimo", "")),
 		"4: o relato marca o JSON do snapshot como DESACTUALIZADO (%d eventos depois dele; fechada %s → %s) e a caixa actual que imprime é a do servidor" % [
 			int(cr.get("snap", {}).get("eventos", 0)), od_snap.get("fechada"), od_act.get("fechada")])
+	# CAIXA-RELATO-CORRECOES (B2): a contagem do relato é EXACTA — o mesmo número e os mesmos tipos, pela mesma ordem,
+	# que o Estado aplicou desde o snapshot; as duas vezes jogadas dão 2 eventos de actor (a acção de cada uma) e 2
+	# `turno` (o `encerrar` de cada uma, que não adianta a caixa).
+	var sn: Dictionary = cr.get("snap", {})
+	var tipos_rel: Array = sn.get("tipos", [])
+	var tipos_est: Array = sn.get("tipos_estado", [])
+	_ok(int(sn.get("eventos", -1)) == tipos_est.size() and tipos_rel == tipos_est and int(sn.get("de_actor", -1)) == 2
+		and tipos_rel.count("turno") == 2,
+		"4: a contagem do relato é exacta: %d evento(s) %s = os %d que o Estado aplicou desde o snapshot %s; %d de actor (esperados 2), %d turno (esperados 2)" % [
+			int(sn.get("eventos", -1)), JSON.stringify(tipos_rel), tipos_est.size(), JSON.stringify(tipos_est), int(sn.get("de_actor", -1)), tipos_rel.count("turno")])
 	await _gravar("4-religada-avancou.png")
 
 	_linha("== 5. a jogadora sai e volta a entrar ==")

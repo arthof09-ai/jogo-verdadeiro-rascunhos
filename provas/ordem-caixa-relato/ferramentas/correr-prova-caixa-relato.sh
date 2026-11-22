@@ -4,19 +4,22 @@
 # em provas/ordem-caixa-relato/ (cliente-hud/, cliente-manequim/, teste-relato.log). As saídas antigas das duas ordens
 # ficam como estavam (são o registo do que se viu nessa altura). PC Windows, Git Bash; num clone novo, primeiro
 # `godot --headless --path rascunhos/cliente --import`.
-#   bash provas/ordem-caixa-relato/ferramentas/correr-prova-caixa-relato.sh <godot.exe> <vlab-completo.js> <pasta-tmp>
+#   bash provas/ordem-caixa-relato/ferramentas/correr-prova-caixa-relato.sh <godot.exe> <vlab-completo.js> <pasta-tmp> [<pasta-saída>]
+# Ordem CAIXA-RELATO-CORRECOES: o 4.º argumento (opcional) muda a pasta de saída (por omissão provas/ordem-caixa-relato/);
+# as corridas das correcções foram para provas/ordem-caixa-relato/correcoes/, sem reescrever as da ordem anterior.
 cd "$(dirname "$0")/../../.." || exit 9
 G=${1:?godot}; MOTOR=${2:?motor}; T=${3:?tmp}
 P=$PWD/provas/ordem-caixa-relato
-mkdir -p "$T"
+O=${4:-$P}
+mkdir -p "$T" "$O"
 rc_total=0
 
 timeout 120 "$G" --headless --path rascunhos/cliente -s "$P/ferramentas/teste_relato_caixa.gd" > "$T/teste-relato.log" 2>&1
 rc=$?; echo "teste_relato_caixa rc=$rc"; [ $rc -ne 0 ] && rc_total=1
-grep -v "^Godot Engine" "$T/teste-relato.log" > "$P/teste-relato.log"
+grep -v "^Godot Engine" "$T/teste-relato.log" > "$O/teste-relato.log"
 
 correr() {  # <nome> <ferramenta.gd> <porta>
-  local S=$P/$1; mkdir -p "$S"; rm -f "$T/info-$1.json"
+  local S=$O/$1; mkdir -p "$S"; rm -f "$T/info-$1.json"
   node provas/ordem-caixa-hud-jogadora/ferramentas/servidor-bancada-prova.mjs --porta=$3 --semente=7 --info="$T/info-$1.json" \
     --motor="$MOTOR" --vida-max-s=900 > "$T/servidor-$1.log" 2>&1 &
   local SRV=$!

@@ -58,6 +58,8 @@ Nos §1 e §5 (snapshot acabado de chegar) a linha diz «— JSON actual (do ROO
 - `9d9d979` — este ESTADO-FINAL. Ramo `claude2/caixa-relato` publicado; `fable/integracao-50` intocado (`7c97b48`).
 
 ## 5. Para o coordenador
+*(Numeração corrigida na CAIXA-RELATO-CORRECOES, B6: os pontos estavam 1, 2, 3, 4, 6, 5; o texto de cada um não mudou,
+salvo a nota do 4.)*
 1. **Escolha feita:** a linha continua a imprimir o JSON do snapshot (é o que a verificação de chaves confere), mas
    marca-o «DESACTUALIZADO» ANTES do JSON e imprime na mesma linha a caixa actual dela. A comparação é com o modelo do
    HUD (o que a jogadora vê), e a verificação nova do §4 confere que esse actual é a ordem do servidor.
@@ -77,12 +79,15 @@ Nos §1 e §5 (snapshot acabado de chegar) a linha diz «— JSON actual (do ROO
    ```
    (o job `cliente` corre com `working-directory: rascunhos/cliente` — conferido; por isso `--path .` e o caminho absoluto do teste).
 4. As capturas das corridas novas não entram no ramo (12 MB, iguais em conteúdo às das ordens antigas — nada de HUD
-   mudou); ficaram na pasta tmp da sede.
-6. **A linha avançou durante a ordem:** `fable/integracao-50` está agora em `6381f50` (CAIXA-TESTES: `f0d24ac`,
+   mudou); ficaram na pasta tmp da sede. *[Nota da CAIXA-RELATO-CORRECOES (B5): «iguais em conteúdo» não se confirma —
+   as capturas da HUD-JOGADORA no ramo são de antes da PALETA-C ponto 2, do LAGO-MAIOR e da CAIXA-JANELA; a caixa e o
+   lago já não são os mesmos. As 10 capturas da corrida das correcções entraram no ramo, em
+   `provas/ordem-caixa-relato/correcoes/` (ver `ESTADO-FINAL-ORDEM-CAIXA-RELATO-CORRECOES.md`).]*
+5. **A linha avançou durante a ordem:** `fable/integracao-50` está agora em `6381f50` (CAIXA-TESTES: `f0d24ac`,
    `7008328`, `6381f50`), por cima da minha base `7c97b48`. Conferido: `git merge-tree` sem conflitos; nenhum
    ficheiro em comum (a CAIXA-TESTES mexe nas listas da retoma, este ramo não). Não é fast-forward — a fusão precisa
    de merge ou de rebase; deixei para o coordenador.
-5. Privacidade: a linha só ganha a origem do snapshot (seq, revisão, hora, nº de eventos) e ids opacos — nenhum nome
+6. Privacidade: a linha só ganha a origem do snapshot (seq, revisão, hora, nº de eventos) e ids opacos — nenhum nome
    verdadeiro, vida, alma ou PA (o teste confere).
 
 ## CI — VERIFICADO
