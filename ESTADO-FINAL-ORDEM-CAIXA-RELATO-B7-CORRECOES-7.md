@@ -129,7 +129,7 @@ PC Windows 11 com Git Bash, Godot 4.7.2 `win64_console`, motor VLAB real `a91c02
 | Teste do relato | **31/31**, rc 0 | `b7-correcoes-7/teste-relato.log` |
 | HUD-JOGADORA, pelo lançador da relato | **43/43**, rc 0, 68 linhas | `b7-correcoes-7/cliente-hud/relato.txt` |
 | MANEQUIM, pelo lançador da relato | **53/53**, rc 0, 78 linhas | `b7-correcoes-7/cliente-manequim/relato.txt` |
-| JANELA, pelo lançador dela | **41/41**, rc 0, 82 linhas | `b7-correcoes-7/cliente-janela/relato.txt` |
+| JANELA, pelo lançador dela | **41/41**, rc 0, 81 linhas | `b7-correcoes-7/cliente-janela/relato.txt` |
 | O 4.º lançador (caixa) | **23/23**, rc 0 | `b7-correcoes-7/lancador-caixa.log` |
 | Autojogo, semente 1 | rc 0, vitória em 14 turnos, 109 linhas | `corridas.log` |
 | Suite do servidor | **421/421** | — |
