@@ -142,3 +142,23 @@ Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c�
   MT5–MT8 do teste (20, 23, 23 e 23 de 25, todas com rc=1; diffs em `cobertura-correcoes-2/mt*.diff`).
 - `cobertura-correcoes-2/actualizar-listas.log`: o artefacto do `retoma-i0004/actualizar-listas.py` com a saída REAL
   capturada de cada comando (B4).
+
+## cobertura-correcoes-4/ — Ordem CAIXA-JANELA-COBERTURA-CORRECOES-4 (22/11/2026, Claude conta 2, PC): B1–B4
+- **B1:** o parágrafo antigo do cabeçalho de `ferramentas/nomes_relato.gd` (as 12 chaves da CORRECOES, que dizia
+  «só o Mestre vê») tem agora a tabela de quem recebe cada uma. **9 das 12 chegam à dona**: as 6 do `estado`
+  (`vidaActual`, `paLivre`, `estadoMorte`, `armaCaida`, `armaQuebrada`, `corpoPartido`), `vidaTotal`/`paTotal` (no
+  `base.propria` do snapshot) e `custoPA` (dentro da própria ficha). `paGasto`, `alma` e `dano` não chegam a ela como
+  chaves. O filtro não muda. A conferência está em `cobertura-correcoes-4/conferencia-fontes.log`.
+- **B2:** os rótulos da prova viva dizem «nenhuma chave privada no relato» e «nenhuma das 17 chaves privadas» (já não
+  dizem «do Mestre»). A prosa do §5 do teste tem os dois rótulos novos e mantém os antigos.
+- **B3:** o teste afirma o total no `_fim()` (`VERIFICACOES` = 25). A verificação do total é ela própria um `_ok`, por
+  isso a linha final diz **26 de 26**.
+
+Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c…`; semente 7):
+- `cobertura-correcoes-4/teste-nomes-relato.log`: **teste 26/26** (as 25 de antes + a do total).
+- `cobertura-correcoes-4/cliente/`: **prova viva 41/41**, 0 nomes verdadeiros e 0 das 17 chaves no relato. Capturas
+  (sha256, 16 primeiros): `1-janela-1280x720.png` `3236673a0ce143d5`, `2-baixo-844x390.png` `00896476369c1b8c`,
+  `3-baixo-780x360.png` `561363927bab83f2`.
+- `cobertura-correcoes-4/mutacoes.log`: as mutações MT9–MT11 da B3, com uma verificação apagada, o ciclo dos custos com
+  2 voltas e uma verificação a mais. Dão 24 de 25, 24 de 25 e 26 de 27, todas com rc=1.
+- `cobertura-correcoes-4/actualizar-listas.log`: o artefacto do `retoma-i0004/actualizar-listas.py`.

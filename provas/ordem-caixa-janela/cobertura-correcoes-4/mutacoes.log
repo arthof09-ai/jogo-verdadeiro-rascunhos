@@ -1,0 +1,37 @@
+# Ordem CAIXA-JANELA-COBERTURA-CORRECOES-4, B3 — o total de 25 verificações afirmado no _fim() do teste dos nomes
+# cada mutação numa cópia de teste_nomes_relato.gd ao lado do original (apagada a seguir); Godot 4.7.2 Windows _console.exe, headless
+# (a linha FALHA sai duas vezes: o _ok escreve-a em stdout e em stderr)
+
+## MT0-sem-mutacao — rc=0
+  ok    fim: correram as 25 verificações do teste (esperadas 25)
+teste dos nomes do relato da caixa-janela: 26 de 26 verificações passaram.
+
+## MT9-apaga-uma-verificacao — rc=1
+  FALHA fim: correram as 24 verificações do teste (esperadas 25)
+  FALHA fim: correram as 24 verificações do teste (esperadas 25)
+teste dos nomes do relato da caixa-janela: 24 de 25 verificações passaram.
+
+## MT10-ciclo-de-2 — rc=1
+  FALHA fim: correram as 24 verificações do teste (esperadas 25)
+  FALHA fim: correram as 24 verificações do teste (esperadas 25)
+teste dos nomes do relato da caixa-janela: 24 de 25 verificações passaram.
+
+## MT11-uma-a-mais — rc=1
+  FALHA fim: correram as 26 verificações do teste (esperadas 25)
+  FALHA fim: correram as 26 verificações do teste (esperadas 25)
+teste dos nomes do relato da caixa-janela: 26 de 27 verificações passaram.
+
+## diff MT9 (original → mutado)
+82d81
+< 	_ok(N.nome(vista, "nao-existe") == "nao-existe", "2: figura que não está na vista → o id")
+
+## diff MT10 (original → mutado)
+127c127
+< 	var custos := ["custoPA", "paGasto", "custoM"]
+---
+> 	var custos := ["custoPA", "paGasto"]
+
+## diff MT11 (original → mutado)
+82a83
+> 	_ok(true, "2: duplicada")
+

@@ -1,0 +1,145 @@
+# Ordem CAIXA-JANELA-COBERTURA-CORRECOES-4, B1 — as 12 chaves da CAIXA-JANELA-COBERTURA-CORRECOES: quem recebe cada uma
+# cada linha tirada da base 30a16b5 (git show 30a16b5:<ficheiro>), com o comando que a deu; 2026-11-22T11:01:56Z · PC (Git Bash)
+
+## (a) as 6 do evento `estado`: `propria` (só a dona) — vidaActual, paLivre, estadoMorte, armaCaida, armaQuebrada, corpoPartido
+$ git show 30a16b5:rascunhos/servidor/nucleo/projecao.js | grep -n "^  estado: Object"
+37:  estado: Object.freeze({ todos: ['figuraId', 'visivel'], propria: ['vidaActual', 'paLivre', 'estadoMorte', 'armaCaida', 'armaQuebrada', 'corpoPartido'] }),
+rc=0
+
+$ git show 30a16b5:rascunhos/servidor/nucleo/projecao.js | grep -n "^  estado: (d, f)"
+63:  estado: (d, f) => d.figuraId === f,
+rc=0
+
+$ git show 30a16b5:rascunhos/servidor/nucleo/sala.js | grep -n -A9 "Só a própria recebe estes"
+1313:      // Só a própria recebe estes (lista `propria` da projeção).
+1314-      dados.vidaActual = f.vidaActual;
+1315-      dados.paLivre = paLivre(f);
+1316-      dados.estadoMorte = f.estadoMorte;
+1317-      // Acrescentados (P2: apanhar_arma): a própria sabe da arma e do corpo sem esperar por um snapshot.
+1318-      dados.armaCaida = f.armaCaida;
+1319-      dados.armaQuebrada = f.armaQuebrada;
+1320-      dados.corpoPartido = f.corpoPartido;
+1321-    }
+1322-    tx.emitir('estado', dados, ehJog ? null : { vidaActual: f.vidaActual, estadoMorte: f.estadoMorte });
+rc=0
+
+## (a') a mesma lista no ROOM_SNAPSHOT da dona (base.propria), e as 2 extra: vidaTotal e paTotal
+$ git show 30a16b5:rascunhos/servidor/nucleo/projecao.js | grep -n -A13 "Vida, PA e ficha DA PRÓPRIA"
+215:      // Vida, PA e ficha DA PRÓPRIA: ✔ só para ela.
+216-      base.propria = {
+217-        figuraId: f.id,
+218-        vidaActual: f.vidaActual,
+219-        vidaTotal: ficha.vidaTotal,
+220-        paLivre: ficha.paTotal - f.paGasto,
+221-        paTotal: ficha.paTotal,
+222-        estadoMorte: clonarJson(f.estadoMorte),
+223-        armaCaida: f.armaCaida,
+224-        armaQuebrada: f.armaQuebrada,
+225-        corpoPartido: f.corpoPartido,
+226-        ficha: clonarJson(ficha),
+227-      };
+228-    }
+rc=0
+
+$ git show 30a16b5:rascunhos/servidor/nucleo/projecao.js | grep -n "if (dest.papel === 'jogadora' && dest.figuraId)"
+211:  if (dest.papel === 'jogadora' && dest.figuraId) {
+rc=0
+
+## (b) custoPA: um campo de cada técnica da ficha, e a ficha vai inteira à dona (ficha: clonarJson(ficha), acima)
+$ git show 30a16b5:rascunhos/servidor/autojogo/fichas-bancada.json | grep -n '"custoPA"'
+27:          "custoPA": 2,
+37:          "custoPA": 0,
+66:          "custoPA": 2,
+76:          "custoPA": 0,
+105:          "custoPA": 0,
+134:          "custoPA": 0,
+rc=0
+
+$ git show 30a16b5:rascunhos/servidor/nucleo/sala.js | grep -n "ataques.push\|curas.push"
+908:          ataques.push({ alvoId: alvo.id, arma: t.id });
+924:          curas.push({ alvoId: alvo.id, tecnica: t.id });
+rc=0
+
+   (as opções de ataque/cura levam só alvoId + arma/tecnica: o custoPA não vai nas opções, só na ficha)
+
+## (c) as 3 que NÃO chegam à dona como chaves: paGasto, alma, dano
+### paGasto: guardado por figura (sala.js), na vista do Mestre (figuraDoMestre: ...clonarJson(fig)); à dona vai só o paLivre (= paTotal - paGasto)
+$ git show 30a16b5:rascunhos/servidor/nucleo/sala.js | grep -n "paGasto: 0"
+549:      vidaActual: ficha.vidaTotal, paGasto: 0, vivo: true, caido: false, estadoMorte: null,
+rc=0
+
+$ git show 30a16b5:rascunhos/servidor/nucleo/projecao.js | grep -n "clonarJson(fig)\|paGasto"
+152:    ...clonarJson(fig),
+220:        paLivre: ficha.paTotal - f.paGasto,
+rc=0
+
+$ git show 30a16b5:rascunhos/servidor/autojogo/fichas-bancada.json | grep -c 'paGasto'
+0
+rc=1
+
+### alma: nenhum campo em projecao.js, nas fichas de bancada, nem como chave em sala.js
+$ git show 30a16b5:rascunhos/servidor/nucleo/projecao.js | grep -n "alma"
+(saída vazia: 0 bytes)
+rc=1
+
+$ git show 30a16b5:rascunhos/servidor/autojogo/fichas-bancada.json | grep -c '"alma"'
+0
+rc=1
+
+$ git show 30a16b5:rascunhos/servidor/nucleo/sala.js | grep -n "\balma\s*:\|'alma'\|\"alma\""
+(saída vazia: 0 bytes)
+rc=1
+
+### dano: o evento `dano` leva `valor`/`tipos` (propria) — o nome «dano» é o TIPO do evento, não uma chave; na ficha só há expressaoDano
+$ git show 30a16b5:rascunhos/servidor/nucleo/projecao.js | grep -n "^  dano:"
+32:  dano: Object.freeze({ todos: ['alvoId', 'autorId'], propria: ['valor', 'tipos'] }),
+62:  dano: (d, f) => d.alvoId === f || d.autorId === f,
+rc=0
+
+$ git show 30a16b5:rascunhos/servidor/autojogo/fichas-bancada.json | grep -c '"dano"'
+0
+rc=1
+
+$ git show 30a16b5:rascunhos/servidor/autojogo/fichas-bancada.json | grep -c '"expressaoDano"'
+6
+rc=0
+
+$ git show 30a16b5:rascunhos/servidor/nucleo/sala.js | grep -n "tx.emitir = (tipo, dados, soMestre)"
+1122:    tx.emitir = (tipo, dados, soMestre) => {
+rc=0
+
+$ git show 30a16b5:rascunhos/servidor/nucleo/sala.js | grep -n "dano: r.aplicado"
+1353:          ...(r.alvoId ? { tipo: Amb.TIPO_RAIO, bruto: Amb.DANO_RAIO, rd: 0, dano: r.aplicado } : {}),
+1359:          }, { tipo: Amb.TIPO_RAIO, bruto: Amb.DANO_RAIO, rd: 0, dano: r.aplicado, vidaDepois: f.vidaActual });
+1367:        }, { tipo: Amb.TIPO_FOGO, expressao: '1d' + Amb.FACES_FOGO, faces: r.faces, bruto: r.faces[0], rd: 0, dano: r.aplicado, pegouFogo: r.pegouFogo, vidaDepois: f.vidaActual });
+rc=0
+
+   (o 3.º argumento de tx.emitir é o soMestre: a chave `dano` só existe aí; aos outros vai `valor`)
+
+## (d) as CHAVES que a dona recebe (o lado esquerdo do base.propria + a lista propria do estado); a ficha à parte, em (b)
+$ git show 30a16b5:rascunhos/servidor/nucleo/projecao.js | sed -n '217,226p' | grep -oE '^ +[A-Za-z]+:' | tr -d ' :'
+figuraId
+vidaActual
+vidaTotal
+paLivre
+paTotal
+estadoMorte
+armaCaida
+armaQuebrada
+corpoPartido
+ficha
+rc=0
+
+$ git show 30a16b5:rascunhos/servidor/nucleo/projecao.js | sed -n '37p' | grep -oE "propria: \[[^]]*\]"
+propria: ['vidaActual', 'paLivre', 'estadoMorte', 'armaCaida', 'armaQuebrada', 'corpoPartido']
+rc=0
+
+   (10 chaves no snapshot da dona — figuraId e ficha à parte, as 8 da tabela — e as 6 do estado; paGasto, alma e dano não estão em nenhuma)
+
+### nenhuma das 3 em ordem-dinamica.js como chave (só a palavra alma em comentários)
+$ git show 30a16b5:rascunhos/servidor/nucleo/ordem-dinamica.js | grep -n "paGasto\|alma\|dano"
+19:// Só ids, um booleano e um contador. NENHUM valor de vida ou de alma — regra da casa (a ordem é só de quem e quando).
+126:// booleano e um modo — nenhum valor de vida ou de alma. Só o Mestre a vê e só ele a muda (MASTER_SUPERVISOR op 'caixa').
+156:// Só ids, um booleano e um modo — nunca vida, alma, valores de iniciativa, nem nada técnico.
+rc=0
+

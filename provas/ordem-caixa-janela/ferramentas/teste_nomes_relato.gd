@@ -15,10 +15,18 @@ extends SceneTree
 ## CAIXA-JANELA-COBERTURA-CORRECOES-2: 17 chaves (B1: + `custoM`, `reservaM`, `perdeQuarto`, `reacaoDisponivel`,
 ## `defendendo`), o caso do custo também com `custoM`, 69 formas (17×4+1); os limites novos fixados (B2: `modo`, kebab,
 ## `m` minúsculo); o falso alarme da prosa «a alma 3 vezes» fixado (B5).
+## CAIXA-JANELA-COBERTURA-CORRECOES-4: o rótulo das chaves passa a «chave privada» (B2: «do Mestre» deixava de fora a
+## dona, que recebe 12 das 17 — a tabela está em `nomes_relato.gd`), com a prosa do §5 a acompanhar; e o TOTAL de
+## verificações é afirmado no `_fim()` (B3: `VERIFICACOES` = 25; uma verificação apagada, ou saltada, é FALHA).
 ## No CI: job `cliente`, passo «Nomes do relato da caixa-janela» (B1).
 ##
 ## Correr (na raiz do repo):
 ##   godot --headless --path rascunhos/cliente -s "$PWD/provas/ordem-caixa-janela/ferramentas/teste_nomes_relato.gd"
+
+## CORRECOES-4 (B3): as verificações que o teste corre — 22 `_ok` locais + 1 em ciclo de 3 (§5, os custos) = 25.
+## Afirmado no `_fim()` antes da linha do total: menos (uma verificação apagada, um ramo saltado) ou mais é FALHA.
+## A verificação do total é ela própria um `_ok`, por isso a linha final diz 26 (as 25 + a do total).
+const VERIFICACOES := 25
 
 var _total := 0
 var _falhas := 0
@@ -104,12 +112,12 @@ func _init() -> void:
 		"4: o canário apanha no relato antigo 22 achados (28 ocorrências brutas), o 1.º «Lobo de Bancada na linha 7» (%s; %d brutas)" % [
 		N.diagnostico(velho, canarios), brutas])
 
-	print("== 5. C1 (+ B1–B4 das CORRECOES, B1/B2/B5 das CORRECOES-2) — as 17 chaves privadas do Mestre no relato ==")
+	print("== 5. C1 (+ B1–B4 das CORRECOES, B1/B2/B5 das CORRECOES-2) — as 17 chaves privadas no relato ==")
 	var chaves: Array = N.CHAVES_PROIBIDAS
 	_ok(chaves == ["vidaActual", "vidaTotal", "paTotal", "paLivre", "alma",
 		"paGasto", "estadoMorte", "armaCaida", "armaQuebrada", "corpoPartido", "custoPA", "dano",
 		"custoM", "reservaM", "perdeQuarto", "reacaoDisponivel", "defendendo"],
-		"5: as chaves proibidas são as 17 privadas do Mestre (vida, PA, alma, dano, morte, arma, corpo, movimento, desgraça, reacção, defesa) — %d" % chaves.size())
+		"5: as chaves proibidas são as 17 privadas (vida, PA, alma, dano, morte, arma, corpo, movimento, desgraça, reacção, defesa) — %d" % chaves.size())
 	# O relato escrito pela fonte e o relato antigo inteiro (com os seus rótulos «vida, PA» em palavra) passam.
 	_ok(N.chaves_no_relato(limpo).is_empty() and N.chaves_no_relato(velho).is_empty(),
 		"5: o relato da fonte e o relato antigo (%d linhas) não têm chaves (%s; %s)" % [velho.size(), N.diagnostico_chaves(limpo), N.diagnostico_chaves(velho)])
@@ -141,6 +149,8 @@ func _init() -> void:
 	# As palavras não tropeçam (os rótulos usam-nas), e o diagnóstico não escreve a chave achada.
 	var prosa := PackedStringArray([
 		"  ok    1: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa (0 achado(s), textos [])",
+		"  ok    1: nenhuma chave privada no relato (40 linhas; 17 chaves proibidas; 0 achado(s), linhas [])",
+		"  ok    fim: o relato inteiro (78 linhas) não traz nenhuma das 17 chaves privadas (0 achado(s), linhas [])",
 		"  ok    1: nenhuma chave privada do Mestre no relato (40 linhas; 17 chaves proibidas; 0 achado(s), linhas [])",
 		"  ok    1: nenhuma chave privada do Mestre no relato (40 linhas; 12 chaves proibidas; 0 achado(s), linhas [])",
 		"  ok    1: nenhuma chave de vida/PA/alma no relato (40 linhas; 5 chaves proibidas; 0 achado(s), linhas [])",
@@ -188,6 +198,9 @@ func _init() -> void:
 	_fim()
 
 func _fim() -> void:
+	# CORRECOES-4 (B3): o total afirmado — antes de contar a própria verificação.
+	var corridas := _total
+	_ok(corridas == VERIFICACOES, "fim: correram as %d verificações do teste (esperadas %d)" % [corridas, VERIFICACOES])
 	print("")
 	print("teste dos nomes do relato da caixa-janela: %d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 or _total == 0 else 0)

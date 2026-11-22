@@ -29,6 +29,8 @@ extends SceneTree
 ## estado de morte, arma caída/quebrada, corpo partido); os rótulos dizem «chaves privadas do Mestre».
 ## CAIXA-JANELA-COBERTURA-CORRECOES-2 (B1): 17 chaves (+ `custoM`, `reservaM`, `perdeQuarto`, `reacaoDisponivel`,
 ## `defendendo`); o rótulo conta-as de `NomesRelato.CHAVES_PROIBIDAS`, por isso esta ferramenta não muda mais nada.
+## CAIXA-JANELA-COBERTURA-CORRECOES-4 (B2): os rótulos dizem agora «nenhuma chave privada no relato» e «nenhuma das 17
+## chaves privadas»: «do Mestre» deixava de fora a dona, que recebe 12 das 17 (a tabela está em `nomes_relato.gd`).
 ## Deixa em <pasta>: 1-janela-1280x720.png, 2-baixo-844x390.png, 3-baixo-780x360.png e relato.txt. Código 0 se tudo passa.
 
 const CENA := "res://cenas/arena/arena.tscn"
@@ -342,10 +344,11 @@ func _privacidade(rotulo: String) -> void:
 	var no_relato: Array = NomesRelato.no_relato(_relato, nomes)
 	_ok(not nomes.is_empty() and no_relato.is_empty(),
 		rotulo + ": nenhum nome verdadeiro no relato (%d linhas; canários: %d nome(s) que diferem do público; %s)" % [_relato.size(), nomes.size(), NomesRelato.diagnostico(_relato, nomes)])
-	# CAIXA-JANELA-COBERTURA (C1; B1 das CORRECOES: 12 chaves): e nenhuma chave privada do Mestre em nenhuma linha do
-	# relato até aqui.
+	# CAIXA-JANELA-COBERTURA (C1; B1 das CORRECOES: 12 chaves): e nenhuma chave privada em nenhuma linha do relato até
+	# aqui. (CORRECOES-4, B2:) «privada», não «do Mestre»: 12 das 17 chegam também à dona (ver nomes_relato.gd); o
+	# relato é lido por quem não é a dona, por isso nenhuma.
 	_ok(NomesRelato.chaves_no_relato(_relato).is_empty(),
-		rotulo + ": nenhuma chave privada do Mestre no relato (%d linhas; %d chaves proibidas; %s)" % [_relato.size(), NomesRelato.CHAVES_PROIBIDAS.size(), NomesRelato.diagnostico_chaves(_relato)])
+		rotulo + ": nenhuma chave privada no relato (%d linhas; %d chaves proibidas; %s)" % [_relato.size(), NomesRelato.CHAVES_PROIBIDAS.size(), NomesRelato.diagnostico_chaves(_relato)])
 
 
 func _correr() -> void:
@@ -469,9 +472,10 @@ func _fim() -> void:
 	var no_relato: Array = NomesRelato.no_relato(_relato, _canarios_nomes)
 	_ok(not _canarios_nomes.is_empty() and no_relato.is_empty(), "fim: o relato inteiro (%d linhas) não traz nenhum dos %d nome(s) verdadeiro(s) (%s)" % [
 		_relato.size(), _canarios_nomes.size(), NomesRelato.diagnostico(_relato, _canarios_nomes)])
-	# CAIXA-JANELA-COBERTURA (C1; B1 das CORRECOES: 12 chaves): a varredura final das chaves privadas, também incondicional (não precisa de
-	# canários: as chaves são fixas). Corre antes da linha de baixo, sobre o relato inteiro.
-	_ok(NomesRelato.chaves_no_relato(_relato).is_empty(), "fim: o relato inteiro (%d linhas) não traz nenhuma das %d chaves privadas do Mestre (%s)" % [
+	# CAIXA-JANELA-COBERTURA (C1; B1 das CORRECOES: 12 chaves; rótulo da B2 da CORRECOES-4): a varredura final das chaves
+	# privadas, também incondicional (não precisa de canários: as chaves são fixas). Corre antes da linha de baixo, sobre o
+	# relato inteiro.
+	_ok(NomesRelato.chaves_no_relato(_relato).is_empty(), "fim: o relato inteiro (%d linhas) não traz nenhuma das %d chaves privadas (%s)" % [
 		_relato.size(), NomesRelato.CHAVES_PROIBIDAS.size(), NomesRelato.diagnostico_chaves(_relato)])
 	_linha("")
 	_linha("prova da janela e da caixa com 10 figuras: %d de %d verificações passaram." % [_total - _falhas, _total])

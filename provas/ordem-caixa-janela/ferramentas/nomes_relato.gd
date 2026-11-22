@@ -81,9 +81,28 @@ static func diagnostico(relato: PackedStringArray, nomes: Array) -> String:
 ## que nenhuma linha do relato pode trazer. A varredura é por chaves e não por valores: os valores de bancada
 ## (vida 16/22/30/34, PA 0/6) confundem-se com coordenadas, seq e medidas. Apanha também um valor que a IA ou o protocolo
 ## ponham no passo da linha «bancada:» (que é `JSON.stringify(passo)`), p. ex. um custo de PA como `"custoPA":2`.
-## CAIXA-JANELA-COBERTURA-CORRECOES (B1): de 5 para 12 chaves — as que o servidor guarda por figura e só o Mestre vê
-## (`sala.js`, `projecao.js` → `propria`): `paGasto` (a chave de PA que a vista do Mestre traz de facto), `estadoMorte`,
-## `armaCaida`, `armaQuebrada`, `corpoPartido`; o `custoPA` das técnicas; e o `dano`.
+## CAIXA-JANELA-COBERTURA-CORRECOES (B1): de 5 para 12 chaves — `paGasto` (a chave de PA que a vista do Mestre traz
+## de facto), `estadoMorte`, `armaCaida`, `armaQuebrada`, `corpoPartido`; o `custoPA` das técnicas; e o `dano`.
+## (CORRECOES-4, B1:) NÃO são todas «só do Mestre»: 9 das 12 chegam à DONA (a jogadora da própria figura). Quem recebe
+## cada uma (o Mestre recebe-as todas, na vista do Mestre; a conferência das fontes está em
+## `provas/ordem-caixa-janela/cobertura-correcoes-4/conferencia-fontes.log`):
+##   chave          | onde chega à dona                                                    | quem a recebe
+##   vidaActual     | `propria` do evento `estado` (`projecao.js:37`); `base.propria` do    | o Mestre e a dona
+##                  | snapshot (`projecao.js:218`)                                         |
+##   paLivre        | idem (`projecao.js:37`; `projecao.js:220`)                           | o Mestre e a dona
+##   estadoMorte    | idem (`projecao.js:37`; `projecao.js:222`)                           | o Mestre e a dona
+##   armaCaida      | idem (`projecao.js:37`; `projecao.js:223`)                           | o Mestre e a dona
+##   armaQuebrada   | idem (`projecao.js:37`; `projecao.js:224`)                           | o Mestre e a dona
+##   corpoPartido   | idem (`projecao.js:37`; `projecao.js:225`)                           | o Mestre e a dona
+##   vidaTotal      | só no `base.propria` do snapshot (`projecao.js:219`)                 | o Mestre e a dona
+##   paTotal        | só no `base.propria` do snapshot (`projecao.js:221`)                 | o Mestre e a dona
+##   custoPA        | dentro da própria ficha (`ficha: clonarJson(ficha)`, `projecao.js:226`; | o Mestre e a dona
+##                  | um campo de cada técnica); não vai nas opções de ataque/cura          |
+##   paGasto        | não chega: à dona vai só o `paLivre` (= paTotal − paGasto)           | só o Mestre
+##   alma           | não chega: nenhum campo de alma nas fontes (a chave fica de guarda)  | ninguém (guarda)
+##   dano           | não chega como chave: o evento `dano` leva `valor`/`tipos`; a ficha  | só o Mestre (o `dano:`
+##                  | só tem `expressaoDano`                                               | do `soMestre`, sala.js)
+## O filtro não muda: o relato é cometido e lido por quem não é a dona, por isso exclui as 12 na mesma.
 ## Duas famílias de regex (`_re_chave`):
 ## - as 10 camelCase: em qualquer sítio da linha, sem distinguir maiúsculas (`(?i)`, B4: `VidaActual`/`vidaactual`),
 ##   mas não a meio de um identificador (`(?<![A-Za-z0-9_])`, B2: `capaLivre` não é `paLivre`);
