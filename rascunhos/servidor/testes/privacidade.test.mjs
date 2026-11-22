@@ -107,17 +107,20 @@ function voltaInteira(m, parar = () => false) {
 // e uma guarda só com o do fim passava calada. O histórico vem de: a Vida máxima (o valor de partida, da ficha), cada
 // evento `estado` do journal com a `vidaActual` dessa figura, o valor final do estado da sala e — com `proprias` — a
 // `propria` de cada snapshot que a própria recebeu. O journal nunca apaga história, nem no «voltar».
-// Ordem CAIXA-TESTES-CORRECOES-7 (B3): o `estado` NÃO regista todas as mudanças da Vida. As acções do jogo emitem-no, mas
-// o «voltar» e o «recomeçar» mudam a Vida e emitem só `revertido` / `recomeco`, sem `estado`. Hoje isso não abre buraco:
-// o «voltar» repõe a Vida de um instante anterior do guião, o «recomeçar» repõe a máxima (a de partida), e a Vida do fim
-// entra sempre pelo estado da sala.
+// Ordem CAIXA-TESTES-CORRECOES-7 (B3), precisado na CAIXA-TESTES-CORRECOES-8 (B3): o `estado` NÃO regista todas as
+// mudanças da Vida. As acções do jogo emitem-no, mas o «voltar» e o «recomeçar» mudam a Vida sem ele: o «voltar» emite
+// `revertido` (mais `cartao_fechado`/`cartao` para os cartões) e o «recomeçar» emite `recomeco`, nenhum emite `estado`.
+// Hoje isso não abre buraco: o «voltar» repõe a Vida de um instante anterior do guião, o «recomeçar» repõe a máxima (a
+// de partida), e a Vida do fim entra sempre pelo estado da sala.
 // Ordem CAIXA-TESTES-CORRECOES-6 (B1), parágrafo reescrito na CAIXA-TESTES-CORRECOES-7 (B2): só o 0 fica de fora. NÃO é o
 // único valor que colide. No guião de hoje chegam às jogadoras, sob chaves que o varredor NÃO isenta, o 0 (`geral`) e o
 // 2, 3, 6, 9, 14, 18, 20 e 23 (`custoPA`/`protocolo`/`v`, `custoM`, `custoM`, `alcanceM`/`custoM`/`deslocamentoBase`/
-// `orcamentoM`, `constituicao`, `faces`, `altura`/`largura`, `total`). O 0 é o único que TEM de ser excluído, porque é
-// uma Vida alcançável (a de quem cai) e o `geral: 0` vai em todos os snapshots das jogadoras: com o 0 no histórico, a
-// guarda falhava sempre. Os outros só colidem se a Vida de uma jogadora passar por eles, e hoje não passa. Os contadores
-// e as coordenadas a 0 (`seq`, `revision`, `rodada`, `x`, `y`) não colidem: `procurarCanarios` isenta-os abaixo de 100.
+// `orcamentoM`, `constituicao`, `faces`, `altura`/`largura`, `total`), e o 51 (`vidaActual`), só nas mensagens da
+// própria aliada no guião da M51b — é dela, não é colisão (CAIXA-TESTES-CORRECOES-8, B2). O 0 é o único que TEM de ser
+// excluído, porque é uma Vida alcançável (a de quem cai) e o `geral: 0` vai em todos os snapshots das jogadoras: com o
+// 0 no histórico, a guarda falhava sempre. Os outros só colidem se a Vida de uma jogadora passar por eles, e hoje não
+// passa. Os contadores e as coordenadas a 0 (`seq`, `revision`, `rodada`, `x`, `y`) não colidem: `procurarCanarios`
+// isenta-os abaixo de 100.
 // O corte antigo (< 100) deixava passar calada a fuga de um intermédio baixo: a M51b (a aliada a 51, fotografada num
 // RESYNC, depois «voltar» a 2403) ficava viva com este ficheiro 9/9 e a suite verde. Se um valor baixo do histórico
 // colidir um dia com um número legítimo, a falha é ALTA, não calada: muda-se o guião, nunca se volta ao corte.
