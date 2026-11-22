@@ -115,6 +115,16 @@ No PC, a corrida **com** `--permission` dá 401 passam e 7 falham, todos testes 
 problema do ambiente registado nas ordens anteriores: o Node 26 daqui recusa a rede nesse modo. No CI (Node 24) esses
 testes saltam-se (ver B4). Não corri os testes Godot do cliente porque nada do cliente mudou; quem os cobre é o CI.
 
+## CI deste ramo (em `eb74bb7`, o commit das listas)
+
+- **«Testes dos rascunhos»**, run 44979062131: **10/10 jobs verdes** (servidor, validador-glb, motor-real, protocolo,
+  cliente, godot-cliente, ponta-a-ponta, provas-mapa, foto-mestre, **retoma-pc**).
+  - job `servidor`: `tests 418 · pass 408 · fail 0 · skipped 10`, e a Prova da caixa dá **PROVA OK** (B4).
+  - job `protocolo`: `tests 418 · pass 418 · fail 0 · skipped 0` (B4).
+- **«Sonda de privacidade»**, run 44979062216: verde.
+- Este parágrafo foi acrescentado num commit a seguir, que só toca neste ficheiro (fora de `rascunhos/`). As listas da
+  retoma não mudam com ele: corri o `actualizar-listas` outra vez e não houve diferença.
+
 ### As mutações (resumo; detalhe em B1, B3 e B6)
 
 | | Mutação | Suite nova | (c) antiga | `privacidade` antiga |
