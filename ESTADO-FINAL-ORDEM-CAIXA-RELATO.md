@@ -55,7 +55,7 @@ Nos §1 e §5 (snapshot acabado de chegar) a linha diz «— JSON actual (do ROO
 
 ## 4. Commits e CI
 - `dbf98d6` — a correcção, o teste, as corridas e as notas. Este ESTADO-FINAL no commit seguinte.
-- CI do ramo `claude2/caixa-relato`: preenchido na secção «CI» abaixo depois do push.
+- `9d9d979` — este ESTADO-FINAL. Ramo `claude2/caixa-relato` publicado; `fable/integracao-50` intocado (`7c97b48`).
 
 ## 5. Para o coordenador
 1. **Escolha feita:** a linha continua a imprimir o JSON do snapshot (é o que a verificação de chaves confere), mas
@@ -81,5 +81,8 @@ Nos §1 e §5 (snapshot acabado de chegar) a linha diz «— JSON actual (do ROO
 5. Privacidade: a linha só ganha a origem do snapshot (seq, revisão, hora, nº de eventos) e ids opacos — nenhum nome
    verdadeiro, vida, alma ou PA (o teste confere).
 
-## CI
-(por preencher depois do push)
+## CI — VERIFICADO
+- Em `9d9d979` (ramo `claude2/caixa-relato`): **Testes dos rascunhos success** (run 44964900369 — validador-glb,
+  protocolo, provas-mapa, ponta-a-ponta, cliente, foto-mestre, motor-real, servidor, **retoma-pc**, godot-cliente:
+  todos success) e **Sonda de privacidade success** (run 44964900334).
+- O commit que traz esta secção só muda este ficheiro (fora de `rascunhos/`).
