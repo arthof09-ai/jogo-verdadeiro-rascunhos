@@ -150,7 +150,7 @@ Godot 4.7.2, Windows 11, RTX 4060. As suites correram com `--headless`, como no 
 Capturas e retratos em `provas/ordem-caixa-padrao-correcoes/cliente/`; o README tem os SHA. Vi as 5 capturas e os
 6 retratos dos casos. Os quadradinhos medem 46×60 px em todos os momentos.
 
-**CI da ponta publicada `802f87e`** (corrida Testes 45080058208): **os 10 jobs estão verdes**, incluindo o `cliente`
+**CI da ponta `802f87e`, já na linha** (corrida Testes 45080058208): **os 10 jobs estão verdes**, incluindo o `cliente`
 (onde estava a falha da B9) e o `retoma-pc`. No Linux do CI os números são os mesmos de cá: `rodar_testes` 311/311
 (nos jobs `cliente` e `godot-cliente`) e `caixa_jogadora` 36/36. A sonda de privacidade (45080058125) também está verde.
 
