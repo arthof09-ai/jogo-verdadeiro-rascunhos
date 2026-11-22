@@ -21,6 +21,42 @@ export const INICIATIVA = Object.freeze({
   'heroina-teste': 973, 'aliada-teste': 971, 'lobo-teste': 967, 'orc-teste': 953, 'bandido-teste': 947,
 });
 
+// Ordem CAIXA-TESTES-CORRECOES-3 (B7): as listas de canários de privacidade numa só fonte, usadas por
+// privacidade.test.mjs e caixa-hud-jogadora.test.mjs (antes eram cópias, e já derivaram uma vez). Valores-canário de
+// bancada das fichas de teste (dados-exemplo/fichas-ficticias.json e listaDeFichas).
+// A semente da sala usada como canário (as mesas que a querem viva abrem com `rngSemente: () => SEMENTE`).
+export const SEMENTE = 0xc0ffee11;
+// Números que NENHUM papel da Party pode ver.
+export const NUMEROS_SO_MESTRE = Object.freeze([
+  9137, 7777, 313, 41, 61, // orc: CA, Vida, PA, RD, bonusCD (errata)
+  6601, // vidaActual do orc depois do golpe da heroína (7777 − 1176)
+  4949, 4848, // lobo: defesaAplicavel, Vida
+  6363, 6464, // bandido (nunca colocado)
+  SEMENTE, // semente (0xC0FFEE11)
+  ...Object.values(INICIATIVA), // valores de iniciativa (a Party vê só a ordem)
+]);
+// Textos só do Mestre que qualquer mesa de teste pode ter: o PIN, as senhas de todos, a semente escrita, os nomes
+// verdadeiros e os fichaId dos inimigos, as páginas. (Os CANARIO-* dos cartões e do ambiente são do guião de
+// privacidade.test.mjs, que os junta a estes.) CAIXA-TESTES-CORRECOES-3 (B3): o nome verdadeiro do lobo, 'Lobo Teste',
+// e os `verbos` do orc e do lobo — só vão na figura do Mestre (projecao.js figuraDoMestre, Ordem 13 parte C; a Party
+// não narra os golpes dos monstros, cliente/README.md).
+export const TEXTOS_SO_MESTRE = Object.freeze([
+  PIN, SENHAS.heroina, SENHAS.aliada, SENHAS.espectador,
+  'c0ffee11', 'C0FFEE11', String(SEMENTE),
+  'Orc Verdadeiro', 'Lobo Teste', 'orc-teste', 'lobo-teste', 'bandido-teste', 'pagina-',
+  'desferiu o machado', 'tentou desferir o machado', 'deu uma patada', 'tentou dar uma patada',
+]);
+// Chaves só do Mestre, em qualquer parte do que chega à Party.
+export const CHAVES_SO_MESTRE = Object.freeze([
+  'soMestre', 'semente', 'journalSeq', 'recibo', 'modo', 'verificacaoCritico', 'proposta', 'razao', 'fichaId',
+  'campoNovoDoMotor', 'reacaoDefensiva', 'desgracaProposta', 'mestre', 'contexto', 'iniciativaValor', 'tokenHash',
+  'caixaMestre', // Ordem CAIXA-TESTES (B5-b): a escolha do Mestre na forma dele só vai na MASTER_VIEW
+  'vezes', // Ordem CAIXA-TESTES-CORRECOES (B6): o contador interno da ordem dinâmica não sai na caixa da Party
+]);
+// Da heroína: só ela os vê (perícia 8642, …). Da aliada: só ela (os de listaDeFichas).
+export const NUMEROS_HEROINA = Object.freeze([8642, 5551, 5150, 4040]);
+export const NUMEROS_ALIADA = Object.freeze([2468, 3579, 1357]);
+
 export function rngDeterministico(semente = 0x9e3779b9) {
   let x = semente >>> 0 || 1;
   return () => {

@@ -3,35 +3,22 @@
 // chegou à Party à procura de valores que só o Mestre pode ver.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { montarMesa, exigirAplicada, procurarCanarios, recibo, PIN, SENHAS, INICIATIVA } from './ajudantes.mjs';
+import {
+  montarMesa, exigirAplicada, procurarCanarios, recibo, PIN, SENHAS,
+  SEMENTE, NUMEROS_SO_MESTRE, TEXTOS_SO_MESTRE, CHAVES_SO_MESTRE, NUMEROS_HEROINA, NUMEROS_ALIADA,
+} from './ajudantes.mjs';
 import { CAMPOS_PERMITIDOS } from '../nucleo/projecao.js';
 
-const SEMENTE = 0xc0ffee11;
-
+// Ordem CAIXA-TESTES-CORRECOES-3 (B7): as listas vêm de ajudantes.mjs (uma só fonte com caixa-hud-jogadora.test.mjs).
 // Valores que NENHUM papel da Party pode ver.
-const NUMEROS_MESTRE = [
-  9137, 7777, 313, 41, 61, // orc: CA, Vida, PA, RD, bonusCD (errata)
-  6601, // vidaActual do orc depois do golpe (7777 − 1176)
-  4949, 4848, // lobo: defesaAplicavel, Vida
-  6363, 6464, // bandido (nunca colocado)
-  SEMENTE, // semente (0xC0FFEE11)
-  ...Object.values(INICIATIVA), // valores de iniciativa (a Party vê só a ordem)
-];
+const NUMEROS_MESTRE = NUMEROS_SO_MESTRE;
+// Os textos de qualquer mesa + os canários deste guião (cartões da IA e da desgraça, o bandido-fantasma, o ambiente).
 const TEXTOS_MESTRE = [
   'CANARIO-RAZAO-IA', 'CANARIO-DESGRACA', 'CANARIO-FANTASMA', 'raio 23:59 CANARIO', '23:59',
-  PIN, SENHAS.heroina, SENHAS.aliada, SENHAS.espectador,
-  'c0ffee11', 'C0FFEE11', String(SEMENTE),
-  'Orc Verdadeiro', 'orc-teste', 'lobo-teste', 'bandido-teste', 'pagina-',
+  ...TEXTOS_SO_MESTRE,
 ];
-const CHAVES_MESTRE = [
-  'soMestre', 'semente', 'journalSeq', 'recibo', 'modo', 'verificacaoCritico', 'proposta', 'razao', 'fichaId',
-  'campoNovoDoMotor', 'reacaoDefensiva', 'desgracaProposta', 'mestre', 'contexto', 'iniciativaValor', 'tokenHash',
-  'caixaMestre', // Ordem CAIXA-TESTES (B5-b): a escolha do Mestre na forma dele só vai na MASTER_VIEW
-  'vezes', // Ordem CAIXA-TESTES-CORRECOES (B6): o contador interno da ordem dinâmica não sai na caixa da Party
-];
-// Da heroína: só ela os vê. Da aliada: só ela.
-const NUMEROS_HEROINA = [8642, 5551, 5150, 4040];
-const NUMEROS_ALIADA = [2468, 3579, 1357];
+const CHAVES_MESTRE = CHAVES_SO_MESTRE;
+// Da heroína: só ela os vê. Da aliada: só ela. (NUMEROS_HEROINA / NUMEROS_ALIADA, de ajudantes.mjs.)
 
 function guiao() {
   const m = montarMesa({ comAliada: true, comEspectador: true, rngSemente: () => SEMENTE });
@@ -116,7 +103,9 @@ test('canários: nada do Mestre chega a nenhum papel da Party (jogadoras e espec
   assert.deepEqual(vistaMestre.caixaMestre, { ligada: true, modo: 'dinamico' }, 'o Mestre vê a escolha dele');
   // Sanidade: o Mestre recebeu os canários (o teste não está a varrer o vazio).
   const mestre = JSON.stringify(m.clientes.mestre.msgs);
-  for (const t of ['CANARIO-RAZAO-IA', 'CANARIO-DESGRACA', 'CANARIO-FANTASMA', 'raio 23:59 CANARIO', '9137', '6601', String(SEMENTE)]) {
+  // CAIXA-TESTES-CORRECOES-3 (B3): também o nome verdadeiro do lobo e os verbos do orc e do lobo.
+  for (const t of ['CANARIO-RAZAO-IA', 'CANARIO-DESGRACA', 'CANARIO-FANTASMA', 'raio 23:59 CANARIO', '9137', '6601', String(SEMENTE),
+    'Lobo Teste', 'desferiu o machado', 'tentou desferir o machado', 'deu uma patada', 'tentou dar uma patada']) {
     assert.ok(mestre.includes(t), 'o Mestre vê ' + t);
   }
 });
