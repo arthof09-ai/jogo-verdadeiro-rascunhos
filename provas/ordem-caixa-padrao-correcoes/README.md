@@ -34,6 +34,9 @@ casos do retrato.
   3. `3-desligada.png` `bd378e355b2c6ab7`
   4. `4-religada-avancou.png` `cee2ae1a50deb01e`
   5. `5-reentrou.png` `67cad72521b46628`
+- Retratos (sha256, primeiros 16 caracteres):
+  - casos: `arma-levantada.png` `ae4fcfe71a4e185b` · `braco-levantado.png` `c51f746c7f7b6432` · `caixa-zero.png` `98fdb901433cd006` · `deitada.png` `b54bc0c51a608283` · `passada-longa.png` `e1e40c9d54354f6f` · `quadrupede.png` `84fcde5731ebd394`
+  - cena: `arqueira-de-bancada.png` `58f8b693d8b07173` · `espadachim-de-bancada.png` `58f8b693d8b07173` · `lobo.png` `58f8b693d8b07173`
 
 Para correr de novo (Git Bash, na raiz; num clone novo, corre primeiro
 `godot --headless --path rascunhos/cliente --import`):

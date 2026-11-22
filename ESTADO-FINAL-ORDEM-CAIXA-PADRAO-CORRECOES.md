@@ -5,7 +5,8 @@ da pilha da estética. Fiz `fetch` antes de publicar e a ponta não tinha andado
 Commits:
 1. `6ab81e5` — código, testes e provas (B1–B9);
 2. `802f87e` — este ESTADO-FINAL, com as listas da retoma sincronizadas;
-3. o acrescento do resultado do CI a este ESTADO-FINAL (só documento).
+3. `8ce92e5` — o acrescento do resultado do CI da ponta `802f87e` a este ESTADO-FINAL (só documento);
+4. `b10e6b8` — emenda de redacção a este ESTADO-FINAL (0/0 achados no conferidor estrito; só documento).
 
 Este ficheiro não tem nomes verdadeiros, nem pedaços deles, nem o valor de nenhum PIN. O conferidor estrito dá
 0 / 0 achados nele (§3).
@@ -67,8 +68,8 @@ Este ficheiro não tem nomes verdadeiros, nem pedaços deles, nem o valor de nen
   - mede 0,45 × 1,23 × 1,80 m e não conta como de pé, nem pela caixa toda nem pelo tronco (1,80 m);
   - o retrato mostra o corpo inteiro;
   - na prova viva, o motor esfola-o e a malha cabe na caixa.
-- **Caixa zero** (nada visível): o enquadramento usa a figura de recurso de 2 m. A câmara fica à frente e olha o busto
-  a 1,73 m, com os planos entre 0,01 e 5,18 m. Desenha sem erro (`retratos/casos/caixa-zero.png`).
+- **Caixa zero** (nada visível): o retrato é vazio (uma só cor em 25.600 px) — a câmara fica bem posta; nada há para
+  desenhar. Não se desenha figura de recurso: o vazio é o comportamento correcto. (`retratos/casos/caixa-zero.png`)
 
 ### B5 — a validação em repouso, cometida, e a caixa em pose contra a AABB esfolada do motor
 - **Em repouso** (`reset_bone_poses`), a conta por ossos dá a caixa da malha do ficheiro: 1,762 × 1,806 × 0,309 m,
@@ -126,7 +127,7 @@ Godot 4.7.2, Windows 11, RTX 4060. As suites correram com `--headless`, como no 
 |---|---|
 | `abrir_scripts` | 108 scripts (era 107: entrou `testes/casos_retrato.gd`), 0 falhas |
 | `rodar_testes` | **311/311** (eram 297; +14) |
-| `caixa_janela` | **78/78** (eram 69; +9, a B6) |
+| `caixa_janela` | **78/78** (eram 69; +9, a B6; corrida local — esta suite não corre no CI, sem artefacto) |
 | `caixa_jogadora` | **36/36** (antes da B9 dava 34/36, as mesmas 2 falhas do CI 45076802117) |
 | `abrir_clareira` | 22/22 |
 | `medir_painel_config` | 0 falhas, 0 sem medida |
@@ -141,8 +142,8 @@ Godot 4.7.2, Windows 11, RTX 4060. As suites correram com `--headless`, como no 
 
 **A prova viva dá 95/95.** Cliente real pela Rede, servidor de mesa real com o motor VLAB real (`a91c021c…`), semente
 7, janela 1028×720, manequim `andar-v3.glb` com o SHA conferido e nenhuma cápsula à vista.
-- As **78** verificações da prova do padrão-busto saem iguais e pela mesma ordem (comparei as listas `ok` com `diff`:
-  só há acrescentos).
+- As **78** verificações da prova do padrão-busto saem iguais e pela mesma ordem (comparei as listas `ok` com `diff`):
+  as mesmas 78 verificações, pela mesma ordem; só a mensagem da privacidade mudou (passou a indicar o n.º de achados).
 - **+4** da privacidade no momento 2 (B7).
 - **+4** dos retratos contra a malha esfolada pelo motor (B5).
 - **+9** casos: B1 ×3, B2 ×2, B4 ×3 e B5 ×1.
@@ -150,9 +151,10 @@ Godot 4.7.2, Windows 11, RTX 4060. As suites correram com `--headless`, como no 
 Capturas e retratos em `provas/ordem-caixa-padrao-correcoes/cliente/`; o README tem os SHA. Vi as 5 capturas e os
 6 retratos dos casos. Os quadradinhos medem 46×60 px em todos os momentos.
 
-**CI da ponta `802f87e`, já na linha** (corrida Testes 45080058208): **os 10 jobs estão verdes**, incluindo o `cliente`
-(onde estava a falha da B9) e o `retoma-pc`. No Linux do CI os números são os mesmos de cá: `rodar_testes` 311/311
-(nos jobs `cliente` e `godot-cliente`) e `caixa_jogadora` 36/36. A sonda de privacidade (45080058125) também está verde.
+**CI da ponta `b10e6b8`, já na linha** (corridas Testes 45080362305 + Sonda 45080362267): **11/11 check-runs (10 jobs Testes +
+Sonda)**, incluindo o `cliente` (onde estava a falha da B9) e o `retoma-pc`. No Linux do CI os números são os mesmos de cá:
+`rodar_testes` 311/311 (nos jobs `cliente` e `godot-cliente`) e `caixa_jogadora` 36/36. A sonda de privacidade também
+está verde.
 
 **Listas da retoma:** corri o `actualizar-listas.py` depois do commit 1. Deu 1 ficheiro novo no manifesto (o
 `casos_retrato.gd`), 0 tirados. O `depois.txt` e o `MANIFESTO-SHA256.txt` vão sincronizados no commit 2.
@@ -170,7 +172,7 @@ Capturas e retratos em `provas/ordem-caixa-padrao-correcoes/cliente/`; o README 
 | a ferramenta da prova, inteira | 53 / 53 | 0 |
 | o lançador da prova | 2 / 2 | 0 |
 | `cliente/relato.txt` | 67 / 67 | **0** |
-| (precedentes na linha: prova do manequim · `rodar_testes.gd` · `teste_nomes_relato.gd`) | 63/61 · 121/109 · 151/150 | — |
+| (precedentes na linha: prova do manequim · `rodar_testes.gd` · `teste_nomes_relato.gd`) | 63/61 · 115/106 · 151/150 | — |
 
 Os achados que sobram **não vêm do meu texto**. A ferramenta e o lançador têm de nomear os ficheiros da casa (o
 servidor, o cenário, a IA e os lugares, todos com essa palavra no caminho) e levam o texto herdado da prova do
@@ -194,7 +196,7 @@ inteiro, nenhum PIN, e nada de vida, alma, PA ou dados do Mestre.
    Para chegar a 0 nestes também, era preciso uma ordem que mude os caminhos da casa ou que faça o relato usar ids em
    vez de nomes públicos.
 3. **B9: a recentragem existe, mas não a apliquei.** Seria pôr a faixa o mais perto do centro do ecrã que o espaço
-   livre deixa, sem encolher a caixa. Calculado, os desvios passariam a 407,0 / 535,0 / 30,5 u. Mas isso muda o
+   livre deixa, sem encolher a caixa. Mas isso muda o
    desenho da faixa da CAIXA-JANELA B3 («centrada entre a ⚙ e a caixa»), que está à espera do olho do Mestre (o
    EXPANDE), e mexe no `hud.gd`, fora da caixa. Por isso actualizei os tectos. Se o Mestre a quiser, é uma ordem
    à parte, e os tectos baixam com ela.
