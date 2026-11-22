@@ -1,2 +1,0 @@
-[servidor] servidor de mesa pronto (WebSocket em /ws)
-pronto-prova-caixa-hud {"pronto":true,"porta":8797,"semente":7,"roomId":"bancada-caixa-hud-s7","motor":"vlab-real","motorSha256":"a91c021cda11df675c78c63277e6f2679faa79c716c7ba104373198689993261","cenarioSha256":"7703320c87701acf31e29c11a99ba929cfdf5e35276adfd6f4c10082c6b3398a","fichasSha256":"3c498137411950a2d765d81ecdc3bf663ba1f1c568075b180a4b52dd57e0b501","pin":"20261116"}

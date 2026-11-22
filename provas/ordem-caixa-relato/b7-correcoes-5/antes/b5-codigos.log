@@ -1,0 +1,4 @@
+script -4, godot-morre-124: rc=1
+script -4, godot-corta: rc=1
+script -5, godot-morre-124: rc=4
+script -5, godot-corta: rc=4

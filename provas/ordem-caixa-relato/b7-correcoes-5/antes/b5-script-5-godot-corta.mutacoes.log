@@ -1,0 +1,37 @@
+nada                     teste novo   rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «0 - -»
+r1-alcunha               teste novo   rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 -»
+b1-ultimo-turno          teste novo   rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 -»
+b1-ultimo-42             teste novo   rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 -»
+b1-ligada-texto          teste novo   rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 -»
+b1-fechada-numero        teste novo   rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 -»
+b1-ordempor-turno        teste novo   rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 -»
+b1-ordem-palavra         teste novo   rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 -»
+b2-ultimo-17hex          teste novo   rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «0 + -»
+b2-propria-acento        teste novo   rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 +»
+b2-propria-combinante    teste novo   rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 +»
+b5-s-longo               teste novo   rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 +»
+b5-marca-20d0            teste novo   rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 +»
+b5-separador-nao-ascii   teste novo   rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 -»
+b5-sem-uma-verificacao   teste novo   rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 - -»
+b4-passo-3-igual-ao-2    teste novo   rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «0 - -»
+nada                     teste antigo rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «0 - -»
+r1-alcunha               teste antigo rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 -»
+b1-ultimo-turno          teste antigo rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «0 + -»
+b1-ultimo-42             teste antigo rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «0 + -»
+b1-ligada-texto          teste antigo rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «0 + -»
+b1-fechada-numero        teste antigo rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «0 + -»
+b1-ordempor-turno        teste antigo rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «0 + -»
+b1-ordem-palavra         teste antigo rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «0 + -»
+b2-ultimo-17hex          teste antigo rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «0 + -»
+b2-propria-acento        teste antigo rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 +»
+b2-propria-combinante    teste antigo rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 +»
+b5-s-longo               teste antigo rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 0»
+b5-marca-20d0            teste antigo rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 0 0»
+b5-separador-nao-ascii   teste antigo rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «0 + -»
+b5-sem-uma-verificacao   teste antigo rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «1 - -»
+b4-passo-3-igual-ao-2    teste antigo rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «0 - -»
+nada                     teste r1     rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «0 - -»
+r1-alcunha               teste r1     rc=1  FALHA-DA-CORRIDA (sem a linha «N de M verificações passaram»)  esperado «0 + -»
+mutações que não batem com o esperado: 0
+corridas que falharam (FALHA-DA-CORRIDA): 34
+logs com caminho pessoal: 0

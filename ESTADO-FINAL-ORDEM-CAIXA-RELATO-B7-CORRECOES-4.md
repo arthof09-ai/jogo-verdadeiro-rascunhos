@@ -45,7 +45,9 @@ As mutações, todas na caixa do snapshot do caso do `limpar()` (linhas B7-1 e B
 | `"ligada": "turno"` | 31/31, código 0, **3 ecos** | **30/31, código 1, 0 ecos** |
 | `"fechada": 0` | 31/31, código 0, **2 ecos** | **30/31, código 1, 0 ecos** |
 | `"ordemPor": "turno"` | 31/31, código 0, **3 ecos** | **30/31, código 1, 0 ecos** |
-| `"ordem": [a, "dinamico"]` | 31/31, código 0, **8 ecos** | **30/31, código 1, 0 ecos** |
+| `"ordem": [a, "dinamico"]` | 31/31, código 0, **2 ecos**¹ | **30/31, código 1, 0 ecos** |
+
+¹ Na primeira corrida foram 8: o canário era então `"turno"]`, que também sai nos tipos dos eventos (ver o B4 e `b7-correcoes-4/antes/b4-codigo-de-saida-1.log`). O 2 é o da corrida final, com o canário `"dinamico"]` (`mutacoes/mutacoes.log`). Corrigido na Ordem CAIXA-RELATO-B7-CORRECOES-5 (B6), que também corrigiu o 36 → 38 do ponto 5.
 
 Os registos estão em `b7-correcoes-4/mutacoes/b1-*.log`. Na mutação `"fechada": 0`, o `relato_caixa.gd` (que não
 mudou) escreve `SCRIPT ERROR: Invalid operands 'int' and 'bool'` ao comparar `0 == true`, e o teste continua. Isto
@@ -180,7 +182,7 @@ O CI do commit deste ESTADO-FINAL, que só junta este ficheiro, corre a seguir a
 4. **B3:** mudei o lançador (`correr-prova-caixa-relato.sh`) para o info e o log do servidor não voltarem a cair na
    pasta que se comete. Os ficheiros das ordens anteriores com o PIN ficam no ramo. Apagá-los é decisão tua.
 5. **Os logs de mutação levam o caminho da pasta temporária** (`C:/Users/txcga/AppData/Local/Temp/…`) nos rastos de
-   erro do Godot. Isto acontece só nos 2 logs da `b1-fechada-numero`. O ramo já tem 36 ficheiros em `provas/` com
+   erro do Godot. Isto acontece só nos 2 logs da `b1-fechada-numero`. O ramo já tem 38 ficheiros em `provas/` com
    caminhos `C:/Users/txcga`.
 6. **Os valores nos logs são canários de bancada, fictícios:** `Canario-R1`, `turno`, `42`, `0123456789abcdef0`, `1ȷe`
    e as chaves `alcunha`, `própria` e `maſter`. Aparecem só onde o resultado esperado é o eco, ou seja, no teste
