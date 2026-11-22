@@ -243,6 +243,7 @@ test('caixa no HUD da jogadora: o «voltar» repõe a ordemDinamicaParty do chec
   m.sair('aliada');
   m.entrar('aliada', { papel: 'jogadora', nome: 'Aliada Teste', senha: SENHAS.aliada });
   assert.deepEqual(m.clientes.aliada.ultimo('ROOM_SNAPSHOT').caixa.ordemDinamica, esperada);
+});
 // Ordem CAIXA-LOBBY (21/11/2026), B6 — NÃO aplicado (ver ESTADO-FINAL-ORDEM-CAIXA-LOBBY.md): o começo do combate não
 // manda ROOM_SNAPSHOT à Party (só eventos), por isso o snapshot do LOBBY é o único que leva a escolha do Mestre à jogadora
 // que estava na mesa antes da batalha (o cliente lê Estado.caixa desse snapshot ao abrir a arena: hud.gd _carregar_caixa).
