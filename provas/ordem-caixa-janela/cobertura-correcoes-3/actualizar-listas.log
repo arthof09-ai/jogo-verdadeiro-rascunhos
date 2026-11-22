@@ -1,6 +1,6 @@
 # o artefacto do retoma-i0004/actualizar-listas.py, com a saída REAL de cada comando capturada
-# (corrido na raiz do repo, sobre o HEAD ba56b7e mais a árvore de trabalho; cada bloco: o comando, a saída, o rc)
-# 2026-11-22T09:41:23Z · Python 3.12.10 · git version 2.56.0.windows.4 · PC (Git Bash)
+# (corrido na raiz do repo, sobre o HEAD 79d2eb9 mais a árvore de trabalho; cada bloco: o comando, a saída, o rc)
+# 2026-11-22T09:43:59Z · Python 3.12.10 · git version 2.56.0.windows.4 · PC (Git Bash)
 
 ## SHA-256 das 3 listas ANTES
 $ sha256sum retoma-i0004/antes.txt retoma-i0004/depois.txt MANIFESTO-SHA256.txt
@@ -41,22 +41,22 @@ rc=0
 
 ## tudo o que o ramo muda contra a base (árvore de trabalho; os não seguidos à parte)
 $ git diff --stat ba56b7e
- provas/ordem-caixa-janela/ferramentas/nomes_relato.gd       | 13 +++++++++++--
- provas/ordem-caixa-janela/ferramentas/teste_nomes_relato.gd | 11 +++++++----
- 2 files changed, 18 insertions(+), 6 deletions(-)
+ .../cobertura-correcoes-3/actualizar-listas.log    |  43 +++++++++++
+ .../cliente/1-janela-1280x720.png                  | Bin 0 -> 1469769 bytes
+ .../cliente/2-baixo-844x390.png                    | Bin 0 -> 559261 bytes
+ .../cliente/3-baixo-780x360.png                    | Bin 0 -> 474142 bytes
+ .../cobertura-correcoes-3/cliente/relato.txt       |  81 +++++++++++++++++++++
+ .../cliente/servidor-info.json                     |   1 +
+ .../cobertura-correcoes-3/cliente/servidor.log     |   2 +
+ .../cobertura-correcoes-3/conferencia-fontes.log   |  53 ++++++++++++++
+ .../cobertura-correcoes-3/teste-nomes-relato.log   |  35 +++++++++
+ .../ordem-caixa-janela/ferramentas/nomes_relato.gd |  13 +++-
+ .../ferramentas/teste_nomes_relato.gd              |  11 ++-
+ 11 files changed, 233 insertions(+), 6 deletions(-)
 rc=0
 
 $ git status --short --untracked-files=all
- M provas/ordem-caixa-janela/ferramentas/nomes_relato.gd
- M provas/ordem-caixa-janela/ferramentas/teste_nomes_relato.gd
-?? provas/ordem-caixa-janela/cobertura-correcoes-3/actualizar-listas.log
-?? provas/ordem-caixa-janela/cobertura-correcoes-3/cliente/1-janela-1280x720.png
-?? provas/ordem-caixa-janela/cobertura-correcoes-3/cliente/2-baixo-844x390.png
-?? provas/ordem-caixa-janela/cobertura-correcoes-3/cliente/3-baixo-780x360.png
-?? provas/ordem-caixa-janela/cobertura-correcoes-3/cliente/relato.txt
-?? provas/ordem-caixa-janela/cobertura-correcoes-3/cliente/servidor-info.json
-?? provas/ordem-caixa-janela/cobertura-correcoes-3/cliente/servidor.log
-?? provas/ordem-caixa-janela/cobertura-correcoes-3/conferencia-fontes.log
-?? provas/ordem-caixa-janela/cobertura-correcoes-3/teste-nomes-relato.log
+ M provas/ordem-caixa-janela/cobertura-correcoes-3/actualizar-listas.log
+?? ESTADO-FINAL-ORDEM-CAIXA-JANELA-COBERTURA-CORRECOES-3.md
 rc=0
 
