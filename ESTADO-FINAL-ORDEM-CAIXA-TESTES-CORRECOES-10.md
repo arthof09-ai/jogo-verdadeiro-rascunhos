@@ -48,7 +48,7 @@ CORRECOES-8 escreveu.
 - `cenarioAgir`, que fica em `agir`.
 
 A chave `jogadora` guarda `d.jogadora`, as mensagens da heroína no cenário da desgraça. Medido em
-`dados-exemplo/mesa-mestre.json`:
+`rascunhos/servidor/dados-exemplo/mesa-mestre.json`:
 - chaves de topo: `origem, canarios, mestre, lobby, agir, jogadora`;
 - `mestre`: `vista, snapshot, cartoes`;
 - `mestre.cartoes`: `desgraca, ia, dados`.
