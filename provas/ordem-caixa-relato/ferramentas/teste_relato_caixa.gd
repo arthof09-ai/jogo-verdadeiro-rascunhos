@@ -41,6 +41,18 @@ extends SceneTree
 ##  - B4: a verificação de cobertura do caso do `limpar()` prende as 4 linhas pelo rótulo («B7-1:» … «B7-4:») e pela
 ##    origem (seq 1, seq 0, seq 0, seq 5); a B7-2 e a B7-3 têm o mesmo corpo (o evento à espera não muda nada) e
 ##    distinguem-se pelo rótulo — o teste confere as duas coisas. Continua 30/30.
+## Ordem CAIXA-RELATO-B7-CORRECOES-3 (sentença da CAIXA-RELATO-B7-CORRECOES-2):
+##  - B1 (ordem futura R1): a retenção deixa de ser só por palavras PROIBIDAS. Uma linha só se ecoa se, além de não ter
+##    nenhuma proibida, tiver SÓ chaves JSON de `CHAVES_PERMITIDAS` e SÓ palavras de `PALAVRAS_PERMITIDAS` (mais números
+##    e ids hexadecimais de 17). Um valor novo sem chave proibida ao lado («"alcunha": "Canario-R1"») já não passa nem se
+##    ecoa. O que se acha fora da lista conta-se, mas NUNCA se imprime (o achado seria o próprio valor).
+##  - B2: a comparação normaliza acentos (e maiúsculas) dos dois lados — «"própria"» casa com "propria".
+##  - B3: o comentário de "propria" aponta `estado.gd:57` (a linha do `var propria`).
+##  - B4 (registo): a B7-2 e a B7-3 continuam presas só pelo rótulo; uma troca/duplicação dos dois passos do meio
+##    passa — inerente aos dados (ver o comentário no caso do `limpar()`).
+##  - B5: o total de verificações é afirmado (`TOTAL_ESPERADO`): uma verificação removida já não passa calada com
+##    «30 de 30» — o teste sai com código 1. São 31, não 30: na `fable/integracao-50` as 30 da B7-CORRECOES-2 juntaram-se
+##    à verificação do fuso injectado da CORRECOES-3 (B6). Continua 31/31.
 ##
 ## Correr (na raiz do repo):
 ##   godot --headless --path rascunhos/cliente -s "$PWD/provas/ordem-caixa-relato/ferramentas/teste_relato_caixa.gd"
@@ -49,10 +61,35 @@ const OrdemTurnos := preload("res://hud/ordem_turnos.gd")
 
 ## As palavras que nenhuma linha do relato pode ter (B6; CORRECOES-2 B3). Partilhada pela varredura do §B6 e pela do
 ## caso do `limpar()` (B7-CORRECOES B2).
-## B7-CORRECOES-2 (B1): "propria" (o campo do snapshot só da jogadora: vida, PA e ficha dela — estado.gd:56).
+## B7-CORRECOES-2 (B1): "propria" (o campo do snapshot só da jogadora: vida, PA e ficha dela — estado.gd:57).
+## B7-CORRECOES-3 (B2): comparadas sem acentos nem maiúsculas (`_normal`), dos dois lados.
 const PROIBIDAS := ["nome", "vida", "alma", "pa", "pa\"", "paTotal", "vidaActual", "mestre", "master", "caixaMestre",
 	"propria"]
 
+## B7-CORRECOES-3 (B1, R1): o que uma linha PODE ter. Tudo o resto retém a linha. Nenhum campo novo entra na caixa sem
+## passar pela conferência: acrescentá-lo aqui é a mudança que a conferência vê.
+## As chaves JSON da caixa da Party (projecao.js `caixa`) — as 3 de cima e as 3 da `ordemDinamica`.
+const CHAVES_PERMITIDAS := ["ligada", "ordemPor", "ordemDinamica", "ordem", "fechada", "ultimo"]
+## As palavras (já normalizadas por `_normal`: minúsculas, sem acentos) que `relato_caixa.linha()` e `_origem()` escrevem,
+## os valores JSON da caixa, os tipos de evento e os rótulos deste teste. Números e ids hexadecimais de 17 à parte.
+const PALAVRAS_PERMITIDAS := [
+	# linha(): a base, «JSON DESACTUALIZADO (é o do …)», «a caixa ACTUAL dela (revisão N)», «JSON actual (do …; a caixa dela é esta)»
+	"a", "caixa", "que", "lhe", "chegou", "so", "tem", "ligada", "ordempor", "e", "ordemdinamica",
+	"json", "desactualizado", "o", "do", "actual", "dela", "revisao", "esta",
+	# _origem(): «ROOM_SNAPSHOT seq N, revisão N, aplicado às H; N evento(s) aplicado(s) depois dele […], N de actor (só esses podem adiantá-la)»
+	"room_snapshot", "seq", "aplicado", "as", "evento", "s", "depois", "dele", "de", "actor", "esses", "podem", "adianta", "la",
+	# os valores JSON da caixa (as chaves já estão acima, normalizadas)
+	"true", "false", "null", "dinamico", "ordem", "fechada", "ultimo",
+	# os tipos de evento que o teste aplica
+	"movimento", "turno", "ataque", "dano", "estado",
+	# os rótulos do teste: «1», «x», «e», «4», «B7-1»…«B7-4»
+	"x", "b7",
+]
+## Os ids opacos (hexadecimais de 17, como os da prova). Os números (seq, revisão, hora) são só dígitos.
+const RE_ID := "^[0-9a-f]{17}$"
+const RE_NUM := "^[0-9]+$"
+## B7-CORRECOES-3 (B5): quantas verificações o teste tem. Uma a menos (ou a mais) sem mudar este número = o teste falha.
+const TOTAL_ESPERADO := 31
 var _total := 0
 var _falhas := 0
 
@@ -201,44 +238,112 @@ func _init() -> void:
 	# --- Privacidade (B6; CORRECOES-2 B2/B3): TODAS as linhas — as «JSON actual» (§1/§5, as duas do caso da hora, o
 	# `encerrar`, a mesma vez) e a do §4 — só têm ids opacos, os campos da caixa e a origem do snapshot: nenhum nome,
 	# vida, alma, PA nem nada do Mestre. "pa" sozinho: nenhuma palavra fixa da linha o tem (e os ids são hexadecimais).
-	var achadas: Array = _proibidas_em(linhas)
+	var achadas: Array = _achados_em(linhas)  # B7-CORRECOES-3 (B1): proibidas E fora das listas permitidas
 	var actuais := 0
 	for linha_r in linhas:
 		if str(linha_r).contains("JSON actual"):
 			actuais += 1
 	_ok(linhas.size() == 6 and actuais == 5,
 		"a privacidade varre as 6 linhas, 5 delas «JSON actual» (não só a do §4; %d linhas, %d actuais)" % [linhas.size(), actuais])
-	_ok(achadas.is_empty(), "nenhuma linha ganha nomes, vida, alma nem PA %s" % [achadas])
+	_ok(achadas.is_empty(), "nenhuma linha ganha nomes, vida, alma nem PA, nem nada fora das chaves e palavras permitidas %s" % [achadas])
 	_ecoar(linhas)  # B7-CORRECOES-2 (B2): o eco só depois da varredura, e só das linhas limpas
 
 	_caso_limpar(R)
 
 	print("")
 	print("teste do relato da caixa: %d de %d verificações passaram." % [_total - _falhas, _total])
-	quit(1 if _falhas > 0 or _total == 0 else 0)
+	# B7-CORRECOES-3 (B5): o total afirmado — uma verificação removida não passa calada com «30 de 30».
+	var total_ok := _total == TOTAL_ESPERADO
+	if not total_ok:
+		print("  FALHA o total: %d verificações, esperadas %d (TOTAL_ESPERADO)" % [_total, TOTAL_ESPERADO])
+		printerr("  FALHA o total: %d verificações, esperadas %d (TOTAL_ESPERADO)" % [_total, TOTAL_ESPERADO])
+	quit(1 if _falhas > 0 or _total == 0 or not total_ok else 0)
 
 
-## As palavras de PROIBIDAS que aparecem nas linhas (sem distinguir maiúsculas), uma entrada por achado.
+## B7-CORRECOES-3 (B2): o texto em minúsculas e sem acentos — as letras acentuadas passam à letra de base, e as marcas
+## combinantes (U+0300–U+036F, o acento escrito à parte) caem. «"própria"», «PRÓPRIA» e «própria» dão «propria».
+const _SEM_ACENTO := {"á": "a", "à": "a", "â": "a", "ã": "a", "ä": "a", "å": "a", "é": "e", "è": "e", "ê": "e", "ë": "e",
+	"í": "i", "ì": "i", "î": "i", "ï": "i", "ó": "o", "ò": "o", "ô": "o", "õ": "o", "ö": "o", "ú": "u", "ù": "u",
+	"û": "u", "ü": "u", "ç": "c", "ñ": "n", "ý": "y", "ÿ": "y"}
+
+
+func _normal(s: String) -> String:
+	var low := s.to_lower()
+	var out := ""
+	for i in range(low.length()):
+		var cp := low.unicode_at(i)
+		if cp >= 0x300 and cp <= 0x36F:
+			continue
+		var c := low.substr(i, 1)
+		out += str(_SEM_ACENTO.get(c, c))
+	return out
+
+
+## As palavras de PROIBIDAS que aparecem nas linhas (sem distinguir maiúsculas nem acentos — B7-CORRECOES-3, B2), uma
+## entrada por achado. Só palavras DA LISTA — é seguro imprimi-las.
 func _proibidas_em(linhas_v: Array) -> Array:
 	var achadas: Array = []
 	for linha_r in linhas_v:
+		var ln := _normal(str(linha_r))
 		for p in PROIBIDAS:
-			if str(linha_r).to_lower().contains(str(p).to_lower()):
+			if ln.contains(_normal(str(p))):
 				achadas.append(p)
 	return achadas
+
+
+## B7-CORRECOES-3 (B1, R1): quantas chaves JSON fora de `CHAVES_PERMITIDAS` e quantas palavras fora de
+## `PALAVRAS_PERMITIDAS` (nem número, nem id) a linha tem. Devolve SÓ as contagens — o que está fora da lista é, num
+## vazamento, o próprio valor, e não se imprime. A chave compara-se tal como vem (não normalizada): «ordempor» ou
+## «ligáda» não são chaves da caixa.
+func _fora_da_lista(lx: String) -> Dictionary:
+	var chaves := 0
+	var re_chave := RegEx.create_from_string("\"((?:[^\"\\\\]|\\\\.)*)\"\\s*:")
+	for m in re_chave.search_all(lx):
+		if not CHAVES_PERMITIDAS.has(m.get_string(1)):
+			chaves += 1
+	var palavras := 0
+	var re_id := RegEx.create_from_string(RE_ID)
+	var re_num := RegEx.create_from_string(RE_NUM)
+	var re_sep := RegEx.create_from_string("[^a-z0-9_]+")
+	for p in re_sep.sub(_normal(lx), " ", true).split(" ", false):
+		if not (PALAVRAS_PERMITIDAS.has(p) or re_num.search(p) != null or re_id.search(p) != null):
+			palavras += 1
+	return {"chaves": chaves, "palavras": palavras}
+
+
+## Tudo o que retém as linhas: as proibidas achadas (pelo nome, da lista) e, à parte, as CONTAGENS do que está fora das
+## listas permitidas (B1). Vazio = as linhas só têm o permitido.
+func _achados_em(linhas_v: Array) -> Array:
+	var achados: Array = _proibidas_em(linhas_v)
+	var chaves := 0
+	var palavras := 0
+	for linha_r in linhas_v:
+		var f := _fora_da_lista(str(linha_r))
+		chaves += int(f["chaves"])
+		palavras += int(f["palavras"])
+	if chaves > 0:
+		achados.append("chave(s) fora da lista: %d" % chaves)
+	if palavras > 0:
+		achados.append("palavra(s) fora da lista: %d" % palavras)
+	return achados
 
 
 ## B7-CORRECOES-2 (B2): o eco das linhas, chamado SÓ DEPOIS da varredura. Uma linha limpa imprime-se inteira; uma linha
 ## com palavras proibidas não — sai o rótulo (o texto antes do primeiro «:», que é do teste) e as palavras achadas. Num
 ## vazamento real o valor não chega ao log cometido.
+## B7-CORRECOES-3 (B1): «limpa» = sem proibidas E só com chaves e palavras permitidas (`_achados_em`). O rótulo de uma
+## linha retida só se imprime se ele próprio for só do permitido; senão sai o número da linha.
 func _ecoar(linhas_v: Array) -> void:
-	for linha_r in linhas_v:
-		var lx := str(linha_r)
-		var achadas: Array = _proibidas_em([lx])
+	for i in range(linhas_v.size()):
+		var lx := str(linhas_v[i])
+		var achadas: Array = _achados_em([lx])
 		if achadas.is_empty():
 			print("  linha: ", lx)
 		else:
-			print("  linha %s: RETIDA (não se imprime; tem %s)" % [lx.get_slice(":", 0), achadas])
+			var rot := lx.get_slice(":", 0)
+			if not _achados_em([rot]).is_empty():
+				rot = "n.º %d" % (i + 1)
+			print("  linha %s: RETIDA (não se imprime; tem %s)" % [rot, achadas])
 
 
 ## Ordem CAIXA-RELATO-B7 (Mecânica D4 da conferência da CAIXA-RELATO-CORRECOES): `Estado.limpar()` emite
@@ -249,6 +354,7 @@ func _ecoar(linhas_v: Array) -> void:
 ## Só ids opacos: o snapshot DESTE CASO (o que o teste monta) não traz `propria` nem nomes; nada de vida, alma ou PA.
 ## B7-CORRECOES (B2): as linhas do relato deste caso também passam pela varredura de privacidade (no fim do caso).
 ## B7-CORRECOES-2 (B1): e "propria" está em `PROIBIDAS` — «não traz `propria`» confere-se nas linhas, não só na montagem.
+## B7-CORRECOES-3 (B1/B2): e também sem acentos («própria»), e nenhuma chave ou palavra fora das listas permitidas.
 func _caso_limpar(R) -> void:
 	var est = load("res://estado/estado.gd").new()
 	var ctx := {"snap": {}}
@@ -301,6 +407,9 @@ func _caso_limpar(R) -> void:
 	# B7-CORRECOES (B2): a varredura de privacidade do §B6, estendida a este caso — as 4 linhas, a mesma lista.
 	# B7-CORRECOES-2 (B4): cada linha presa pelo rótulo e pela origem; B7-1 pela âncora «seq 1,». A B7-2 e a B7-3 têm o
 	# mesmo corpo (o evento à espera não muda nada): o rótulo distingue-as, e o teste confere que o corpo é igual.
+	# B7-CORRECOES-3 (B4, registo): a B7-2/B7-3 distinguem-se SÓ pelo rótulo, e não se inventa âncora. Limite inerente
+	# aos dados: uma troca ou duplicação dos dois passos do meio (p. ex. o passo 3 sem o evento à espera, igual ao 2)
+	# dá as mesmas 4 linhas e passa esta verificação — não há nada no corpo que os distinga.
 	var seqs := ["seq 1,", "seq 0,", "seq 0,", "seq 5,"]
 	var presas := linhas_b7.size() == 4
 	for i in range(mini(linhas_b7.size(), 4)):
@@ -308,7 +417,7 @@ func _caso_limpar(R) -> void:
 	presas = presas and str(linhas_b7[1]).get_slice(":", 0) != str(linhas_b7[2]).get_slice(":", 0) 		and str(linhas_b7[1]).trim_prefix("B7-2") == str(linhas_b7[2]).trim_prefix("B7-3")
 	_ok(presas,
 		"B7-CORRECOES: a varredura do caso do limpar() cobre as 4 linhas do relato, cada uma presa pelo rótulo e pela origem (B7-1 seq 1, B7-2 seq 0, B7-3 seq 0 com o mesmo corpo da B7-2, B7-4 seq 5; %d linhas)" % linhas_b7.size())
-	var achadas_b7: Array = _proibidas_em(linhas_b7)
-	_ok(achadas_b7.is_empty(), "B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria` %s" % [achadas_b7])
+	var achadas_b7: Array = _achados_em(linhas_b7)  # B7-CORRECOES-3 (B1): proibidas E fora das listas permitidas
+	_ok(achadas_b7.is_empty(), "B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria`, nem nada fora das chaves e palavras permitidas %s" % [achadas_b7])
 	_ecoar(linhas_b7)  # B7-CORRECOES-2 (B2): o eco só depois da varredura, e só das linhas limpas
 	est.free()

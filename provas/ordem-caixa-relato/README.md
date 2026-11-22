@@ -247,3 +247,26 @@ MANEQUIM `correcoes-4/cliente-manequim/relato.txt` **53/53**, 78 = 78.
 Correr de novo: `bash provas/ordem-caixa-relato/ferramentas/correr-prova-caixa-relato.sh <godot.exe> <vlab-completo.js>
 <pasta-tmp> "$PWD/provas/ordem-caixa-relato/correcoes-4"` e, para as mutações,
 `bash provas/ordem-caixa-relato/ferramentas/correr-mutacoes.sh <godot.exe> <vlab-completo.js> <pasta-tmp> <base4|novo> <registo.log>`.
+# Correcções B1–B5 da sentença da CAIXA-RELATO-B7-CORRECOES-2 (Ordem CAIXA-RELATO-B7-CORRECOES-3 · 22/11/2026, Claude conta 2, PC)
+
+Só o teste do registo; nada do código do jogo muda. As corridas estão em **`b7-correcoes-3/`**; as mutações, em
+**`b7-correcoes-3/mutacoes/`** (`mutacoes.log` é o resumo), feitas por `ferramentas/correr-mutacoes-b7-correcoes-3.sh`.
+
+- **B1 (R1) — a retenção por listas PERMITIDAS.** Uma linha só se ecoa se não tiver nenhuma proibida E tiver só chaves
+  JSON de `CHAVES_PERMITIDAS` (`ligada`, `ordemPor`, `ordemDinamica`, `ordem`, `fechada`, `ultimo`) e só palavras de
+  `PALAVRAS_PERMITIDAS` (as fixas de `linha()`/`_origem()`, os valores da caixa, os tipos de evento, os rótulos),
+  números e ids hexadecimais de 17. O que está fora conta-se e não se imprime. Mutação `"alcunha": "Canario-R1"`:
+  teste novo **30/31**, valor **0 vezes** no log; teste antigo **31/31**, valor **2 vezes**.
+- **B2 — sem acentos.** `_normal` (minúsculas, letras acentuadas → base, marcas combinantes U+0300–U+036F fora) dos
+  dois lados. Mutações `"própria"` e `"pro◌́pria"` (acento à parte): teste novo **30/31**, a `PROIBIDAS` acusa
+  `propria`, **0 ecos**; teste antigo **31/31**, **2 ecos** cada.
+- **B3** — o comentário de "propria" aponta `estado.gd:57`.
+- **B4 (registo)** — a B7-2/B7-3 só pelo rótulo, sem âncora inventada. Mutação «o passo 3 sem o evento à espera»
+  (duplicação do passo 2): **31/31** nos dois testes — o limite inerente aos dados, escrito no teste.
+- **B5 — o total afirmado** (`TOTAL_ESPERADO := 31`). Mutação «sem uma verificação»: teste novo **30 de 30 + FALHA do
+  total, código 1**; teste antigo **30 de 30, código 0** (passava calado). São **31**, não 30: a `fable/integracao-50`
+  juntou as 30 da B7-CORRECOES-2 à verificação do fuso injectado da CORRECOES-3 (B6); o teste da base dá 31/31.
+
+Números (Godot 4.7.2 Windows, Node 26.13.0, motor VLAB real `a91c021c…`, semente 7): teste `teste-relato.log`
+**31/31**; prova HUD-JOGADORA **43/43**; prova MANEQUIM **53/53**; suites `suites/`: servidor **419/419**, prova da
+caixa do servidor **PROVA OK**.
