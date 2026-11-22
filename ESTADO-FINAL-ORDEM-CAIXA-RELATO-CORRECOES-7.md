@@ -37,8 +37,9 @@ emendado.
   `N4-B1-canario-na-linha-em-branco-manequim` têm 2 resumos por bloco. O `relato.txt` dessas corridas tem duas
   linhas-resumo («2 resumo(s)»): uma escrita antes da re-varredura (43 de 43; 53 de 53) e outra depois de ela achar o
   canário (43 de 44; 53 de 54). O harness copia as duas. Na parte 2 (`novo`), o relato tem só uma.
-  Os 38 são iguais, linha a linha, aos do registo cometido antes da regeneração (`fe4a84d`), e os 36 `rc=` também.
-  Contado na CORRECOES-8 com `grep -c` e um `diff` dos títulos, resumos e `rc=`.
+  Contra o registo cometido antes da regeneração (`fe4a84d`), o `diff` sai vazio nos 38 resumos e nos 36 `rc=`; 4
+  títulos diferem (n.º 1, 7, 19, 25), só na redacção (os 4 títulos desta B1, acima). Contado na CORRECOES-8 com
+  `grep -c`; o `diff`, por tipo de linha, foi corrido outra vez na CORRECOES-9 (B1), que corrigiu esta frase.
 - **O marcador do filtro:** passa de 28 linhas e 92 ocorrências para **24 linhas e 88 ocorrências**. Saíram as 4 dos
   títulos. As que ficam estão nas linhas FALHA e nos resumos.
 - **O conferidor** no registo regenerado (251 linhas): **0 achados, rc=0** no critério alargado (151 pedaços) e

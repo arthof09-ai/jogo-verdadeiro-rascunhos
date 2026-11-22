@@ -22,8 +22,13 @@ estavam.
   `N4-B1-canario-na-linha-em-branco-manequim` têm 2 resumos por bloco. O `relato.txt` dessas corridas traz uma linha-resumo
   escrita antes da re-varredura (43 de 43; 53 de 53) e outra depois de ela achar o canário (43 de 44; 53 de 54), e o
   harness copia as duas («2 resumo(s)»). Na parte 2 (`novo`), há só uma.
-- **Os 38 são iguais aos de antes:** um `diff` dos títulos, resumos e `rc=` entre o registo actual e o de `fe4a84d`
-  (antes da regeneração da CORRECOES-7) sai vazio.
+- **Os 38 são iguais aos de antes:** entre o registo actual e o de `fe4a84d` (antes da regeneração da CORRECOES-7), o
+  `diff` sai vazio nos 38 resumos e nos 36 `rc=`; 4 títulos diferem (n.º 1, 7, 19, 25), só na redacção.²
+
+  ² **Emenda (Ordem CAIXA-RELATO-CORRECOES-9, B1).** A primeira redacção dizia que o `diff` dos títulos, resumos e
+  `rc=` saía vazio. Nos títulos não sai: os 4 títulos (n.º 1, 7, 19 e 25 dos 36, pela ordem do registo) das mutações
+  `B1-nome-verdadeiro` e `N-B2-canario-minusculas-relato` (as duas, nas duas partes) passaram de «‹nome verdadeiro›»
+  para a redacção «n.º 1» na CORRECOES-7. Corrido outra vez na CORRECOES-9.
 - **Correcção:** no `ESTADO-FINAL-ORDEM-CAIXA-RELATO-CORRECOES-7.md` §1 B1, «36» fica riscado e passa a **38**¹, com
   uma nota de emenda (¹), como as emendas ¹ e ² do ESTADO-FINAL-6.
 - **Conferidor** nesse ficheiro: 0 achados antes e 0 depois. A primeira redacção da nota dava 2 achados de 4 car.

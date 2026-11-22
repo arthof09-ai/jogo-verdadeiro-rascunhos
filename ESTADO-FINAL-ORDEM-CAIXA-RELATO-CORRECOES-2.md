@@ -78,7 +78,7 @@ Mutações (todas revertidas, `git status` limpo depois): ver §1. Teste: bias 0
 1. **Os relatos já cometidos continuam a ter os nomes verdadeiros.** São estes: `provas/ordem-caixa-hud-jogadora/cliente/`,
    `ordem-caixa-manequim/cliente/`, `ordem-caixa-janela/cliente/`, `ordem-caixa-relato/{cliente-hud,cliente-manequim}/`
    e `ordem-caixa-relato/correcoes/…/relato.txt`. Não os reescrevi, porque são o registo do que se viu em cada ordem e
-   estão no histórico de qualquer forma. Os nomes são de bancada (fictícios). Se a decisão for limpá-los, é uma ordem
+   estão no histórico de qualquer forma. Os nomes verdadeiros n.º 1 e n.º 2 são fictícios (das fichas de teste). Se a decisão for limpá-los, é uma ordem
    à parte, e o histórico do git continua a tê-los.
 2. **A prova da CAIXA-JANELA (`provas/ordem-caixa-janela/ferramentas/prova_caixa_janela.gd:141`) tem o mesmo `_nome()`**,
    que lê o `nome` da vista do Mestre e por isso põe os mesmos nomes no relato dela. Ficou fora da fronteira desta ordem
