@@ -37,8 +37,10 @@ na_arvore() {  # <valor> → ficheiros / ocorrências em TODA a árvore de traba
 novos=$( { git diff --name-only --diff-filter=d "$BASE"; git ls-files --others --exclude-standard; } | sort -u)
 nos_novos() { local n=0 f; for f in $novos; do [ -f "$f" ] && grep -qF -- "$1" "$f" && n=$((n + 1)); done; echo $n; }
 digitos_novos() {  # <mínimo> → ocorrências de cadeias de <mínimo> ou mais dígitos seguidos nos ficheiros novos de texto
+  # Os sha256 (64 caracteres hexadecimais seguidos, como os do MANIFESTO e das listas da retoma) tiram-se antes: os
+  # dígitos de dentro de um sha não são um PIN.
   local n=0 f
-  for f in $novos; do [ -f "$f" ] && grep -Iq . "$f" && n=$((n + $(grep -oE "[0-9]{$1,}" "$f" | wc -l))); done; echo $n
+  for f in $novos; do [ -f "$f" ] && grep -Iq . "$f" && n=$((n + $(sed -E 's/[0-9a-fA-F]{64}//g' "$f" | grep -oE "[0-9]{$1,}" | wc -l))); done; echo $n
 }
 LANC=(provas/ordem-caixa-hud-jogadora/ferramentas/correr-prova-caixa-hud.sh provas/ordem-caixa-janela/ferramentas/correr-prova-caixa-janela.sh
       provas/ordem-caixa-manequim/ferramentas/correr-prova-caixa-manequim.sh provas/ordem-caixa/ferramentas/correr-prova-caixa.sh

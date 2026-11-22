@@ -1,13 +1,13 @@
-# verificação do PIN (Ordem CAIXA-RELATO-B7-CORRECOES-7) · bfe4c3c · base bfe4c3c
+# verificação do PIN (Ordem CAIXA-RELATO-B7-CORRECOES-7) · 30c4c76 · base bfe4c3c
 # só contagens; os valores nunca se escrevem. O PIN antigo vem de 1b907bc, o PIN novo de 20 dígitos de e8f1a42.
 PIN novo de 20 dígitos — ficheiros na árvore de trabalho (seguidos ou não): 0 (esperado 0) ok
 PIN novo de 20 dígitos — ocorrências na árvore de trabalho: 0 (esperado 0) ok
 PIN novo de 20 dígitos — ficheiros seguidos (git grep): 0 (esperado 0) ok
 PIN antigo — ficheiros na árvore de trabalho (seguidos ou não): 2 (esperado 0) FALHA
 PIN antigo — ocorrências na árvore de trabalho: 2 (esperado 0) FALHA
-PIN antigo — ficheiros novos ou mudados desde a base (11 ficheiros): 0 (esperado 0) ok
+PIN antigo — ficheiros novos ou mudados desde a base (19 ficheiros): 0 (esperado 0) ok
 PIN de corrida — cadeias de 20+ dígitos seguidos nos ficheiros novos: 0 (esperado 0) ok
-(informativo) cadeias de 6+ dígitos seguidos nos ficheiros novos: 27 — números de linhas, sha, horas; nenhuma é um PIN (o antigo e o novo contam-se acima e o de corrida tem 20)
+(informativo) cadeias de 6+ dígitos seguidos nos ficheiros novos: 32 — números de linhas, sha, horas; nenhuma é um PIN (o antigo e o novo contam-se acima e o de corrida tem 20)
 chave "pin" no cenário de bancada: false (esperado false) ok
 servidor-info.json seguidos: 1 (esperado 0) FALHA
 servidor.log seguidos fora de suites/: 1 (esperado 0) FALHA
@@ -45,10 +45,12 @@ provas/ordem-caixa-janela/ferramentas/prova_caixa_janela.gd sem --pin → códig
 provas/ordem-caixa-manequim/ferramentas/prova_caixa_manequim.gd sem --pin → código: 2 (esperado 2) ok
 provas/ordem-caixa/ferramentas/prova_caixa_reentrar.gd sem --pin → código: 2 (esperado 2) ok
 falhas: 4
-
 # Nota (Ordem CAIXA-RELATO-B7-CORRECOES-7): as 4 FALHAS acima são UM achado, fora do território desta ordem, e não vêm
 # das correcções dela. São 2 ficheiros seguidos de provas/ordem-caixa-janela/cobertura-correcoes-6/cliente/
 # (servidor-info.json e servidor.log), cometidos pela CAIXA-JANELA-COBERTURA-CORRECOES-6 (e4072d0) em paralelo com a
 # B7-CORRECOES-6, e cada um tem 1 ocorrência do PIN antigo. Na ponta do ramo da -6 (5282c99) a contagem dava 0. Na ponta
 # da linha depois da fusão (880f601) e na base desta ordem (bfe4c3c) dá 2. Os ficheiros novos ou mudados por esta ordem
 # têm 0. Não se apagaram, porque estão fora do território. A decisão é do coordenador (ver o ESTADO-FINAL).
+# Regenerado na ponta 30c4c76, depois das listas e do rebase. A contagem das cadeias de 20+ dígitos passou a tirar
+# antes os sha256 de 64 caracteres hexadecimais: com eles, as listas novas davam 4 cadeias, que estão dentro de 2 sha e
+# não são PINs.
