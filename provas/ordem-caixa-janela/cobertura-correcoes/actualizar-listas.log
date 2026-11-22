@@ -1,0 +1,20 @@
+# B5 — o artefacto do retoma-i0004/actualizar-listas.py (corrido na raiz do repo, sobre o HEAD 9b7ec0f)
+# 2026-11-22T07:11:58Z · Python 3.12.10 · PC (Git Bash)
+
+## SHA-256 das 3 listas ANTES
+cf3b16fa1b1b924b4e75376022c7a997cc678083ccbfd4fac64915ce05f69d46 *retoma-i0004/antes.txt
+4fd4320f9e17d047d9d8c6fae6dcf084e4b521086a28be68f2ff846cc66a10df *retoma-i0004/depois.txt
+cb15041ad3c71cb929bd99497fc0c4ca7834049c73d8c8d420b6513038bf4f94 *MANIFESTO-SHA256.txt
+
+## saída do script (PYTHONIOENCODING=utf-8, para o «·» não sair estragado no Windows)
+antes.txt: 37 · depois.txt: 415 · MANIFESTO: 459 ficheiros (0 novos, 0 tirados nesta passagem)
+rc=0
+
+## SHA-256 das 3 listas DEPOIS
+cf3b16fa1b1b924b4e75376022c7a997cc678083ccbfd4fac64915ce05f69d46 *retoma-i0004/antes.txt
+4fd4320f9e17d047d9d8c6fae6dcf084e4b521086a28be68f2ff846cc66a10df *retoma-i0004/depois.txt
+cb15041ad3c71cb929bd99497fc0c4ca7834049c73d8c8d420b6513038bf4f94 *MANIFESTO-SHA256.txt
+
+## git status --short retoma-i0004 MANIFESTO-SHA256.txt (vazio = as listas já estavam sincronizadas)
+## git diff b36566d HEAD --stat -- rascunhos/ .github/ (vazio = o ramo não toca no código do jogo nem no CI)
+(fim)
