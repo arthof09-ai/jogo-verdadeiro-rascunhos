@@ -4,7 +4,7 @@
 # Nunca resolve em silêncio para o sítio errado. Os casos (PC Windows, Git Bash; o Godot é um .exe Windows):
 #   /c/…, /tmp/…            absoluto (MSYS) — fica.
 #   C:/… , C:\…             absoluto (Windows) — fica (as barras invertidas passam a /).
-#   ~ , ~/…                 $HOME (que tem de ser absoluto, e não a raiz «/») + o resto. ~utilizador/… → falha.
+#   ~ , ~/…                 $HOME (que tem de ser absoluto, e não a raiz «/» nem a de uma unidade «C:/») + o resto. ~utilizador/… → falha.
 #   \pasta\…  (uma barra)   relativo à raiz da unidade da ORIGEM → <unidade>:/pasta/… (a unidade lê-se com cygpath).
 #   \\servidor\… , //…      caminho de rede (UNC) → falha: o Godot e o bash não o tratam da mesma maneira.
 #   C:pasta  (sem barra)    relativo à pasta corrente da unidade C:, que o bash não sabe → falha.
@@ -17,7 +17,11 @@ absolutizar() {
     '~'|'~/'*|'~\'*)
       case "$HOME" in /*|[A-Za-z]:[\\/]*) ;; *) echo "$oque «$o»: começa por ~ mas o \$HOME («$HOME») não é absoluto — dá um caminho absoluto" >&2; return 1 ;; esac
       # CAIXA-RELATO-CORRECOES-9 (B3): com HOME=/ (ou só barras), `~/x` dava `//x` e falhava como «UNC», que não é.
-      case "$HOME" in *[!/\\]*) ;; *) echo "$oque «$o»: começa por ~ mas o \$HOME («$HOME») é a raiz, não uma pasta pessoal — dá um caminho absoluto" >&2; return 1 ;; esac
+      # CAIXA-RELATO-CORRECOES-10 (B1): com HOME=C:/ ou C:\ (só a raiz de uma unidade), `~/x` dava `C://x` em silêncio.
+      case "$HOME" in
+        [A-Za-z]:[\\/]) echo "$oque «$o»: começa por ~ mas o \$HOME («$HOME») é a raiz da unidade ${HOME:0:2}, não uma pasta pessoal — dá um caminho absoluto" >&2; return 1 ;;
+        *[!/\\]*) ;;
+        *) echo "$oque «$o»: começa por ~ mas o \$HOME («$HOME») é a raiz, não uma pasta pessoal — dá um caminho absoluto" >&2; return 1 ;; esac
       v=$HOME${v:1} ;;
     '~'*) echo "$oque «$o»: ~utilizador não é suportado — dá um caminho absoluto" >&2; return 1 ;;
   esac
