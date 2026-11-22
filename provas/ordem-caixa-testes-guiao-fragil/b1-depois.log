@@ -1,0 +1,95 @@
+# B1 — o guião duas voltas depois das escolhas da caixa, sem «voltar»
+# privacidade.test.mjs de HEAD 5bc5c72 + a correcção por cometer (B2/B3)
+# Nota: as variantes mexem no guião PARTILHADO. O teste da M51b (e, na B depois da correcção, o controlo B3, que
+# também segue o caminho da M51b) falham nas sanidades do PRÓPRIO caminho («o «voltar» repôs a aliada no 2403»,
+# «o lobo levou a aliada a 51»): esperado, não é a fragilidade. O que a B1 olha é o 1.º teste e a asserção
+# «a ordem no snapshot do escolherCaixa».
+
+## Variante A — as duas voltas da M51b, sem «voltar», no guião do 1.º teste
+# node --test: código de saída 1
+
+✔ canários: nada do Mestre chega a nenhum papel da Party (jogadoras e espectador)
+✔ canários: nada do Mestre chega à Party com o guião duas voltas depois das escolhas da caixa, sem «voltar»
+✔ canários: "outra jogadora" e espectador não veem a ficha, a Vida nem o dano alheio
+✔ canários: a Vida actual (variável) de uma jogadora ferida não chega à outra jogadora nem ao espectador
+✖ canários: a Vida baixa de um intermédio (51, depois «voltar») não chega à outra jogadora nem ao espectador
+✔ lista de campos permitidos: todo o ROOM_EVENT da Party só tem campos da lista do seu tipo
+✔ E-P7: id oculto e id inexistente dão a MESMA recusa, byte a byte (tirando o intentId)
+✔ seatToken: cada um só vê o seu; a exportação leva só o hash; PIN e senhas nunca entram
+✔ E-P9: 5 ROOM_JOIN errados bloqueiam e avisam o Mestre; papel mestre sem PIN é recusado
+✔ E-P9: a recusa do JOIN é a mesma para nome inexistente e para senha errada
+✔ Mestre ausente: ROOM_PAUSED, intenções recusadas, nenhum cartão se aprova sozinho; RESUMED só após o RESYNC
+ℹ tests 11
+ℹ suites 0
+ℹ pass 10
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+
+✖ failing tests:
+
+test at ..\tmp\b1-A.test.mjs:323:1
+✖ canários: a Vida baixa de um intermédio (51, depois «voltar») não chega à outra jogadora nem ao espectador
+  AssertionError [ERR_ASSERTION]: o «voltar» repôs a aliada no 2403
+  
+  51 !== 2403
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 51,
+    expected: 2403,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+
+## Variante B — duas voltas inteiras no fim do guião de sempre, sem «voltar»
+# node --test: código de saída 1
+
+✔ canários: nada do Mestre chega a nenhum papel da Party (jogadoras e espectador)
+✖ canários: nada do Mestre chega à Party com o guião duas voltas depois das escolhas da caixa, sem «voltar»
+✔ canários: "outra jogadora" e espectador não veem a ficha, a Vida nem o dano alheio
+✔ canários: a Vida actual (variável) de uma jogadora ferida não chega à outra jogadora nem ao espectador
+✖ canários: a Vida baixa de um intermédio (51, depois «voltar») não chega à outra jogadora nem ao espectador
+✔ lista de campos permitidos: todo o ROOM_EVENT da Party só tem campos da lista do seu tipo
+✔ E-P7: id oculto e id inexistente dão a MESMA recusa, byte a byte (tirando o intentId)
+✔ seatToken: cada um só vê o seu; a exportação leva só o hash; PIN e senhas nunca entram
+✔ E-P9: 5 ROOM_JOIN errados bloqueiam e avisam o Mestre; papel mestre sem PIN é recusado
+✔ E-P9: a recusa do JOIN é a mesma para nome inexistente e para senha errada
+✔ Mestre ausente: ROOM_PAUSED, intenções recusadas, nenhum cartão se aprova sozinho; RESUMED só após o RESYNC
+ℹ tests 11
+ℹ suites 0
+ℹ pass 9
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+
+✖ failing tests:
+
+test at ..\tmp\b1-B.test.mjs:223:1
+✖ canários: nada do Mestre chega à Party com o guião duas voltas depois das escolhas da caixa, sem «voltar»
+  AssertionError [ERR_ASSERTION]: M51b: o lobo levou a aliada a 51
+  
+  -4653 !== 51
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: -4653,
+    expected: 51,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ..\tmp\b1-B.test.mjs:324:1
+✖ canários: a Vida baixa de um intermédio (51, depois «voltar») não chega à outra jogadora nem ao espectador
+  AssertionError [ERR_ASSERTION]: M51b: o lobo levou a aliada a 51
+  
+  -4653 !== 51
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: -4653,
+    expected: 51,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+

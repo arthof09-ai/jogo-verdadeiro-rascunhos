@@ -7,7 +7,8 @@ import {
   montarMesa, exigirAplicada, procurarCanarios, recibo, varrer, PIN, SENHAS,
   SEMENTE, NUMEROS_SO_MESTRE, TEXTOS_SO_MESTRE, CHAVES_SO_MESTRE, NUMEROS_HEROINA, NUMEROS_ALIADA, TEXTOS_HEROINA,
 } from './ajudantes.mjs';
-import { CAMPOS_PERMITIDOS } from '../nucleo/projecao.js';
+import { CAMPOS_PERMITIDOS, projetarEvento } from '../nucleo/projecao.js';
+import { ordemDinamicaVazia, registarEvento } from '../nucleo/ordem-dinamica.js';
 
 // Ordem CAIXA-TESTES-CORRECOES-3 (B7): as listas vêm de ajudantes.mjs (uma só fonte com caixa-hud-jogadora.test.mjs).
 // Valores que NENHUM papel da Party pode ver.
@@ -20,7 +21,7 @@ const TEXTOS_MESTRE = [
 const CHAVES_MESTRE = CHAVES_SO_MESTRE;
 // Da heroína: só ela os vê. Da aliada: só ela. (NUMEROS_HEROINA / NUMEROS_ALIADA, de ajudantes.mjs.)
 
-function guiao({ m51b = false } = {}) {
+function guiao({ m51b = false, voltar = true } = {}) {
   const m = montarMesa({ comAliada: true, comEspectador: true, rngSemente: () => SEMENTE });
   m.entrarTodos();
   // Lobby com o bandido disponível, mas NUNCA colocado (CANARIO-FANTASMA).
@@ -76,6 +77,8 @@ function guiao({ m51b = false } = {}) {
   // num RESYNC e o Mestre volta ao fim do guião (2403). Só no teste da Vida baixa; o guião de sempre não muda.
   // O caminho: uma volta inteira (o orc acerta-lhe: 2403 → 1227); na volta seguinte o lobo, já ao pé, acerta-lhe
   // primeiro (1227 → 51) — o RESYNC é logo aí, antes de o orc jogar (o orc levava-a a −1125).
+  // Ordem CAIXA-TESTES-GUIAO-FRAGIL (B3): `voltar: false` deixa o guião acabar nas duas voltas, SEM «voltar» — a ordem
+  // dinâmica da Party já não é a das escolhas da caixa (na 2.ª volta o lobo joga antes do orc e a ordem troca-os).
   if (m51b) {
     const vidaAliada = () => m.sala.depuracao.estado().figuras[m.clientes.aliada.figuraId].vidaActual;
     const fimDoGuiao = m.sala.depuracao.journalSeq();
@@ -83,9 +86,49 @@ function guiao({ m51b = false } = {}) {
     voltaInteira(m, () => vidaAliada() !== 1227);
     assert.equal(vidaAliada(), 51, 'M51b: o lobo levou a aliada a 51');
     for (const k of ['heroina', 'aliada', 'espectador']) m.enviar(k, { type: 'ROOM_RESYNC' });
-    exigirAplicada(m.mestre('MASTER_SUPERVISOR', { op: 'voltar', ateSeq: fimDoGuiao }), 'voltar ao fim do guião');
+    if (voltar) exigirAplicada(m.mestre('MASTER_SUPERVISOR', { op: 'voltar', ateSeq: fimDoGuiao }), 'voltar ao fim do guião');
   }
   return m;
+}
+
+// Ordem CAIXA-TESTES-GUIAO-FRAGIL (B2): a ordem dinâmica da Party que a SALA registou num instante do journal. É a mesma
+// regra do servidor (sala.js finalizar): cada evento, projectado como o vê o espectador, passa por registarEvento; o
+// «Recomeçar» limpa (registarEvento); o «voltar» (`revertido`, soMestre.ateSeq) repõe a ordem do ponto a que se volta
+// (o journal nunca apaga história: reconstrói-se esse ponto). Uma batalha nova (rodada de volta a 1 sem `recomeco` nem
+// `revertido`) não é modelada: falha ALTA, não calada — muda-se esta função, nunca se volta à ordem do fim.
+function ordemPartyRegistada(m, ateSeq) {
+  const eventos = m.sala.depuracao.eventos();
+  const reconstruir = (ate) => {
+    let od = ordemDinamicaVazia();
+    let rodada = 0;
+    for (const e of eventos) {
+      if (e.journalSeq > ate) break;
+      if (e.tipo === 'revertido') {
+        assert.ok(Number.isInteger(e.soMestre?.ateSeq) && e.soMestre.ateSeq < e.journalSeq, 'o `revertido` traz o ateSeq');
+        ({ od, rodada } = reconstruir(e.soMestre.ateSeq));
+        continue;
+      }
+      if (e.tipo === 'recomeco') rodada = 0;
+      if (e.tipo === 'turno') {
+        assert.ok(e.dados.rodada >= rodada, `journal ${e.journalSeq}: batalha nova sem recomeço — a reconstrução da ordem não a modela`);
+        rodada = e.dados.rodada;
+      }
+      const visto = projetarEvento(e, { papel: 'espectador', figuraId: null });
+      if (visto !== null) registarEvento(od, { tipo: e.tipo, dados: visto });
+    }
+    return { od, rodada };
+  };
+  return reconstruir(ateSeq).od;
+}
+
+// O instante do journal em que um snapshot foi feito: o último evento com ts ≤ o do snapshot. O relógio da mesa anda a
+// cada transacção (ajudantes.mjs relogio) e o escolherCaixa não emite evento — o snapshot dele é o estado nesse ponto.
+// (O RESYNC com lastSeq reenvia o snapshot GRAVADO, com o mesmo ts: dá o mesmo instante.)
+function journalSeqDoSnapshot(m, s) {
+  let seq = 0;
+  for (const e of m.sala.depuracao.eventos()) if (e.ts <= s.ts) seq = Math.max(seq, e.journalSeq);
+  assert.ok(seq > 0, 'o snapshot tem um instante no journal');
+  return seq;
 }
 
 // Uma volta da ordem: as duas jogadoras encerram e o Mestre aprova as propostas do lobo (semi) até a vez passar; o orc
@@ -135,8 +178,7 @@ function historicoVida(m, k, { proprias = true } = {}) {
   return [...v].filter((x) => x !== 0).sort((a, b) => a - b);
 }
 
-test('canários: nada do Mestre chega a nenhum papel da Party (jogadoras e espectador)', () => {
-  const m = guiao();
+function conferirCanariosDoMestre(m) {
   for (const k of ['heroina', 'aliada', 'espectador']) {
     const achados = procurarCanarios(m.clientes[k].msgs, { numeros: NUMEROS_MESTRE, textos: TEXTOS_MESTRE, chaves: CHAVES_MESTRE });
     assert.deepEqual(achados, [], `vazamento para ${k}: ${JSON.stringify(achados.slice(0, 5))}`);
@@ -148,11 +190,18 @@ test('canários: nada do Mestre chega a nenhum papel da Party (jogadoras e espec
     assert.ok(caixas.some((c) => c.ligada === true && c.ordemPor === 'iniciativa'), k + ': snapshot da caixa em iniciativa');
     assert.ok(caixas.some((c) => c.ligada === false), k + ': snapshot da caixa desligada');
     assert.ok(caixas.some((c) => c.ordemDinamica.ordem.length > 0), k + ': a caixa varrida traz a ordem dinâmica da Party');
-    // B2 (CAIXA-TESTES-CORRECOES-2): o VALOR da ordem nos snapshots do escolherCaixa (os únicos em `iniciativa`) é o da
-    // ordemDinamicaParty do servidor (nada mexe nela depois das escolhas), com 2+ figuras para uma ordem trocada se ver.
-    const odParty = m.sala.depuracao.estado().ordemDinamicaParty.ordem;
-    assert.ok(odParty.length >= 2, 'a ordem da Party tem 2+ figuras');
-    for (const c of caixas.filter((x) => x.ordemPor === 'iniciativa')) assert.deepEqual(c.ordemDinamica.ordem, odParty, k + ': a ordem no snapshot do escolherCaixa');
+    // B2 (CAIXA-TESTES-CORRECOES-2): o VALOR da ordem nos snapshots do escolherCaixa (os únicos em `iniciativa`), com 2+
+    // figuras para uma ordem trocada se ver. Re-ancorada na CAIXA-TESTES-GUIAO-FRAGIL (B2): compara-se com a ordem que
+    // a sala REGISTOU no instante desse snapshot (ordemPartyRegistada, pelo journal), não com a do fim. Antes valia «nada
+    // mexe nela depois das escolhas» — o guião com duas voltas depois das escolhas e sem «voltar» (a 2.ª volta troca o
+    // lobo e o orc) partia este teste em falso positivo, sem fuga nenhuma.
+    const snapsIniciativa = m.clientes[k].msgs.filter((x) => x.type === 'ROOM_SNAPSHOT' && x.caixa?.ordemPor === 'iniciativa');
+    assert.ok(snapsIniciativa.length >= 1, k + ': snapshots do escolherCaixa em iniciativa');
+    for (const s of snapsIniciativa) {
+      const registada = ordemPartyRegistada(m, journalSeqDoSnapshot(m, s)).ordem;
+      assert.ok(registada.length >= 2, k + ': a ordem da Party registada nesse instante tem 2+ figuras');
+      assert.deepEqual(s.caixa.ordemDinamica.ordem, registada, k + ': a ordem no snapshot do escolherCaixa');
+    }
     // B6 (CAIXA-TESTES-CORRECOES): as chaves exactas da caixa da Party em todos os snapshots — nada a mais, nada a menos.
     for (const c of caixas) {
       assert.deepEqual(Object.keys(c).sort(), ['ligada', 'ordemDinamica', 'ordemPor'], k + ': as chaves da caixa');
@@ -168,6 +217,27 @@ test('canários: nada do Mestre chega a nenhum papel da Party (jogadoras e espec
     'Lobo Teste', 'desferiu o machado', 'tentou desferir o machado', 'deu uma patada', 'tentou dar uma patada']) {
     assert.ok(mestre.includes(t), 'o Mestre vê ' + t);
   }
+  // Sanidade da reconstrução (B2, CAIXA-TESTES-GUIAO-FRAGIL): pelo journal inteiro, ordemPartyRegistada chega à ordem da
+  // Party que a sala tem agora — a função não se desvia da regra do servidor (se se desviar, falha aqui, alto).
+  const { ordem, fechada, ultimo, vezes } = m.sala.depuracao.estado().ordemDinamicaParty;
+  assert.deepEqual(ordemPartyRegistada(m, m.sala.depuracao.journalSeq()), { ordem, fechada, ultimo, vezes }, 'a ordem reconstruída do journal = a da sala');
+}
+
+test('canários: nada do Mestre chega a nenhum papel da Party (jogadoras e espectador)', () => {
+  conferirCanariosDoMestre(guiao());
+});
+
+// Ordem CAIXA-TESTES-GUIAO-FRAGIL (B3): o controlo da fragilidade. O guião avança as duas voltas depois das escolhas da
+// caixa (as da M51b) e acaba SEM «voltar»: a ordem da Party do fim já não é a das escolhas (sanidade do caminho, abaixo).
+// O teste de cima, todo, tem de passar assim — a ordem do snapshot do escolherCaixa vale pelo instante registado.
+test('canários: nada do Mestre chega à Party com o guião duas voltas depois das escolhas da caixa, sem «voltar»', () => {
+  const m = guiao({ m51b: true, voltar: false });
+  assert.ok(!m.sala.depuracao.eventos().some((e) => e.tipo === 'revertido'), 'o guião acabou sem «voltar»');
+  assert.equal(m.sala.depuracao.estado().figuras[m.clientes.aliada.figuraId].vidaActual, 51, 'o guião acabou nas duas voltas (aliada a 51)');
+  const snap = m.clientes.heroina.msgs.find((x) => x.type === 'ROOM_SNAPSHOT' && x.caixa?.ordemPor === 'iniciativa');
+  assert.notDeepEqual(m.sala.depuracao.estado().ordemDinamicaParty.ordem, snap.caixa.ordemDinamica.ordem,
+    'a ordem da Party mudou depois das escolhas (senão o controlo não toca a fragilidade)');
+  conferirCanariosDoMestre(m);
 });
 
 test('canários: "outra jogadora" e espectador não veem a ficha, a Vida nem o dano alheio', () => {
