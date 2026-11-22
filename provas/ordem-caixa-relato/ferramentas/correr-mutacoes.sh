@@ -13,15 +13,20 @@
 # (que é cometido), o harness troca qualquer nome verdadeiro por «‹nome verdadeiro›»: uma mutação que põe o nome no
 # próprio resumo deixava-o lá. Com `SO="id1 id2"`, corre só essas mutações.
 # CAIXA-RELATO-CORRECOES-5: B1 — filtra-se ANTES de cortar. O `cut -c1-400` corria antes do `filtrar` e, no locale C do
-# Git Bash, contava bytes: um nome a cavalo do byte 400 ficava cortado («Lobo de Bancad») e o filtro, que procura o
+# Git Bash, contava bytes: um nome a cavalo do byte 400 ficava cortado (o nome verdadeiro n.º 2 sem a última letra) e o filtro, que procura o
 # nome inteiro, já não o apanhava. Agora cada linha passa inteira pelo `filtrar` e só depois pelo `cortar`, que conta
 # caracteres (não bytes) e não parte um carácter a meio. Os dois são em node: não dependem do locale e o filtro trata o
 # nome como texto literal (sem metacaracteres de sed) e sem distinguir maiúsculas também fora do ASCII. B2 — o título
 # da mutação (o `diz`) e a linha «NÃO APLICOU» também passam pelo filtro, com os nomes verdadeiros das fichas limpas
 # (as cometidas): «Espadachim de Bancada», que nas fichas é o nome público, fica.
 # CAIXA-RELATO-CORRECOES-6: B3 — o `cortar` conta pontos de código (não grafemas) e corta só entre grafemas.
+# CAIXA-RELATO-CORRECOES-7: B5 — a <pasta-tmp> é absolutizada à entrada. O Godot corre com `--path rascunhos/cliente` e
+# lê o `--saida` a partir daí: com um caminho relativo, as saídas iam parar a `rascunhos/cliente/<tmp>/`. Um caminho
+# relativo conta agora a partir da pasta de onde se chamou o script (antes do `cd` para a raiz).
+ORIGEM=$PWD
 cd "$(dirname "$0")/../../.." || exit 9
 G=${1:?godot}; MOTOR=${2:?motor}; T=${3:?tmp}; MODO=${4:?base|base4|novo}; LOG=${5:?registo}
+case "$T" in /*|[A-Za-z]:*) ;; *) T=$ORIGEM/$T; echo "pasta tmp relativa — uso o caminho absoluto $T" >&2 ;; esac
 BASE=${6:-$([ "$MODO" = base4 ] && echo da6683e || echo 6a87b9e)}
 M=provas/ordem-caixa-relato/ferramentas/mutacoes.mjs
 FICH=(provas/ordem-caixa-hud-jogadora/ferramentas/prova_caixa_jogadora.gd provas/ordem-caixa-manequim/ferramentas/prova_caixa_manequim.gd

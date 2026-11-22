@@ -1,9 +1,12 @@
 # Ordem CAIXA-RELATO-CORRECOES-4 — as mutações B1–B3, executadas com correr-mutacoes.sh (PC, Godot 4.7.2 Windows).
-# REGENERADO na Ordem CAIXA-RELATO-CORRECOES-5 (B1/B2), com o harness corrigido: as linhas passam inteiras pelo filtro
-# e só depois são cortadas aos 400 caracteres (não bytes); os títulos das mutações também passam pelo filtro. Os ficheiros
-# das provas são os mesmos da CORRECOES-4 (o «HEAD» nos cabeçalhos das duas partes é a ponta onde se correu).
-# Parte 1 — modo base4: os ficheiros das provas de da6683e (a base da CORRECOES-4).
-# Parte 2 — modo novo: o código da CORRECOES-4 (o que está no ramo).
+# REGENERADO na Ordem CAIXA-RELATO-CORRECOES-7 (B1), com a fonte actual (66da920, a ponta de fable/integracao-50): os
+# títulos das duas mutações do nome verdadeiro dizem agora «o nome verdadeiro n.º 1» (o `diz` do mutacoes.mjs desde a
+# CORRECOES-6), em vez do marcador do filtro. Antes, fora regenerado na CORRECOES-5 (B1/B2): as linhas passam inteiras
+# pelo filtro e só depois são cortadas aos 400 caracteres (não bytes); os títulos também passam pelo filtro.
+# Parte 1 — modo base4: os ficheiros das provas de da6683e (a base da CORRECOES-4) — os mesmos de sempre.
+# Parte 2 — modo novo: os ficheiros das provas de 66da920. O teste_relato_caixa.gd mudou depois da CORRECOES-4 (linha
+# B7: 9a980a0, 28af7b4): nas mutações do teste, as linhas FALHA da varredura de palavras trazem a cláusula nova («nem
+# nada fora das chaves e palavras permitidas»); os resumos «N de M» são os mesmos da regeneração da CORRECOES-5.
 # Nas provas vivas, as linhas FALHA e os resumos vêm do relato.txt da corrida. «relato.txt: N linhas, R resumo(s)»
 # conta-os com wc -l / grep -c. «nomes verdadeiros nas linhas FALHA» conta só os nomes INTEIROS (nome ≠ nomePublico
 # nas fichas) nas linhas FALHA do relato e da consola, antes do filtro — não conta fragmentos nem olha para os
@@ -11,10 +14,10 @@
 # nem em pedaço de 4 ou mais caracteres. Antes de entrar aqui, o harness troca qualquer nome verdadeiro por
 # «‹nome verdadeiro›». Os valores em causa são valores-canário fictícios.
 
-# mutações — modo base4 (ficheiros das provas de da6683e) · 2026-11-22 05:43:39 -0300 · 7ce6df3
+# mutações — modo base4 (ficheiros das provas de da6683e) · 2026-11-22 09:38:15 -0300 · 66da920
 # Godot: 4.7.2.stable.official.ed1daf0bf  ·  motor sha256 a91c021cda11…
 
-== B1-nome-verdadeiro (hud) — CORRECOES-2 B1: `_nome_publico` lê o `nome` (o verdadeiro) — o relato traz «‹nome verdadeiro›»
+== B1-nome-verdadeiro (hud) — CORRECOES-2 B1: `_nome_publico` lê o `nome` (o verdadeiro) — o relato traz o nome verdadeiro n.º 1
 rc=1
 relato.txt: 68 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 34, consola 68
   FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["‹nome verdadeiro› na linha 6", "‹nome verdadeiro› na linha 7", "‹nome verdadeiro› na linha 10", "‹nome verdadeiro› na linha 10"]
@@ -52,7 +55,7 @@ rc=1
   FALHA a linha diz de que snapshot é o velho (seq 9, revisão 31, 7 eventos com os tipos, 3 de actor) e a revisão da actual (35)
 teste do relato da caixa: 29 de 31 verificações passaram.
 
-== N-B2-canario-minusculas-relato (hud) — CORRECOES-3 B2: o relato traz o nome verdadeiro em minúsculas («‹nome verdadeiro›»)
+== N-B2-canario-minusculas-relato (hud) — CORRECOES-3 B2: o relato traz o nome verdadeiro n.º 1 em minúsculas
 rc=1
 relato.txt: 68 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 34, consola 68
   FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["‹nome verdadeiro› na linha 6", "‹nome verdadeiro› na linha 7", "‹nome verdadeiro› na linha 10", "‹nome verdadeiro› na linha 10"]
@@ -90,7 +93,7 @@ teste do relato da caixa: 30 de 31 verificações passaram.
 
 == B5-bias-zero (teste) — CORRECOES-2 B5: `hora_ms()` esquece o fuso (bias → 0)
 rc=1
-  FALHA a hora é a LOCAL do sistema (fuso Hora oficial do Brasil, bias -180 min): 08:44:30 ∈ [05:44:30, 05:44:30] e 08:44:31 ∈ [05:44:31, 05:44:31]
+  FALHA a hora é a LOCAL do sistema (fuso Hora oficial do Brasil, bias -180 min): 12:39:05 ∈ [09:39:05, 09:39:05] e 12:39:05 ∈ [09:39:05, 09:39:05]
   FALHA a hora soma o fuso INJECTADO (não depende do fuso desta máquina): bias −180 → 11:06:40.250 (08:06:40.250), bias +330 → 11:06:40.250 (16:36:40.250)
 teste do relato da caixa: 29 de 31 verificações passaram.
 
@@ -131,10 +134,10 @@ prova da caixa com os manequins: 53 de 53 verificações passaram.
 prova da caixa com os manequins: 53 de 54 verificações passaram.
 
 
-# mutações — modo novo · 2026-11-22 05:45:24 -0300 · 7ce6df3
+# mutações — modo novo · 2026-11-22 09:39:55 -0300 · 66da920
 # Godot: 4.7.2.stable.official.ed1daf0bf  ·  motor sha256 a91c021cda11…
 
-== B1-nome-verdadeiro (hud) — CORRECOES-2 B1: `_nome_publico` lê o `nome` (o verdadeiro) — o relato traz «‹nome verdadeiro›»
+== B1-nome-verdadeiro (hud) — CORRECOES-2 B1: `_nome_publico` lê o `nome` (o verdadeiro) — o relato traz o nome verdadeiro n.º 1
 rc=1
 relato.txt: 68 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
   FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["nome verdadeiro n.º 2 na linha 6", "nome verdadeiro n.º 2 na linha 7", "nome verdadeiro n.º 1 na linha 10", "nome verdadeiro n.º 2 na linha 10"]
@@ -145,25 +148,25 @@ prova da caixa no HUD da jogadora: 39 de 43 verificações passaram.
 
 == B2-fuga-linhas-hora (teste) — CORRECOES-2 B2: uma fuga «nome » só nas linhas de seq 13 (as do caso da hora)
 rc=1
-  FALHA nenhuma linha ganha nomes, vida, alma nem PA ["nome", "nome"]
+  FALHA nenhuma linha ganha nomes, vida, alma nem PA, nem nada fora das chaves e palavras permitidas ["nome", "nome", "palavra(s) fora da lista: 2"]
 teste do relato da caixa: 30 de 31 verificações passaram.
 
 == B3-caixaMestre (teste) — CORRECOES-2 B3: «(caixaMestre)» na origem da linha
 rc=1
-  FALHA nenhuma linha ganha nomes, vida, alma nem PA ["mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre"]
-  FALHA B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria` ["mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre"]
+  FALHA nenhuma linha ganha nomes, vida, alma nem PA, nem nada fora das chaves e palavras permitidas ["mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "palavra(s) fora da lista: 6"]
+  FALHA B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria`, nem nada fora das chaves e palavras permitidas ["mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "mestre", "caixaMestre", "palavra(s) fora da lista: 4"]
 teste do relato da caixa: 29 de 31 verificações passaram.
 
 == B3-master (teste) — CORRECOES-2 B3: «(master)» na origem da linha
 rc=1
-  FALHA nenhuma linha ganha nomes, vida, alma nem PA ["master", "master", "master", "master", "master", "master"]
-  FALHA B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria` ["master", "master", "master", "master"]
+  FALHA nenhuma linha ganha nomes, vida, alma nem PA, nem nada fora das chaves e palavras permitidas ["master", "master", "master", "master", "master", "master", "palavra(s) fora da lista: 6"]
+  FALHA B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria`, nem nada fora das chaves e palavras permitidas ["master", "master", "master", "master", "palavra(s) fora da lista: 4"]
 teste do relato da caixa: 29 de 31 verificações passaram.
 
 == B3-PA (teste) — CORRECOES-2 B3: «(PA 3)» na origem da linha
 rc=1
-  FALHA nenhuma linha ganha nomes, vida, alma nem PA ["pa", "pa", "pa", "pa", "pa", "pa"]
-  FALHA B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria` ["pa", "pa", "pa", "pa"]
+  FALHA nenhuma linha ganha nomes, vida, alma nem PA, nem nada fora das chaves e palavras permitidas ["pa", "pa", "pa", "pa", "pa", "pa", "palavra(s) fora da lista: 6"]
+  FALHA B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria`, nem nada fora das chaves e palavras permitidas ["pa", "pa", "pa", "pa", "palavra(s) fora da lista: 4"]
 teste do relato da caixa: 29 de 31 verificações passaram.
 
 == B6-estado-de-actor (teste) — CORRECOES-2 B6: `anotar_evento` conta o `estado` como de actor
@@ -172,7 +175,7 @@ rc=1
   FALHA a linha diz de que snapshot é o velho (seq 9, revisão 31, 7 eventos com os tipos, 3 de actor) e a revisão da actual (35)
 teste do relato da caixa: 29 de 31 verificações passaram.
 
-== N-B2-canario-minusculas-relato (hud) — CORRECOES-3 B2: o relato traz o nome verdadeiro em minúsculas («‹nome verdadeiro›»)
+== N-B2-canario-minusculas-relato (hud) — CORRECOES-3 B2: o relato traz o nome verdadeiro n.º 1 em minúsculas
 rc=1
 relato.txt: 68 linhas, 1 resumo(s); nomes verdadeiros nas linhas FALHA: relato 0, consola 0
   FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["nome verdadeiro n.º 2 na linha 6", "nome verdadeiro n.º 2 na linha 7", "nome verdadeiro n.º 1 na linha 10", "nome verdadeiro n.º 2 na linha 10"]
@@ -206,7 +209,7 @@ teste do relato da caixa: 30 de 31 verificações passaram.
 
 == B5-bias-zero (teste) — CORRECOES-2 B5: `hora_ms()` esquece o fuso (bias → 0)
 rc=1
-  FALHA a hora é a LOCAL do sistema (fuso Hora oficial do Brasil, bias -180 min): 08:46:15 ∈ [05:46:15, 05:46:15] e 08:46:15 ∈ [05:46:15, 05:46:15]
+  FALHA a hora é a LOCAL do sistema (fuso Hora oficial do Brasil, bias -180 min): 12:40:44 ∈ [09:40:44, 09:40:44] e 12:40:44 ∈ [09:40:44, 09:40:44]
   FALHA a hora soma o fuso INJECTADO (não depende do fuso desta máquina): bias −180 → 11:06:40.250 (08:06:40.250), bias +330 → 11:06:40.250 (16:36:40.250)
 teste do relato da caixa: 29 de 31 verificações passaram.
 

@@ -78,12 +78,20 @@ O conferidor, no critério alargado, dá 0 achados neste ficheiro e na secção 
 | Corrida | Resultado | Ficheiro |
 |---|---|---|
 | Teste do relato | **31/31**, rc=0 | `provas/ordem-caixa-relato/correcoes-6/teste-relato.log` |
-| Prova HUD-JOGADORA | **43/43**, rc=0; 68 linhas varridas = 68 no ficheiro; 0 nomes verdadeiros | `correcoes-6/cliente-hud/relato.txt` |
-| Prova MANEQUIM | **53/53**, rc=0; 78 = 78; 0 nomes verdadeiros | `correcoes-6/cliente-manequim/relato.txt` |
+| Prova HUD-JOGADORA | **43/43**, rc=0; 68 linhas varridas = 68 no ficheiro; 0 nomes verdadeiros **inteiros** (varredura do jogo; o conferidor estrito dá 48, todos artefactos)¹ | `correcoes-6/cliente-hud/relato.txt` |
+| Prova MANEQUIM | **53/53**, rc=0; 78 = 78; 0 nomes verdadeiros **inteiros** (varredura do jogo; o conferidor estrito dá 46, todos artefactos)¹ | `correcoes-6/cliente-manequim/relato.txt` |
 | Conferidor, critério alargado, registo regenerado | **0 achados**, rc=0, 248 linhas | `correcoes-4/mutacoes.log` |
 | Conferidor, critério antigo (`--velho`), registo regenerado | **0 achados**, rc=0 | idem |
 | Mutações de amostra (B4) | `B1-nome-verdadeiro` 39/43 · `N-B2-canario-minusculas-relato` 39/43; conferidor 0 | só em tmp |
 | CI em `acd3c82` | **10/10 jobs verdes** (servidor, cliente, motor-real, foto-mestre, godot-cliente, protocolo, ponta-a-ponta, provas-mapa, validador-glb, **retoma-pc**); sonda de privacidade verde | — |
+
+¹ **Emenda (Ordem CAIXA-RELATO-CORRECOES-7, B2).** Antes, as duas linhas diziam só «0 nomes verdadeiros». Esse 0 é
+o da varredura do próprio jogo (o canário da prova), que procura os nomes verdadeiros **inteiros**. O conferidor
+estrito (`conferir-registo.mjs`, critério alargado), corrido sobre os mesmos ficheiros, dá **48** (HUD), **46**
+(manequim) e **4** (`correcoes-6/teste-relato.log`; 2 no critério antigo). Nenhum é um nome inteiro. São todos
+artefactos: os nomes públicos das duas fichas (que são palavras dos nomes verdadeiros e estão no relato por direito),
+a palavra que dá nome ao cenário dos testes (está no nome da sala e nos nomes públicos por inteiro) e, no teste, uma palavra corrente
+e um fim de palavra seguido da preposição. O relato da CORRECOES-5 dá os mesmos 48/46/4. Medido na CORRECOES-7.
 
 O lançador é o de sempre: `correr-prova-caixa-relato.sh … "$PWD/provas/ordem-caixa-relato/correcoes-6"`. Não copia
 o PIN nem as capturas para a pasta de saída.
@@ -105,8 +113,18 @@ do commit deste ficheiro. As duas vezes deu «0 novos, 0 tirados», e o `git sta
    CORRECOES-2, linha 96) e o §3.2 do ESTADO-FINAL da CORRECOES-4 citam-nos. São valores-canário fictícios, e a ordem
    nomeou só o `mutacoes.mjs`. Não lhes toquei.
 4. **Cuidado ao correr as mutações:** a pasta tmp tem de ser um caminho **absoluto**. O `--saida` da prova é lido a
-   partir de `rascunhos/cliente`; com um caminho relativo, as saídas vão parar a `rascunhos/tmp/`. Aconteceu-me numa
+   partir de `rascunhos/cliente`; com um caminho relativo, as saídas vão parar a ~~`rascunhos/tmp/`~~
+   **`rascunhos/cliente/<pasta-tmp>/`**². Aconteceu-me numa
    primeira tentativa. Apaguei essa pasta (não estava no git) e corri de novo. Ficou escrito no README.
+
+   ² **Emenda (Ordem CAIXA-RELATO-CORRECOES-7, B6).** O Godot corre com `--path rascunhos/cliente` e muda a pasta de
+   trabalho para lá (medido na CORRECOES-7 com uma sonda: um ficheiro aberto com o caminho relativo `pasta-rel/x.txt`
+   foi parar a `<projecto>/pasta-rel/x.txt`). Com uma `<pasta-tmp>` relativa `T`, o script (bash) escreve em
+   `<raiz do repo>/T` (a guarda, os ficheiros limpos, o info e o log do servidor, a consola das mutações), e o
+   Godot escreve o `--saida` (o `relato.txt` e as capturas) em `rascunhos/cliente/T/saida-<corrida>/`. O script lê
+   depois o relato em `<raiz>/T/saida-<corrida>/`, que não existe. «`rascunhos/tmp/`» só acontece com `T=../tmp` (a
+   pasta tmp da sede, vista a partir da raiz do clone): `rascunhos/cliente/../tmp`. A regra geral é
+   `rascunhos/cliente/T`. Desde a CORRECOES-7 (B5), os dois scripts absolutizam a pasta tmp à entrada.
 5. **Fronteira:** mexi só em `provas/ordem-caixa-relato/` (`conferir-registo.mjs`, `correr-mutacoes.sh`,
    `mutacoes.mjs`, README, `correcoes-6/` nova), na linha 55 do ESTADO-FINAL da CORRECOES-5 e neste ficheiro. Não mexi
    no código do jogo, no HUD, nas cores, no workflow nem em `rascunhos/`. Não mexi no `ORDEM.md` da sede.

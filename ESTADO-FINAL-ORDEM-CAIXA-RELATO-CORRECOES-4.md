@@ -103,7 +103,7 @@ listas a juntar ao commit. O retoma-pc passou.
    `correr-mutacoes.sh`, `correcoes-4/`) e neste ficheiro. Não mexi no código do jogo, no HUD, nas cores, no workflow
    nem em `rascunhos/`.
 2. **O registo de mutações ainda tem nomes-canário de bancada, em 6 títulos** (3 por modo). São as descrições
-   («diz») de `B1-nome-verdadeiro` e `N-B2-canario-minusculas-relato` («Bruto de Bancada», «bruto de bancada») e de
+   («diz») de `B1-nome-verdadeiro` e `N-B2-canario-minusculas-relato` (o nome verdadeiro n.º 1, inteiro e em minúsculas) e de
    `N-B3-heroina-nome-publico-hud` («Espadachim de Bancada»). Vêm de
    `mutacoes.mjs`, que já está cometido com esse texto. Não os filtrei: no N-B3, «Espadachim de Bancada» só é nome
    verdadeiro dentro da mutação, e filtrá-lo estragava a descrição. São valores-canário de bancada, fictícios. ~~As

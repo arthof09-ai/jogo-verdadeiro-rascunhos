@@ -8,8 +8,9 @@
 // antes de procurar. A saída NÃO repete o texto achado: diz a linha, o n.º do nome e o comprimento do pedaço.
 // Sai com 0 se não achar nada, 1 se achar.
 // CAIXA-RELATO-CORRECOES-6 (B2): o critério literal da ordem — também os pedaços A CAVALO DE PALAVRAS. Antes só se
-// geravam pedaços dentro de cada palavra do nome; um fragmento como «o de B» (o fim de uma palavra, o espaço, o início
-// da seguinte) não tem 4 letras seguidas numa só palavra e escapava. Agora gera-se todo o pedaço contíguo do nome
+// geravam pedaços dentro de cada palavra do nome; um fragmento como «x de Y» (num nome «Xxxx de Yyyyy»: o fim de uma
+// palavra, o espaço, a palavra do meio, o início da seguinte) não tem 4 letras seguidas numa só palavra e escapava.
+// (CAIXA-RELATO-CORRECOES-7, B3: o exemplo usa letras de marcação, não um pedaço real dos nomes das fichas.) Agora gera-se todo o pedaço contíguo do nome
 // inteiro (espaços incluídos, como estão no nome) que tenha 4 ou mais letras; os de dentro de uma palavra continuam lá.
 // `--velho` usa o critério antigo (só dentro de cada palavra), para comparar.
 import { readFileSync } from 'node:fs';

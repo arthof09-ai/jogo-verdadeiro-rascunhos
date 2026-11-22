@@ -9,10 +9,17 @@
 # as corridas das correcções foram para provas/ordem-caixa-relato/correcoes/, sem reescrever as da ordem anterior.
 # Ordem CAIXA-RELATO-B7-CORRECOES-4 (B3): `servidor-info.json` e `servidor.log` deixam de ir para a pasta de saída (o
 # PIN); as das ordens anteriores ficam como estavam (pré-existentes, servidor efémero), não se repetem.
+# Ordem CAIXA-RELATO-CORRECOES-7 (B5): a <pasta-tmp> e a <pasta-saída> são absolutizadas à entrada. O Godot corre com
+# `--path rascunhos/cliente` e lê o `--saida` a partir daí: com um caminho relativo, as saídas iam parar a
+# `rascunhos/cliente/<pasta>/`. Um caminho relativo conta agora a partir da pasta de onde se chamou o script.
+ORIGEM=$PWD
 cd "$(dirname "$0")/../../.." || exit 9
 G=${1:?godot}; MOTOR=${2:?motor}; T=${3:?tmp}
 P=$PWD/provas/ordem-caixa-relato
 O=${4:-$P}
+absoluto() { case "$1" in /*|[A-Za-z]:*) printf '%s' "$1" ;; *) printf '%s/%s' "$ORIGEM" "$1" ;; esac; }
+[ "$(absoluto "$T")" != "$T" ] && { T=$(absoluto "$T"); echo "pasta tmp relativa — uso o caminho absoluto $T" >&2; }
+[ "$(absoluto "$O")" != "$O" ] && { O=$(absoluto "$O"); echo "pasta de saída relativa — uso o caminho absoluto $O" >&2; }
 mkdir -p "$T" "$O"
 rc_total=0
 

@@ -93,8 +93,8 @@ As corridas estão em **`correcoes-2/`** (as de `correcoes/` e as de cima ficam 
 
 - **B1 — os nomes do relato são os públicos, e o canário varre o relato.** `_nome()` e a linha «bancada: …» das duas
   provas vivas (`prova_caixa_jogadora.gd`, `prova_caixa_manequim.gd`) liam o `nome` da vista do Mestre, e por isso os
-  relatos cometidos traziam «Bruto de Bancada» e «Lobo de Bancada», os valores-canário. Agora lêem o `nomePublico`
-  («Bruto», «Lobo»), ou o id quando não há nome público. Além disso, o canário estende-se ao relato: em cada passagem
+  relatos cometidos traziam os nomes verdadeiros n.º 1 e n.º 2 (os valores-canário). Agora lêem o `nomePublico`
+  (as primeiras palavras deles), ou o id quando não há nome público. Além disso, o canário estende-se ao relato: em cada passagem
   (§1, §4, §5) confere que nenhuma linha escrita até ali traz um nome verdadeiro (os que diferem do público), e em
   `_fim()` confere o relato inteiro. Com a mutação «voltar a ler `nome`», a prova HUD dá 39/43 (as 4 verificações
   novas falham).
@@ -363,3 +363,39 @@ Correr de novo: `bash provas/ordem-caixa-relato/ferramentas/correr-prova-caixa-r
 <pasta-tmp> "$PWD/provas/ordem-caixa-relato/correcoes-6"`; `node provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs
 [--velho] provas/ordem-caixa-relato/correcoes-4/mutacoes.log`. Para as mutações, a pasta tmp tem de ser um **caminho
 absoluto**: o `--saida` da prova é lido a partir de `rascunhos/cliente`.
+
+---
+
+# Correcções B1–B6 da sentença da CAIXA-RELATO-CORRECOES-6 (Ordem CAIXA-RELATO-CORRECOES-7 · 22/11/2026, Claude conta 1, PC)
+
+Só as ferramentas desta pasta, o registo regenerado, as corridas em **`correcoes-7/`**, este README e emendas aos
+ESTADO-FINAL da CORRECOES-4 e da CORRECOES-6 (raiz). Nada do código do jogo, do HUD nem das cores.
+
+- **B1** — o registo `correcoes-4/mutacoes.log` foi **regenerado com a fonte actual** (36 corridas: 18 `base4` + 18
+  `novo`, em `66da920`). Os 4 títulos das duas mutações do nome verdadeiro dizem agora «o nome verdadeiro n.º 1»,
+  como o `mutacoes.mjs`. Os resumos «N de M» são os mesmos da regeneração anterior. A única outra diferença é na
+  parte `novo`: nas mutações do teste, as linhas FALHA da varredura de palavras trazem a cláusula que a linha B7 juntou
+  ao `teste_relato_caixa.gd` depois da CORRECOES-4. O conferidor dá **0** nos dois critérios (251 linhas).
+- **B2** — os relatos das provas vivas têm **0 nomes verdadeiros inteiros** (varredura do jogo). O conferidor
+  estrito dá 48 (HUD), 46 (manequim) e 4 (`teste-relato.log`), todos artefactos: os nomes públicos das fichas, a
+  palavra que dá nome ao cenário dos testes, uma palavra corrente. São os mesmos números na CORRECOES-5, na CORRECOES-6 e aqui. O
+  ESTADO-FINAL da CORRECOES-6 (§2) foi emendado com esta qualificação.
+- **B3** — o exemplo no comentário do `conferir-registo.mjs` usa letras de marcação («x de Y»), não um pedaço real.
+- **B4** — tirei os nomes inteiros que ainda estavam neste README (a secção da CORRECOES-2), no §3.2 do ESTADO-FINAL
+  da CORRECOES-4 e no comentário do `correr-mutacoes.sh` (o fragmento da CORRECOES-5). Dizem agora o n.º do nome.
+- **B5** — o `correr-mutacoes.sh` e o `correr-prova-caixa-relato.sh` **absolutizam a pasta tmp à entrada**. O
+  segundo absolutiza também a pasta de saída. Um caminho relativo conta a partir da pasta de onde se chamou o script,
+  e o script avisa no stderr. Antes, o Godot (que corre com `--path rascunhos/cliente` e muda para lá a pasta de
+  trabalho) escrevia o `--saida` em `rascunhos/cliente/<pasta>/`, e o script lia o relato em `<raiz>/<pasta>/`.
+- **B6** — o ESTADO-FINAL da CORRECOES-6, §3 ponto 4, foi emendado: a regra é `rascunhos/cliente/<pasta-tmp>/`;
+  `rascunhos/tmp/` era o caso particular de `<pasta-tmp>` = `../tmp`.
+
+Números (Godot 4.7.2 Windows, motor VLAB real `a91c021c…`, semente 7): teste `correcoes-7/teste-relato.log` **31/31**;
+prova HUD-JOGADORA `correcoes-7/cliente-hud/relato.txt` **43/43**, 68 linhas = 68 no ficheiro; prova MANEQUIM
+`correcoes-7/cliente-manequim/relato.txt` **53/53**, 78 = 78. Nas duas provas, 0 nomes verdadeiros inteiros
+(varredura do jogo); o conferidor estrito dá 48/46/4, todos artefactos.
+
+Correr de novo: `bash provas/ordem-caixa-relato/ferramentas/correr-prova-caixa-relato.sh <godot.exe> <vlab-completo.js>
+<pasta-tmp> provas/ordem-caixa-relato/correcoes-7`; `bash provas/ordem-caixa-relato/ferramentas/correr-mutacoes.sh
+<godot.exe> <vlab-completo.js> <pasta-tmp> <base4|novo> <registo.log>`; `node
+provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs [--velho] provas/ordem-caixa-relato/correcoes-4/mutacoes.log`.
