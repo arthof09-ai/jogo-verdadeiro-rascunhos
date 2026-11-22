@@ -80,16 +80,17 @@ inteiros). Reescrevi 3 linhas, sem mudar nenhum número, e ficou 0 / 0.
 - **Commits, directamente na linha `fable/integracao-50`:**
   - `762088f`: o teste (B1, com a opção `--estrita`);
   - `48855ed`: a pasta de provas (B2/B3);
-  - `7d1e007`: as listas da retoma e este ESTADO-FINAL.
+  - `7d1e007`: as listas da retoma e este ESTADO-FINAL;
+  - `411088e`: só o §5 deste ficheiro.
   Antes de publicar: `fetch` e `rebase` sobre a ponta. A ponta continuava em `4f3b5d8`: nada a rebasear, nenhum
   conflito. Depois do 3.º commit, o `actualizar-listas.py` voltou a dar 0 novos, 0 tirados, sem mudanças.
-- **Publicado:** push `4f3b5d8..7d1e007 -> fable/integracao-50`. `git ls-remote`: `fable/integracao-50` =
-  `7d1e007a57f485c919b95a74839b8741220dcdfd`.
+- **Publicado:** push `4f3b5d8..411088e -> fable/integracao-50`. `git ls-remote`: `fable/integracao-50` =
+  `411088ed7edefdb91e9e980fe2abe2ff09c9d850`.
 
-## 5. CI da ponta: VERIFICADO
-- No `7d1e007`: **Testes dos rascunhos success** (run 45072371443; protocolo, retoma-pc, motor-real, cliente,
-  godot-cliente, ponta-a-ponta, provas-mapa, servidor, validador-glb e foto-mestre, todos success) e **Sonda de
-  privacidade success** (run 45072371545).
+## 5. CI verificado no `411088e`
+- No `411088e`: **Testes dos rascunhos success** (run 45072712870) e **Sonda de privacidade success**
+  (run 45072712836) — 11/11 check-runs.
+- No `7d1e007` também estava verde: Testes run 45072371443 e Sonda run 45072371545.
 - No job `cliente`, o `caixa_jogadora.gd` dá **36 de 36**. As 3 linhas do tecto passam com os mesmos números do PC
   (539,0 / 576,0 / 350,5 u).
-- Este parágrafo segue num commit só deste ficheiro, por cima do `7d1e007`.
+- §5 actualizado no commit documental da conferência (F1) para citar o CI da ponta `411088e`.
