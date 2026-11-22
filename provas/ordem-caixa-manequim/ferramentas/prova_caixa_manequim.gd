@@ -52,6 +52,9 @@ var _recebido: Array = []  # tudo o que chegou ao aparelho da jogadora (JSON)
 var _snap := {}
 var RelatoCaixa  # provas/ordem-caixa-relato/ferramentas/relato_caixa.gd
 var _caixa_relatada := {}  # a última linha da caixa: {desactualizado, snapshot, actual}
+## CAIXA-RELATO-CORRECOES-2 (B1): os nomes verdadeiros (os que diferem do nome público) que o canário procura também
+## no RELATO — juntados a cada passagem do canário, para a varredura final do relato inteiro em _fim().
+var _canarios_nomes: Array = []
 var _gltf_doc: GLTFDocument
 var _gltf_estado: GLTFState
 
@@ -146,11 +149,18 @@ func _caixa_b(ligada: bool, modo: String) -> bool:
 	return await _comando_b("MASTER_SUPERVISOR", {"op": "caixa", "caixa": {"ligada": ligada, "modo": modo}})
 
 
+## CAIXA-RELATO-CORRECOES-2 (B1): o nome que vai para o RELATO é o `nomePublico` (o que a Party vê), nunca o `nome`
+## verdadeiro da vista do Mestre — o relato é cometido e não pode trazer o valor-canário. Sem nome público: o id.
 func _nome(v: Dictionary, id: String) -> String:
 	for f in v.get("mestre", {}).get("figuras", []):
 		if str(f.get("id", "")) == id:
-			return str(f.get("nome", id))
+			return _nome_publico(f, id)
 	return id
+
+
+func _nome_publico(f: Dictionary, id: String) -> String:
+	var np = f.get("nomePublico")
+	return str(np) if np is String and np != "" else id
 
 
 ## Joga UMA vez da figura que está na vez (mover pela IA de bancada e encerrar). Devolve o id de quem jogou ("" = não deu).
@@ -178,7 +188,7 @@ func _jogar_vez() -> String:
 		else:
 			id = lugar.intencao(passo)
 		await _esperar(func(): return lugar.respostas.has(id), 10.0)
-		_linha("  bancada: %s → %s (%s)" % [str(quem.get("nome", vez_id)), JSON.stringify(passo), str(lugar.respostas.get(id, {}).get("estado", lugar.respostas.get(id, {}).get("motivo", "?")))])
+		_linha("  bancada: %s → %s (%s)" % [_nome_publico(quem, vez_id), JSON.stringify(passo), str(lugar.respostas.get(id, {}).get("estado", lugar.respostas.get(id, {}).get("motivo", "?")))])
 		if passo.get("tipo") == "encerrar":
 			break
 		await _vista_b()
@@ -421,6 +431,28 @@ func _privacidade(rotulo: String) -> void:
 			if str(t).contains(k):
 				achados.append("%s em «%s»" % [k, t])
 	_ok(achados.is_empty(), rotulo + ": nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa %s" % [achados])
+	# CAIXA-RELATO-CORRECOES-2 (B1): o canário estende-se ao RELATO (o que fica cometido): nenhum nome verdadeiro em
+	# nenhuma linha até aqui. Só os nomes — vida e PA são números pequenos que o relato tem por outras razões
+	# (coordenadas, seq, revisões); esses ficam para a varredura dos textos da caixa, acima.
+	var nomes: Array = []
+	for f in v.get("mestre", {}).get("figuras", []):
+		if str(f.get("nome", "")) != str(f.get("nomePublico", "")) and str(f.get("nome", "")) != "":
+			nomes.append(str(f.get("nome")))
+			if not _canarios_nomes.has(str(f.get("nome"))):
+				_canarios_nomes.append(str(f.get("nome")))
+	var no_relato := _nomes_no_relato(nomes)
+	_ok(not nomes.is_empty() and no_relato.is_empty(),
+		rotulo + ": nenhum nome verdadeiro no relato (%d linhas; canários: %d nome(s) que diferem do público) %s" % [_relato.size(), nomes.size(), no_relato])
+
+
+## As linhas do relato que trazem algum dos nomes dados (o texto da própria verificação ainda não está lá).
+func _nomes_no_relato(nomes: Array) -> Array:
+	var achados: Array = []
+	for i in _relato.size():
+		for k in nomes:
+			if _relato[i].contains(k):
+				achados.append("%s na linha %d" % [k, i + 1])
+	return achados
 
 
 func _correr() -> void:
@@ -549,6 +581,10 @@ func _correr() -> void:
 
 
 func _fim() -> void:
+	# CAIXA-RELATO-CORRECOES-2 (B1): a varredura final do relato INTEIRO (incluindo o que se escreveu depois do §5).
+	if not _canarios_nomes.is_empty():
+		var no_relato := _nomes_no_relato(_canarios_nomes)
+		_ok(no_relato.is_empty(), "fim: o relato inteiro (%d linhas) não traz nenhum dos %d nome(s) verdadeiro(s) %s" % [_relato.size(), _canarios_nomes.size(), no_relato])
 	_linha("")
 	_linha("prova da caixa com os manequins: %d de %d verificações passaram." % [_total - _falhas, _total])
 	for l in _herois.values():

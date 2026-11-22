@@ -6,6 +6,13 @@ extends SceneTree
 ## Ordem CAIXA-RELATO-CORRECOES: o contador do ajudante (novo_snap/anotar_evento — o mesmo que as provas usam) com
 ## contagens EXACTAS e os tipos; o caso vivo de um `encerrar` (só um `turno`) que não muda a caixa (B2); a hora com
 ## milissegundos (B3); a privacidade varre todas as linhas, incluindo as «JSON actual» (B6).
+## Ordem CAIXA-RELATO-CORRECOES-2 (conferência da CAIXA-RELATO-CORRECOES):
+##  - B2: as 2 linhas do caso da hora também entram na varredura de privacidade — 6 linhas, 5 «JSON actual».
+##  - B3: a lista das proibidas ganha "master", "caixaMestre" e "pa".
+##  - B5: os dois snapshots do caso da hora ficam a 20 ms (não 5) e a hora confere-se contra a hora LOCAL do sistema
+##    (um `hora_ms()` que esquecesse o fuso — `bias` a zero — dava a hora UTC e passava; agora não passa fora de UTC).
+##  - B6: o §4 leva um evento `estado` (como o do caso vivo: o ataque produz-o). Traz `figuraId` mas não é de actor —
+##    contá-lo como de actor muda a contagem e adianta o modelo.
 ##
 ## Correr (na raiz do repo):
 ##   godot --headless --path rascunhos/cliente -s "$PWD/provas/ordem-caixa-relato/ferramentas/teste_relato_caixa.gd"
@@ -59,13 +66,28 @@ func _init() -> void:
 	_ok(l.contains(JSON.stringify(snap_caixa)), "acabado de chegar: a linha traz o JSON do snapshot tal como chegou")
 
 	# --- B3: a hora leva milissegundos — dois snapshots aplicados no mesmo segundo distinguem-se.
+	# B5: a hora local do sistema (só HH:MM:SS) antes e depois de cada leitura — a do ajudante tem de cair entre elas.
+	var antes1 := Time.get_time_string_from_system()
 	var s1: Dictionary = R.novo_snap(13, 10)
-	OS.delay_msec(5)
+	var depois1 := Time.get_time_string_from_system()
+	OS.delay_msec(20)
+	var antes2 := Time.get_time_string_from_system()
 	var s2: Dictionary = R.novo_snap(13, 10)
+	var depois2 := Time.get_time_string_from_system()
 	var re := RegEx.create_from_string("^\\d\\d:\\d\\d:\\d\\d\\.\\d\\d\\d$")
 	_ok(re.search(str(s1["hora"])) != null and re.search(str(s2["hora"])) != null, "a hora é HH:MM:SS.mmm (%s)" % s1["hora"])
-	_ok(str(s1["hora"]) != str(s2["hora"]) and R.linha("x", snap_caixa, s1, act) != R.linha("x", snap_caixa, s2, act),
-		"dois snapshots com o mesmo seq e revisão, a 5 ms um do outro, dão linhas diferentes (%s ≠ %s)" % [s1["hora"], s2["hora"]])
+	var h1 := str(s1["hora"]).substr(0, 8)
+	var h2 := str(s2["hora"]).substr(0, 8)
+	var fuso := Time.get_time_zone_from_system()
+	_ok(h1 >= antes1 and h1 <= depois1 and h2 >= antes2 and h2 <= depois2,
+		"a hora é a LOCAL do sistema (fuso %s, bias %s min): %s ∈ [%s, %s] e %s ∈ [%s, %s]" % [
+			fuso.get("name", "?"), fuso.get("bias", "?"), h1, antes1, depois1, h2, antes2, depois2])
+	var lh1: String = R.linha("x", snap_caixa, s1, act)
+	var lh2: String = R.linha("x", snap_caixa, s2, act)
+	linhas.append(lh1)  # B2: as duas linhas do caso da hora também passam pela varredura de privacidade
+	linhas.append(lh2)
+	_ok(str(s1["hora"]) != str(s2["hora"]) and lh1 != lh2,
+		"dois snapshots com o mesmo seq e revisão, a 20 ms um do outro, dão linhas diferentes (%s ≠ %s)" % [s1["hora"], s2["hora"]])
 
 	# --- B2: o caso vivo exacto — depois do snapshot, a figura na vez ENCERRA. O servidor (sala.js `encerrar` →
 	# avancarVez) só emite um `turno`; sem actor, o modelo não se mexe: a caixa continua a do snapshot.
@@ -98,13 +120,15 @@ func _init() -> void:
 		"um evento de actor que não muda a caixa: o JSON continua o actual (e diz que houve 1 evento, de actor)")
 
 	# --- §4: depois do snapshot a bancada joga Bruto e depois Arqueira (cada vez: a acção e o `encerrar` → `turno`);
-	# os eventos de actor adiantam o modelo (a volta fecha). Contagem exacta: 6 eventos, 3 de actor.
+	# os eventos de actor adiantam o modelo (a volta fecha). B6: o ataque produz também um `estado` (como no caso vivo),
+	# que traz o `figuraId` do alvo mas NÃO é de actor. Contagem exacta: 7 eventos, 3 de actor.
 	var eventos := [
 		{"tipo": "movimento", "dados": {"figuraId": bruto}},
 		{"tipo": "turno", "dados": {"figuraId": arq, "rodada": 2}},
 		{"tipo": "movimento", "dados": {"figuraId": arq}},
 		{"tipo": "ataque", "dados": {"atacanteId": arq, "alvoId": lobo}},
 		{"tipo": "dano", "dados": {"alvoId": lobo}},
+		{"tipo": "estado", "dados": {"figuraId": lobo}},
 		{"tipo": "turno", "dados": {"figuraId": lobo, "rodada": 2}},
 	]
 	for e in eventos:
@@ -117,8 +141,9 @@ func _init() -> void:
 	print("  linha: ", l)
 	_ok(m.fechada and act["ordemDinamica"]["fechada"] == true and act["ordemDinamica"]["ordem"] == [arq, lobo, esp, bruto] and act["ordemDinamica"]["ultimo"] == arq,
 		"o modelo do HUD adiantou-se pelos eventos de actor: 4 figuras, fechada true, Arqueira na vez (a caixa actual)")
-	_ok(snap["eventos"] == 6 and snap["de_actor"] == 3 and snap["tipos"] == ["movimento", "turno", "movimento", "ataque", "dano", "turno"],
-		"contagem exacta: 6 eventos aplicados, 3 de actor, os tipos pela ordem")
+	_ok(OrdemTurnos.actor_do_evento(eventos[5]) == "", "o evento `estado` (com figuraId) não é de actor")
+	_ok(snap["eventos"] == 7 and snap["de_actor"] == 3 and snap["tipos"] == ["movimento", "turno", "movimento", "ataque", "dano", "estado", "turno"],
+		"contagem exacta: 7 eventos aplicados, 3 de actor, os tipos pela ordem (com o `estado`)")
 	_ok(R.desactualizado(snap_caixa, act), "depois dos eventos: o JSON do snapshot já NÃO é a caixa actual")
 	var i_marca := l.find("DESACTUALIZADO")
 	var i_velho := l.find(JSON.stringify(snap_caixa))
@@ -126,9 +151,9 @@ func _init() -> void:
 	_ok(i_marca >= 0 and i_velho > i_marca, "a linha marca «DESACTUALIZADO» ANTES do JSON velho (lê-se a marca primeiro)")
 	_ok(i_actual > i_velho and l.contains("ACTUAL"), "a mesma linha imprime a caixa ACTUAL depois do JSON velho")
 	_ok(l.contains("\"fechada\":false") and l.contains("\"fechada\":true"), "lêem-se as duas: a velha (fechada false) e a actual (fechada true)")
-	_ok(l.contains("seq 9") and l.contains("revisão 31") and l.contains("6 evento(s) aplicado(s) depois dele [movimento, turno, movimento, ataque, dano, turno], 3 de actor")
+	_ok(l.contains("seq 9") and l.contains("revisão 31") and l.contains("7 evento(s) aplicado(s) depois dele [movimento, turno, movimento, ataque, dano, estado, turno], 3 de actor")
 		and l.contains("(revisão 35)"),
-		"a linha diz de que snapshot é o velho (seq 9, revisão 31, 6 eventos com os tipos, 3 de actor) e a revisão da actual (35)")
+		"a linha diz de que snapshot é o velho (seq 9, revisão 31, 7 eventos com os tipos, 3 de actor) e a revisão da actual (35)")
 	_ok(not l.contains("JSON actual") and not l.contains("adiantaram"), "o JSON velho nunca passa por actual; a linha não diz «que a adiantaram»")
 	_ok(not l.contains("9.0") and not l.contains("31.0"), "seq e revisão (floats do JSON) escritos como inteiros")
 
@@ -136,9 +161,10 @@ func _init() -> void:
 	var m3 := OrdemTurnos.new()
 	_ok(not R.desactualizado({}, R.caixa_actual({}, m3)), "sem caixa no snapshot: nada desactualizado")
 
-	# --- Privacidade (B6): TODAS as linhas — as «JSON actual» (§1/§5, o `encerrar`, a mesma vez) e a do §4 — só têm
-	# ids opacos, os campos da caixa e a origem do snapshot: nenhum nome, vida, alma ou PA.
-	var proibidas := ["nome", "vida", "alma", "pa\"", "paTotal", "vidaActual", "mestre"]
+	# --- Privacidade (B6; CORRECOES-2 B2/B3): TODAS as linhas — as «JSON actual» (§1/§5, as duas do caso da hora, o
+	# `encerrar`, a mesma vez) e a do §4 — só têm ids opacos, os campos da caixa e a origem do snapshot: nenhum nome,
+	# vida, alma, PA nem nada do Mestre. "pa" sozinho: nenhuma palavra fixa da linha o tem (e os ids são hexadecimais).
+	var proibidas := ["nome", "vida", "alma", "pa", "pa\"", "paTotal", "vidaActual", "mestre", "master", "caixaMestre"]
 	var achadas: Array = []
 	var actuais := 0
 	for linha_r in linhas:
@@ -147,7 +173,8 @@ func _init() -> void:
 		for p in proibidas:
 			if str(linha_r).to_lower().contains(p.to_lower()):
 				achadas.append(p)
-	_ok(linhas.size() == 4 and actuais == 3, "a privacidade varre as 4 linhas, 3 delas «JSON actual» (não só a do §4)")
+	_ok(linhas.size() == 6 and actuais == 5,
+		"a privacidade varre as 6 linhas, 5 delas «JSON actual» (não só a do §4; %d linhas, %d actuais)" % [linhas.size(), actuais])
 	_ok(achadas.is_empty(), "nenhuma linha ganha nomes, vida, alma nem PA %s" % [achadas])
 
 	print("")

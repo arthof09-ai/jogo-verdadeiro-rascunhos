@@ -1,0 +1,16 @@
+
+comparar capturas (algum canal RGB > 0.060): provas/ordem-caixa-hud-jogadora/cliente ↔ provas/ordem-caixa-relato/correcoes/cliente-hud
+  1-entrou-dinamica.png      43.9 %  (325060 de 740160 píxeis, 1028×720)
+  2-iniciativa.png           36.7 %  (271419 de 740160 píxeis, 1028×720)
+  3-desligada.png            35.3 %  (261177 de 740160 píxeis, 1028×720)
+  4-religada-avancou.png     35.3 %  (261100 de 740160 píxeis, 1028×720)
+  5-reentrou.png             36.3 %  (268807 de 740160 píxeis, 1028×720)
+  intervalo: 35.3–43.9 %
+
+comparar capturas (algum canal RGB > 0.060): provas/ordem-caixa-manequim/cliente ↔ provas/ordem-caixa-relato/correcoes/cliente-manequim
+  1-entrou-dinamica.png      19.0 %  (140556 de 740160 píxeis, 1028×720)
+  2-iniciativa.png            4.7 %  (34742 de 740160 píxeis, 1028×720)
+  3-desligada.png             2.4 %  (17926 de 740160 píxeis, 1028×720)
+  4-religada-avancou.png      2.6 %  (19545 de 740160 píxeis, 1028×720)
+  5-reentrou.png             13.5 %  (100083 de 740160 píxeis, 1028×720)
+  intervalo: 2.4–19.0 %

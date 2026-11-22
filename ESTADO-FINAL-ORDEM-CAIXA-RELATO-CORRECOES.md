@@ -100,12 +100,20 @@ ficheiros, **0 diferenças**. O ramo não toca em `rascunhos/`, por isso não ha
    (`prova_caixa_jogadora.gd`, `prova_caixa_manequim.gd`): não havia maneira de o pôr a ouvir o Estado sem tocar nelas.
    A ordem CAIXA-RELATO já as tinha mexido pela mesma razão. Mudei só as ligações do contador, a cópia funda da origem
    e a verificação nova do §4. Nada de código do jogo.
-2. **O ramo não tinha nenhuma imagem da caixa como ela está hoje.** Comparei as capturas ao píxel (limiar 0,06 RGB).
-   - As da HUD-JOGADORA no ramo (`provas/ordem-caixa-hud-jogadora/cliente/`, commit `fd7f978`) diferem 54–65 % das de
-     hoje. São de antes da PALETA-C ponto 2 (`a63c2c1`, as cores da caixa), do LAGO-MAIOR (`ded3272`) e da CAIXA-JANELA
-     (`e38b4fc`): a caixa era escura e o lago pequeno.
-   - As do MANEQUIM diferem 7–38 %.
-   - As da corrida CAIXA-RELATO (21:02, na pasta tmp dela) já eram as de hoje: 2,7 % de diferença no §4 da HUD.
+2. **O ramo não tinha nenhuma imagem da caixa como ela está hoje.** Comparei as capturas ao píxel (limiar 0,06 por
+   canal RGB — **emendado pela Ordem CAIXA-RELATO-CORRECOES-2, B4**: o método está agora cometido em
+   `provas/ordem-caixa-relato/ferramentas/comparar_capturas.gd`, e as saídas em
+   `provas/ordem-caixa-relato/correcoes-2/comparacao-capturas.log`).
+   - As da HUD-JOGADORA no ramo (`provas/ordem-caixa-hud-jogadora/cliente/`, commit `fd7f978`) diferem **35–44 %**
+     das de hoje (43,9 / 36,7 / 35,3 / 35,3 / 36,3 %). São de antes da PALETA-C ponto 2 (`a63c2c1`, as cores da caixa),
+     do LAGO-MAIOR (`ded3272`) e da CAIXA-JANELA (`e38b4fc`): a caixa era escura e o lago pequeno.
+   - As do MANEQUIM diferem **2–19 %** (19,0 / 4,7 / 2,4 / 2,6 / 13,5 %).
+   - As da corrida CAIXA-RELATO (21:02, na pasta tmp dela, fora do ramo) já eram as de hoje: **1,0 %** de diferença
+     no §4 da HUD.
+   - *Emenda (B4):* os números que aqui estavam (54–65 %, 7–38 %, 2,7 %) saíram de um script não cometido que contava
+     um píxel quando a SOMA |ΔR|+|ΔG|+|ΔB| passava 0,06, e não quando algum canal passava 0,06. Esse critério é mais
+     apertado. O script cometido reproduz os dois (`--metodo=soma`; saídas em `correcoes-2/comparacao-capturas-soma.log`).
+     A conclusão (as capturas antigas já não são a caixa de hoje) não muda.
 
    Daí a escolha de as incluir. Esta ordem não mudou nada visível.
 3. **O caso vivo do §4 tem um `estado` que a ordem não previa.** Os 5 eventos são
