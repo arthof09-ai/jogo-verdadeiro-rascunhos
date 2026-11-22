@@ -29,3 +29,26 @@ O servidor não mudou (nenhum ficheiro de `rascunhos/servidor`).
 
 Correr de novo (Git Bash, na raiz do repo):
 `bash provas/ordem-caixa-janela/ferramentas/correr-prova-caixa-janela.sh <Godot_console.exe> <vlab-completo.js> <pasta-tmp>`
+
+## nomes/ — Ordem CAIXA-JANELA-NOMES (21/11/2026, Claude conta 1, PC): o relato só com o nome público
+O relato desta prova trazia os nomes verdadeiros das criaturas de bancada («Lobo de Bancada», «Bruto de Bancada»): o
+`_nome()` e a linha «bancada:» liam o `nome` da vista do Mestre, e o canário só varria os textos da caixa. O mesmo
+remédio da B1 da CAIXA-RELATO-CORRECOES-2, as duas metades:
+- **a fonte:** os nomes do relato vêm do `nomePublico` (sem ele, o id) — `ferramentas/nomes_relato.gd`, partilhado pela
+  prova e pelo teste;
+- **o canário estende-se ao relato:** em cada passagem (1, 2) uma verificação nova confere que nenhuma linha do relato
+  traz um nome verdadeiro (os que diferem do público; ≥ 1 canário exigido), e no fim o relato inteiro.
+
+Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c…`; semente 7):
+- `nomes/teste-nomes-relato.log` — **teste 14/14** (`ferramentas/teste_nomes_relato.gd`, sem servidor nem ecrã, com as
+  fichas de bancada reais; reproduz o caso: «Bruto de Bancada» numa linha → o canário falha; e apanha os 22 nomes
+  verdadeiros do relato antigo `cliente/relato.txt`).
+- `nomes/cliente/` — **prova viva 38/38** (eram 35; +3 do canário do relato). Capturas (sha256, 16 primeiros):
+  `1-janela-1280x720.png` `13ea9aa6ade3a432`, `2-baixo-844x390.png` `9125924cc4b1e23e`, `3-baixo-780x360.png`
+  `b4d327e1b0c34764`.
+- `nomes/suites/` — rodar_testes 290/290 · abrir_scripts 107/0 falhas · caixa_janela 69/69 · caixa_jogadora 18/18 ·
+  hud_acoes 50/50 · canario_privacidade 10/10 · teste_relato_caixa 21/21.
+
+O `cliente/` de cima fica como estava (o registo da Ordem CAIXA-JANELA, com os nomes verdadeiros de bancada).
+Correr o teste (raiz do repo): `godot --headless --path rascunhos/cliente -s "$PWD/provas/ordem-caixa-janela/ferramentas/teste_nomes_relato.gd"`.
+A prova: o lançador aceita agora um 4.º argumento, a pasta de saída (sem ele, `provas/ordem-caixa-janela/cliente`).

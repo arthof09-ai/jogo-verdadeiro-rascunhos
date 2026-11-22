@@ -16,6 +16,8 @@ extends SceneTree
 ##      não tapa a ⚙/ficha/barra, e a faixa tem a largura da frase mais comprida, sem passar por baixo da caixa.
 ##      Uma captura em cada tamanho.
 ## Em todos: nada do Mestre chega ao aparelho dela; nenhum texto da caixa mostra nome verdadeiro, vida ou PA.
+## CAIXA-JANELA-NOMES: o relato escreve só o nome PÚBLICO das figuras (ferramentas/nomes_relato.gd), e o canário varre
+## também o relato — em cada passagem (1, 2) e no fim, o relato inteiro: um nome verdadeiro de bancada nele é FALHA.
 ## Deixa em <pasta>: 1-janela-1280x720.png, 2-baixo-844x390.png, 3-baixo-780x360.png e relato.txt. Código 0 se tudo passa.
 
 const CENA := "res://cenas/arena/arena.tscn"
@@ -50,6 +52,10 @@ var _a_entrar = null
 var _cenario: Dictionary = {}
 var _jogadora: Dictionary = {}  # a heroína que entra pelo ecrã a sério (a 1.ª do cenário)
 var _recebido: Array = []  # tudo o que chegou ao aparelho da jogadora (JSON)
+## CAIXA-JANELA-NOMES: os nomes do relato e o canário do relato (ferramentas/nomes_relato.gd, partilhado com o teste).
+var NomesRelato
+## Os nomes verdadeiros (os que diferem do público) juntados a cada passagem do canário, para a varredura final em _fim().
+var _canarios_nomes: Array = []
 
 
 func _init() -> void:
@@ -138,11 +144,10 @@ func _comando_b(tipo: String, campos: Dictionary) -> bool:
 	return str(_mestre_b.respostas[id].get("estado", "")) == "APLICADA"
 
 
+## CAIXA-JANELA-NOMES: o nome que vai para o RELATO é o `nomePublico` (o que a Party vê), nunca o nome verdadeiro da
+## vista do Mestre — o relato é cometido e não pode trazer o valor-canário. Sem nome público: o id.
 func _nome(v: Dictionary, id: String) -> String:
-	for f in v.get("mestre", {}).get("figuras", []):
-		if str(f.get("id", "")) == id:
-			return str(f.get("nome", id))
-	return id
+	return NomesRelato.nome(v, id)
 
 
 ## Joga UMA vez da figura que está na vez (a IA de bancada e encerrar). Devolve o id de quem jogou ("" = não deu).
@@ -170,7 +175,7 @@ func _jogar_vez() -> String:
 		else:
 			id = lugar.intencao(passo)
 		await _esperar(func(): return lugar.respostas.has(id), 10.0)
-		_linha("  bancada: %s → %s (%s)" % [str(quem.get("nome", vez_id)), JSON.stringify(passo), str(lugar.respostas.get(id, {}).get("estado", lugar.respostas.get(id, {}).get("motivo", "?")))])
+		_linha(NomesRelato.linha_bancada(quem, vez_id, passo, str(lugar.respostas.get(id, {}).get("estado", lugar.respostas.get(id, {}).get("motivo", "?")))))
 		if passo.get("tipo") == "encerrar":
 			break
 		await _vista_b()
@@ -293,10 +298,9 @@ func _privacidade(rotulo: String) -> void:
 	var chaves_ok: bool = c.is_empty() or (c.keys().size() == 3 and c.has("ligada") and c.has("ordemPor") and c.has("ordemDinamica"))
 	_ok(chaves_ok, rotulo + ": a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica")
 	var v := await _vista_b()
-	var canarios: Array = []
+	var nomes: Array = NomesRelato.nomes_verdadeiros(v)
+	var canarios: Array = nomes.duplicate()
 	for f in v.get("mestre", {}).get("figuras", []):
-		if str(f.get("nome", "")) != str(f.get("nomePublico", "")):
-			canarios.append(str(f.get("nome")))
 		for k in ["vidaActual", "vidaTotal", "paTotal", "paLivre"]:
 			if f.get(k) is float or f.get(k) is int:
 				canarios.append(str(int(f[k])))
@@ -311,6 +315,15 @@ func _privacidade(rotulo: String) -> void:
 	_ok(achados.is_empty(), rotulo + ": nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa %s" % [achados])
 	var com_digito: Array = textos.filter(func(t): return RegEx.create_from_string("[0-9]").search(str(t)) != null)
 	_ok(com_digito.is_empty(), rotulo + ": nenhum número nos textos da caixa (%d textos) %s" % [textos.size(), com_digito])
+	# CAIXA-JANELA-NOMES: o canário estende-se ao RELATO (o que fica cometido): nenhum nome verdadeiro em nenhuma linha
+	# até aqui. Só os nomes — vida e PA são números pequenos que o relato tem por outras razões (coordenadas, seq,
+	# medidas); esses ficam para a varredura dos textos da caixa, acima.
+	for n in nomes:
+		if not _canarios_nomes.has(n):
+			_canarios_nomes.append(n)
+	var no_relato: Array = NomesRelato.no_relato(_relato, nomes)
+	_ok(not nomes.is_empty() and no_relato.is_empty(),
+		rotulo + ": nenhum nome verdadeiro no relato (%d linhas; canários: %d nome(s) que diferem do público) %s" % [_relato.size(), nomes.size(), no_relato])
 
 
 func _correr() -> void:
@@ -324,6 +337,11 @@ func _correr() -> void:
 	DirAccess.make_dir_recursive_absolute(_saida)
 	_url = "ws://%s/ws" % srv
 	_pin = str(_args.get("pin", _pin))
+	NomesRelato = load(str(get_script().resource_path).get_base_dir().path_join("nomes_relato.gd"))
+	if NomesRelato == null:
+		printerr("não abriu provas/ordem-caixa-janela/ferramentas/nomes_relato.gd")
+		quit(2)
+		return
 	_rede = root.get_node("Rede")
 	_estado = root.get_node("Estado")
 	_rede.persistir = false
@@ -420,6 +438,10 @@ func _medir_vivo(tam: Vector2i, nome: String) -> void:
 
 
 func _fim() -> void:
+	# CAIXA-JANELA-NOMES: a varredura final do relato INTEIRO (incluindo o que se escreveu depois do último canário).
+	if not _canarios_nomes.is_empty():
+		var no_relato: Array = NomesRelato.no_relato(_relato, _canarios_nomes)
+		_ok(no_relato.is_empty(), "fim: o relato inteiro (%d linhas) não traz nenhum dos %d nome(s) verdadeiro(s) %s" % [_relato.size(), _canarios_nomes.size(), no_relato])
 	_linha("")
 	_linha("prova da janela e da caixa com 10 figuras: %d de %d verificações passaram." % [_total - _falhas, _total])
 	for l in _herois.values():

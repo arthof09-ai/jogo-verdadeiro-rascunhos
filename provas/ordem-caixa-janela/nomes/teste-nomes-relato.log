@@ -1,0 +1,23 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+== Ordem CAIXA-JANELA-NOMES — os nomes do relato da prova da caixa-janela ==
+  ok    as fichas de bancada têm o Bruto e o Lobo (4 fichas)
+== 1. os canários: os nomes verdadeiros que diferem do público ==
+  ok    1: «Bruto de Bancada» e «Lobo de Bancada» são canários ["Bruto de Bancada", "Lobo de Bancada"]
+  ok    1: as heroínas (nome = nome público) não são canários
+  ok    1: figuras repetidas (as 8 criaturas da prova) não repetem o canário
+== 2. a fonte: o relato escreve o nome PÚBLICO ==
+  ok    2: _nome() da prova dá «Bruto» e «Lobo» (o público)
+  ok    2: figura que não está na vista → o id
+  ok    2: sem nomePublico → o id, nunca o nome verdadeiro
+  ok    2: nomePublico vazio → o id
+  ok    2: a linha «bancada:» traz o público: «  bancada: Lobo → {"tipo":"encerrar"} (APLICADA)»
+== 3. o canário do relato ==
+  ok    3: o relato escrito pela fonte (nome público) passa o canário []
+  ok    3: «Bruto de Bancada» na linha 5 → o canário FALHA ["Bruto de Bancada na linha 5"]
+  ok    3: dentro de JSON também se apanha («Lobo de Bancada»)
+  ok    3: sem canários não há achados (por isso a prova exige ≥ 1 canário)
+== 4. o caso medido: o relato cometido da CAIXA-JANELA de antes desta ordem ==
+  ok    4: o canário apanha os nomes verdadeiros no relato antigo (22 achados; o 1.º: Lobo de Bancada na linha 7)
+
+teste dos nomes do relato da caixa-janela: 14 de 14 verificações passaram.
