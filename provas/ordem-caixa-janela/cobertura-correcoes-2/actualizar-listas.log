@@ -1,0 +1,62 @@
+# B4 — o artefacto do retoma-i0004/actualizar-listas.py, com a saída REAL de cada comando capturada
+# (corrido na raiz do repo, sobre o HEAD ce3d677; cada bloco: o comando, a sua saída tal como saiu, e o rc)
+# 2026-11-22T08:06:57Z · Python 3.12.10 · git version 2.56.0.windows.4 · PC (Git Bash)
+
+## SHA-256 das 3 listas ANTES
+$ sha256sum retoma-i0004/antes.txt retoma-i0004/depois.txt MANIFESTO-SHA256.txt
+cf3b16fa1b1b924b4e75376022c7a997cc678083ccbfd4fac64915ce05f69d46 *retoma-i0004/antes.txt
+2da80f0e60f43d9b90785cf8e97690ade4d3c350a03adca48aa6dc5eda3d1e7f *retoma-i0004/depois.txt
+bfde904b4a4edfc8d11076a35b0b7df36103e3c5fe000f86bfd7857d4ea40b06 *MANIFESTO-SHA256.txt
+rc=0
+
+## o script (PYTHONIOENCODING=utf-8, para o «·» não sair estragado no Windows)
+$ env PYTHONIOENCODING=utf-8 python retoma-i0004/actualizar-listas.py
+antes.txt: 37 · depois.txt: 415 · MANIFESTO: 459 ficheiros (0 novos, 0 tirados nesta passagem)
+rc=0
+
+## SHA-256 das 3 listas DEPOIS
+$ sha256sum retoma-i0004/antes.txt retoma-i0004/depois.txt MANIFESTO-SHA256.txt
+cf3b16fa1b1b924b4e75376022c7a997cc678083ccbfd4fac64915ce05f69d46 *retoma-i0004/antes.txt
+2da80f0e60f43d9b90785cf8e97690ade4d3c350a03adca48aa6dc5eda3d1e7f *retoma-i0004/depois.txt
+bfde904b4a4edfc8d11076a35b0b7df36103e3c5fe000f86bfd7857d4ea40b06 *MANIFESTO-SHA256.txt
+rc=0
+
+## o estado das listas (saída vazia = o script não mudou nada: as listas já estavam sincronizadas)
+$ git status --short --untracked-files=all retoma-i0004 MANIFESTO-SHA256.txt
+(saída vazia: 0 bytes)
+rc=0
+
+$ git diff --stat -- retoma-i0004 MANIFESTO-SHA256.txt
+(saída vazia: 0 bytes)
+rc=0
+
+## o que o ramo muda em relação à base ed3ae11 (prova de que não toca em rascunhos/ nem no CI)
+$ git diff --stat ed3ae11 HEAD -- rascunhos/ .github/
+(saída vazia: 0 bytes)
+rc=0
+
+$ git diff --stat ed3ae11 HEAD
+ provas/ordem-caixa-janela/README.md                |  19 +++++
+ .../cliente/1-janela-1280x720.png                  | Bin 0 -> 1470498 bytes
+ .../cliente/2-baixo-844x390.png                    | Bin 0 -> 559448 bytes
+ .../cliente/3-baixo-780x360.png                    | Bin 0 -> 474069 bytes
+ .../cobertura-correcoes-2/cliente/relato.txt       |  81 +++++++++++++++++++
+ .../cliente/servidor-info.json                     |   1 +
+ .../cobertura-correcoes-2/cliente/servidor.log     |   2 +
+ .../cobertura-correcoes-2/m1c/mutacao-base.diff    |  26 ++++++
+ .../m1c/mutacao-esta-ordem.diff                    |  26 ++++++
+ .../m1c/relato-mutado-base.txt                     |  81 +++++++++++++++++++
+ .../m1c/relato-mutado-esta-ordem.txt               |  81 +++++++++++++++++++
+ .../cobertura-correcoes-2/mt5-lista-12.diff        |  12 +++
+ .../cobertura-correcoes-2/mt6-sem-sufixo.diff      |  11 +++
+ .../mt7-defendendo-texto.diff                      |  11 +++
+ .../cobertura-correcoes-2/mt8-sem-nua-numero.diff  |  11 +++
+ .../cobertura-correcoes-2/mutacoes.log             |  89 +++++++++++++++++++++
+ .../cobertura-correcoes-2/teste-nomes-relato.log   |  35 ++++++++
+ .../ordem-caixa-janela/ferramentas/nomes_relato.gd |  26 +++++-
+ .../ferramentas/prova_caixa_janela.gd              |   2 +
+ .../ferramentas/teste_nomes_relato.gd              |  64 ++++++++++-----
+ 20 files changed, 554 insertions(+), 24 deletions(-)
+rc=0
+
+(fim)
