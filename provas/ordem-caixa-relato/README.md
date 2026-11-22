@@ -62,7 +62,12 @@ registo do que se viu nessa altura).
   caixa), do LAGO-MAIOR e da CAIXA-JANELA. A caixa e o lago de hoje já não são os dessas imagens: 35–44 % dos píxeis
   diferem (limiar 0,06 por canal RGB). Nas do MANEQUIM diferem 2–19 %. Esta ordem não mudou nada no HUD, mas a linha
   mudou, e sem as capturas novas o ramo não teria nenhuma imagem da caixa como ela é hoje. As da corrida CAIXA-RELATO
-  (21:02) ficaram fora: são da base `7c97b48` e, no essencial, iguais a estas (1,0 % de diferença no §4 da HUD).
+  (21:02) ficaram fora: são da base `7c97b48`. Não são iguais a estas nas 5 capturas da HUD: diferem 20,2 % (§1),
+  3,2 % (§2), 1,4 % (§3), 1,0 % (§4) e 13,7 % (§5). Só do §2 ao §4 ficam perto; o 1,0 % é só o §4.
+  *Emenda (CAIXA-RELATO-CORRECOES-4, B4):* aqui dizia «no essencial, iguais a estas (1,0 % de diferença no §4 da
+  HUD)», o que valia para o §4 e não para as 5. Os números são de `correcoes-3/comparacao-caixa-relato-vs-correcoes.log`
+  (método `ferramentas/comparar_capturas.gd`). As 5 capturas dessa corrida entraram depois no ramo, em
+  `cliente-hud/` (CORRECOES-3, B5).
   *Emenda (CAIXA-RELATO-CORRECOES-2, B4):* os intervalos que aqui estavam (54–65 %, 7–38 %, 2,7 %) não se
   reproduziam. Vinham de um script não cometido que somava os três canais. O método está agora em
   `ferramentas/comparar_capturas.gd` (ver a secção CORRECOES-2, abaixo).
@@ -207,3 +212,38 @@ Números (Godot 4.7.2 Windows, Node 26.13.0, motor VLAB real `a91c021c…`, seme
 **30/30**; prova HUD-JOGADORA **43/43**; prova MANEQUIM **53/53**; suites `suites/`: servidor **418/418**, prova da
 caixa do servidor **PROVA OK**. Os logs de mutação foram feitos com cópias do teste na pasta `ferramentas/`, apagadas
 antes do commit.
+
+---
+
+# Correcções B1–B4 da sentença da CAIXA-RELATO-CORRECOES-3 (Ordem CAIXA-RELATO-CORRECOES-4 · 22/11/2026, Claude conta 1, PC)
+
+Só as ferramentas das provas; nada do código do jogo, do HUD nem das cores muda. As corridas estão em
+**`correcoes-4/`**; as mutações, executadas, em `correcoes-4/mutacoes.log` (modo `base4` = os ficheiros de `da6683e`,
+modo `novo` = o código desta ordem).
+
+- **B1 — a re-varredura falhada não acrescenta linhas.** Em `_fim()` (as duas provas vivas), se a re-varredura do
+  relato escrito achar um nome, a verificação do fim passa a FALHA e o resumo é refeito, os dois **no sítio**
+  (`_reescrever`, que troca a linha e regrava o ficheiro). A contagem continua a ser a do ficheiro e há um só resumo.
+  Mutação «canário na linha em branco final»: na base, o relato fica com **70 linhas e 2 resumos** («43 de 43» e
+  «43 de 44»), e a linha do fim continua a dizer 68; com o código novo, fica com **68 linhas, 1 resumo, 42/43**, rc=1.
+  No manequim: 80 linhas e 2 resumos («53 de 53», «53 de 54») passam a **78 linhas, 1 resumo, 52/53**.
+- **B2 — as linhas FALHA não ecoam nomes.** Os achados dizem «nome verdadeiro n.º K na linha L» (o n.º em
+  `_canarios_nomes`) e, nos textos da caixa, «canário n.º K (nome|número) no texto n.º J da caixa». Nunca dizem o
+  valor nem o texto que o traz. Contagem dos nomes verdadeiros nas linhas FALHA (relato / consola), da base para o
+  novo: `B1-nome-verdadeiro` 34/68 → 0/0; `N-B2-canario-minusculas-relato` 34/68 → 0/0;
+  `N-B2-canario-minusculas-caixa` 21/42 → 0/0. Esta última passa de **36/43 para 40/43**: as 4 falhas em cascata
+  vinham do eco da linha FALHA para o relato e desaparecem. Como defesa extra, o `correr-mutacoes.sh` lê agora a cauda
+  do `relato.txt` e troca qualquer nome verdadeiro por «‹nome verdadeiro›» antes de a escrever no registo cometido.
+- **B3 — o portão do `_fim()` falha sem canários.** Com `_canarios_nomes` vazio, sai «FALHA fim: a varredura do relato
+  inteiro não tem nenhum nome verdadeiro para procurar …». Mutação «o canário não junta nomes»: na base, HUD
+  **42/42 rc=0** e manequim **52/52 rc=0** (a verificação nem aparece); com o código novo, **42/43** e **52/53**, rc=1.
+- **B4** — a frase do §B5 da secção CORRECOES ficou com os números das 5 capturas (20,2 / 3,2 / 1,4 / 1,0 / 13,7 %);
+  já não diz «no essencial, iguais».
+
+Números (Godot 4.7.2 Windows, motor VLAB real `a91c021c…`, semente 7): teste `correcoes-4/teste-relato.log`
+**31/31**; prova HUD-JOGADORA `correcoes-4/cliente-hud/relato.txt` **43/43**, 68 linhas = 68 no ficheiro; prova
+MANEQUIM `correcoes-4/cliente-manequim/relato.txt` **53/53**, 78 = 78.
+
+Correr de novo: `bash provas/ordem-caixa-relato/ferramentas/correr-prova-caixa-relato.sh <godot.exe> <vlab-completo.js>
+<pasta-tmp> "$PWD/provas/ordem-caixa-relato/correcoes-4"` e, para as mutações,
+`bash provas/ordem-caixa-relato/ferramentas/correr-mutacoes.sh <godot.exe> <vlab-completo.js> <pasta-tmp> <base4|novo> <registo.log>`.

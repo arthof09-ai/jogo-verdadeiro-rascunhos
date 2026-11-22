@@ -59,6 +59,18 @@ func _init() -> void:
 func _linha(t: String) -> void:
 	print(t)
 	_relato.append(t)
+	_gravar_relato()
+
+
+## CAIXA-RELATO-CORRECOES-4 (B1): troca a linha `i` (a partir de 0) do relato e regrava o ficheiro — o número de linhas
+## não muda. Na consola sai a linha nova, marcada como reescrita.
+func _reescrever(i: int, t: String) -> void:
+	print("  (reescrita da linha %d do relato) " % (i + 1) + t)
+	_relato[i] = t
+	_gravar_relato()
+
+
+func _gravar_relato() -> void:
 	if _saida != "":
 		var f := FileAccess.open(_saida.path_join("relato.txt"), FileAccess.WRITE)
 		if f != null:
@@ -341,11 +353,14 @@ func _privacidade(rotulo: String) -> void:
 	var textos: Array = []
 	_textos(_arena.hud.get_node("Raiz/Seguro/Camadas/CaixaOrdem"), textos)
 	var achados: Array = []
-	for t in textos:
-		for k in canarios:
+	for j in textos.size():
+		for i in canarios.size():
+			var k = canarios[i]
 			# CAIXA-RELATO-CORRECOES-3 (B2): sem distinguir maiúsculas («bruto de bancada» também é o canário).
-			if str(t).to_lower().contains(str(k).to_lower()):
-				achados.append("%s em «%s»" % [k, t])
+			# CAIXA-RELATO-CORRECOES-4 (B2): o achado diz qual canário (n.º e espécie) e em que texto — nunca o valor nem
+			# o texto, que o trazem: a linha FALHA vai para o relato e para a consola, e os dois ficam cometidos.
+			if str(textos[j]).to_lower().contains(str(k).to_lower()):
+				achados.append("canário n.º %d (%s) no texto n.º %d da caixa" % [i + 1, "número" if str(k).is_valid_int() else "nome", j + 1])
 	_ok(achados.is_empty(), rotulo + ": nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa %s" % [achados])
 	# CAIXA-RELATO-CORRECOES-2 (B1): o canário estende-se ao RELATO (o que fica cometido): nenhum nome verdadeiro em
 	# nenhuma linha até aqui. Só os nomes — vida e PA são números pequenos que o relato tem por outras razões
@@ -374,7 +389,10 @@ func _nomes_em(linhas: PackedStringArray, nomes: Array) -> Array:
 		var l := linhas[i].to_lower()
 		for k in nomes:
 			if l.contains(str(k).to_lower()):
-				achados.append("%s na linha %d" % [k, i + 1])
+				# CAIXA-RELATO-CORRECOES-4 (B2): o n.º do nome em _canarios_nomes (ou, se lá não estiver, em `nomes`), nunca
+				# o nome (ver acima).
+				var num := _canarios_nomes.find(str(k)) + 1
+				achados.append("nome verdadeiro n.º %d na linha %d" % [num if num > 0 else nomes.find(k) + 1, i + 1])
 	return achados
 
 
@@ -497,28 +515,39 @@ func _correr() -> void:
 
 func _fim() -> void:
 	# CAIXA-RELATO-CORRECOES-2 (B1): a varredura final do relato INTEIRO (incluindo o que se escreveu depois do §5).
-	# CAIXA-RELATO-CORRECOES-3 (B1): «inteiro» é agora o ficheiro TODO. Antes, esta verificação, a linha em branco e o
-	# resumo ficavam fora da varredura (o relato dizia «65 linhas» e o ficheiro tinha 68). As 3 linhas finais compõem-se
-	# primeiro, a varredura corre sobre o relato + elas (o que vai ficar no ficheiro) e a contagem diz esse tamanho.
-	# Depois de TODAS as _linha(), o relato volta a ser varrido (abaixo): se aí aparecer um nome, a prova falha.
+	# CAIXA-RELATO-CORRECOES-3 (B1): «inteiro» é o ficheiro TODO: as 3 linhas finais (esta verificação, a linha em
+	# branco e o resumo) compõem-se primeiro, a varredura corre sobre o relato + elas e a contagem diz esse tamanho.
+	# Depois de TODAS as _linha(), o relato volta a ser varrido (abaixo).
+	# CAIXA-RELATO-CORRECOES-4 (B1): se a re-varredura achar um nome, a verificação do fim passa a FALHA e o resumo é
+	# refeito, os dois NO SÍTIO (`_reescrever`), sem linhas a mais: a contagem continua a ser a do ficheiro e há um só
+	# resumo. Antes, juntava-se uma FALHA e um 2.º resumo, e o ficheiro ficava com 2 linhas a mais do que dizia.
+	# CAIXA-RELATO-CORRECOES-4 (B3): sem nomes verdadeiros juntados (`_canarios_nomes` vazio), a varredura não tem o
+	# que procurar — falha em voz alta em vez de não verificar nada (como as passagens do `_privacidade`).
 	var resumo := "prova da caixa no HUD da jogadora: %d de %d verificações passaram."
-	var pre_ok := true
-	if not _canarios_nomes.is_empty():
+	var texto := "fim: o relato inteiro (%d linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos %d nome(s) verdadeiro(s) %s"
+	var pre_ok := false
+	var i_fim := -1
+	if _canarios_nomes.is_empty():
+		_ok(false, "fim: a varredura do relato inteiro não tem nenhum nome verdadeiro para procurar (o canário não juntou nenhum) — não pode passar sem verificar")
+	else:
 		var n := _relato.size() + 3
-		var texto := "fim: o relato inteiro (%d linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos %d nome(s) verdadeiro(s) %s"
 		var finais := PackedStringArray(["  ok    " + texto % [n, _canarios_nomes.size(), []], "", resumo % [_total + 1 - _falhas, _total + 1]])
 		var achados := _nomes_em(_relato + finais, _canarios_nomes)
 		pre_ok = achados.is_empty()
+		i_fim = _relato.size()
 		_ok(pre_ok, texto % [n, _canarios_nomes.size(), achados])
 	_linha("")
 	_linha(resumo % [_total - _falhas, _total])
 	# B1: re-varrer DEPOIS de todas as _linha() — o relato em memória é agora o ficheiro inteiro. (Se a varredura de
-	# cima já falhou, a prova já falha e as linhas de falha trazem os nomes; não se repete.)
-	if pre_ok and not _canarios_nomes.is_empty():
+	# cima já falhou, a prova já falha; não se repete.)
+	if pre_ok:
 		var depois := _nomes_no_relato(_canarios_nomes)
 		if not depois.is_empty():
-			_ok(false, "fim: a re-varredura do relato escrito (%d linhas) achou nome(s) verdadeiro(s) %s" % [_relato.size(), depois])
-			_linha(resumo % [_total - _falhas, _total])
+			_falhas += 1
+			var falha := "fim: o relato inteiro (%d linhas — todas as do ficheiro, contando esta e as 2 finais) traz nome(s) verdadeiro(s), achados só pela re-varredura do que se escreveu %s" % [_relato.size(), depois]
+			_reescrever(i_fim, "  FALHA " + falha)
+			printerr("  FALHA ", falha)
+			_reescrever(_relato.size() - 1, resumo % [_total - _falhas, _total])
 	for l in _herois.values():
 		l.fechar()
 	if _mestre_b != null:

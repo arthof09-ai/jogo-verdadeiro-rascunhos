@@ -5,6 +5,10 @@
 //   node mutacoes.mjs lista <base|novo>          → «id corrida» por linha
 //   node mutacoes.mjs aplicar <base|novo> <id>   → aplica a mutação (na raiz do repo)
 //
+// CAIXA-RELATO-CORRECOES-4: modo `base4` = os ficheiros da base desta ordem (fable/integracao-50 da6683e, o código da
+// CAIXA-RELATO-CORRECOES-3) com as mutações de `novo`; `novo` passa a ser o código da CORRECOES-4. As mutações novas
+// (N4-…) estão nos três modos onde o texto existe.
+//
 // `base` = os ficheiros da base (fable/integracao-50 6a87b9e, o código da CAIXA-RELATO-CORRECOES-2): as 6 mutações da
 // ordem anterior (B1, B2, B3 ×3, B5, B6), para os números dela terem registo, e as novas para mostrar que a base não as
 // apanhava. `novo` = o código desta ordem.
@@ -54,6 +58,18 @@ const comuns = {
     diz: 'CORRECOES-3 B6: o caso do CI — aparelho em UTC (simulado no teste) e `hora_ms()` sem o fuso' },
 };
 
+// ---- CAIXA-RELATO-CORRECOES-4
+const sem_canarios = (f) => ({ f, de: '\t\t\t\t_canarios_nomes.append(str(f.get("nome")))', para: '\t\t\t\tpass' });
+const novas4 = {
+  'N4-B3-sem-canarios-hud': { corrida: 'hud', subs: [sem_canarios(PROVA_HUD)],
+    diz: 'CORRECOES-4 B3: `_canarios_nomes` fica vazio (o canário do `_privacidade` não junta nenhum nome) — o portão do `_fim()`' },
+  'N4-B3-sem-canarios-manequim': { corrida: 'manequim', subs: [sem_canarios(PROVA_MAN)],
+    diz: 'CORRECOES-4 B3: o mesmo — manequim' },
+  'N4-B1-canario-na-linha-em-branco-manequim': { corrida: 'manequim',
+    subs: [{ f: PROVA_MAN, de: '\t_linha("")\n\t_linha(resumo', para: '\t_linha(str(_canarios_nomes[0]))\n\t_linha(resumo' }],
+    diz: 'CORRECOES-4 B1: a linha em branco final traz um canário (só a re-varredura o vê) — manequim' },
+};
+
 const porModo = {
   base: {
     ...comuns,
@@ -83,11 +99,14 @@ const porModo = {
   },
 };
 // O caso do CI junta o aparelho em UTC à mutação do fuso (o texto do fuso é o de cada modo).
+porModo.novo = { ...porModo.novo, ...novas4 };
+porModo.base4 = { ...porModo.novo };
+porModo.base = { ...porModo.base, 'N4-B3-sem-canarios-hud': novas4['N4-B3-sem-canarios-hud'] };
 for (const m of Object.values(porModo)) m['N-B6-utc-e-sem-fuso'] = { ...m['N-B6-utc-e-sem-fuso'], subs: [UTC_NO_TESTE, ...m['B5-bias-zero'].subs] };
 
 const [cmd, modo, id] = process.argv.slice(2);
 const tab = porModo[modo];
-if (!tab) { console.error('modo: base | novo'); process.exit(2); }
+if (!tab) { console.error('modo: base | base4 | novo'); process.exit(2); }
 if (cmd === 'lista') {
   for (const [k, v] of Object.entries(tab)) console.log(k + ' ' + v.corrida);
 } else if (cmd === 'diz') {
