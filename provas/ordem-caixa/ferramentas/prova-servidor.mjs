@@ -3,7 +3,8 @@
 // muda com o «voltar» nem com o «Recomeçar», vale com cartão aberto e em pausa, e a Party nunca recebe a `caixaMestre`.
 // Actualizada na Ordem CAIXA-TESTES (21/11/2026, correcção B4): desde a CAIXA-HUD-JOGADORA a Party recebe a escolha
 // no ROOM_SNAPSHOT dela (campo `caixa`: ligada, ordemPor, ordem dinâmica DA PARTY) — o passo 3 prova agora isso:
-// exactamente 1 snapshot por membro da Party, e nada mais.
+// exactamente 1 snapshot por membro da Party, e nada mais. Na Ordem CAIXA-TESTES-CORRECOES (21/11/2026, B1) o passo 3
+// prova também o VALOR desse snapshot: `ligada` true e a ordem dinâmica igual à formada no passo 2 ([Heroína, Aliada]).
 //   node provas/ordem-caixa/ferramentas/prova-servidor.mjs
 // Com PROTOCOLO_DUMP=<ficheiro>, o tráfego vai para a conferência dos schemas (protocolo/ferramentas/conferir-schemas.py).
 import assert from 'node:assert/strict';
@@ -49,7 +50,10 @@ function jogar(id, destino) {
   } else { act(id, { tipo: 'mover', destino }); act(id, { tipo: 'encerrar' }); }
 }
 jogar(H, { x: 3, y: 2 }); jogar(A, { x: 3, y: 4 });
-log('2) a meio da batalha: ordem dinâmica', vista().ordemDinamica.ordem.map((id) => nome[id]).join(' → '), '| vez de', nome[estado().vez.figuraId]);
+// A ordem formada aqui (Heroína → Aliada) é a que o passo 3 confere no snapshot da Party (correcção B1, CAIXA-TESTES-CORRECOES).
+const ordemDoPasso2 = vista().ordemDinamica.ordem;
+log('2) a meio da batalha: ordem dinâmica', ordemDoPasso2.map((id) => nome[id]).join(' → '), '| vez de', nome[estado().vez.figuraId]);
+assert.deepEqual(ordemDoPasso2, [H, A], 'a ordem dinâmica do passo 2 é [Heroína, Aliada]');
 
 // 3) O Mestre liga o «Modo iniciativa»: o servidor guarda; sem evento, sem revisão nova. A Party recebe EXACTAMENTE um
 //    ROOM_SNAPSHOT novo (desde a CAIXA-HUD-JOGADORA, com a `caixa` dela) e nada mais — nunca a `caixaMestre`.
@@ -68,10 +72,14 @@ for (const k of party) {
   assert.deepEqual(novas.map((x) => x.type), ['ROOM_SNAPSHOT'], k + ': a Party recebe exactamente o snapshot, e nada mais');
   assert.deepEqual(Object.keys(novas[0].caixa).sort(), ['ligada', 'ordemDinamica', 'ordemPor'], k + ': a caixa da Party');
   assert.equal(novas[0].caixa.ordemPor, 'iniciativa', k);
+  // B1 (CAIXA-TESTES-CORRECOES): o VALOR, não só a forma — a caixa segue ligada e com a ordem formada no passo 2.
+  assert.equal(novas[0].caixa.ligada, true, k + ': a caixa da Party segue ligada');
+  assert.deepEqual(novas[0].caixa.ordemDinamica.ordem, ordemDoPasso2, k + ': a ordem da Party é a do passo 2 ([H, A])');
   assert.equal(novas[0].caixaMestre, undefined, k + ': nunca a caixaMestre');
 }
+const cxH = m.clientes.heroina.ultimo('ROOM_SNAPSHOT').caixa;
 log('   journalSeq', seqAntes, '→', v3.journalSeq, '| revisões iguais | Party: exactamente 1 mensagem nova cada (ROOM_SNAPSHOT, caixa.ordemPor',
-  m.clientes.heroina.ultimo('ROOM_SNAPSHOT').caixa.ordemPor + ') | pontos do «voltar»:', pontosAntes, '→', v3.pontos.length);
+  cxH.ordemPor + ', ligada', cxH.ligada + ', ordem', cxH.ordemDinamica.ordem.map((id) => nome[id]).join(' → ') + ') | pontos do «voltar»:', pontosAntes, '→', v3.pontos.length);
 
 // 4) SAIR E VOLTAR A ENTRAR a meio da batalha: a caixa volta com a escolha (e com a ordem dinâmica, da INICIATIVA).
 const odAntes = v3.ordemDinamica;

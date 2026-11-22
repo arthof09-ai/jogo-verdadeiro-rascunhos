@@ -11,6 +11,13 @@ import { ordemDinamicaVazia, registarEvento } from '../nucleo/ordem-dinamica.js'
 import { jsonCanonico } from '../nucleo/util.js';
 
 const PARTY = ['heroina', 'aliada', 'espectador'];
+// Canários do Mestre para a caixa da Party (o teste dos canários da caixa e, desde a B7, o snapshot do «voltar»).
+const CHAVES_MESTRE_CAIXA = ['modo', 'vidaActual', 'vidaTotal', 'paGasto', 'paTotal', 'valor', 'vezes', 'soMestre', 'iniciativaValor', 'caixaMestre'];
+const NUMEROS_MESTRE_CAIXA = [7777, 313, 5150, 3579, 4040, 1357, 4848, ...Object.values(INICIATIVA)];
+// Só do Mestre, em qualquer parte de um snapshot da Party (subconjunto dos de privacidade.test.mjs): fichas dos inimigos,
+// valores de iniciativa, o modo e a escolha do Mestre, os campos internos.
+const CHAVES_SO_MESTRE = ['soMestre', 'semente', 'journalSeq', 'modo', 'fichaId', 'iniciativaValor', 'caixaMestre', 'vezes', 'razao', 'proposta', 'campoNovoDoMotor'];
+const NUMEROS_SO_MESTRE = [9137, 7777, 313, 4949, 4848, 6363, 6464, ...Object.values(INICIATIVA)];
 
 function mesaEmCombate() {
   const m = montarMesa({ comAliada: true, comEspectador: true, modoPadrao: 'manual' });
@@ -127,7 +134,7 @@ test('caixa no HUD da jogadora: nada do Mestre na caixa da Party (canários)', (
       assert.deepEqual(Object.keys(c).sort(), ['ligada', 'ordemDinamica', 'ordemPor']);
       assert.deepEqual(Object.keys(c.ordemDinamica).sort(), ['fechada', 'ordem', 'ultimo']);
     }
-    const achados = procurarCanarios(caixas, { chaves: ['modo', 'vidaActual', 'vidaTotal', 'paGasto', 'paTotal', 'valor', 'vezes', 'soMestre', 'iniciativaValor'], numeros: [7777, 313, 5150, 3579, 4040, 1357, 4848, ...Object.values(INICIATIVA)] });
+    const achados = procurarCanarios(caixas, { chaves: CHAVES_MESTRE_CAIXA, numeros: NUMEROS_MESTRE_CAIXA });
     assert.deepEqual(achados, [], k);
   }
 });
@@ -178,9 +185,15 @@ test('caixa no HUD da jogadora: a ordem da Party sobrevive ao journal, recomeça
 // Ordem CAIXA-TESTES (21/11/2026, correcção B5-a): a escolha da caixa é só do Mestre. A jogadora (e o espectador) que
 // tentam o op `caixa` levam ERRO proibido «Só o Mestre.» e nada muda: nem a escolha, nem o journal, nem a Party.
 test('caixa no HUD da jogadora: a jogadora que envia MASTER_SUPERVISOR op caixa recebe ERRO proibido «Só o Mestre.» e a caixa fica inalterada', () => {
-  const { m, estado, vista } = mesaEmCombate();
+  const { m, H, estado, vista } = mesaEmCombate();
+  // B5 (CAIXA-TESTES-CORRECOES): a heroína anda antes da tentativa, para haver pontos do «voltar» e uma ordem dinâmica
+  // da Party não vazia ([H]) — assim o «nada muda» compara valores, não listas vazias.
+  exigirAplicada(m.intencao('heroina', { tipo: 'mover', destino: { x: 3, y: 2 } }), 'mover heroína');
   const caixaAntes = structuredClone(estado().caixaMestre);
   const vistaAntes = vista();
+  const odPartyAntes = structuredClone(estado().ordemDinamicaParty);
+  assert.ok(vistaAntes.pontos.length > 0, 'há pontos do «voltar» antes da tentativa');
+  assert.deepEqual(odPartyAntes.ordem, [H], 'a ordem da Party antes da tentativa é [H]');
   const revAntes = Object.fromEntries(Object.values(estado().lugares).map((s) => [s.seatId, s.revision]));
   for (const k of ['heroina', 'espectador']) {
     const antes = Object.fromEntries([...PARTY, 'mestre'].map((x) => [x, m.clientes[x].msgs.length]));
@@ -199,6 +212,9 @@ test('caixa no HUD da jogadora: a jogadora que envia MASTER_SUPERVISOR op caixa 
     assert.deepEqual(estado().caixaMestre, caixaAntes, k + ': a escolha do Mestre não mudou');
     assert.deepEqual(vista().caixaMestre, vistaAntes.caixaMestre, k);
     assert.equal(vista().journalSeq, vistaAntes.journalSeq, k + ': nada entrou no journal');
+    // B5: os pontos do «voltar» e a ordemDinamicaParty ficam iguais depois da tentativa falhada.
+    assert.deepEqual(vista().pontos, vistaAntes.pontos, k + ': os pontos do «voltar» não mudaram');
+    assert.deepEqual(estado().ordemDinamicaParty, odPartyAntes, k + ': a ordemDinamicaParty não mudou');
   }
   const revDepois = Object.fromEntries(Object.values(estado().lugares).map((s) => [s.seatId, s.revision]));
   assert.deepEqual(revDepois, revAntes, 'nenhuma revisão mudou');
@@ -208,12 +224,13 @@ test('caixa no HUD da jogadora: a jogadora que envia MASTER_SUPERVISOR op caixa 
   const s = m.clientes.heroina.ultimo('ROOM_SNAPSHOT');
   assert.equal(s.caixa.ligada, true);
   assert.equal(s.caixa.ordemPor, 'dinamico');
+  assert.deepEqual(s.caixa.ordemDinamica.ordem, [H], 'a ordem que a Party conhece continua [H]');
 });
 
 // Ordem CAIXA-TESTES (21/11/2026, correcção B5-c): o «voltar» repõe a ordemDinamicaParty do checkpoint (CHAVES_MUNDO) e o
 // snapshot que segue leva-a à Party — não a ordem de depois do ponto, nem uma ordem vazia.
 test('caixa no HUD da jogadora: o «voltar» repõe a ordemDinamicaParty do checkpoint e o snapshot seguinte leva-a à Party', () => {
-  const { m, H, A, estado, vista } = mesaEmCombate();
+  const { m, H, A, estado, vista, caixa } = mesaEmCombate();
   assert.equal(estado().vez?.figuraId, H, 'a batalha começa na heroína');
   // Agir: a heroína anda — o ponto a que se vai voltar (a ordem da Party é [H]).
   exigirAplicada(m.intencao('heroina', { tipo: 'mover', destino: { x: 3, y: 2 } }), 'mover heroína');
@@ -226,6 +243,9 @@ test('caixa no HUD da jogadora: o «voltar» repõe a ordemDinamicaParty do chec
   exigirAplicada(m.intencao('aliada', { tipo: 'mover', destino: { x: 3, y: 4 } }), 'mover aliada');
   assert.deepEqual(estado().ordemDinamicaParty.ordem, [H, A], 'depois do ponto a ordem da Party mudou');
   assert.ok(vista().pontos.some((p) => p.journalSeq === ateSeq), 'o ponto está entre os pontos do «voltar»');
+  // B7 (CAIXA-TESTES-CORRECOES): DEPOIS do ponto, o Mestre muda a caixa para fora da omissão (ligada, iniciativa). A
+  // escolha é preferência do Mestre, não mundo: o «voltar» não a repõe — `ligada`/`ordemPor` sobrevivem a ele.
+  exigirAplicada(caixa(true, 'iniciativa'), 'caixa iniciativa depois do ponto');
   // Voltar.
   const antes = Object.fromEntries(PARTY.map((k) => [k, m.clientes[k].msgs.length]));
   exigirAplicada(m.mestre('MASTER_SUPERVISOR', { op: 'voltar', ateSeq }), 'voltar');
@@ -236,13 +256,26 @@ test('caixa no HUD da jogadora: o «voltar» repõe a ordemDinamicaParty do chec
   for (const k of PARTY) {
     const snap = m.clientes[k].msgs.slice(antes[k]).find((x) => x.type === 'ROOM_SNAPSHOT');
     assert.ok(snap, k + ': recebeu o snapshot do «voltar»');
+    // B7: as chaves exactas da caixa da Party, e nada do Mestre no snapshot do «voltar».
+    assert.deepEqual(Object.keys(snap.caixa).sort(), ['ligada', 'ordemDinamica', 'ordemPor'], k + ': as chaves da caixa');
+    assert.deepEqual(Object.keys(snap.caixa.ordemDinamica).sort(), ['fechada', 'ordem', 'ultimo'], k + ': as chaves da ordem dinâmica');
+    assert.equal(snap.caixaMestre, undefined, k + ': nunca a caixaMestre');
+    assert.equal(snap.caixa.ligada, true, k + ': `ligada` sobrevive ao «voltar»');
+    assert.equal(snap.caixa.ordemPor, 'iniciativa', k + ': `ordemPor` sobrevive ao «voltar» (não volta à omissão)');
     assert.deepEqual(snap.caixa.ordemDinamica, esperada, k + ': a ordem dinâmica da Party é a do checkpoint');
     assert.ok(!snap.caixa.ordemDinamica.ordem.includes(A), k + ': a aliada (andou depois do ponto) já não está');
+    // B7: o snapshot do «voltar» varrido com os canários. A `caixa` com os da caixa (os do teste dos canários da caixa:
+    // nem a Vida/PA de ninguém); o snapshot inteiro com os que são SÓ do Mestre (o resto do snapshot leva, por desenho,
+    // a ficha da própria jogadora — `propria` —, por isso os números das jogadoras não entram aqui).
+    assert.deepEqual(procurarCanarios([snap.caixa], { chaves: CHAVES_MESTRE_CAIXA, numeros: NUMEROS_MESTRE_CAIXA }), [], k + ': canários na caixa do «voltar»');
+    assert.deepEqual(procurarCanarios([snap], { chaves: CHAVES_SO_MESTRE, numeros: NUMEROS_SO_MESTRE }), [], k + ': canários do Mestre no snapshot do «voltar»');
   }
+  assert.deepEqual(estado().caixaMestre, { ligada: true, modo: 'iniciativa' }, 'a escolha do Mestre sobrevive ao «voltar»');
   // E quem volta a entrar depois do «voltar» recebe a mesma.
   m.sair('aliada');
   m.entrar('aliada', { papel: 'jogadora', nome: 'Aliada Teste', senha: SENHAS.aliada });
-  assert.deepEqual(m.clientes.aliada.ultimo('ROOM_SNAPSHOT').caixa.ordemDinamica, esperada);
+  const sa = m.clientes.aliada.ultimo('ROOM_SNAPSHOT');
+  assert.deepEqual(sa.caixa, { ligada: true, ordemPor: 'iniciativa', ordemDinamica: esperada });
 });
 // Ordem CAIXA-LOBBY (21/11/2026), B6 — NÃO aplicado (ver ESTADO-FINAL-ORDEM-CAIXA-LOBBY.md): o começo do combate não
 // manda ROOM_SNAPSHOT à Party (só eventos), por isso o snapshot do LOBBY é o único que leva a escolha do Mestre à jogadora

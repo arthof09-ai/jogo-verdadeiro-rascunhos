@@ -27,6 +27,7 @@ const CHAVES_MESTRE = [
   'soMestre', 'semente', 'journalSeq', 'recibo', 'modo', 'verificacaoCritico', 'proposta', 'razao', 'fichaId',
   'campoNovoDoMotor', 'reacaoDefensiva', 'desgracaProposta', 'mestre', 'contexto', 'iniciativaValor', 'tokenHash',
   'caixaMestre', // Ordem CAIXA-TESTES (B5-b): a escolha do Mestre na forma dele só vai na MASTER_VIEW
+  'vezes', // Ordem CAIXA-TESTES-CORRECOES (B6): o contador interno da ordem dinâmica não sai na caixa da Party
 ];
 // Da heroína: só ela os vê. Da aliada: só ela.
 const NUMEROS_HEROINA = [8642, 5551, 5150, 4040];
@@ -100,6 +101,11 @@ test('canários: nada do Mestre chega a nenhum papel da Party (jogadoras e espec
     assert.ok(caixas.some((c) => c.ligada === true && c.ordemPor === 'iniciativa'), k + ': snapshot da caixa em iniciativa');
     assert.ok(caixas.some((c) => c.ligada === false), k + ': snapshot da caixa desligada');
     assert.ok(caixas.some((c) => c.ordemDinamica.ordem.length > 0), k + ': a caixa varrida traz a ordem dinâmica da Party');
+    // B6 (CAIXA-TESTES-CORRECOES): as chaves exactas da caixa da Party em todos os snapshots — nada a mais, nada a menos.
+    for (const c of caixas) {
+      assert.deepEqual(Object.keys(c).sort(), ['ligada', 'ordemDinamica', 'ordemPor'], k + ': as chaves da caixa');
+      assert.deepEqual(Object.keys(c.ordemDinamica).sort(), ['fechada', 'ordem', 'ultimo'], k + ': as chaves da ordem dinâmica');
+    }
   }
   const vistaMestre = m.enviar('mestre', { type: 'MASTER_VIEW' }).find((x) => x.type === 'MASTER_VIEW');
   assert.deepEqual(vistaMestre.caixaMestre, { ligada: true, modo: 'dinamico' }, 'o Mestre vê a escolha dele');
