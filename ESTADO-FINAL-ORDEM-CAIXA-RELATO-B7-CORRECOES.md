@@ -4,7 +4,13 @@ As correcções B1–B4 da sentença da conferência da CAIXA-RELATO-B7. Só reg
 mudou** (`git diff 15eab43 -- rascunhos/` vazio).
 
 - **Executor:** conta 2, no PC do cunhado.
-- **Base:** `15eab43`, a ponta de `fable/integracao-50` à hora do lançamento. A linha não avançou durante a ordem.
+- **Base:** `15eab43`, a ponta de `fable/integracao-50` à hora do lançamento. ~~A linha não avançou durante a
+  ordem.~~ **[B7-CORRECOES-2 B3] Falso:** a linha andou `15eab43` → `f049089` dentro da janela da ordem — os três
+  commits da CAIXA-TESTES-CORRECOES-3 (`8870275`, `ae62dd9`, `f049089`) entraram em `fable/integracao-50` às
+  00:45:29–00:45:30 (−03:00; data de commit 03:45:29–30 UTC), entre o commit das correcções (00:44:25) e o deste
+  ESTADO-FINAL (00:48:00). Esta ordem trabalhou e correu tudo sobre `15eab43` e não o viu; o ramo foi depois
+  reposto sobre `f049089` na integração (`5ac2253` → `d7ea743`, `b4b51c2` → `f747427`; `git range-diff` dá os dois patches iguais). Os números deste
+  ESTADO-FINAL são os da `15eab43` + `5ac2253`.
 - **Ramo:** `claude2/caixa-relato-b7-correcoes`, **sem fusão**.
 - **Commits:**
   - `5ac2253`: as correcções, o teste e as corridas;

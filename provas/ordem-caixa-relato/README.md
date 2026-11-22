@@ -184,3 +184,26 @@ Números (Godot 4.7.2 Windows, motor VLAB real `a91c021c…`, semente 7):
 - prova MANEQUIM `correcoes-3/cliente-manequim/relato.txt`: **53/53**, 78 = 78;
 - suites `correcoes-3/suites/`: servidor 418/418, prova da caixa do servidor PROVA OK, rodar_testes 290/290,
   caixa_jogadora 18/18, caixa_janela 69/69, hud_acoes 50/50, canario_privacidade 10/10, abrir_scripts 107 / 0 falhas.
+
+---
+
+# Correcções B1–B4 da sentença da CAIXA-RELATO-B7-CORRECOES (Ordem CAIXA-RELATO-B7-CORRECOES-2 · 22/11/2026, Claude conta 2, PC)
+
+Só o teste do registo; nada do código do jogo muda. As corridas estão em **`b7-correcoes-2/`**.
+
+- **B1 — `"propria"` entra em `PROIBIDAS`.** Nenhuma linha legítima de `relato_caixa.linha()` a traz (palavras fixas,
+  rótulos, tipos de evento, campos da caixa, ids hexadecimais). Mutação «`propria` na caixa do snapshot do caso»:
+  **29/30** (`mutacao-1-propria.log`); o teste antigo dava **30/30** (`mutacao-1-propria-teste-antigo.log`).
+- **B2 — nenhum eco antes da varredura.** As linhas (do §B6 e do caso do `limpar()`) só se imprimem depois de
+  varridas, e uma linha com palavras proibidas fica RETIDA (sai o rótulo e as palavras, não a linha). Mutação «nome-
+  canário na caixa do caso»: **29/30** e o valor **0 vezes** no log (`mutacao-2-canario-eco.log`); no teste antigo, o
+  valor saía **2 vezes**, antes da FALHA (`mutacao-2-canario-eco-teste-antigo.log`).
+- **B4 — as 4 linhas do caso presas.** Rótulo «B7-1:»…«B7-4:» e origem (seq 1, 0, 0, 5); a B7-2 e a B7-3 têm o mesmo
+  corpo, o que o teste também confere. Mutação «a linha B7-1 perde-se e a última repete-se»: **29/30**
+  (`mutacao-3-sem-B7-1.log`); o teste antigo dava **30/30** (`mutacao-3-sem-B7-1-teste-antigo.log`).
+- **B3** — no `ESTADO-FINAL-ORDEM-CAIXA-RELATO-B7-CORRECOES.md` (raiz).
+
+Números (Godot 4.7.2 Windows, Node 26.13.0, motor VLAB real `a91c021c…`, semente 7): teste `teste-relato.log`
+**30/30**; prova HUD-JOGADORA **43/43**; prova MANEQUIM **53/53**; suites `suites/`: servidor **418/418**, prova da
+caixa do servidor **PROVA OK**. Os logs de mutação foram feitos com cópias do teste na pasta `ferramentas/`, apagadas
+antes do commit.

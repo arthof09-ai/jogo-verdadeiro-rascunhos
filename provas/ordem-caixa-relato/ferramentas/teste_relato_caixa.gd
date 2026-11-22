@@ -32,6 +32,15 @@ extends SceneTree
 ##    vida/PA), não a palavra «pa».
 ##  - B6: a conta do fuso confere-se com um instante e um fuso INJECTADOS (`hora_ms(unix, bias_min)`, bias −180 e
 ##    +330): não depende do fuso da máquina, e um `hora_ms()` que esquecesse o fuso falha também no CI (UTC).
+## Ordem CAIXA-RELATO-B7-CORRECOES-2 (sentença da conferência da CAIXA-RELATO-B7-CORRECOES):
+##  - B1: "propria" entra em `PROIBIDAS` — nenhuma linha legítima do relato a traz (as palavras fixas de `linha()`, os
+##    rótulos, os tipos de evento e os campos da caixa não a têm; o «própria» acentuado das provas vivas não é linha
+##    de `linha()` nem casa com "propria"). «Não traz `propria`» passa a ser verdade por teste.
+##  - B2: nenhuma linha é ecoada ANTES da varredura. As linhas (do §B6 e do caso do `limpar()`) só se imprimem depois
+##    de varridas, e uma linha com palavras proibidas NÃO se imprime — sai só o rótulo e as palavras achadas (`_ecoar`).
+##  - B4: a verificação de cobertura do caso do `limpar()` prende as 4 linhas pelo rótulo («B7-1:» … «B7-4:») e pela
+##    origem (seq 1, seq 0, seq 0, seq 5); a B7-2 e a B7-3 têm o mesmo corpo (o evento à espera não muda nada) e
+##    distinguem-se pelo rótulo — o teste confere as duas coisas. Continua 30/30.
 ##
 ## Correr (na raiz do repo):
 ##   godot --headless --path rascunhos/cliente -s "$PWD/provas/ordem-caixa-relato/ferramentas/teste_relato_caixa.gd"
@@ -40,7 +49,9 @@ const OrdemTurnos := preload("res://hud/ordem_turnos.gd")
 
 ## As palavras que nenhuma linha do relato pode ter (B6; CORRECOES-2 B3). Partilhada pela varredura do §B6 e pela do
 ## caso do `limpar()` (B7-CORRECOES B2).
-const PROIBIDAS := ["nome", "vida", "alma", "pa", "pa\"", "paTotal", "vidaActual", "mestre", "master", "caixaMestre"]
+## B7-CORRECOES-2 (B1): "propria" (o campo do snapshot só da jogadora: vida, PA e ficha dela — estado.gd:56).
+const PROIBIDAS := ["nome", "vida", "alma", "pa", "pa\"", "paTotal", "vidaActual", "mestre", "master", "caixaMestre",
+	"propria"]
 
 var _total := 0
 var _falhas := 0
@@ -81,7 +92,6 @@ func _init() -> void:
 	var act: Dictionary = R.caixa_actual(snap_caixa, m)
 	var l: String = R.linha("1", snap_caixa, snap, act)
 	linhas.append(l)
-	print("  linha: ", l)
 	_ok(not R.desactualizado(snap_caixa, act), "acabado de chegar: o JSON do snapshot é a caixa actual")
 	_ok(l.contains("JSON actual") and not l.contains("DESACTUALIZADO"), "acabado de chegar: a linha diz «JSON actual», sem «DESACTUALIZADO»")
 	_ok(l.contains("seq 9") and l.contains("revisão 31") and l.contains("21:30:00.125") and l.contains("0 evento(s) aplicado(s) depois dele [], 0 de actor"),
@@ -130,7 +140,6 @@ func _init() -> void:
 	se["revisao_actual"] = 32
 	var le: String = R.linha("e", snap_caixa, se, R.caixa_actual(snap_caixa, me))
 	linhas.append(le)
-	print("  linha: ", le)
 	_ok(se["eventos"] == 1 and se["de_actor"] == 0 and se["tipos"] == ["turno"],
 		"um `encerrar` (o `turno` que produz): exactamente 1 evento, de tipo turno, 0 de actor")
 	_ok(le.contains("JSON actual") and le.contains("1 evento(s) aplicado(s) depois dele [turno], 0 de actor") and not le.contains("adiantaram"),
@@ -167,7 +176,6 @@ func _init() -> void:
 	act = R.caixa_actual(snap_caixa, m)
 	l = R.linha("4", snap_caixa, snap, act)
 	linhas.append(l)
-	print("  linha: ", l)
 	_ok(m.fechada and act["ordemDinamica"]["fechada"] == true and act["ordemDinamica"]["ordem"] == [arq, lobo, esp, bruto] and act["ordemDinamica"]["ultimo"] == arq,
 		"o modelo do HUD adiantou-se pelos eventos de actor: 4 figuras, fechada true, Arqueira na vez (a caixa actual)")
 	_ok(OrdemTurnos.actor_do_evento(eventos[5]) == "", "o evento `estado` (com figuraId) não é de actor")
@@ -201,6 +209,7 @@ func _init() -> void:
 	_ok(linhas.size() == 6 and actuais == 5,
 		"a privacidade varre as 6 linhas, 5 delas «JSON actual» (não só a do §4; %d linhas, %d actuais)" % [linhas.size(), actuais])
 	_ok(achadas.is_empty(), "nenhuma linha ganha nomes, vida, alma nem PA %s" % [achadas])
+	_ecoar(linhas)  # B7-CORRECOES-2 (B2): o eco só depois da varredura, e só das linhas limpas
 
 	_caso_limpar(R)
 
@@ -219,6 +228,19 @@ func _proibidas_em(linhas_v: Array) -> Array:
 	return achadas
 
 
+## B7-CORRECOES-2 (B2): o eco das linhas, chamado SÓ DEPOIS da varredura. Uma linha limpa imprime-se inteira; uma linha
+## com palavras proibidas não — sai o rótulo (o texto antes do primeiro «:», que é do teste) e as palavras achadas. Num
+## vazamento real o valor não chega ao log cometido.
+func _ecoar(linhas_v: Array) -> void:
+	for linha_r in linhas_v:
+		var lx := str(linha_r)
+		var achadas: Array = _proibidas_em([lx])
+		if achadas.is_empty():
+			print("  linha: ", lx)
+		else:
+			print("  linha %s: RETIDA (não se imprime; tem %s)" % [lx.get_slice(":", 0), achadas])
+
+
 ## Ordem CAIXA-RELATO-B7 (Mecânica D4 da conferência da CAIXA-RELATO-CORRECOES): `Estado.limpar()` emite
 ## `snapshot_aplicado` — as provas recomeçam aí o contador (`_registar_snapshot` → novo_snap) — mas deixava
 ## `eventos_desde_snapshot` com os eventos do snapshot de ANTES. A verificação B2 das provas (a contagem e os tipos do
@@ -226,6 +248,7 @@ func _proibidas_em(linhas_v: Array) -> Array:
 ## ESTADO REAL (res://estado/estado.gd, fora da árvore: sem Rede, sem Mestre) e a mesma ligação das provas.
 ## Só ids opacos: o snapshot DESTE CASO (o que o teste monta) não traz `propria` nem nomes; nada de vida, alma ou PA.
 ## B7-CORRECOES (B2): as linhas do relato deste caso também passam pela varredura de privacidade (no fim do caso).
+## B7-CORRECOES-2 (B1): e "propria" está em `PROIBIDAS` — «não traz `propria`» confere-se nas linhas, não só na montagem.
 func _caso_limpar(R) -> void:
 	var est = load("res://estado/estado.gd").new()
 	var ctx := {"snap": {}}
@@ -276,10 +299,16 @@ func _caso_limpar(R) -> void:
 	evento.call(6, "turno", a)
 	b2.call("o snapshot novo e um evento", ["turno"])
 	# B7-CORRECOES (B2): a varredura de privacidade do §B6, estendida a este caso — as 4 linhas, a mesma lista.
-	for lb in linhas_b7:
-		print("  linha: ", lb)
-	_ok(linhas_b7.size() == 4 and str(linhas_b7[1]).contains("seq 0") and str(linhas_b7[3]).contains("seq 5"),
-		"B7-CORRECOES: a varredura do caso do limpar() cobre as 4 linhas do relato (antes, o limpar() sem snapshot, o evento à espera, o snapshot novo; %d linhas)" % linhas_b7.size())
+	# B7-CORRECOES-2 (B4): cada linha presa pelo rótulo e pela origem; B7-1 pela âncora «seq 1,». A B7-2 e a B7-3 têm o
+	# mesmo corpo (o evento à espera não muda nada): o rótulo distingue-as, e o teste confere que o corpo é igual.
+	var seqs := ["seq 1,", "seq 0,", "seq 0,", "seq 5,"]
+	var presas := linhas_b7.size() == 4
+	for i in range(mini(linhas_b7.size(), 4)):
+		presas = presas and str(linhas_b7[i]).begins_with("B7-%d:" % (i + 1)) and str(linhas_b7[i]).contains(seqs[i])
+	presas = presas and str(linhas_b7[1]).get_slice(":", 0) != str(linhas_b7[2]).get_slice(":", 0) 		and str(linhas_b7[1]).trim_prefix("B7-2") == str(linhas_b7[2]).trim_prefix("B7-3")
+	_ok(presas,
+		"B7-CORRECOES: a varredura do caso do limpar() cobre as 4 linhas do relato, cada uma presa pelo rótulo e pela origem (B7-1 seq 1, B7-2 seq 0, B7-3 seq 0 com o mesmo corpo da B7-2, B7-4 seq 5; %d linhas)" % linhas_b7.size())
 	var achadas_b7: Array = _proibidas_em(linhas_b7)
-	_ok(achadas_b7.is_empty(), "B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma nem PA %s" % [achadas_b7])
+	_ok(achadas_b7.is_empty(), "B7-CORRECOES: nenhuma linha do caso do limpar() ganha nomes, vida, alma, PA nem `propria` %s" % [achadas_b7])
+	_ecoar(linhas_b7)  # B7-CORRECOES-2 (B2): o eco só depois da varredura, e só das linhas limpas
 	est.free()
