@@ -1,0 +1,7 @@
+# actualizar-listas.py depois de de02d81
+antes.txt: 37 · depois.txt: 415 · MANIFESTO: 459 ficheiros (0 novos, 0 tirados nesta passagem)
+## diff das listas (só as linhas mudadas)
+-7703320c87701acf31e29c11a99ba929cfdf5e35276adfd6f4c10082c6b3398a  rascunhos/servidor/autojogo/cenario-bancada.json
++2cab6459b35260ac9d84d4787e3a5cecda150f0c6f257882f0a7d044cdb9afd4  rascunhos/servidor/autojogo/cenario-bancada.json
+-7703320c87701acf31e29c11a99ba929cfdf5e35276adfd6f4c10082c6b3398a  rascunhos/servidor/autojogo/cenario-bancada.json
++2cab6459b35260ac9d84d4787e3a5cecda150f0c6f257882f0a7d044cdb9afd4  rascunhos/servidor/autojogo/cenario-bancada.json
