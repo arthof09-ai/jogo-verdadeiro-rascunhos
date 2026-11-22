@@ -11,6 +11,11 @@ extends SceneTree
 ##    a caixa não tapa a ⚙/ficha, a barra nem a faixa e nada fica cortado (contam); a faixa centrada mede-se e regista-se
 ##    (REGISTO ..., não conta: com a caixa larga, a faixa centra-se entre a ⚙ e a caixa, por desenho da CAIXA-JANELA B3).
 ##    As medidas saem no registo (MEDIDA ...). O critério está em provas/ordem-caixa-hud-jogadora/medicao-8-figuras/CRITERIO.md.
+##    Ordem CAIXA-HUD-JOGADORA-TECTO-DESVIO-PONTO-4: o desvio do centro da faixa tem um TECTO por resolução (não pior que
+##    hoje: 539,0 / 576,0 / 350,5 u), que conta. É um tripwire, não a fasquia (a fasquia do critério é ≤ 1 u); quando o
+##    EXPANDE entrar, o tecto actualiza-se com a nova medição. A variante estrita (o ponto 4 a contar, ≤ 1 u, em vez do
+##    tecto) corre-se com `-- --estrita` (o CI corre sem a opção):
+##      godot --headless --path cliente -s res://testes/caixa_jogadora.gd -- --estrita
 ## Código de saída 0 se tudo passa, 1 se algo falha.
 
 var _total := 0
@@ -22,6 +27,10 @@ var _seq := 0
 var _figs: Array = []
 ## §8: nomes públicos genéricos, até 10 letras (o corte da caixa), para encher a fila.
 const NOMES_8 := ["Espadachim", "Arqueira", "Criatura", "Criatura", "Personagem", "Criatura", "Criatura", "Criatura"]
+## §8: o tecto do desvio do centro da faixa (u), por resolução: o desvio medido na MEDICAO-8-FIGURAS (não pior que hoje).
+const TECTO_DESVIO_8 := {Vector2i(844, 390): 539.0, Vector2i(780, 360): 576.0, Vector2i(1920, 1080): 350.5}
+## §8: a variante estrita (`-- --estrita`): o ponto 4 conta com a fasquia do critério (≤ 1 u), em vez do tecto.
+var _estrita := OS.get_cmdline_user_args().has("--estrita")
 
 
 func _init() -> void:
@@ -258,4 +267,13 @@ func _medir_8(hud: Node, tam: Vector2i) -> void:
 	# correcção é o EXPANDE. A 1.ª corrida, com ele a contar, está em provas/.../medicao-8-figuras/corrida-1-criterio.log.
 	print("  REGISTO (não conta) 8 figuras %dx%d: a faixa centrada no ecrã? %s (margens %d / %d u, desvio %.1f u)" % [
 		tam.x, tam.y, "SIM" if centrada else "NÃO", int(faixa.offset_left), int(-faixa.offset_right), desvio_centro])
+	# Ordem CAIXA-HUD-JOGADORA-TECTO-DESVIO-PONTO-4: o tecto (tripwire), não pior que hoje. Se a centragem piorar, falha.
+	# Na variante estrita (`-- --estrita`) conta a fasquia do critério (≤ 1 u) em vez do tecto: hoje dá 33/36.
+	if _estrita:
+		_ok(centrada, "8 figuras %dx%d: [estrita] a faixa continua centrada (desvio %.1f u ≤ 1 u, margens %d / %d u)" % [
+			tam.x, tam.y, desvio_centro, int(faixa.offset_left), int(-faixa.offset_right)])
+	else:
+		var tecto: float = TECTO_DESVIO_8[tam]
+		_ok(desvio_centro <= tecto, "8 figuras %dx%d: o desvio do centro da faixa não piora (%.1f u ≤ tecto %.1f u; não pior que hoje)" % [
+			tam.x, tam.y, desvio_centro, tecto])
 	_ok(cabe, "8 figuras %dx%d: nada cortado (caixa no ecrã %s, quadradinhos fora %s, faixa %d ≥ %d u)" % [tam.x, tam.y, tela.encloses(r), slots_fora, int(livre), int(precisa)])
