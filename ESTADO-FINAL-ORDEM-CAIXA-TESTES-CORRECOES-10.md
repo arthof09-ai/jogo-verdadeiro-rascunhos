@@ -21,7 +21,7 @@ Nenhuma linha de código mudou. Não toquei em código do jogo, no HUD, nas core
 ## Ponto a ponto
 
 ### B1 (D1): o ESTADO-FINAL-8 aponta para as frases em vigor
-**Prova:** no corpo do ESTADO-FINAL-8, os blocos «Corrigido» do §B1 (l. 28–31) e do §B3 (l. 56–62) citavam, fora do
+**Prova:** no corpo do ESTADO-FINAL-8, os blocos «Corrigido» do §B1 (l. 28–31) e do §B3 (l. 61–67) citavam, fora do
 riscado, as frases da CORRECOES-8 como estavam. A CORRECOES-9 substituiu-as noutros sítios (`git show 60076d1`):
 - **A frase da fixture:** está riscada no ESTADO-FINAL-7, ponto 2 para o coordenador. Por baixo, a nota «Apertado na
   CAIXA-TESTES-CORRECOES-9 (B3), 22/11/2026».
@@ -41,7 +41,7 @@ CORRECOES-8 escreveu.
   na CORRECOES-9 (B2). Aponta para o ESTADO-FINAL-9, B1 e B2.
 
 ### B2 (O1): os 5 cenários no ESTADO-FINAL-9
-**Prova:** `gerar()` (`testes/fixture-mestre.test.mjs`, l. 80–98) corre 5 funções de cenário:
+**Prova:** `gerar()` (`rascunhos/servidor/testes/fixture-mestre.test.mjs`, l. 80–96) corre 5 funções de cenário:
 - `cenarioDesgraca`, `cenarioIA` e `cenarioDados`, que ficam todos em `mestre`: `{ vista: d.vista, snapshot:
   d.snapshotMestre, cartoes: { desgraca: d.cartao, ia, dados } }`;
 - `cenarioLobby`, que fica em `lobby`;
