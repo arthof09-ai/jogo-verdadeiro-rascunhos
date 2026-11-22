@@ -41,7 +41,7 @@ achados nele (§2).
 | `retoma-i0004/actualizar-listas.py`, antes do commit | «MANIFESTO: 459 ficheiros (0 novos, 0 tirados nesta passagem)», sem mudanças nas listas |
 | `retoma-i0004/actualizar-listas.py`, depois do commit | o mesmo, 0 novos, 0 tirados, sem mudanças |
 
-O CI da ponta fica registado no commit seguinte a este (§4).
+O CI da ponta está no §4.
 
 ## 3. Pontos para o coordenador
 
@@ -66,4 +66,8 @@ O CI da ponta fica registado no commit seguinte a este (§4).
 
 ## 4. CI
 
-(preenchido no commit seguinte)
+**Commits na linha:** `8fff874` (o log, B1) e `405f04f` (este ESTADO-FINAL), publicados com `ec79c90..405f04f`.
+O `fetch` antes de publicar não trouxe nada, por isso não houve rebase nem conflitos.
+
+CI em `405f04f`: **Testes dos rascunhos** (run 45062749007): `success`, **10/10 jobs**. **Sonda de
+privacidade** (run 45062749018): `success`. O commit que acrescenta este §4 só muda este ficheiro.
