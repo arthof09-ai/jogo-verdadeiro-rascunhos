@@ -75,3 +75,45 @@ static func linhas(relato: PackedStringArray, nomes: Array) -> Array:
 ## nomes (o diagnóstico vai para o relato e para os registos, que são cometidos: escrever lá o nome achado era a fuga).
 static func diagnostico(relato: PackedStringArray, nomes: Array) -> String:
 	return "%d achado(s), linhas %s" % [no_relato(relato, nomes).size(), JSON.stringify(linhas(relato, nomes))]
+
+
+## CAIXA-JANELA-COBERTURA (C1; fecha as faltas 1 e 2 da B7 da CAIXA-JANELA-NOMES-CORRECOES): as CHAVES de vida, PA e
+## alma que nenhuma linha do relato pode trazer. A varredura é por chaves e não por valores: os valores de bancada
+## (vida 16/22/30/34, PA 0/6) confundem-se com coordenadas, seq e medidas. Apanha também um valor que a IA ou o protocolo
+## ponham no passo da linha «bancada:» (que é `JSON.stringify(passo)`), p. ex. um custo de PA como `"paLivre":4`.
+## Os rótulos das verificações usam «vida», «PA» e «alma» como PALAVRAS, e não tropeçam: as chaves camelCase só
+## aparecem como chaves; e «alma», que também é palavra portuguesa, só conta em posição de chave (`"alma"`, `'alma'`,
+## `alma:` / `alma=`) ou como início de um identificador camelCase (`almaLivre`, `almaTotal`: a forma da chave de alma
+## ainda não existe em ficha nenhuma; ver a C2).
+const CHAVES_PROIBIDAS := ["vidaActual", "vidaTotal", "paTotal", "paLivre", "alma"]
+
+
+static func _re_chave(k: String) -> RegEx:
+	if k == "alma":
+		return RegEx.create_from_string("(?<![A-Za-z0-9_])(?:alma[A-Z][A-Za-z0-9_]*|\"alma\"|'alma'|alma[ \\t]*[:=])")
+	return RegEx.create_from_string(k)
+
+
+## As chaves proibidas nas linhas do relato («<chave> na linha <n>», uma entrada por linha × chave). Vazio = limpo.
+## Só para o teste conferir o caso; o diagnóstico que vai para o relato é o de `diagnostico_chaves()`.
+static func chaves_no_relato(relato: PackedStringArray) -> Array:
+	var achados: Array = []
+	var res := {}
+	for k in CHAVES_PROIBIDAS:
+		res[k] = _re_chave(k)
+	for i in relato.size():
+		for k in CHAVES_PROIBIDAS:
+			if (res[k] as RegEx).search(relato[i]) != null:
+				achados.append("%s na linha %d" % [k, i + 1])
+	return achados
+
+
+## O diagnóstico da varredura das chaves: a contagem e as linhas, sem as chaves — o diagnóstico vai para o relato, e
+## escrever lá a chave achada faria a varredura seguinte (a do `fim`) tropeçar no próprio rótulo.
+static func diagnostico_chaves(relato: PackedStringArray) -> String:
+	var ls: Array = []
+	for a in chaves_no_relato(relato):
+		var n := int(str(a).get_slice(" na linha ", 1))
+		if not ls.has(n):
+			ls.append(n)
+	return "%d achado(s), linhas %s" % [chaves_no_relato(relato).size(), JSON.stringify(ls)]

@@ -76,3 +76,32 @@ Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c�
   rodar_testes 290/290 · abrir_scripts 107/0 falhas · caixa_jogadora 18/18 · hud_acoes 50/50 · canario_privacidade 10/10.
 - `nomes-correcoes/mutacoes.log` — as provas da B1 (o passo verde/vermelho) e da B3 (a fuga com paragem no passo 0:
   calada na base, FALHA «fim» agora).
+
+## cobertura/ — Ordem CAIXA-JANELA-COBERTURA (22/11/2026, Claude conta 2, PC): as correcções C1–C2
+- **C1:** o relato é varrido por **chaves proibidas** de vida/PA/alma (`nomes_relato.gd`, `CHAVES_PROIBIDAS` = as 5:
+  `vidaActual`, `vidaTotal`, `paTotal`, `paLivre`, `alma`). Na prova: em cada passagem (1, 2) e no fim (incondicional,
+  como a dos nomes). No teste: o §5 (5 verificações novas, 14 → 19). As chaves camelCase contam em qualquer sítio da
+  linha. «alma» é também palavra portuguesa, por isso só conta em posição de chave (`"alma"`, `'alma'`, `alma:`,
+  `alma=`) ou como início de um identificador camelCase (`almaLivre`). Os rótulos «vida, PA, alma», em palavra, não
+  tropeçam. O diagnóstico diz a contagem e as linhas, sem a chave. Cobre a linha «bancada:», que escreve o passo
+  inteiro.
+- **C2 (condição):** não se cumpre. Nenhuma ficha (a de bancada, o protocolo ou o servidor) tem um campo de alma, por
+  isso não há valor para o canário.
+
+Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c…`; semente 7):
+- `cobertura/teste-nomes-relato.log`: **teste 19/19** (os 14 de antes, iguais, + 5 do §5).
+- `cobertura/cliente/`: **prova viva 41/41** (eram 38; +3: 1, 2 e fim). 0 nomes verdadeiros e 0 chaves proibidas no
+  relato. Capturas (sha256, 16 primeiros): `1-janela-1280x720.png` `95903df226a9cfd0`, `2-baixo-844x390.png`
+  `00410562fefa1dbd`, `3-baixo-780x360.png` `939137737ead4137`.
+- `cobertura/suites/`:
+  - servidor (`node --test`): 419/419;
+  - prova-servidor: PROVA OK;
+  - teste_relato_caixa: 30/30;
+  - rodar_testes: 290/290;
+  - abrir_scripts: 107 scripts, 0 falhas;
+  - caixa_jogadora 18/18 · hud_acoes 50/50 · canario_privacidade 10/10.
+- `cobertura/mutacoes.log`: as mutações, todas executadas.
+  - **M1:** um passo «bancada:» com um custo de PA, na prova viva. Na base passa calado (38/38, rc=0, com 13 linhas com
+    a chave). Agora dá FALHA em 1, em 2 e no fim (38/41, rc=1).
+  - **M2:** a chave do PA livre tirada da lista. O teste dá 17/19, rc=1.
+  - **M3:** «alma» procurada como texto simples. O teste dá 18/19, rc=1, porque os rótulos em palavra tropeçam.

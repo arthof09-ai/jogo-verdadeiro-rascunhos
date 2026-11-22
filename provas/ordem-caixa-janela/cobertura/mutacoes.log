@@ -1,0 +1,32 @@
+# CAIXA-JANELA-COBERTURA — as mutações da C1 (todas em cópias em tmp/; nenhuma cometida)
+
+## M1 — a prova viva com um passo «bancada:» que traz um custo de PA
+Mutação (igual nas duas cópias): em _jogar_vez, o passo escrito na linha «bancada:» leva `passo.merged({<chave do PA livre>: max(PA livre − 1, 0)})` (menos no «encerrar»).
+Servidor de bancada real, porta 8793, semente 7, motor VLAB real sha256 a91c021c…3261.
+
+### versão da base (91fcfc5: só o canário dos nomes): rc=0, a fuga NÃO é vista
+prova da janela e da caixa com 10 figuras: 38 de 38 verificações passaram.
+  (linhas do relato com a chave do PA livre: 13 — linhas 6 8 10 12 14 16 18 20 22 24 30 32 34 )
+
+### versão desta ordem (C1: varredura por chaves em 1, 2 e fim): rc=1, a fuga é FALHA
+  FALHA 1: nenhuma chave de vida/PA/alma no relato (48 linhas; 5 chaves proibidas; 13 achado(s), linhas [6,8,10,12,14,16,18,20,22,24,30,32,34])
+  FALHA 2: nenhuma chave de vida/PA/alma no relato (77 linhas; 5 chaves proibidas; 13 achado(s), linhas [6,8,10,12,14,16,18,20,22,24,30,32,34])
+  FALHA fim: o relato inteiro (79 linhas) não traz nenhuma das 5 chaves de vida/PA/alma (13 achado(s), linhas [6,8,10,12,14,16,18,20,22,24,30,32,34])
+prova da janela e da caixa com 10 figuras: 38 de 41 verificações passaram.
+  (linhas do relato com a chave do PA livre: 13 — linhas 6 8 10 12 14 16 18 20 22 24 30 32 34 )
+
+## M2 — o teste com «paLivre» tirado das chaves proibidas (nomes_relato.gd, CHAVES_PROIBIDAS): rc=1
+  FALHA 5: as chaves proibidas são as 5 de vida/PA/alma ["vidaActual", "vidaTotal", "paTotal", "alma"]
+  ok    5: o relato da fonte e o relato antigo (76 linhas) não têm chaves (0 achado(s), linhas []; 0 achado(s), linhas [])
+  FALHA 5: um passo «bancada:» com um custo de PA → a varredura FALHA (0 achado(s), linhas [])
+  ok    5: cada uma das 5 chaves é apanhada em JSON, em str() de Dictionary, em k= e em k: (e «almaLivre») — 17 linhas, 17 achado(s), linhas [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
+  ok    5: «vida», «PA» e «alma» como palavras não são chaves, e o diagnóstico não escreve a chave (0 achado(s), linhas [])
+teste dos nomes do relato da caixa-janela: 17 de 19 verificações passaram.
+
+## M3 — o teste com «alma» procurada como texto simples (sem a posição de chave): rc=1
+  ok    5: as chaves proibidas são as 5 de vida/PA/alma ["vidaActual", "vidaTotal", "paTotal", "paLivre", "alma"]
+  ok    5: o relato da fonte e o relato antigo (76 linhas) não têm chaves (0 achado(s), linhas []; 0 achado(s), linhas [])
+  ok    5: um passo «bancada:» com um custo de PA → a varredura FALHA (1 achado(s), linhas [5])
+  ok    5: cada uma das 5 chaves é apanhada em JSON, em str() de Dictionary, em k= e em k: (e «almaLivre») — 21 linhas, 21 achado(s), linhas [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
+  FALHA 5: «vida», «PA» e «alma» como palavras não são chaves, e o diagnóstico não escreve a chave (2 achado(s), linhas [2,3])
+teste dos nomes do relato da caixa-janela: 18 de 19 verificações passaram.

@@ -8,6 +8,8 @@ extends SceneTree
 ## CAIXA-JANELA-NOMES-CORRECOES: esse relato está CONGELADO aqui dentro (RELATO_VELHO, B2), para o §4 não depender do
 ## ficheiro (que é registo histórico e pode ser limpo por outra ordem); a vista vem do elenco pelo ajudante da prova
 ## (`vista_do_elenco`, B6); os diagnósticos dizem a contagem e as linhas, não os nomes (`diagnostico`, B4).
+## CAIXA-JANELA-COBERTURA (C1): §5 — a varredura do relato por CHAVES proibidas de vida/PA/alma
+## (`chaves_no_relato`, a mesma que a prova corre), com o caso de um passo «bancada:» que traz um custo de PA.
 ## No CI: job `cliente`, passo «Nomes do relato da caixa-janela» (B1).
 ##
 ## Correr (na raiz do repo):
@@ -96,6 +98,39 @@ func _init() -> void:
 	_ok(achados_velho.size() == 22 and achados_velho[0] == "Lobo de Bancada na linha 7" and brutas == 28,
 		"4: o canário apanha no relato antigo 22 achados (28 ocorrências brutas), o 1.º «Lobo de Bancada na linha 7» (%s; %d brutas)" % [
 		N.diagnostico(velho, canarios), brutas])
+
+	print("== 5. C1 — as chaves proibidas de vida/PA/alma no relato ==")
+	var chaves: Array = N.CHAVES_PROIBIDAS
+	_ok(chaves == ["vidaActual", "vidaTotal", "paTotal", "paLivre", "alma"], "5: as chaves proibidas são as 5 de vida/PA/alma %s" % [chaves])
+	# O relato escrito pela fonte e o relato antigo inteiro (com os seus rótulos «vida, PA» em palavra) passam.
+	_ok(N.chaves_no_relato(limpo).is_empty() and N.chaves_no_relato(velho).is_empty(),
+		"5: o relato da fonte e o relato antigo (%d linhas) não têm chaves (%s; %s)" % [velho.size(), N.diagnostico_chaves(limpo), N.diagnostico_chaves(velho)])
+	# O caso: a IA ou o protocolo põem um custo de PA no passo; a linha «bancada:» escreve o passo inteiro.
+	var passo_pa := {"tipo": "mover", "destino": {"x": 11, "y": 10}, "paLivre": 4}
+	var com_pa := limpo.duplicate()
+	com_pa.append(N.linha_bancada(lobo, "lobo-bancada", passo_pa, "APLICADA"))
+	_ok(N.chaves_no_relato(com_pa) == ["paLivre na linha 5"] and N.diagnostico_chaves(com_pa) == "1 achado(s), linhas [5]",
+		"5: um passo «bancada:» com um custo de PA → a varredura FALHA (%s)" % N.diagnostico_chaves(com_pa))
+	# Cada chave, nas formas em que pode chegar a uma linha: JSON, `str()` de um Dictionary do Godot, `k=`/`k:` à mão.
+	var formas := PackedStringArray()
+	for k in chaves:
+		formas.append("  x %s" % JSON.stringify({k: 9}))
+		formas.append("  x %s" % str({k: 9}))
+		formas.append("  x %s=9" % k)
+		formas.append("  x %s: 9" % k)
+	formas.append("  x almaLivre 3")
+	var por_forma: Array = []
+	for i in formas.size():
+		por_forma.append(N.chaves_no_relato(PackedStringArray([formas[i]])).size())
+	_ok(not por_forma.has(0) and N.diagnostico_chaves(formas) == "%d achado(s), linhas %s" % [formas.size(), JSON.stringify(range(1, formas.size() + 1))],
+		"5: cada uma das 5 chaves é apanhada em JSON, em str() de Dictionary, em k= e em k: (e «almaLivre») — %d linhas, %s" % [formas.size(), N.diagnostico_chaves(formas)])
+	# As palavras não tropeçam (os rótulos usam-nas), e o diagnóstico não escreve a chave achada.
+	var prosa := PackedStringArray([
+		"  ok    1: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa (0 achado(s), textos [])",
+		"  ok    1: nenhuma chave de vida/PA/alma no relato (40 linhas; 5 chaves proibidas; 0 achado(s), linhas [])",
+		"  a alma do Lobo, com calma, na palma da mão; Alma; almas; vida total; PA livre"])
+	_ok(N.chaves_no_relato(prosa).is_empty() and not N.diagnostico_chaves(com_pa).contains("paLivre"),
+		"5: «vida», «PA» e «alma» como palavras não são chaves, e o diagnóstico não escreve a chave (%s)" % N.diagnostico_chaves(prosa))
 	_fim()
 
 
