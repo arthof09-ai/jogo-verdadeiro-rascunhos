@@ -104,5 +104,13 @@ Não mudou o sentido de nenhum ponto nem nenhuma conta.
   - o commit seguinte: as listas da retoma e este ESTADO-FINAL.
   Antes de publicar: `fetch` e depois `rebase` sobre a ponta. A ponta continuava em `5a29112`: nada a rebasear e
   nenhum conflito.
-- **CI:** o teste publicado sai com rc 0 no PC (33/33). O CI da ponta corre depois do push e fica para a
-  conferência do coordenador.
+- **Publicado:** push `5a29112..3203d83 -> fable/integracao-50`. `git ls-remote`: `fable/integracao-50` =
+  `3203d8331e2c47f79d8c575f7da8ad6a40d5bbbf`. O commit `3203d83` leva as listas e este ESTADO-FINAL.
+
+## 5. CI da ponta: VERIFICADO
+- No `3203d83`: **Testes dos rascunhos success** (run 45067277410; servidor, validador-glb, motor-real, protocolo,
+  cliente, godot-cliente, ponta-a-ponta, foto-mestre, retoma-pc e provas-mapa, todos success) e **Sonda de privacidade
+  success** (run 45067277477).
+- No job `cliente`, o `caixa_jogadora.gd` dá **33 de 33**. As 3 linhas `REGISTO (não conta)` têm os mesmos números do
+  PC (margens 126/1204, 136/1288 e 77/778 u).
+- Este parágrafo segue num commit só deste ficheiro, por cima do `3203d83`.
