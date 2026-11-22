@@ -79,6 +79,17 @@ inteiros). Reescrevi 3 linhas, sem mudar nenhum número, e ficou 0 / 0.
   Mudou 1 linha nos dois ficheiros: a do `caixa_jogadora.gd` (`59aa1fbb…` → `0af2deff…`).
 - **Commits, directamente na linha `fable/integracao-50`:**
   - `762088f`: o teste (B1, com a opção `--estrita`);
-  - o commit seguinte: a pasta de provas (B2/B3);
-  - o commit seguinte: as listas da retoma e este ESTADO-FINAL.
-- Publicação e CI: ver o §5.
+  - `48855ed`: a pasta de provas (B2/B3);
+  - `7d1e007`: as listas da retoma e este ESTADO-FINAL.
+  Antes de publicar: `fetch` e `rebase` sobre a ponta. A ponta continuava em `4f3b5d8`: nada a rebasear, nenhum
+  conflito. Depois do 3.º commit, o `actualizar-listas.py` voltou a dar 0 novos, 0 tirados, sem mudanças.
+- **Publicado:** push `4f3b5d8..7d1e007 -> fable/integracao-50`. `git ls-remote`: `fable/integracao-50` =
+  `7d1e007a57f485c919b95a74839b8741220dcdfd`.
+
+## 5. CI da ponta: VERIFICADO
+- No `7d1e007`: **Testes dos rascunhos success** (run 45072371443; protocolo, retoma-pc, motor-real, cliente,
+  godot-cliente, ponta-a-ponta, provas-mapa, servidor, validador-glb e foto-mestre, todos success) e **Sonda de
+  privacidade success** (run 45072371545).
+- No job `cliente`, o `caixa_jogadora.gd` dá **36 de 36**. As 3 linhas do tecto passam com os mesmos números do PC
+  (539,0 / 576,0 / 350,5 u).
+- Este parágrafo segue num commit só deste ficheiro, por cima do `7d1e007`.
