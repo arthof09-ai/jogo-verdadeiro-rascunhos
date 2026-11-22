@@ -47,7 +47,9 @@ O registo da CORRECOES-5 é registo cometido e não se emenda. A correcção vai
   de vida ou de alma», e não chaves. O log mostra-os.
 
 A frase da sentença, «1× num comentário TODO, sala.js:615», é exacta para as fontes que a conferência varre. Não é
-exacta para o servidor inteiro, onde a palavra aparece 4 vezes, todas em comentários.
+exacta para o servidor inteiro, onde a palavra aparece 8 vezes no servidor (`rascunhos/servidor/`, ficheiros seguidos:
+4 no núcleo — `sala.js:615` e os 3 de `ordem-dinamica.js` — e 4 nos testes), todas em comentários ou prosa, nunca
+chave. *(Emenda da CORRECOES-7, B2: dizia «4 vezes», que é só a conta do núcleo.)*
 
 ### B2 — a saída do `godot --import` capturada
 
@@ -89,7 +91,7 @@ tudo, corri `godot --headless --path rascunhos/cliente --import` no clone novo: 
 |---|---|---|
 | Importação do cliente | rc=0, 0 SCRIPT ERROR, 415 linhas | `cobertura-correcoes-6/godot-import.log` |
 | Teste dos nomes do relato | **26/26**, rc=0, 0 SCRIPT ERROR; «correram as 25 verificações do teste (esperadas 25)». **Igual byte a byte** ao registo da CORRECOES-5 (`cmp`) | `cobertura-correcoes-6/teste-nomes-relato.log` |
-| Prova viva da caixa-janela | **41/41**, rc=0, 0 SCRIPT ERROR. 0 nomes verdadeiros e 0 achados das 17 chaves na passagem 1 (47 linhas), na passagem 2 (76) e no fim (78). O relato é **igual byte a byte** ao da CORRECOES-5 (`cmp`) | `cobertura-correcoes-6/cliente/relato.txt` |
+| Prova viva da caixa-janela | **41/41**, rc=0, 0 SCRIPT ERROR. 0 nomes verdadeiros e 0 achados das 17 chaves na passagem 1 (47 linhas), na passagem 2 (76) e no fim (78) — estas são as contagens da verificação das chaves; a dos nomes conta 46/75/77 *(emenda da CORRECOES-7, B5)*. O relato é **igual byte a byte** ao da CORRECOES-5 (`cmp`) | `cobertura-correcoes-6/cliente/relato.txt` |
 | Conferência das fontes (B1, B3) | §0 com diff vazio. A conta continua 8 + `paLivre` + `dano` = 10. `alma` não aparece como chave. Os eventos do `dano:` são `raio`/`dano_ambiente` | `cobertura-correcoes-6/conferencia-fontes.log` |
 | `actualizar-listas` | «antes.txt: 37 · depois.txt: 415 · MANIFESTO: 459 ficheiros (0 novos, 0 tirados nesta passagem)». As listas ficaram iguais antes e depois | `cobertura-correcoes-6/actualizar-listas.log` |
 
@@ -99,8 +101,9 @@ tudo, corri `godot --headless --path rascunhos/cliente --import` no clone novo: 
   - `3-baixo-780x360.png`: `a43957257b8f8bab`.
 
   O relato é igual ao da CORRECOES-5, mas os PNG não. Já nas ordens anteriores mudavam de corrida para corrida.
-- **SHA-256 das listas** (iguais antes e depois): `antes.txt` `cf3b16fa…`, `depois.txt` `b2fe7042…` e
-  `MANIFESTO-SHA256.txt` `9433f1c2…`.
+- **SHA-256 das listas** (iguais antes e depois): `antes.txt` `cf3b16fa…`, `depois.txt` `99db48dc846152cf…` e
+  `MANIFESTO-SHA256.txt` `c70f1314e08554…`, como no `cobertura-correcoes-6/actualizar-listas.log`. *(Emenda da
+  CORRECOES-7, B1: os dois prefixos diziam `b2fe7042…` e `9433f1c2…`, que não batiam com o log.)*
 - **Não havia listas a sincronizar.** O script só olha para `rascunhos/`, e o ramo não lhe toca. Corri-o antes do commit
   do trabalho e outra vez antes do commit final.
 - **Não corri as suites largas.** Esta ordem só junta registos e o README, e o CI corre-as todas (§3).

@@ -213,17 +213,22 @@ Só registo. O código do teste e da prova não muda, e o registo cometido da CO
   - **§(f), B1:** «`alma`: não existe como chave/campo (a palavra ocorre 1× num comentário TODO, `sala.js:615`)». Nas
     3 fontes da conferência, a palavra só aparece nessa linha. Como chave (`alma:`, `'alma'`, `"alma"`, `.alma`) não
     aparece em lado nenhum de `rascunhos/servidor/`. Fora dessas fontes, aparece ainda em 3 comentários de
-    `ordem-dinamica.js`, que são prosa das regras e não chaves.
+    `ordem-dinamica.js`, que são prosa das regras e não chaves. *(CORRECOES-7, B2:)* no servidor inteiro a palavra
+    ocorre **8×** (4 no núcleo — `sala.js:615` e os 3 de `ordem-dinamica.js` — e 4 nos testes), sempre em comentário ou
+    prosa, nunca como chave.
   - **§(d), B3:** o `dano:` do `soMestre` vem nos eventos `raio` (`sala.js:1353`) e `dano_ambiente` (`:1359`, com
     origem raio, e `:1367`, com origem fogo). O evento chamado `dano` não o leva, porque emite com `soMestre` `null`
     (`:1918`, `:1925`).
 - **B2:** a saída do `godot --headless --path rascunhos/cliente --import`, corrido no clone novo e sem `.godot/`, está
   em `cobertura-correcoes-6/godot-import.log`: rc=0 e 0 SCRIPT ERROR.
+  - *(CORRECOES-7, B4:)* a saída do `--import` da CORRECOES-5, que tinha ficado fora do repo na sede dessa ordem
+    (`…\ordem-caixa-janela-cobertura-correcoes-5\tmp\import.log`), está copiada byte a byte em
+    `cobertura-correcoes-6/godot-import-correcoes-5.log` (405 linhas, 0 SCRIPT ERROR/Parse Error/Compile Error).
 
 Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c…`; semente 7):
 - `cobertura-correcoes-6/teste-nomes-relato.log`: **teste 26/26**, igual byte a byte ao da CORRECOES-5.
 - `cobertura-correcoes-6/cliente/`: **prova viva 41/41**, 0 nomes verdadeiros e 0 das 17 chaves no relato (passagem 1:
-  47 linhas, passagem 2: 76, fim: 78). O relato é igual byte a byte ao da CORRECOES-5. Capturas (sha256, 16
+  47 linhas, passagem 2: 76, fim: 78 — as contagens da verificação das chaves; a dos nomes conta 46/75/77). O relato é igual byte a byte ao da CORRECOES-5. Capturas (sha256, 16
   primeiros): `1-janela-1280x720.png` `9fc06ba84c04ed5d`, `2-baixo-844x390.png` `e3f8a21e3cde48a6`,
   `3-baixo-780x360.png` `a43957257b8f8bab`.
 - `cobertura-correcoes-6/actualizar-listas.log`: o artefacto do `retoma-i0004/actualizar-listas.py`.
