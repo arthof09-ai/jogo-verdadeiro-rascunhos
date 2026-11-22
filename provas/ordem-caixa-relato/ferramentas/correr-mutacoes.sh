@@ -12,6 +12,13 @@
 # fichas da corrida, nome ≠ nomePublico) aparece nas linhas FALHA, no relato e na consola. Antes de ir para o registo
 # (que é cometido), o harness troca qualquer nome verdadeiro por «‹nome verdadeiro›»: uma mutação que põe o nome no
 # próprio resumo deixava-o lá. Com `SO="id1 id2"`, corre só essas mutações.
+# CAIXA-RELATO-CORRECOES-5: B1 — filtra-se ANTES de cortar. O `cut -c1-400` corria antes do `filtrar` e, no locale C do
+# Git Bash, contava bytes: um nome a cavalo do byte 400 ficava cortado («Lobo de Bancad») e o filtro, que procura o
+# nome inteiro, já não o apanhava. Agora cada linha passa inteira pelo `filtrar` e só depois pelo `cortar`, que conta
+# caracteres (não bytes) e não parte um carácter a meio. Os dois são em node: não dependem do locale e o filtro trata o
+# nome como texto literal (sem metacaracteres de sed) e sem distinguir maiúsculas também fora do ASCII. B2 — o título
+# da mutação (o `diz`) e a linha «NÃO APLICOU» também passam pelo filtro, com os nomes verdadeiros das fichas limpas
+# (as cometidas): «Espadachim de Bancada», que nas fichas é o nome público, fica.
 cd "$(dirname "$0")/../../.." || exit 9
 G=${1:?godot}; MOTOR=${2:?motor}; T=${3:?tmp}; MODO=${4:?base|base4|novo}; LOG=${5:?registo}
 BASE=${6:-$([ "$MODO" = base4 ] && echo da6683e || echo 6a87b9e)}
@@ -65,36 +72,49 @@ conta_nomes() {  # <ficheiro> <nomes> → ocorrências (sem distinguir maiúscul
   done <<< "$2"
   echo $n
 }
-filtrar() {  # stdin → stdout, com os nomes <nomes> trocados por «‹nome verdadeiro›»
-  local prog="" k
-  while IFS= read -r k; do [ -n "$k" ] && prog="$prog;s/$k/‹nome verdadeiro›/Ig"; done <<< "$1"
-  if [ -n "$prog" ]; then sed -e "${prog#;}"; else cat; fi
+filtrar() {  # stdin → stdout, com os nomes <nomes> (um por linha) trocados por «‹nome verdadeiro›», na linha inteira
+  NOMES="$1" node -e '
+    const esc = (k) => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const nomes = (process.env.NOMES || "").split(/\r?\n/).filter((k) => k.length > 0).sort((a, b) => b.length - a.length);
+    const re = nomes.length ? new RegExp(nomes.map(esc).join("|"), "giu") : null;
+    let t = ""; process.stdin.setEncoding("utf8");
+    process.stdin.on("data", (c) => (t += c)).on("end", () => process.stdout.write(re ? t.replace(re, "‹nome verdadeiro›") : t));'
 }
+cortar() {  # <n> — stdin → stdout, cada linha com no máximo <n> caracteres (pontos de código, não bytes)
+  N="$1" node -e '
+    const n = Number(process.env.N); let t = ""; process.stdin.setEncoding("utf8");
+    process.stdin.on("data", (c) => (t += c)).on("end", () =>
+      process.stdout.write(t.split("\n").map((l) => Array.from(l).slice(0, n).join("")).join("\n")));'
+}
+juntar_nomes() { printf '%s\n%s\n' "$1" "$2" | awk 'NF && !v[$0]++'; }
+repor_limpo
+nomes_limpos=$(nomes_verdadeiros)  # os das fichas cometidas (sem mutação) — para o título e o «NÃO APLICOU»
 node "$M" lista "$MODO" | tr -d '\r' | while read -r id corrida; do
   if [ -n "$SO" ] && [[ " $SO " != *" $id "* ]]; then continue; fi
   repor_limpo
   if ! node "$M" aplicar "$MODO" "$id" 2> "$T/erro-mut.txt"; then
-    { echo; echo "== $id ($corrida) — NÃO APLICOU: $(cat "$T/erro-mut.txt")"; } >> "$LOG"; continue
+    { echo; echo "== $id ($corrida) — NÃO APLICOU: $(cat "$T/erro-mut.txt")"; } | filtrar "$nomes_limpos" >> "$LOG"; continue
   fi
   saida="$T/mut-$MODO-$id.log"
   if [ "$corrida" = teste ]; then correr_teste "$saida"; else porta=$((porta + 1)); correr_prova "$corrida" "$saida" $porta; fi
   rc=$?
   nomes=$(nomes_verdadeiros)
+  filtro=$(juntar_nomes "$nomes" "$nomes_limpos")  # os da corrida e os das fichas cometidas
   fonte="$saida"; [ "$corrida" != teste ] && fonte="$T/saida-$corrida/relato.txt"
   {
     echo
-    echo "== $id ($corrida) — $(node "$M" diz "$MODO" "$id")"
+    echo "== $id ($corrida) — $(node "$M" diz "$MODO" "$id" | tr -d '\r' | filtrar "$nomes_limpos")"
     echo "rc=$rc"
     if [ "$corrida" != teste ]; then
       echo "relato.txt: $(wc -l < "$fonte" 2>/dev/null) linhas, $(grep -c 'verificações passaram' "$fonte" 2>/dev/null) resumo(s); nomes verdadeiros nas linhas FALHA: relato $(conta_nomes "$fonte" "$nomes"), consola $(conta_nomes "$saida" "$nomes")"
     fi
     {
       grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$saida" | head -3
-      grep -E "^  FALHA " "$fonte" | awk '!v[$0]++' | cut -c1-400
+      grep -E "^  FALHA " "$fonte" | awk '!v[$0]++'
       grep -E "verificações passaram|verificações\)" "$fonte" | tail -2
-    } | filtrar "$nomes"
+    } | filtrar "$filtro" | cortar 400  # B1: o filtro vê a linha inteira; só depois se corta
   } >> "$LOG"
-  echo "$id $corrida rc=$rc $(grep -E 'verificações passaram' "$fonte" | tail -1 | filtrar "$nomes")"
+  echo "$id $corrida rc=$rc $(grep -E 'verificações passaram' "$fonte" | tail -1 | filtrar "$filtro")"
 done
 repor_guarda
 git status --short -- "${FICH[@]}"

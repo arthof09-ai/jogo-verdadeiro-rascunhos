@@ -106,8 +106,16 @@ listas a juntar ao commit. O retoma-pc passou.
    («diz») de `B1-nome-verdadeiro` e `N-B2-canario-minusculas-relato` («Bruto de Bancada», «bruto de bancada») e de
    `N-B3-heroina-nome-publico-hud` («Espadachim de Bancada»). Vêm de
    `mutacoes.mjs`, que já está cometido com esse texto. Não os filtrei: no N-B3, «Espadachim de Bancada» só é nome
-   verdadeiro dentro da mutação, e filtrá-lo estragava a descrição. São valores-canário de bancada, fictícios. As
-   linhas FALHA e os resumos do registo não têm nenhum.
+   verdadeiro dentro da mutação, e filtrá-lo estragava a descrição. São valores-canário de bancada, fictícios. ~~As
+   linhas FALHA e os resumos do registo não têm nenhum.~~
+   **Emenda (CAIXA-RELATO-CORRECOES-5, B3):** a frase riscada era falsa como estava escrita. O que se contou foi só
+   isto: o `conta_nomes` do harness conta os **nomes inteiros** nas **linhas FALHA**, **antes do filtro**, no
+   `relato.txt` e na consola de cada corrida (os números «nomes verdadeiros nas linhas FALHA: relato N, consola M»).
+   Não vê fragmentos de nomes, não olha para os resumos e não olha para o registo que fica escrito. E o registo
+   cometido, `correcoes-4/mutacoes.log`, tinha fragmentos: o harness cortava as linhas FALHA aos 400 **bytes** antes de
+   filtrar, e o corte partia o nome. Ficaram fragmentos de 14 e de 7 caracteres de dois nomes verdadeiros (linhas
+   17/55 e 18/56). Na CORRECOES-5, o `correcoes-4/mutacoes.log` foi regenerado com o filtro antes do corte e voltou a
+   ser cometido: o ficheiro que está agora no ramo já não os tem (ver `ESTADO-FINAL-ORDEM-CAIXA-RELATO-CORRECOES-5.md`).
 3. **Há um modo novo no `correr-mutacoes.sh`: `base4`.** Usa os ficheiros das provas de `da6683e`, a base desta ordem,
    com a tabela de `novo`. O modo `base` continua a ser o `6a87b9e` da CORRECOES-3, para que o `correcoes-3/mutacoes.log`
    se possa reproduzir. As mutações novas são `N4-B3-sem-canarios-hud`, `N4-B3-sem-canarios-manequim` e

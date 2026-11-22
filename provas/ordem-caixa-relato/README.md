@@ -270,3 +270,37 @@ Só o teste do registo; nada do código do jogo muda. As corridas estão em **`b
 Números (Godot 4.7.2 Windows, Node 26.13.0, motor VLAB real `a91c021c…`, semente 7): teste `teste-relato.log`
 **31/31**; prova HUD-JOGADORA **43/43**; prova MANEQUIM **53/53**; suites `suites/`: servidor **419/419**, prova da
 caixa do servidor **PROVA OK**.
+
+---
+
+# Correcções B1–B3 da sentença da CAIXA-RELATO-CORRECOES-4 (Ordem CAIXA-RELATO-CORRECOES-5 · 22/11/2026, Claude conta 2, PC)
+
+Só o harness das mutações, o registo e um conferidor novo; as provas vivas, o teste, o código do jogo, o HUD e as
+cores não mudam. As corridas limpas estão em **`correcoes-5/`**; o registo das mutações foi **regenerado no mesmo
+sítio**, `correcoes-4/mutacoes.log` (é a mesma experiência, com o mesmo código das provas; o antigo tinha fragmentos).
+
+- **B1 — filtrar antes de cortar.** O `correr-mutacoes.sh` cortava as linhas FALHA com `cut -c1-400` **antes** do
+  filtro. No locale C do Git Bash o `cut` conta bytes, e os 400 bytes acabavam a meio de um nome; o filtro procura o
+  nome inteiro e deixava passar o pedaço (o registo antigo tinha um fragmento de 14 de 15 caracteres e outro de 7 de
+  16, em 4 linhas). Agora a linha passa **inteira** pelo `filtrar` e só depois pelo `cortar 400`, que conta caracteres
+  (pontos de código) e não parte um carácter a meio. O filtro e o corte são em node: não dependem do locale, o nome é
+  texto literal (sem metacaracteres de sed) e as maiúsculas não contam também fora do ASCII.
+- **B2 — o título da mutação também passa pelo filtro.** O `diz` (e a linha «NÃO APLICOU») passa pelo `filtrar` com
+  os nomes verdadeiros das fichas cometidas. Os 4 títulos que traziam um nome verdadeiro dizem agora
+  «‹nome verdadeiro›». «Espadachim de Bancada» (títulos do `N-B3-heroina-nome-publico-hud`) fica: nas fichas é o nome
+  público.
+- **Conferidor novo:** `ferramentas/conferir-registo.mjs <registo> [<fichas.json>]` confere linha a linha que não há
+  nenhum nome verdadeiro (nome ≠ nomePublico), nem inteiro nem num pedaço de 4 ou mais letras seguidas de uma das suas
+  palavras, sem distinguir maiúsculas. Só exclui as ocorrências dentro dos nomes que são públicos por inteiro. Não
+  repete o texto achado. No registo antigo dá 18 achados, em 10 linhas: as 8 da sentença e 2 do cabeçalho escrito à mão; no
+  regenerado, **0**. Serve para o registo; nos relatos acusaria os nomes públicos curtos, que lá estão por direito.
+- **B3** — no `ESTADO-FINAL-ORDEM-CAIXA-RELATO-CORRECOES-4.md` §3.2 (raiz), emendado.
+
+Números (Godot 4.7.2 Windows, motor VLAB real `a91c021c…`, semente 7): teste `correcoes-5/teste-relato.log`
+**31/31**; prova HUD-JOGADORA `correcoes-5/cliente-hud/relato.txt` **43/43**, 68 linhas = 68 no ficheiro; prova
+MANEQUIM `correcoes-5/cliente-manequim/relato.txt` **53/53**, 78 = 78. Mutações regeneradas: 18 `base4` + 18 `novo`,
+com os mesmos resultados, um a um, do registo da CORRECOES-4.
+
+Correr de novo: `bash provas/ordem-caixa-relato/ferramentas/correr-prova-caixa-relato.sh <godot.exe> <vlab-completo.js>
+<pasta-tmp> "$PWD/provas/ordem-caixa-relato/correcoes-5"`; as mutações como na secção anterior; e
+`node provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs provas/ordem-caixa-relato/correcoes-4/mutacoes.log`.
