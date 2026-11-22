@@ -12,7 +12,8 @@
 // O que é obrigatório: o que o servidor sempre escreveu e lê sem rede. O que ele próprio já lia com tolerância à falta
 // (journals de antes da ordem que o criou: `fogo`, `mapa.casaM`, `motores`, `marchaLivre`, `casaColocacao`,
 // `seqSnapshot`, `seqEspera`, os campos do painel de ambiente) pode faltar; se estiver presente, tem de ter o tipo certo.
-// Chaves a mais não são erro (ninguém as lê). Nenhuma regra de jogo: só forma e referências.
+// Chaves a mais não são erro (ninguém as lê) — excepto em `ordemDinamica`, `ordemDinamicaParty` e
+// `caixaMestre`, que recusam chaves a mais (ordem CAIXA-LOBBY, B7a). Nenhuma regra de jogo: só forma e referências.
 
 import { ErroJournal } from './journal.js';
 

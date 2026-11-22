@@ -64,7 +64,13 @@ verdadeiro, vida, alma, PA nem valores de iniciativa (é o teste dos canários d
    de protocolo e de cliente.
 
 Nota: suprimir a caixa só no `fim` (o outro caso fora do combate) também não é seguro sem rever o «Recomeçar»
-(`fim → combate`), que pode não mandar snapshot pelo mesmo motivo. Não o fiz.
+(`fim → combate`) — mas o «Recomeçar» manda snapshot a todos (`sala.js:2922`), por isso esse caso está coberto.
+Não o fiz nesta ordem.
+
+Registo do coordenador (correcção B3 da sentença): o sintoma que a ordem descrevia já estava suprimido antes
+desta ordem — `projecao.js:209` tira a caixa do snapshot quando `salaDeEspera === true`, com teste
+pré-existente a afirmá-lo. O B6 não tinha alvo válido; quem o tentar outra vez pela mesma razão vai encontrar
+esta nota e o teste de guarda.
 
 ## 3. Ficheiros mudados (`7c97b48..` ponta do ramo)
 - `rascunhos/servidor/nucleo/conferir-estado.js` (B7a, +5 linhas).
