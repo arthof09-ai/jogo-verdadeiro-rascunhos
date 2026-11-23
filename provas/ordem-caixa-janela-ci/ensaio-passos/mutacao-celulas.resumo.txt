@@ -1,0 +1,17 @@
+== mutação feita (só na cópia de trabalho):
+ rascunhos/cliente/hud/caixa_ordem.gd | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+-		slot.custom_minimum_size = celula
++		slot.custom_minimum_size = celula + Vector2(float(id.trim_prefix("f").to_int() % 2), 0.0)  # MUTACAO (CAIXA-JANELA-CI)
+== ficheiro reposto: git diff vazio em rascunhos/cliente/hud/caixa_ordem.gd
+== com a mutação: rc=1 · falhas=9 (do assert B6: 9) · «69 de 78 verificações passaram.» · erros de script=0
+  FALHA 8 figuras 1280x720: os 8 slots renderizam com a largura da célula (["76.0", "75.0"] u = 50.0 px reais por slot; moldura quadrada) ["Slot_f1 76.0/75.0", "Slot_f3 76.0/75.0", "Slot_f5 76.0/75.0", "Slot_f7 76.0/75.0"]
+  FALHA 8 figuras 844x390: os 8 slots renderizam com a largura da célula (["123.0", "122.0"] u = 44.1 px reais por slot; moldura quadrada) ["Slot_f1 123.0/122.0", "Slot_f3 123.0/122.0", "Slot_f5 123.0/122.0", "Slot_f7 123.0/122.0"]
+  FALHA 8 figuras 780x360: os 8 slots renderizam com a largura da célula (["134.0", "133.0"] u = 44.3 px reais por slot; moldura quadrada) ["Slot_f1 134.0/133.0", "Slot_f3 134.0/133.0", "Slot_f5 134.0/133.0", "Slot_f7 134.0/133.0"]
+  FALHA 12 figuras 1280x720: os 12 slots renderizam com a largura da célula (["76.0", "75.0"] u = 50.0 px reais por slot; moldura quadrada) ["Slot_f1 76.0/75.0", "Slot_f3 76.0/75.0", "Slot_f5 76.0/75.0", "Slot_f7 76.0/75.0", "Slot_f9 76.0/75.0", "Slot_f11 76.0/75.0"]
+  FALHA 12 figuras 844x390: os 12 slots renderizam com a largura da célula (["123.0", "122.0"] u = 44.1 px reais por slot; moldura quadrada) ["Slot_f1 123.0/122.0", "Slot_f2 123.0/122.0", "Slot_f3 123.0/122.0", "Slot_f5 123.0/122.0", "Slot_f7 123.0/122.0", "Slot_f9 123.0/122.0", "Slot_f10 123.0/122.0", "Slot_f11 123.0/122.0", "Slot_f12 123.0/122.0"]
+  FALHA 12 figuras 780x360: os 12 slots renderizam com a largura da célula (["134.0", "133.0"] u = 44.3 px reais por slot; moldura quadrada) ["Slot_f1 134.0/133.0", "Slot_f3 134.0/133.0", "Slot_f5 134.0/133.0", "Slot_f7 134.0/133.0", "Slot_f9 134.0/133.0", "Slot_f11 134.0/133.0"]
+  FALHA 16 figuras 1280x720: os 16 slots renderizam com a largura da célula (["76.0", "75.0"] u = 50.0 px reais por slot; moldura quadrada) ["Slot_f1 76.0/75.0", "Slot_f3 76.0/75.0", "Slot_f5 76.0/75.0", "Slot_f7 76.0/75.0", "Slot_f9 76.0/75.0", "Slot_f11 76.0/75.0", "Slot_f13 76.0/75.0", "Slot_f15 76.0/75.0", "Slot_f16 76.0/75.0"]
+  FALHA 16 figuras 844x390: os 16 slots renderizam com a largura da célula (["123.0", "122.0"] u = 44.1 px reais por slot; moldura quadrada) ["Slot_f1 123.0/122.0", "Slot_f2 123.0/122.0", "Slot_f3 123.0/122.0", "Slot_f4 123.0/122.0", "Slot_f5 123.0/122.0", "Slot_f6 123.0/122.0", "Slot_f7 123.0/122.0", "Slot_f9 123.0/122.0", "Slot_f10 123.0/122.0", "Slot_f11 123.0/122.0", "Slot_f12 123.0/122.0", "Slot_f13 123.0/122.0", "Slot_f14 123.0/122.0", "Slot_f15 123.0/122.0", "Slot_f16 123.0/122.0"]
+  FALHA 16 figuras 780x360: os 16 slots renderizam com a largura da célula (["134.0", "133.0"] u = 44.3 px reais por slot; moldura quadrada) ["Slot_f1 134.0/133.0", "Slot_f3 134.0/133.0", "Slot_f5 134.0/133.0", "Slot_f7 134.0/133.0", "Slot_f9 134.0/133.0", "Slot_f11 134.0/133.0", "Slot_f13 134.0/133.0", "Slot_f15 134.0/133.0"]
+MUTACAO APANHADA: 9 falhas, todas do assert B6; o passo dispara.
