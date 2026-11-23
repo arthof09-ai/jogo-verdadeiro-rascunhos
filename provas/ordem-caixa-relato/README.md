@@ -508,9 +508,9 @@ as quatro formas do §2:
 - o canário mudado (a preposição do meio mudada) passa a `nome n.º N com a preposição mudada`;
 - o nome cortado na origem passa a `nome n.º N (cortado na origem)`. Conta como corte a linha que acaba num pedaço
   inicial do nome maior do que o nome público. O nome público sozinho não se redige;
-- **desde a F97** (bancada F71+F87+F89), uma 5.ª forma: o nome sem a preposição, na forma exacta de um só espaço
+- **desde a F97** (F71+F87+F89), uma 5.ª forma: o nome sem a preposição, na forma exacta de um só espaço
   «1.ª parte + última parte», com fronteira de palavra dos dois lados, passa a `nome n.º N sem a preposição` (com
-  contador próprio na linha de contagens). Por cada preposição no meio do nome, a forma sem ela. Não há nenhuma no
+  contador próprio na linha de contagens). Uma forma por preposição no meio do nome. Não há nenhuma no
   corpus: 0 no relato antigo, cru e redigido, e 0 no registo limpo, por isso nenhuma comparação byte a byte muda.
 
 Nenhuma linha é acrescentada nem tirada e os fins de linha ficam como estavam. A ferramenta sai com 3 se sobrar um nome
@@ -532,7 +532,7 @@ redacção. Procura-se só no texto já redigido e diz só contagens e n.ºs de 
   tem pelo menos 2 palavras inteiras do nome e acaba a meio de uma palavra do nome. Com menos, o nome público seguido
   de uma palavra que começa pela letra da preposição dispararia a rede.
 
-**Desde a F97** (bancada F71+F87+F89):
+**Desde a F97** (F71+F87+F89):
 - **F87 — o nome sem a preposição:** o padrão «1.ª parte, um ou mais espaços, última parte», com fronteira de palavra,
   conta como resto e dá saída 3. Apanha o que a 5.ª forma exacta não redige: dois espaços, um tabulador, a quebra de
   linha (conta na linha onde começa). A forma de um espaço não se exclui aqui, para que um falhanço da redacção saia

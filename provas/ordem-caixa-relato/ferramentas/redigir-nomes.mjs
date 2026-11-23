@@ -11,7 +11,7 @@
 //   3. o nome cortado na origem: a linha acaba num pedaço inicial do nome, maior do que o nome público da mesma ficha
 //      (o nome público, sozinho, não se redige) → «nome n.º N (cortado na origem)»;
 //   5. (desde a F97, F87) o nome sem a preposição do meio: a forma exacta de um só espaço «1.ª parte + última parte»,
-//      com fronteira de palavra dos dois lados → «nome n.º N sem a preposição» (por cada preposição no meio, a forma sem
+//      com fronteira de palavra dos dois lados → «nome n.º N sem a preposição» (uma forma por preposição no meio, sem
 //      ela). O apelido sozinho não se redige: é palavra corrente.
 // Nada mais muda: nem linhas acrescentadas ou tiradas, nem os fins de linha (CRLF fica CRLF, LF fica LF).
 // --saida escreve o redigido (sem --saida nem --comparar, vai para a saída padrão). --comparar compara byte a byte o
@@ -52,7 +52,7 @@ function variantesPreposicao(nome) {
   return vs;
 }
 
-// F97 (F87): o nome sem a preposição do meio — por cada preposição da lista no meio, as partes de antes e as de depois
+// F97 (F87): o nome sem a preposição do meio — uma forma por preposição da lista no meio: as partes de antes e as de depois
 // (só nomes de 3 ou mais palavras).
 function partesSemPreposicao(nome) {
   const ps = nome.split(' ');
@@ -141,7 +141,7 @@ export function sobram(texto, verdadeiros) {
 // Ordem F93: o nome inteiro tal e qual (é da contagem dos inteiros) e as 5 variantes da lista com um espaço só (a
 // redacção já as redigiu) NÃO contam como variante fora da lista, e um corte que começa dentro de uma variante não
 // conta como corte — uma ocorrência conta uma vez só.
-// Ordem F97 (bancada F71+F87+F89):
+// Ordem F97 (F71+F87+F89):
 //   F87 — o nome sem a preposição: o padrão `1.ª parte \s+ última parte`, com fronteira de palavra, conta como resto
 //         (apanha também os dois espaços, os tabuladores e a quebra de linha, que a 5.ª forma exacta não apanha). A forma
 //         de um espaço não se exclui: se a redacção falhar, a rede ainda sai com 3. O apelido sozinho fica de fora;
