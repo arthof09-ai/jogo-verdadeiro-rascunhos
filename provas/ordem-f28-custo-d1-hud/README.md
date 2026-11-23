@@ -15,6 +15,13 @@ fica na caixa. Nenhum ficheiro do jogo muda com esta ordem. As conclusões estã
 - `medicao/medir_custo_d1_hud.log` é a medição na ponta, com o D1.
 - `sem-d1/medir_custo_d1_hud.log` é a mesma medição com o `caixa_ordem.gd` de `0bebd76`, de antes da F14. O ficheiro foi
   trocado só na cópia de trabalho e reposto a seguir (`git diff` vazio). Esse ficheiro não tem o D1 nem o D3.
+- **2.ª corrida (Ordem F61, sentença da F28):** `medicao/medir_custo_d1_hud-corrida2.log` (na ponta) e
+  `medicao/medir_custo_d1_hud-sem-d1-corrida2.log` (sem o D1, com a mesma troca do `caixa_ordem.gd`).
+  - `medicao/resumo.txt` tem o rc, a contagem, as tabelas e a comparação com a 1.ª corrida. Escreve-o
+    `bash ferramentas/resumo_corrida2.sh <raiz-do-repo> <rc-ponta> <rc-sem-d1> <partida>`.
+  - Desde a F61, a ferramenta repõe a câmara entre casos (a F64 pediu-o): o modo, o foco, o zoom, o rumo e a inclinação
+    de quando a arena ficou pronta. As tabelas saem iguais às da 1.ª corrida, menos o deslocamento do arrastar, que muda
+    na 4.ª casa decimal. Ver `ESTADO-FINAL-ORDEM-F61-SEGUNDA-CORRIDA-D1.md`, na raiz.
 
 Para correr (Godot 4.7.2; num clone novo, faz antes o `--import`):
 

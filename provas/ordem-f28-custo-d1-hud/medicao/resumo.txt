@@ -1,0 +1,162 @@
+Ordem F61 (sentença da F28) — resumo da 2.ª corrida das duas medições do custo do D1
+Ferramenta: provas/ordem-f28-custo-d1-hud/ferramentas/medir_custo_d1_hud.gd, com a câmara reposta entre casos (F61).
+Godot 4.7.2 --headless (_console.exe), Windows 11. Partida: 74f5fa9.
+
+== Na ponta (com o D1): medicao/medir_custo_d1_hud-corrida2.log
+rc=0 · Medição acabada: 62 casos, 0 erros de medição. · linhas com MEDIDA 62 · linhas TABELA (sem o cabeçalho) 62 · linhas com error/warning 0
+
+== Sem o D1 (caixa_ordem.gd de 0bebd76 só na cópia de trabalho, reposto a seguir; sha cc26f56c… igual ao HEAD): medicao/medir_custo_d1_hud-sem-d1-corrida2.log
+rc=0 · Medição acabada: 62 casos, 0 erros de medição. · linhas com MEDIDA 62 · linhas TABELA (sem o cabeçalho) 62 · linhas com error/warning 0
+
+== Comparação com a 1.ª corrida (linhas TABELA, diff 1.ª → 2.ª)
+-- na ponta (1.ª: medicao/medir_custo_d1_hud.log): 1 de 62 linhas diferem
+50c50
+< TABELA | arrastar 1 dedo (deslocar a câmara) | 780x360 | controlo | 2.26987314224243 | 0 | 0 | câmara desloca-se | false
+---
+> TABELA | arrastar 1 dedo (deslocar a câmara) | 780x360 | controlo | 2.26925158500671 | 0 | 0 | câmara desloca-se | false
+-- sem o D1 (1.ª: sem-d1/medir_custo_d1_hud.log): 3 de 62 linhas diferem
+19c19
+< TABELA | arrastar 1 dedo (deslocar a câmara) | 844x390 | controlo | 2.26987314224243 | 0 | 0 | câmara desloca-se | false
+---
+> TABELA | arrastar 1 dedo (deslocar a câmara) | 844x390 | controlo | 2.26925158500671 | 0 | 0 | câmara desloca-se | false
+48c48
+< TABELA | arrastar 1 dedo (deslocar a câmara) | 780x360 | lista | 2.26859712600708 | 0 | 0 | câmara desloca-se | false
+---
+> TABELA | arrastar 1 dedo (deslocar a câmara) | 780x360 | lista | 2.26925158500671 | 0 | 0 | câmara desloca-se | false
+50c50
+< TABELA | arrastar 1 dedo (deslocar a câmara) | 780x360 | controlo | 2.26802849769592 | 0 | 0 | câmara desloca-se | false
+---
+> TABELA | arrastar 1 dedo (deslocar a câmara) | 780x360 | controlo | 2.26925158500671 | 0 | 0 | câmara desloca-se | false
+Todas as linhas que diferem são do arrastar 1 dedo, e a diferença está na 4.ª casa decimal. As outras são iguais byte a byte.
+Com a câmara reposta, os 6 arrastares que deslocam a câmara dão todos o mesmo valor. Na 1.ª corrida variavam entre
+2.2680 e 2.2699. A reposição tira essa variação, o que aponta para o estado que a câmara levava de caso para caso.
+
+== TABELA da 2.ª corrida, na ponta
+TABELA (caso | ecrã | 1.º toque com a lista aberta | toques com a lista aberta | toques com a caixa fechada | custo | acção | sob a expandida)
+TABELA | Mover | 844x390 | fecha só a lista | 2 | 1 | 1 | abre o Mover (casas a azul) | false
+TABELA | Ataque | 844x390 | fecha só a lista | 2 | 1 | 1 | abre o Ataque (alvos) | false
+TABELA | Consumível | 844x390 | fecha só a lista | 2 | 1 | 1 | abre o Consumível (alvos) | false
+TABELA | Encerrar | 844x390 | fecha só a lista | 2 | 1 | 1 | abre «Encerrar a sua vez?» | false
+TABELA | ⚙ (config.) | 844x390 | fecha só a lista | 2 | 1 | 1 | abre as Configurações | false
+TABELA | FICHA ▸ | 844x390 | fecha só a lista | 2 | 1 | 1 | abre a ficha | false
+TABELA | Declarar Defender (na ficha) | 844x390 | fecha só a lista | 2 | 1 | 1 | envia «defender» | false
+TABELA | » Correr (gaveta do Mover) | 844x390 | fecha só a lista | 2 | 1 | 1 | envia «correr» | false
+TABELA | ↩ Sair c/ segurança (gaveta do Mover) | 844x390 | fecha só a lista | 2 | 1 | 1 | liga a declaração | false
+TABELA | Apagar o fogo (gaveta do Mover) | 844x390 | fecha só a lista | 2 | 1 | 1 | envia «apagar_fogo» | false
+TABELA | ✦ Transformação (gaveta do Ataque) | 844x390 | fecha só a lista | 2 | 1 | 1 | abre a confirmação | false
+TABELA | Sim, encerrar (painel de escolha) | 844x390 | fecha só a lista | 2 | 1 | 1 | envia «encerrar» | false
+TABELA | Cancelar (painel de escolha) | 844x390 | fecha só a lista | 2 | 1 | 1 | fecha o painel | false
+TABELA | Fechar (Configurações) | 844x390 | fecha só a lista | 2 | 1 | 1 | fecha as Configurações | false
+TABELA | Repor o zoom (Configurações) | 844x390 | fecha só a lista | 2 | 1 | 1 | repõe o zoom | false
+TABELA | arrastar 1 dedo (deslocar a câmara) | 844x390 | lista | 0.0 | 0 | 0 | câmara desloca-se | false
+TABELA | pinça 2 dedos (zoom) | 844x390 | lista | 1.0 | 0 | 0 | zoom muda | false
+TABELA | arrastar 1 dedo (deslocar a câmara) | 844x390 | controlo | 2.26925158500671 | 0 | 0 | câmara desloca-se | false
+TABELA | pinça 2 dedos (zoom) | 844x390 | controlo | 2.0 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 844x390 | compacta | 1.0 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 844x390 | expandida pelo rato | 1.0 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 844x390 | fora | 1.1 | 0 | 0 | zoom muda | false
+TABELA | rato · Mover | 844x390 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · Mover | 844x390 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | rato · Encerrar | 844x390 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · Encerrar | 844x390 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | rato · ⚙ (config.) | 844x390 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · ⚙ (config.) | 844x390 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | jogada típica (mover + encerrar) | 844x390 | nunca | 4 | 0 | 0 | Mover 1, casa 1, Encerrar 1, Sim, encerrar 1 | false
+TABELA | jogada típica (mover + encerrar) | 844x390 | no começo da vez | 6 | 0 | 0 | abrir a lista 1, Mover 2, casa 1, Encerrar 1, Sim, encerrar 1 | false
+TABELA | jogada típica (mover + encerrar) | 844x390 | com o Mover aberto | 6 | 0 | 0 | Mover 1, abrir a lista 1, casa 2, Encerrar 1, Sim, encerrar 1 | false
+TABELA | Mover | 780x360 | fecha só a lista | 2 | 1 | 1 | abre o Mover (casas a azul) | false
+TABELA | Ataque | 780x360 | fecha só a lista | 2 | 1 | 1 | abre o Ataque (alvos) | false
+TABELA | Consumível | 780x360 | fecha só a lista | 2 | 1 | 1 | abre o Consumível (alvos) | false
+TABELA | Encerrar | 780x360 | fecha só a lista | 2 | 1 | 1 | abre «Encerrar a sua vez?» | false
+TABELA | ⚙ (config.) | 780x360 | fecha só a lista | 2 | 1 | 1 | abre as Configurações | false
+TABELA | FICHA ▸ | 780x360 | fecha só a lista | 2 | 1 | 1 | abre a ficha | false
+TABELA | Declarar Defender (na ficha) | 780x360 | fecha só a lista | 2 | 1 | 1 | envia «defender» | false
+TABELA | » Correr (gaveta do Mover) | 780x360 | fecha só a lista | 2 | 1 | 1 | envia «correr» | false
+TABELA | ↩ Sair c/ segurança (gaveta do Mover) | 780x360 | fecha só a lista | 2 | 1 | 1 | liga a declaração | false
+TABELA | Apagar o fogo (gaveta do Mover) | 780x360 | fecha só a lista | 2 | 1 | 1 | envia «apagar_fogo» | false
+TABELA | ✦ Transformação (gaveta do Ataque) | 780x360 | fecha só a lista | 2 | 1 | 1 | abre a confirmação | false
+TABELA | Sim, encerrar (painel de escolha) | 780x360 | fecha só a lista | 2 | 1 | 1 | envia «encerrar» | false
+TABELA | Cancelar (painel de escolha) | 780x360 | fecha só a lista | 2 | 1 | 1 | fecha o painel | false
+TABELA | Fechar (Configurações) | 780x360 | fecha só a lista | 2 | 1 | 1 | fecha as Configurações | false
+TABELA | Repor o zoom (Configurações) | 780x360 | fecha só a lista | 2 | 1 | 1 | repõe o zoom | false
+TABELA | arrastar 1 dedo (deslocar a câmara) | 780x360 | lista | 0.0 | 0 | 0 | câmara desloca-se | false
+TABELA | pinça 2 dedos (zoom) | 780x360 | lista | 1.0 | 0 | 0 | zoom muda | false
+TABELA | arrastar 1 dedo (deslocar a câmara) | 780x360 | controlo | 2.26925158500671 | 0 | 0 | câmara desloca-se | false
+TABELA | pinça 2 dedos (zoom) | 780x360 | controlo | 2.0 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 780x360 | compacta | 1.0 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 780x360 | expandida pelo rato | 1.0 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 780x360 | fora | 1.1 | 0 | 0 | zoom muda | false
+TABELA | rato · Mover | 780x360 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · Mover | 780x360 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | rato · Encerrar | 780x360 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · Encerrar | 780x360 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | rato · ⚙ (config.) | 780x360 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · ⚙ (config.) | 780x360 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | jogada típica (mover + encerrar) | 780x360 | nunca | 4 | 0 | 0 | Mover 1, casa 1, Encerrar 1, Sim, encerrar 1 | false
+TABELA | jogada típica (mover + encerrar) | 780x360 | no começo da vez | 6 | 0 | 0 | abrir a lista 1, Mover 2, casa 1, Encerrar 1, Sim, encerrar 1 | false
+TABELA | jogada típica (mover + encerrar) | 780x360 | com o Mover aberto | 6 | 0 | 0 | Mover 1, abrir a lista 1, casa 2, Encerrar 1, Sim, encerrar 1 | false
+
+== TABELA da 2.ª corrida, sem o D1
+TABELA (caso | ecrã | 1.º toque com a lista aberta | toques com a lista aberta | toques com a caixa fechada | custo | acção | sob a expandida)
+TABELA | Mover | 844x390 | fecha e executa | 1 | 1 | 0 | abre o Mover (casas a azul) | false
+TABELA | Ataque | 844x390 | fecha e executa | 1 | 1 | 0 | abre o Ataque (alvos) | false
+TABELA | Consumível | 844x390 | fecha e executa | 1 | 1 | 0 | abre o Consumível (alvos) | false
+TABELA | Encerrar | 844x390 | fecha e executa | 1 | 1 | 0 | abre «Encerrar a sua vez?» | false
+TABELA | ⚙ (config.) | 844x390 | fecha e executa | 1 | 1 | 0 | abre as Configurações | false
+TABELA | FICHA ▸ | 844x390 | fecha e executa | 1 | 1 | 0 | abre a ficha | false
+TABELA | Declarar Defender (na ficha) | 844x390 | fecha e executa | 1 | 1 | 0 | envia «defender» | false
+TABELA | » Correr (gaveta do Mover) | 844x390 | fecha e executa | 1 | 1 | 0 | envia «correr» | false
+TABELA | ↩ Sair c/ segurança (gaveta do Mover) | 844x390 | fecha e executa | 1 | 1 | 0 | liga a declaração | false
+TABELA | Apagar o fogo (gaveta do Mover) | 844x390 | fecha e executa | 1 | 1 | 0 | envia «apagar_fogo» | false
+TABELA | ✦ Transformação (gaveta do Ataque) | 844x390 | fecha e executa | 1 | 1 | 0 | abre a confirmação | false
+TABELA | Sim, encerrar (painel de escolha) | 844x390 | fecha e executa | 1 | 1 | 0 | envia «encerrar» | false
+TABELA | Cancelar (painel de escolha) | 844x390 | fecha e executa | 1 | 1 | 0 | fecha o painel | false
+TABELA | Fechar (Configurações) | 844x390 | fecha e executa | 1 | 1 | 0 | fecha as Configurações | false
+TABELA | Repor o zoom (Configurações) | 844x390 | fecha e executa | 1 | 1 | 0 | repõe o zoom | false
+TABELA | arrastar 1 dedo (deslocar a câmara) | 844x390 | lista | 2.26925158500671 | 0 | 0 | câmara desloca-se | false
+TABELA | pinça 2 dedos (zoom) | 844x390 | lista | 2.0 | 0 | 0 | zoom muda | false
+TABELA | arrastar 1 dedo (deslocar a câmara) | 844x390 | controlo | 2.26925158500671 | 0 | 0 | câmara desloca-se | false
+TABELA | pinça 2 dedos (zoom) | 844x390 | controlo | 2.0 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 844x390 | compacta | 1.1 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 844x390 | expandida pelo rato | 1.1 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 844x390 | fora | 1.1 | 0 | 0 | zoom muda | false
+TABELA | rato · Mover | 844x390 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · Mover | 844x390 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | rato · Encerrar | 844x390 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · Encerrar | 844x390 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | rato · ⚙ (config.) | 844x390 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · ⚙ (config.) | 844x390 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | jogada típica (mover + encerrar) | 844x390 | nunca | 4 | 0 | 0 | Mover 1, casa 1, Encerrar 1, Sim, encerrar 1 | false
+TABELA | jogada típica (mover + encerrar) | 844x390 | no começo da vez | 5 | 0 | 0 | abrir a lista 1, Mover 1, casa 1, Encerrar 1, Sim, encerrar 1 | false
+TABELA | jogada típica (mover + encerrar) | 844x390 | com o Mover aberto | 5 | 0 | 0 | Mover 1, abrir a lista 1, casa 1, Encerrar 1, Sim, encerrar 1 | false
+TABELA | Mover | 780x360 | fecha e executa | 1 | 1 | 0 | abre o Mover (casas a azul) | false
+TABELA | Ataque | 780x360 | fecha e executa | 1 | 1 | 0 | abre o Ataque (alvos) | false
+TABELA | Consumível | 780x360 | fecha e executa | 1 | 1 | 0 | abre o Consumível (alvos) | false
+TABELA | Encerrar | 780x360 | fecha e executa | 1 | 1 | 0 | abre «Encerrar a sua vez?» | false
+TABELA | ⚙ (config.) | 780x360 | fecha e executa | 1 | 1 | 0 | abre as Configurações | false
+TABELA | FICHA ▸ | 780x360 | fecha e executa | 1 | 1 | 0 | abre a ficha | false
+TABELA | Declarar Defender (na ficha) | 780x360 | fecha e executa | 1 | 1 | 0 | envia «defender» | false
+TABELA | » Correr (gaveta do Mover) | 780x360 | fecha e executa | 1 | 1 | 0 | envia «correr» | false
+TABELA | ↩ Sair c/ segurança (gaveta do Mover) | 780x360 | fecha e executa | 1 | 1 | 0 | liga a declaração | false
+TABELA | Apagar o fogo (gaveta do Mover) | 780x360 | fecha e executa | 1 | 1 | 0 | envia «apagar_fogo» | false
+TABELA | ✦ Transformação (gaveta do Ataque) | 780x360 | fecha e executa | 1 | 1 | 0 | abre a confirmação | false
+TABELA | Sim, encerrar (painel de escolha) | 780x360 | fecha e executa | 1 | 1 | 0 | envia «encerrar» | false
+TABELA | Cancelar (painel de escolha) | 780x360 | fecha e executa | 1 | 1 | 0 | fecha o painel | false
+TABELA | Fechar (Configurações) | 780x360 | fecha e executa | 1 | 1 | 0 | fecha as Configurações | false
+TABELA | Repor o zoom (Configurações) | 780x360 | fecha e executa | 1 | 1 | 0 | repõe o zoom | false
+TABELA | arrastar 1 dedo (deslocar a câmara) | 780x360 | lista | 2.26925158500671 | 0 | 0 | câmara desloca-se | false
+TABELA | pinça 2 dedos (zoom) | 780x360 | lista | 2.0 | 0 | 0 | zoom muda | false
+TABELA | arrastar 1 dedo (deslocar a câmara) | 780x360 | controlo | 2.26925158500671 | 0 | 0 | câmara desloca-se | false
+TABELA | pinça 2 dedos (zoom) | 780x360 | controlo | 2.0 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 780x360 | compacta | 1.1 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 780x360 | expandida pelo rato | 1.1 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 780x360 | fora | 1.1 | 0 | 0 | zoom muda | false
+TABELA | rato · Mover | 780x360 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · Mover | 780x360 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | rato · Encerrar | 780x360 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · Encerrar | 780x360 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | rato · ⚙ (config.) | 780x360 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · ⚙ (config.) | 780x360 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | jogada típica (mover + encerrar) | 780x360 | nunca | 4 | 0 | 0 | Mover 1, casa 1, Encerrar 1, Sim, encerrar 1 | false
+TABELA | jogada típica (mover + encerrar) | 780x360 | no começo da vez | 5 | 0 | 0 | abrir a lista 1, Mover 1, casa 1, Encerrar 1, Sim, encerrar 1 | false
+TABELA | jogada típica (mover + encerrar) | 780x360 | com o Mover aberto | 5 | 0 | 0 | Mover 1, abrir a lista 1, casa 1, Encerrar 1, Sim, encerrar 1 | false

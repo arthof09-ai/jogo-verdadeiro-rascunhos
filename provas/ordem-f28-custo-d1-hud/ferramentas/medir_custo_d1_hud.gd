@@ -17,6 +17,9 @@ extends SceneTree
 ## toque; (3) toques no centro do botão até a acção sair (máx. 4). Regista-se o 1.º toque (fechou a lista? o botão
 ## recebeu o `pressed`? a acção saiu?) e quantos toques foram precisos. De controlo, o mesmo com a caixa fechada.
 ## Saída: linhas MEDIDA (uma por caso) e TABELA no fim. O código de saída é 0 se a medição correu (não é um teste).
+##
+## F61 (segunda corrida, a pedido da F64): a câmara repõe-se entre casos. O `_repor` volta a pôr o modo, o foco, o zoom,
+## o rumo e a inclinação que a câmara tinha quando a arena ficou pronta, e salta para lá sem a suavização.
 
 const NOMES := ["Espadachim", "Arqueira", "Criatura", "Criatura", "Personagem", "Criatura", "Criatura", "Criatura"]
 const CASA_DELA := Vector2i(10, 10)
@@ -31,6 +34,7 @@ var hud: Node
 var _pressed := {}  # nome do botão -> quantas vezes o `pressed` saiu
 var _tabela: Array = []
 var _erros := 0
+var _cam0 := {}  # o estado da câmara quando a arena ficou pronta (F61: repõe-se entre casos)
 
 
 func _init() -> void:
@@ -115,7 +119,24 @@ func _repor() -> void:
 	hud._painel_ficha.visible = false
 	_opcoes()
 	hud._atualizar()
+	_repor_camara()
 	await _quadros(3)
+
+
+## F61: guarda-se o estado da câmara logo que a arena fica pronta; o `_repor` volta a pô-lo antes de todos os casos.
+func _guardar_camara() -> void:
+	var c = arena.camera
+	_cam0 = {"modo": c.modo, "foco": c.foco, "zoom": c.zoom, "rumo": c.rumo, "inclinacao": c.inclinacao}
+
+
+func _repor_camara() -> void:
+	var c = arena.camera
+	c.modo = _cam0["modo"]
+	c.foco = _cam0["foco"]
+	c.zoom = _cam0["zoom"]
+	c.rumo = _cam0["rumo"]
+	c.inclinacao = _cam0["inclinacao"]
+	c._saltar()
 
 
 ## A declaração «Sair c/ …» do Mover (hud.gd: a propriedade `sair_com_*`, o 1.º botão da gaveta). Sem argumento, lê-a;
@@ -565,7 +586,10 @@ func _correr() -> void:
 	root.add_child(arena)
 	await _quadros(4)
 	hud = arena.hud
+	_guardar_camara()
 	print("== F28: o custo do D1 nos botões do HUD (12 figuras, a jogadora na vez; arena a sério, sem servidor) ==")
+	print("== F61: a câmara repõe-se entre casos (modo %d, foco %s, zoom %.3f, rumo %.1f, inclinação %.1f) ==" % [
+		_cam0["modo"], _cam0["foco"], _cam0["zoom"], _cam0["rumo"], _cam0["inclinacao"]])
 	for tam in [Vector2i(844, 390), Vector2i(780, 360)]:
 		root.size = tam
 		await process_frame
