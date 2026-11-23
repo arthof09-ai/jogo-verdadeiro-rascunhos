@@ -39,7 +39,7 @@ ficheiro (§6).
   As minhas tabelas são iguais byte a byte às da tentativa anterior. Os logs só diferem no tempo de carga da floresta.
 - **Biblioteca (GameDev Kit):** vi as 10 pastas da BIB (ambientes, HUD e UX, itens, jogos 2D, sistemas, áudio,
   animações 3D, VFX e magias). Não há nada para resumir ou comparar registos de texto. O único ficheiro novo é um script
-  de 32 linhas que escreve o `resumo.txt`, no padrão das ferramentas de `provas/`.
+  de 31 linhas que escreve o `resumo.txt`, no padrão das ferramentas de `provas/`. (Correcção do coordenador, F72, 23/11/2026: o script tem 31 linhas, não 32.)
 
 ## 1. Como corri a 2.ª corrida
 - **A ferramenta:** `provas/ordem-f28-custo-d1-hud/ferramentas/medir_custo_d1_hud.gd`, a mesma da F28, com uma

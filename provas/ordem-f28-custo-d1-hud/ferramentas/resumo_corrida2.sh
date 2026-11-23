@@ -1,5 +1,5 @@
 #!/bin/bash
-# Escreve o resumo.txt da 2.ª corrida (F61). Uso: fazer-resumo.sh <raiz-do-repo> <rc-ponta> <rc-sem-d1> <partida>
+# Escreve o resumo.txt da 2.ª corrida (F61). Uso: resumo_corrida2.sh <raiz-do-repo> <rc-ponta> <rc-sem-d1> <partida>
 R=$1; P=$R/provas/ordem-f28-custo-d1-hud; M=$P/medicao
 tab(){ grep '^TABELA' "$1" | tr -d '\r'; }
 conta(){ printf 'rc=%s · %s · linhas com MEDIDA %s · linhas TABELA (sem o cabeçalho) %s · linhas com error/warning %s\n' \
