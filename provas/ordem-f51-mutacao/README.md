@@ -9,11 +9,13 @@ Duas provas da F25 que só existiam em testemunho passam a ter artefacto cometid
   - `teste-nomes-relato.mutacao.log`: o log da corrida, redigido pelo `redigir-nomes.mjs` (a saída crua traz os
     nomes verdadeiros de propósito e fica na pasta tmp);
   - `resumo.txt`: rc=1, 23 de 26, as 3 FALHA.
+  - Desde a F68 (sentença da F51), o guião também afirma que o `mutacao.diff` tem exactamente uma linha mudada: uma
+    «-» (a linha 59 como estava) e uma «+» (a mutação). As FALHA distintas contam-se com `sort -u`, e não com `uniq`,
+    que só junta as repetidas seguidas.
 - `reproduzir-redaccao-f25.sh <pasta-tmp>` prova que o `redigir-nomes.mjs` reproduz a redacção do §2 da F25. O
   resultado está em `reproducao-f25.log`: os 11 de 11 iguais byte a byte.
 
 - `remendo-ci-testes.yml.patch` é o passo novo do job `cliente`: o auto-teste do `redigir-nomes.mjs` e a comparação da
-  saída do canário com o registo limpo. Aplica-o o coordenador (`git apply`), porque o token do executor não tem a
-  permissão `workflow`.
+  saída do canário com o registo limpo. Foi aplicado em `74f5fa9` (F65) e fica aqui como registo.
 
 A ferramenta e o seu uso estão documentados em `provas/ordem-caixa-relato/README.md`, na secção da F51.

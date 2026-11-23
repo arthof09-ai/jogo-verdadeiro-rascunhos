@@ -510,8 +510,17 @@ as quatro formas do §2:
   inicial do nome maior do que o nome público. O nome público sozinho não se redige.
 
 Nenhuma linha é acrescentada nem tirada e os fins de linha ficam como estavam. A ferramenta sai com 3 se sobrar um nome
-inteiro. **Limite:** a saída 3 só cobre nomes inteiros — uma variante de preposição fora da lista de 5 ou um corte a meio
-da linha escapa e sai com rc=0, em silêncio.
+inteiro. **Desde a F66** (sentença da F51), a saída 3 cobre também o que a redacção do §2 não redige, sem mudar a
+redacção. Procura-se só no texto já redigido e diz só contagens e n.ºs de linha:
+- **a variante de preposição fora da lista de 5:** o nome com a palavra da preposição substituída por outra palavra
+  qualquer, ou com mais de um espaço à volta dela;
+- **o corte a meio da linha:** um pedaço inicial do nome com a medida do corte na origem (maior do que o nome público,
+  sem acabar em espaço, a começar numa fronteira de palavra) a que se segue um carácter que não é letra. No fim da
+  linha o corte redige-se, como no §2; a meio só se aponta.
+
+Não há nenhum caso destes no corpus: os 11 registos e a saída do canário dão 0 variantes e 0 cortes. O auto-teste
+cobre-os com casos montados. **Limite:** a rede não apanha o nome sem a preposição nem um pedaço que não comece no
+início do nome.
 
 Usos (na raiz do repo):
 - `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs <saída-crua.log> --saida=<redigido.log>` escreve a
@@ -520,15 +529,15 @@ Usos (na raiz do repo):
   compara o redigido com o registo, byte a byte. Diz só «igual» ou o n.º da 1.ª linha diferente, nunca o texto. Sai
   com 0 se for igual e 1 se não for. `--ignorar-cr` tira os CR dos dois lados: o Godot do CI, em Linux, escreve LF, e
   os registos cometidos são CRLF (escritos no Windows). No PC compara-se sem `--ignorar-cr`.
-- `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs --auto-teste` corre 12 verificações com casos montados
-  em memória a partir das fichas (as quatro formas, o nome público intacto, fins de linha, idempotência).
+- `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs --auto-teste` corre 16 verificações com casos montados
+  em memória a partir das fichas: as quatro formas, o nome público intacto, os fins de linha e a idempotência; e, desde
+  a F66/F68, a variante do nome n.º 1 fora da lista, o corte mínimo do nome n.º 2 a meio da linha, a rede calada no
+  que está limpo e a guarda dos 2 nomes. Com menos de 2 nomes verdadeiros, falha com 1 e não rebenta.
 - `--fichas=<fichas.json>` muda as fichas (por omissão `rascunhos/servidor/autojogo/fichas-bancada.json`).
 
-**No CI:** o passo entra com o remendo `provas/ordem-f51-mutacao/remendo-ci-testes.yml.patch`. O token do executor não
-tem a permissão `workflow`, por isso é o coordenador quem o aplica, como nos remendos anteriores. Com ele, o job
-`cliente` corre o auto-teste e compara a saída do canário com
-`provas/ordem-caixa-janela/cobertura-correcoes-6/teste-nomes-relato.log`, logo a seguir ao passo do canário. Até lá, a
-comparação corre-se à mão com os comandos acima.
+**No CI:** o passo está no job `cliente` desde `74f5fa9` (F65), logo a seguir ao passo do canário. Corre o auto-teste
+e compara a saída do canário com `provas/ordem-caixa-janela/cobertura-correcoes-6/teste-nomes-relato.log`. Se a
+ferramenta sair com 3, o passo fica vermelho.
 
 **A prova de que reproduz o §2:** `provas/ordem-f51-mutacao/reproduzir-redaccao-f25.sh <pasta-tmp>` tira do histórico
 os 11 registos de antes da limpeza (o pai de `081304e`) e redige-os. Os 11 ficam iguais byte a byte aos limpos da ponta

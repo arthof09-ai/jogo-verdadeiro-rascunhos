@@ -14,7 +14,9 @@
 // --saida escreve o redigido (sem --saida nem --comparar, vai para a saída padrão). --comparar compara byte a byte o
 // redigido com um registo e diz só o n.º da 1.ª linha diferente, nunca o texto. --ignorar-cr tira os CR dos dois antes
 // de comparar (o Godot do CI, em Linux, escreve LF; os registos cometidos foram escritos no Windows, com CRLF).
-// Sai com 0 se tudo bate, 1 se a comparação (ou o auto-teste) falha, 2 por uso errado, 3 se sobrar um nome inteiro.
+// Sai com 0 se tudo bate, 1 se a comparação (ou o auto-teste) falha, 2 por uso errado, 3 se sobrar no redigido um nome
+// inteiro, uma variante de preposição fora da lista de 5 ou um corte a meio da linha (estes dois desde a F66; ver
+// `suspeitos`). A saída 3 só diz contagens e n.ºs de linha, nunca o texto.
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const PREPOSICOES = ['de', 'da', 'do', 'das', 'dos'];
@@ -99,6 +101,67 @@ export function sobram(texto, verdadeiros) {
   return verdadeiros.reduce((t, { nome }) => t + (min(texto).split(min(nome)).length - 1), 0);
 }
 
+// Ordem F66 da sentença da F51: a rede de segurança (saída 3) passa a cobrir também o que a redacção do §2 NÃO redige e
+// que ainda assim é o nome. A redacção não muda: isto só se procura no texto JÁ redigido.
+//   a) a variante de preposição fora da lista de 5: o nome com a palavra da preposição substituída por outra palavra
+//      qualquer (ou com mais de um espaço à volta dela) — as 5 da lista já foram redigidas, por isso o que sobra é de fora;
+//   b) o corte a meio da linha: um pedaço inicial do nome com a mesma medida do corte na origem (maior do que o nome
+//      público, sem acabar em espaço, a começar numa fronteira de palavra) que acaba numa fronteira de palavra
+//      (o carácter a seguir não é letra) — o corte na origem só se redige no fim da linha.
+// Devolve as contagens e os n.ºs das linhas (1-based), nunca o texto.
+function reVariantesFora(nome) {
+  const ps = nome.split(' ');
+  const res = [];
+  for (let j = 1; j < ps.length - 1; j++) {
+    if (!PREPOSICOES.includes(min(ps[j]))) continue;
+    const antes = ps.slice(0, j).map(esc).join('\\s+');
+    const depois = ps.slice(j + 1).map(esc).join('\\s+');
+    res.push(new RegExp(`(?<!\\p{L})${antes}\\s+[\\p{L}'’]+\\s+${depois}(?!\\p{L})`, 'giu'));
+  }
+  return res;
+}
+
+function cortesNaLinha(l, nome, publico) {
+  const cs = Array.from(min(nome));
+  const minimo = Math.max(Array.from(publico).length + 1, 4);
+  const ls = Array.from(min(l));
+  let n = 0;
+  for (let i = 0; i < ls.length; i++) {
+    if (i > 0 && eLetra(ls[i - 1])) continue;
+    let c = 0;
+    while (c < cs.length && i + c < ls.length && ls[i + c] === cs[c]) c++;
+    if (c === cs.length) continue; // o nome inteiro: é da contagem dos inteiros
+    while (c > 0 && /\s/u.test(cs[c - 1])) c--; // o pedaço não acaba em espaço
+    if (c < minimo) continue;
+    if (i + c < ls.length && eLetra(ls[i + c])) continue; // continua noutra palavra: não é um pedaço do nome
+    n++;
+    i += c - 1;
+  }
+  return n;
+}
+
+export function suspeitos(texto, verdadeiros) {
+  const r = { inteiros: sobram(texto, verdadeiros), variantes: 0, cortes: 0, linhasVariantes: [], linhasCortes: [] };
+  const res = verdadeiros.map(({ nome }) => reVariantesFora(nome));
+  texto.split('\n').forEach((linha, i) => {
+    const l = linha.replace(/\r$/, '');
+    let v = 0, c = 0;
+    verdadeiros.forEach(({ nome, publico }, k) => {
+      for (const re of res[k]) v += (l.match(re) || []).length;
+      c += cortesNaLinha(l, nome, publico);
+    });
+    if (v) { r.variantes += v; r.linhasVariantes.push(i + 1); }
+    if (c) { r.cortes += c; r.linhasCortes.push(i + 1); }
+  });
+  return r;
+}
+
+const descreverSuspeitos = (s) =>
+  `sobram ${s.inteiros} nome(s) inteiro(s), ${s.variantes} variante(s) de preposição fora da lista` +
+  `${s.variantes ? ` (linhas ${s.linhasVariantes.join(', ')})` : ''}, ${s.cortes} corte(s) a meio da linha` +
+  `${s.cortes ? ` (linhas ${s.linhasCortes.join(', ')})` : ''}`;
+const haSuspeitos = (s) => s.inteiros + s.variantes + s.cortes > 0;
+
 // A 1.ª linha diferente entre dois Buffers (1-based), ou 0 se são iguais.
 function primeiraDiferente(a, b) {
   if (a.equals(b)) return 0;
@@ -108,13 +171,20 @@ function primeiraDiferente(a, b) {
   return Math.max(la.length, lb.length);
 }
 
-function autoTeste(verdadeiros, publicos) {
+function autoTeste(verdadeiros, publicos, escreve = console.log) {
   // Casos montados em memória a partir das fichas: os nomes nunca vão para disco nem para a saída.
   let corridas = 0, falhas = 0;
-  const confere = (desc, cond) => { corridas++; if (!cond) falhas++; console.log(`  ${cond ? 'ok   ' : 'FALHA'} ${desc}`); };
+  const confere = (desc, cond) => { corridas++; if (!cond) falhas++; escreve(`  ${cond ? 'ok   ' : 'FALHA'} ${desc}`); };
   const r = (t) => redigir(t, verdadeiros).texto;
+  const sus = (t) => suspeitos(t, verdadeiros);
   const [a, b] = verdadeiros;
   confere(`as fichas têm ${verdadeiros.length} nome(s) verdadeiro(s) e ${publicos.length} público(s) por inteiro (≥ 2 verdadeiros)`, verdadeiros.length >= 2);
+  // F68: com menos de 2 nomes verdadeiros os casos abaixo não se podem montar — o auto-teste falha (sai com 1) em vez
+  // de rebentar a meio com um TypeError.
+  if (verdadeiros.length < 2) {
+    escreve(`auto-teste do redigir-nomes: 0 de ${corridas} verificações passaram (os outros casos precisam de 2 nomes verdadeiros e não correram).`);
+    return 1;
+  }
   confere('1: o nome inteiro → «nome n.º 1», «nome n.º 2» (também dentro de JSON)',
     r(`  ok    1: «${a.nome}» e «${b.nome}» são canários ["${a.nome}", "${b.nome}"]`) ===
     '  ok    1: «nome n.º 1» e «nome n.º 2» são canários ["nome n.º 1", "nome n.º 2"]');
@@ -143,7 +213,32 @@ function autoTeste(verdadeiros, publicos) {
     rc === 'a «nome n.º 1»\r\nb\r\n\r\nc «nome n.º 2»\nfim' && rc.split('\n').length === crlf.split('\n').length);
   confere('a redacção é idempotente (redigir o redigido não muda nada) e não sobra nenhum nome inteiro',
     r(rc) === rc && sobram(rc, verdadeiros) === 0);
-  console.log(`auto-teste do redigir-nomes: ${corridas - falhas} de ${corridas} verificações passaram.`);
+  // Ordem F66/F68 da sentença da F51: a rede de segurança (saída 3) para o que a redacção do §2 não redige.
+  const psA = a.nome.split(' ');
+  const jA = psA.findIndex((p, j) => j > 0 && j < psA.length - 1 && PREPOSICOES.includes(min(p)));
+  const foraA = jA > 0 ? [...psA.slice(0, jA), 'du', ...psA.slice(jA + 1)].join(' ') : null;
+  const linhaV = foraA && `x «${foraA}» y`;
+  const sV = foraA && sus(r(linhaV));
+  confere('F66: a variante do nome n.º 1 com uma preposição fora da lista de 5 não se redige (o §2 não muda), mas a rede apanha-a: 1 variante → saída 3',
+    !!foraA && r(linhaV) === linhaV && sV.variantes === 1 && sV.linhasVariantes.join() === '1' && sV.cortes === 0 && sV.inteiros === 0 && haSuspeitos(sV));
+  const minimoB = Math.max(Array.from(b.publico).length + 1, 4);
+  const csB = Array.from(b.nome);
+  let nB = minimoB;
+  while (nB < csB.length && /\s/u.test(csB[nB - 1])) nB++;
+  const corteB = csB.slice(0, nB).join('');
+  const sC = sus(r(`a\n"${corteB}", "resto"`));
+  confere('F66: o corte mínimo do nome n.º 2 a meio da linha não se redige, mas a rede apanha-o (1 corte, linha 2 → saída 3); no fim da linha redige-se',
+    r(`"${corteB}", "resto"`) === `"${corteB}", "resto"` && sC.cortes === 1 && sC.linhasCortes.join() === '2' && sC.variantes === 0 && haSuspeitos(sC) &&
+    r(`fim: ${corteB}`) === 'fim: nome n.º 2 (cortado na origem)');
+  const limpos = [r(`  vez: ${a.publico}`), r(`dá «${a.publico}» e «${b.publico}» ao fim`), r(`x${ca} y`), r(`«${b.publico}» diz`), rc,
+    r(`«${b.nome}» → «${vb[0]}»`), r(`"${cb}`), r(`fim: ${corteB}`)];
+  confere('F66: a rede não dispara no que a redacção deixa limpo (o nome público, o pedaço a meio de palavra, as formas já redigidas)',
+    limpos.every((t) => !haSuspeitos(sus(t))));
+  let semRebentar = true, rc1 = 0;
+  try { rc1 = autoTeste([a], publicos, () => {}); } catch { semRebentar = false; }
+  confere('F68: com 1 só nome verdadeiro o auto-teste falha (sai com 1) sem rebentar',
+    semRebentar && rc1 === 1);
+  escreve(`auto-teste do redigir-nomes: ${corridas - falhas} de ${corridas} verificações passaram.`);
   return falhas ? 1 : 0;
 }
 
@@ -158,9 +253,9 @@ if (principal) {
   const entrada = args.find((x) => !x.startsWith('--'));
   if (!entrada) { console.error('uso: redigir-nomes.mjs <saida-crua.log> [--fichas=…] [--saida=…] [--comparar=<registo.log>] [--ignorar-cr] | --auto-teste'); process.exit(2); }
   const { texto, conta } = redigir(readFileSync(entrada, 'utf8'), verdadeiros);
-  const resto = sobram(texto, verdadeiros);
-  console.error(`redigir-nomes: ${entrada}: ${contarLinhas(texto)} linhas, ${conta.linhas} redigidas — ${conta.inteiros} nome(s) inteiro(s), ${conta.minusculas} em minúsculas, ${conta.preposicao} com a preposição mudada, ${conta.cortados} cortado(s) na origem; sobram ${resto} nome(s) inteiro(s)`);
-  if (resto) process.exit(3);
+  const s = suspeitos(texto, verdadeiros);
+  console.error(`redigir-nomes: ${entrada}: ${contarLinhas(texto)} linhas, ${conta.linhas} redigidas — ${conta.inteiros} nome(s) inteiro(s), ${conta.minusculas} em minúsculas, ${conta.preposicao} com a preposição mudada, ${conta.cortados} cortado(s) na origem; ${descreverSuspeitos(s)}`);
+  if (haSuspeitos(s)) process.exit(3);
   const saida = opc('saida');
   if (saida) writeFileSync(saida, texto);
   const registo = opc('comparar');
