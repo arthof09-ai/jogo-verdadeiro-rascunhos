@@ -120,4 +120,10 @@ mexeu em nada do que elas correm.
 
 ## Nota do CI
 
-(a preencher depois de o CI correr sobre o commit desta ordem)
+- `9e4660b` (correcção + provas + ESTADO-FINAL): **Sonda de privacidade 45248989526: success**. **Testes dos
+  rascunhos 45248989369: failure**. Dos 10 jobs, 9 passaram; falhou só o `retoma-pc`, por causa das listas da retoma
+  (§5). As 4 verificações D-AUD-01 passaram no job `cliente`.
+- `1d3441b` (listas da retoma sincronizadas): **Testes dos rascunhos 45249627803: success**, os 10 jobs (servidor,
+  validador-glb, motor-real, protocolo, cliente, godot-cliente, foto-mestre, provas-mapa, ponta-a-ponta, retoma-pc), e
+  **Sonda de privacidade 45249627881: success**. No log do CI: `pecas_mestre` 290 de 290 (com as 4 D-AUD-01 «ok»),
+  `rodar_testes` 321 de 321, `caixa_janela` 123 de 123.
