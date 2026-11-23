@@ -62,3 +62,23 @@ Corri as duas suites com o `hud/caixa_ordem.gd` da ponta, sem a correcção, só
 | `cliente/11-toque-fora-12-figuras-780x360.png` | `9575f0e08099f5b75744ca1f6b709024132f8c0284b497d42ac742aa7f9d493a` |
 | `cliente/11-toque-fora-16-figuras-844x390.png` | `7a52d9b9efa15e38a5ee225ea3e10ea20429ec5a35ebd50abb1c16252a9ac233` |
 | `cliente/11-toque-fora-16-figuras-780x360.png` | `65763c3c65155e64ac75a7f3b1f64c11301d78c03d6debe6d5b2f5e6e73dc278` |
+
+## Capturas dos passos 1–9 — SHA-256 (emenda da conferência, F23, 23/11/2026)
+
+As 12 capturas dos passos 1–9 são re-renders desta corrida da prova viva (o manequim anda; o fotograma muda),
+não cópias das da CAIXA-EXPANDE — 0/13 byte-idênticas. Os SHA-256, medidos nos ficheiros cometidos:
+
+| ficheiro | SHA-256 |
+|---|---|
+| `cliente/1-entrou-dinamica.png` | `d30213ece6853d33456286100856fb4c4711b4f564a4fb094f785f1708be7942` |
+| `cliente/2-iniciativa.png` | `386e94228e2cfcda2181fd052e4ce19aac86cacc17211841c0b7934d480a3e8f` |
+| `cliente/3-desligada.png` | `5583c30839b815501acc856f42c0f5a4719bf52f9fd44a04b73e91b7d6c01466` |
+| `cliente/4-religada-avancou.png` | `abc1d8d78d4a76c5bc3e446eed356366df857d79b201d15592c5a59909044c25` |
+| `cliente/5-reentrou.png` | `6182d9ca894546bb0ef08c4dcbbb72f98d81ca7dc44cc56d53e512d22a921a69` |
+| `cliente/6-rato-expandida.png` | `d489e2fbe53ce732942f3054f7035857159f2599f18f47dadb6f59606007dd4f` |
+| `cliente/7-expandida-9-figuras.png` | `cdb3f9c20e2fd81d4b2cea56acf8ec329d19e361ca298ea3f24e653196bd6c99` |
+| `cliente/8-expandida-780x360.png` | `5a3ccbc1df9f83be7d605ee9cc99c3a3c4011a6654f48e2554d12bf674478699` |
+| `cliente/8-expandida-844x390.png` | `d7fa4499b3cca02470d26f0e54d8b7447413efffe3f0e628720fdb2a09cea0c4` |
+| `cliente/9-faixa-1920x1080.png` | `bba77a3aea3103bf56d76af55a3e5c6aa666eeabdaafb9a238b3de491537af2f` |
+| `cliente/9-faixa-780x360.png` | `589d8d8f3f9de30151fa9af119138deb156905a60982662ab340c65bdf1f83bb` |
+| `cliente/9-faixa-844x390.png` | `d88f72da27f9872c670f1740bda9048527143f9bfbd994c4aaa2c3834115d251` |

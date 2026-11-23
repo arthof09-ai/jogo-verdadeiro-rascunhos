@@ -113,7 +113,7 @@ ao arrastar. Aqui não há como o medir, e não o fingi.
 Está em `provas/ordem-caixa-expande-interacao/cliente/` (o README tem os SHA-256 das capturas novas):
 - o cliente real pela Rede;
 - o servidor de mesa real com o motor VLAB real (`a91c021c…`) e a semente 7;
-- o manequim `andar-v3.glb` com o SHA conferido.
+- o manequim `andar-v3.glb` com o SHA conferido (`sha256 8413b0395d6b9f161aefe05004999ee5f605d4eb68e81a4767a81f9b56ea3491`, 2.858.648 B).
 
 Por passo: 0 → 1 · 1 → 22 · 2 → 20 · 3 → 4 · 4 → 22 · 5 → 20 · 6 → 17 · 7 → 31 · 8 → 18 · 9 → 6 · 10 → 9 ·
 **11 → 38**, mais 1 da abertura do manequim. Os passos 0 a 10 dão os mesmos 171 da CAIXA-EXPANDE. O 8 continua com 18
@@ -131,7 +131,7 @@ verificações: a da rolagem é agora a da roda, e mediu-se 0 → 49 u em 2 pass
 - «Tabuleiro igual» quer dizer que ficaram iguais os nós das figuras, as casas do Estado, o modo da arena (0 → 0), o
   cursor ((−1, −1)), os alvos, o item e a última intenção enviada.
 - Arrastar com o rato: 0 → 0 u nas 4 medições.
-- O máximo em 780×360 é 344 e 736 na prova e 343 e 735 na suite, porque os nomes das figuras são outros.
+- O máximo em 780×360 é 344 e 736 na prova e 343 e 735 na suite.
 
 **Vi as capturas:**
 - `11-roda-fim-16-figuras-780x360.png`: a lista no fim, com a última figura inteira;
@@ -191,6 +191,8 @@ Conferidor: `provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs`, crité
 - **Os logs dos outros passos não se cometem.** O do `teste_nomes_relato` imprime nomes verdadeiros inteiros de
   propósito (é o teste do canário). Cometi-o por engano num commit local, que **desfiz antes de qualquer push**: nunca
   saiu do PC. Do resto fica só a linha final (`resumo-alheios.txt`, 0 / 0).
+**Emenda da conferência (F21, 23/11/2026): o quadro verdadeiro.** O que este §6 diz sobre *esta entrega* é verdade (0 nomes inteiros em tudo o que ela acrescenta), mas a ponta já contém **90 pares (linha, nome) de nomes verdadeiros inteiros pré-existentes em 11 ficheiros** que esta ordem não toca: 9 `teste-nomes-relato.log` (5 cada) em `provas/ordem-caixa-janela/nomes/`, `nomes-correcoes/`, `cobertura/`, `cobertura-correcoes/` e `cobertura-correcoes-2` a `-6`; `provas/ordem-caixa-relato/correcoes-3/mutacoes.log` (42); `provas/ordem-caixa-janela/nomes-correcoes/mutacoes.log` (3) — 188 ocorrências brutas no total. Os 90 são um piso, não um tecto: só 44 ficheiros foram varridos; os restantes ~515 `.log`/`.txt` pré-existentes sob `provas/` não foram. A Sonda varre a árvore toda mas **só procura e-mails pessoais, nunca nomes** — «Sonda verde» nunca quis dizer «repo limpo de nomes». A frase «desfiz antes de qualquer push» é palavra do executor, não prova (um commit local desfeito não deixa rasto no GitHub). A limpeza da ponta segue na F25; a do histórico publicado depende da palavra do Mestre (F26). Convenção de contagem: um «par (linha, nome)» é uma linha que contém um nome verdadeiro inteiro; «ocorrências brutas» contam cada achado do conferidor nos dois critérios.
+
 - **O PIN** é novo por corrida e passa só por `--pin=`. O info e o log do servidor ficaram na pasta temporária, fora
   do repo. Não há nenhum valor de PIN em nenhum ficheiro.
 
@@ -206,4 +208,4 @@ Conferidor: `provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs`, crité
    para alguém ver se a roda chega duas vezes à câmara na janela a sério.
 4. **A guarda do CI prende a `caixa_janela` a «123 de 123».** Para a respeitar sem tocar no workflow, a prova da roda
    substituiu a verificação que comparava as mesmas alturas, em vez de se somar. Por isso o D1 e o D3, que precisam da
-   câmara, estão na `caixa_jogadora` §10, que no CI só é guardada contra erros de script.
+   câmara, estão na `caixa_jogadora` §10. **Emenda da conferência (F22, 23/11/2026):** o §10 TEM rede no CI — `testes.yml:153-156` (`set -o pipefail`) e o `quit(1 if _falhas > 0 else 0)` da `caixa_jogadora.gd:269`: uma falha de asserção reprova a run. A frase anterior («só guardada contra erros de script») era falsa.
