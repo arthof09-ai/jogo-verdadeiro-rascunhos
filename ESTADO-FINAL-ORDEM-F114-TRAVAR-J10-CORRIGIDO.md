@@ -151,3 +151,17 @@ nada a sincronizar.**
 1. `5554637` — a obra: o padrão, os 2 casos e o README (sobre `5bf8ca1`).
 2. Este ESTADO-FINAL (sobre `5554637`).
 3. A nota do CI da ponta do commit 2, acrescentada no fim deste ficheiro.
+
+## 9. Nota do CI — ponta `90ac1a0` (este ESTADO-FINAL)
+
+Testes **45177537605** + Sonda **45177537526**: **10/10 jobs verdes e a Sonda verde**, com o passo da F51 a correr.
+No log do job `cliente` (job 137702565444, 2179 linhas):
+
+- canário 26/26;
+- «auto-teste do redigir-nomes: **28 de 28** verificações passaram.»;
+- o registo da COBERTURA-CORRECOES-6 «**igual byte a byte** ao redigido (3437 bytes, sem os CR)»;
+- `rodar_testes` 321/321 (também no `godot-cliente`), `caixa_janela` 123/123, `caixa_jogadora` 70/70;
+- a mutação deu «114 de 123» e «MUTACAO APANHADA: 9 falhas, todas do assert B6».
+
+**Nomes inteiros nos logs:** 0 + 0 no log do `cliente` e 0 + 0 no do `godot-cliente` (contagem refeita sem distinguir
+maiúsculas). O commit desta nota só acrescenta esta secção a este ficheiro.
