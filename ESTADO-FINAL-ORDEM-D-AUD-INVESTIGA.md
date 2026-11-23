@@ -37,3 +37,7 @@ O cliente do Mestre abre na **arena da jogadora**. A cena principal é `arena.ts
 - [x] A causa de cada um com ficheiro e linha (tabela acima; o pormenor está no relatório).
 - [x] O âmbito da correcção proposta (o que muda, onde, e o risco) para cada um.
 - [x] Nenhum código do jogo alterado; só o relatório, as provas e o ESTADO-FINAL; nenhum nome verdadeiro.
+
+## Nota do CI
+
+Commit do relatório e deste ESTADO-FINAL `b3f3382`: **Testes dos rascunhos 45292070232: success** · **Sonda de privacidade 45292070110: success**.
