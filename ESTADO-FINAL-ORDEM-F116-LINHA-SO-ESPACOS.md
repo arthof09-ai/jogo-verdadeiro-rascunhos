@@ -133,3 +133,18 @@ no repo os sha256 e os blobs antigos dos dois e não os encontrei. O `MANIFESTO-
 1. `209bbf8` — a obra: o caso novo e o README (sobre `49d6fbe`).
 2. Este ESTADO-FINAL (sobre `209bbf8`).
 3. A nota do CI da ponta do commit 2, acrescentada no fim deste ficheiro.
+
+## 7. Nota do CI — ponta `0c721cf` (este ESTADO-FINAL)
+
+Testes **45180476469** + Sonda **45180476063**: **10/10 jobs verdes e a Sonda verde**, com o passo da F51 a correr.
+No log do job `cliente` (job 137712666092, 2152 linhas):
+
+- canário 26/26;
+- «auto-teste do redigir-nomes: **29 de 29** verificações passaram»;
+- o registo da COBERTURA-CORRECOES-6 «**igual byte a byte** ao redigido (3437 bytes, sem os CR)»;
+- `rodar_testes` 321/321 (também no `godot-cliente`), `caixa_janela` 123/123, `caixa_jogadora` 70/70;
+- a mutação deu «114 de 123» e «MUTACAO APANHADA: 9 falhas, todas do assert B6».
+
+**Nomes inteiros nos logs:** 0 + 0 no log do `cliente` e 0 + 0 no do `godot-cliente` (sem distinguir maiúsculas).
+A procura da `SENTENCA.md` no disco deste PC também não a encontrou (a busca foi parada pelo limite de tempo, sem
+resultado). O commit desta nota só acrescenta esta secção a este ficheiro.
