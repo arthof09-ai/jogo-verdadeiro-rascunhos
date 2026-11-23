@@ -6,8 +6,8 @@ Conferidas (resumo = registo): 3/3 · vitórias: heroínas 3 · criaturas 0 · s
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | Arqueira de Bancada | jogadora | 22 | 18.3 | 24 | 25.7 | 4 | 1/3 | 0/3 |
 | Espadachim de Bancada | jogadora | 30 | 15 | 28.7 | 15 | 3.7 | 0/3 | 0/3 |
-| Bruto de Bancada | criatura | 34 | 34 | 24.7 | 34.7 | 3.3 | 3/3 | 3/3 |
-| Lobo de Bancada | criatura | 16 | 16 | 16 | 18 | 4 | 3/3 | 3/3 |
+| nome n.º 1 | criatura | 34 | 34 | 24.7 | 34.7 | 3.3 | 3/3 | 3/3 |
+| nome n.º 2 | criatura | 16 | 16 | 16 | 18 | 4 | 3/3 | 3/3 |
 
 Vida perdida = vida total − vida restante (pára no 0). Dano sofrido = a soma dos golpes recebidos, como o servidor a conta (inclui o excesso além da vida). «Caiu» = acabou com vida 0; «Morreu» = a morte foi adjudicada (uma heroína caída pode continuar viva, em teste de morte).
 

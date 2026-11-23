@@ -4,11 +4,11 @@ servidor ws://127.0.0.1:8794/ws · render NVIDIA GeForce RTX 4060
 == 0. batalha de bancada (IA de bancada, lugares próprios) ==
   bancada: Arqueira de Bancada → {"destino":{"x":11,"y":10},"tipo":"mover"} (APLICADA)
   bancada: Arqueira de Bancada → {"tipo":"encerrar"} (APLICADA)
-  bancada: Lobo de Bancada → {"destino":{"x":12,"y":10},"tipo":"mover"} (APLICADA)
-  bancada: Lobo de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: nome n.º 2 → {"destino":{"x":12,"y":10},"tipo":"mover"} (APLICADA)
+  bancada: nome n.º 2 → {"tipo":"encerrar"} (APLICADA)
   bancada: Espadachim de Bancada → {"destino":{"x":11,"y":8},"tipo":"mover"} (APLICADA)
   bancada: Espadachim de Bancada → {"tipo":"encerrar"} (APLICADA)
-  a batalha a meio: fase combate, rodada 1.0, vez de Bruto de Bancada, ordem dinâmica (Mestre) ["Arqueira de Bancada","Lobo de Bancada","Espadachim de Bancada"]
+  a batalha a meio: fase combate, rodada 1.0, vez de nome n.º 1, ordem dinâmica (Mestre) ["Arqueira de Bancada","nome n.º 2","Espadachim de Bancada"]
   ok    batalha de bancada a meio: em combate e com a ordem dinâmica formada no servidor (≥ 2 figuras)
 == 1. a jogadora (Espadachim de Bancada) entra pelo ecrã a sério ==
   ok    1: a jogadora entrou a meio da batalha (fase combate, rodada 1)
@@ -67,8 +67,8 @@ servidor ws://127.0.0.1:8794/ws · render NVIDIA GeForce RTX 4060
 == 4. o Mestre volta a ligar no modo dinâmico; a bancada joga mais duas vezes ==
   ok    4: o servidor aceitou (ligada, dinâmico)
   ok    4: a caixa voltou ao HUD dela no modo dinâmico
-  bancada: Bruto de Bancada → {"destino":{"x":10,"y":10},"tipo":"mover"} (APLICADA)
-  bancada: Bruto de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: nome n.º 1 → {"destino":{"x":10,"y":10},"tipo":"mover"} (APLICADA)
+  bancada: nome n.º 1 → {"tipo":"encerrar"} (APLICADA)
   ok    4: a bancada jogou a vez de Bruto
   bancada: Arqueira de Bancada → {"alvoId":"f08e6e9dc41e7a378","arma":"tiro-certeiro-bancada","tipo":"atacar"} (APLICADA)
   bancada: Arqueira de Bancada → {"tipo":"encerrar"} (APLICADA)

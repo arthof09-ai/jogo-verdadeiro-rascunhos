@@ -41,7 +41,7 @@
     },
     {
       "fichaId": "bruto-bancada",
-      "figura": "Bruto de Bancada",
+      "figura": "nome n.º 1",
       "lado": "criatura",
       "vidaTotal": 34,
       "vidaPerdidaMedia": 34,
@@ -53,7 +53,7 @@
     },
     {
       "fichaId": "lobo-bancada",
-      "figura": "Lobo de Bancada",
+      "figura": "nome n.º 2",
       "lado": "criatura",
       "vidaTotal": 16,
       "vidaPerdidaMedia": 16,

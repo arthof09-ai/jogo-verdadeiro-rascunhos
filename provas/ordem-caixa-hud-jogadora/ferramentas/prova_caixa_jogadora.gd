@@ -356,7 +356,7 @@ func _privacidade(rotulo: String) -> void:
 	for j in textos.size():
 		for i in canarios.size():
 			var k = canarios[i]
-			# CAIXA-RELATO-CORRECOES-3 (B2): sem distinguir maiúsculas («bruto de bancada» também é o canário).
+			# CAIXA-RELATO-CORRECOES-3 (B2): sem distinguir maiúsculas («nome n.º 1 em minúsculas» também é o canário).
 			# CAIXA-RELATO-CORRECOES-4 (B2): o achado diz qual canário (n.º e espécie) e em que texto — nunca o valor nem
 			# o texto, que o trazem: a linha FALHA vai para o relato e para a consola, e os dois ficam cometidos.
 			if str(textos[j]).to_lower().contains(str(k).to_lower()):
@@ -382,7 +382,7 @@ func _nomes_no_relato(nomes: Array) -> Array:
 
 
 ## CAIXA-RELATO-CORRECOES-3 (B1/B2): as linhas de `linhas` que trazem algum dos nomes — sem distinguir maiúsculas dos
-## dois lados (um canário escrito «lobo de bancada» é o mesmo nome verdadeiro). Linhas numeradas a partir de 1.
+## dois lados (um canário escrito «nome n.º 2 em minúsculas» é o mesmo nome verdadeiro). Linhas numeradas a partir de 1.
 func _nomes_em(linhas: PackedStringArray, nomes: Array) -> Array:
 	var achados: Array = []
 	for i in linhas.size():

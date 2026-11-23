@@ -3,8 +3,8 @@ servidor ws://127.0.0.1:8791/ws · render llvmpipe (LLVM 20.1.2, 256 bits)
 == 0. batalha de bancada (IA de bancada, lugares próprios) ==
   bancada: Arqueira de Bancada → {"destino":{"x":11,"y":10},"tipo":"mover"} (APLICADA)
   bancada: Arqueira de Bancada → {"tipo":"encerrar"} (APLICADA)
-  bancada: Lobo de Bancada → {"destino":{"x":12,"y":10},"tipo":"mover"} (APLICADA)
-  bancada: Lobo de Bancada → {"tipo":"encerrar"} (APLICADA)
+  bancada: nome n.º 2 → {"destino":{"x":12,"y":10},"tipo":"mover"} (APLICADA)
+  bancada: nome n.º 2 → {"tipo":"encerrar"} (APLICADA)
   bancada: Espadachim de Bancada → {"destino":{"x":11,"y":8},"tipo":"mover"} (APLICADA)
   bancada: Espadachim de Bancada → {"tipo":"encerrar"} (APLICADA)
   a batalha a meio: fase combate, rodada 1.0, vez de f1c67641aa5cdfe28, ordem dinâmica ["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"]

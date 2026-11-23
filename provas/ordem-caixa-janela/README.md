@@ -31,7 +31,7 @@ Correr de novo (Git Bash, na raiz do repo):
 `bash provas/ordem-caixa-janela/ferramentas/correr-prova-caixa-janela.sh <Godot_console.exe> <vlab-completo.js> <pasta-tmp>`
 
 ## nomes/ — Ordem CAIXA-JANELA-NOMES (21/11/2026, Claude conta 1, PC): o relato só com o nome público
-O relato desta prova trazia os nomes verdadeiros das criaturas de bancada («Lobo de Bancada», «Bruto de Bancada»): o
+O relato desta prova trazia os nomes verdadeiros das criaturas de bancada («nome n.º 2», «nome n.º 1»): o
 `_nome()` e a linha «bancada:» liam o `nome` da vista do Mestre, e o canário só varria os textos da caixa. O mesmo
 remédio da B1 da CAIXA-RELATO-CORRECOES-2, as duas metades:
 - **a fonte:** os nomes do relato vêm do `nomePublico` (sem ele, o id) — `ferramentas/nomes_relato.gd`, partilhado pela
@@ -41,7 +41,7 @@ remédio da B1 da CAIXA-RELATO-CORRECOES-2, as duas metades:
 
 Corridas (Godot 4.7.2 Windows, `_console.exe`; motor VLAB real sha256 `a91c021c…`; semente 7):
 - `nomes/teste-nomes-relato.log` — **teste 14/14** (`ferramentas/teste_nomes_relato.gd`, sem servidor nem ecrã, com as
-  fichas de bancada reais; reproduz o caso: «Bruto de Bancada» numa linha → o canário falha; e apanha os 22 nomes
+  fichas de bancada reais; reproduz o caso: «nome n.º 1» numa linha → o canário falha; e apanha os 22 nomes
   verdadeiros do relato antigo `cliente/relato.txt`).
 - `nomes/cliente/` — **prova viva 38/38** (eram 35; +3 do canário do relato). Capturas (sha256, 16 primeiros):
   `1-janela-1280x720.png` `13ea9aa6ade3a432`, `2-baixo-844x390.png` `9125924cc4b1e23e`, `3-baixo-780x360.png`
@@ -58,8 +58,8 @@ A prova: o lançador aceita agora um 4.º argumento, a pasta de saída (sem ele,
   `nomes-correcoes/remendo-ci-testes.yml.patch` — aplica-o o coordenador (token `workflow`). O corpo exacto do passo,
   corrido aqui, dá rc=0 e rc=1 com um canário mudado (`nomes-correcoes/mutacoes.log`).
 - **B2:** o §4 do teste já não lê `cliente/relato.txt`: o relato antigo está congelado dentro do teste (`RELATO_VELHO`,
-  igual byte a byte, sha256 `6df653c41a29e23a…`), e o §4 afirma **22 achados** (28 ocorrências brutas), o 1.º «Lobo de
-  Bancada na linha 7». O `cliente/relato.txt` pode ser limpo por outra ordem sem tocar no teste.
+  igual byte a byte, sha256 `6df653c41a29e23a…`), e o §4 afirma **22 achados** (28 ocorrências brutas), o 1.º «nome n.º 2
+  na linha 7». O `cliente/relato.txt` pode ser limpo por outra ordem sem tocar no teste.
 - **B3:** a varredura final da prova (`_fim()`) é incondicional; sem canários é FALHA.
 - **B4:** os diagnósticos das varreduras (relato e textos da caixa) dizem a contagem e as linhas/índices, nunca o nome.
 - **B5:** o rótulo «as 8 criaturas da prova» passou a «aqui as 4 fichas + 1 Bruto repetido; na prova viva, 10 figuras

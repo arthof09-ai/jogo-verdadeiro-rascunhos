@@ -14,7 +14,7 @@ A caixa da ordem de turnos no HUD da jogadora, com a escolha do Mestre lida do s
   3. `3-desligada.png` `10eed5b6385dd249` — o Mestre desliga: a caixa sai do HUD dela.
   4. `4-religada-avancou.png` `577466d65bc74666` — religada no dinâmico; Bruto e Arqueira jogam: a volta fecha pelos eventos, Arqueira na vez.
   5. `5-reentrou.png` `79d9cbbe29985403` — ela sai e volta a entrar: a caixa reconstrói-se igual.
-- Os nomes na caixa são os PÚBLICOS («Lobo», «Bruto»; o Mestre vê «Lobo de Bancada», «Bruto de Bancada»).
+- Os nomes na caixa são os PÚBLICOS («Lobo», «Bruto»; o Mestre vê «nome n.º 2», «nome n.º 1»).
 
 ## suites/ — as suites da casa, locais (PC, Godot 4.7.2 headless, Node 26)
 servidor 380/380 · schemas (tráfego dos testes) 0 falhas nas mensagens que saem · abrir_scripts 105/0 falhas ·
