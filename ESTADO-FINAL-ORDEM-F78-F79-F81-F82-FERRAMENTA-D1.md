@@ -46,7 +46,7 @@ Ferramenta: `provas/ordem-f28-custo-d1-hud/ferramentas/medir_custo_d1_hud.gd`.
   e depois `gaveta = "à vista, %s" % de`.
 - Os modos possíveis (Mover, Ataque, Consumível) são todos masculinos, e todos levam «do».
 - Corri as duas medições outra vez com a ferramenta corrigida. Os logs dão «de o Mover» 0 vezes; na F64 eram 44 na
-  ponta e 52 sem o D1. «À vista, do Mover» sai 54 vezes na ponta e 64 sem o D1.
+  ponta e 52 sem o D1. «À vista, do Mover» sai 44 vezes na ponta e 52 sem o D1. (Correcção do coordenador, F98, 23/11/2026: 54/64 é o total em todos os modos — Mover 44/52 + Ataque 10/12 + Consumível 0.)
 
 ### F81 — a forma da ferramenta
 - **Rumo e inclinação na pinça a deslocar.** `_pinca_a_deslocar` guarda `rumo0` e `incl0` antes do gesto. A
@@ -114,7 +114,7 @@ cursor e o rumo/inclinação novos. Depois comparei-os linha a linha, sem olhar 
 - a casa (7, 11): com o D1 e a lista aberta, o 1.º toque fecha a lista sem mover a figura (2 toques);
 - a pinça: 0,000 m com a lista aberta e 0,028 m no controlo;
 - a pinça a deslocar: 0,000 m com a lista aberta e 0,854 m no controlo. Rumo 0,0 → 0,0 e inclinação 55,0 → 55,0 em
-  todos os casos.
+  todos os casos. (Precisão do coordenador, F99, 23/11/2026: estes valores são os da ponta — sem o D1 a lista aberta dá 0,854 m, não 0,000 m.)
 - **Na ponta, nos 32 casos com a lista aberta, a linha «ao 1.º toque» muda uma só coisa**: `caixa: expandida por toque →
   compacta` (32 de 32). Sem o D1, é 0 de 32, porque o 1.º toque também faz a acção.
 
