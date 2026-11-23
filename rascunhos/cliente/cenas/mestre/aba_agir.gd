@@ -53,7 +53,7 @@ func montar(m) -> void:
 	_cancelar = Button.new()
 	_cancelar.text = Textos.CANCELAR
 	_cancelar.visible = false
-	_cancelar.pressed.connect(parar_mover)
+	_cancelar.pressed.connect(cancelar_mover)
 	add_child(_cancelar)
 
 
@@ -156,6 +156,15 @@ func editar(cartao_id: String) -> void:
 	editar_cartao = cartao_id
 	if mestre != null and mestre.vista is Dictionary:
 		atualizar()
+
+
+## «Cancelar» do Mover: desarma e, se o «Mover» tinha desarmado o «Colocar» da Mesa, o «Colocar» volta
+## (D-AUD-01-CORRECCOES).
+func cancelar_mover() -> void:
+	var estava := a_mover
+	parar_mover()
+	if estava and mestre != null:
+		mestre.cancelou_mover()
 
 
 func parar_mover() -> void:

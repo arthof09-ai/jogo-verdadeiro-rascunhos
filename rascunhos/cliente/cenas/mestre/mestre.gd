@@ -99,6 +99,7 @@ var _livre: ControlosLivre
 var _aba_registo: AbaRegisto
 var _aba_mesa: AbaMesa
 var _aba_agir: AbaAgir
+var _colocar_guardado := ""  # D-AUD-01-CORRECCOES: a ficha do «Colocar» que o «Mover» desarmou
 var _folha: PanelContainer
 var _colunas: HBoxContainer
 var _col1: VBoxContainer
@@ -698,15 +699,28 @@ func casa_tocada(casa: Vector2i) -> void:
 
 
 ## D-AUD-01: o Mestre escolheu uma ficha para colocar (aba Mesa) — o «Mover» do Agir desarma.
+## A escolha nova manda: o «Colocar» guardado pelo «Mover» deixa de valer (D-AUD-01-CORRECCOES).
 func armou_colocar() -> void:
+	_colocar_guardado = ""
 	if _aba_agir != null:
 		_aba_agir.parar_mover()
 
 
 ## D-AUD-01: o Mestre armou o «Mover» (aba Agir) — o «Colocar» da Mesa desarma (o esquema, se houver, fica na lista).
+## D-AUD-01-CORRECCOES: a ficha que estava a colocar fica guardada, para voltar se o Mestre cancelar o «Mover».
 func armou_mover() -> void:
 	if _aba_mesa != null:
+		_colocar_guardado = _aba_mesa.a_colocar
 		_aba_mesa.parar()
+
+
+## D-AUD-01-CORRECCOES: o Mestre cancelou o «Mover» (botão «Cancelar» do Agir) — o «Colocar» que o «Mover» desarmou
+## volta armado, com a mesma ficha. Só no cancelamento: depois de mover, ou se a vez mudar, o «Colocar» não volta.
+func cancelou_mover() -> void:
+	var ficha := _colocar_guardado
+	_colocar_guardado = ""
+	if ficha != "" and _aba_mesa != null:
+		_aba_mesa.escolher_colocar(ficha)
 
 
 func _enviar(tipo: String, campos: Dictionary) -> String:

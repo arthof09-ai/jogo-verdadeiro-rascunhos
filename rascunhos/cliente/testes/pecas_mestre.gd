@@ -190,6 +190,32 @@ func _correr() -> void:
 	_ok(c._aba_agir.a_mover, "D-AUD-01: «Mover» armado (pré-condição)")
 	c._aba_mesa.escolher_colocar("orc-teste")
 	_ok(not c._aba_agir.a_mover and c._arena.casas_destacadas().is_empty(), "D-AUD-01: escolher «Colocar» desarma o «Mover» e apaga-lhe o destaque")
+	# D-AUD-01-CORRECCOES (conferência D-AUD-01): cancelar o «Mover» repõe o «Colocar» que ele desarmou.
+	c._aba_agir.iniciar_mover()
+	c._aba_agir._cancelar.pressed.emit()  # o botão «Cancelar» do Agir
+	var antes_rep := _comandos.size()
+	c.casa_tocada(Vector2i(19, 19))
+	var places_rep: Array = []
+	for cmd in _comandos.slice(antes_rep):
+		if cmd.get("type") == "MASTER_PLACE":
+			places_rep.append(str(cmd.get("fichaId", "")))
+	_ok(not c._aba_agir.a_mover and c._aba_mesa.a_colocar == "orc-teste" and places_rep == ["orc-teste"],
+		"D-AUD-01-CORRECCOES: cancelar o «Mover» repõe o «Colocar» e o toque seguinte coloca (%d MASTER_PLACE %s)" % [places_rep.size(), places_rep])
+	if not places_rep.is_empty():
+		_responder(c, _ultimo())
+	# 5.º caso: «Mover» armado → escolher OUTRA ficha no «Colocar» → o toque põe a ficha nova, não a velha.
+	c._aba_agir.iniciar_mover()
+	c._aba_mesa.escolher_colocar("lobo-teste")
+	var antes_5 := _comandos.size()
+	c.casa_tocada(Vector2i(19, 19))
+	var places_5: Array = []
+	for cmd in _comandos.slice(antes_5):
+		if cmd.get("type") == "MASTER_PLACE":
+			places_5.append(str(cmd.get("fichaId", "")))
+	_ok(not c._aba_agir.a_mover and places_5 == ["lobo-teste"],
+		"D-AUD-01-CORRECCOES: com o «Mover» armado, escolher outra ficha no «Colocar» → o toque põe a ficha nova (%d MASTER_PLACE %s, 0 da velha)" % [places_5.size(), places_5])
+	if not places_5.is_empty():
+		_responder(c, _ultimo())
 	var antes_dau := _comandos.size()
 	c._aba_agir.iniciar_mover()
 	_ok(c._aba_mesa.a_colocar == "", "D-AUD-01: armar «Mover» desarma o «Colocar» da Mesa")
