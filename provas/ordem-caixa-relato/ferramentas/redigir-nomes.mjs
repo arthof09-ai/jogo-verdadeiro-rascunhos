@@ -15,8 +15,10 @@
 // redigido com um registo e diz só o n.º da 1.ª linha diferente, nunca o texto. --ignorar-cr tira os CR dos dois antes
 // de comparar (o Godot do CI, em Linux, escreve LF; os registos cometidos foram escritos no Windows, com CRLF).
 // Sai com 0 se tudo bate, 1 se a comparação (ou o auto-teste) falha, 2 por uso errado, 3 se sobrar no redigido um nome
-// inteiro, uma variante de preposição fora da lista de 5 ou um corte a meio da linha (estes dois desde a F66; ver
-// `suspeitos`). A saída 3 só diz contagens e n.ºs de linha, nunca o texto.
+// inteiro, uma variante de preposição fora da lista de 5 ou um corte a meio da linha (estes dois desde a F66, e desde
+// a F94 também com pontuação, partidos por quebra de linha ou colados a uma letra; ver `suspeitos`). A saída 3 só diz
+// contagens e n.ºs de linha, nunca o texto. Sem nenhum nome verdadeiro nas fichas sai com 2 antes de tudo (também
+// antes do --auto-teste); com 1 só, o --auto-teste falha com 1.
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const PREPOSICOES = ['de', 'da', 'do', 'das', 'dos'];
@@ -108,6 +110,17 @@ export function sobram(texto, verdadeiros) {
 //   b) o corte a meio da linha: um pedaço inicial do nome com a mesma medida do corte na origem (maior do que o nome
 //      público, sem acabar em espaço, a começar numa fronteira de palavra) que acaba numa fronteira de palavra
 //      (o carácter a seguir não é letra) — o corte na origem só se redige no fim da linha.
+// Ordem F94 da sentença da F66+F68 (os buracos J8–J10, fechados sem mudar a redacção):
+//   J9 — a variante com pontuação logo a seguir à palavra substituída («X du, Y», «X d. Y») também é variante;
+//   J10 — a variante partida por quebra de linha quando o corte é curto (a linha acaba em «X», demasiado curto para o
+//         corte na origem, e a seguinte começa em «de Y» ou «du Y»): a variante procura-se no texto todo, e o espaço
+//         à volta da palavra do meio pode ser uma quebra de linha. Conta na linha onde começa;
+//   J8 — o corte colado a uma letra (o pedaço do nome seguido logo de outra letra, «X de Sq…»): conta quando o pedaço
+//        tem pelo menos 2 palavras inteiras do nome e acaba a meio de uma palavra do nome. Com menos, o nome público
+//        seguido de qualquer palavra começada pela mesma letra («X diz») disparava a rede.
+// Ordem F93: o nome inteiro tal e qual (é da contagem dos inteiros) e as 5 variantes da lista com um espaço só (a
+// redacção já as redigiu) NÃO contam como variante fora da lista, e um corte que começa dentro de uma variante não
+// conta como corte — uma ocorrência conta uma vez só.
 // Devolve as contagens e os n.ºs das linhas (1-based), nunca o texto.
 function reVariantesFora(nome) {
   const ps = nome.split(' ');
@@ -116,16 +129,17 @@ function reVariantesFora(nome) {
     if (!PREPOSICOES.includes(min(ps[j]))) continue;
     const antes = ps.slice(0, j).map(esc).join('\\s+');
     const depois = ps.slice(j + 1).map(esc).join('\\s+');
-    res.push(new RegExp(`(?<!\\p{L})${antes}\\s+[\\p{L}'’]+\\s+${depois}(?!\\p{L})`, 'giu'));
+    res.push(new RegExp(`(?<!\\p{L})${antes}\\s+[\\p{L}'’]+(?:\\p{P}+\\s*|\\s+)${depois}(?!\\p{L})`, 'giu'));
   }
   return res;
 }
 
+// As posições (em caracteres da linha) onde começa um corte a meio da linha.
 function cortesNaLinha(l, nome, publico) {
   const cs = Array.from(min(nome));
   const minimo = Math.max(Array.from(publico).length + 1, 4);
-  const ls = Array.from(min(l));
-  let n = 0;
+  const ls = Array.from(l).map(min);
+  const pos = [];
   for (let i = 0; i < ls.length; i++) {
     if (i > 0 && eLetra(ls[i - 1])) continue;
     let c = 0;
@@ -133,26 +147,53 @@ function cortesNaLinha(l, nome, publico) {
     if (c === cs.length) continue; // o nome inteiro: é da contagem dos inteiros
     while (c > 0 && /\s/u.test(cs[c - 1])) c--; // o pedaço não acaba em espaço
     if (c < minimo) continue;
-    if (i + c < ls.length && eLetra(ls[i + c])) continue; // continua noutra palavra: não é um pedaço do nome
-    n++;
+    if (i + c < ls.length && eLetra(ls[i + c])) {
+      // J8: colado a uma letra — só com 2 palavras inteiras do nome no pedaço e o corte a meio de uma palavra do nome.
+      const inteiras = cs.slice(0, c).join('').split(/\s+/u).length - 1;
+      if (!eLetra(cs[c]) || inteiras < 2) continue;
+    }
+    pos.push(i);
     i += c - 1;
   }
-  return n;
+  return pos;
 }
 
+// Só chamar sobre o texto JÁ redigido (como a ferramenta faz): as 5 variantes da lista não contam aqui, porque a
+// redacção do §2 já as trocou — num texto cru, uma delas não dá suspeito nenhum (F93).
 export function suspeitos(texto, verdadeiros) {
+  const t = texto.replace(/\r(?=\n|$)/g, '');
+  const inicios = [0];
+  for (let p = t.indexOf('\n'); p !== -1; p = t.indexOf('\n', p + 1)) inicios.push(p + 1);
+  const linhaDe = (p) => { let a = 0; while (a + 1 < inicios.length && inicios[a + 1] <= p) a++; return a + 1; };
   const r = { inteiros: sobram(texto, verdadeiros), variantes: 0, cortes: 0, linhasVariantes: [], linhasCortes: [] };
-  const res = verdadeiros.map(({ nome }) => reVariantesFora(nome));
-  texto.split('\n').forEach((linha, i) => {
-    const l = linha.replace(/\r$/, '');
-    let v = 0, c = 0;
-    verdadeiros.forEach(({ nome, publico }, k) => {
-      for (const re of res[k]) v += (l.match(re) || []).length;
-      c += cortesNaLinha(l, nome, publico);
-    });
-    if (v) { r.variantes += v; r.linhasVariantes.push(i + 1); }
-    if (c) { r.cortes += c; r.linhasCortes.push(i + 1); }
+  const vs = [], lv = new Set(), lc = new Set();
+  verdadeiros.forEach(({ nome }) => {
+    const exactas = new Set([nome, ...variantesPreposicao(nome)].map(min));
+    for (const re of reVariantesFora(nome)) {
+      for (const m of t.matchAll(re)) {
+        if (exactas.has(min(m[0]))) continue;
+        const fim = m.index + m[0].length;
+        if (vs.some(([a, b]) => m.index < b && a < fim)) continue; // a mesma ocorrência, por outra preposição do nome
+        vs.push([m.index, fim]);
+        r.variantes++;
+        lv.add(linhaDe(m.index));
+      }
+    }
   });
+  inicios.forEach((ini, i) => {
+    const l = t.slice(ini, i + 1 < inicios.length ? inicios[i + 1] - 1 : t.length);
+    const cps = Array.from(l);
+    verdadeiros.forEach(({ nome, publico }) => {
+      for (const p of cortesNaLinha(l, nome, publico)) {
+        const abs = ini + cps.slice(0, p).join('').length;
+        if (vs.some(([a, b]) => a <= abs && abs < b)) continue; // dentro de uma variante: já contou
+        r.cortes++;
+        lc.add(i + 1);
+      }
+    });
+  });
+  r.linhasVariantes = [...lv].sort((x, y) => x - y);
+  r.linhasCortes = [...lc].sort((x, y) => x - y);
   return r;
 }
 
@@ -231,13 +272,56 @@ function autoTeste(verdadeiros, publicos, escreve = console.log) {
     r(`"${corteB}", "resto"`) === `"${corteB}", "resto"` && sC.cortes === 1 && sC.linhasCortes.join() === '2' && sC.variantes === 0 && haSuspeitos(sC) &&
     r(`fim: ${corteB}`) === 'fim: nome n.º 2 (cortado na origem)');
   const limpos = [r(`  vez: ${a.publico}`), r(`dá «${a.publico}» e «${b.publico}» ao fim`), r(`x${ca} y`), r(`«${b.publico}» diz`), rc,
-    r(`«${b.nome}» → «${vb[0]}»`), r(`"${cb}`), r(`fim: ${corteB}`)];
-  confere('F66: a rede não dispara no que a redacção deixa limpo (o nome público, o pedaço a meio de palavra, as formas já redigidas)',
+    r(`«${b.nome}» → «${vb[0]}»`), r(`"${cb}`), r(`fim: ${corteB}`),
+    // F94 (J8): o que o corte colado a uma letra NÃO pode apanhar — o nome público seguido de uma palavra que começa
+    // pela letra da preposição, e a preposição colada a outra letra.
+    ...[a, b].flatMap(({ nome, publico }) => {
+      const ps = nome.split(' '), j = ps.findIndex((p, i) => i > 0 && PREPOSICOES.includes(min(p)));
+      return j > 0 ? [r(`«${publico} ${Array.from(ps[j])[0]}iz» x`), r(`«${ps.slice(0, j + 1).join(' ')}x» y`)] : [nome]; // sem preposição: o nome cru faz o caso falhar
+    })];
+  confere('F66: a rede não dispara no que a redacção deixa limpo (o nome público, o pedaço a meio de palavra, as formas já redigidas; F94: o nome público seguido de uma palavra começada pela letra da preposição)',
     limpos.every((t) => !haSuspeitos(sus(t))));
   let semRebentar = true, rc1 = 0;
   try { rc1 = autoTeste([a], publicos, () => {}); } catch { semRebentar = false; }
   confere('F68: com 1 só nome verdadeiro o auto-teste falha (sai com 1) sem rebentar',
     semRebentar && rc1 === 1);
+  // Ordem F94/F95 da sentença da F66+F68. Os casos montam-se como os de cima, a partir das fichas.
+  // F96 — dependências das fichas: a 13.ª verificação (a variante «du») e as de J9, J10, F93 e dos buracos ainda
+  // abertos precisam de o nome n.º 1 ter uma preposição da lista no meio; a 5.ª precisa do mesmo no nome n.º 2 e a
+  // 15.ª nos dois; a 14.ª precisa de o nome n.º 2 ser maior do que o mínimo do corte; a de J8 precisa de o nome n.º 2 ter
+  // 3 palavras ou mais. Se as fichas mudarem e isto já não valer, o caso FALHA (falha alto, não se salta).
+  const antesA = jA > 0 ? psA.slice(0, jA).join(' ') : null, depoisA = jA > 0 ? psA.slice(jA + 1).join(' ') : null;
+  const s1 = (t) => { const s = sus(t); return [s.inteiros, s.variantes, s.cortes, s.linhasVariantes.join(), s.linhasCortes.join()].join('|'); };
+  // J8: o corte colado a uma letra. O pedaço do nome n.º 2 até à 1.ª letra da 3.ª palavra, seguido de uma letra que
+  // não é a do nome.
+  const psB = b.nome.split(' ');
+  const pedB = psB.length >= 3 ? `${psB.slice(0, 2).join(' ')} ${Array.from(psB[2])[0]}` : null;
+  const seguinte = pedB && Array.from(b.nome)[Array.from(pedB).length];
+  const colado = pedB && `${pedB}${min(seguinte) === 'q' ? 'z' : 'q'}xw`;
+  confere('F94 (J8): o corte do nome n.º 2 colado a uma letra (2 palavras inteiras e a 3.ª a meio) não se redige, mas a rede apanha-o: 1 corte, linha 2 → saída 3',
+    !!colado && r(`a\n«${colado}» b`) === `a\n«${colado}» b` && s1(r(`a\n«${colado}» b`)) === '0|0|1||2');
+  // J9: a variante do nome n.º 1 com pontuação logo a seguir à palavra substituída.
+  const pont = antesA && [`x «${antesA} du, ${depoisA}» y`, `x «${antesA} d. ${depoisA}» y`, `x «${antesA} du;${depoisA}» y`];
+  confere('F94 (J9): a variante do nome n.º 1 com pontuação logo a seguir à palavra substituída («du,», «d.», «du;» sem espaço) → 1 variante por caso → saída 3',
+    !!pont && pont.every((t) => r(t) === t && s1(r(t)) === '0|1|0|1|'));
+  // J10: a variante partida por quebra de linha, com o corte demasiado curto para se redigir na origem.
+  const partidas = antesA && [`fim: ${antesA}\n${psA[jA]} ${depoisA} segue`, `fim: ${antesA} du\n${depoisA} segue`,
+    `a\r\nfim: ${antesA}\r\n${psA[jA]} ${depoisA} segue\r\n`];
+  confere('F94 (J10): o nome n.º 1 (ou a variante «du») partido por quebra de linha, com o corte curto (LF e CRLF), não se redige, mas a rede apanha-o: 1 variante, na linha onde começa → saída 3',
+    !!partidas && partidas.map((t) => r(t) === t).every(Boolean) &&
+    s1(r(partidas[0])) === '0|1|0|1|' && s1(r(partidas[1])) === '0|1|0|1|' && s1(r(partidas[2])) === '0|1|0|2|');
+  // F93: uma ocorrência conta uma vez só.
+  const duploA = antesA && `x «${antesA}  ${psA[jA]} ${depoisA}» y`;
+  confere('F93: o nome n.º 1 inteiro (texto cru) conta só como inteiro (0 variantes, 0 cortes); com 2 espaços conta só como 1 variante',
+    s1(`x «${a.nome}» y`) === '1|0|0||' && !!duploA && s1(duploA) === '0|1|0|1|');
+  // F95: os buracos que ficam abertos (fica para a F71 decidir, F87). Estes casos passam ENQUANTO o buraco está
+  // aberto; quem o fechar tem de os virar (passam a afirmar a saída 3) — é a prova do fecho.
+  const semPrep = antesA && `x «${antesA} ${depoisA}» y`;
+  confere('F95 AINDA ABERTO: o nome n.º 1 sem a preposição não dá suspeito (com estas fichas a 1.ª parte é o nome público, abaixo do mínimo do corte)',
+    !!semPrep && r(semPrep) === semPrep && s1(r(semPrep)) === '0|0|0||');
+  const meio = antesA && [`x «${psA.slice(jA).join(' ')}» y`, `x «${depoisA}» y`];
+  confere('F95 AINDA ABERTO: um pedaço que começa a meio do nome n.º 1 (a preposição e o apelido, ou só o apelido) não dá suspeito',
+    !!meio && meio.every((t) => r(t) === t && s1(r(t)) === '0|0|0||'));
   escreve(`auto-teste do redigir-nomes: ${corridas - falhas} de ${corridas} verificações passaram.`);
   return falhas ? 1 : 0;
 }

@@ -7,7 +7,7 @@
 # comete é a saída redigida pelo redigir-nomes.mjs (a redacção do §2 da F25). Em [saída] (por omissão esta pasta):
 # teste-nomes-relato.mutacao.log (o log redigido), mutacao.diff (a mutação posta) e resumo.txt.
 # Sai com 0 se a mutação deu o esperado (rc=1, 23 de 26, as 3 FALHA do §3 da F25, e — desde a F68 — o mutacao.diff com
-# exactamente uma linha mudada), 1 se não, 9 se a cópia não está limpa.
+# exactamente uma linha mudada, contada desde a F91 também pelo `git diff --numstat`), 1 se não, 9 se a cópia não está limpa.
 cd "$(dirname "$0")/../.." || exit 9
 G=${1:?godot}; T=${2:?pasta-tmp}
 S=$PWD/${3:-provas/ordem-f51-mutacao}
@@ -20,9 +20,13 @@ git diff --quiet -- "$F" || { echo "$F não está igual ao commit — não corro
 sed -i '59s/\tif relato\[i\]\.contains(str(k)):/\tif false and relato[i].contains(str(k)):/' "$F"
 git diff -- "$F" > "$S/mutacao.diff"
 # F68 (sentença da F51): o diff tem exactamente uma linha mudada — uma «-», uma «+», e a «-» é a linha 59 como estava.
-menos=$(grep -c '^-[^-]' "$S/mutacao.diff"); mais=$(grep -c '^+[^+]' "$S/mutacao.diff")
+# F91 (sentença da F66+F68): contam-se TODAS as linhas «-» e «+» (também as que só têm «-» ou «+», ou que começam por
+# «--»/«++»), menos os cabeçalhos «--- » e «+++ »; e a contagem tem de coincidir com o `git diff --numstat`.
+menos=$(( $(grep -c '^-' "$S/mutacao.diff") - $(grep -c '^--- ' "$S/mutacao.diff") ))
+mais=$(( $(grep -c '^+' "$S/mutacao.diff") - $(grep -c '^+++ ' "$S/mutacao.diff") ))
+numstat=$(git diff --numstat -- "$F" | cut -f1,2 | tr '\t' ' ')
 umalinha=NÃO
-[ "$menos" = 1 ] && [ "$mais" = 1 ] \
+[ "$menos" = 1 ] && [ "$mais" = 1 ] && [ "$numstat" = "1 1" ] \
   && grep -qFx -- $'-\t\t\tif relato[i].contains(str(k)):' "$S/mutacao.diff" \
   && grep -qFx -- $'+\t\t\tif false and relato[i].contains(str(k)):' "$S/mutacao.diff" && umalinha=sim
 timeout 180 "$G" --headless --path rascunhos/cliente -s "$PWD/$CANARIO" > "$T/mutacao.cru.log" 2>&1
@@ -34,7 +38,7 @@ node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs "$T/mutacao.cru.log
 rr=$?
 L="$S/teste-nomes-relato.mutacao.log"
 total=$(grep "verificações passaram" "$L" | tr -d '\r')
-falhas=$(grep "^  FALHA" "$L" | tr -d '\r' | LC_ALL=C sort -u)  # F68: sort -u (o uniq só junta as repetidas seguidas)
+falhas=$(grep "^  FALHA" "$L" | tr -d '\r' | LC_ALL=C sort -u)  # F68: sort -u (o uniq só junta as repetidas seguidas; F92: neste log a troca é preventiva — o uniq também dá 3)
 nf=$(printf '%s\n' "$falhas" | grep -c "FALHA")
 erros=$(grep -c -E "SCRIPT ERROR|Parse Error|Compile Error" "$L")
 esperado=nao
@@ -47,7 +51,7 @@ esperado=nao
   echo "godot: $(head -1 "$L" | tr -d '\r')"
   echo "mutação: $F:59 — «if relato[i].contains(str(k)):» → «if false and relato[i].contains(str(k)):» (mutacao.diff)"
   echo "corrida: $G --headless --path rascunhos/cliente -s <raiz>/$CANARIO" | sed "s#$HOME#~#"
-  echo "mutacao.diff: $menos linha(s) tirada(s), $mais posta(s) — exactamente uma linha mudada: $umalinha"
+  echo "mutacao.diff: $menos linha(s) tirada(s), $mais posta(s) (git diff --numstat: $numstat) — exactamente uma linha mudada: $umalinha"
   echo "rc=$rc"
   echo "contagem: ${total#*: }"
   echo "FALHA distintas: $nf (todas saem duas vezes no log: o teste faz print e printerr)"

@@ -11,7 +11,12 @@ Duas provas da F25 que só existiam em testemunho passam a ter artefacto cometid
   - `resumo.txt`: rc=1, 23 de 26, as 3 FALHA.
   - Desde a F68 (sentença da F51), o guião também afirma que o `mutacao.diff` tem exactamente uma linha mudada: uma
     «-» (a linha 59 como estava) e uma «+» (a mutação). As FALHA distintas contam-se com `sort -u`, e não com `uniq`,
-    que só junta as repetidas seguidas.
+    que só junta as repetidas seguidas. Neste log a troca é preventiva (F92): as duas cópias de uma FALHA saem
+    seguidas, e o `uniq` também dá 3.
+  - Desde a F91 (sentença da F66+F68), contam-se todas as linhas «-» e «+» do diff menos os cabeçalhos «--- » e
+    «+++ ». Assim, uma linha só com «-» ou só com «+» também conta. A contagem tem de coincidir com o
+    `git diff --numstat` («1 1»), que apanha a linha tirada que começa por «-- » e que a 1.ª conta confundiria com
+    um cabeçalho.
 - `reproduzir-redaccao-f25.sh <pasta-tmp>` prova que o `redigir-nomes.mjs` reproduz a redacção do §2 da F25. O
   resultado está em `reproducao-f25.log`: os 11 de 11 iguais byte a byte.
 

@@ -54,6 +54,8 @@ só contagens e n.ºs de linha, nunca o texto:
 - **A guarda dos 2 nomes.** Com menos de 2 nomes verdadeiros nas fichas, o auto-teste falha com 1 e diz que os outros
   casos não correram. Antes rebentava com um `TypeError` ao montar o 2.º caso. Provei-o com umas fichas de 1 nome só,
   em `tmp/`: a antiga dava `TypeError` e a nova dá «0 de 1» e rc=1. O próprio auto-teste também o verifica (caso 16).
+  **Errata (F90, sentença da F66+F68, 23/11/2026):** a frase «com menos de 2» é falsa para 0. Com 1 nome verdadeiro,
+  falha com 1; com 0, sai com 2 antes do auto-teste.
 - **Os casos novos:**
 
   | n.º | caso | o que afirma |
@@ -77,6 +79,8 @@ só contagens e n.ºs de linha, nunca o texto:
 - **`LC_ALL=C sort -u` em vez de `uniq`** na contagem das FALHA distintas. O `uniq` só junta as repetidas seguidas.
   Pus `LC_ALL=C` para a ordem das linhas sair igual em qualquer máquina. Com ele, as 3 FALHA saem ordenadas no
   `resumo.txt`, e por isso mudam de ordem em relação ao resumo da F51.
+  **Errata (F92, sentença da F66+F68, 23/11/2026):** neste corpus a troca é preventiva. As duas cópias de uma FALHA
+  (o `print` e o `printerr`) saem seguidas no log, e o `uniq` também dava 3.
 - **Afirma que o `mutacao.diff` tem exactamente uma linha mudada.** Tem de ter uma «-» igual à linha 59 tal como estava
   e uma «+» igual à mutação. Se não, o `resumo.txt` diz «NÃO» e o guião sai com 1. Pus o troço à prova contra diffs
   falsos:

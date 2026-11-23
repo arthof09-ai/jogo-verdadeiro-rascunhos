@@ -518,9 +518,33 @@ redacção. Procura-se só no texto já redigido e diz só contagens e n.ºs de 
   sem acabar em espaço, a começar numa fronteira de palavra) a que se segue um carácter que não é letra. No fim da
   linha o corte redige-se, como no §2; a meio só se aponta.
 
+**Desde a F94** (sentença da F66+F68), a rede fecha mais três buracos, também sem mudar a redacção:
+- **J9:** a variante com pontuação logo a seguir à palavra substituída («X du, Y», «X d. Y», «X du;Y») conta como
+  variante;
+- **J10:** a variante (ou o próprio nome) partida por quebra de linha, quando o pedaço que fica no fim da linha é
+  demasiado curto para se redigir como corte na origem: a variante procura-se no texto todo, e o espaço à volta da
+  palavra do meio pode ser uma quebra de linha (LF ou CRLF). Conta como variante, na linha onde começa;
+- **J8:** o corte colado a uma letra (o pedaço do nome seguido logo de outra letra) conta como corte quando o pedaço
+  tem pelo menos 2 palavras inteiras do nome e acaba a meio de uma palavra do nome. Com menos, o nome público seguido
+  de uma palavra que começa pela letra da preposição dispararia a rede.
+
+**F93:** uma ocorrência conta uma vez só. O nome inteiro tal e qual é só da contagem dos inteiros, e as 5 variantes
+da lista com um espaço só não contam como variante fora da lista, porque a redacção já as trocou. Um corte que começa
+dentro de uma variante não conta como corte. Por isso a função `suspeitos()` só se deve chamar sobre o texto já
+redigido, como a ferramenta faz.
+
 Não há nenhum caso destes no corpus: os 11 registos e a saída do canário dão 0 variantes e 0 cortes. O auto-teste
-cobre-os com casos montados. **Limite:** a rede não apanha o nome sem a preposição nem um pedaço que não comece no
-início do nome.
+cobre-os com casos montados.
+
+**Limite (F88).** Ficam dois buracos abertos. Fechá-los fica para a F71 decidir (F87):
+- **O nome sem a preposição** («X Y» em vez de «X de Y»). A rede só o apanha como corte quando a 1.ª parte do nome
+  chega sozinha ao mínimo do corte, isto é, quando tem mais caracteres do que o nome público (e pelo menos 4). Com as
+  fichas de agora, a 1.ª parte dos dois nomes é o próprio nome público, por isso não chega ao mínimo e o nome sem
+  preposição passa.
+- **Um pedaço que começa a meio do nome**, como «de Y» ou só «Y».
+
+O auto-teste marca os dois como «AINDA ABERTO» (F95): os casos passam enquanto o buraco está aberto. Quem o fechar tem
+de virar o caso para afirmar a saída 3, e é essa a prova do fecho.
 
 Usos (na raiz do repo):
 - `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs <saída-crua.log> --saida=<redigido.log>` escreve a
@@ -529,10 +553,24 @@ Usos (na raiz do repo):
   compara o redigido com o registo, byte a byte. Diz só «igual» ou o n.º da 1.ª linha diferente, nunca o texto. Sai
   com 0 se for igual e 1 se não for. `--ignorar-cr` tira os CR dos dois lados: o Godot do CI, em Linux, escreve LF, e
   os registos cometidos são CRLF (escritos no Windows). No PC compara-se sem `--ignorar-cr`.
-- `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs --auto-teste` corre 16 verificações com casos montados
-  em memória a partir das fichas: as quatro formas, o nome público intacto, os fins de linha e a idempotência; e, desde
-  a F66/F68, a variante do nome n.º 1 fora da lista, o corte mínimo do nome n.º 2 a meio da linha, a rede calada no
-  que está limpo e a guarda dos 2 nomes. Com menos de 2 nomes verdadeiros, falha com 1 e não rebenta.
+- `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs --auto-teste` corre 22 verificações com casos montados
+  em memória a partir das fichas:
+  - as quatro formas, o nome público intacto, os fins de linha e a idempotência;
+  - desde a F66/F68: a variante do nome n.º 1 fora da lista, o corte mínimo do nome n.º 2 a meio da linha, a rede
+    calada no que está limpo e a guarda dos 2 nomes;
+  - desde a F93–F95: J8, J9, J10, a contagem única e os dois buracos «AINDA ABERTO».
+
+  Com 1 nome verdadeiro, falha com 1; com 0, sai com 2 antes do auto-teste (F90).
+
+  **As verificações dependem das fichas (F96):**
+  - a 13.ª (a variante «du»), as de J9, J10 e F93 e as dos buracos ainda abertos precisam de o nome n.º 1 ter uma
+    preposição da lista no meio;
+  - a 5.ª precisa do mesmo no nome n.º 2, e a 15.ª nos dois nomes;
+  - a 14.ª precisa de o nome n.º 2 ser maior do que o mínimo do corte;
+  - a de J8 precisa de o nome n.º 2 ter 3 palavras ou mais.
+
+  Se as fichas mudarem e uma destas condições deixar de valer, o caso falha. Falhar alto é o certo, e a dependência
+  fica escrita aqui e no código.
 - `--fichas=<fichas.json>` muda as fichas (por omissão `rascunhos/servidor/autojogo/fichas-bancada.json`).
 
 **No CI:** o passo está no job `cliente` desde `74f5fa9` (F65), logo a seguir ao passo do canário. Corre o auto-teste

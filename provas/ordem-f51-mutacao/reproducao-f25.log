@@ -20,5 +20,5 @@ provas/ordem-caixa-janela/nomes/teste-nomes-relato.log: igual byte a byte ao red
   redigido: provas/ordem-caixa-janela/nomes/teste-nomes-relato.log: 23 linhas, 4 redigidas — 8 nome(s) inteiro(s), 0 em minúsculas, 0 com a preposição mudada, 0 cortado(s) na origem; sobram 0 nome(s) inteiro(s), 0 variante(s) de preposição fora da lista, 0 corte(s) a meio da linha
 provas/ordem-caixa-relato/correcoes-3/mutacoes.log: igual byte a byte ao redigido (15928 bytes)
   redigido: provas/ordem-caixa-relato/correcoes-3/mutacoes.log: 182 linhas, 30 redigidas — 116 nome(s) inteiro(s), 5 em minúsculas, 0 com a preposição mudada, 5 cortado(s) na origem; sobram 0 nome(s) inteiro(s), 0 variante(s) de preposição fora da lista, 0 corte(s) a meio da linha
-base: 56a7fd1; antes: 06e77c4 (pai de 081304e)
+base: 457c73d; antes: 06e77c4 (pai de 081304e)
 iguais byte a byte: 11 de 11

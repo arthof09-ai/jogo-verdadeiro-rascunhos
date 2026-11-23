@@ -1,9 +1,9 @@
-Ordem F51 — mutação do canário (§3 da F25), 2026-11-23T07:41Z
-base: 56a7fd11ffcbc808b4ba7b55193b41d72ca20969 (fable/integracao-50)
+Ordem F51 — mutação do canário (§3 da F25), 2026-11-23T08:45Z
+base: 457c73dcef2d3c50990ef04efcd670c51e1f8810 (fable/integracao-50)
 godot: Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 mutação: provas/ordem-caixa-janela/ferramentas/nomes_relato.gd:59 — «if relato[i].contains(str(k)):» → «if false and relato[i].contains(str(k)):» (mutacao.diff)
 corrida: ~/RPG_Local/ferramentas/Godot_4.7.2/Godot_v4.7.2-stable_win64_console.exe --headless --path rascunhos/cliente -s <raiz>/provas/ordem-caixa-janela/ferramentas/teste_nomes_relato.gd
-mutacao.diff: 1 linha(s) tirada(s), 1 posta(s) — exactamente uma linha mudada: sim
+mutacao.diff: 1 linha(s) tirada(s), 1 posta(s) (git diff --numstat: 1 1) — exactamente uma linha mudada: sim
 rc=1
 contagem: 23 de 26 verificações passaram.
 FALHA distintas: 3 (todas saem duas vezes no log: o teste faz print e printerr)
