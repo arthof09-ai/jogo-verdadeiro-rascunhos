@@ -1056,7 +1056,7 @@ func _expande() -> void:
 	_conferir_compacta("7")
 	_conferir_cores("7")
 	_conferir_quadradinhos("7")
-	await _rato_expandida("7", "7-expandida-8-figuras.png")
+	await _rato_expandida("7", "7-expandida-9-figuras.png")
 	# O toque (aparelhos de toque, sem rato): um toque abre a mesma vista, outro fecha; um toque fora também fecha.
 	var r0 := _cx().get_global_rect()
 	_tocar(r0.get_center())
