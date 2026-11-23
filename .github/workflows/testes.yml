@@ -154,6 +154,38 @@ jobs:
           set -o pipefail
           timeout 120 "$GODOT" --headless --path . -s res://testes/caixa_jogadora.gd 2>&1 | tee "$RUNNER_TEMP/caixa_jogadora.gd.log"
           ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/caixa_jogadora.gd.log"
+      # Ordem CAIXA-JANELA-CI (F5 da conferência da CAIXA-PADRAO-CORRECOES): a suite caixa_janela corre aqui, com o
+      # mesmo arranque que a casa usa no PC (--headless, sem ecrã, sem servidor). O log e a prova de disparo ficam no
+      # artefacto «caixa-janela». Aplicado pelo coordenador (F1 da sentença da CAIXA-JANELA-CI, 22/11/2026).
+      - name: A janela lobby→arena e a caixa com 8, 12 e 16 figuras em ecrãs baixos (Ordem CAIXA-JANELA-CI)
+        if: always()
+        run: |
+          set -o pipefail
+          mkdir -p "$RUNNER_TEMP/caixa-janela"
+          L="$RUNNER_TEMP/caixa-janela/caixa_janela.gd.log"
+          timeout 120 "$GODOT" --headless --path . -s res://testes/caixa_janela.gd 2>&1 | tee "$L"
+          ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$L"
+          # A suite tem de chegar ao fim com o número exacto da ponta (123 de 123; actualizar quando a suite crescer).
+          # Os logs podem vir com CRLF (os cometidos são CRLF): normaliza-se antes da guarda — o «\r?» NÃO funciona
+          # no grep GNU (o «\r» lê-se como a letra «r», medido nos logs cometidos), por isso o «tr» é obrigatório.
+          tr -d '\r' < "$L" | grep -E "^123 de 123 verificações passaram\.$"
+      - name: A caixa_janela dispara — mutação das células na cópia de trabalho, sem commit (tem de dar as 9 falhas da B6)
+        if: always()
+        working-directory: ${{ github.workspace }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/caixa-janela"
+          # Sem pipefail, o tee não deixa o -e parar aqui; o código do guião lê-se do PIPESTATUS.
+          bash provas/ordem-caixa-janela-ci/ferramentas/mutacao-celulas.sh "$GODOT" "$RUNNER_TEMP/caixa-janela/mutacao-celulas.log" 2>&1 | tee "$RUNNER_TEMP/caixa-janela/mutacao-celulas.resumo.txt"
+          R=${PIPESTATUS[0]}
+          # O ficheiro mutado tem de ter ficado reposto (a cópia de trabalho igual ao commit).
+          git diff --exit-code -- rascunhos/cliente/hud/caixa_ordem.gd
+          exit $R
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: caixa-janela
+          path: ${{ runner.temp }}/caixa-janela/
+          if-no-files-found: warn
       - name: Relato da caixa — o §4 marca o JSON desactualizado (Ordem CAIXA-RELATO, B7)
         if: always()
         run: |

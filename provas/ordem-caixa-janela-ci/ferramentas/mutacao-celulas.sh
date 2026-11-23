@@ -22,13 +22,20 @@ ORIGINAL='		slot.custom_minimum_size = celula'
 MUTADA='		slot.custom_minimum_size = celula + Vector2(float(id.trim_prefix("f").to_int() % 2), 0.0)  # MUTACAO (CAIXA-JANELA-CI)'
 
 repor() { git checkout -- "$ALVO"; }
-trap repor EXIT
 
 if ! git diff --quiet -- "$ALVO"; then echo "PARAR: $ALVO já tem alterações por cometer"; exit 1; fi
 if [ "$(grep -cxF "$ORIGINAL" "$ALVO")" != "1" ]; then echo "PARAR: a linha a mutar não está (uma vez) em $ALVO"; exit 1; fi
+# O trap só se arma depois das guardas: antes disso nada foi mutado, e um restauro
+# aqui apagaria trabalho por cometer alheio (F4 da sentença da CAIXA-JANELA-CI).
+trap repor EXIT
 
-sed -i "s|^$ORIGINAL\$|$MUTADA|" "$ALVO"
+# O ponto de «slot.» escapa-se no padrão do sed (ponto coringa); sem ele o sed casava
+# também «slotXcustom_minimum_size». A confirmação de que a linha original sumiu é
+# obrigatória (F4): o grep da mutada sozinho não a prova.
+ORIGINAL_RE='\t\tslot\.custom_minimum_size = celula'
+sed -i "s|^$ORIGINAL_RE\$|$MUTADA|" "$ALVO"
 if [ "$(grep -cxF "$MUTADA" "$ALVO")" != "1" ]; then echo "PARAR: a mutação não ficou feita"; exit 1; fi
+if [ "$(grep -cxF "$ORIGINAL" "$ALVO")" != "0" ]; then echo "PARAR: a linha original ainda lá está"; exit 1; fi
 echo "== mutação feita (só na cópia de trabalho):"
 git diff --stat -- "$ALVO"
 git diff -U0 -- "$ALVO" | grep -E '^[-+][^-+]'
@@ -43,7 +50,7 @@ echo "== ficheiro reposto: git diff vazio em $ALVO"
 
 N_FALHAS=$(grep -c "  FALHA " "$LOG")
 N_B6=$(grep "  FALHA " "$LOG" | grep -c "slots renderizam com a largura da célula")
-FINAL=$(grep -E "^[0-9]+ de [0-9]+ verificações passaram\.$" "$LOG" | tail -1)
+FINAL=$(tr -d '\r' < "$LOG" | grep -E "^[0-9]+ de [0-9]+ verificações passaram\.$" | tail -1)  # normalizar: «\r?» não funciona no grep GNU (F3)
 ERROS=$(grep -cE "SCRIPT ERROR|Parse Error|Compile Error" "$LOG")
 echo "== com a mutação: rc=$RC · falhas=$N_FALHAS (do assert B6: $N_B6) · «$FINAL» · erros de script=$ERROS"
 grep "  FALHA " "$LOG"
