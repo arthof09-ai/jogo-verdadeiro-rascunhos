@@ -1,0 +1,13 @@
+diff --git a/provas/ordem-caixa-janela/ferramentas/nomes_relato.gd b/provas/ordem-caixa-janela/ferramentas/nomes_relato.gd
+index 498c858..8bc72b4 100644
+--- a/provas/ordem-caixa-janela/ferramentas/nomes_relato.gd
++++ b/provas/ordem-caixa-janela/ferramentas/nomes_relato.gd
+@@ -56,7 +56,7 @@ static func no_relato(relato: PackedStringArray, nomes: Array) -> Array:
+ 	var achados: Array = []
+ 	for i in relato.size():
+ 		for k in nomes:
+-			if relato[i].contains(str(k)):
++			if false and relato[i].contains(str(k)):
+ 				achados.append("%s na linha %d" % [k, i + 1])
+ 	return achados
+ 

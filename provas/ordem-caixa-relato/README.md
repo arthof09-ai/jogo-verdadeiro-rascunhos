@@ -491,3 +491,45 @@ Números (Godot 4.7.2 Windows, motor VLAB real `a91c021c…`, semente 7): teste 
 prova HUD-JOGADORA `correcoes-8/cliente-hud/relato.txt` **43/43**, 68 linhas; prova MANEQUIM
 `correcoes-8/cliente-manequim/relato.txt` **53/53**, 78 linhas. Os relatos são iguais aos da CORRECOES-7, tirando as
 horas. Registo `correcoes-4/mutacoes.log`: conferidor **0/0** (critério alargado e `--velho`).
+
+# Redacção da saída nova do canário (Ordem F51 da sentença da F25 · 23/11/2026, Claude conta 1, PC)
+
+**Para que serve.** Desde a F25, os 11 registos limpos (os `teste-nomes-relato.log` da CAIXA-JANELA e os dois
+`mutacoes.log`) já não são a saída crua do Godot: os nomes verdadeiros passaram a «nome n.º 1» / «nome n.º 2». A
+saída crua do canário (`provas/ordem-caixa-janela/ferramentas/teste_nomes_relato.gd`) continua a trazê-los por
+desenho. Para comparar uma corrida nova com um registo limpo, byte a byte, aplica-se primeiro à saída nova a mesma
+redacção do §2 da F25 (o ponto 5 do §7 do ESTADO-FINAL da F25).
+
+**A ferramenta:** `ferramentas/redigir-nomes.mjs`. Lê os nomes das fichas em todas as corridas, por isso não há nenhum nome
+no código. A numeração é a da O1 e do `conferir-registo.mjs`, ou seja a ordem dos nomes verdadeiros nas fichas. Redige
+as quatro formas do §2:
+- o nome inteiro, sem distinguir maiúsculas, passa a `nome n.º N`;
+- a forma toda em minúsculas passa a `nome n.º N em minúsculas`;
+- o canário mudado (a preposição do meio mudada) passa a `nome n.º N com a preposição mudada`;
+- o nome cortado na origem passa a `nome n.º N (cortado na origem)`. Conta como corte a linha que acaba num pedaço
+  inicial do nome maior do que o nome público. O nome público sozinho não se redige.
+
+Nenhuma linha é acrescentada nem tirada e os fins de linha ficam como estavam. A ferramenta sai com 3 se sobrar um nome
+inteiro.
+
+Usos (na raiz do repo):
+- `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs <saída-crua.log> --saida=<redigido.log>` escreve a
+  saída redigida.
+- `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs <saída-crua.log> --comparar=<registo.log> [--ignorar-cr]`
+  compara o redigido com o registo, byte a byte. Diz só «igual» ou o n.º da 1.ª linha diferente, nunca o texto. Sai
+  com 0 se for igual e 1 se não for. `--ignorar-cr` tira os CR dos dois lados: o Godot do CI, em Linux, escreve LF, e
+  os registos cometidos são CRLF (escritos no Windows). No PC compara-se sem `--ignorar-cr`.
+- `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs --auto-teste` corre 12 verificações com casos montados
+  em memória a partir das fichas (as quatro formas, o nome público intacto, fins de linha, idempotência).
+- `--fichas=<fichas.json>` muda as fichas (por omissão `rascunhos/servidor/autojogo/fichas-bancada.json`).
+
+**No CI:** o passo entra com o remendo `provas/ordem-f51-mutacao/remendo-ci-testes.yml.patch`. O token do executor não
+tem a permissão `workflow`, por isso é o coordenador quem o aplica, como nos remendos anteriores. Com ele, o job
+`cliente` corre o auto-teste e compara a saída do canário com
+`provas/ordem-caixa-janela/cobertura-correcoes-6/teste-nomes-relato.log`, logo a seguir ao passo do canário. Até lá, a
+comparação corre-se à mão com os comandos acima.
+
+**A prova de que reproduz o §2:** `provas/ordem-f51-mutacao/reproduzir-redaccao-f25.sh <pasta-tmp>` tira do histórico
+os 11 registos de antes da limpeza (o pai de `081304e`) e redige-os. Os 11 ficam iguais byte a byte aos limpos da ponta
+(`provas/ordem-f51-mutacao/reproducao-f25.log`). As contagens batem com a tabela do §2 da F25: 69 linhas, 188
+ocorrências (5 em minúsculas), 5 cortes na origem e 1 canário mudado.

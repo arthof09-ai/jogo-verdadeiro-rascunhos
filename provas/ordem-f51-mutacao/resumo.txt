@@ -1,0 +1,17 @@
+Ordem F51 — mutação do canário (§3 da F25), 2026-11-23T04:48Z
+base: 526ef0d8f24924e99f7fddf082066deaa710aa28 (fable/integracao-50)
+godot: Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+mutação: provas/ordem-caixa-janela/ferramentas/nomes_relato.gd:59 — «if relato[i].contains(str(k)):» → «if false and relato[i].contains(str(k)):» (mutacao.diff)
+corrida: ~/RPG_Local/ferramentas/Godot_4.7.2/Godot_v4.7.2-stable_win64_console.exe --headless --path rascunhos/cliente -s <raiz>/provas/ordem-caixa-janela/ferramentas/teste_nomes_relato.gd
+rc=1
+contagem: 23 de 26 verificações passaram.
+FALHA distintas: 3 (todas saem duas vezes no log: o teste faz print e printerr)
+  FALHA 3: «nome n.º 1» na linha 5 → o canário FALHA (0 achado(s), linhas [5])
+  FALHA 3: dentro de JSON também se apanha («nome n.º 2»)
+  FALHA 4: o canário apanha no relato antigo 22 achados (28 ocorrências brutas), o 1.º «nome n.º 2 na linha 7» (0 achado(s), linhas [7,8,9,10,11,12,13,14,17,18,19,20,21,22,23,24,25,31,32,33,34]; 28 brutas)
+SCRIPT ERROR / Parse Error / Compile Error: 0
+reposto com git checkout: sim (git diff vazio)
+log: teste-nomes-relato.mutacao.log — a saída do canário redigida pelo redigir-nomes.mjs (§2 da F25); a crua ficou fora do repo
+redacção: 39 linhas, 7 redigidas — 10 nome(s) inteiro(s), 0 em minúsculas, 0 com a preposição mudada, 0 cortado(s) na origem; sobram 0 nome(s) inteiro(s)
+sha256 do log: 4560e8ceac8d229e3a52bb83a35cd09f55949638962b7adf1916d18e72747653
+esperado (rc=1, 23 de 26, as 3 FALHA, ficheiro reposto): sim
