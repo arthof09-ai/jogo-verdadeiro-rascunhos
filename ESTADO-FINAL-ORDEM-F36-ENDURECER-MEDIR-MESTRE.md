@@ -89,6 +89,8 @@ Na primeira versão do D-G, o M3 não reprovava o «fecho pelo clique»: o toque
 ## 4. O CI da ponta
 **CI da ponta `a2c2fd3`, já na linha** (Testes 45108535736 + Sonda 45108535732): **10/10 jobs verdes e a Sonda verde**. A nota foi acrescentada pelo coordenador, por API, porque o executor bateu no limite semanal da conta 2 às 00:56 antes de a escrever.
 
+**CI da ponta `4c63188` (F70, emenda da conferência), já na linha** (Testes 45112439077 + Sonda 45112439100): **10/10 jobs verdes e a Sonda verde** — a condição da fusão da F36 está cumprida.
+
 ## 5. Listas da retoma
 Corri o `actualizar-listas.py` depois do commit 1. Deu 0 novos e 0 tirados. Só muda o SHA de `rascunhos/cliente/testes/medir_mestre.gd` no `retoma-i0004/depois.txt` e no `MANIFESTO-SHA256.txt` (`606db648…` → `42e34a07…`), que vão neste commit.
 
