@@ -153,6 +153,13 @@ preciso mexer no workflow. O §5 diz o que ele deu na ponta.
   canário ficou «igual byte a byte» ao registo limpo (3464 bytes).
 - O `retoma-pc` ficou verde, o que confirma que as listas da retoma batem certo sem mudar.
 
+**CI da ponta `fc04d26` (a obra mais este ESTADO-FINAL): verde.**
+- Testes dos rascunhos, run `45138841851`: passaram os 10 jobs.
+- Sonda de privacidade, run `45138842030`: verde.
+- Os números são os mesmos: canário 26/26, `rodar_testes` 321/321 (também no `godot-cliente`), `caixa_janela` 123/123,
+  `caixa_jogadora` 70/70 e mutação das células «114 de 123». O passo da F51 deu 16/16 e «igual byte a byte».
+- O commit desta nota só acrescenta este parágrafo a este ficheiro.
+
 ## 6. Privacidade re-derivada
 Conferidor: `provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs`, nos dois critérios (alargado e `--velho`), sobre
 os ficheiros cometidos por esta ordem. Na coluna dos nomes inteiros conta-se um achado cujo pedaço tem o comprimento do
