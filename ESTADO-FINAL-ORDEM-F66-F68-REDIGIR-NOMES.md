@@ -156,6 +156,7 @@ nova sem mudar o workflow. Um rc=3 da rede nova põe o passo vermelho. O token d
 - O commit desta nota só acrescenta este parágrafo a este ficheiro.
 
 ## 6. Privacidade re-derivada
+**Âmbito desta secção (F86, errata do coordenador, 23/11/2026): só os ficheiros cometidos.** A tabela abaixo conta os ficheiros da obra e este ESTADO-FINAL — não os logs do CI, que ficam fora do repo.
 Conferidor: `provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs`, nos dois critérios (alargado e `--velho`). A
 coluna dos nomes inteiros é a contagem do `sobram()` da ferramenta, que procura o nome inteiro sem distinguir maiúsculas.
 
@@ -175,6 +176,7 @@ coluna dos nomes inteiros é a contagem do `sobram()` da ferramenta, que procura
 - **Os casos novos montam-se em memória** a partir das fichas, como os 12 de antes, e nenhum nome vai para o código.
 - **As saídas cruas e os casos de ponta a ponta** com nomes ficaram em `tmp/`, fora do repo.
 - **Nomes verdadeiros inteiros: 0** em todos os ficheiros da obra e neste ESTADO-FINAL.
+- **Ponto aberto da casa (F85, 23/11/2026): os logs do CI da ponta trazem 7 nomes verdadeiros inteiros** (job `cliente`, linhas 2012/2023/2024/2027, contados pelo juiz da conferência). A causa é pré-existente: o canário imprime os nomes de propósito desde a Caixa-Janela, e os logs dos runs públicos são legíveis por qualquer pessoa. Fechar a impressão dos nomes no CI é decisão da bancada da F71, não desta ordem.
 - **PIN: 0.** Esta ordem não arrancou o servidor, por isso não houve PIN nem `--pin=`. Não há nenhum número de 20
   algarismos (a forma do PIN) nos ficheiros mudados.
 - **As listas da retoma:** `python retoma-i0004/actualizar-listas.py` deu «0 novos, 0 tirados» e não mudou nenhum
