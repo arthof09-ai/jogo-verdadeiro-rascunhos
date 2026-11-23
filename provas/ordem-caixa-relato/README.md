@@ -533,7 +533,8 @@ redacção. Procura-se só no texto já redigido e diz só contagens e n.ºs de 
   **Travado desde a F114** (opção 1 da F108): qualquer separador à volta da palavra do meio casa no máximo uma quebra de
   linha. A quebra de linha pode estar antes ou depois da palavra do meio, ou nos dois lados (o nome partido por 3
   linhas continua a contar), **nunca uma linha em branco** (nem uma linha só de espaços): partido por uma linha em
-  branco, deixa de contar;
+  branco, deixa de contar. Desde a F132, **o tabulador conta como espaço em branco** (não é quebra de linha): uma
+  linha só com um tabulador é uma linha só de espaços;
 - **J8:** o corte colado a uma letra (o pedaço do nome seguido logo de outra letra) conta como corte quando o pedaço
   tem pelo menos 2 palavras inteiras do nome e acaba a meio de uma palavra do nome. Com menos, o nome público seguido
   de uma palavra que começa pela letra da preposição dispararia a rede.
@@ -574,7 +575,7 @@ Usos (na raiz do repo):
   compara o redigido com o registo, byte a byte. Diz só «igual» ou o n.º da 1.ª linha diferente, nunca o texto. Sai
   com 0 se for igual e 1 se não for. `--ignorar-cr` tira os CR dos dois lados: o Godot do CI, em Linux, escreve LF, e
   os registos cometidos são CRLF (escritos no Windows). No PC compara-se sem `--ignorar-cr`.
-- `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs --auto-teste` corre 30 verificações com casos montados
+- `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs --auto-teste` corre 31 verificações com casos montados
   em memória a partir das fichas:
   - as quatro formas, o nome público intacto, os fins de linha e a idempotência;
   - desde a F66/F68: a variante do nome n.º 1 fora da lista, o corte mínimo do nome n.º 2 a meio da linha, a rede

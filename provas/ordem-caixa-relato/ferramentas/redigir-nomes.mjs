@@ -378,6 +378,11 @@ function autoTeste(verdadeiros, publicos, escreve = console.log) {
   const soEspacos = antesA && [`fim: ${antesA}\n  \n${psA[jA]} ${depoisA} segue`, `fim: ${antesA} du\n \t \n${depoisA} segue`];
   confere('F116 (J10 travado): o nome n.º 1 partido por uma linha só de espaços (antes da palavra do meio, ou a variante «du» antes do apelido) não se redige e NÃO conta como variante (0 variantes nas duas posições; a travagem tem dentes)',
     !!soEspacos && soEspacos.every((t) => r(t) === t && sus(r(t)).variantes === 0));
+  // F132 (guarda da F116): o tabulador é espaço em branco, não é quebra de linha — uma linha só com um tabulador antes
+  // da palavra do meio dá o mesmo que a linha só de espaços (não se redige, 0 variantes).
+  const soTab = antesA && `fim: ${antesA}\n\t\n${psA[jA]} ${depoisA} segue`;
+  confere('F132 (J10 travado): o nome n.º 1 partido por uma linha só com um tabulador antes da palavra do meio dá o mesmo que a linha só de espaços (não se redige; 0 variantes)',
+    !!soTab && r(soTab) === soTab && s1(r(soTab)) === s1(r(soEspacos[0])) && sus(r(soTab)).variantes === 0);
   // F109 (J9-antes, sentença da F88–F96): a pontuação ANTES da palavra do meio também é variante.
   const pontAntes = antesA && `x «${antesA}, du ${depoisA}» y`;
   confere('F109 (J9-antes): a variante do nome n.º 1 com pontuação antes da palavra do meio («X, du Y») não se redige, mas a rede apanha-a: 1 variante, linha 1 → saída 3',
