@@ -149,7 +149,9 @@ verificações: a da rolagem é agora a da roda, e mediu-se 0 → 49 u em 2 pass
 
 ## 5. CI
 **CI da ponta `4a33152`, já na linha** (Testes 45096618851 + Sonda 45096618860): **10/10 jobs verdes e a Sonda
-verde**. Os jobs são `servidor`, `validador-glb`, `foto-mestre`, `godot-cliente`, `cliente`, `ponta-a-ponta`,
+verde**.
+
+**CI da ponta `94719e0` (F21–F24, emendas da conferência), já na linha** (Testes 45103970823 + Sonda 45103970834): **10/10 jobs verdes e a Sonda verde** — a condição da fusão da F14 está cumprida. Os jobs são `servidor`, `validador-glb`, `foto-mestre`, `godot-cliente`, `cliente`, `ponta-a-ponta`,
 `retoma-pc`, `provas-mapa`, `motor-real` e `protocolo`.
 
 No Linux do CI os números são os de cá:
