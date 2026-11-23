@@ -38,7 +38,7 @@ Corri a mesma ferramenta e a suite com o `cenas/mestre/mestre.gd` da ponta, só 
   - a lista depois de um passo da roda;
   - a lista no fim;
   - a barra do tema: se está à vista, a largura, a altura e a pega.
-- Capturas `12-barra-{topo,meio,fim}-N-figuras-WxH.png`. Cada uma tem também um recorte da caixa, ampliado 3× ao píxel
+- Capturas `12-barra-{topo,meio,fim}-N-figuras-WxH.png`. Todas têm também um recorte da caixa, ampliado 3× ao píxel
   (`-recorte.png`), para o olho ver a barra. O recorte é a mesma imagem, só cortada.
 
 Verificações por passo: 0 → 1 · 1 → 22 · 2 → 20 · 3 → 4 · 4 → 22 · 5 → 20 · 6 → 17 · 7 → 31 · 8 → 18 · 9 → 6 ·
