@@ -89,3 +89,10 @@ O commit `b9c7129` e a sua mensagem não se reescrevem; as correcções valem po
 - **F154** — No §1, onde se lê «Está na linha 563», leia-se «Está na linha 563 na obra (564 na ponta deste ESTADO-FINAL)». A mensagem do commit `b9c7129` também diz 563; o §4.2 já corrige para 564.
 - **F155** — No §3, onde se lê «A nota do CI da ponta deste ESTADO-FINAL entra mais abaixo e só acrescenta texto a este ficheiro.», leia-se «A nota do CI da ponta deste ESTADO-FINAL entra no commit seguinte `e3214f3` (§5) e só acrescenta texto a este ficheiro.»; no §5, onde se lê «as suites dão 321/321 e 70/70», leia-se «as suites dão 321/321, 123/123 e 70/70».
 - **F156** — Onde se lê «0 PIN» (§3 e §5), leia-se «0 valores de PIN». (No §2 não há a expressão literal — a linha de privacidade é «0/0».) Regra para os próximos ESTADOS-FINAIS: o token PIN ocorre 7× em 5 linhas por log do `cliente`, sempre como rótulo de testes marcados `ok`.
+
+## Nota do CI (coordenador, 23/11/2026 ~13:15 -03)
+
+- Ponta: `4257b4c` (correcção CRLF da fusão F150, commit `b541c3f`).
+- Testes: run 45209020422 — success.
+- Sonda de privacidade: run 45209020410 — success.
+- F128 FUNDIDA.
