@@ -39,8 +39,8 @@ Este ficheiro não tem nomes verdadeiros, nem pedaços deles, nem o valor de nen
   (`cc26f56c…`).
 - **Registos:** `provas/ordem-f28-custo-d1-hud/medicao/medir_custo_d1_hud.log` (na ponta) e `…/sem-d1/` (o contrafactual).
   Os dois têm 62 casos e 0 erros de medição. Os registos não têm nenhuma linha com `error` nem `warning`.
-- **Repetição:** corri as duas medições duas vezes. As tabelas saíram iguais; só o deslocamento da câmara no arrastar
-  varia, na 4.ª casa decimal.
+- **Repetição:** corri as duas medições duas vezes e as tabelas saíram iguais; só o deslocamento da câmara no arrastar
+  varia, na 4.ª casa decimal. **Emenda da conferência (F60, 23/11/2026): só a primeira corrida de cada medição está cometida — da segunda não há log no repo, por isso a repetição é palavra do executor, sem rasto. A pergunta apoia-se na corrida única cometida (62 casos na ponta, 62 sem o D1, 0 erros).**
 
 ## 2. Botão a botão (com a lista aberta por toque)
 Os dois ecrãs deram **exactamente o mesmo** em todos os botões, por isso a tabela vale para 844×390 e 780×360.
@@ -188,6 +188,6 @@ nomes inteiros conta-se um achado cujo pedaço tem o comprimento do nome inteiro
    (`ScreenTouch`/`ScreenDrag` pelo `Input`, com a imitação do rato). Um telemóvel a sério não foi medido.
 5. **A primeira corrida sem o D1 deu 28 erros de medição.** A ferramenta escrevia uma variável que o `caixa_ordem.gd`
    antigo não tem (`_engolir_toque`). Corrigi a ferramenta: agora só a escreve se ela existir. As corridas entregues têm
-   0 erros. A corrida com erros não se cometeu.
+   0 erros. A corrida com erros não se cometeu. **Emenda da conferência (F60, 23/11/2026): o número 28 é palavra do executor, sem rasto — a corrida com erros não está cometida.**
 6. **A medição não entra no CI.** É uma ferramenta de `provas/`, como a da prova viva. Não mudei nenhuma suite nem o
    workflow. A `caixa_jogadora` continua com **70/70** neste PC.
