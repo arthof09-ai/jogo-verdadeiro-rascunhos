@@ -146,6 +146,12 @@ Não é uma decisão nova, é só a conta feita sobre a base verdadeira (ponto a
 
 **O passo da guarda não correu**: está no remendo, por aplicar (ponto aberto 1).
 
+**Nota do CI — ponta `d602848` (este ESTADO-FINAL, com o retoque de texto)**: Testes **45168496219** + Sonda
+**45168495889**, **10/10 jobs verdes e a Sonda verde**, com o passo da F51 a correr. No log do job `cliente` (job
+137671568724, 2145 linhas): canário 26/26, auto-teste do redigir-nomes 26/26, o registo da COBERTURA-CORRECOES-6
+«igual byte a byte ao redigido (3437 bytes, sem os CR)», e **0 + 0 nomes inteiros** no log (contagem refeita, sem
+distinguir maiúsculas). O passo da guarda continua por aplicar (ponto aberto 1).
+
 ## 6. O retoque do commit 2
 
 Depois do `push` da obra, o conferidor (critério alargado) deu mais achados nos dois ficheiros: `redigir-nomes.mjs`
