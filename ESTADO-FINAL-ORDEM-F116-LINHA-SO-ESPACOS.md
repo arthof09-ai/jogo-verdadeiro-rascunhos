@@ -147,3 +147,8 @@ No log do job `cliente` (job 137712666092, 2152 linhas):
 **Nomes inteiros nos logs:** 0 + 0 no log do `cliente` e 0 + 0 no do `godot-cliente` (sem distinguir maiúsculas).
 A procura da `SENTENCA.md` no disco deste PC também não a encontrou (a busca foi parada pelo limite de tempo, sem
 resultado). O commit desta nota só acrescenta esta secção a este ficheiro.
+
+
+## Nota do CI (fusão C-J1)
+
+Fusão C-J1 (commit 8124dce): Testes dos rascunhos 45188835973 — SUCCESS; Sonda de privacidade 45188835851 — SUCCESS. 11/11.
