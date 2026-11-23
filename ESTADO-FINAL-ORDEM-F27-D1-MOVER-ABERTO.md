@@ -59,8 +59,7 @@ Em 780×360 a medida corre na mesma vez dela, com o orçamento que sobrou do mov
 estivesse gasto, a ferramenta encerrava a vez dela e voltava a conduzir a batalha (o caminho existe, mas não foi preciso).
 
 ## 3. O toque fora com o Mover aberto — antes e depois
-**Prova viva** (servidor de mesa real, motor VLAB real `a91c021c…`, semente 7, manequim de referência com o SHA
-conferido). «u» são unidades do HUD. A casa do servidor é a da vista do Mestre.
+**Prova viva** (servidor de mesa real, motor VLAB real `a91c021c…`, semente 7, manequim de referência `andar-v3.glb` com o SHA conferido (`sha256 8413b0395d6b9f161aefe05004999ee5f605d4eb68e81a4767a81f9b56ea3491`, 2.858.648 B)). «u» são unidades do HUD. A casa do servidor é a da vista do Mestre.
 
 | ecrã | toque fora em | casa de destino sob o toque | ANTES: nó · casa (Estado) · casa (servidor) · modo · fila | DEPOIS: fechou · «toque» · nó · casa (Estado) · casa (servidor) · modo · fila · «movimento» da jogadora recebido |
 |---|---|---|---|---|
@@ -86,7 +85,7 @@ conferido). «u» são unidades do HUD. A casa do servidor é a da vista do Mest
   figuras são do ataque de uma criatura durante a condução, não deste toque.
 
 **Suite, §11** (arena a sério, sem servidor). Nos 4 casos a casa de destino sob o toque é a (7, 11), e o toque fora cai
-em (983–985; 589–590) u.
+em (983–985; 588,7–590,1) u.
 
 | caso | D1 com o Mover aberto: fechou · «toque» · nó j1 · casa j1 · modo · fila · cursor | controlo: «toque» · intenção que sai |
 |---|---|---|
@@ -183,6 +182,8 @@ nomes inteiros conta-se um achado cujo pedaço tem o comprimento do nome inteiro
   temporária, fora do repo.
   - Procurei números de 20 algarismos (a forma do PIN) em todos os ficheiros desta ordem: nenhum.
   - **0 valores de PIN** em qualquer ficheiro.
+
+**Emenda da conferência (F40, 23/11/2026): o quadro verdadeiro.** O que este §7 diz sobre *esta entrega* é verdade (0 nomes inteiros em tudo o que ela acrescenta), mas a base trazia **90 pares (linha, nome) de nomes verdadeiros inteiros pré-existentes em 11 ficheiros** — a F25 limpou-os, 90→0, no commit `dd16afe`; esta ordem acrescenta 0; a ponta está a 0 nos ficheiros que o conferidor cobre.
 
 ## 8. Pontos para o coordenador
 1. **A primeira corrida da prova viva deu 245/246.**
