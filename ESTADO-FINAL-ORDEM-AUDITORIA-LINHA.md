@@ -117,3 +117,7 @@ Todas com exit 0 e 0 `SCRIPT ERROR / Parse Error / Compile Error`. O CI (Testes 
 ## Nota final — fecho da bancada (~15:58 -03)
 
 Depois do «Terminar batalha» e das medidas, fechei a bancada com o `bancada-rede/parar-bancada.cmd`, que só mata os PIDs de `privado/pids.txt` (servidor 33076, clientes 19960/30084). Parei também o agente de input da sessão 1 (PID 35308, ficheiro `PARAR`). Conferido: nenhum desses processos vivo, porta 8790 fechada, GPU 0%. O PC fica livre para a ordem seguinte (o mapa jogável da conta 1).
+
+## Nota do CI
+
+Commit do ESTADO-FINAL `e37e16f`: **Testes dos rascunhos 45241725345 — success** · **Sonda de privacidade 45241725387 — success**. Os commits anteriores desta ordem também ficaram verdes: `9be27c3` (Testes 45238274611 + Sonda 45238274575) e `333b908` (Testes 45241362113 + Sonda 45241362056).
