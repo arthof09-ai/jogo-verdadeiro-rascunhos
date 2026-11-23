@@ -7,8 +7,8 @@ vez antes do push: a linha não tinha andado.
 **Commits:**
 1. `3fb546b` — o código (D1, D3), as suites, a ferramenta da prova (passo 8 pela roda, passo 11 novo), o lançador e
    as provas.
-2. o commit deste ficheiro — ESTADO-FINAL, `mutacao/` e as listas da retoma sincronizadas.
-3. a seguir — só o resultado do CI da ponta, acrescentado ao §5 (documento).
+2. `4a33152` — este ESTADO-FINAL, `mutacao/` e as listas da retoma sincronizadas.
+3. o commit que acrescenta o resultado do CI da ponta `4a33152` ao §5 (só documento).
 
 Este ficheiro não tem nomes verdadeiros, nem pedaços deles, nem o valor de nenhum PIN (§6).
 
@@ -148,7 +148,20 @@ verificações: a da rolagem é agora a da roda, e mediu-se 0 → 49 u em 2 pass
 - **O arrastar num ecrã de toque.** Este PC não tem ecrã de toque (§2). Fica registado o que ele faz.
 
 ## 5. CI
-O CI da ponta deste commit acrescenta-se no commit 3 (só documento), quando as runs acabarem.
+**CI da ponta `4a33152`, já na linha** (Testes 45096618851 + Sonda 45096618860): **10/10 jobs verdes e a Sonda
+verde**. Os jobs são `servidor`, `validador-glb`, `foto-mestre`, `godot-cliente`, `cliente`, `ponta-a-ponta`,
+`retoma-pc`, `provas-mapa`, `motor-real` e `protocolo`.
+
+No Linux do CI os números são os de cá:
+- `caixa_janela` 123/123, e a guarda «123 de 123» passou;
+- `caixa_jogadora` 58/58;
+- `rodar_testes` 321/321, nos jobs `cliente` e `godot-cliente`;
+- `abrir_scripts` 108 scripts e 0 falhas · `abrir_clareira` 22/22 · `abrir_mestre` 67/67 · `pecas_mestre` 286/286 ·
+  `hud_acoes` 50/50;
+- `teste_relato_caixa` 31/31 · `teste_nomes_relato` 26/26 · o canário 10/10;
+- o guião de mutação: 9 falhas, todas da B6, e «114 de 123».
+
+O `retoma-pc` passou com as listas deste commit.
 
 **Listas da retoma:** corri o `actualizar-listas.py` depois do commit 1, porque ele lê o `HEAD`. Deu 0 novos e 0
 tirados; só mudam os SHA de 3 ficheiros: `caixa_ordem.gd`, `caixa_janela.gd` e `caixa_jogadora.gd`. O `depois.txt` e o
