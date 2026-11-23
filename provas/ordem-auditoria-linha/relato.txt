@@ -1,0 +1,92 @@
+RELATO DA CORRIDA — ORDEM-AUDITORIA-LINHA (bancada de rede, servidor de produção + 2 clientes Godot 4.7.2, RTX 4060)
+Gerado do journal do servidor (journal-sala/1). Horas em UTC (-03 = UTC-3). Nomes: só os fictícios das fichas de teste.
+
+== PILHA 1 (13:55-14:10 -03, parada pelo coordenador)
+estado final: fase=combate rodada=1 desfecho=null eventos=7 recibos=4
+  figura orc-teste#1 lado=criatura vida=7777 pos=(26,21) colocada=true paGasto=0
+  figura heroina-teste#2 lado=jogadora vida=5150 pos=(38,4) colocada=true paGasto=0
+    1 16:56:00Z entrada    {"figuraId":"heroina-teste#2","lado":"jogadora"}
+    2 17:07:41Z pausa      {"motivo":"mestre_desconectado"}
+    3 17:08:55Z retomada   {"motivo":"mestre_desconectado"}
+    4 17:09:20Z lobby      {}
+    5 17:09:36Z colocacao  {"figuraId":"heroina-teste#2","lado":"jogadora","orientacao":"S","visivel":"de_pe","x":38,"y":4}
+    6 17:09:36Z turno      {"figuraId":"heroina-teste#2","narra":false,"rodada":1}
+    7 17:10:03Z colocacao  {"figuraId":"orc-teste#1","lado":"criatura","orientacao":"S","visivel":"de_pe","x":26,"y":21}
+
+== PILHA 2 / VIVA (14:13 -03 -> retoma 15:25 -03 -> fim 15:35 -03)
+estado final: fase=fim rodada=9 desfecho="terminada" eventos=100 recibos=59
+  figura heroina-teste#1 lado=jogadora vida=5150 pos=(34,10) colocada=true paGasto=12
+  figura orc-teste#2 lado=criatura vida=7777 pos=(34,9) colocada=true paGasto=0
+  figura orc-teste#3 lado=criatura vida=7777 pos=(33,10) colocada=true paGasto=0
+    1 17:13:10Z entrada    {"figuraId":"heroina-teste#1","lado":"jogadora"}
+    2 17:14:11Z pausa      {"motivo":"mestre_desconectado"}
+    3 18:25:57Z retomada   {"motivo":"mestre_desconectado"}
+    4 18:26:22Z lobby      {}
+    5 18:26:33Z colocacao  {"figuraId":"heroina-teste#1","lado":"jogadora","orientacao":"S","visivel":"de_pe","x":38,"y":4}
+    6 18:26:33Z turno      {"figuraId":"heroina-teste#1","narra":false,"rodada":1}
+    7 18:26:57Z colocacao  {"figuraId":"orc-teste#3","lado":"criatura","orientacao":"S","visivel":"de_pe","x":29,"y":15}
+    8 18:27:21Z movimento  {"caminho":[{"x":38,"y":4},{"x":38,"y":5},{"x":38,"y":6},{"x":38,"y":7},{"x":38,"y":8},{"x":38,"y":9},{"x":38,"y":10}],"custoM":9,"de":{"x":38,"y":4},"figuraId":"heroina-teste#1","para":{"x":38,"y":10},"reservaM":0}
+    9 18:27:54Z turno      {"figuraId":"orc-teste#3","narra":true,"rodada":1}
+   10 18:28:14Z colocacao  {"figuraId":"orc-teste#2","lado":"criatura","orientacao":"S","visivel":"de_pe","x":30,"y":17}
+   11 18:28:48Z movimento  {"caminho":[{"x":29,"y":15},{"x":30,"y":15},{"x":31,"y":15},{"x":32,"y":15},{"x":32,"y":16}],"custoM":6,"de":{"x":29,"y":15},"figuraId":"orc-teste#3","para":{"x":32,"y":16},"reservaM":0}
+   12 18:29:04Z turno      {"figuraId":"orc-teste#2","narra":true,"rodada":1}
+   13 18:29:10Z modo       {"figuraId":"orc-teste#2"}
+   15 18:29:10Z movimento  {"caminho":[{"x":30,"y":17},{"x":30,"y":16},{"x":30,"y":15},{"x":30,"y":14},{"x":30,"y":13}],"custoM":6,"de":{"x":30,"y":17},"figuraId":"orc-teste#2","para":{"x":30,"y":13},"reservaM":0}
+   17 18:29:10Z turno      {"figuraId":"heroina-teste#1","narra":false,"rodada":2}
+   18 18:29:38Z movimento  {"caminho":[{"x":38,"y":10},{"x":37,"y":10},{"x":36,"y":10},{"x":35,"y":10},{"x":35,"y":11}],"custoM":6,"de":{"x":38,"y":10},"figuraId":"heroina-teste#1","para":{"x":35,"y":11},"reservaM":3}
+   19 18:30:03Z movimento  {"caminho":[{"x":35,"y":11},{"x":34,"y":11},{"x":34,"y":10}],"custoM":3,"de":{"x":35,"y":11},"figuraId":"heroina-teste#1","para":{"x":34,"y":10},"reservaM":0}
+   20 18:30:34Z turno      {"figuraId":"orc-teste#3","narra":true,"rodada":2}
+   21 18:30:41Z modo       {"figuraId":"orc-teste#3"}
+   23 18:30:41Z movimento  {"caminho":[{"x":32,"y":16},{"x":32,"y":15},{"x":32,"y":14},{"x":32,"y":13},{"x":32,"y":12}],"custoM":6,"de":{"x":32,"y":16},"figuraId":"orc-teste#3","para":{"x":32,"y":12},"reservaM":0}
+   25 18:30:41Z turno      {"figuraId":"orc-teste#2","narra":true,"rodada":2}
+   27 18:30:41Z movimento  {"caminho":[{"x":30,"y":13},{"x":31,"y":13},{"x":31,"y":12},{"x":31,"y":11},{"x":31,"y":10}],"custoM":6,"de":{"x":30,"y":13},"figuraId":"orc-teste#2","para":{"x":31,"y":10},"reservaM":0}
+   29 18:30:41Z turno      {"figuraId":"heroina-teste#1","narra":false,"rodada":3}
+   30 18:31:10Z ataque     {"alvoId":"orc-teste#2","arma":"chicote-teste","atacanteId":"heroina-teste#1","ataqueDeOportunidade":false,"expressao":"1d20+4","faces":[10],"resultado":"erro","total":14}
+   31 18:31:10Z estado     {"armaCaida":false,"armaQuebrada":false,"corpoPartido":false,"estadoMorte":null,"figuraId":"heroina-teste#1","paLivre":4038,"vidaActual":5150,"visivel":"de_pe"}
+   32 18:31:29Z turno      {"figuraId":"orc-teste#3","narra":true,"rodada":3}
+   34 18:31:29Z movimento  {"caminho":[{"x":32,"y":12},{"x":33,"y":12},{"x":33,"y":11},{"x":33,"y":10}],"custoM":4.5,"de":{"x":32,"y":12},"figuraId":"orc-teste#3","para":{"x":33,"y":10},"reservaM":1.5}
+   36 18:31:29Z ataque     {"alvoId":"heroina-teste#1","arma":"machado-teste","atacanteId":"orc-teste#3","ataqueDeOportunidade":false,"resultado":"erro"}
+   38 18:31:29Z turno      {"figuraId":"orc-teste#2","narra":true,"rodada":3}
+   40 18:31:29Z movimento  {"caminho":[{"x":31,"y":10},{"x":32,"y":10},{"x":32,"y":9},{"x":33,"y":9},{"x":34,"y":9}],"custoM":6,"de":{"x":31,"y":10},"figuraId":"orc-teste#2","para":{"x":34,"y":9},"reservaM":0}
+   42 18:31:29Z ataque     {"alvoId":"heroina-teste#1","arma":"machado-teste","atacanteId":"orc-teste#2","ataqueDeOportunidade":false,"resultado":"erro"}
+   44 18:31:29Z turno      {"figuraId":"heroina-teste#1","narra":false,"rodada":4}
+   45 18:31:53Z ataque     {"alvoId":"orc-teste#3","arma":"chicote-teste","atacanteId":"heroina-teste#1","ataqueDeOportunidade":false,"expressao":"1d20+4","faces":[18],"resultado":"erro","total":22}
+   46 18:31:53Z estado     {"armaCaida":false,"armaQuebrada":false,"corpoPartido":false,"estadoMorte":null,"figuraId":"heroina-teste#1","paLivre":4036,"vidaActual":5150,"visivel":"de_pe"}
+   47 18:31:55Z turno      {"figuraId":"orc-teste#3","narra":true,"rodada":4}
+   49 18:31:55Z ataque     {"alvoId":"heroina-teste#1","arma":"machado-teste","atacanteId":"orc-teste#3","ataqueDeOportunidade":false,"resultado":"erro"}
+   51 18:31:55Z turno      {"figuraId":"orc-teste#2","narra":true,"rodada":4}
+   53 18:31:55Z ataque     {"alvoId":"heroina-teste#1","arma":"machado-teste","atacanteId":"orc-teste#2","ataqueDeOportunidade":false,"resultado":"erro"}
+   55 18:31:55Z turno      {"figuraId":"heroina-teste#1","narra":false,"rodada":5}
+   56 18:32:12Z ataque     {"alvoId":"orc-teste#3","arma":"chicote-teste","atacanteId":"heroina-teste#1","ataqueDeOportunidade":false,"expressao":"1d20+4","faces":[18],"resultado":"erro","total":22}
+   57 18:32:12Z estado     {"armaCaida":false,"armaQuebrada":false,"corpoPartido":false,"estadoMorte":null,"figuraId":"heroina-teste#1","paLivre":4034,"vidaActual":5150,"visivel":"de_pe"}
+   58 18:32:16Z turno      {"figuraId":"orc-teste#3","narra":true,"rodada":5}
+   60 18:32:16Z ataque     {"alvoId":"heroina-teste#1","arma":"machado-teste","atacanteId":"orc-teste#3","ataqueDeOportunidade":false,"resultado":"erro"}
+   62 18:32:16Z turno      {"figuraId":"orc-teste#2","narra":true,"rodada":5}
+   64 18:32:16Z ataque     {"alvoId":"heroina-teste#1","arma":"machado-teste","atacanteId":"orc-teste#2","ataqueDeOportunidade":false,"resultado":"erro"}
+   66 18:32:16Z turno      {"figuraId":"heroina-teste#1","narra":false,"rodada":6}
+   67 18:32:24Z ataque     {"alvoId":"orc-teste#3","arma":"chicote-teste","atacanteId":"heroina-teste#1","ataqueDeOportunidade":false,"expressao":"1d20+4","faces":[18],"resultado":"erro","total":22}
+   68 18:32:24Z estado     {"armaCaida":false,"armaQuebrada":false,"corpoPartido":false,"estadoMorte":null,"figuraId":"heroina-teste#1","paLivre":4032,"vidaActual":5150,"visivel":"de_pe"}
+   69 18:32:27Z turno      {"figuraId":"orc-teste#3","narra":true,"rodada":6}
+   71 18:32:27Z ataque     {"alvoId":"heroina-teste#1","arma":"machado-teste","atacanteId":"orc-teste#3","ataqueDeOportunidade":false,"resultado":"erro"}
+   73 18:32:27Z turno      {"figuraId":"orc-teste#2","narra":true,"rodada":6}
+   75 18:32:27Z ataque     {"alvoId":"heroina-teste#1","arma":"machado-teste","atacanteId":"orc-teste#2","ataqueDeOportunidade":false,"resultado":"erro"}
+   77 18:32:27Z turno      {"figuraId":"heroina-teste#1","narra":false,"rodada":7}
+   78 18:32:35Z ataque     {"alvoId":"orc-teste#3","arma":"chicote-teste","atacanteId":"heroina-teste#1","ataqueDeOportunidade":false,"expressao":"1d20+4","faces":[18],"resultado":"erro","total":22}
+   79 18:32:35Z estado     {"armaCaida":false,"armaQuebrada":false,"corpoPartido":false,"estadoMorte":null,"figuraId":"heroina-teste#1","paLivre":4030,"vidaActual":5150,"visivel":"de_pe"}
+   80 18:32:39Z turno      {"figuraId":"orc-teste#3","narra":true,"rodada":7}
+   82 18:32:39Z ataque     {"alvoId":"heroina-teste#1","arma":"machado-teste","atacanteId":"orc-teste#3","ataqueDeOportunidade":false,"resultado":"erro"}
+   84 18:32:39Z turno      {"figuraId":"orc-teste#2","narra":true,"rodada":7}
+   86 18:32:39Z ataque     {"alvoId":"heroina-teste#1","arma":"machado-teste","atacanteId":"orc-teste#2","ataqueDeOportunidade":false,"resultado":"erro"}
+   88 18:32:39Z turno      {"figuraId":"heroina-teste#1","narra":false,"rodada":8}
+   89 18:32:47Z ataque     {"alvoId":"orc-teste#3","arma":"chicote-teste","atacanteId":"heroina-teste#1","ataqueDeOportunidade":false,"expressao":"1d20+4","faces":[19],"resultado":"erro","total":23}
+   90 18:32:47Z estado     {"armaCaida":false,"armaQuebrada":false,"corpoPartido":false,"estadoMorte":null,"figuraId":"heroina-teste#1","paLivre":4028,"vidaActual":5150,"visivel":"de_pe"}
+   91 18:32:50Z turno      {"figuraId":"orc-teste#3","narra":true,"rodada":8}
+   93 18:32:50Z ataque     {"alvoId":"heroina-teste#1","arma":"machado-teste","atacanteId":"orc-teste#3","ataqueDeOportunidade":false,"resultado":"erro"}
+   95 18:32:50Z turno      {"figuraId":"orc-teste#2","narra":true,"rodada":8}
+   97 18:32:50Z ataque     {"alvoId":"heroina-teste#1","arma":"machado-teste","atacanteId":"orc-teste#2","ataqueDeOportunidade":false,"resultado":"erro"}
+   99 18:32:50Z turno      {"figuraId":"heroina-teste#1","narra":false,"rodada":9}
+  100 18:35:48Z fim        {"desfecho":"terminada"}
+
+== CONTAGEM DE ATAQUES (pilha 2)
+  total=18 {"chicote-teste:erro":6,"machado-teste:erro":12} | faces da heroina: 10=>14 18=>22 18=>22 18=>22 18=>22 19=>23
+  CA das fichas da bancada (fichas.json): heroina-teste 5551, orc-teste 9137 (numeros CANARIO) -> 1d20+4 nunca acerta.
