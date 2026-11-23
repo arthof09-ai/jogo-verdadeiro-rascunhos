@@ -5,7 +5,8 @@ publicar fiz `fetch`: a linha tinha andado para `ff6d69f` (a ORDEM-CAIXA-JANELA-
 sem conflito. Commits:
 1. `878b13e` — código, testes e provas (a caixa compacta, a vista expandida, a recentragem F4, os tectos novos);
 2. `0e81bbc` — o guião de mutação da CAIXA-JANELA-CI acertado com a caixa nova (114 de 123);
-3. este ESTADO-FINAL, com as listas da retoma sincronizadas.
+3. `58648e0` — este ESTADO-FINAL, com as listas da retoma sincronizadas;
+4. o acrescento do resultado do CI da ponta `58648e0` e do ensaio do retoma-pc (só documento).
 
 Este ficheiro não tem nomes verdadeiros, nem pedaços deles, nem o valor de nenhum PIN (§6).
 
@@ -156,6 +157,14 @@ Vi as capturas:
 - **7** (9 linhas, «Espadachim de Bancada» inteiro);
 - **8 em 780×360** (8 linhas à vista e a nona a meio, a rolar);
 - **9 em 780×360** (a faixa «O Mestre narra» quase ao centro, a caixa compacta com o cartão e 4 caixinhas).
+
+**CI da ponta `58648e0`, já na linha** (Testes 45088944272 + Sonda 45088944338): **10/10 jobs verdes e a Sonda
+verde**, incluindo `cliente` e `retoma-pc`. No Linux do CI os números são os de cá: `rodar_testes` 321/321 (nos jobs
+`cliente` e `godot-cliente`), `caixa_jogadora` 42/42, `abrir_mestre` 67/67, `pecas_mestre` 286/286, `hud_acoes`
+50/50, e o canário 10/10. A `caixa_janela` ainda não corre no CI (o remendo da CAIXA-JANELA-CI está por aplicar).
+
+**Ensaio local do `retoma-pc`** (num clone limpo com `core.autocrlf=false`, sobre o original simulado do 9cbaca8):
+ensaio, cópia e ensaio outra vez — rc 0 / 0 / 0 («416 ficheiros no PC iguais ao ramo»).
 
 **Listas da retoma:** corri o `actualizar-listas.py` depois do commit 2. Deu 0 novos e 0 tirados (só mudam os SHA
 de 6 ficheiros). O `depois.txt` e o `MANIFESTO-SHA256.txt` vão sincronizados no commit 3.
