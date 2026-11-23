@@ -145,7 +145,23 @@ dele: 9 linhas inteiras, o retrato da 10.ª cortado na borda inferior e a barra 
 `12-barra-fim-16-figuras-780x360-recorte.png`: a última figura inteira em baixo e a pega no fim da barra.
 
 ## 5. CI
-*(acrescentado no commit 3, com o resultado do CI da ponta)*
+**CI da ponta `ecf46d6`, já na linha** (Testes 45101519738 + Sonda 45101519763): **10/10 jobs verdes e a Sonda
+verde**. Os jobs são `servidor`, `validador-glb`, `foto-mestre`, `godot-cliente`, `cliente`, `ponta-a-ponta`,
+`retoma-pc`, `provas-mapa`, `motor-real` e `protocolo`.
+
+No Linux do CI os números são os de cá:
+- `medir_mestre`: **130 ok, 0 falhas** («ecrã do Mestre: 0 falha(s), 0 sem medida»), com as 6 medidas da expandida e a
+  da câmara livre. Os rectângulos da caixa são os de cá. O tabuleiro em 780×360 mede 866 u no Linux contra 867 cá,
+  por causa do arredondamento da letra, e a caixa aberta continua a acabar em 847;
+- `caixa_janela` 123/123, e a guarda «123 de 123» passou;
+- `caixa_jogadora` 58/58;
+- `rodar_testes` 321/321, nos jobs `cliente` e `godot-cliente`;
+- `abrir_scripts` 108 scripts e 0 falhas · `abrir_clareira` 22/22 · `abrir_mestre` 67/67 · `pecas_mestre` 286/286 ·
+  `hud_acoes` 50/50;
+- `teste_relato_caixa` 31/31 · `teste_nomes_relato` 26/26 · o canário 10/10;
+- o guião de mutação da CAIXA-JANELA-CI: 9 falhas, todas da B6, e «114 de 123».
+
+O `foto-mestre`, que fotografa o ecrã do Mestre com render, passou. O `retoma-pc` passou com as listas do commit 2.
 
 **Listas da retoma:** corri o `actualizar-listas.py` depois do commit 1, porque ele lê o `HEAD`. Deu 0 novos e 0
 tirados; só mudam os SHA de 2 ficheiros, `cenas/mestre/mestre.gd` e `testes/medir_mestre.gd`. O `depois.txt` e o
