@@ -1,0 +1,27 @@
+# Ordem CAIXA-EXPANDE (F4) — sensibilidade dos tectos do desvio (testes/caixa_jogadora.gd, Godot 4.7.2 --headless)
+# Tectos cometidos: const TECTO_DESVIO_8 := {Vector2i(844, 390): 0.0, Vector2i(780, 360): 11.5, Vector2i(1920, 1080): 0.0}
+# Uma corrida por tecto, a baixar só esse 0,5 u (no ficheiro local; reposto a seguir); a última baixa os três.
+
+## baixado: 844  ->  const TECTO_DESVIO_8 := {Vector2i(844, 390): -0.5, Vector2i(780, 360): 11.5, Vector2i(1920, 1080): 0.0}
+rc=1
+  FALHA 8 figuras 844x390: o desvio do centro da faixa não piora (0.0 u ≤ tecto -0.5 u; não pior que a caixa compacta recentrada)
+41 de 42 verificações passaram.
+
+## baixado: 780  ->  const TECTO_DESVIO_8 := {Vector2i(844, 390): 0.0, Vector2i(780, 360): 11.0, Vector2i(1920, 1080): 0.0}
+rc=1
+  FALHA 8 figuras 780x360: o desvio do centro da faixa não piora (11.5 u ≤ tecto 11.0 u; não pior que a caixa compacta recentrada)
+41 de 42 verificações passaram.
+
+## baixado: 1920  ->  const TECTO_DESVIO_8 := {Vector2i(844, 390): 0.0, Vector2i(780, 360): 11.5, Vector2i(1920, 1080): -0.5}
+rc=1
+  FALHA 8 figuras 1920x1080: o desvio do centro da faixa não piora (0.0 u ≤ tecto -0.5 u; não pior que a caixa compacta recentrada)
+41 de 42 verificações passaram.
+
+## baixado: todos  ->  const TECTO_DESVIO_8 := {Vector2i(844, 390): -0.5, Vector2i(780, 360): 11.0, Vector2i(1920, 1080): -0.5}
+rc=1
+  FALHA 8 figuras 844x390: o desvio do centro da faixa não piora (0.0 u ≤ tecto -0.5 u; não pior que a caixa compacta recentrada)
+  FALHA 8 figuras 780x360: o desvio do centro da faixa não piora (11.5 u ≤ tecto 11.0 u; não pior que a caixa compacta recentrada)
+  FALHA 8 figuras 1920x1080: o desvio do centro da faixa não piora (0.0 u ≤ tecto -0.5 u; não pior que a caixa compacta recentrada)
+39 de 42 verificações passaram.
+
+## reposto: const TECTO_DESVIO_8 := {Vector2i(844, 390): 0.0, Vector2i(780, 360): 11.5, Vector2i(1920, 1080): 0.0}

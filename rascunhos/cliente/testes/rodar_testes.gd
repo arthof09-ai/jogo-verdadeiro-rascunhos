@@ -83,7 +83,6 @@ func _initialize() -> void:
 	_teste_retrato_casos_corpo()
 	_teste_retrato_casos_corpo_inteiro()
 	_teste_retrato_casos_esfola()
-	_teste_caixa_ordem()
 	_teste_escala_do_mundo()
 	# ORDEM MAPA-JOGÁVEL: a grelha é o mapa inteiro e a água pisa-se (o lago segue nós na árvore: depois do quadro).
 	_teste_mapa_jogavel_geometria()
@@ -91,6 +90,8 @@ func _initialize() -> void:
 	await process_frame
 	_teste_agua_reacao()
 	_teste_mapa_jogavel_agua()
+	# Ordem CAIXA-EXPANDE: a caixa lê o rato e os toques (make_input_local) — precisa de estar na árvore: depois do quadro.
+	await _teste_caixa_ordem()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -1329,20 +1330,26 @@ func _teste_caixa_ordem() -> void:
 	var ordem: Array[String] = ["j1", "j2", "m"]
 	c.mostrar(ordem, "j2", {"j1": "Ong", "j2": "Ruiva", "m": "Lobo"}, {}, "dinamico")
 	_ok(c.ids_mostrados == ordem and c.vez_mostrada == "j2", "caixa: mostra a ordem e quem está na vez")
-	_ok(c.find_child("Fila", true, false).get_child_count() == 3, "caixa: um retrato por figura")
-	# Ordem CAIXA-PADRAO-BUSTO: todos os quadradinhos do mesmo tamanho, seja qual for o nome (e a figura na vez).
+	# Ordem CAIXA-EXPANDE: as caixinhas pequenas são só os PRÓXIMOS (a vez não aparece nelas), a contar de quem vem a seguir.
+	var fila0 := c.find_child("Fila", true, false)
+	_ok(c.ids_fila == ["m", "j1"] and fila0.get_child_count() == 2 and fila0.find_child("Slot_j2", false, false) == null,
+		"caixa: as caixinhas são os próximos a jogar, sem a figura na vez (%s)" % [c.ids_fila])
+	# Ordem CAIXA-PADRAO-BUSTO: todos os quadradinhos do mesmo tamanho, seja qual for o nome.
 	var ordem5: Array[String] = ["a", "b", "c", "d", "e"]
-	c.mostrar(ordem5, "c", {"a": "Arqueira de Prata Longa", "b": "Lobo", "c": "Espadachim", "d": "Ab", "e": "Bruto"}, {}, "iniciativa")
+	var nomes5 := {"a": "Arqueira de Prata Longa", "b": "Urso", "c": "Espadachim", "d": "Ab", "e": "Gigante"}
+	c.mostrar(ordem5, "c", nomes5, {}, "iniciativa")
+	_ok(c.ids_fila == ["d", "e", "a", "b"], "caixa: com 5 figuras, as 4 caixinhas são os 4 próximos a seguir à vez, dando a volta (%s)" % [c.ids_fila])
 	var tamanhos := {}
 	for slot in c.find_child("Fila", true, false).get_children():
 		var t: Vector2 = (slot as Control).get_combined_minimum_size()
 		tamanhos["%dx%d" % [int(t.x), int(t.y)]] = true
 	var cel := c.tamanho_celula()
 	_ok(tamanhos.size() == 1 and tamanhos.has("%dx%d" % [int(cel.x), int(cel.y)]),
-		"caixa: os 5 quadradinhos têm o MESMO tamanho, nomes curtos ou longos (%s; célula %dx%d)" % [tamanhos.keys(), int(cel.x), int(cel.y)])
+		"caixa: os 4 quadradinhos têm o MESMO tamanho, nomes curtos ou longos (%s; célula %dx%d)" % [tamanhos.keys(), int(cel.x), int(cel.y)])
 	# Ordem CAIXA-PADRAO-CORRECOES (B3): o que a linha de nome MOSTRA (cortado com «…» na largura da célula), não o `text`.
 	var visiveis: Array = []
 	var cortes_ok := true
+	var cores_ok := true
 	for slot in c.find_child("Fila", true, false).get_children():
 		var l := slot.get_node("Nome") as Label
 		var v := CaixaOrdem.texto_visivel(l)
@@ -1356,13 +1363,93 @@ func _teste_caixa_ordem() -> void:
 			cortes_ok = cortes_ok and v.ends_with(l.ellipsis_char) and l.text.begins_with(sem) and fonte.get_string_size(mais, HORIZONTAL_ALIGNMENT_LEFT, -1, tam).x > l.size.x
 		else:
 			cortes_ok = cortes_ok and fonte.get_string_size(v, HORIZONTAL_ALIGNMENT_LEFT, -1, tam).x <= l.size.x
-	_ok(cortes_ok and visiveis[3] == "Ab" and (visiveis[0] as String).length() < 10,
+		cores_ok = cores_ok and l.get_theme_color("font_color") == CaixaOrdem.COR_TEXTO
+		var est := (slot.get_node("Moldura") as PanelContainer).get_theme_stylebox("panel") as StyleBoxFlat
+		cores_ok = cores_ok and est.border_width_top == 1
+	_ok(cortes_ok and visiveis[0] == "Ab" and (visiveis[2] as String).length() < 10,
 		"caixa: os nomes à vista são os cortados na célula %s (não o texto anterior ao corte)" % [visiveis])
+	# Ordem CAIXA-EXPANDE: o nome a ouro (e a moldura grossa) é SÓ o do cartão grande; nas caixinhas, tudo pergaminho.
+	var activa := c.find_child("NomeActiva", true, false) as Label
+	_ok(cores_ok and activa.get_theme_color("font_color") == CaixaOrdem.COR_REALCE and activa.text.begins_with("Espadachim"),
+		"caixa: o nome a ouro só no cartão grande (%s); nas caixinhas todos pergaminho, moldura fina" % [activa.text.replace("\n", " · ")])
+	# Quando a vez passa, quem jogou sai do cartão grande e vai para o fim da fila; a fila anda.
+	c.mostrar(ordem5, "d", nomes5, {}, "iniciativa")
+	_ok(c.ids_fila == ["e", "a", "b", "c"] and activa.text.begins_with("Ab"),
+		"caixa: a vez passa à seguinte — quem jogou (Espadachim) vai para o fim da fila (%s)" % [c.ids_fila])
+	# Ordem CAIXA-EXPANDE: a vista expandida — a ordem completa, a vez primeiro e realçada, os nomes inteiros.
+	var compacta := c.size
+	c.definir_sobre(true)
+	await process_frame  # os contentores arrumam as linhas no fim do quadro (só então se mede o texto à vista)
+	var lista := c.find_child("Lista", true, false)
+	var linhas: Array = []
+	for l in lista.get_children():
+		linhas.append(str(l.name).trim_prefix("Linha_"))
+	var nome_a := lista.get_node("Linha_a/Textos/Nome") as Label
+	var vez_l := lista.get_node("Linha_d")
+	_ok(c.expandida() and linhas == ["d", "e", "a", "b", "c"] and c.ids_expandida == ["d", "e", "a", "b", "c"],
+		"caixa: com o rato por cima cresce e mostra a ordem completa a partir da vez (%s)" % [linhas])
+	_ok(c.linhas_cortadas().is_empty() and CaixaOrdem.texto_visivel(nome_a) == "Arqueira de Prata Longa",
+		"caixa: na expandida os nomes são completos, sem corte («%s»)" % CaixaOrdem.texto_visivel(nome_a))
+	_ok(vez_l.has_node("Textos/NaVez") and (vez_l.get_node("Textos/Nome") as Label).get_theme_color("font_color") == CaixaOrdem.COR_REALCE
+		and nome_a.get_theme_color("font_color") == CaixaOrdem.COR_TEXTO and not lista.get_node("Linha_a").has_node("Textos/NaVez"),
+		"caixa: na expandida a figura na vez vem realçada como no cartão grande (ouro, «na vez»); as outras a pergaminho")
+	_ok(c.size.x >= compacta.x and c.size.y > compacta.y and c.tamanho_compacto() == compacta,
+		"caixa: a expandida é maior que a compacta (%s ⊇ %s) e o tamanho compacto continua sabido" % [c.size, compacta])
+	c.definir_sobre(false)
+	_ok(not c.expandida() and c.size == compacta and not (c.find_child("Expandida", true, false) as Control).visible,
+		"caixa: ao tirar o rato volta ao tamanho compacto (%s)" % [c.size])
+	# O rato a sério (eventos do motor), o rato imitado a partir de um toque e o toque.
+	c.position = Vector2(40, 40)
+	var dentro := c.get_global_rect().get_center()
+	var fora := c.get_global_rect().end + Vector2(30, 30)
+	_mover_rato(dentro, 0)
+	var abriu_rato := c.expandida()
+	_mover_rato(fora, 0)
+	var fechou_rato := not c.expandida()
+	_mover_rato(dentro, InputEvent.DEVICE_ID_EMULATION)
+	var imitado := c.expandida()
+	_ok(abriu_rato and fechou_rato and not imitado,
+		"caixa: o rato por cima abre e fora fecha; o rato que o motor imita a partir de um toque não abre (%s/%s/%s)" % [abriu_rato, fechou_rato, imitado])
+	_tocar(dentro, dentro)
+	var abriu_toque := c.expandida()
+	_tocar(dentro, dentro)
+	var fechou_toque := not c.expandida()
+	_tocar(dentro, dentro)
+	_tocar(fora, fora)
+	var fechou_fora := not c.expandida()
+	_tocar(dentro, dentro + Vector2(0, 200))
+	var arrastou := c.expandida()
+	_ok(abriu_toque and fechou_toque and fechou_fora and not arrastou,
+		"caixa: um toque abre e outro fecha; um toque fora fecha; arrastar não abre (%s/%s/%s/%s)" % [abriu_toque, fechou_toque, fechou_fora, arrastou])
 	var vazia: Array[String] = []
 	c.mostrar(vazia, "", {}, {}, "dinamico")
 	_ok(c.vez_mostrada == "" and (c.find_child("Vazia", true, false) as Label).visible, "caixa: sem acções, diz que a ordem se forma — nada inventado")
-	_ok(c.mouse_filter == Control.MOUSE_FILTER_IGNORE, "caixa: não rouba os toques ao tabuleiro")
+	var filhos_ignoram := true
+	for n in c.find_children("*", "Control", true, false):
+		if n.name != "ModoIniciativa" and n.name != "Expandida" and not (n is ScrollBar) and (n as Control).mouse_filter != Control.MOUSE_FILTER_IGNORE:
+			filhos_ignoram = false
+	_ok(c.mouse_filter == Control.MOUSE_FILTER_STOP and filhos_ignoram,
+		"caixa: só o painel apanha o rato/toque (em cima dela abre a vista); fora dela o tabuleiro recebe-os")
 	c.queue_free()
+
+
+## Ordem CAIXA-EXPANDE: um movimento do rato (device 0 = rato a sério; DEVICE_ID_EMULATION = imitado de um toque).
+func _mover_rato(p: Vector2, dispositivo: int) -> void:
+	var e := InputEventMouseMotion.new()
+	e.device = dispositivo
+	e.position = p
+	e.global_position = p
+	get_root().push_input(e, true)  # já em coordenadas da janela (sem o esticar do ecrã)
+
+
+## Ordem CAIXA-EXPANDE: um toque (carrega em `a`, levanta em `b`).
+func _tocar(a: Vector2, b: Vector2) -> void:
+	for k in 2:
+		var t := InputEventScreenTouch.new()
+		t.index = 0
+		t.pressed = k == 0
+		t.position = a if k == 0 else b
+		get_root().push_input(t, true)
 
 
 # ---------------------------------------------------------------- Ordem ÁGUA-REAÇÃO (o lago reage às figuras)

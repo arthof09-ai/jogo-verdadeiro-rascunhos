@@ -1390,8 +1390,11 @@ func _posicionar_caixa() -> void:
 		if c.visible:
 			y = maxf(y, _livre.position.y + c.position.y + c.size.y + margem)
 	_caixa.position = Vector2(margem * 2.0, y)
+	# Ordem CAIXA-EXPANDE: a vista expandida (rato por cima / toque) cresce para a direita e para baixo, por cima do
+	# resto, até ao fundo do ecrã (depois a lista rola); o sítio decide-se pela caixa COMPACTA.
+	_caixa.limitar_altura(maxf(1.0, get_viewport_rect().size.y - y - margem))
 	_caixa.size = _caixa.get_combined_minimum_size()
-	var r := Rect2(_caixa.position, _caixa.size)
+	var r := Rect2(_caixa.position, _caixa.tamanho_compacto())
 	for n in [_livre.manipulo, _livre.sobe_botao, _livre.desce_botao, _livre.vel_caixa]:
 		var c := n as Control
 		if c.visible and r.intersects(Rect2(_livre.position + c.position, c.size)):

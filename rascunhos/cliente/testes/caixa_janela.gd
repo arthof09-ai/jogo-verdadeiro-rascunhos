@@ -9,6 +9,9 @@ extends SceneTree
 ## B3: com 8, 12 e 16 figuras na ordem, em 844×390 e 780×360 (e 1280×720 como referência): a caixa cabe no ecrã, não tapa
 ##     a ⚙, a ficha nem a barra, e a faixa de cima continua com largura para a frase mais comprida que mostra, numa linha,
 ##     sem passar por baixo da caixa. As medidas saem no registo (MEDIDA ...).
+##     Ordem CAIXA-EXPANDE: a compacta mostra só os 4 próximos (os slots); e, em todas as medições, a VISTA EXPANDIDA — o rato
+##     por cima (eventos a sério) abre a ordem inteira com os nomes completos (um nome de 33 letras incluído), encostada à
+##     direita, acima da barra, sem tapar a faixa nem a ⚙; o que não cabe rola por dentro (MEDIDA EXPANDIDA ...).
 ## Código de saída 0 se tudo passa, 1 se algo falha.
 
 ## As frases mais compridas que a faixa mostra em combate (hud.gd `_texto_faixa`), com um nome de 10 letras e 10,5 m.
@@ -18,7 +21,7 @@ const FRASES_FAIXA := [
 	"Vez de Espadachim",
 	"O Mestre narra",
 ]
-const NOMES := ["Espadachim", "Arqueira", "Criatura", "Criatura", "Criatura", "Criatura", "Personagem", "Criatura",
+const NOMES := ["Espadachim", "Arqueira", "Criatura das Brumas do Lago Velho", "Criatura", "Criatura", "Criatura", "Personagem", "Criatura",
 	"Criatura", "Criatura", "Personagem", "Criatura"]
 
 var _total := 0
@@ -211,6 +214,57 @@ func _medir(hud: Node, n: int, tam: Vector2i) -> void:
 		larguras["%.1f" % rs.size.x] = true
 		if absf(rs.size.x - cel.x) > 0.5 or absf(rm.size.x - cel.x) > 0.5 or absf(rm.size.y - cel.x) > 0.5:
 			maus.append("%s %.1f/%.1f" % [s.name, rs.size.x, rm.size.x])
-	_ok(maus.is_empty() and larguras.size() == 1 and fila.get_child_count() == n,
-		"%d figuras %dx%d: os %d slots renderizam com a largura da célula (%s u = %.1f px reais por slot; moldura quadrada) %s" % [
+	# Ordem CAIXA-EXPANDE: as caixinhas pequenas são só os 4 próximos (a vez fica no cartão grande, não aqui).
+	var n_fila := mini(hud._caixa.MAX_FILA, n - 1)
+	_ok(maus.is_empty() and larguras.size() == 1 and fila.get_child_count() == n_fila and not fila.has_node("Slot_" + str(c["vez"])),
+		"%d figuras %dx%d: os %d slots (os próximos, sem a vez) renderizam com a largura da célula (%s u = %.1f px reais por slot; moldura quadrada) %s" % [
 			n, tam.x, tam.y, fila.get_child_count(), larguras.keys(), cel.x * escala, maus])
+	await _medir_expandida(hud, n, tam)
+
+
+## Ordem CAIXA-EXPANDE: a vista expandida com n figuras num ecrã: o rato por cima (eventos a sério) abre-a; mostra a
+## ordem inteira, com os nomes completos; cabe no ecrã sem descer abaixo do topo da barra (se não couber, a lista rola);
+## a borda direita fica no sítio; a faixa não se mexe; tirar o rato volta à compacta.
+func _medir_expandida(hud: Node, n: int, tam: Vector2i) -> void:
+	var cx: Control = hud._caixa
+	var faixa := hud.get_node("Raiz/Seguro/Camadas/Faixa") as Label
+	var barra := hud.get_node("Raiz/Seguro/Camadas/Barra") as Control
+	var r0 := cx.get_global_rect()
+	var margens0 := Vector2(faixa.offset_left, faixa.offset_right)
+	_rato(r0.get_center())
+	await _quadros(3)
+	var r := cx.get_global_rect()
+	var tela := root.get_visible_rect()
+	var c: Dictionary = hud.caixa_mostrada()
+	var lista: Node = cx.find_child("Lista", true, false)
+	var rol := cx.find_child("Expandida", true, false) as ScrollContainer
+	var linha0 := lista.get_child(0) as Control
+	var cortadas: Dictionary = cx.linhas_cortadas()
+	var rola: bool = cx.expandida_rola()
+	var sep := float(lista.get_theme_constant("separation"))
+	var cabem := n if not rola else int(floor((rol.size.y + sep + 0.5) / (linha0.size.y + sep)))
+	var topo_barra := barra.get_global_rect().position.y
+	print("  MEDIDA EXPANDIDA %d figuras · %dx%d: caixa %dx%d u = %dx%d px reais (compacta %dx%d u) · %d linhas de %d u (retrato %d u) · à vista sem rolar %d · rola %s · nomes cortados %s · fundo %d u (topo da barra %d u)" % [
+		n, tam.x, tam.y, int(r.size.x), int(r.size.y), int(r.size.x * hud._escala), int(r.size.y * hud._escala), int(r0.size.x), int(r0.size.y),
+		lista.get_child_count(), int(linha0.size.y), int((linha0.get_child(0) as Control).size.x), mini(cabem, n), "SIM" if rola else "NÃO", cortadas, int(r.end.y), int(topo_barra)])
+	_ok(c["expandida"] and c["ordem_expandida"].size() == n and lista.get_child_count() == n and c["ordem_expandida"][0] == c["vez"],
+		"%d figuras %dx%d: [expandida] o rato por cima abre a ordem inteira, a vez primeiro (%d linhas)" % [n, tam.x, tam.y, lista.get_child_count()])
+	_ok(cortadas.is_empty(), "%d figuras %dx%d: [expandida] todos os nomes completos à vista, sem corte %s" % [n, tam.x, tam.y, cortadas])
+	var coluna := hud.get_node("Raiz/Seguro/Camadas/ColunaEsquerda") as Control
+	var tapa := faixa.get_global_rect().intersects(r) or (coluna.visible and coluna.get_global_rect().intersects(r))
+	_ok(tela.encloses(r) and r.end.y <= topo_barra + 0.5 and absf(r.end.x - r0.end.x) <= 0.5 and r.size.x >= r0.size.x and r.size.y >= r0.size.y and not tapa,
+		"%d figuras %dx%d: [expandida] cresce para baixo, encostada à direita, cabe no ecrã acima da barra e não tapa a faixa nem a ⚙ (%s; barra em y %d)" % [n, tam.x, tam.y, r, int(topo_barra)])
+	_ok(rola == (lista.get_combined_minimum_size().y > rol.size.y + 0.5) and Vector2(faixa.offset_left, faixa.offset_right) == margens0,
+		"%d figuras %dx%d: [expandida] o que não cabe rola por dentro (rola %s) e a faixa não se mexe" % [n, tam.x, tam.y, rola])
+	_rato(r.end + Vector2(40, 40) if r.end.x + 40.0 < tela.end.x else r.position - Vector2(40, -40))
+	await _quadros(3)
+	_ok(not hud.caixa_mostrada()["expandida"] and cx.get_global_rect().is_equal_approx(r0),
+		"%d figuras %dx%d: [expandida] tirar o rato volta à compacta (%s)" % [n, tam.x, tam.y, cx.get_global_rect()])
+
+
+## Ordem CAIXA-EXPANDE: um movimento do rato a sério, em coordenadas da janela.
+func _rato(p: Vector2) -> void:
+	var e := InputEventMouseMotion.new()
+	e.position = p
+	e.global_position = p
+	root.push_input(e, true)

@@ -15,9 +15,12 @@ extends SceneTree
 ##    hoje: 539,0 / 576,0 / 350,5 u), que conta. É um tripwire, não a fasquia (a fasquia do critério é ≤ 1 u); quando o
 ##    EXPANDE entrar, o tecto actualiza-se com a nova medição.
 ##    Ordem CAIXA-PADRAO-CORRECOES (B9): os tectos passam a 542,5 / 587,5 / 343,5 u — não pior que a caixa do
-##    padrão-busto (ver TECTO_DESVIO_8). A variante estrita (o ponto 4 a contar, ≤ 1 u, em vez do
+##    padrão-busto. Ordem CAIXA-EXPANDE (F4): a caixa compacta (4 caixinhas) e a recentragem da faixa baixam-nos para
+##    0,0 / 11,5 / 0,0 u (ver TECTO_DESVIO_8). A variante estrita (o ponto 4 a contar, ≤ 1 u, em vez do
 ##    tecto) corre-se com `-- --estrita` (o CI corre sem a opção):
 ##      godot --headless --path cliente -s res://testes/caixa_jogadora.gd -- --estrita
+## §9 (Ordem CAIXA-EXPANDE): a recentragem da faixa (hud.gd faixa_recentrada) em casos puros, e o toque na caixa no HUD
+##    a sério (844×390, 8 figuras): um toque abre a vista expandida, outro fecha, um toque fora fecha; a faixa não mexe.
 ## Código de saída 0 se tudo passa, 1 se algo falha.
 
 var _total := 0
@@ -30,15 +33,16 @@ var _figs: Array = []
 ## §8: nomes públicos genéricos, até 10 letras (o corte da caixa), para encher a fila.
 const NOMES_8 := ["Espadachim", "Arqueira", "Criatura", "Criatura", "Personagem", "Criatura", "Criatura", "Criatura"]
 ## §8: o tecto do desvio do centro da faixa (u), por resolução: o desvio medido (não pior que hoje).
-## Ordem CAIXA-PADRAO-CORRECOES (B9): NÃO PIOR QUE A CAIXA DO PADRÃO-BUSTO. A caixa fundida (células de tamanho fixo,
-## retrato com LADO_RETRATO_EM_LETRAS = 3,4 letras) mudou a largura da caixa com 8 figuras: 1186 → 1193 u (844×390),
-## 1269 → 1292 u (780×360), 767 → 753 u (1920×1080). A faixa centra-se entre a ⚙ e a caixa (hud.gd _posicionar_caixa:
-## margem direita = largura da caixa + folga), por isso o desvio é (margem dir − margem esq) / 2 e muda METADE do que a
-## caixa muda: +3,5 / +11,5 / −7,0 u — os 539,0 / 576,0 / 350,5 da MEDICAO-8-FIGURAS passam aos medidos com a caixa nova.
-## A recentragem que não encolhe a caixa (pôr a faixa o mais perto do centro do ecrã que o espaço livre deixa) muda o
-## desenho da faixa da CAIXA-JANELA B3, que espera o olho do Mestre (o EXPANDE): não se fez; está registada no
-## ESTADO-FINAL da ordem. A guarda dispara a +0,5 u (provas/ordem-caixa-padrao-correcoes/tecto/sensibilidade.log).
-const TECTO_DESVIO_8 := {Vector2i(844, 390): 542.5, Vector2i(780, 360): 587.5, Vector2i(1920, 1080): 343.5}
+## Ordem CAIXA-PADRAO-CORRECOES (B9) tinha 542,5 / 587,5 / 343,5 u — os da caixa do padrão-busto (8 caixinhas, uma por
+## figura) com a faixa «centrada entre a ⚙ e a caixa».
+## Ordem CAIXA-EXPANDE (F4, a recentragem): NÃO PIOR QUE A CAIXA COMPACTA RECENTRADA. Duas mudanças, medidas uma a uma:
+## (1) a caixa compacta mostra só o cartão grande e os 4 próximos — 1193 → 689 u (844×390), 1292 → 744 u (780×360),
+## 753 → 437 u (1920×1080); só com isto, pela regra antiga, o desvio seria 0,0 / 313,5 / 0,0 u (a 780×360 a faixa
+## larga centrada não cabe por 23 u e ia para o meio entre a ⚙ e a caixa); (2) a recentragem (hud.gd
+## faixa_recentrada): a faixa fica o mais perto do centro que o espaço livre deixa, sem encolher a caixa — a 780×360
+## encosta-se à caixa com a largura que precisa (788 u) e o desvio fica 11,5 u. Medido: 0,0 / 11,5 / 0,0 u. A guarda
+## dispara se se baixar 0,5 u um tecto qualquer (provas/ordem-caixa-expande/tecto/sensibilidade.log).
+const TECTO_DESVIO_8 := {Vector2i(844, 390): 0.0, Vector2i(780, 360): 11.5, Vector2i(1920, 1080): 0.0}
 ## §8: a variante estrita (`-- --estrita`): o ponto 4 conta com a fasquia do critério (≤ 1 u), em vez do tecto.
 var _estrita := OS.get_cmdline_user_args().has("--estrita")
 
@@ -219,12 +223,55 @@ func _correr() -> void:
 	await _quadros(3)
 	for tam in [Vector2i(844, 390), Vector2i(780, 360), Vector2i(1920, 1080)]:
 		await _medir_8(hud, tam)
+
+	print("== 9. Ordem CAIXA-EXPANDE: a recentragem da faixa (F4) e o toque na caixa ==")
+	# A conta pura: (largura, ⚙, caixa, precisa) -> margens. Centrada se cabe; senão, o mais perto do centro.
+	var m1: Vector2 = hud.faixa_recentrada(1000.0, 100.0, 300.0, 400.0)
+	var m2: Vector2 = hud.faixa_recentrada(1000.0, 100.0, 400.0, 400.0)
+	var m3: Vector2 = hud.faixa_recentrada(1000.0, 100.0, 400.0, 600.0)
+	_ok(m1 == Vector2(300, 300), "F4: se a faixa larga centrada cabe, as margens são iguais (desvio 0) %s" % m1)
+	_ok(m2 == Vector2(200, 400), "F4: se não cabe centrada, fica com a largura que precisa, encostada à caixa, o mais perto do centro (desvio 100 u; a regra antiga dava 150 u) %s" % m2)
+	_ok(m3 == Vector2(100, 400), "F4: se nem a largura que precisa cabe, ocupa o espaço livre todo (a regra antiga) %s" % m3)
+	# O toque na caixa, no HUD a sério (844×390, 8 figuras): abre e fecha a mesma vista expandida; a faixa não se mexe.
+	root.size = Vector2i(844, 390)
+	await process_frame
+	hud._ao_redimensionar()
+	await _quadros(4)
+	var faixa9 := hud.get_node("Raiz/Seguro/Camadas/Faixa") as Label
+	var margens9 := Vector2(faixa9.offset_left, faixa9.offset_right)
+	var r9: Rect2 = hud.caixa_mostrada()["rect"]
+	_tocar(r9.get_center())
+	await _quadros(3)
+	c = hud.caixa_mostrada()
+	var r_aberta: Rect2 = c["rect"]
+	_ok(c["expandida"] and (c["ordem_expandida"] as Array).size() == 8 and r_aberta.size.y > r9.size.y and is_equal_approx(r_aberta.end.x, r9.end.x)
+		and Vector2(faixa9.offset_left, faixa9.offset_right) == margens9,
+		"toque: um toque na caixa abre a ordem inteira (%d), encostada à direita (%s), e a faixa não se mexe" % [(c["ordem_expandida"] as Array).size(), r_aberta])
+	_tocar(r_aberta.get_center())
+	await _quadros(3)
+	c = hud.caixa_mostrada()
+	_ok(not c["expandida"] and (c["rect"] as Rect2).is_equal_approx(r9), "toque: outro toque na caixa fecha-a (volta a %s)" % [c["rect"]])
+	_tocar(r9.get_center())
+	await _quadros(2)
+	_tocar(Vector2(root.get_visible_rect().size.x * 0.5, root.get_visible_rect().size.y * 0.5))
+	await _quadros(2)
+	_ok(not hud.caixa_mostrada()["expandida"], "toque: com a caixa aberta, um toque fora dela fecha-a")
 	hud.queue_free()
 	_figs = []
 	await process_frame
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
+
+
+## §9: um toque (carrega e levanta no mesmo sítio), em coordenadas da janela.
+func _tocar(p: Vector2) -> void:
+	for k in 2:
+		var t := InputEventScreenTouch.new()
+		t.index = 0
+		t.pressed = k == 0
+		t.position = p
+		root.push_input(t, true)
 
 
 ## §8: mede a caixa com 8 figuras numa resolução, contra os 5 pontos do CRITERIO.md.
@@ -261,29 +308,36 @@ func _medir_8(hud: Node, tam: Vector2i) -> void:
 		if not r.grow(0.5).encloses((s as Control).get_global_rect()):
 			slots_fora.append(s.name)
 	var centrada := desvio_margens <= 1.0 and desvio_centro <= 1.0
+	# Ordem CAIXA-EXPANDE (F4): o desvio que a regra ANTIGA (a faixa «centrada entre a ⚙ e a caixa», CAIXA-JANELA B3)
+	# daria com esta mesma caixa — para separar o que a caixa compacta mudou do que a recentragem mudou.
+	var esq_min := float(hud._fonte) * 3.5
+	var dir_caixa := maxf(esq_min, (hud._caixa.tamanho_compacto() as Vector2).x + float(hud._fonte) * 0.5)
+	var desvio_antigo := 0.0 if pai.size.x - 2.0 * dir_caixa >= precisa else (dir_caixa - esq_min) * 0.5
 	var cabe := tela.encloses(r) and slots_fora.is_empty() and livre >= precisa
 	var sobrepoe := tapa_coluna or tapa_barra or tapa_faixa
-	print("  MEDIDA 8 figuras · %dx%d (tela %dx%d u, escala %.3f, fonte %d): caixa %dx%d u = %dx%d px reais (altura %.0f%% do ecrã) · %d por linha · faixa livre %d u (precisa %d u), margens esq %d / dir %d u, desvio do centro %.1f u · sobreposição %s (ficha %s, barra %s, faixa %s) · centrada %s · cortado %s" % [
+	print("  MEDIDA 8 figuras · %dx%d (tela %dx%d u, escala %.3f, fonte %d): caixa %dx%d u = %dx%d px reais (altura %.0f%% do ecrã) · %d por linha · faixa livre %d u (precisa %d u), margens esq %d / dir %d u, desvio do centro %.1f u (pela regra antiga, com esta caixa: %.1f u) · sobreposição %s (ficha %s, barra %s, faixa %s) · centrada %s · cortado %s" % [
 		tam.x, tam.y, int(tela.size.x), int(tela.size.y), escala, hud._fonte, int(r.size.x), int(r.size.y),
 		int(round(r.size.x * escala)), int(round(r.size.y * escala)), 100.0 * r.size.y / tela.size.y, hud._caixa.colunas_fila(),
-		int(livre), int(precisa), int(faixa.offset_left), int(-faixa.offset_right), desvio_centro,
+		int(livre), int(precisa), int(faixa.offset_left), int(-faixa.offset_right), desvio_centro, desvio_antigo,
 		"SIM" if sobrepoe else "NÃO", tapa_coluna, tapa_barra, tapa_faixa, "SIM" if centrada else "NÃO", "NÃO" if cabe else "SIM"])
-	_ok(c["visivel"] and (c["ids"] as Array).size() == 8, "8 figuras %dx%d: a caixa mostra as 8 (%d)" % [tam.x, tam.y, (c["ids"] as Array).size()])
+	_ok(c["visivel"] and (c["ids"] as Array).size() == 8 and (c["fila"] as Array).size() == 4 and not (c["fila"] as Array).has(c["vez"]),
+		"8 figuras %dx%d: a caixa tem as 8 (%d) — na compacta, a vez no cartão grande e os 4 próximos %s" % [tam.x, tam.y, (c["ids"] as Array).size(), c["fila"]])
 	_ok(not tapa_coluna, "8 figuras %dx%d: não tapa a ⚙/ficha" % [tam.x, tam.y])
 	_ok(not tapa_barra and barra.visible, "8 figuras %dx%d: não tapa a barra inferior (barra visível %s)" % [tam.x, tam.y, barra.visible])
 	_ok(not tapa_faixa, "8 figuras %dx%d: não tapa a faixa de cima (faixa %s, caixa %s)" % [tam.x, tam.y, rf, r])
 	# O ponto 4 do critério (a faixa centrada) MEDE-SE e regista-se, mas não conta para o código de saída: com a caixa
-	# larga a faixa centra-se entre a ⚙ e a caixa POR DESENHO (Ordem CAIXA-JANELA B3, à espera do olho do Mestre); a
-	# correcção é o EXPANDE. A 1.ª corrida, com ele a contar, está em provas/.../medicao-8-figuras/corrida-1-criterio.log.
+	# larga a faixa centrava-se entre a ⚙ e a caixa POR DESENHO (Ordem CAIXA-JANELA B3). A 1.ª corrida, com ele a contar,
+	# está em provas/.../medicao-8-figuras/corrida-1-criterio.log. Ordem CAIXA-EXPANDE: com a caixa compacta e a
+	# recentragem, 844×390 e 1920×1080 ficam centradas (0,0 u); 780×360 fica a 11,5 u (a faixa larga centrada não cabe).
 	print("  REGISTO (não conta) 8 figuras %dx%d: a faixa centrada no ecrã? %s (margens %d / %d u, desvio %.1f u)" % [
 		tam.x, tam.y, "SIM" if centrada else "NÃO", int(faixa.offset_left), int(-faixa.offset_right), desvio_centro])
 	# Ordem CAIXA-HUD-JOGADORA-TECTO-DESVIO-PONTO-4: o tecto (tripwire), não pior que hoje. Se a centragem piorar, falha.
-	# Na variante estrita (`-- --estrita`) conta a fasquia do critério (≤ 1 u) em vez do tecto: hoje dá 33/36.
+	# Na variante estrita (`-- --estrita`) conta a fasquia do critério (≤ 1 u) em vez do tecto: com o EXPANDE dá 41/42 (só 780×360).
 	if _estrita:
 		_ok(centrada, "8 figuras %dx%d: [estrita] a faixa continua centrada (desvio %.1f u ≤ 1 u, margens %d / %d u)" % [
 			tam.x, tam.y, desvio_centro, int(faixa.offset_left), int(-faixa.offset_right)])
 	else:
 		var tecto: float = TECTO_DESVIO_8[tam]
-		_ok(desvio_centro <= tecto, "8 figuras %dx%d: o desvio do centro da faixa não piora (%.1f u ≤ tecto %.1f u; não pior que a caixa do padrão-busto)" % [
+		_ok(desvio_centro <= tecto, "8 figuras %dx%d: o desvio do centro da faixa não piora (%.1f u ≤ tecto %.1f u; não pior que a caixa compacta recentrada)" % [
 			tam.x, tam.y, desvio_centro, tecto])
 	_ok(cabe, "8 figuras %dx%d: nada cortado (caixa no ecrã %s, quadradinhos fora %s, faixa %d ≥ %d u)" % [tam.x, tam.y, tela.encloses(r), slots_fora, int(livre), int(precisa)])

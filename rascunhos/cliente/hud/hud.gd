@@ -943,6 +943,7 @@ func _montar_caixa() -> void:
 	_caixa.com_botao = false  # a escolha é do Mestre: a jogadora só vê
 	_caixa.visible = false
 	$Raiz/Seguro/Camadas.add_child(_caixa)
+	_caixa.vista_mudou.connect(func(_e: bool): _posicionar_caixa())  # Ordem CAIXA-EXPANDE: cresce encostada à direita
 	_retratos.mudou.connect(func(_id: String): _pedir_desenho_caixa())
 
 
@@ -1005,28 +1006,51 @@ func _desenhar_caixa() -> void:
 
 
 ## A caixa fica no canto de cima, à direita (à esquerda estão a ⚙ e a ficha; em baixo, a barra). A faixa e o aviso de
-## cima encolhem dos dois lados o mesmo, para continuarem centrados sem passar por baixo da caixa.
-## Ordem CAIXA-JANELA (B3): com muitas figuras em ecrãs baixos (8+ em 844×390) os dois lados iguais já não deixavam à
-## faixa a largura da frase mais comprida. Então: (1) a caixa não come a largura que a faixa precisa ao lado da ⚙ — a fila
-## parte em linhas; (2) se centrada não cabe, a faixa fica entre a ⚙ e a caixa (centrada no espaço que sobra).
+## cima encolhem para continuarem sem passar por baixo da caixa.
+## Ordem CAIXA-JANELA (B3): (1) a caixa não come a largura que a faixa precisa ao lado da ⚙ — a fila parte em linhas.
+## Ordem CAIXA-EXPANDE (F4, a recentragem): (2) a faixa fica O MAIS PERTO DO CENTRO DO ECRÃ que o espaço livre entre a ⚙
+## e a caixa deixa (faixa_recentrada), sem encolher a caixa — centrada se cabe, senão encostada ao lado mais perto do
+## centro (já não «centrada entre a ⚙ e a caixa»). A faixa arruma-se pela caixa COMPACTA: com a vista expandida aberta
+## (o rato por cima, ou um toque) a caixa cresce para a esquerda e para baixo, por cima, e nada mais se mexe; a
+## expandida não desce abaixo do topo da barra (se a ordem não couber, a lista rola por dentro).
 func _posicionar_caixa() -> void:
 	if _caixa == null:
 		return
 	var esq := float(_fonte) * 3.5  # não passa por cima da ⚙
 	var dir := esq
+	var area: Vector2 = ($Raiz/Seguro/Camadas as Control).size
 	if _caixa.visible:
-		var area: Vector2 = ($Raiz/Seguro/Camadas as Control).size
 		var folga := float(_fonte) * 0.5
-		var precisa := largura_faixa_precisa()
-		_caixa.limitar_largura(maxf(1.0, area.x - esq - precisa - folga))
+		var precisa_caixa := largura_faixa_precisa()
+		_caixa.limitar_largura(maxf(1.0, area.x - esq - precisa_caixa - folga))
+		var baixo := area.y
+		if _barra.visible:
+			baixo = _barra.position.y
+		_caixa.limitar_altura(maxf(1.0, baixo - folga))
 		_caixa.size = _caixa.get_combined_minimum_size()
 		_caixa.position = Vector2(maxf(0.0, area.x - _caixa.size.x), 0.0)
-		dir = maxf(esq, _caixa.size.x + folga)
-		if area.x - 2.0 * dir >= precisa:
-			esq = dir  # cabe centrada: os dois lados iguais, como antes
+		dir = maxf(esq, _caixa.tamanho_compacto().x + folga)
+	var m := faixa_recentrada(area.x, esq, dir, largura_faixa_precisa())
 	for c in [_faixa, _aviso]:
-		(c as Control).offset_left = esq
-		(c as Control).offset_right = -dir
+		(c as Control).offset_left = m.x
+		(c as Control).offset_right = -m.y
+
+
+## Ordem CAIXA-EXPANDE (F4): as margens (esquerda, direita) da faixa numa largura `largura`, com o espaço livre entre
+## `esq` (a ⚙) e `largura − dir` (a caixa): a faixa o mais perto do centro que esse espaço deixa, sem encolher a caixa.
+## Se a faixa larga centrada no ecrã cabe (com a largura `precisa` ou mais), as margens são iguais (desvio 0). Se não,
+## a faixa tem a largura `precisa` e fica o mais perto do centro possível dentro do espaço livre (encostada ao lado
+## da caixa ou da ⚙ que estiver mais perto do centro). Se nem `precisa` cabe, ocupa o espaço livre todo.
+static func faixa_recentrada(largura: float, esq: float, dir: float, precisa: float) -> Vector2:
+	var centro := largura * 0.5
+	var a := esq
+	var b := largura - dir
+	var meia := minf(centro - a, b - centro)
+	if meia >= 0.0 and 2.0 * meia >= precisa:
+		return Vector2(centro - meia, largura - (centro + meia))
+	var w := clampf(precisa, 0.0, maxf(0.0, b - a))
+	var x := clampf(centro - w * 0.5, a, b - w)
+	return Vector2(x, largura - (x + w))
 
 
 ## Ordem CAIXA-JANELA (B3): a largura que a faixa precisa para a frase mais comprida que mostra (a da pausa, ou a de
@@ -1048,4 +1072,8 @@ func caixa_mostrada() -> Dictionary:
 		"vez": _caixa.vez_mostrada if _caixa != null else "",
 		"modo": ordem_turnos.modo,
 		"rect": _caixa.get_global_rect() if _caixa != null else Rect2(),
+		# Ordem CAIXA-EXPANDE: as caixinhas pequenas (os próximos), a vista aberta e a ordem completa dela.
+		"fila": _caixa.ids_fila.duplicate() if _caixa != null else [],
+		"expandida": _caixa != null and _caixa.expandida(),
+		"ordem_expandida": _caixa.ids_expandida.duplicate() if _caixa != null else [],
 	}
