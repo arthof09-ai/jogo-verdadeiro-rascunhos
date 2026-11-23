@@ -103,6 +103,8 @@ não lêem estes registos. O CI do §4 confirma-as.
 
 Este commit só acrescenta texto a este ficheiro.
 
+**CI da ponta `9fe4ce2` (F50, emendas da conferência), já na linha** (Testes 45112901995 + Sonda 45112902028): **10/10 jobs verdes e a Sonda verde** — a condição da fusão da F25 está cumprida.
+
 ## 5. Privacidade re-derivada
 
 - **Os 11 ficheiros:** 0 pares e 0 ocorrências de nomes verdadeiros inteiros, sem distinguir maiúsculas.
