@@ -31,8 +31,7 @@ dos `.md`) pelos caminhos e pelos nomes dos ficheiros:
 - `retoma-i0004/actualizar-listas.py` só trata de `rascunhos/`. Os 11 estão em `provas/`.
 - Os `actualizar-listas.log` de `cobertura-correcoes*/` mencionam os nomes dos ficheiros num `diff --stat` antigo.
   São registos, não código.
-- **Documentos que os citam** (por caminho, sem ler o conteúdo): `provas/ordem-caixa-janela/README.md:43, 59, 71, 77,
-  92, 117, 135, 162, 182, 202, 229`, `provas/ordem-caixa-relato/README.md:181` e vários ESTADO-FINAL da raiz.
+- **Documentos que os citam** (por caminho, sem ler o conteúdo): `provas/ordem-caixa-janela/README.md:43, 59, 71, 77, 92, 103, 117, 121, 135, 139, 162, 182, 186, 202, 229`, `provas/ordem-caixa-relato/README.md:181` e vários ESTADO-FINAL da raiz.
 
 Como há documentos que os citam, **não apaguei nenhum** e redigi os 11.
 
@@ -59,7 +58,7 @@ dos documentos continuam certas.
 | **total** | | **90 → 0** | **188 → 0** | **69** |
 
 A contagem antes bate certo com a sentença (90 pares e 188 ocorrências). Só bate se não se distinguirem maiúsculas:
-2 dos 42 pares e 5 das 121 ocorrências de `correcoes-3/mutacoes.log` estão em minúsculas (l. 47 e 130).
+2 dos 42 pares e 5 das 121 ocorrências de `correcoes-3/mutacoes.log` estão em minúsculas. «Pares em minúsculas» quer dizer pares cujas ocorrências na linha são todas minúsculas: são os das l. 47 e 130. As 5 ocorrências em minúsculas estão nas l. 47, 130, 140, 142 e 144 — as três últimas linhas trazem também a forma com maiúsculas.
 
 **Além dos 90, redigi duas formas que não são nomes inteiros mas ficam quase iguais a eles:**
 - **Nomes cortados na origem.** Em `correcoes-3/mutacoes.log`, as linhas 17, 100 e 134 acabam no nome n.º 2 cortado
@@ -121,7 +120,7 @@ Este commit só acrescenta texto a este ficheiro.
 
   **Os achados que sobram não são nomes nem pedaços de nomes.** Separei-os um a um, fora do repo. São palavras
   correntes que partilham letras com os nomes: a palavra que dá nome às fichas de teste (sozinha, com a preposição,
-  ou no fim de outra palavra), uma palavra de quatro letras que quer dizer «todo», e o início do adjectivo que os registos usam para as ocorrências não filtradas. Também
+  ou no fim de outra palavra), uma palavra de quatro letras que quer dizer «cada», e o início do adjectivo que os registos usam para as ocorrências não filtradas. Também
   aparecem os dois nomes públicos das criaturas, que o canário mostra de propósito. O maior pedaço que sobra tem 12
   caracteres, e todos estão nessas palavras. Não sobra nenhum nome inteiro, nem nenhum início de nome que passe do
   nome público. Ver o ponto 4 do §7.
@@ -145,14 +144,14 @@ Apagá-los dali seria reescrever a história de um repo público, e isso depende
 2. **A heroína do cenário N-B3** (`correcoes-3/mutacoes.log`, l. 55–68 e 149 em diante). Neste cenário, a heroína
    entra de propósito com nome diferente do nome público. Nas fichas de teste, porém, o nome dela é público por
    inteiro. Por isso não conta como nome verdadeiro, nem para a sentença (fora dos 90), nem para o conferidor.
-   Deixei-o como estava. Se o coordenador o quiser tratar como verdadeiro no contexto do cenário, são mais 11 linhas
+   Deixei-o como estava. Se o coordenador o quiser tratar como verdadeiro no contexto do cenário, são mais 10 linhas (22 ocorrências)
    neste ficheiro.
 3. **Fora dos 11 ainda há nomes verdadeiros inteiros na ponta.** Contei-os na árvore inteira, só por números, sem
-   distinguir maiúsculas: **251 pares em 22 ficheiros**. Destes, três são por desenho: as fichas
+   distinguir maiúsculas: **251 pares em 22 ficheiros** (a lista itemizada abaixo nomeia 23 ficheiros, incluindo `rascunhos/servidor/autojogo/cenario-bancada.json`, com 0 pares; 22 é o número de ficheiros com pares). Destes, três são por desenho: as fichas
    (`rascunhos/servidor/autojogo/`, 2), o canário (`teste_nomes_relato.gd`, 34, com o `RELATO_VELHO` congelado) e
    o `relato.txt` da CAIXA-JANELA (22, o caso medido). Os outros: `provas/ordem-autojogo/` (`s1.jsonl` 29,
-   `s1.repeticao.jsonl` 29, `s2.jsonl` 42, `s3.jsonl` 30, `resumo.json` 2, `resumo.md` 2), sete `relato.txt` de
-   provas da caixa (6 por ficheiro), `provas/ordem-caixa/cliente/relato.txt` (2), `provas/ordem-caixa-janela/README.md` (3),
+   `s1.repeticao.jsonl` 29, `s2.jsonl` 42, `s3.jsonl` 30, `resumo.json` 2, `resumo.md` 2), oito `relato.txt` de
+   provas da caixa (6 por ficheiro) — `ordem-caixa-hud-jogadora/cliente/relato.txt`, `ordem-caixa-manequim/cliente/relato.txt`, `ordem-caixa-padrao-busto/cliente/relato.txt`, `ordem-caixa-relato/cliente-hud/relato.txt`, `ordem-caixa-relato/cliente-manequim/relato.txt`, `ordem-caixa-relato/correcoes/cliente-hud/relato.txt`, `ordem-caixa-relato/correcoes/cliente-manequim/relato.txt` e `ordem-caixa-teste-estetica/cliente/relato.txt` — `provas/ordem-caixa/cliente/relato.txt` (2), `provas/ordem-caixa-janela/README.md` (3),
    `provas/ordem-caixa-hud-jogadora/README.md` (2) e as ferramentas `prova_caixa_jogadora.gd` e
    `prova_caixa_manequim.gd` (2 por ficheiro). Os 90 eram mesmo um piso. Não lhes toquei, porque estão fora do território
    desta ordem.
