@@ -76,7 +76,7 @@ Todas deram exit 0, com 0 `SCRIPT ERROR / Parse Error / Compile Error`.
 - `4e897a8`: listas da retoma sincronizadas com `retoma-i0004/actualizar-listas.py` (0 novos, 0 tirados). Só
   mudaram os 3 SHA dos ficheiros desta ordem, no `depois.txt` e no `MANIFESTO-SHA256.txt`. Neste PC, o `python3` é
   o atalho da Microsoft Store, por isso corri o guião com o `python` (3.12).
-- o commit das provas e deste ESTADO-FINAL, que não muda nada em `rascunhos/`.
+- `66d45c1`: provas e este ESTADO-FINAL (não muda nada em `rascunhos/`).
 
 ## 5. Perímetro e privacidade
 
@@ -87,4 +87,8 @@ Todas deram exit 0, com 0 `SCRIPT ERROR / Parse Error / Compile Error`.
 
 ## Nota do CI
 
-(segue no commit seguinte)
+- `66d45c1` (correcção + listas + provas + ESTADO-FINAL): **Testes dos rascunhos 45262985642: success**, com os 10
+  jobs verdes (servidor, validador-glb, motor-real, protocolo, cliente, godot-cliente, foto-mestre, provas-mapa,
+  ponta-a-ponta, retoma-pc), e **Sonda de privacidade 45262985720: success**. No log do CI: `pecas_mestre` 292 de 292,
+  com as 2 D-AUD-01-CORRECCOES «ok», e `rodar_testes` 321 de 321. O `retoma-pc` passou à primeira, porque as listas
+  já iam sincronizadas no `4e897a8`.
