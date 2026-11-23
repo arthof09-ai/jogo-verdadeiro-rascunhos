@@ -6,7 +6,7 @@ sem conflito. Commits:
 1. `878b13e` — código, testes e provas (a caixa compacta, a vista expandida, a recentragem F4, os tectos novos);
 2. `0e81bbc` — o guião de mutação da CAIXA-JANELA-CI acertado com a caixa nova (114 de 123);
 3. `58648e0` — este ESTADO-FINAL, com as listas da retoma sincronizadas;
-4. o acrescento do resultado do CI da ponta `58648e0` e do ensaio do retoma-pc (só documento).
+4. `f54d92e` — o acrescento do resultado do CI da ponta `58648e0` e do ensaio do retoma-pc (só documento).
 
 Este ficheiro não tem nomes verdadeiros, nem pedaços deles, nem o valor de nenhum PIN (§6).
 
@@ -19,6 +19,9 @@ Este ficheiro não tem nomes verdadeiros, nem pedaços deles, nem o valor de nen
   partir de quem vem depois da vez e dão a volta à ordem. A figura na vez nunca aparece nelas. Quando a vez passa,
   quem jogou sai do cartão grande e vai para o fim da fila (`proximos`, com um teste próprio). A ordem é a mesma que
   o servidor projecta (dinâmica ou de iniciativa). A caixa só decide o que mostra.
+- **Com 6 ou mais figuras, quem acabou de jogar some da compacta:** a fila anda e ele vai para o fim; a compacta só
+  mostra os 4 próximos, por isso ele só volta a aparecer quando for outra vez um dos 4 próximos — ou na expandida,
+  onde a ordem está inteira (emenda do coordenador, F12 da sentença da CAIXA-EXPANDE).
 - Com menos de 5 figuras há menos caixinhas: 4 figuras dão 3, e ninguém se repete. Sem ninguém na vez (no modo
   dinâmico, antes de alguém agir) não há cartão grande, e as caixinhas são as 4 primeiras da ordem.
 - Os quadradinhos mantêm a célula fixa da pilha da estética (46×60 px na janela da prova). Os nomes compactos
@@ -98,17 +101,20 @@ ordem não couber, **a lista rola por dentro** (com a roda do rato ou a arrastar
 | resolução | caixa antes → agora (u) | desvio antes → agora (u) | diferença |
 |---|---|---|---|
 | 844×390 | 1193 → 689 | 542,5 → **0,0** | −542,5 |
-| 780×360 | 1292 → 744 | 587,5 → **11,5** | −576,0 (−313,5 só pela recentragem) |
+| 780×360 | 1292 → 744 | 587,5 → **11,5** | −576,0 (−302,0 só pela recentragem; −274,0 pela caixa compacta) |
 | 1920×1080 | 753 → 437 | 343,5 → **0,0** | −343,5 |
 
 - **Os tectos novos são 0,0 / 11,5 / 0,0 u** (eram 542,5 / 587,5 / 343,5). A justificação está escrita no teste: «não
   pior que a caixa compacta recentrada».
+- **Nota (772 u contra 788 u):** o 788 u é a largura de que a faixa precisa na suite do tecto; na suite
+  `caixa_janela` a mesma faixa precisa de 772 u em 780×360 — as duas suites medem frases mais compridas
+  diferentes, e cada número é interno à sua suite (emenda do coordenador, F12).
 - **Sensibilidade** (`provas/ordem-caixa-expande/tecto/sensibilidade.log`): baixei um só tecto 0,5 u por corrida.
   Deu 41/42 e rc 1 nas três corridas, e em todas falhou **exactamente** a guarda dessa resolução. Com os três
   baixados, deu 39/42.
 - **A variante estrita** (`-- --estrita`, o critério de ≤ 1 u) dá 41/42: só falha 780×360, com 11,5 u.
 - **Na prova viva** (passo 9, a janela muda de tamanho a sério, 9 figuras) mediu-se 0,0 / 11,5 / 0,0 u, dentro dos
-  tectos. A faixa não toca na caixa. As caixas compactas mediram 686 / 744 / 434 u. A diferença de 3 u para a suite
+  tectos. A faixa não toca na caixa. As caixas compactas mediram 686 / 744 / 434 u. A diferença de 3 u em 844×390 e 1920×1080 (0 u em 780×360) para a suite
   vem do nome do cartão grande, que é outro.
 
 ## 5. Os números das corridas

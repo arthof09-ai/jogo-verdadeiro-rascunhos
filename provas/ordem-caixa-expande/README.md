@@ -13,7 +13,7 @@ semente 7, o mesmo motor VLAB `a91c021c…`; os casos do retrato passam a ser o 
   a vez primeiro e realçada, todos os nomes completos; tirar o rato volta ao tamanho compacto (`6-rato-expandida.png`);
 - **7 (b)** 9 figuras: o Mestre de ensaio põe 5 criaturas a mais na luta (MASTER_PLACE em combate) e escolhe a
   iniciativa; a expandida mostra as 9; o toque abre e fecha a mesma vista, e um toque fora fecha
-  (`7-expandida-8-figuras.png`);
+  (`7-expandida-9-figuras.png`);
 - **8 (c)** a expandida com as 9 figuras em 844×390 (cabem as 9) e em 780×360 (cabem 8; a lista rola, e
   `8-expandida-780x360-fim.png` mostra-a rolada até ao fim);
 - **9 (d)** a recentragem da faixa nas 3 resoluções, contra os tectos novos: desvio 0,0 / 11,5 / 0,0 u
@@ -34,7 +34,7 @@ relato só leva nomes públicos (0 nomes verdadeiros inteiros).
 | `cliente/4-religada-avancou.png` | `f8f29c723ffbd07afad5ee04fea6acdef3d82078f05ba6e4b469cdf87641b0ea` |
 | `cliente/5-reentrou.png` | `4a43c883c1ea4f2851dadfc02075787a07f6903f2706571e1f03b91e091f99ef` |
 | `cliente/6-rato-expandida.png` | `7cc1f99ccc9aa3762c135660015297e0c8aaccffaf8cb6d7605a5def96d3e755` |
-| `cliente/7-expandida-8-figuras.png` | `965692ccf351069ce3cd5a35eb49106a2ae7c042918a72d095f4b6fb30d2c158` |
+| `cliente/7-expandida-9-figuras.png` | `965692ccf351069ce3cd5a35eb49106a2ae7c042918a72d095f4b6fb30d2c158` |
 | `cliente/8-expandida-844x390.png` | `e46c63ee1f5f3e73cb13b27529d32aeb6232fad5455ae29688699fc73c70c687` |
 | `cliente/8-expandida-780x360.png` | `b9e422d251f3f724c07fc40920110a3763e1747ce3184c5764ca34ef0a192de4` |
 | `cliente/8-expandida-780x360-fim.png` | `f0bf4dc426fc45f06ee60959e0d3627d15329f965a1619c70d8b923d0d818270` |
@@ -42,6 +42,21 @@ relato só leva nomes públicos (0 nomes verdadeiros inteiros).
 | `cliente/9-faixa-780x360.png` | `9b018454743be7a0b50ccd5d4f626af69000dad2f8468bc43cfd4efde02a1f66` |
 | `cliente/9-faixa-1920x1080.png` | `2123c8dbebcc13c0b904b9dd8a1f3f129c3582cf4f670561e8ee9e5118eb3afe` |
 | `cliente/relato.txt` | `5b6d225aa2b9db8743e931df418df65206168df39402c12be6a7bd68dab8554f` |
+
+Retratos (passo 10 — os casos do retrato): os 6 de casos são distintos; os 3 de cena são byte-idênticos entre si
+(o mesmo manequim na mesma pose), por isso têm o mesmo SHA.
+
+| ficheiro | SHA-256 |
+|---|---|
+| `cliente/retratos/casos/arma-levantada.png` | `ae4fcfe71a4e185ba08c739e459c6dce32fa27af36ab54559a502aeeb2bddd39` |
+| `cliente/retratos/casos/braco-levantado.png` | `7874a0504ac9656fa69b008a9b14c4fa7de183e63591d71484e0cce9a06c3002` |
+| `cliente/retratos/casos/caixa-zero.png` | `98fdb901433cd006ec474682de4c753bfbe4504d4392d5873debecda63b80bf1` |
+| `cliente/retratos/casos/deitada.png` | `b54bc0c51a608283b643cb0d90b3de2e8b6cb5e697ce0ff084ab9adb84dfe038` |
+| `cliente/retratos/casos/passada-longa.png` | `e1e40c9d54354f6fdd5fbd5a2376205006d6833e4d0ba13665ede8580e53ec78` |
+| `cliente/retratos/casos/quadrupede.png` | `84fcde5731ebd394136216bec7213d2326b500caf0aa6b5f39523086b650148a` |
+| `cliente/retratos/arqueira-de-bancada.png` | `58f8b693d8b07173ba159548f078bdf7ef4a511f40b75838d894d96ed9cd2628` |
+| `cliente/retratos/espadachim-de-bancada.png` | `58f8b693d8b07173ba159548f078bdf7ef4a511f40b75838d894d96ed9cd2628` |
+| `cliente/retratos/lobo.png` | `58f8b693d8b07173ba159548f078bdf7ef4a511f40b75838d894d96ed9cd2628` |
 
 ## expandida/ — a suite `caixa_janela` (sem ecrã), 123/123
 `caixa_janela.log`: 8, 12 e 16 figuras × 1280×720, 844×390 e 780×360. Em todas as medições: a compacta (4 caixinhas,
