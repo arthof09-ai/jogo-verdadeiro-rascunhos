@@ -1,4 +1,4 @@
-M1-livre-sem-lugar: código 1, 217 ok, 5 falhas, das quais 2 da guarda nova
-M2-sem-tecto: código 1, 202 ok, 18 falhas, das quais 3 da guarda nova
-M3-clique-nao-fecha: código 1, 202 ok, 18 falhas, das quais 9 da guarda nova
-M4-rato-nao-abre: código 1, 190 ok, 30 falhas, das quais 1 da guarda nova
+M1-livre-sem-lugar: código 1, 217 ok, 5 falhas, das quais 2 das guardas novas (2 da guarda-alvo)
+M2-sem-tecto: código 1, 202 ok, 18 falhas, das quais 15 das guardas novas (3 da guarda-alvo)
+M3-clique-nao-fecha: código 1, 202 ok, 18 falhas, das quais 18 das guardas novas (9 da guarda-alvo)
+M4-rato-nao-abre: código 1, 190 ok, 30 falhas, das quais 21 das guardas novas (1 da guarda-alvo)

@@ -60,12 +60,14 @@ As medidas de antes repetem-se iguais, com uma excepção: 844×390 com 16 figur
 
 **A prova de que as guardas novas disparam** (`provas/ordem-f36-medir-mestre/ferramentas/mutacoes-medir-mestre.sh`): quatro mutações do jogo, uma por vez, repostas no fim (`git diff` vazio).
 
-| mutação | resultado | falhas das guardas novas |
+| mutação | resultado | falhas das guardas novas (guarda-alvo) |
 |---|---|---|
-| M1: a caixa nunca sai de cena na câmara livre | 217 ok, 5 falhas | 2 (D-A: «sai de cena (sem lugar)» em 844×390 e 780×360) |
-| M2: sem o tecto da largura | 202 ok, 18 falhas | 3 (D-B: os «…» em 780×360, com 8, 12 e 16) |
-| M3: o clique imitado de um toque fora não fecha | 202 ok, 18 falhas | 9 (D-G: «fecho pelo clique», nos 9 casos) |
-| M4: o rato a sério não abre a caixa | 190 ok, 30 falhas | 1 (D-A: «câmara livre: vista expandida aberta pelo rato») |
+| M1: a caixa nunca sai de cena na câmara livre | 217 ok, 5 falhas | 2 (guarda-alvo: 2, D-A: «sai de cena (sem lugar)» em 844×390 e 780×360) |
+| M2: sem o tecto da largura | 202 ok, 18 falhas | 15 (guarda-alvo: 3, D-B: os «…» em 780×360, com 8, 12 e 16) |
+| M3: o clique imitado de um toque fora não fecha | 202 ok, 18 falhas | 18 (guarda-alvo: 9, D-G: «fecho pelo clique», nos 9 casos) |
+| M4: o rato a sério não abre a caixa | 190 ok, 30 falhas | 21 (guarda-alvo: 1, D-A: «câmara livre: vista expandida aberta pelo rato») |
+
+**Emenda da conferência (F70, 23/11/2026):** a tabela contava mal — os números eram só os da guarda-alvo. Os totais das guardas novas, contados nos logs cometidos, são M1=2, M2=15, M3=18, M4=21; a guarda-alvo fica entre parênteses.
 
 Na primeira versão do D-G, o M3 não reprovava o «fecho pelo clique»: o toque que vem a seguir ao clique fechava a caixa na mesma. Por isso a leitura passou para logo depois do clique, e o M3 acima é dessa versão.
 
