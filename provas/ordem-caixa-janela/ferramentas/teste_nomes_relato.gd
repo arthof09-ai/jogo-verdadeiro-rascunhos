@@ -70,7 +70,7 @@ func _init() -> void:
 
 	print("== 1. os canários: os nomes verdadeiros que diferem do público ==")
 	var canarios: Array = N.nomes_verdadeiros(vista)
-	_ok(canarios.has("Bruto de Bancada") and canarios.has("Lobo de Bancada"), "1: «Bruto de Bancada» e «Lobo de Bancada» são canários %s" % [canarios])
+	_ok(canarios.has("Bruto de Bancada") and canarios.has("Lobo de Bancada"), "1: «nome n.º 1» e «nome n.º 2» são canários (%d)" % canarios.size())
 	_ok(not canarios.has("Espadachim de Bancada") and not canarios.has("Arqueira de Bancada"),
 		"1: as heroínas (nome = nome público) não são canários")
 	var dup := {"mestre": {"figuras": figuras + [bruto.duplicate()]}}
@@ -95,9 +95,9 @@ func _init() -> void:
 	var sujo := limpo.duplicate()
 	sujo.append("  bancada: Bruto de Bancada → {\"tipo\":\"encerrar\"} (APLICADA)")
 	var achados_sujo: Array = N.no_relato(sujo, canarios)
-	_ok(achados_sujo == ["Bruto de Bancada na linha 5"], "3: «Bruto de Bancada» na linha 5 → o canário FALHA (%s)" % N.diagnostico(sujo, canarios))
+	_ok(achados_sujo == ["Bruto de Bancada na linha 5"], "3: «nome n.º 1» na linha 5 → o canário FALHA (%s)" % N.diagnostico(sujo, canarios))
 	var sujo2 := PackedStringArray(['  ordem ["Lobo","Lobo de Bancada"]'])
-	_ok(N.no_relato(sujo2, canarios) == ["Lobo de Bancada na linha 1"], "3: dentro de JSON também se apanha («Lobo de Bancada»)")
+	_ok(N.no_relato(sujo2, canarios) == ["Lobo de Bancada na linha 1"], "3: dentro de JSON também se apanha («nome n.º 2»)")
 	_ok(N.no_relato(sujo, []).is_empty(), "3: sem canários não há achados (por isso a prova exige ≥ 1 canário)")
 
 	print("== 4. o caso medido: o relato da CAIXA-JANELA de antes da CAIXA-JANELA-NOMES (congelado: RELATO_VELHO) ==")
@@ -109,7 +109,7 @@ func _init() -> void:
 	for k in canarios:
 		brutas += RELATO_VELHO.count(str(k))
 	_ok(achados_velho.size() == 22 and achados_velho[0] == "Lobo de Bancada na linha 7" and brutas == 28,
-		"4: o canário apanha no relato antigo 22 achados (28 ocorrências brutas), o 1.º «Lobo de Bancada na linha 7» (%s; %d brutas)" % [
+		"4: o canário apanha no relato antigo 22 achados (28 ocorrências brutas), o 1.º «nome n.º 2 na linha 7» (%s; %d brutas)" % [
 		N.diagnostico(velho, canarios), brutas])
 
 	print("== 5. C1 (+ B1–B4 das CORRECOES, B1/B2/B5 das CORRECOES-2) — as 17 chaves privadas no relato ==")

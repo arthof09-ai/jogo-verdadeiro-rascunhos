@@ -507,7 +507,11 @@ as quatro formas do §2:
 - a forma toda em minúsculas passa a `nome n.º N em minúsculas`;
 - o canário mudado (a preposição do meio mudada) passa a `nome n.º N com a preposição mudada`;
 - o nome cortado na origem passa a `nome n.º N (cortado na origem)`. Conta como corte a linha que acaba num pedaço
-  inicial do nome maior do que o nome público. O nome público sozinho não se redige.
+  inicial do nome maior do que o nome público. O nome público sozinho não se redige;
+- **desde a F97** (bancada F71+F87+F89), uma 5.ª forma: o nome sem a preposição, na forma exacta de um só espaço
+  «1.ª parte + última parte», com fronteira de palavra dos dois lados, passa a `nome n.º N sem a preposição` (com
+  contador próprio na linha de contagens). Por cada preposição no meio do nome, a forma sem ela. Não há nenhuma no
+  corpus: 0 no relato antigo, cru e redigido, e 0 no registo limpo, por isso nenhuma comparação byte a byte muda.
 
 Nenhuma linha é acrescentada nem tirada e os fins de linha ficam como estavam. A ferramenta sai com 3 se sobrar um nome
 inteiro. **Desde a F66** (sentença da F51), a saída 3 cobre também o que a redacção do §2 não redige, sem mudar a
@@ -528,23 +532,32 @@ redacção. Procura-se só no texto já redigido e diz só contagens e n.ºs de 
   tem pelo menos 2 palavras inteiras do nome e acaba a meio de uma palavra do nome. Com menos, o nome público seguido
   de uma palavra que começa pela letra da preposição dispararia a rede.
 
+**Desde a F97** (bancada F71+F87+F89):
+- **F87 — o nome sem a preposição:** o padrão «1.ª parte, um ou mais espaços, última parte», com fronteira de palavra,
+  conta como resto e dá saída 3. Apanha o que a 5.ª forma exacta não redige: dois espaços, um tabulador, a quebra de
+  linha (conta na linha onde começa). A forma de um espaço não se exclui aqui, para que um falhanço da redacção saia
+  ainda com 3. A linha de contagens diz «N nome(s) sem a preposição».
+- **F89 — a palavra hifenizada:** a palavra substituta da variante fora da lista é **«uma palavra de letras, com ou sem
+  hífenes»** («X du-la Y» conta como variante). **Mais de uma palavra** no lugar da preposição («X du la Y») continua
+  fora: duas ou três palavras já não são «a preposição substituída», são palavras inseridas. **Os dígitos** também
+  continuam fora: um número não é uma palavra, e não há caso realista de preposição escrita como dígito.
+- **Fronteira com a F94 (registada, não fechada aqui):** a substituta colada ao apelido (falta o espaço) e a
+  substituta seguida de pontuação continuam com a F94.
+
 **F93:** uma ocorrência conta uma vez só. O nome inteiro tal e qual é só da contagem dos inteiros, e as 5 variantes
 da lista com um espaço só não contam como variante fora da lista, porque a redacção já as trocou. Um corte que começa
 dentro de uma variante não conta como corte. Por isso a função `suspeitos()` só se deve chamar sobre o texto já
 redigido, como a ferramenta faz.
 
-Não há nenhum caso destes no corpus: os 11 registos e a saída do canário dão 0 variantes e 0 cortes. O auto-teste
-cobre-os com casos montados.
+Não há nenhum caso destes no corpus: os 11 registos e a saída do canário dão 0 variantes, 0 cortes e 0 nomes sem a
+preposição. O auto-teste cobre-os com casos montados.
 
-**Limite (F88).** Ficam dois buracos abertos. Fechá-los fica para a F71 decidir (F87):
-- **O nome sem a preposição** («X Y» em vez de «X de Y»). A rede só o apanha como corte quando a 1.ª parte do nome
-  chega sozinha ao mínimo do corte, isto é, quando tem mais caracteres do que o nome público (e pelo menos 4). Com as
-  fichas de agora, a 1.ª parte dos dois nomes é o próprio nome público, por isso não chega ao mínimo e o nome sem
-  preposição passa.
-- **Um pedaço que começa a meio do nome**, como «de Y» ou só «Y».
+**Limite (F97).** A redacção apanha o nome sem a preposição (5.ª forma) e a rede aponta-o. A rede não apanha um pedaço que não comece no início do nome — só o apelido sozinho fica de fora: a última palavra é palavra corrente — 75 ocorrências no relato antigo, 47 ainda no relato antigo redigido, 6 no registo limpo (a contar sem distinguir maiúsculas) — e apanhá-la marcaria o registo limpo como sujo.
 
-O auto-teste marca os dois como «AINDA ABERTO» (F95): os casos passam enquanto o buraco está aberto. Quem o fechar tem
-de virar o caso para afirmar a saída 3, e é essa a prova do fecho.
+O auto-teste marca o que fica aberto como «AINDA ABERTO» (F95): o pedaço que começa a meio do nome («de Y» ou só «Y»)
+e, desde a F97, duas palavras no lugar da preposição (F89). Os casos passam enquanto o buraco está aberto; quem o
+fechar tem de virar o caso para afirmar a saída 3, e é essa a prova do fecho. O caso do nome sem a preposição já virou
+(F97): afirma agora a rede.
 
 Usos (na raiz do repo):
 - `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs <saída-crua.log> --saida=<redigido.log>` escreve a
@@ -553,12 +566,16 @@ Usos (na raiz do repo):
   compara o redigido com o registo, byte a byte. Diz só «igual» ou o n.º da 1.ª linha diferente, nunca o texto. Sai
   com 0 se for igual e 1 se não for. `--ignorar-cr` tira os CR dos dois lados: o Godot do CI, em Linux, escreve LF, e
   os registos cometidos são CRLF (escritos no Windows). No PC compara-se sem `--ignorar-cr`.
-- `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs --auto-teste` corre 22 verificações com casos montados
+- `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs --auto-teste` corre 26 verificações com casos montados
   em memória a partir das fichas:
   - as quatro formas, o nome público intacto, os fins de linha e a idempotência;
   - desde a F66/F68: a variante do nome n.º 1 fora da lista, o corte mínimo do nome n.º 2 a meio da linha, a rede
     calada no que está limpo e a guarda dos 2 nomes;
-  - desde a F93–F95: J8, J9, J10, a contagem única e os dois buracos «AINDA ABERTO».
+  - desde a F93–F95: J8, J9, J10, a contagem única e o pedaço a meio do nome «AINDA ABERTO»;
+  - desde a F97: o nome n.º 1 sem a preposição com dois espaços, um tabulador ou partido por quebra de linha (e a
+    forma de um espaço crua) → a rede sai com 3 (é o caso da F95 que virou); a 5.ª forma no nome n.º 1 a meio da
+    linha e no nome n.º 2 no fim da linha; a variante hifenizada → saída 3; e duas palavras no lugar da preposição
+    «AINDA ABERTO».
 
   Com 1 nome verdadeiro, falha com 1; com 0, sai com 2 antes do auto-teste (F90).
 
@@ -567,7 +584,9 @@ Usos (na raiz do repo):
     preposição da lista no meio;
   - a 5.ª precisa do mesmo no nome n.º 2, e a 15.ª nos dois nomes;
   - a 14.ª precisa de o nome n.º 2 ser maior do que o mínimo do corte;
-  - a de J8 precisa de o nome n.º 2 ter 3 palavras ou mais.
+  - a de J8 precisa de o nome n.º 2 ter 3 palavras ou mais;
+  - (F97) a do nome sem a preposição na rede, a da 5.ª forma no nome n.º 1 e as duas da F89 precisam de o nome n.º 1
+    ter uma preposição da lista no meio; a da 5.ª forma no nome n.º 2 precisa do mesmo no nome n.º 2.
 
   Se as fichas mudarem e uma destas condições deixar de valer, o caso falha. Falhar alto é o certo, e a dependência
   fica escrita aqui e no código.
@@ -576,6 +595,16 @@ Usos (na raiz do repo):
 **No CI:** o passo está no job `cliente` desde `74f5fa9` (F65), logo a seguir ao passo do canário. Corre o auto-teste
 e compara a saída do canário com `provas/ordem-caixa-janela/cobertura-correcoes-6/teste-nomes-relato.log`. Se a
 ferramenta sair com 3, o passo fica vermelho.
+
+**A guarda do log cru (F97, F71).** O passo do canário corre o Godot com `tee`: o que ele imprime vai para o ficheiro
+**e** para o log público do run. Por isso as descrições do `teste_nomes_relato.gd` deixaram de trazer nomes (dizem
+«nome n.º 1» / «nome n.º 2»; as comparações, que usam os valores literais, não mudaram), e entre o passo do canário e o
+da redacção entra o passo «Guarda: 0 nomes inteiros no log cru do canário (F71)», `if: always()` — está no remendo
+`provas/ordem-f97-rede-redaccao/remendo-ci-testes.yml.patch` (o token do PC não tem o âmbito `workflow`; o coordenador
+aplica-o, como na F51/F65). Conta os nomes inteiros
+no log cru com o `sobram` desta ferramenta (que lê os nomes das fichas e só imprime a contagem) e falha se for > 0. Só
+lê o ficheiro: não redige o fluxo nem toca na comparação. O registo limpo da COBERTURA-CORRECOES-6 foi regenerado na
+F97 (a linha do caso 1 diz agora o tamanho do array): 3473 bytes, 3437 sem os CR.
 
 **A prova de que reproduz o §2:** `provas/ordem-f51-mutacao/reproduzir-redaccao-f25.sh <pasta-tmp>` tira do histórico
 os 11 registos de antes da limpeza (o pai de `081304e`) e redige-os. Os 11 ficam iguais byte a byte aos limpos da ponta

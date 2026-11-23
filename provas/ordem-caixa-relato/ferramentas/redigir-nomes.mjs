@@ -9,14 +9,18 @@
 //   1. o nome inteiro, sem distinguir maiúsculas → «nome n.º N»; a forma toda em minúsculas → «nome n.º N em minúsculas»;
 //   2. o nome com a preposição do meio mudada (o canário mudado) → «nome n.º N com a preposição mudada»;
 //   3. o nome cortado na origem: a linha acaba num pedaço inicial do nome, maior do que o nome público da mesma ficha
-//      (o nome público, sozinho, não se redige) → «nome n.º N (cortado na origem)».
+//      (o nome público, sozinho, não se redige) → «nome n.º N (cortado na origem)»;
+//   5. (desde a F97, F87) o nome sem a preposição do meio: a forma exacta de um só espaço «1.ª parte + última parte»,
+//      com fronteira de palavra dos dois lados → «nome n.º N sem a preposição» (por cada preposição no meio, a forma sem
+//      ela). O apelido sozinho não se redige: é palavra corrente.
 // Nada mais muda: nem linhas acrescentadas ou tiradas, nem os fins de linha (CRLF fica CRLF, LF fica LF).
 // --saida escreve o redigido (sem --saida nem --comparar, vai para a saída padrão). --comparar compara byte a byte o
 // redigido com um registo e diz só o n.º da 1.ª linha diferente, nunca o texto. --ignorar-cr tira os CR dos dois antes
 // de comparar (o Godot do CI, em Linux, escreve LF; os registos cometidos foram escritos no Windows, com CRLF).
 // Sai com 0 se tudo bate, 1 se a comparação (ou o auto-teste) falha, 2 por uso errado, 3 se sobrar no redigido um nome
 // inteiro, uma variante de preposição fora da lista de 5 ou um corte a meio da linha (estes dois desde a F66, e desde
-// a F94 também com pontuação, partidos por quebra de linha ou colados a uma letra; ver `suspeitos`). A saída 3 só diz
+// a F94 também com pontuação, partidos por quebra de linha ou colados a uma letra; ver `suspeitos`) ou, desde a F97, o
+// nome sem a preposição que a 5.ª forma não redigiu (dois espaços, tabulador, quebra de linha). A saída 3 só diz
 // contagens e n.ºs de linha, nunca o texto. Sem nenhum nome verdadeiro nas fichas sai com 2 antes de tudo (também
 // antes do --auto-teste); com 1 só, o --auto-teste falha com 1.
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -48,6 +52,17 @@ function variantesPreposicao(nome) {
   return vs;
 }
 
+// F97 (F87): o nome sem a preposição do meio — por cada preposição da lista no meio, as partes de antes e as de depois
+// (só nomes de 3 ou mais palavras).
+function partesSemPreposicao(nome) {
+  const ps = nome.split(' ');
+  const fs = [];
+  for (let j = 1; j < ps.length - 1; j++) {
+    if (PREPOSICOES.includes(min(ps[j]))) fs.push([ps.slice(0, j), ps.slice(j + 1)]);
+  }
+  return fs;
+}
+
 // Redige uma linha (sem o fim de linha). Devolve a linha e soma à contagem.
 function redigirLinha(l, verdadeiros, conta) {
   verdadeiros.forEach(({ nome }, k) => {
@@ -61,6 +76,11 @@ function redigirLinha(l, verdadeiros, conta) {
       conta.inteiros++;
       return rotulo;
     });
+    // 5.ª forma (F97, F87): o nome sem a preposição, exacto, com um só espaço e fronteira de palavra dos dois lados.
+    const fs = partesSemPreposicao(nome).map(([antes, depois]) => esc([...antes, ...depois].join(' ')));
+    if (fs.length) {
+      l = l.replace(new RegExp(`(?<!\\p{L})(?:${fs.join('|')})(?!\\p{L})`, 'giu'), () => { conta.semPreposicao++; return `${rotulo} sem a preposição`; });
+    }
   });
   // O nome cortado na origem: o fim da linha é um pedaço inicial (próprio) do nome, maior do que o nome público e
   // sem acabar em espaço, e começa numa fronteira de palavra. Fica o maior pedaço que se encontra.
@@ -86,7 +106,7 @@ function redigirLinha(l, verdadeiros, conta) {
 
 // Redige o texto inteiro, linha a linha, mantendo os fins de linha tal como estão.
 export function redigir(texto, verdadeiros) {
-  const conta = { inteiros: 0, minusculas: 0, preposicao: 0, cortados: 0, linhas: 0 };
+  const conta = { inteiros: 0, minusculas: 0, preposicao: 0, semPreposicao: 0, cortados: 0, linhas: 0 };
   const partes = texto.split(/(\r?\n)/);
   for (let i = 0; i < partes.length; i += 2) {
     const nova = redigirLinha(partes[i], verdadeiros, conta);
@@ -121,6 +141,12 @@ export function sobram(texto, verdadeiros) {
 // Ordem F93: o nome inteiro tal e qual (é da contagem dos inteiros) e as 5 variantes da lista com um espaço só (a
 // redacção já as redigiu) NÃO contam como variante fora da lista, e um corte que começa dentro de uma variante não
 // conta como corte — uma ocorrência conta uma vez só.
+// Ordem F97 (bancada F71+F87+F89):
+//   F87 — o nome sem a preposição: o padrão `1.ª parte \s+ última parte`, com fronteira de palavra, conta como resto
+//         (apanha também os dois espaços, os tabuladores e a quebra de linha, que a 5.ª forma exacta não apanha). A forma
+//         de um espaço não se exclui: se a redacção falhar, a rede ainda sai com 3. O apelido sozinho fica de fora;
+//   F89 — a palavra substituta da variante fora da lista é «uma palavra de letras, com ou sem hífenes». Duas ou três
+//         palavras no lugar da preposição (já são palavras inseridas) e dígitos continuam fora.
 // Devolve as contagens e os n.ºs das linhas (1-based), nunca o texto.
 function reVariantesFora(nome) {
   const ps = nome.split(' ');
@@ -129,9 +155,15 @@ function reVariantesFora(nome) {
     if (!PREPOSICOES.includes(min(ps[j]))) continue;
     const antes = ps.slice(0, j).map(esc).join('\\s+');
     const depois = ps.slice(j + 1).map(esc).join('\\s+');
-    res.push(new RegExp(`(?<!\\p{L})${antes}\\s+[\\p{L}'’]+(?:\\p{P}+\\s*|\\s+)${depois}(?!\\p{L})`, 'giu'));
+    res.push(new RegExp(`(?<!\\p{L})${antes}\\s+[\\p{L}'’]+(?:-[\\p{L}'’]+)*(?:\\p{P}+\\s*|\\s+)${depois}(?!\\p{L})`, 'giu'));
   }
   return res;
+}
+
+// F97 (F87): o nome sem a preposição, com qualquer espaço entre as partes.
+function reSemPreposicao(nome) {
+  return partesSemPreposicao(nome).map(([antes, depois]) =>
+    new RegExp(`(?<!\\p{L})${[...antes, ...depois].map(esc).join('\\s+')}(?!\\p{L})`, 'giu'));
 }
 
 // As posições (em caracteres da linha) onde começa um corte a meio da linha.
@@ -165,8 +197,9 @@ export function suspeitos(texto, verdadeiros) {
   const inicios = [0];
   for (let p = t.indexOf('\n'); p !== -1; p = t.indexOf('\n', p + 1)) inicios.push(p + 1);
   const linhaDe = (p) => { let a = 0; while (a + 1 < inicios.length && inicios[a + 1] <= p) a++; return a + 1; };
-  const r = { inteiros: sobram(texto, verdadeiros), variantes: 0, cortes: 0, linhasVariantes: [], linhasCortes: [] };
-  const vs = [], lv = new Set(), lc = new Set();
+  const r = { inteiros: sobram(texto, verdadeiros), variantes: 0, cortes: 0, semPreposicao: 0,
+    linhasVariantes: [], linhasCortes: [], linhasSemPreposicao: [] };
+  const vs = [], ss = [], lv = new Set(), lc = new Set(), ls = new Set();
   verdadeiros.forEach(({ nome }) => {
     const exactas = new Set([nome, ...variantesPreposicao(nome)].map(min));
     for (const re of reVariantesFora(nome)) {
@@ -179,6 +212,15 @@ export function suspeitos(texto, verdadeiros) {
         lv.add(linhaDe(m.index));
       }
     }
+    for (const re of reSemPreposicao(nome)) {
+      for (const m of t.matchAll(re)) {
+        const fim = m.index + m[0].length;
+        if (ss.some(([a, b]) => m.index < b && a < fim)) continue; // a mesma ocorrência, por outra preposição do nome
+        ss.push([m.index, fim]);
+        r.semPreposicao++;
+        ls.add(linhaDe(m.index));
+      }
+    }
   });
   inicios.forEach((ini, i) => {
     const l = t.slice(ini, i + 1 < inicios.length ? inicios[i + 1] - 1 : t.length);
@@ -186,7 +228,7 @@ export function suspeitos(texto, verdadeiros) {
     verdadeiros.forEach(({ nome, publico }) => {
       for (const p of cortesNaLinha(l, nome, publico)) {
         const abs = ini + cps.slice(0, p).join('').length;
-        if (vs.some(([a, b]) => a <= abs && abs < b)) continue; // dentro de uma variante: já contou
+        if ([...vs, ...ss].some(([a, b]) => a <= abs && abs < b)) continue; // dentro de uma variante ou do nome sem a preposição: já contou
         r.cortes++;
         lc.add(i + 1);
       }
@@ -194,14 +236,16 @@ export function suspeitos(texto, verdadeiros) {
   });
   r.linhasVariantes = [...lv].sort((x, y) => x - y);
   r.linhasCortes = [...lc].sort((x, y) => x - y);
+  r.linhasSemPreposicao = [...ls].sort((x, y) => x - y);
   return r;
 }
 
 const descreverSuspeitos = (s) =>
   `sobram ${s.inteiros} nome(s) inteiro(s), ${s.variantes} variante(s) de preposição fora da lista` +
   `${s.variantes ? ` (linhas ${s.linhasVariantes.join(', ')})` : ''}, ${s.cortes} corte(s) a meio da linha` +
-  `${s.cortes ? ` (linhas ${s.linhasCortes.join(', ')})` : ''}`;
-const haSuspeitos = (s) => s.inteiros + s.variantes + s.cortes > 0;
+  `${s.cortes ? ` (linhas ${s.linhasCortes.join(', ')})` : ''}, ${s.semPreposicao} nome(s) sem a preposição` +
+  `${s.semPreposicao ? ` (linhas ${s.linhasSemPreposicao.join(', ')})` : ''}`;
+const haSuspeitos = (s) => s.inteiros + s.variantes + s.cortes + s.semPreposicao > 0;
 
 // A 1.ª linha diferente entre dois Buffers (1-based), ou 0 se são iguais.
 function primeiraDiferente(a, b) {
@@ -289,7 +333,9 @@ function autoTeste(verdadeiros, publicos, escreve = console.log) {
   // F96 — dependências das fichas: a 13.ª verificação (a variante «du») e as de J9, J10, F93 e dos buracos ainda
   // abertos precisam de o nome n.º 1 ter uma preposição da lista no meio; a 5.ª precisa do mesmo no nome n.º 2 e a
   // 15.ª nos dois; a 14.ª precisa de o nome n.º 2 ser maior do que o mínimo do corte; a de J8 precisa de o nome n.º 2 ter
-  // 3 palavras ou mais. Se as fichas mudarem e isto já não valer, o caso FALHA (falha alto, não se salta).
+  // 3 palavras ou mais. F97: as do nome sem a preposição (rede e 5.ª forma no nome n.º 1) e as duas da F89 precisam de
+  // o nome n.º 1 ter uma preposição da lista no meio; a da 5.ª forma no nome n.º 2, do mesmo no nome n.º 2.
+  // Se as fichas mudarem e isto já não valer, o caso FALHA (falha alto, não se salta).
   const antesA = jA > 0 ? psA.slice(0, jA).join(' ') : null, depoisA = jA > 0 ? psA.slice(jA + 1).join(' ') : null;
   const s1 = (t) => { const s = sus(t); return [s.inteiros, s.variantes, s.cortes, s.linhasVariantes.join(), s.linhasCortes.join()].join('|'); };
   // J8: o corte colado a uma letra. O pedaço do nome n.º 2 até à 1.ª letra da 3.ª palavra, seguido de uma letra que
@@ -314,11 +360,31 @@ function autoTeste(verdadeiros, publicos, escreve = console.log) {
   const duploA = antesA && `x «${antesA}  ${psA[jA]} ${depoisA}» y`;
   confere('F93: o nome n.º 1 inteiro (texto cru) conta só como inteiro (0 variantes, 0 cortes); com 2 espaços conta só como 1 variante',
     s1(`x «${a.nome}» y`) === '1|0|0||' && !!duploA && s1(duploA) === '0|1|0|1|');
-  // F95: os buracos que ficam abertos (fica para a F71 decidir, F87). Estes casos passam ENQUANTO o buraco está
-  // aberto; quem o fechar tem de os virar (passam a afirmar a saída 3) — é a prova do fecho.
-  const semPrep = antesA && `x «${antesA} ${depoisA}» y`;
-  confere('F95 AINDA ABERTO: o nome n.º 1 sem a preposição não dá suspeito (com estas fichas a 1.ª parte é o nome público, abaixo do mínimo do corte)',
-    !!semPrep && r(semPrep) === semPrep && s1(r(semPrep)) === '0|0|0||');
+  // F95: os buracos que ficam abertos. Estes casos passam ENQUANTO o buraco está aberto; quem o fechar tem de os virar
+  // (passam a afirmar a saída 3) — é a prova do fecho.
+  // F97 (F87) fechou o do nome sem a preposição: o caso virou e afirma a rede (o que a 5.ª forma exacta não redige).
+  const s2 = (t) => { const s = sus(t); return [s.semPreposicao, s.linhasSemPreposicao.join(), s.inteiros + s.variantes + s.cortes].join('|'); };
+  const semPrep2 = antesA && [`x «${antesA}  ${depoisA}» y`, `a\nx «${antesA}\t${depoisA}» y`, `fim: ${antesA}\n${depoisA} segue`];
+  const semPrep1 = antesA && `x «${antesA} ${depoisA}» y`;
+  confere('F95 FECHADO (F97, F87): o nome n.º 1 sem a preposição com dois espaços, um tabulador ou partido por quebra de linha não se redige, mas a rede apanha-o (1, na linha onde começa → saída 3); e se a redacção falhar (a forma de um espaço, crua) a rede também sai com 3',
+    !!semPrep2 && semPrep2.every((t) => r(t) === t) &&
+    s2(r(semPrep2[0])) === '1|1|0' && s2(r(semPrep2[1])) === '1|2|0' && s2(r(semPrep2[2])) === '1|1|0' &&
+    s2(semPrep1) === '1|1|0' && haSuspeitos(sus(semPrep1)));
+  // F97 (F87): a 5.ª forma da redacção — o nome sem a preposição, exacto, com um espaço só.
+  confere('F87: o nome n.º 1 sem a preposição a meio da linha → «nome n.º 1 sem a preposição» (e a rede fica calada)',
+    !!semPrep1 && r(semPrep1) === 'x «nome n.º 1 sem a preposição» y' && !haSuspeitos(sus(r(semPrep1))) &&
+    r(`x${antesA} ${depoisA}`) === `x${antesA} ${depoisA}` && r(`${antesA} ${depoisA}x`) === `${antesA} ${depoisA}x`);
+  const jB = psB.findIndex((p, j) => j > 0 && j < psB.length - 1 && PREPOSICOES.includes(min(p)));
+  const semPrepB = jB > 0 ? [...psB.slice(0, jB), ...psB.slice(jB + 1)].join(' ') : null;
+  confere('F87: o nome n.º 2 sem a preposição no fim da linha → «nome n.º 2 sem a preposição» (e a rede fica calada)',
+    !!semPrepB && r(`a\nfim: ${semPrepB}\r\nb`) === 'a\nfim: nome n.º 2 sem a preposição\r\nb' && !haSuspeitos(sus(r(`fim: ${semPrepB}`))));
+  // F97 (F89): a palavra substituta é «uma palavra de letras, com ou sem hífenes».
+  const hifen = antesA && `x «${antesA} du-la ${depoisA}» y`;
+  confere('F89: a variante do nome n.º 1 com uma palavra hifenizada no lugar da preposição («du-la») não se redige, mas a rede apanha-a: 1 variante → saída 3',
+    !!hifen && r(hifen) === hifen && s1(r(hifen)) === '0|1|0|1|' && s2(r(hifen)) === '0||1');
+  const duas = antesA && `x «${antesA} du la ${depoisA}» y`;
+  confere('F89 AINDA ABERTO: duas palavras no lugar da preposição do nome n.º 1 («du la») não dão suspeito (são palavras inseridas, não a preposição substituída)',
+    !!duas && r(duas) === duas && s1(r(duas)) === '0|0|0||' && s2(r(duas)) === '0||0');
   const meio = antesA && [`x «${psA.slice(jA).join(' ')}» y`, `x «${depoisA}» y`];
   confere('F95 AINDA ABERTO: um pedaço que começa a meio do nome n.º 1 (a preposição e o apelido, ou só o apelido) não dá suspeito',
     !!meio && meio.every((t) => r(t) === t && s1(r(t)) === '0|0|0||'));
@@ -338,7 +404,7 @@ if (principal) {
   if (!entrada) { console.error('uso: redigir-nomes.mjs <saida-crua.log> [--fichas=…] [--saida=…] [--comparar=<registo.log>] [--ignorar-cr] | --auto-teste'); process.exit(2); }
   const { texto, conta } = redigir(readFileSync(entrada, 'utf8'), verdadeiros);
   const s = suspeitos(texto, verdadeiros);
-  console.error(`redigir-nomes: ${entrada}: ${contarLinhas(texto)} linhas, ${conta.linhas} redigidas — ${conta.inteiros} nome(s) inteiro(s), ${conta.minusculas} em minúsculas, ${conta.preposicao} com a preposição mudada, ${conta.cortados} cortado(s) na origem; ${descreverSuspeitos(s)}`);
+  console.error(`redigir-nomes: ${entrada}: ${contarLinhas(texto)} linhas, ${conta.linhas} redigidas — ${conta.inteiros} nome(s) inteiro(s), ${conta.minusculas} em minúsculas, ${conta.preposicao} com a preposição mudada, ${conta.semPreposicao} sem a preposição, ${conta.cortados} cortado(s) na origem; ${descreverSuspeitos(s)}`);
   if (haSuspeitos(s)) process.exit(3);
   const saida = opc('saida');
   if (saida) writeFileSync(saida, texto);

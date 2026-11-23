@@ -1,0 +1,18 @@
+diff --git a/.github/workflows/testes.yml b/.github/workflows/testes.yml
+index e76ff2b..07fd2de 100644
+--- a/.github/workflows/testes.yml
++++ b/.github/workflows/testes.yml
+@@ -202,6 +202,13 @@ jobs:
+         if: always()
+         with:
+           node-version: '22'
++      - name: 'Guarda: 0 nomes inteiros no log cru do canário (F71)'
++        # Só lê o log cru (o tee fica); conta os nomes inteiros com o sobram da ferramenta, que lê os nomes das fichas e
++        # só imprime a contagem. Não redige nem toca na comparação da F51.
++        if: always()
++        working-directory: ${{ github.workspace }}
++        run: |
++          node --input-type=module -e "import {lerFichas,sobram} from './provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs'; import {readFileSync} from 'node:fs'; const {verdadeiros}=lerFichas('rascunhos/servidor/autojogo/fichas-bancada.json'); const n=sobram(readFileSync(process.env.RUNNER_TEMP+'/teste_nomes_relato.gd.log','utf8'),verdadeiros); console.log('guarda-nomes: '+n+' nome(s) inteiro(s) no log cru do canario'); if(n>0) process.exit(1);"
+       - name: A saída do canário, redigida (§2 da F25), é igual byte a byte ao registo limpo (Ordem F51, §7.5 da F25)
+         # A saída crua traz os nomes verdadeiros de propósito; o redigir-nomes.mjs aplica-lhe a redacção do §2 da F25 e
+         # compara com o registo limpo da COBERTURA-CORRECOES-6. --ignorar-cr: o Godot daqui escreve LF, o registo é CRLF.
