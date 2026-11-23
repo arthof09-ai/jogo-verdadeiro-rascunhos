@@ -367,6 +367,12 @@ function autoTeste(verdadeiros, publicos, escreve = console.log) {
   const emBranco = antesA && `fim: ${antesA}\n\n${psA[jA]} ${depoisA} segue`;
   confere('F114 (J10 travado): o nome n.º 1 partido por uma linha em branco antes da preposição NÃO conta como variante (0 variantes; a travagem tem dentes)',
     !!emBranco && r(emBranco) === emBranco && sus(r(emBranco)).variantes === 0);
+  // F116 (sentença da F108): uma linha só com espaços conta como linha em branco — nas duas posições (antes da palavra
+  // do meio e antes do apelido) a variante não a atravessa. Antes do apelido usa-se a variante «du»: com a preposição
+  // verdadeira a linha de cima já se redige como corte na origem e o caso não teria dentes.
+  const soEspacos = antesA && [`fim: ${antesA}\n  \n${psA[jA]} ${depoisA} segue`, `fim: ${antesA} du\n \t \n${depoisA} segue`];
+  confere('F116 (J10 travado): o nome n.º 1 partido por uma linha só de espaços (antes da palavra do meio, ou a variante «du» antes do apelido) não se redige e NÃO conta como variante (0 variantes nas duas posições; a travagem tem dentes)',
+    !!soEspacos && soEspacos.every((t) => r(t) === t && sus(r(t)).variantes === 0));
   // F93: uma ocorrência conta uma vez só.
   const duploA = antesA && `x «${antesA}  ${psA[jA]} ${depoisA}» y`;
   confere('F93: o nome n.º 1 inteiro (texto cru) conta só como inteiro (0 variantes, 0 cortes); com 2 espaços conta só como 1 variante',
