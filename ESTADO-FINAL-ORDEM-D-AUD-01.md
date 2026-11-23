@@ -106,6 +106,11 @@ mexeu em nada do que elas correm.
 
 - Escrevi o código da causa (3 ficheiros do ecrã do Mestre), o teste da causa (`pecas_mestre.gd`), as provas e este
   ESTADO-FINAL. O servidor, os workflows, os dados e a `main` ficaram como estavam.
+- **Desvio de perímetro (mecânico):** o 1.º CI (`9e4660b`) falhou no job `retoma-pc`, porque o
+  `retoma-i0004/depois.txt` guarda o SHA-256 de cada ficheiro mudado em `rascunhos/`. Corri o guião da casa
+  `python3 retoma-i0004/actualizar-listas.py` («correr depois de cada commit que mude ficheiros em rascunhos/»). Só
+  mudaram os 4 SHA dos ficheiros desta ordem, no `depois.txt` e no `MANIFESTO-SHA256.txt` (0 novos, 0 tirados).
+  É a mesma sincronização que as ordens F27 e F36 fizeram.
 - Ponho o teste no perímetro porque é a prova automática da causa e o CI passa a guardá-la. Se o coordenador o
   quiser fora, sai sozinho, sem tocar na correcção.
 - Nomes: só os fictícios das fichas de teste. Tirei dos logs e das ferramentas os caminhos com o utilizador da
