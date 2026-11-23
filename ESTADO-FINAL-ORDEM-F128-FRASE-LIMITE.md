@@ -70,3 +70,13 @@ A nota do CI da ponta deste ESTADO-FINAL entra mais abaixo e só acrescenta text
    `77ba415`. Mexe no README (linhas 536 e 577, não no «Limite») e acrescenta um caso ao auto-teste. Na ponta deste
    ESTADO-FINAL o auto-teste dá **31/31**, medido no PC. A minha frase continua intacta e é única no ficheiro. Fiz
    rebase deste ESTADO-FINAL por cima do `ba165e3`, sem conflito.
+
+## 5. Nota do CI da ponta deste ESTADO-FINAL (`b9c7129`, por cima da F132)
+
+- **Testes dos rascunhos 45196259809: success, 10/10 jobs.**
+- **Sonda de privacidade 45196259701: success.**
+- No job `cliente`:
+  - o auto-teste dá **31/31** (com a F132);
+  - o canário dá 26/26 e «igual byte a byte ao redigido (3437 bytes, sem os CR)»;
+  - as suites dão 321/321 e 70/70, e a mutação dá 114/123.
+- O log do `cliente` tem 0 nomes inteiros e 0 PIN.
