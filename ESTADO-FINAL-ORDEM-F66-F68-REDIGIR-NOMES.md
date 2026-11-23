@@ -146,6 +146,15 @@ nova sem mudar o workflow. Um rc=3 da rede nova põe o passo vermelho. O token d
   - a mutação das células deu «114 de 123» e «MUTACAO APANHADA: 9 falhas, todas do assert B6».
 - No `retoma-pc` sai uma linha «PC DIFERENTE DO 9cbaca8». Já saía igual no run `45131224957` da F64, e o job passa.
 
+**CI da ponta `3a4244b` (a obra mais este ESTADO-FINAL): verde.**
+- Testes dos rascunhos, run `45133611443`: passaram os 10 jobs.
+- Sonda de privacidade, run `45133611472`: verde.
+- O passo da F51 correu outra vez: o auto-teste deu 16 de 16, e a saída do canário redigida ficou igual byte a byte
+  (3464 bytes, sem os CR).
+- Os números são os mesmos: canário 26/26, `rodar_testes` 321/321 (também no `godot-cliente`), `caixa_janela`
+  123/123, `caixa_jogadora` 70/70 e mutação das células «114 de 123», «MUTACAO APANHADA».
+- O commit desta nota só acrescenta este parágrafo a este ficheiro.
+
 ## 6. Privacidade re-derivada
 Conferidor: `provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs`, nos dois critérios (alargado e `--velho`). A
 coluna dos nomes inteiros é a contagem do `sobram()` da ferramenta, que procura o nome inteiro sem distinguir maiúsculas.
