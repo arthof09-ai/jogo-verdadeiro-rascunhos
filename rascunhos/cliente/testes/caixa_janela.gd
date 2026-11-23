@@ -217,7 +217,7 @@ func _medir(hud: Node, n: int, tam: Vector2i) -> void:
 	# Ordem CAIXA-EXPANDE: as caixinhas pequenas são só os 4 próximos (a vez fica no cartão grande, não aqui).
 	var n_fila := mini(hud._caixa.MAX_FILA, n - 1)
 	_ok(maus.is_empty() and larguras.size() == 1 and fila.get_child_count() == n_fila and not fila.has_node("Slot_" + str(c["vez"])),
-		"%d figuras %dx%d: os %d slots (os próximos, sem a vez) renderizam com a largura da célula (%s u = %.1f px reais por slot; moldura quadrada) %s" % [
+		"%d figuras %dx%d: os %d slots renderizam com a largura da célula (os próximos, sem a vez; %s u = %.1f px reais por slot; moldura quadrada) %s" % [
 			n, tam.x, tam.y, fila.get_child_count(), larguras.keys(), cel.x * escala, maus])
 	await _medir_expandida(hud, n, tam)
 

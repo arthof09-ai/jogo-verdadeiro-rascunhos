@@ -9,7 +9,8 @@
 #   - código de saída diferente de 0;
 #   - exactamente 9 falhas, todas do assert B6 («os N slots renderizam com a largura da célula»), uma por medição
 #     (8, 12 e 16 figuras × 1280×720, 844×390 e 780×360);
-#   - a linha final «69 de 78 verificações passaram.»;
+#   - a linha final «114 de 123 verificações passaram.» (Ordem CAIXA-EXPANDE: a suite passou de 78 a 123 verificações,
+#     com a vista expandida; eram «69 de 78»);
 #   - 0 erros de script.
 # Repõe o ficheiro a seguir (git checkout), mesmo se algo falhar, e confere que a cópia de trabalho ficou limpa.
 # Código de saída 0 se a mutação foi apanhada como devia, 1 se não.
@@ -46,9 +47,9 @@ FINAL=$(grep -E "^[0-9]+ de [0-9]+ verificações passaram\.$" "$LOG" | tail -1)
 ERROS=$(grep -cE "SCRIPT ERROR|Parse Error|Compile Error" "$LOG")
 echo "== com a mutação: rc=$RC · falhas=$N_FALHAS (do assert B6: $N_B6) · «$FINAL» · erros de script=$ERROS"
 grep "  FALHA " "$LOG"
-if [ "$RC" -ne 0 ] && [ "$N_FALHAS" -eq 9 ] && [ "$N_B6" -eq 9 ] && [ "$FINAL" = "69 de 78 verificações passaram." ] && [ "$ERROS" -eq 0 ]; then
+if [ "$RC" -ne 0 ] && [ "$N_FALHAS" -eq 9 ] && [ "$N_B6" -eq 9 ] && [ "$FINAL" = "114 de 123 verificações passaram." ] && [ "$ERROS" -eq 0 ]; then
   echo "MUTACAO APANHADA: 9 falhas, todas do assert B6; o passo dispara."
   exit 0
 fi
-echo "MUTACAO NAO APANHADA COMO DEVIA (esperado: rc≠0, 9 falhas B6, 69 de 78, 0 erros)"
+echo "MUTACAO NAO APANHADA COMO DEVIA (esperado: rc≠0, 9 falhas B6, 114 de 123, 0 erros)"
 exit 1

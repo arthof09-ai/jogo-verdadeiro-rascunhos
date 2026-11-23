@@ -54,6 +54,13 @@ passam no conferidor estrito.
 - `sensibilidade.log`: baixar 0,5 u um só tecto por corrida falha exactamente a guarda dessa resolução (41/42, rc 1, as
   três vezes); baixar os três dá 39/42.
 
+## mutacao/ — o guião da CAIXA-JANELA-CI contra a caixa nova
+A linha andou durante esta ordem (a CAIXA-JANELA-CI publicou um guião que muta as células e espera «69 de 78»). Com a
+caixa nova a suite tem 123 verificações e mostra 4 caixinhas: actualizei o total esperado do guião para
+«114 de 123» e mantive contígua a frase que ele procura. `mutacao-celulas.resumo.txt`: a mutação dá exactamente as 9
+falhas do assert B6 (uma por medição), rc 1, 0 erros de script, e o ficheiro fica reposto. (O log inteiro da suite
+mutada não se copia: a parte B1 dele traz as mensagens herdadas que o conferidor estrito apanha.)
+
 ## ferramentas/
 - `correr-prova-caixa-expande.sh <godot.exe> <vlab-completo.js> <pasta-tmp>`: o lançador (servidor de ensaio + Godot
   com render).
