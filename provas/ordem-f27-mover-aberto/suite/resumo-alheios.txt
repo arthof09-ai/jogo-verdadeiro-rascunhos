@@ -1,0 +1,13 @@
+# As linhas finais dos outros passos do cliente (Godot 4.7.2, Windows 11, --headless), na cópia de trabalho da Ordem F27.
+rodar_testes: 321 de 321 verificações passaram. · erros de script 0
+caixa_janela: 123 de 123 verificações passaram. · erros de script 0
+abrir_scripts: 108 scripts, 0 falhas · erros de script 0
+abrir_clareira: 22 de 22 verificações passaram. · erros de script 0
+abrir_mestre: 67 de 67 verificações passaram. · erros de script 0
+pecas_mestre: 286 de 286 verificações passaram. · erros de script 0
+hud_acoes: 50 de 50 verificações passaram. · erros de script 0
+medir_painel_config: painel ⚙: 0 falha(s), 0 sem medida · erros de script 0
+medir_mestre: ecrã do Mestre: 0 falha(s), 0 sem medida · erros de script 0
+canario_privacidade: 10 de 10 verificações passaram. · erros de script 0
+teste_relato_caixa: teste do relato da caixa: 31 de 31 verificações passaram. · erros de script 0
+teste_nomes_relato: teste dos nomes do relato da caixa-janela: 26 de 26 verificações passaram. · erros de script 0

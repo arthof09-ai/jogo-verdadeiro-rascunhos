@@ -1,4 +1,15 @@
 extends SceneTree
+## Ordem F27 da sentença da CAIXA-EXPANDE-INTERACAO (23/11/2026): a mesma prova, com um passo novo, o 13, depois do 11/12
+## (com as 16 figuras que o 11 deixou):
+##   13     o D1 com MOVIMENTO. A IA de ensaio joga as vezes das outras figuras até ser a vez da jogadora (a do ecrã a sério);
+##          ela abre o Mover pelo botão da barra (toque pelo Input do motor). Em 844×390 e 780×360: a expandida aberta
+##          por toque; um toque fora, num sítio que cai numa casa de destino do Mover, fecha-a e a figura FICA NO SÍTIO
+##          (o nó dela e a casa do Estado iguais, a casa no servidor igual, o Mover ainda aberto, nenhuma intenção na fila
+##          nem enviada); de controlo, com a caixa fechada, o MESMO toque escolhe a casa, sai a intenção e a figura ANDA
+##          até ela (a casa do Estado e a do servidor passam a ser a de destino; o nó chega lá). Capturas
+##          13-mover-aberta-*, 13-mover-toque-fora-* e 13-mover-controlo-*.
+##   bash provas/ordem-f27-mover-aberto/ferramentas/correr-prova-mover-aberto.sh <godot.exe> <vlab-completo.js> <pasta-tmp>
+##
 ## Ordem CAIXA-EXPANDE-VISTAS (22/11/2026, F15 da sentença da CAIXA-EXPANDE, D2): a mesma prova, com um passo novo, o 12,
 ## corrido dentro do ciclo do 11 (as mesmas 12 e 16 figuras, em 844×390 e 780×360, depois dos 3 gestos):
 ##   12     a barra de rolagem da expandida COMO É HOJE (não se muda): a lista no topo sem rolar (linhas inteiras à vista,
@@ -775,6 +786,7 @@ func _correr() -> void:
 	await _expande()
 	await _casos()
 	await _interacao()
+	await _mover_aberto()
 	_fim()
 
 
@@ -1432,6 +1444,198 @@ func _barra(n: int, tam: Vector2i) -> void:
 	await _rodar_ate_parar(p, false)
 	_rato(_fora())
 	await _quadros(6)
+
+
+# ------------------------------------------------------------------ 13. Ordem F27: o D1 com o Mover aberto
+
+## A casa da figura `id` na vista do Mestre (a do servidor), "x,y".
+func _casa_servidor(id: String) -> String:
+	var v := await _vista_b()
+	for f in v.get("mestre", {}).get("figuras", []):
+		if str(f.get("id", "")) == id:
+			return "%d,%d" % [int(f.get("x", -1)), int(f.get("y", -1))]
+	return "?"
+
+
+## A condução: a IA de ensaio joga as vezes das outras figuras (a IA de ensaio: mover e encerrar) até ser a vez da
+## jogadora do ecrã a sério; depois espera que as opções dela (o ROOM_OPTIONS com casas do Mover) cheguem ao aparelho.
+## Se já é a vez dela mas o Mover se gastou, ela encerra (a mesma intenção do botão «Encerrar») e a volta segue.
+func _ate_a_vez_dela(rotulo: String) -> bool:
+	var dela: String = _jogadora["figuraId"]
+	if _estado.e_minha_vez() and _estado.lista_opcao("mover").is_empty():
+		_ok(_arena.enviar_acao({"tipo": "encerrar"}), rotulo + ": a vez dela sem casas do Mover: ela encerra")
+		await _esperar(func(): return not _estado.e_minha_vez(), 10.0)
+	var jogaram: Array = []
+	for k in 40:
+		var v := await _vista_b()
+		if str(v.get("vezId", "")) == dela:
+			break
+		var quem := await _jogar_vez()
+		if quem == "":
+			break
+		jogaram.append(_estado.nome_de(quem))
+	var pronta := func(): return _estado.e_minha_vez() and not _estado.lista_opcao("mover").is_empty()
+	var chegou := await _esperar(pronta, 15.0)
+	await _quadros(10)
+	_linha("  condução %s: o ensaio jogou %d vez(es) %s · vez de %s (rodada %s) · casa dela %s · casas do Mover no ROOM_OPTIONS %d · orçamento %.1f m" % [
+		rotulo, jogaram.size(), JSON.stringify(jogaram), _estado.nome_de(_estado.vez_id), _estado.rodada,
+		_estado.casa_de(_estado.figuras.get(dela)), _estado.lista_opcao("mover").size(), _estado.orcamento_m()])
+	_ok(chegou, rotulo + ": a batalha chegou à vez da jogadora, com casas para onde mover (%d)" % _estado.lista_opcao("mover").size())
+	return chegou
+
+
+## O sítio do ecrã (unidades do HUD) de uma casa de destino do Mover que fica fora da caixa (`r`, a expandida aberta),
+## da ⚙/ficha, da barra, da faixa e da gaveta: o centro da casa projectado pela câmara da arena, e só se a arena,
+## com um toque aí, der essa mesma casa. Prefere a mais próxima de `_fora()`. Devolve [casa, sítio] ou [].
+func _destino_fora(r: Rect2) -> Array:
+	var hud = _arena.hud
+	var evitar: Array = [r.grow(8.0)]
+	for p in ["Raiz/Seguro/Camadas/ColunaEsquerda", "Raiz/Seguro/Camadas/Barra", "Raiz/Seguro/Camadas/Faixa"]:
+		var no := hud.get_node(p) as Control
+		if no.visible:
+			evitar.append(no.get_global_rect().grow(8.0))
+	if hud._gaveta.is_visible_in_tree():
+		evitar.append((hud._gaveta as Control).get_global_rect().grow(8.0))
+	var tela := root.get_visible_rect().grow(-12.0)
+	var melhor: Array = []
+	var dist := INF
+	var casas: Array = _arena._casas.keys()
+	casas.sort()
+	for c in casas:
+		var mundo: Vector3 = _arena.centro_casa(c)
+		if _arena.camera.is_position_behind(mundo):
+			continue
+		var p: Vector2 = _arena.camera.unproject_position(mundo)
+		if not tela.has_point(p) or evitar.any(func(e: Rect2): return e.has_point(p)) or _arena.casa_em_tela(p) != c:
+			continue
+		if p.distance_to(_fora()) < dist:
+			dist = p.distance_to(_fora())
+			melhor = [c, p]
+	return melhor
+
+
+## Espera que nenhum nó de figura se mexa durante 30 quadros seguidos (até 10 s). Devolve se assentou.
+func _assentar() -> bool:
+	var ultimo: Dictionary = _tabuleiro()["nos"]
+	var quietos := 0
+	var t := Time.get_ticks_msec()
+	while quietos < 30 and Time.get_ticks_msec() - t < 10000:
+		await _quadros(1)
+		var agora: Dictionary = _tabuleiro()["nos"]
+		quietos = quietos + 1 if agora == ultimo else 0
+		ultimo = agora
+	return quietos >= 30
+
+
+## Os ROOM_EVENT «movimento» da figura da jogadora que chegaram ao aparelho dela desde a mensagem n.º `desde` de
+## `_recebido`: a lista dos `para` ({x, y}).
+func _movimentos_dela(desde: int) -> Array:
+	var saida: Array = []
+	for i in range(desde, _recebido.size()):
+		var m = JSON.parse_string(_recebido[i])
+		if not (m is Dictionary) or m.get("type") != "ROOM_EVENT" or m.get("tipo") != "movimento":
+			continue
+		var d = m.get("dados", {})
+		if d is Dictionary and str(d.get("figuraId", "")) == _jogadora["figuraId"] and d.get("para") is Dictionary:
+			saida.append(d["para"])
+	return saida
+
+
+func _mover_aberto() -> void:
+	_linha("== 13. Ordem F27: o D1 com o Mover aberto — a vez da jogadora, o toque fora numa casa de destino ==")
+	var dela: String = _jogadora["figuraId"]
+	var cam = _arena.camera
+	var toques: Array = []
+	cam.toque.connect(func(p: Vector2): toques.append(p))
+	var MOVER: int = _arena.Modo.MOVER
+	var n := (_caixa()["ids"] as Array).size()
+	for tam in [Vector2i(844, 390), Vector2i(780, 360)]:
+		var rot := "13 %d figuras %dx%d" % [n, tam.x, tam.y]
+		if not await _ate_a_vez_dela(rot):
+			continue
+		if not await _janela_em(tam):
+			continue
+		_rede.fila._itens.clear()  # as intenções de antes, já respondidas (a fila guarda-as): só contam as deste passo
+		# O Mover aberto pelo botão da barra, por toque (a caixa fechada).
+		var bm: Control = _arena.hud._b_mover
+		await _tocar_motor(bm.get_global_rect().get_center())
+		await _quadros(6)
+		var mover_aberto: bool = _arena.modo == MOVER and not _arena._casas.is_empty()
+		# A expandida aberta por toque.
+		await _tocar_motor(_cx().get_global_rect().get_center())
+		await _quadros(6)
+		var c := _caixa()
+		var aberta: bool = c["expandida"] and (c["ordem_expandida"] as Array).size() == n
+		var destino := _destino_fora(_cx().get_global_rect())
+		_linha("  Mover aberto pelo botão %s: modo %d · %d casas de destino · a dela em %s · expandida aberta por toque %s · sítio fora da caixa sobre uma casa de destino %s" % [
+			mover_aberto, _arena.modo, _arena._casas.size(), _estado.casa_de(_estado.figuras.get(dela)), aberta, destino])
+		_ok(_estado.e_minha_vez() and mover_aberto and aberta and not destino.is_empty(),
+			rot + ": a vez da jogadora, o Mover aberto pelo botão, a expandida aberta por toque e um sítio fora dela que cai numa casa de destino %s" % [destino])
+		if destino.is_empty():
+			continue
+		var casa: Vector2i = destino[0]
+		var sitio: Vector2 = destino[1]
+		await _gravar("13-mover-aberta-%d-figuras-%dx%d.png" % [n, tam.x, tam.y])
+		# D1 — o toque fora, em cima da casa de destino. Antes de medir, o tabuleiro assenta: as figuras que o ensaio
+		# acabou de mover acabam de andar (nenhum nó mexe durante 30 quadros seguidos; até 10 s).
+		var assentou := await _assentar()
+		var t0 := _tabuleiro()
+		var r0 := _recebido.size()
+		var f0: Array = (_rede.fila._itens as Dictionary).keys()
+		var srv0: String = await _casa_servidor(dela)
+		var n0 := toques.size()
+		await _tocar_motor(sitio)
+		var t := Time.get_ticks_msec()
+		while Time.get_ticks_msec() - t < 2000:  # tempo para uma intenção ir e voltar, se tivesse saído
+			await _quadros(1)
+		var t1 := _tabuleiro()
+		var f1: Array = (_rede.fila._itens as Dictionary).keys()
+		var mov_d1 := _movimentos_dela(r0)
+		var difs: Array = []
+		for k in t0:
+			if t0[k] != t1[k]:
+				if k == "nos":
+					for id in t0["nos"]:
+						if t0["nos"][id] != t1["nos"].get(id):
+							difs.append("nó de %s %s → %s" % [_estado.nome_de(str(id)), t0["nos"][id], t1["nos"].get(id)])
+				else:
+					difs.append("%s %s → %s" % [k, t0[k], t1[k]])
+		var srv1: String = await _casa_servidor(dela)
+		var fechou: bool = not _caixa()["expandida"]
+		var disparou := toques.size() - n0
+		_linha("  MEDIDA D1-MOVER %s: toque fora em %s u, sobre a casa de destino %s · ANTES: nó %s, casa (Estado) %s, casa (servidor) %s, modo %d, fila %d · DEPOIS: fechou %s, «toque» %d, nó %s, casa (Estado) %s, casa (servidor) %s, modo %d, fila %d, última intenção igual %s, cursor %s → %s, movimentos da jogadora recebidos %d · tabuleiro assentado antes %s · diferenças no tabuleiro inteiro %s" % [
+			rot, sitio, casa, t0["nos"][dela], t0["casas"][dela], srv0, t0["modo"], f0.size(),
+			fechou, disparou, t1["nos"][dela], t1["casas"][dela], srv1, t1["modo"], f1.size(), t0["ultima_intencao"] == t1["ultima_intencao"],
+			t0["cursor"], t1["cursor"], mov_d1.size(), assentou, difs])
+		_ok(fechou and disparou == 0 and t0 == t1 and t1["modo"] == MOVER and f1 == f0 and srv1 == srv0 and mov_d1.is_empty(),
+			rot + ": [D1 com o Mover aberto] o toque fora sobre a casa %s fecha a expandida e a figura fica no sítio (nó, casa do Estado e casa do servidor iguais; o Mover ainda aberto; nenhuma intenção)" % [casa])
+		await _gravar("13-mover-toque-fora-%d-figuras-%dx%d.png" % [n, tam.x, tam.y])
+		# De controlo: com a caixa fechada, o mesmo toque escolhe a casa e a figura anda até ela.
+		var r1 := _recebido.size()
+		await _tocar_motor(sitio)
+		var no_dela: Node3D = _arena._nos[dela]
+		var alvo3: Vector3 = _arena.pe_figura(casa)
+		var andou := await _esperar(func(): return _estado.casa_de(_estado.figuras.get(dela)) == casa, 10.0)
+		var chegou := await _esperar(func(): return Vector2(no_dela.global_position.x - alvo3.x, no_dela.global_position.z - alvo3.z).length() < 0.05, 10.0)
+		await _quadros(10)
+		var t2 := _tabuleiro()
+		var f2: Array = (_rede.fila._itens as Dictionary).keys()
+		var novas: Array = f2.filter(func(id): return not f1.has(id))
+		# A fila apaga o texto da intenção quando ela termina: o destino lê-se do que a jogadora recebeu do servidor,
+		# o ROOM_EVENT «movimento» dela (o `para`).
+		var mov_ctl := _movimentos_dela(r1)
+		var para := Vector2i(-1, -1)
+		if mov_ctl.size() >= 1:
+			para = Vector2i(int(mov_ctl[0].get("x", -1)), int(mov_ctl[0].get("y", -1)))
+		var srv2: String = await _casa_servidor(dela)
+		_linha("  MEDIDA CONTROLO-MOVER %s: caixa fechada · o mesmo toque em %s u: «toque» %d · intenções novas %d · «movimento» da jogadora recebido do servidor %d, para %s · nó %s → %s · casa (Estado) %s → %s · casa (servidor) %s → %s · modo %d → %d" % [
+			rot, sitio, toques.size() - n0, novas.size(), mov_ctl.size(), para, t1["nos"][dela], t2["nos"][dela],
+			t1["casas"][dela], t2["casas"][dela], srv1, srv2, t1["modo"], t2["modo"]])
+		_ok(toques.size() - n0 == 1 and novas.size() == 1 and mov_ctl.size() == 1 and para == casa and andou and chegou
+			and srv2 == "%d,%d" % [casa.x, casa.y] and t2["nos"][dela] != t1["nos"][dela],
+			rot + ": [D1 controlo] com a caixa fechada o mesmo toque chega ao tabuleiro, escolhe a casa %s e a figura anda até ela (Estado, servidor e nó)" % [casa])
+		await _gravar("13-mover-controlo-%d-figuras-%dx%d.png" % [n, tam.x, tam.y])
+	await _janela_em(Vector2i(1280, 720))
 
 
 func _fim() -> void:

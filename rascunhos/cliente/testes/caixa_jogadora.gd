@@ -23,6 +23,11 @@ extends SceneTree
 ##    a sério (844×390, 8 figuras): um toque abre a vista expandida, outro fecha, um toque fora fecha; a faixa não mexe.
 ## §10 (Ordem CAIXA-EXPANDE-INTERACAO): com a câmara da mesa a sério por baixo — o toque fora que fecha a expandida não
 ##    chega ao tabuleiro (D1) e a roda no topo e no fim da lista não lhe dá zoom (D3). Ver `_interacao`.
+## §11 (Ordem F27 da sentença da CAIXA-EXPANDE-INTERACAO): o D1 com MOVIMENTO — a ARENA a sério (cenas/arena/arena.tscn:
+##    o HUD, a câmara e o `_ao_toque` dela), a jogadora na vez, o Mover aberto pelo botão da barra, e o toque fora a cair
+##    numa casa de destino. Com a expandida aberta por toque, o toque fora fecha-a e a figura fica no sítio (nó e casa do
+##    Estado iguais, nenhuma intenção na fila); de controlo, com a caixa fechada, o mesmo toque escolhe essa casa e sai a
+##    intenção `mover` para ela. Ver `_mover_aberto`.
 ## Código de saída 0 se tudo passa, 1 se algo falha.
 
 const CameraMesa := preload("res://camera/camera_mesa.gd")
@@ -264,6 +269,8 @@ func _correr() -> void:
 	hud.queue_free()
 	_figs = []
 	await process_frame
+	await _mover_aberto()
+	_figs = []
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -376,6 +383,188 @@ func _interacao(hud: Node) -> void:
 			_ok(not is_equal_approx(z_controlo, z0), "%s: [D3] de controlo, a roda fora da caixa dá zoom ao tabuleiro (%.3f → %.3f)" % [rot, z0, z_controlo])
 	cam.queue_free()
 	await process_frame
+
+
+## §11 (Ordem F27): a casa da jogadora no §11 — no meio da grelha 20×20, para as casas de destino caírem à volta dela
+## no ecrã (a câmara da arena foca-a no primeiro snapshot).
+const CASA_DELA_11 := Vector2i(10, 10)
+
+
+## §11: as `n` figuras do §11 — a dela (j1) em CASA_DELA_11; as outras nas filas y = 2 e y = 17, longe das casas de destino.
+func _figuras_11(n: int) -> Array:
+	var figs: Array = []
+	for i in n:
+		var fid := "j1" if i == 0 else ("j2" if i == 1 else "m%d" % (i - 1))
+		var f := _figura(fid, NOMES_8[i % NOMES_8.size()], "jogadora" if i < 2 else "criatura", 2 + ((i - 1) % 8))
+		if i == 0:
+			f["x"] = CASA_DELA_11.x
+			f["y"] = CASA_DELA_11.y
+		elif i > 8:
+			f["y"] = 17
+		figs.append(f)
+	return figs
+
+
+## §11: o ROOM_OPTIONS da vez dela, como o servidor o manda: as casas a até 3 casas da dela (sem figura), com o custo.
+func _opcoes_mover_11() -> Array:
+	var ocupadas := {}
+	for f in _figs:
+		ocupadas[Vector2i(int(f["x"]), int(f["y"]))] = true
+	var mover: Array = []
+	for dy in range(-3, 4):
+		for dx in range(-3, 4):
+			var c := CASA_DELA_11 + Vector2i(dx, dy)
+			if c == CASA_DELA_11 or ocupadas.has(c) or c.x < 0 or c.y < 0 or c.x >= 20 or c.y >= 20:
+				continue
+			mover.append({"x": c.x, "y": c.y, "custoM": 1.5 * maxi(absi(dx), absi(dy))})
+	_receber({"type": "ROOM_OPTIONS", "revision": 5, "vezId": "j1", "orcamentoM": 4.5, "mover": mover, "ataques": [],
+		"consumiveis": [], "acoes": ["encerrar"], "reacoes": []})
+	return mover
+
+
+## §11: o que um toque no tabuleiro pode mudar — onde estão as figuras (o nó em cena e a casa do Estado), o modo da
+## arena e as intenções (a última que saiu e as que estão na fila da Rede).
+func _tabuleiro_11(arena: Node) -> Dictionary:
+	var nos := {}
+	for id in arena._nos:
+		var no: Node3D = arena._nos[id]
+		nos[id] = "%.2f,%.2f,%.2f" % [no.global_position.x, no.global_position.y, no.global_position.z]
+	var casas := {}
+	for id in _estado.figuras:
+		casas[str(id)] = "%s,%s" % [_estado.figuras[id].get("x"), _estado.figuras[id].get("y")]
+	return {"nos": nos, "casas": casas, "modo": arena.modo, "ultima_intencao": arena._ultimo_id,
+		"fila": (_rede.fila._itens as Dictionary).keys(), "cursor": arena._cursor}
+
+
+## §11: o sítio do ecrã (unidades do HUD) de uma casa de destino que um toque escolhe e que fica fora da caixa (`r`, a
+## expandida aberta), da ⚙/ficha, da barra, da faixa e da gaveta do Mover: o centro da casa projectado pela câmara da
+## arena, e só se a arena, com um toque aí, der essa mesma casa. Prefere a mais próxima do sítio «fora» do §10. [casa, sítio] ou [].
+func _destino_fora(hud: Node, arena: Node, r: Rect2) -> Array:
+	var evitar: Array = [r.grow(8.0)]
+	for p in ["Raiz/Seguro/Camadas/ColunaEsquerda", "Raiz/Seguro/Camadas/Barra", "Raiz/Seguro/Camadas/Faixa"]:
+		var n := hud.get_node(p) as Control
+		if n.visible:
+			evitar.append(n.get_global_rect().grow(8.0))
+	if hud._gaveta.is_visible_in_tree():
+		evitar.append((hud._gaveta as Control).get_global_rect().grow(8.0))
+	var tela := root.get_visible_rect().grow(-12.0)
+	var alvo := _fora_da_caixa(hud)
+	var melhor: Array = []
+	var dist := INF
+	var casas: Array = arena._casas.keys()
+	casas.sort()
+	for c in casas:
+		var mundo: Vector3 = arena.centro_casa(c)
+		if arena.camera.is_position_behind(mundo):
+			continue
+		var p: Vector2 = arena.camera.unproject_position(mundo)
+		if not tela.has_point(p) or evitar.any(func(e: Rect2): return e.has_point(p)) or arena.casa_em_tela(p) != c:
+			continue
+		if p.distance_to(alvo) < dist:
+			dist = p.distance_to(alvo)
+			melhor = [c, p]
+	return melhor
+
+
+## §11 (Ordem F27): o D1 com movimento. A arena a sério (o HUD dela, a câmara dela e o `_ao_toque` que transforma o
+## «toque» numa casa e a casa numa intenção), a jogadora na vez com o Mover aberto pelo botão da barra (por toque), com
+## 12 e 16 figuras em 844×390 e 780×360:
+##   D1  com a expandida aberta por toque, um toque fora — num sítio que cai numa casa de destino — fecha-a e a figura
+##       fica no sítio: o nó dela e a casa do Estado iguais, o Mover ainda aberto, nenhuma intenção na fila nem enviada.
+##   controlo  com a caixa fechada, o MESMO toque chega ao tabuleiro: escolhe essa casa e sai a intenção
+##       `{"tipo": "mover", "destino": casa}` (a figura move-se quando o servidor a aplica; aqui não há servidor — a
+##       prova viva, passo 13, mede a figura a andar com o servidor real).
+## A Rede fica «na mesa» com um WebSocketPeer por ligar: a intenção regista-se na fila e o envio do texto falha sem erro.
+func _mover_aberto() -> void:
+	print("== 11. Ordem F27: o D1 com o Mover aberto — a arena a sério, a jogadora na vez, o toque fora numa casa de destino ==")
+	root.size = Vector2i(1920, 1080)
+	await process_frame
+	var ativo_antes: bool = _rede._ativo
+	var ligacao_antes: int = _rede.estado_ligacao
+	_rede._ativo = true  # a arena chama Rede.iniciar(): sem isto, ia ligar-se a um servidor
+	_rede.estado_ligacao = _rede.Ligacao.NA_MESA
+	_rede._ws = WebSocketPeer.new()
+	_figs = _figuras_11(12)
+	var ordem: Array = _figs.map(func(f): return f["id"])
+	_snapshot({"ligada": true, "ordemPor": "dinamico", "ordemDinamica": {"ordem": ordem, "fechada": true, "ultimo": "j1"}})
+	var arena = (load("res://cenas/arena/arena.tscn") as PackedScene).instantiate()
+	root.add_child(arena)
+	await _quadros(4)
+	var hud = arena.hud
+	var toques: Array = []
+	arena.camera.toque.connect(func(p: Vector2): toques.append(p))
+	var MOVER: int = arena.Modo.MOVER
+	for n in [12, 16]:
+		_figs = _figuras_11(n)
+		ordem = _figs.map(func(f): return f["id"])
+		_snapshot({"ligada": true, "ordemPor": "dinamico", "ordemDinamica": {"ordem": ordem, "fechada": true, "ultimo": "j1"}})
+		await _quadros(2)
+		for tam in [Vector2i(844, 390), Vector2i(780, 360)]:
+			root.size = tam
+			await process_frame
+			var rot := "§11 %d figuras %dx%d" % [n, tam.x, tam.y]
+			if root.size != tam:
+				_ok(false, "%s: a janela ficou %s: sem medida" % [rot, root.size])
+				continue
+			hud._ao_redimensionar()
+			await _quadros(4)
+			_rede.fila._itens.clear()
+			_rede._envios_recentes.clear()
+			var opcoes := _opcoes_mover_11()
+			await _quadros(2)
+			# A vez dela, o Mover aberto pelo botão da barra (um toque, como no aparelho).
+			var bm: Control = hud._b_mover
+			await _tocar_motor(bm.get_global_rect().get_center())
+			await _quadros(3)
+			var vez_dela: bool = _estado.e_minha_vez()
+			var mover_aberto: bool = arena.modo == MOVER and arena._casas.size() == opcoes.size()
+			# A expandida aberta por toque.
+			await _tocar_motor((hud.caixa_mostrada()["rect"] as Rect2).get_center())
+			await _quadros(3)
+			var c: Dictionary = hud.caixa_mostrada()
+			var aberta: bool = c["expandida"] and (c["ordem_expandida"] as Array).size() == n
+			var destino := _destino_fora(hud, arena, c["rect"])
+			_ok(vez_dela and mover_aberto and aberta and not destino.is_empty(),
+				"%s: a jogadora na vez (%s), o Mover aberto pelo botão (modo %d, %d casas de destino), a expandida aberta por toque (%s) e um sítio fora dela que cai numa casa de destino %s" % [
+					rot, vez_dela, arena.modo, arena._casas.size(), aberta, destino])
+			if destino.is_empty():
+				continue
+			var casa: Vector2i = destino[0]
+			var sitio: Vector2 = destino[1]
+			# D1 — o toque fora, em cima da casa de destino.
+			var t0 := _tabuleiro_11(arena)
+			var n0 := toques.size()
+			await _tocar_motor(sitio)
+			await _quadros(4)
+			var t1 := _tabuleiro_11(arena)
+			var fechou: bool = not hud.caixa_mostrada()["expandida"]
+			var disparou := toques.size() - n0
+			print("  MEDIDA D1-MOVER %s: a dela em %s · toque fora em %s u, sobre a casa de destino %s · antes: nó %s, casa %s, modo %d, fila %d, cursor %s · depois: fechou %s, «toque» %d, nó %s, casa %s, modo %d, fila %d, cursor %s, última intenção igual %s" % [
+				rot, CASA_DELA_11, sitio, casa, t0["nos"]["j1"], t0["casas"]["j1"], t0["modo"], (t0["fila"] as Array).size(), t0["cursor"],
+				fechou, disparou, t1["nos"]["j1"], t1["casas"]["j1"], t1["modo"], (t1["fila"] as Array).size(), t1["cursor"], t0["ultima_intencao"] == t1["ultima_intencao"]])
+			_ok(fechou and disparou == 0 and t0 == t1 and t1["modo"] == MOVER and (t1["fila"] as Array).is_empty(),
+				"%s: [D1 com o Mover aberto] o toque fora sobre a casa %s fecha a expandida e a figura fica no sítio (nó e casa do Estado iguais, o Mover ainda aberto, nenhuma intenção: fila %d)" % [
+					rot, casa, (t1["fila"] as Array).size()])
+			# De controlo: com a caixa fechada, o mesmo toque escolhe a casa e sai a intenção de mover para ela.
+			await _tocar_motor(sitio)
+			await _quadros(4)
+			var t2 := _tabuleiro_11(arena)
+			var novas: Array = (t2["fila"] as Array).filter(func(id): return not (t1["fila"] as Array).has(id))
+			var acao := {}
+			if novas.size() == 1:
+				acao = (JSON.parse_string(_rede.fila._itens[novas[0]]["texto"]) as Dictionary).get("acao", {})
+			var certa: bool = acao.get("tipo") == "mover" and acao.get("destino") is Dictionary \
+				and int(acao["destino"].get("x", -1)) == casa.x and int(acao["destino"].get("y", -1)) == casa.y
+			print("  MEDIDA CONTROLO-MOVER %s: caixa fechada · o mesmo toque em %s u: «toque» %d · intenções novas %d %s · modo %d → %d" % [
+				rot, sitio, toques.size() - n0, novas.size(), JSON.stringify(acao), t1["modo"], t2["modo"]])
+			_ok(toques.size() - n0 == 1 and novas.size() == 1 and certa and t2["ultima_intencao"] == novas[0] and t2["modo"] != MOVER,
+				"%s: [D1 controlo] com a caixa fechada o mesmo toque chega ao tabuleiro e escolhe a casa %s (sai «mover» para ela: %s)" % [rot, casa, JSON.stringify(acao)])
+	_rede.fila._itens.clear()
+	_rede._ws = null
+	_rede.estado_ligacao = ligacao_antes
+	_rede._ativo = ativo_antes
+	arena.queue_free()
+	await _quadros(2)
 
 
 ## §10: um sítio do tabuleiro fora da caixa, da ⚙/ficha, da barra e da faixa (o meio do ecrã, um pouco abaixo da faixa).
