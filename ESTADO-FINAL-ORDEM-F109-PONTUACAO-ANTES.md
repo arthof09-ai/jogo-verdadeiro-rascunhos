@@ -203,5 +203,24 @@ encontrei. O `MANIFESTO-SHA256.txt` e as listas da retoma não citam nenhum dos 
 ## 9. Commits
 
 1. `8ac126c`: a obra (o padrão, o caso novo, os comentários e o README), sobre `1e6c56e`.
-2. Este ESTADO-FINAL, sobre `8ac126c`.
-3. A nota do CI da ponta do commit 2, acrescentada no fim deste ficheiro.
+2. `da2b49e`: este ESTADO-FINAL. Assenta em `8124dce`, e não directamente em `8ac126c`: entre os dois, o remoto
+   recebeu `8124dce` («F116 fusao C-J1»), de outra ordem, que só muda 3 linhas do ESTADO-FINAL da F116. Pus este
+   commit por cima, sem merge.
+3. A nota do CI da ponta do commit 2, acrescentada no fim deste ficheiro (§10).
+
+## 10. Nota do CI — ponta `da2b49e` (este ESTADO-FINAL)
+
+Testes **45189085103** + Sonda **45189085259**: **10/10 jobs verdes e a Sonda verde**, com o passo da F51 a correr.
+A ponta inclui o `8124dce`. No log do job `cliente` (job 137742328212, 2179 linhas):
+
+- canário 26/26;
+- «auto-teste do redigir-nomes: **30 de 30** verificações passaram»;
+- o registo da COBERTURA-CORRECOES-6 «**igual byte a byte** ao redigido (3437 bytes, sem os CR)»;
+- `rodar_testes` 321/321 (também no `godot-cliente`, job 137742328246), `caixa_janela` 123/123, `caixa_jogadora`
+  70/70;
+- a mutação deu «114 de 123» e «MUTACAO APANHADA: 9 falhas, todas do assert B6». As 13 linhas com «FALHA» são as
+  mesmas do §6.
+
+**Nomes inteiros nos logs:** 0 + 0 no log do `cliente` e 0 + 0 no do `godot-cliente`, sem distinguir maiúsculas.
+O CI da ponta `8124dce` (Testes 45188835973) não é desta ordem e não o li. O commit desta nota só acrescenta esta
+secção e acerta o §9.
