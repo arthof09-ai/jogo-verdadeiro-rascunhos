@@ -213,3 +213,9 @@ Na coluna dos nomes inteiros conta-se um achado cujo pedaço tem o comprimento d
 5. **A pinça a deslocar é um gesto novo.** Escolhi um meio que anda 60 u, para o controlo dar um número grande. Os
    valores (22 u e 2 u por passo) são meus, e não vêm de nenhum aparelho.
 6. **Este PC não tem ecrã de toque.** Como na F28, os toques são os que o motor recebe de um aparelho.
+
+
+## Nota do CI (coordenador, 23/11/2026)
+
+- Ponta `99a83a3` (decisões F77/F78/F80/F83 registadas): Testes 45135243661 + Sonda 45135243677, 10/10 jobs verdes.
+- **A F64 está FUNDIDA** (conferência 875, unânime; decisões F77/F78/F80/F83 lavradas; follow-ups F78+F79+F81+F82 escritos em ficheiro; F84 fica como verificação futura do coordenador).
