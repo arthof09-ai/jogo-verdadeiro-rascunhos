@@ -687,11 +687,26 @@ func destacar(casas: Array[Vector2i]) -> void:
 	_arena.destacar(casas)
 
 
-## Casa tocada na arena: primeiro o «Colocar» da aba Mesa, depois o «Mover» da aba Agir.
+## Casa tocada na arena: vai para o modo que estiver armado — o «Colocar» da aba Mesa ou o «Mover» da aba Agir.
+## D-AUD-01: os dois nunca estão armados ao mesmo tempo (armou_colocar / armou_mover), por isso a ordem daqui não
+## escolhe nada. Antes, o «Colocar» ficava armado depois de colocar e roubava o toque do «Mover»: o clique de mover
+## punha uma 2.ª cópia da criatura.
 func casa_tocada(casa: Vector2i) -> void:
 	if _aba_mesa.colocar(casa):
 		return
 	_aba_agir.mover(casa)
+
+
+## D-AUD-01: o Mestre escolheu uma ficha para colocar (aba Mesa) — o «Mover» do Agir desarma.
+func armou_colocar() -> void:
+	if _aba_agir != null:
+		_aba_agir.parar_mover()
+
+
+## D-AUD-01: o Mestre armou o «Mover» (aba Agir) — o «Colocar» da Mesa desarma (o esquema, se houver, fica na lista).
+func armou_mover() -> void:
+	if _aba_mesa != null:
+		_aba_mesa.parar()
 
 
 func _enviar(tipo: String, campos: Dictionary) -> String:

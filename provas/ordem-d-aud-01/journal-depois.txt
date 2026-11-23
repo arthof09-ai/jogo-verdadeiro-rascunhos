@@ -1,0 +1,24 @@
+== eventos (sem «ia») ==
+1 2026-11-23T19:21:45.784Z lobby {}
+2 2026-11-23T19:21:45.903Z colocacao {"figuraId":"heroina-teste#1","lado":"jogadora","nomePublico":"Heroína Teste","orientacao":"S","visivel":"de_pe","x":38,"y":4}
+3 2026-11-23T19:21:45.903Z turno {"figuraId":"heroina-teste#1","narra":false,"rodada":1}
+4 2026-11-23T19:21:46.027Z colocacao {"figuraId":"orc-teste#1","lado":"criatura","nomePublico":"Orc","orientacao":"S","visivel":"de_pe","x":38,"y":11}
+5 2026-11-23T19:21:46.154Z entrada {"figuraId":"heroina-teste#1","lado":"jogadora","nomePublico":"Heroína Teste"}
+6 2026-11-23T19:22:07.919Z pausa {"motivo":"mestre_desconectado"}
+7 2026-11-23T19:22:19.392Z retomada {"motivo":"mestre_desconectado"}
+8 2026-11-23T19:22:37.517Z colocacao {"figuraId":"orc-teste#2","lado":"criatura","nomePublico":"Orc","orientacao":"S","visivel":"de_pe","x":24,"y":26}
+9 2026-11-23T19:22:40.848Z turno {"figuraId":"orc-teste#1","narra":true,"rodada":1}
+10 2026-11-23T19:22:53.323Z movimento {"caminho":[{"x":38,"y":11},{"x":37,"y":11},{"x":36,"y":11},{"x":35,"y":11},{"x":35,"y":12}],"custoM":6,"de":{"x":38,"y":11},"figuraId":"orc-teste#1","para":{"x":35,"y":12},"reservaM":0}
+== recibos ==
+["s9de98300aaec38e6\u0000e35e5a43-6796-4c13-a037-b52c39d440e2",{"estado":"APLICADA","hashAcao":"95f10e2cbb521f3c1ed7d745b4a560031440342691ee96566159d8bf1e270d23","id":"e35e5a43-6796-4c13-a037-b52c39d440e2","idCampo":"intentId","journalSeq":
+["se97191d06a4b9819\u0000act:77c01cc5-869a-4f91-b59c-e96461c36155",{"estado":"APLICADA","hashAcao":"dab060398a54349669ba4e281f0bd2ff2fe7be7cb2c6c72c7d40f1725e05acbb","id":"77c01cc5-869a-4f91-b59c-e96461c36155","idCampo":"intentId","journalS
+["se97191d06a4b9819\u0000cmd:56e7edf1-4261-4604-a6a7-cbde72b2fa66",{"estado":"APLICADA","hashAcao":"05c25984238fc069b146e33256113ecb06365ace27e61177d036f59eec18abca","id":"56e7edf1-4261-4604-a6a7-cbde72b2fa66","idCampo":"cmdId","journalSeq"
+["se97191d06a4b9819\u0000cmd:9ebe1ccb-e1a1-42c9-ac72-7730ceec0405",{"estado":"APLICADA","hashAcao":"4e175ffd7dfc3d2343d8e6b0a5b00ef6a77c3141f85275b0829b46f4a92d2a40","id":"9ebe1ccb-e1a1-42c9-ac72-7730ceec0405","idCampo":"cmdId","journalSeq"
+["se97191d06a4b9819\u0000cmd:aaaa7dfa-7a7c-4bcf-8f0f-f1e4d70ce4bb",{"estado":"APLICADA","hashAcao":"c23fd38de64c94838c92976338a81546ac720eb040d59b17b78e05669deb483d","id":"aaaa7dfa-7a7c-4bcf-8f0f-f1e4d70ce4bb","idCampo":"cmdId","journalSeq"
+["se97191d06a4b9819\u0000cmd:c74c7837-d0da-4acb-9c39-93f915b18544",{"estado":"APLICADA","hashAcao":"94bedae791ff90725c3884f855d4321082fb1976cd4ee86fe2e11ad209ec1385","id":"c74c7837-d0da-4acb-9c39-93f915b18544","idCampo":"cmdId","journalSeq"
+["se97191d06a4b9819\u0000cmd:d38ea4a8-5858-4426-a44c-8902f3bc2786",{"estado":"APLICADA","hashAcao":"d410292040f8d0574be12311b0f6136a5f115b55f5300795d0986b560f18c278","id":"d38ea4a8-5858-4426-a44c-8902f3bc2786","idCampo":"cmdId","journalSeq"
+== figuras no fim ==
+orc-teste#1 colocacao {"ordem":2,"orientacao":"S","x":38,"y":11} casa null andouM -
+orc-teste#2 colocacao {"ordem":3,"orientacao":"S","x":24,"y":26} casa null andouM -
+heroina-teste#1 colocacao {"ordem":1,"orientacao":"S","x":38,"y":4} casa null andouM -
+== contagem: figuras orc-teste = 2 · eventos colocacao = 3 · eventos movimento = 1

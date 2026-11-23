@@ -213,6 +213,7 @@ func comecar() -> void:
 
 
 func escolher_colocar(ficha_id: String) -> void:
+	mestre.armou_colocar()  # D-AUD-01: o toque no tabuleiro passa a ser do «Colocar»; o «Mover» do Agir desarma
 	a_colocar = ficha_id
 	_estado.text = Textos.COLOCAR_ESCOLHER % _nome(ficha_id)
 	_parar.visible = true

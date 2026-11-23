@@ -183,7 +183,16 @@ func _correr() -> void:
 	u = _ultimo()
 	_ok(u.get("type") == "MASTER_MODE" and u.get("modo") == "semi" and u.get("figuraId") == vista["vezId"], "modo → MASTER_MODE")
 	_responder(c, u)
+	# D-AUD-01 (auditoria da linha, 23/11/2026): o «Colocar» da Mesa ficava armado e o toque do «Mover» do Agir ia
+	# para ele — o clique de mover punha uma 2.ª cópia da criatura. Os dois modos usam o mesmo toque no tabuleiro:
+	# só fica armado o último que o Mestre escolheu.
 	c._aba_agir.iniciar_mover()
+	_ok(c._aba_agir.a_mover, "D-AUD-01: «Mover» armado (pré-condição)")
+	c._aba_mesa.escolher_colocar("orc-teste")
+	_ok(not c._aba_agir.a_mover and c._arena.casas_destacadas().is_empty(), "D-AUD-01: escolher «Colocar» desarma o «Mover» e apaga-lhe o destaque")
+	var antes_dau := _comandos.size()
+	c._aba_agir.iniciar_mover()
+	_ok(c._aba_mesa.a_colocar == "", "D-AUD-01: armar «Mover» desarma o «Colocar» da Mesa")
 	_ok(c._arena.casas_destacadas().size() == opcoes["mover"].size(), "«Mover» destaca as %d casas do servidor" % opcoes["mover"].size())
 	antes = _comandos.size()
 	c.casa_tocada(Vector2i(19, 19))
@@ -194,6 +203,11 @@ func _correr() -> void:
 	_ok(u.get("type") == "MASTER_ACT" and u.get("acao", {}).get("tipo") == "mover"
 		and int(u["acao"]["destino"]["x"]) == destino.x and int(u["acao"]["destino"]["y"]) == destino.y, "tocar numa casa → MASTER_ACT mover")
 	_ok(c._arena.casas_destacadas().is_empty(), "depois de mover os destaques saem")
+	var placs := 0
+	for cmd in _comandos.slice(antes_dau):
+		if cmd.get("type") == "MASTER_PLACE":
+			placs += 1
+	_ok(placs == 0, "D-AUD-01: com o «Colocar» escolhido antes, o toque do «Mover» não coloca cópia nenhuma (%d MASTER_PLACE)" % placs)
 	_responder(c, u)
 	if not opcoes["ataques"].is_empty():
 		var a: Dictionary = opcoes["ataques"][0]

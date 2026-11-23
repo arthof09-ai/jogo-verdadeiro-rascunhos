@@ -121,6 +121,8 @@ func iniciar_mover() -> void:
 		if c is Dictionary:
 			_casas.append(Vector2i(int(c.get("x", -1)), int(c.get("y", -1))))
 	a_mover = not _casas.is_empty()
+	if a_mover:
+		mestre.armou_mover()  # D-AUD-01: o toque no tabuleiro passa a ser do «Mover»; o «Colocar» da Mesa desarma
 	mestre.destacar(_casas)
 	_cancelar.visible = a_mover
 	_info.text = Textos.MOVER_ESCOLHER % _casas.size()
