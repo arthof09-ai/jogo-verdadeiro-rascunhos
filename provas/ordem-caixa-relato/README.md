@@ -526,7 +526,7 @@ redacção. Procura-se só no texto já redigido e diz só contagens e n.ºs de 
 - **J9:** a variante com pontuação logo a seguir à palavra substituída («X du, Y», «X d. Y», «X du;Y») conta como
   variante. **Desde a F109** (sentença da F88–F96), também com a pontuação logo **antes** da palavra do meio
   («X, du Y», «X,du Y», «X; du Y»): a pontuação vem colada ao que está antes, e a seguir pode vir no máximo uma
-  quebra de linha, como depois;
+  quebra de linha, como depois. Com espaço antes da pontuação («X , du Y» e o gémeo «X du , Y») continua 0 — «AINDA ABERTO» (alargar os dois lados é outra ordem);
 - **J10:** a variante (ou o próprio nome) partida por quebra de linha, quando o pedaço que fica no fim da linha é
   demasiado curto para se redigir como corte na origem: a variante procura-se no texto todo, e o espaço à volta da
   palavra do meio pode ser uma quebra de linha (LF ou CRLF). Conta como variante, na linha onde começa.
