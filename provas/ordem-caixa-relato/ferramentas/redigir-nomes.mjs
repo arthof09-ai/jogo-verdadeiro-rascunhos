@@ -19,7 +19,7 @@
 // de comparar (o Godot do CI, em Linux, escreve LF; os registos cometidos foram escritos no Windows, com CRLF).
 // Sai com 0 se tudo bate, 1 se a comparação (ou o auto-teste) falha, 2 por uso errado, 3 se sobrar no redigido um nome
 // inteiro, uma variante de preposição fora da lista de 5 ou um corte a meio da linha (estes dois desde a F66, e desde
-// a F94 também com pontuação, partidos por quebra de linha ou colados a uma letra; ver `suspeitos`) ou, desde a F97, o
+// a F94 também com pontuação (desde a F109 também antes da palavra do meio), partidos por quebra de linha ou colados a uma letra; ver `suspeitos`) ou, desde a F97, o
 // nome sem a preposição que a 5.ª forma não redigiu (dois espaços, tabulador, quebra de linha). A saída 3 só diz
 // contagens e n.ºs de linha, nunca o texto. Sem nenhum nome verdadeiro nas fichas sai com 2 antes de tudo (também
 // antes do --auto-teste); com 1 só, o --auto-teste falha com 1.
@@ -131,7 +131,8 @@ export function sobram(texto, verdadeiros) {
 //      público, sem acabar em espaço, a começar numa fronteira de palavra) que acaba numa fronteira de palavra
 //      (o carácter a seguir não é letra) — o corte na origem só se redige no fim da linha.
 // Ordem F94 da sentença da F66+F68 (os buracos J8–J10, fechados sem mudar a redacção):
-//   J9 — a variante com pontuação logo a seguir à palavra substituída («X du, Y», «X d. Y») também é variante;
+//   J9 — a variante com pontuação logo a seguir à palavra substituída («X du, Y», «X d. Y») também é variante; desde
+//        a F109 (sentença da F88–F96) também com a pontuação logo antes dela («X, du Y»);
 //   J10 — a variante partida por quebra de linha quando o corte é curto (a linha acaba em «X», demasiado curto para o
 //         corte na origem, e a seguinte começa em «de Y» ou «du Y»): a variante procura-se no texto todo, e o espaço
 //         à volta da palavra do meio pode ser uma quebra de linha. Conta na linha onde começa;
@@ -159,7 +160,10 @@ function reVariantesFora(nome) {
     // `\n\n` — a quebra de linha pode estar antes ou depois da palavra do meio, ou nos dois lados, nunca uma linha em
     // branco.
     const S = '(?=\\s)[^\\S\\n]*\\n?[^\\S\\n]*';
-    res.push(new RegExp(`(?<!\\p{L})${antes}${S}[\\p{L}'’]+(?:-[\\p{L}'’]+)*(?:\\p{P}+[^\\S\\n]*\\n?[^\\S\\n]*|${S})${depois}(?!\\p{L})`, 'giu'));
+    // F109 (J9-antes, sentença da F88–F96): a pontuação também pode vir ANTES da palavra do meio («X, du Y»), com a
+    // mesma forma da de depois (pontuação colada, e a seguir no máximo um `\n`).
+    const P = '\\p{P}+[^\\S\\n]*\\n?[^\\S\\n]*';
+    res.push(new RegExp(`(?<!\\p{L})${antes}(?:${P}|${S})[\\p{L}'’]+(?:-[\\p{L}'’]+)*(?:${P}|${S})${depois}(?!\\p{L})`, 'giu'));
   }
   return res;
 }
@@ -338,7 +342,8 @@ function autoTeste(verdadeiros, publicos, escreve = console.log) {
   // abertos precisam de o nome n.º 1 ter uma preposição da lista no meio; a 5.ª precisa do mesmo no nome n.º 2 e a
   // 15.ª nos dois; a 14.ª precisa de o nome n.º 2 ser maior do que o mínimo do corte; a de J8 precisa de o nome n.º 2 ter
   // 3 palavras ou mais. F97: as do nome sem a preposição (rede e 5.ª forma no nome n.º 1) e as duas da F89 precisam de
-  // o nome n.º 1 ter uma preposição da lista no meio; a da 5.ª forma no nome n.º 2, do mesmo no nome n.º 2.
+  // o nome n.º 1 ter uma preposição da lista no meio; a da 5.ª forma no nome n.º 2, do mesmo no nome n.º 2. F109: a do
+  // J9-antes («X, du Y») também precisa de o nome n.º 1 ter uma preposição da lista no meio.
   // Se as fichas mudarem e isto já não valer, o caso FALHA (falha alto, não se salta).
   const antesA = jA > 0 ? psA.slice(0, jA).join(' ') : null, depoisA = jA > 0 ? psA.slice(jA + 1).join(' ') : null;
   const s1 = (t) => { const s = sus(t); return [s.inteiros, s.variantes, s.cortes, s.linhasVariantes.join(), s.linhasCortes.join()].join('|'); };
@@ -373,6 +378,10 @@ function autoTeste(verdadeiros, publicos, escreve = console.log) {
   const soEspacos = antesA && [`fim: ${antesA}\n  \n${psA[jA]} ${depoisA} segue`, `fim: ${antesA} du\n \t \n${depoisA} segue`];
   confere('F116 (J10 travado): o nome n.º 1 partido por uma linha só de espaços (antes da palavra do meio, ou a variante «du» antes do apelido) não se redige e NÃO conta como variante (0 variantes nas duas posições; a travagem tem dentes)',
     !!soEspacos && soEspacos.every((t) => r(t) === t && sus(r(t)).variantes === 0));
+  // F109 (J9-antes, sentença da F88–F96): a pontuação ANTES da palavra do meio também é variante.
+  const pontAntes = antesA && `x «${antesA}, du ${depoisA}» y`;
+  confere('F109 (J9-antes): a variante do nome n.º 1 com pontuação antes da palavra do meio («X, du Y») não se redige, mas a rede apanha-a: 1 variante, linha 1 → saída 3',
+    !!pontAntes && r(pontAntes) === pontAntes && s1(r(pontAntes)) === '0|1|0|1|' && haSuspeitos(sus(r(pontAntes))));
   // F93: uma ocorrência conta uma vez só.
   const duploA = antesA && `x «${antesA}  ${psA[jA]} ${depoisA}» y`;
   confere('F93: o nome n.º 1 inteiro (texto cru) conta só como inteiro (0 variantes, 0 cortes); com 2 espaços conta só como 1 variante',

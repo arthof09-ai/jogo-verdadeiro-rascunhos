@@ -524,7 +524,9 @@ redacção. Procura-se só no texto já redigido e diz só contagens e n.ºs de 
 
 **Desde a F94** (sentença da F66+F68), a rede fecha mais três buracos, também sem mudar a redacção:
 - **J9:** a variante com pontuação logo a seguir à palavra substituída («X du, Y», «X d. Y», «X du;Y») conta como
-  variante;
+  variante. **Desde a F109** (sentença da F88–F96), também com a pontuação logo **antes** da palavra do meio
+  («X, du Y», «X,du Y», «X; du Y»): a pontuação vem colada ao que está antes, e a seguir pode vir no máximo uma
+  quebra de linha, como depois;
 - **J10:** a variante (ou o próprio nome) partida por quebra de linha, quando o pedaço que fica no fim da linha é
   demasiado curto para se redigir como corte na origem: a variante procura-se no texto todo, e o espaço à volta da
   palavra do meio pode ser uma quebra de linha (LF ou CRLF). Conta como variante, na linha onde começa.
@@ -572,7 +574,7 @@ Usos (na raiz do repo):
   compara o redigido com o registo, byte a byte. Diz só «igual» ou o n.º da 1.ª linha diferente, nunca o texto. Sai
   com 0 se for igual e 1 se não for. `--ignorar-cr` tira os CR dos dois lados: o Godot do CI, em Linux, escreve LF, e
   os registos cometidos são CRLF (escritos no Windows). No PC compara-se sem `--ignorar-cr`.
-- `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs --auto-teste` corre 29 verificações com casos montados
+- `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs --auto-teste` corre 30 verificações com casos montados
   em memória a partir das fichas:
   - as quatro formas, o nome público intacto, os fins de linha e a idempotência;
   - desde a F66/F68: a variante do nome n.º 1 fora da lista, o corte mínimo do nome n.º 2 a meio da linha, a rede
@@ -585,7 +587,9 @@ Usos (na raiz do repo):
   - desde a F114 (J10 travado): o nome n.º 1 partido por 3 linhas → a rede sai com 3; partido por uma linha em branco
     → 0 variantes (não conta);
   - desde a F116: o nome n.º 1 partido por uma linha só de espaços (antes da palavra do meio, ou a variante «du»
-    antes do apelido) → 0 variantes nas duas posições (conta como linha em branco).
+    antes do apelido) → 0 variantes nas duas posições (conta como linha em branco);
+  - desde a F109 (J9-antes): a variante do nome n.º 1 com pontuação antes da palavra do meio («X, du Y») → 1
+    variante, a rede sai com 3.
 
   Com 1 nome verdadeiro, falha com 1; com 0, sai com 2 antes do auto-teste (F90).
 
@@ -597,8 +601,8 @@ Usos (na raiz do repo):
   - a de J8 precisa de o nome n.º 2 ter 3 palavras ou mais;
   - (F97) a do nome sem a preposição na rede, a da 5.ª forma no nome n.º 1 e as duas da F89 precisam de o nome n.º 1
     ter uma preposição da lista no meio; a da 5.ª forma no nome n.º 2 precisa do mesmo no nome n.º 2;
-  - (F114) as duas do J10 travado (3 linhas e linha em branco) e (F116) a da linha só de espaços precisam de o nome
-    n.º 1 ter uma preposição da lista no meio.
+  - (F114) as duas do J10 travado (3 linhas e linha em branco), (F116) a da linha só de espaços e (F109) a do
+    J9-antes precisam de o nome n.º 1 ter uma preposição da lista no meio.
 
   Se as fichas mudarem e uma destas condições deixar de valer, o caso falha. Falhar alto é o certo, e a dependência
   fica escrita aqui e no código.
