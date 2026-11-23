@@ -182,3 +182,7 @@ ponto 3).
    toquei, porque é por desenho. A causa é a F97, commit `879bac2`: redigiu os nomes em 4 mensagens de diagnóstico do canário e a l. 112 perdeu o seu único par (−1 par, −5 ocorrências: 34→33, 45→40).
 4. **Os 19 já não são saída crua.** o `.log` dos lançadores externos da `b7-correcoes-6` (l. 20) e `b7-correcoes-7/corridas.log:14` dizem que uma corrida deu igual a `s1.jsonl` linha a linha. São comparações **manuais, registadas em logs** — nenhum código nem passo do CI as faz (ver §1). Quem repetir essa comparação tem de aplicar primeiro a mesma redacção à saída nova (como no ponto 5 do §7 da F25). O mesmo vale para os `resumo.json`/`resumo.md` — uma corrida nova reescreve-os também (`correr-autojogo.sh:61`) — e para os `relato.txt`, que as provas reescrevem em todas as corridas (a comparação manual de um relato está registada em `provas/ordem-caixa-relato/b7-correcoes-7/lancador-caixa.log:7, 17`, um `diff` contra o `relato.txt` cometido da `ordem-caixa`).
 5. **O histórico.** Os 19 ficheiros com os nomes inteiros continuam nos commits publicados até `681a9e9` (é a F26).
+
+## Nota do CI (fusão C-FUS-1..5) — ponta `56477a6`
+
+Testes **45204033141** + Sonda **45204032981**: **10/10 jobs verdes e a Sonda verde** na ponta da fusão. O commit da fusão só muda este ESTADO-FINAL (C-FUS-1 a C-FUS-5, correcções documentais da conferência da F52, 960, unânime); os 19 ficheiros da obra não foram tocados. Nomes inteiros nos logs: 0.
