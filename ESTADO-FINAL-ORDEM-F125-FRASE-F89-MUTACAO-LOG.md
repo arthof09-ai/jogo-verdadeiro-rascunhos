@@ -79,6 +79,14 @@ A redacção diz agora «39 linhas, 0 redigidas»: desde a F97, a saída crua do
   - as suites dão 321/321, 123/123 e 70/70.
 - No job `godot-cliente`, 321/321.
 
+**CI da ponta `a7e027b` (a obra mais este ESTADO-FINAL): verde.**
+- **Testes dos rascunhos 45187054487:** 10/10 jobs.
+- **Sonda de privacidade 45187054581:** verde.
+- **No job `cliente`, os mesmos números:** canário 26/26, auto-teste 29/29, «igual byte a byte ao redigido (3437
+  bytes, sem os CR)», 321/321, 123/123, 70/70 e mutação 114/123. O log tem 0 + 0 nomes inteiros.
+
+A nota do CI só acrescenta texto a este ficheiro.
+
 ## 5. Pontos abertos (para o coordenador)
 
 1. **O `resumo.txt` da F51 ficou desactualizado.** Diz o sha256 `4560e8ce…` e «7 redigidas — 10 nome(s)
