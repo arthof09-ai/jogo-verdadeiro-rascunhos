@@ -48,8 +48,7 @@ A 1.ª linha bate com a tabela da F108 (linha só de espaços: 1 @1 na ponta ant
 **O caso tem dentes.** Corri o auto-teste com dois mutantes, ambos fora do repo (`tmp/` da pasta da ordem):
 
 - **o padrão antigo** (a linha 158 da `5bf8ca1`): **27 de 29**. Falham o caso (b) da F114 e o caso novo;
-- **um padrão que barra a linha em branco mas deixa passar a linha só de espaços** (o `S` com um
-  `(?:\n[^\S\n]+)?` a mais): **28 de 29**. O caso da F114 passa, e só o caso novo falha. É exactamente o buraco que
+- **um padrão que barra a linha em branco mas deixa passar a linha só de espaços** (o `S` com o grupo `(?:\n[^\S\n]+)?` inserido antes do `\n?`): **28 de 29**. O caso da F114 passa, e só o caso novo falha. É exactamente o buraco que
   esta guarda tapa.
 
 Com a ferramenta cometida: **29 de 29**, rc=0.
