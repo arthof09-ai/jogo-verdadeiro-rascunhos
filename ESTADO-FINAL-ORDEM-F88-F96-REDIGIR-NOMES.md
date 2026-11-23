@@ -171,6 +171,15 @@ corre a ferramenta nova sem mudar o workflow.
 
 A ponta `b571dff` (da rede, F86) teve o seu próprio CI. Não o conto aqui, porque não é obra desta ordem.
 
+**CI da ponta `4cdf65e` (a obra, `b571dff` e este ESTADO-FINAL): verde.**
+- Testes dos rascunhos, run `45142495935`: passaram os 10 jobs.
+- Sonda de privacidade, run `45142495946`: verde.
+- O passo da F51 correu outra vez: o auto-teste deu 22 de 22, e a saída do canário redigida ficou igual byte a byte
+  (3464 bytes, sem os CR).
+- Os números são os mesmos: canário 26/26, `rodar_testes` 321/321 (também no `godot-cliente`), `caixa_janela`
+  123/123, `caixa_jogadora` 70/70 e mutação das células «MUTACAO APANHADA: 9 falhas, todas do assert B6».
+- O commit desta nota só acrescenta este parágrafo a este ficheiro.
+
 ## 6. Privacidade re-derivada
 **Âmbito: os ficheiros que esta ordem cometeu** (os 7 da obra e este ESTADO-FINAL). A ordem pedia o âmbito escrito
 como «ficheiros cometidos». Mas a rede (F86) corrigiu-o em `b571dff`: no repo inteiro, «ficheiros cometidos» é
