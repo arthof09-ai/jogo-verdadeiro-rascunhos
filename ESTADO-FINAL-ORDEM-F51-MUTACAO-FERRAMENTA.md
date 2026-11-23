@@ -115,7 +115,7 @@ canário, deram rc=0. **Até alguém o aplicar, a ferramenta não corre no CI.**
   e neste ESTADO-FINAL. O log da mutação tem 0, porque é o redigido.
 - **Critério estrito** (`conferir-registo.mjs`, pedaços de 4 ou mais letras). Este ESTADO-FINAL dá 0 achados nos dois
   critérios (alargado e `--velho`). Também dão 0: os dois scripts, o `README.md` da prova, o `mutacao.diff`, o
-  `reproducao-f25.log` e o remendo. Os achados que sobram não são nomes nem inícios de nomes:
+  `reproducao-f25.log` e o remendo. Os achados que sobram não são nomes inteiros: nenhum é nome verdadeiro inteiro. Seis deles são prefixos do nome verdadeiro (5 no log da mutação e 1 no resumo.txt) e coincidem com o nome público ou as suas primeiras letras, sem revelar mais do que o público.
   - `redigir-nomes.mjs`: 2 achados, os dois na linha do caminho por omissão das fichas, o mesmo do `conferir-registo.mjs`;
   - `provas/ordem-caixa-relato/README.md`: 32 → 34 achados. Os 2 novos estão nesse mesmo caminho;
   - `resumo.txt`: 1 achado, o adjectivo das ocorrências não filtradas, que vem citado da saída do canário na 3.ª FALHA;

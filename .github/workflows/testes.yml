@@ -198,6 +198,20 @@ jobs:
           set -o pipefail
           timeout 120 "$GODOT" --headless --path . -s "$GITHUB_WORKSPACE/provas/ordem-caixa-janela/ferramentas/teste_nomes_relato.gd" 2>&1 | tee "$RUNNER_TEMP/teste_nomes_relato.gd.log"
           ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/teste_nomes_relato.gd.log"
+      - uses: actions/setup-node@v4
+        if: always()
+        with:
+          node-version: '22'
+      - name: A saída do canário, redigida (§2 da F25), é igual byte a byte ao registo limpo (Ordem F51, §7.5 da F25)
+        # A saída crua traz os nomes verdadeiros de propósito; o redigir-nomes.mjs aplica-lhe a redacção do §2 da F25 e
+        # compara com o registo limpo da COBERTURA-CORRECOES-6. --ignorar-cr: o Godot daqui escreve LF, o registo é CRLF.
+        if: always()
+        working-directory: ${{ github.workspace }}
+        run: |
+          node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs --auto-teste
+          node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs "$RUNNER_TEMP/teste_nomes_relato.gd.log" \
+            --saida="$RUNNER_TEMP/teste_nomes_relato.redigido.log" --ignorar-cr \
+            --comparar=provas/ordem-caixa-janela/cobertura-correcoes-6/teste-nomes-relato.log
       - name: Canário de privacidade no aparelho da jogadora (JV3.1 §7)
         if: always()
         run: |

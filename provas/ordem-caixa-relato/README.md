@@ -510,7 +510,8 @@ as quatro formas do §2:
   inicial do nome maior do que o nome público. O nome público sozinho não se redige.
 
 Nenhuma linha é acrescentada nem tirada e os fins de linha ficam como estavam. A ferramenta sai com 3 se sobrar um nome
-inteiro.
+inteiro. **Limite:** a saída 3 só cobre nomes inteiros — uma variante de preposição fora da lista de 5 ou um corte a meio
+da linha escapa e sai com rc=0, em silêncio.
 
 Usos (na raiz do repo):
 - `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs <saída-crua.log> --saida=<redigido.log>` escreve a
