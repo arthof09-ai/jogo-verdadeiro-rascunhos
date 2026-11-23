@@ -151,6 +151,20 @@ func _medir(janela: Vector2i) -> void:
 		% [janela, "à vista" if m._caixa.visible else "sem lugar: sai de cena", tapa_caixa])
 	# Ordem CAIXA-EXPANDE-VISTAS (D4): a mesma medida com a vista ABERTA (o rato por cima da caixa): o rectângulo
 	# expandido também não tapa o «Voltar», a dica nem os controlos de andar.
+	# Ordem F36 (D-A): em que ecrãs a caixa TEM lugar na câmara livre fica escrito (LIVRE_COM_LUGAR) — assim a medida da
+	# vista aberta não pode desaparecer em silêncio. Sem lugar, afirma-se o porquê, em vez de só o imprimir.
+	var com_lugar: bool = LIVRE_COM_LUGAR.get(janela, false)
+	_verificar(m._caixa.visible == com_lugar, "%s câmara livre: a caixa da ordem %s" % [janela, "à vista (há lugar)" if com_lugar else "sai de cena (sem lugar)"])
+	if not m._caixa.visible:
+		# Sem lugar, por desenho (mestre.gd, _posicionar_caixa): a COMPACTA, no sítio dela, já tocava num controlo de andar.
+		# Escondida, a caixa não lê o rato (_input pára em is_visible_in_tree) — não há vista aberta para medir.
+		var r_sem: Rect2 = m._caixa.get_global_rect()
+		var toca: Array = []
+		for n in [ctl.manipulo, ctl.sobe_botao, ctl.desce_botao, ctl.vel_caixa]:
+			if (n as Control).visible and r_sem.intersects((n as Control).get_global_rect()):
+				toca.append((n as Node).name)
+		print("  MEDIDA MESTRE-LIVRE %s à vista=false compacta=%s tocava em %s" % [janela, _r(r_sem), toca])
+		_verificar(not toca.is_empty(), "%s câmara livre, sem lugar: a compacta no sítio dela tocava num controlo de andar %s (por isso sai de cena)" % [janela, toca])
 	if m._caixa.visible:
 		_rato(m._caixa.get_global_rect().get_center())
 		await process_frame
@@ -161,6 +175,8 @@ func _medir(janela: Vector2i) -> void:
 			if m._caixa.visible and r_livre.intersects((n as Control).get_global_rect()):
 				tapa_aberta.append((n as Node).name)
 		print("  MEDIDA MESTRE-LIVRE %s aberta=%s caixa=%s à vista=%s" % [janela, aberta_livre, _r(r_livre), m._caixa.visible])
+		# Ordem F36 (D-A): a vista aberta na câmara livre afirma-se — sem ela, a medida seguinte media a compacta.
+		_verificar(aberta_livre, "%s câmara livre: vista expandida aberta pelo rato" % [janela])
 		_verificar(tapa_aberta.is_empty(), "%s câmara livre, vista aberta (%s): a caixa da ordem não tapa o «Voltar», a dica nem os controlos de andar %s"
 			% [janela, "à vista" if m._caixa.visible else "sem lugar: sai de cena", tapa_aberta])
 		_rato(Vector2(1.0, root.get_visible_rect().end.y - 1.0))
@@ -199,9 +215,26 @@ func _medir(janela: Vector2i) -> void:
 
 # ---------------------------------------------------------------- Ordem CAIXA-EXPANDE-VISTAS (D4)
 
-## Quantas figuras tem a ordem nas medidas da vista expandida (8+ da ordem: 12 e 16, os casos da prova viva; a última
-## fica no ecrã para a medida da câmara livre).
-const FIGURAS_EXPANDIDA := [12, 16]
+## Quantas figuras tem a ordem nas medidas da vista expandida (8+ da ordem: 12 e 16, os casos da prova viva; Ordem F36
+## (D-C): e 8. A última fica no ecrã para a medida da câmara livre).
+const FIGURAS_EXPANDIDA := [8, 12, 16]
+
+## Ordem F36 (D-A): os ecrãs onde a caixa da ordem tem lugar dentro da câmara livre (com FIGURAS_EXPANDIDA[-1] figuras).
+## Nos ecrãs baixos a compacta já tocava num controlo de andar e sai de cena — por desenho, antes da CAIXA-EXPANDE-VISTAS.
+const LIVRE_COM_LUGAR := {Vector2i(1920, 1080): true}
+
+## Ordem F36 (D-B): quantas linhas da expandida cabem inteiras à vista, sem rolar, ecrã a ecrã (0 = cabem todas as que
+## a suite mede). Com mais figuras do que isto, a lista rola.
+const LINHAS_A_VISTA := {Vector2i(844, 390): 9, Vector2i(780, 360): 8, Vector2i(1920, 1080): 0}
+
+## Ordem F36 (D-B): o ecrã onde os nomes compridos da expandida se cortam com «…» (o tecto da largura do D4). Lá
+## cortam-se os nomes das criaturas de ensaio («Sombra comprida de ensaio N») e só esses; nos outros, nenhum.
+const ECRA_CORTA_NOMES := Vector2i(780, 360)
+
+
+## A figura é uma das criaturas de ensaio que _vista_cheia acrescenta (nome comprido)?
+func _de_ensaio(id: String) -> bool:
+	return id.begins_with("fensaio")
 
 
 func _r(r: Rect2) -> String:
@@ -280,6 +313,24 @@ func _medir_expandida(m, janela: Vector2i, total: int) -> void:
 	print("  MEDIDA MESTRE-EXPANDIDA %s figuras=%d compacta=%s aberta=%s tabuleiro=%s folha=%s linhas inteiras à vista=%d de %d rola=%s nomes cortados com «…»=%d"
 		% [janela, cx.ids_mostrados.size(), _r(compacta), _r(r), _r(tab), _r(folha), linhas, cx._lista.get_child_count(), cx.expandida_rola(), cx.linhas_cortadas().size()])
 	_verificar(cx.expandida(), "%s %d figuras: vista expandida aberta pelo rato" % [janela, total])
+	# Ordem F36 (D-B): o que a MEDIDA acima imprime passa a ser afirmado — linhas inteiras à vista sem rolar, se a lista
+	# rola, e os nomes cortados com «…».
+	var cabem: int = LINHAS_A_VISTA.get(janela, 0)
+	var linhas_esperadas := total if cabem <= 0 else mini(total, cabem)
+	_verificar(linhas == linhas_esperadas, "%s %d figuras, vista aberta: %d linhas inteiras à vista sem rolar (esperadas %d)" % [janela, total, linhas, linhas_esperadas])
+	_verificar(cx.expandida_rola() == (linhas_esperadas < total), "%s %d figuras, vista aberta: a lista %s" % [janela, total, "rola" if linhas_esperadas < total else "não rola"])
+	var cortadas: Dictionary = cx.linhas_cortadas()
+	var ensaio := 0
+	for id in cx.ids_mostrados:
+		if _de_ensaio(str(id)):
+			ensaio += 1
+	var cortes_esperados := ensaio if janela == ECRA_CORTA_NOMES else 0
+	var so_ensaio := true
+	for id in cortadas:
+		if not _de_ensaio(str(id)) or not str(cortadas[id]).ends_with("…"):
+			so_ensaio = false
+	_verificar(cortadas.size() == cortes_esperados and so_ensaio, "%s %d figuras, vista aberta: %d nomes cortados com «…» (esperados %d, só os de ensaio)"
+		% [janela, total, cortadas.size(), cortes_esperados])
 	_verificar(r.end.x <= tab.end.x + 0.5 and not r.intersects(folha), "%s %d figuras, vista aberta: a caixa não passa para a folha (direita %.0f ≤ %.0f, início da folha %.0f)" % [janela, total, r.end.x, tab.end.x, folha.position.x])
 	_verificar(r.end.y <= visivel.end.y + 0.5, "%s %d figuras, vista aberta: a caixa não passa do fundo do ecrã (%.0f ≤ %.0f)" % [janela, total, r.end.y, visivel.end.y])
 	_verificar(r.end.x >= compacta.end.x - 0.5, "%s %d figuras, vista aberta: a caixa nunca é mais estreita que a compacta (%.0f ≥ %.0f)" % [janela, total, r.end.x, compacta.end.x])
@@ -292,7 +343,8 @@ func _medir_expandida(m, janela: Vector2i, total: int) -> void:
 	_rato(p)
 	await process_frame
 	var por_cima: Control = root.gui_get_hovered_control()
-	var aberta_depois: bool = cx.expandida()
+	# Ordem F36 (D-G): o fecho PELO RATO — lido logo depois de o rato ir para a folha, antes de qualquer clique.
+	var aberta_depois_rato: bool = cx.expandida()
 	# O clique: conta-se o carregar que chega ao controlo da folha debaixo do rato. Para a medida não dar uma ordem ao
 	# cartão (as verificações seguintes precisam dele como está), um comando finge estar em voo (o «tocar» do Mestre não
 	# age com comandos em voo) e, se o ponto cair no «encolher», a folha volta a abrir-se.
@@ -306,12 +358,77 @@ func _medir_expandida(m, janela: Vector2i, total: int) -> void:
 	m._em_voo["medida-d4"] = true
 	_clique(p)
 	await process_frame
+	# Ordem F36 (D-G): lido DEPOIS do _clique — o clique do rato na folha não reabre a caixa.
+	var aberta_depois_clique: bool = cx.expandida()
 	m._em_voo.erase("medida-d4")
 	if por_cima != null:
 		por_cima.gui_input.disconnect(contar)
 	if m._encolhida != encolhida_antes:
 		m._alternar_folha()
 		await process_frame
-	print("  MEDIDA MESTRE-FOLHA %s ponto=(%.0f,%.0f) por baixo do rato=%s cliques recebidos=%d caixa aberta=%s" % [janela, p.x, p.y, por_cima.name if por_cima != null else "nada", cliques[0], aberta_depois])
+	print("  MEDIDA MESTRE-FOLHA %s ponto=(%.0f,%.0f) por baixo do rato=%s cliques recebidos=%d caixa aberta depois do rato=%s depois do clique=%s"
+		% [janela, p.x, p.y, por_cima.name if por_cima != null else "nada", cliques[0], aberta_depois_rato, aberta_depois_clique])
 	_verificar(_dentro_de(por_cima, m._folha) and cliques[0] == 1, "%s %d figuras, vista aberta: a folha à altura da caixa recebe o rato e o clique (%s, %d clique)" % [janela, total, por_cima.name if por_cima != null else "nada", cliques[0]])
-	_verificar(not aberta_depois, "%s %d figuras: com o rato na folha a caixa volta à compacta" % [janela, total])
+	_verificar(not aberta_depois_rato, "%s %d figuras: fecho pelo rato — com o rato na folha a caixa volta à compacta" % [janela, total])
+	_verificar(not aberta_depois_clique, "%s %d figuras: depois do clique do rato na folha a caixa continua compacta" % [janela, total])
+	await _medir_fecho_por_clique(m, janela, total, p)
+
+
+## Ordem F36 (D-G): o fecho PELO CLIQUE, medido em separado do fecho pelo rato. Com o rato a sério, só o MEXER do rato
+## abre e fecha a caixa (caixa_ordem.gd, _input); o clique que fecha é o que o motor imita a partir de um toque (D1).
+## Aqui: a caixa abre-se como um toque nela a abre (sem o rato a mexer), e o toque na folha, à mesma altura (o rato
+## imitado chega primeiro, depois o próprio toque), fecha-a. Pela regra D1 esse toque fica na caixa: não chega à folha.
+func _medir_fecho_por_clique(m, janela: Vector2i, total: int, p: Vector2) -> void:
+	var cx: Control = m._caixa
+	cx.alternar_toque()
+	await process_frame
+	var aberta_antes: bool = cx.expandida()
+	var alvo: Control = root.gui_get_hovered_control()
+	var cliques := [0]
+	var contar := func(e: InputEvent):
+		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
+			cliques[0] += 1
+	if alvo != null:
+		alvo.gui_input.connect(contar)
+	var encolhida_antes: bool = m._encolhida
+	m._em_voo["medida-f36"] = true
+	# Lê-se logo depois do CLIQUE (o rato imitado, que o motor despacha primeiro), antes do próprio toque — que também
+	# fecharia a caixa e taparia um clique que não fecha.
+	_clique_imitado(p, true)
+	var aberta_depois_clique: bool = cx.expandida()
+	_toque_dedo(p, true)
+	_clique_imitado(p, false)
+	_toque_dedo(p, false)
+	await process_frame
+	var aberta_fim_toque: bool = cx.expandida()
+	m._em_voo.erase("medida-f36")
+	if alvo != null:
+		alvo.gui_input.disconnect(contar)
+	if m._encolhida != encolhida_antes:
+		m._alternar_folha()
+		await process_frame
+	print("  MEDIDA MESTRE-FECHO-CLIQUE %s ponto=(%.0f,%.0f) aberta antes=%s depois do clique=%s no fim do toque=%s cliques na folha=%d"
+		% [janela, p.x, p.y, aberta_antes, aberta_depois_clique, aberta_fim_toque, cliques[0]])
+	_verificar(aberta_antes, "%s %d figuras: vista expandida aberta pelo toque (sem o rato a mexer)" % [janela, total])
+	_verificar(not aberta_depois_clique, "%s %d figuras: fecho pelo clique — o clique na folha fecha a caixa" % [janela, total])
+	_verificar(not aberta_fim_toque and cliques[0] == 0, "%s %d figuras: o gesto que fecha fica na caixa — não reabre nem chega à folha (%d clique)" % [janela, total, cliques[0]])
+
+
+## O clique (carregar ou levantar) que o motor imita a partir do primeiro dedo, em `p`.
+func _clique_imitado(p: Vector2, carregado: bool) -> void:
+	var b := InputEventMouseButton.new()
+	b.device = InputEvent.DEVICE_ID_EMULATION
+	b.button_index = MOUSE_BUTTON_LEFT
+	b.pressed = carregado
+	b.position = p
+	b.global_position = p
+	root.push_input(b, true)
+
+
+## O primeiro dedo a carregar ou a levantar em `p` (o motor despacha-o DEPOIS do clique imitado).
+func _toque_dedo(p: Vector2, carregado: bool) -> void:
+	var t := InputEventScreenTouch.new()
+	t.index = 0
+	t.pressed = carregado
+	t.position = p
+	root.push_input(t, true)
