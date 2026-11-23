@@ -224,3 +224,7 @@ A ponta inclui o `8124dce`. No log do job `cliente` (job 137742328212, 2179 linh
 **Nomes inteiros nos logs:** 0 + 0 no log do `cliente` e 0 + 0 no do `godot-cliente`, sem distinguir maiúsculas.
 O CI da ponta `8124dce` (Testes 45188835973) não é desta ordem e não o li. O commit desta nota só acrescenta esta
 secção e acerta o §9.
+
+## Nota do CI (fusão F134) — ponta `d3b1098`
+
+Testes **45200659539** + Sonda **45200659530**: **10/10 jobs verdes e a Sonda verde** na ponta da fusão. O commit da fusão (`d3b1098`, aplicado pela conferência da F109, 985, unânime) só muda uma linha do README (`provas/ordem-caixa-relato/README.md`, bloco J9): «X , du Y» e o gémeo «X du , Y» passam a «AINDA ABERTO». Este commit só acrescenta esta secção.
