@@ -151,7 +151,9 @@ dele: 9 linhas inteiras, o retrato da 10.ª cortado na borda inferior e a barra 
 
 ## 5. CI
 **CI da ponta `ecf46d6`, já na linha** (Testes 45101519738 + Sonda 45101519763): **10/10 jobs verdes e a Sonda
-verde**. Os jobs são `servidor`, `validador-glb`, `foto-mestre`, `godot-cliente`, `cliente`, `ponta-a-ponta`,
+verde**.
+
+**CI da ponta `7c4da45` (F31–F35, emendas da conferência), já na linha** (Testes 45107208308 + Sonda 45107208346): **10/10 jobs verdes e a Sonda verde** — a condição da fusão da F15 está cumprida (F39). Os jobs são `servidor`, `validador-glb`, `foto-mestre`, `godot-cliente`, `cliente`, `ponta-a-ponta`,
 `retoma-pc`, `provas-mapa`, `motor-real` e `protocolo`.
 
 No Linux do CI os números são os de cá:
