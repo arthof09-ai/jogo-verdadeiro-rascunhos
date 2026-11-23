@@ -1,0 +1,492 @@
+{
+  "ordem": "MAPA-JOGAVEL-CUSTO-CAMARA",
+  "grelha": "20x20_1,5m",
+  "corrida": 3,
+  "render": "NVIDIA GeForce RTX 4060",
+  "versao_godot": "4.7.2-stable (official)",
+  "vsync": 0,
+  "max_fps": 0,
+  "janela_px": [
+    1920,
+    1080
+  ],
+  "perfil": "alto",
+  "abriu": true,
+  "casa_figura": [
+    19,
+    0
+  ],
+  "casa_de_agua": false,
+  "recusada": false,
+  "agua_acima_do_pe_m": 0.567,
+  "camera_antes": {
+    "dentro": 16,
+    "total": 16,
+    "folga_min_px": 51.2,
+    "dist_panorama_m": 26.102,
+    "dist_real_m": 26.102,
+    "d0_m": 15.0,
+    "crescimentos_x1_06": 9,
+    "iteracoes_do_ciclo": 10,
+    "tecto_60_atingido": false,
+    "residuo_formula": 0.0,
+    "viewport_px": [
+      1920,
+      1080
+    ],
+    "camera_fov_graus": 75.0,
+    "camera_keep_aspect": 1,
+    "pontos": [
+      {
+        "f": [
+          -1.0,
+          -1.0
+        ],
+        "altura_m": 0.0,
+        "dentro": true,
+        "ecra_px": [
+          572.7,
+          150.4
+        ],
+        "folga_px": 150.4
+      },
+      {
+        "f": [
+          1.0,
+          -1.0
+        ],
+        "altura_m": 0.0,
+        "dentro": true,
+        "ecra_px": [
+          1290.6,
+          229.3
+        ],
+        "folga_px": 229.3
+      },
+      {
+        "f": [
+          -1.0,
+          1.0
+        ],
+        "altura_m": 0.0,
+        "dentro": true,
+        "ecra_px": [
+          500.0,
+          989.7
+        ],
+        "folga_px": 90.3
+      },
+      {
+        "f": [
+          1.0,
+          1.0
+        ],
+        "altura_m": 0.0,
+        "dentro": true,
+        "ecra_px": [
+          1438.4,
+          1001.7
+        ],
+        "folga_px": 78.3
+      },
+      {
+        "f": [
+          0.0,
+          -1.0
+        ],
+        "altura_m": 0.0,
+        "dentro": true,
+        "ecra_px": [
+          960.0,
+          191.8
+        ],
+        "folga_px": 191.8
+      },
+      {
+        "f": [
+          0.0,
+          1.0
+        ],
+        "altura_m": 0.0,
+        "dentro": true,
+        "ecra_px": [
+          960.0,
+          993.7
+        ],
+        "folga_px": 86.3
+      },
+      {
+        "f": [
+          -1.0,
+          0.0
+        ],
+        "altura_m": 0.0,
+        "dentro": true,
+        "ecra_px": [
+          560.5,
+          541.8
+        ],
+        "folga_px": 538.2
+      },
+      {
+        "f": [
+          1.0,
+          0.0
+        ],
+        "altura_m": 0.0,
+        "dentro": true,
+        "ecra_px": [
+          1369.5,
+          538.1
+        ],
+        "folga_px": 538.1
+      },
+      {
+        "f": [
+          -1.0,
+          -1.0
+        ],
+        "altura_m": 1.8,
+        "dentro": true,
+        "ecra_px": [
+          546.0,
+          113.2
+        ],
+        "folga_px": 113.2
+      },
+      {
+        "f": [
+          1.0,
+          -1.0
+        ],
+        "altura_m": 1.8,
+        "dentro": true,
+        "ecra_px": [
+          1309.9,
+          202.4
+        ],
+        "folga_px": 202.4
+      },
+      {
+        "f": [
+          -1.0,
+          1.0
+        ],
+        "altura_m": 1.8,
+        "dentro": true,
+        "ecra_px": [
+          461.8,
+          1014.6
+        ],
+        "folga_px": 65.4
+      },
+      {
+        "f": [
+          1.0,
+          1.0
+        ],
+        "altura_m": 1.8,
+        "dentro": true,
+        "ecra_px": [
+          1479.9,
+          1028.8
+        ],
+        "folga_px": 51.2
+      },
+      {
+        "f": [
+          0.0,
+          -1.0
+        ],
+        "altura_m": 1.8,
+        "dentro": true,
+        "ecra_px": [
+          960.0,
+          160.3
+        ],
+        "folga_px": 160.3
+      },
+      {
+        "f": [
+          0.0,
+          1.0
+        ],
+        "altura_m": 1.8,
+        "dentro": true,
+        "ecra_px": [
+          960.0,
+          1019.3
+        ],
+        "folga_px": 60.7
+      },
+      {
+        "f": [
+          -1.0,
+          0.0
+        ],
+        "altura_m": 1.8,
+        "dentro": true,
+        "ecra_px": [
+          532.0,
+          531.3
+        ],
+        "folga_px": 531.3
+      },
+      {
+        "f": [
+          1.0,
+          0.0
+        ],
+        "altura_m": 1.8,
+        "dentro": true,
+        "ecra_px": [
+          1399.5,
+          527.0
+        ],
+        "folga_px": 520.5
+      }
+    ]
+  },
+  "custo": {
+    "quadros": 1200,
+    "aquecimento": 240,
+    "tempo_s": 2.0591,
+    "fps_medio": 582.8,
+    "ms_quadro_mediana": 1.668,
+    "ms_quadro_min": 0.792,
+    "ms_quadro_max": 4.032,
+    "ms_quadro_p95": 2.388,
+    "chamadas_de_desenho": 80.0,
+    "primitivas": 1126949,
+    "lago_avancar_us_por_quadro": 20.5,
+    "memoria_video_mb": 150.1
+  },
+  "camera_depois": {
+    "dentro": 16,
+    "total": 16,
+    "folga_min_px": 51.2,
+    "dist_panorama_m": 26.102,
+    "dist_real_m": 26.102,
+    "d0_m": 15.0,
+    "crescimentos_x1_06": 9,
+    "iteracoes_do_ciclo": 10,
+    "tecto_60_atingido": false,
+    "residuo_formula": 0.0,
+    "viewport_px": [
+      1920,
+      1080
+    ],
+    "camera_fov_graus": 75.0,
+    "camera_keep_aspect": 1,
+    "pontos": [
+      {
+        "f": [
+          -1.0,
+          -1.0
+        ],
+        "altura_m": 0.0,
+        "dentro": true,
+        "ecra_px": [
+          572.7,
+          150.4
+        ],
+        "folga_px": 150.4
+      },
+      {
+        "f": [
+          1.0,
+          -1.0
+        ],
+        "altura_m": 0.0,
+        "dentro": true,
+        "ecra_px": [
+          1290.6,
+          229.3
+        ],
+        "folga_px": 229.3
+      },
+      {
+        "f": [
+          -1.0,
+          1.0
+        ],
+        "altura_m": 0.0,
+        "dentro": true,
+        "ecra_px": [
+          500.0,
+          989.7
+        ],
+        "folga_px": 90.3
+      },
+      {
+        "f": [
+          1.0,
+          1.0
+        ],
+        "altura_m": 0.0,
+        "dentro": true,
+        "ecra_px": [
+          1438.4,
+          1001.7
+        ],
+        "folga_px": 78.3
+      },
+      {
+        "f": [
+          0.0,
+          -1.0
+        ],
+        "altura_m": 0.0,
+        "dentro": true,
+        "ecra_px": [
+          960.0,
+          191.8
+        ],
+        "folga_px": 191.8
+      },
+      {
+        "f": [
+          0.0,
+          1.0
+        ],
+        "altura_m": 0.0,
+        "dentro": true,
+        "ecra_px": [
+          960.0,
+          993.7
+        ],
+        "folga_px": 86.3
+      },
+      {
+        "f": [
+          -1.0,
+          0.0
+        ],
+        "altura_m": 0.0,
+        "dentro": true,
+        "ecra_px": [
+          560.5,
+          541.8
+        ],
+        "folga_px": 538.2
+      },
+      {
+        "f": [
+          1.0,
+          0.0
+        ],
+        "altura_m": 0.0,
+        "dentro": true,
+        "ecra_px": [
+          1369.5,
+          538.1
+        ],
+        "folga_px": 538.1
+      },
+      {
+        "f": [
+          -1.0,
+          -1.0
+        ],
+        "altura_m": 1.8,
+        "dentro": true,
+        "ecra_px": [
+          546.0,
+          113.2
+        ],
+        "folga_px": 113.2
+      },
+      {
+        "f": [
+          1.0,
+          -1.0
+        ],
+        "altura_m": 1.8,
+        "dentro": true,
+        "ecra_px": [
+          1309.9,
+          202.4
+        ],
+        "folga_px": 202.4
+      },
+      {
+        "f": [
+          -1.0,
+          1.0
+        ],
+        "altura_m": 1.8,
+        "dentro": true,
+        "ecra_px": [
+          461.8,
+          1014.6
+        ],
+        "folga_px": 65.4
+      },
+      {
+        "f": [
+          1.0,
+          1.0
+        ],
+        "altura_m": 1.8,
+        "dentro": true,
+        "ecra_px": [
+          1479.9,
+          1028.8
+        ],
+        "folga_px": 51.2
+      },
+      {
+        "f": [
+          0.0,
+          -1.0
+        ],
+        "altura_m": 1.8,
+        "dentro": true,
+        "ecra_px": [
+          960.0,
+          160.3
+        ],
+        "folga_px": 160.3
+      },
+      {
+        "f": [
+          0.0,
+          1.0
+        ],
+        "altura_m": 1.8,
+        "dentro": true,
+        "ecra_px": [
+          960.0,
+          1019.3
+        ],
+        "folga_px": 60.7
+      },
+      {
+        "f": [
+          -1.0,
+          0.0
+        ],
+        "altura_m": 1.8,
+        "dentro": true,
+        "ecra_px": [
+          532.0,
+          531.3
+        ],
+        "folga_px": 531.3
+      },
+      {
+        "f": [
+          1.0,
+          0.0
+        ],
+        "altura_m": 1.8,
+        "dentro": true,
+        "ecra_px": [
+          1399.5,
+          527.0
+        ],
+        "folga_px": 520.5
+      }
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+[jogadora] entrou
+[jogadora] o orc está na mesa e é a vez dela: ataca
+[jogadora] recibo do ataque: AGUARDANDO_MESTRE
+[jogadora] recibo do ataque: APLICADA
+[jogadora] o Mestre decidiu a desgraça
+[jogadora] voltar visto
+[jogadora] snapshot do voltar visto
+[jogadora] fim visto
+[jogadora] recomeço visto
+[jogadora] snapshot do recomeço visto
+[jogadora] OK: 23 mensagens, nenhum canário do Mestre (por fase: jogo 13, voltar 4, fim 1, recomeço 5); marcos: entrou → o orc está na mesa e é a vez dela: ataca → recibo do ataque: AGUARDANDO_MESTRE → recibo do ataque: APLICADA → o Mestre decidiu a desgraça → voltar visto → snapshot do voltar visto → fim visto → recomeço visto → snapshot do recomeço visto

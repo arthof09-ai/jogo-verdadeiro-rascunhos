@@ -1,0 +1,5 @@
+[servidor] motor REAL a91c021cda11
+[servidor] servidor de mesa pronto (WebSocket em /ws)
+pronto-e2e 8766
+[motor-real] {"atacante":"heroina-teste","modo":"proposta","resultado":"falhaCritica","erro":null,"desgraca":"cai","aplicado":false}
+[motor-real] {"atacante":"heroina-teste","modo":"escolha","resultado":"falhaCritica","erro":null,"desgraca":"cai","aplicado":true}

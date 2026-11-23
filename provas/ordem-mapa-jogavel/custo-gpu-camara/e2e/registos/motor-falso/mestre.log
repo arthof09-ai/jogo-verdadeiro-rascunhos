@@ -1,0 +1,32 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+== ligar como Mestre a ws://127.0.0.1:8765/ws ==
+  ok    entrou como Mestre e recebeu a MASTER_VIEW (0.0 s)
+[floresta] pronta em 1787 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":1787,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+[floresta] pronta em 3060 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":3060,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+  ok    o ecrã do Mestre abriu no lobby (0.0 s)
+== lobby ==
+  ok    a pesquisa trouxe o orc (MASTER_RESULTS) (0.0 s)
+  ok    «Guardar a mesa» chegou ao servidor (o orc está na mesa) (0.3 s)
+  ok    «Começar a batalha» ×2 → combate (0.3 s)
+== colocar ==
+Unicode parsing error, some characters were replaced with � (U+FFFD): Unexpected NUL character
+Unicode parsing error, some characters were replaced with � (U+FFFD): Unexpected NUL character
+  ok    o orc colocado ao lado dela aparece na arena 3D (0.3 s)
+== o cartão do golpe dela ==
+  ok    chegou o cartão de desgraça (a jogadora atacou) (0.0 s)
+  ok    o cartão mostra a frase que a Party vai ler
+  ok    «Confirmar» fechou o cartão no servidor (0.0 s)
+== voltar até aqui ==
+  ok    a vista traz pontos de «voltar» (L8) (0.0 s)
+  ok    escolher o ponto ainda não voltou
+  ok    «Voltar até aqui» → o servidor voltou (evento revertido) (0.0 s)
+== terminar e recomeçar (N4) ==
+  ok    a vista depois do «voltar» chegou, com a janela de 10 envios/s cheia (1.2 s)
+  ok    o pedido da vista esperou pela janela e voltou a ser feito (1272 ms)
+  fase=combate revisao=7 alertas=[]
+  ok    «Terminar batalha» → a batalha acabou (0.3 s)
+  ok    «Recomeçar» → a mesma batalha do zero (combate, rodada 1) (0.3 s)
+  ok    nenhum comando do Mestre foi recusado []
+
+ponta a ponta: 17 de 17 verificações passaram.
