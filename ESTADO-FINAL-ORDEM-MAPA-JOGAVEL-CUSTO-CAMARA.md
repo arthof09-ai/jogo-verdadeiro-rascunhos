@@ -196,8 +196,11 @@ Na ponta `5ab2aea`, antes das medições (`suites/antes/resumo.txt`, 16:47–16:
 
 **Não houve correcção da câmara**, por isso não há segunda passagem. Nenhum ficheiro de `rascunhos/` mudou, por isso
 as listas da retoma não mudam (conferido com `actualizar-listas.py` no commit deste ESTADO, ver a nota do CI).
-**CI:** o commit das provas é `de0d550`. Os números do CI deste ESTADO ficam na nota que vem a seguir a ele, como nas
-ordens anteriores.
+**CI — VERIFICADO, verde nos dois commits da ordem:**
+- provas `de0d550`: Testes `45254569478` success, Sonda `45254569718` success;
+- **ESTADO `f4aa10a`: Testes `45254861564` success, Sonda `45254861796` success.**
+
+`actualizar-listas.py` no `f4aa10a`: 0 novos, 0 tirados, árvore limpa.
 
 ## 6. A7 — privacidade — VERIFICADO
 - Sonda: o `grep` dos e-mails pessoais da `privacidade.yml`, corrido no repo, dá **0** achados.
