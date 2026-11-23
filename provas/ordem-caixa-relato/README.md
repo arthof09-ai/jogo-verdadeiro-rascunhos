@@ -527,7 +527,11 @@ redacção. Procura-se só no texto já redigido e diz só contagens e n.ºs de 
   variante;
 - **J10:** a variante (ou o próprio nome) partida por quebra de linha, quando o pedaço que fica no fim da linha é
   demasiado curto para se redigir como corte na origem: a variante procura-se no texto todo, e o espaço à volta da
-  palavra do meio pode ser uma quebra de linha (LF ou CRLF). Conta como variante, na linha onde começa;
+  palavra do meio pode ser uma quebra de linha (LF ou CRLF). Conta como variante, na linha onde começa.
+  **Travado desde a F114** (opção 1 da F108): qualquer separador à volta da palavra do meio casa no máximo uma quebra de
+  linha. A quebra de linha pode estar antes ou depois da palavra do meio, ou nos dois lados (o nome partido por 3
+  linhas continua a contar), **nunca uma linha em branco** (nem uma linha só de espaços): partido por uma linha em
+  branco, deixa de contar;
 - **J8:** o corte colado a uma letra (o pedaço do nome seguido logo de outra letra) conta como corte quando o pedaço
   tem pelo menos 2 palavras inteiras do nome e acaba a meio de uma palavra do nome. Com menos, o nome público seguido
   de uma palavra que começa pela letra da preposição dispararia a rede.
@@ -554,6 +558,8 @@ preposição. O auto-teste cobre-os com casos montados.
 
 **Limite (F97).** A redacção apanha o nome sem a preposição (5.ª forma) e a rede aponta-o. A rede não apanha um pedaço que não comece no início do nome — só o apelido sozinho fica de fora: a última palavra é palavra corrente — 75 ocorrências no relato antigo, 47 ainda no relato antigo redigido, 6 no registo limpo (a contar sem distinguir maiúsculas) — e apanhá-la marcaria o registo limpo como sujo.
 
+**Limite (F114, J10).** A variante partida por quebra de linha só conta se a quebra de linha estiver antes ou depois da palavra do meio, ou nos dois lados, **nunca uma linha em branco**. O nome partido por uma linha em branco não dá suspeito: o pedaço no fim da linha de cima é demasiado curto para corte, e a variante não atravessa a linha em branco. O auto-teste afirma-o (0 variantes).
+
 O auto-teste marca o que fica aberto como «AINDA ABERTO» (F95): o pedaço que começa a meio do nome («de Y» ou só «Y»)
 e, desde a F97, duas palavras no lugar da preposição (F89). Os casos passam enquanto o buraco está aberto; quem o
 fechar tem de virar o caso para afirmar a saída 3, e é essa a prova do fecho. O caso do nome sem a preposição já virou
@@ -566,7 +572,7 @@ Usos (na raiz do repo):
   compara o redigido com o registo, byte a byte. Diz só «igual» ou o n.º da 1.ª linha diferente, nunca o texto. Sai
   com 0 se for igual e 1 se não for. `--ignorar-cr` tira os CR dos dois lados: o Godot do CI, em Linux, escreve LF, e
   os registos cometidos são CRLF (escritos no Windows). No PC compara-se sem `--ignorar-cr`.
-- `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs --auto-teste` corre 26 verificações com casos montados
+- `node provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs --auto-teste` corre 28 verificações com casos montados
   em memória a partir das fichas:
   - as quatro formas, o nome público intacto, os fins de linha e a idempotência;
   - desde a F66/F68: a variante do nome n.º 1 fora da lista, o corte mínimo do nome n.º 2 a meio da linha, a rede
@@ -575,7 +581,9 @@ Usos (na raiz do repo):
   - desde a F97: o nome n.º 1 sem a preposição com dois espaços, um tabulador ou partido por quebra de linha (e a
     forma de um espaço crua) → a rede sai com 3 (é o caso da F95 que virou); a 5.ª forma no nome n.º 1 a meio da
     linha e no nome n.º 2 no fim da linha; a variante hifenizada → saída 3; e duas palavras no lugar da preposição
-    «AINDA ABERTO».
+    «AINDA ABERTO»;
+  - desde a F114 (J10 travado): o nome n.º 1 partido por 3 linhas → a rede sai com 3; partido por uma linha em branco
+    → 0 variantes (não conta).
 
   Com 1 nome verdadeiro, falha com 1; com 0, sai com 2 antes do auto-teste (F90).
 
@@ -586,7 +594,9 @@ Usos (na raiz do repo):
   - a 14.ª precisa de o nome n.º 2 ser maior do que o mínimo do corte;
   - a de J8 precisa de o nome n.º 2 ter 3 palavras ou mais;
   - (F97) a do nome sem a preposição na rede, a da 5.ª forma no nome n.º 1 e as duas da F89 precisam de o nome n.º 1
-    ter uma preposição da lista no meio; a da 5.ª forma no nome n.º 2 precisa do mesmo no nome n.º 2.
+    ter uma preposição da lista no meio; a da 5.ª forma no nome n.º 2 precisa do mesmo no nome n.º 2;
+  - (F114) as duas do J10 travado (3 linhas e linha em branco) precisam de o nome n.º 1 ter uma preposição da lista
+    no meio.
 
   Se as fichas mudarem e uma destas condições deixar de valer, o caso falha. Falhar alto é o certo, e a dependência
   fica escrita aqui e no código.

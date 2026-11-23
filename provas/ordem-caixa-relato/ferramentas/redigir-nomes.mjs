@@ -155,7 +155,11 @@ function reVariantesFora(nome) {
     if (!PREPOSICOES.includes(min(ps[j]))) continue;
     const antes = ps.slice(0, j).map(esc).join('\\s+');
     const depois = ps.slice(j + 1).map(esc).join('\\s+');
-    res.push(new RegExp(`(?<!\\p{L})${antes}\\s+[\\p{L}'’]+(?:-[\\p{L}'’]+)*(?:\\p{P}+\\s*|\\s+)${depois}(?!\\p{L})`, 'giu'));
+    // F114 (travar o J10, opção 1 da F108): qualquer separador à volta da palavra do meio casa no máximo um `\n` e nunca
+    // `\n\n` — a quebra de linha pode estar antes ou depois da palavra do meio, ou nos dois lados, nunca uma linha em
+    // branco.
+    const S = '(?=\\s)[^\\S\\n]*\\n?[^\\S\\n]*';
+    res.push(new RegExp(`(?<!\\p{L})${antes}${S}[\\p{L}'’]+(?:-[\\p{L}'’]+)*(?:\\p{P}+[^\\S\\n]*\\n?[^\\S\\n]*|${S})${depois}(?!\\p{L})`, 'giu'));
   }
   return res;
 }
@@ -356,6 +360,13 @@ function autoTeste(verdadeiros, publicos, escreve = console.log) {
   confere('F94 (J10): o nome n.º 1 (ou a variante «du») partido por quebra de linha, com o corte curto (LF e CRLF), não se redige, mas a rede apanha-o: 1 variante, na linha onde começa → saída 3',
     !!partidas && partidas.map((t) => r(t) === t).every(Boolean) &&
     s1(r(partidas[0])) === '0|1|0|1|' && s1(r(partidas[1])) === '0|1|0|1|' && s1(r(partidas[2])) === '0|1|0|2|');
+  // F114 (travar o J10): qualquer separador à volta da palavra do meio casa no máximo um `\n`, nunca uma linha em branco.
+  const tresLinhas = antesA && `fim: ${antesA}\n${psA[jA]}\n${depoisA} segue`;
+  confere('F114 (J10 travado): o nome n.º 1 partido por 3 linhas (o início / a preposição sozinha / o apelido) não se redige, mas a rede continua a apanhá-lo: 1 variante, na linha 1 → saída 3',
+    !!tresLinhas && r(tresLinhas) === tresLinhas && s1(r(tresLinhas)) === '0|1|0|1|' && haSuspeitos(sus(r(tresLinhas))));
+  const emBranco = antesA && `fim: ${antesA}\n\n${psA[jA]} ${depoisA} segue`;
+  confere('F114 (J10 travado): o nome n.º 1 partido por uma linha em branco antes da preposição NÃO conta como variante (0 variantes; a travagem tem dentes)',
+    !!emBranco && r(emBranco) === emBranco && sus(r(emBranco)).variantes === 0);
   // F93: uma ocorrência conta uma vez só.
   const duploA = antesA && `x «${antesA}  ${psA[jA]} ${depoisA}» y`;
   confere('F93: o nome n.º 1 inteiro (texto cru) conta só como inteiro (0 variantes, 0 cortes); com 2 espaços conta só como 1 variante',
