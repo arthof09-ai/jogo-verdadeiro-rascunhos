@@ -3,7 +3,7 @@ Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 == Ordem CAIXA-JANELA-NOMES — os nomes do relato da prova da caixa-janela ==
   ok    as fichas de bancada têm o Bruto e o Lobo (4 fichas)
 == 1. os canários: os nomes verdadeiros que diferem do público ==
-  ok    1: «nome n.º 1» e «nome n.º 2» são canários ["nome n.º 1", "nome n.º 2"]
+  ok    1: «nome n.º 1» e «nome n.º 2» são canários (2)
   ok    1: as heroínas (nome = nome público) não são canários
   ok    1: uma ficha repetida não repete o canário (aqui as 4 fichas + 1 Bruto repetido; na prova viva, 10 figuras de 4 fichas)
 == 2. a fonte: o relato escreve o nome PÚBLICO ==

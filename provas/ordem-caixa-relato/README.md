@@ -541,8 +541,8 @@ redacção. Procura-se só no texto já redigido e diz só contagens e n.ºs de 
   conta como resto e dá saída 3. Apanha o que a 5.ª forma exacta não redige: dois espaços, um tabulador, a quebra de
   linha (conta na linha onde começa). A forma de um espaço não se exclui aqui, para que um falhanço da redacção saia
   ainda com 3. A linha de contagens diz «N nome(s) sem a preposição».
-- **F89 — a palavra hifenizada:** a palavra substituta da variante fora da lista é **«uma palavra de letras, com ou sem
-  hífenes»** («X du-la Y» conta como variante). **Mais de uma palavra** no lugar da preposição («X du la Y») continua
+- **F89 — a palavra hifenizada:** a palavra substituta da variante fora da lista é **«uma palavra de letras, com ou sem hífenes»**
+  («X du-la Y» conta como variante). **Mais de uma palavra** no lugar da preposição («X du la Y») continua
   fora: duas ou três palavras já não são «a preposição substituída», são palavras inseridas. **Os dígitos** também
   continuam fora: um número não é uma palavra, e não há caso realista de preposição escrita como dígito.
 - **Fronteira com a F94 (registada, não fechada aqui):** a substituta colada ao apelido (falta o espaço) e a
