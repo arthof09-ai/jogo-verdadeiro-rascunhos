@@ -1,0 +1,196 @@
+✔ motor real: a estabilizada curada pelo aplicarCura do site fica com 1 + cura, levanta-se e age na vez dela (31.7428ms)
+DIAGNOSTICO-MOTOR-REAL {
+ "sha": "a91c021cda11df675c78c63277e6f2679faa79c716c7ba104373198689993261",
+ "chamadas": 52,
+ "resultados": [
+  "acerta",
+  "erra",
+  "falhaCritica",
+  "critico"
+ ],
+ "desconhecidos": [],
+ "excecoes": [],
+ "erros": [],
+ "exemploSaida": {
+  "resultado": "acerta",
+  "danoAplicado": {
+   "parcelas": [
+    {
+     "tipo": "cortante",
+     "expressao": "1d6+2",
+     "faces": [
+      4
+     ],
+     "subtotal": 6
+    }
+   ],
+   "total": 6,
+   "dme": 5.5,
+   "recibo": "1d6+2 → [4] = 6 (cortante)",
+   "rdAplicada": null,
+   "erro": null
+  },
+  "erro": null,
+  "chavesRolagem": [
+   "ajusteVantagemDesvantagem",
+   "bonus",
+   "conjuntosDeFaces",
+   "escolhido",
+   "expressao",
+   "niveisLiquidos",
+   "resultados",
+   "total"
+  ],
+  "rolagemExemplo": {
+   "expressao": "1d20+4",
+   "conjuntosDeFaces": [
+    [
+     11
+    ]
+   ],
+   "bonus": 4,
+   "ajusteVantagemDesvantagem": 0,
+   "niveisLiquidos": 0,
+   "resultados": [
+    15
+   ],
+   "escolhido": 15,
+   "total": 15
+  },
+  "totalEfectivo": 6,
+  "chavesPublico": [
+   "recibo"
+  ],
+  "chavesFalhaCritica": null,
+  "desgracaPendente": null,
+  "chavesTopo": [
+   "contraAtaquePendente",
+   "danoAplicado",
+   "defesaUsada",
+   "desgracaPendente",
+   "erro",
+   "pa",
+   "publico",
+   "rdAplicada",
+   "reacaoConsumida",
+   "resultado",
+   "rolagem",
+   "soDoMestre",
+   "totalEfectivo"
+  ],
+  "chavesSoDoMestre": [
+   "alvoDepois",
+   "efeitosAtacante"
+  ],
+  "alvoDepois": [
+   "estadosNovos",
+   "estadosRemovidos",
+   "vidaActual"
+  ]
+ },
+ "exemploFalhaCritica": {
+  "resultado": "falhaCritica",
+  "danoAplicado": null,
+  "erro": null,
+  "chavesRolagem": [
+   "ajusteVantagemDesvantagem",
+   "bonus",
+   "conjuntosDeFaces",
+   "escolhido",
+   "expressao",
+   "niveisLiquidos",
+   "resultados",
+   "total"
+  ],
+  "rolagemExemplo": {
+   "expressao": "1d20+7",
+   "conjuntosDeFaces": [
+    [
+     5
+    ]
+   ],
+   "bonus": 7,
+   "ajusteVantagemDesvantagem": 0,
+   "niveisLiquidos": 0,
+   "resultados": [
+    12
+   ],
+   "escolhido": 12,
+   "total": 12
+  },
+  "totalEfectivo": 0,
+  "chavesPublico": [
+   "recibo"
+  ],
+  "chavesFalhaCritica": null,
+  "desgracaPendente": null,
+  "chavesTopo": [
+   "contraAtaquePendente",
+   "danoAplicado",
+   "defesaUsada",
+   "desgracaPendente",
+   "erro",
+   "pa",
+   "publico",
+   "rdAplicada",
+   "reacaoConsumida",
+   "resultado",
+   "rolagem",
+   "soDoMestre",
+   "totalEfectivo"
+  ],
+  "chavesSoDoMestre": [
+   "alvoDepois",
+   "efeitosAtacante",
+   "falhaCritica"
+  ],
+  "alvoDepois": [
+   "estadosNovos",
+   "estadosRemovidos",
+   "vidaActual"
+  ]
+ },
+ "voltas": 25,
+ "contagem": {
+  "ROOM_RECEIPT:APLICADA": 24,
+  "ROOM_RECEIPT:AGUARDANDO_MESTRE": 1
+ },
+ "recusas": [],
+ "desgracas": [
+  {
+   "tipo": "desgraca",
+   "proposta": {
+    "id": "acerta-se",
+    "nome": "Acerta-se a si próprio",
+    "gravidade": 4
+   },
+   "doMonstro": true,
+   "aprovacao": {
+    "type": "ROOM_RECEIPT",
+    "estado": "APLICADA"
+   }
+  },
+  {
+   "tipo": "desgraca",
+   "proposta": {
+    "id": "cai",
+    "nome": "Ele cai",
+    "gravidade": 1
+   },
+   "aprovacao": {
+    "type": "ROOM_RECEIPT",
+    "estado": "APLICADA"
+   }
+  }
+ ],
+ "eventosDanoHeroina": 9
+}
+✔ motor real: ataques da heroína ao orc resolvem sem erro de ponte, com dano, e sem vazar o motor (102.9541ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 212.3301
