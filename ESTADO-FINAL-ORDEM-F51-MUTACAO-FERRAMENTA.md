@@ -148,6 +148,11 @@ canário, deram rc=0. **Até alguém o aplicar, a ferramenta não corre no CI.**
   só para `tmp/`. Passei-a pelos dois comandos do remendo: auto-teste 12/12, e o redigido ficou **igual byte a byte**
   ao registo da COBERTURA-CORRECOES-6 com `--ignorar-cr` (3464 bytes). O passo, aplicado, passa.
 
+**CI da ponta `360d4df`** (a obra mais este ESTADO-FINAL): **verde**. Testes dos rascunhos, run `45114494823`, com os
+10 jobs a passar, e Sonda de privacidade, run `45114494730`. Os números do job `cliente` são os mesmos: canário 26/26,
+`rodar_testes` 321/321 (também no `godot-cliente`), `caixa_janela` 123/123, `caixa_jogadora` 70/70 e mutação das
+células «114 de 123». O commit desta nota só acrescenta este parágrafo a este ficheiro.
+
 ## 6. Ficheiros
 
 - `provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs`: a ferramenta.
