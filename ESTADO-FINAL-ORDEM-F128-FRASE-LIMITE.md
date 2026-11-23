@@ -80,3 +80,12 @@ A nota do CI da ponta deste ESTADO-FINAL entra mais abaixo e só acrescenta text
   - o canário dá 26/26 e «igual byte a byte ao redigido (3437 bytes, sem os CR)»;
   - as suites dão 321/321 e 70/70, e a mutação dá 114/123.
 - O log do `cliente` tem 0 nomes inteiros e 0 PIN.
+
+## 6. Errata (fusão da conferência da F128, 810)
+
+O commit `b9c7129` e a sua mensagem não se reescrevem; as correcções valem por esta errata.
+
+- **F153** — Na introdução, onde se lê «(`@@ -563 +563 @@`)», leia-se «(`@@ -560,7 +560,7 @@`)».
+- **F154** — No §1, onde se lê «Está na linha 563», leia-se «Está na linha 563 na obra (564 na ponta deste ESTADO-FINAL)». A mensagem do commit `b9c7129` também diz 563; o §4.2 já corrige para 564.
+- **F155** — No §3, onde se lê «A nota do CI da ponta deste ESTADO-FINAL entra mais abaixo e só acrescenta texto a este ficheiro.», leia-se «A nota do CI da ponta deste ESTADO-FINAL entra no commit seguinte `e3214f3` (§5) e só acrescenta texto a este ficheiro.»; no §5, onde se lê «as suites dão 321/321 e 70/70», leia-se «as suites dão 321/321, 123/123 e 70/70».
+- **F156** — Onde se lê «0 PIN» (§3 e §5), leia-se «0 valores de PIN». (No §2 não há a expressão literal — a linha de privacidade é «0/0».) Regra para os próximos ESTADOS-FINAIS: o token PIN ocorre 7× em 5 linhas por log do `cliente`, sempre como rótulo de testes marcados `ok`.
