@@ -12,6 +12,8 @@ extends SceneTree
 ##     Ordem CAIXA-EXPANDE: a compacta mostra só os 4 próximos (os slots); e, em todas as medições, a VISTA EXPANDIDA — o rato
 ##     por cima (eventos a sério) abre a ordem inteira com os nomes completos (um nome de 33 letras incluído), encostada à
 ##     direita, acima da barra, sem tapar a faixa nem a ⚙; o que não cabe rola por dentro (MEDIDA EXPANDIDA ...).
+##     Ordem CAIXA-EXPANDE-INTERACAO (D2): a rolagem prova-se com a roda do rato a sério (push_input) em cima da lista,
+##     posição medida antes e depois (MEDIDA RODA ...); o arrastar mede-se e regista-se (REGISTO ARRASTAR ..., não conta).
 ## Código de saída 0 se tudo passa, 1 se algo falha.
 
 ## As frases mais compridas que a faixa mostra em combate (hud.gd `_texto_faixa`), com um nome de 10 letras e 10,5 m.
@@ -254,8 +256,20 @@ func _medir_expandida(hud: Node, n: int, tam: Vector2i) -> void:
 	var tapa := faixa.get_global_rect().intersects(r) or (coluna.visible and coluna.get_global_rect().intersects(r))
 	_ok(tela.encloses(r) and r.end.y <= topo_barra + 0.5 and absf(r.end.x - r0.end.x) <= 0.5 and r.size.x >= r0.size.x and r.size.y >= r0.size.y and not tapa,
 		"%d figuras %dx%d: [expandida] cresce para baixo, encostada à direita, cabe no ecrã acima da barra e não tapa a faixa nem a ⚙ (%s; barra em y %d)" % [n, tam.x, tam.y, r, int(topo_barra)])
-	_ok(rola == (lista.get_combined_minimum_size().y > rol.size.y + 0.5) and Vector2(faixa.offset_left, faixa.offset_right) == margens0,
-		"%d figuras %dx%d: [expandida] o que não cabe rola por dentro (rola %s) e a faixa não se mexe" % [n, tam.x, tam.y, rola])
+	# Ordem CAIXA-EXPANDE-INTERACAO (D2): a rolagem prova-se pelo GESTO — a roda do rato a sério (push_input) em cima da
+	# lista, medida antes e depois —, e não pela conta das alturas (que era a mesma dos dois lados). Se a ordem não cabe:
+	# a lista começa no topo, um passo da roda desce-a, a roda leva-a ao fim (a última linha à vista) e de volta ao topo.
+	# Se cabe: a roda não a mexe.
+	var g: Dictionary = await _rodar_lista(rol, lista)
+	print("  MEDIDA RODA %d figuras · %dx%d: rola %s · posição antes %d u · depois de 1 passo para baixo %d u · no fim %d u (máximo %d u, %d passos; última linha à vista %s) · de volta ao topo %d u" % [
+		n, tam.x, tam.y, "SIM" if rola else "NÃO", g["antes"], g["um"], g["fim"], g["max"], g["passos"], "SIM" if g["ultima"] else "NÃO", g["topo"]])
+	var rolou: bool = g["antes"] == 0 and g["um"] > 0 and g["max"] > 0 and g["fim"] == g["max"] and g["ultima"] and g["topo"] == 0
+	var quieta: bool = g["antes"] == 0 and g["um"] == 0 and g["fim"] == 0 and g["topo"] == 0
+	_ok((rolou if rola else quieta) and Vector2(faixa.offset_left, faixa.offset_right) == margens0,
+		"%d figuras %dx%d: [expandida] a roda do rato rola a lista por dentro quando a ordem não cabe (rola %s: %d → %d → %d de %d u, e volta a %d), e a faixa não se mexe" % [
+			n, tam.x, tam.y, rola, g["antes"], g["um"], g["fim"], g["max"], g["topo"]])
+	if rola:
+		await _registar_arrastar(rol, n, tam)
 	_rato(r.end + Vector2(40, 40) if r.end.x + 40.0 < tela.end.x else r.position - Vector2(40, -40))
 	await _quadros(3)
 	_ok(not hud.caixa_mostrada()["expandida"] and cx.get_global_rect().is_equal_approx(r0),
@@ -268,3 +282,100 @@ func _rato(p: Vector2) -> void:
 	e.position = p
 	e.global_position = p
 	root.push_input(e, true)
+
+
+## Ordem CAIXA-EXPANDE-INTERACAO (D2): um passo da roda do rato a sério (carregar e largar), em coordenadas da janela.
+func _roda(p: Vector2, para_baixo: bool) -> void:
+	for carregado in [true, false]:
+		var e := InputEventMouseButton.new()
+		e.button_index = MOUSE_BUTTON_WHEEL_DOWN if para_baixo else MOUSE_BUTTON_WHEEL_UP
+		e.pressed = carregado
+		e.factor = 1.0
+		e.position = p
+		e.global_position = p
+		root.push_input(e, true)
+
+
+## D2: rola a lista só com a roda, em cima do meio da vista dela, e mede a posição (scroll_vertical, u): antes; depois de
+## um passo para baixo; no fim (passos para baixo até parar); e depois de passos para cima até parar. `ultima`: a última
+## linha da lista fica inteira dentro da vista no fim.
+func _rodar_lista(rol: ScrollContainer, lista: Node) -> Dictionary:
+	var p := rol.get_global_rect().get_center()
+	var g := {"antes": rol.scroll_vertical, "max": maxi(0, int(rol.get_v_scroll_bar().max_value - rol.get_v_scroll_bar().page))}
+	_roda(p, true)
+	await _quadros(2)
+	g["um"] = rol.scroll_vertical
+	var passos := 1
+	var ultimo := -1
+	while rol.scroll_vertical != ultimo and passos < 200:
+		ultimo = rol.scroll_vertical
+		_roda(p, true)
+		passos += 1
+		await _quadros(1)
+	await _quadros(2)
+	g["fim"] = rol.scroll_vertical
+	g["passos"] = passos
+	var ul := lista.get_child(lista.get_child_count() - 1) as Control
+	g["ultima"] = rol.get_global_rect().grow(0.5).encloses(ul.get_global_rect())
+	ultimo = -1
+	var guarda := 0
+	while rol.scroll_vertical != ultimo and guarda < 200:
+		ultimo = rol.scroll_vertical
+		_roda(p, false)
+		guarda += 1
+		await _quadros(1)
+	await _quadros(2)
+	g["topo"] = rol.scroll_vertical
+	return g
+
+
+## D2: o ARRASTAR na lista, medido e registado como facto (não conta: é o que a plataforma faz). No PC sem ecrã de toque
+## (DisplayServer.is_touchscreen_available() falso) o ScrollContainer do motor não rola por arrastar; num aparelho de
+## toque rola. Mede-se o arrastar com o botão do rato e com o dedo (ScreenTouch + ScreenDrag), 3 linhas para cima.
+func _registar_arrastar(rol: ScrollContainer, n: int, tam: Vector2i) -> void:
+	var p := rol.get_global_rect().get_center()
+	var d := Vector2(0.0, -3.0 * (rol.get_global_rect().size.y / 4.0))
+	var antes_rato := rol.scroll_vertical
+	var b := InputEventMouseButton.new()
+	b.button_index = MOUSE_BUTTON_LEFT
+	b.pressed = true
+	b.position = p
+	b.global_position = p
+	root.push_input(b, true)
+	for k in 6:
+		var m := InputEventMouseMotion.new()
+		m.button_mask = MOUSE_BUTTON_MASK_LEFT
+		m.position = p + d * float(k + 1) / 6.0
+		m.global_position = m.position
+		m.relative = d / 6.0
+		root.push_input(m, true)
+		await _quadros(1)
+	var b2 := b.duplicate() as InputEventMouseButton
+	b2.pressed = false
+	b2.position = p + d
+	b2.global_position = b2.position
+	root.push_input(b2, true)
+	await _quadros(3)
+	var depois_rato := rol.scroll_vertical
+	_rato(p)  # o rato volta para cima da lista (a vista continua aberta)
+	var antes_dedo := rol.scroll_vertical
+	var t := InputEventScreenTouch.new()
+	t.index = 0
+	t.pressed = true
+	t.position = p
+	root.push_input(t, true)
+	for k in 6:
+		var s := InputEventScreenDrag.new()
+		s.index = 0
+		s.position = p + d * float(k + 1) / 6.0
+		s.relative = d / 6.0
+		root.push_input(s, true)
+		await _quadros(1)
+	var t2 := t.duplicate() as InputEventScreenTouch
+	t2.pressed = false
+	t2.position = p + d
+	root.push_input(t2, true)
+	await _quadros(3)
+	print("  REGISTO ARRASTAR %d figuras · %dx%d: ecrã de toque %s · arrastar com o rato %d → %d u · arrastar com o dedo %d → %d u (não conta: é o que a plataforma faz)" % [
+		n, tam.x, tam.y, "SIM" if DisplayServer.is_touchscreen_available() else "NÃO", antes_rato, depois_rato, antes_dedo, rol.scroll_vertical])
+	rol.scroll_vertical = 0  # arrumar para a medida seguinte (o arrastar não é o que se prova aqui)

@@ -21,7 +21,11 @@ extends SceneTree
 ##      godot --headless --path cliente -s res://testes/caixa_jogadora.gd -- --estrita
 ## §9 (Ordem CAIXA-EXPANDE): a recentragem da faixa (hud.gd faixa_recentrada) em casos puros, e o toque na caixa no HUD
 ##    a sério (844×390, 8 figuras): um toque abre a vista expandida, outro fecha, um toque fora fecha; a faixa não mexe.
+## §10 (Ordem CAIXA-EXPANDE-INTERACAO): com a câmara da mesa a sério por baixo — o toque fora que fecha a expandida não
+##    chega ao tabuleiro (D1) e a roda no topo e no fim da lista não lhe dá zoom (D3). Ver `_interacao`.
 ## Código de saída 0 se tudo passa, 1 se algo falha.
+
+const CameraMesa := preload("res://camera/camera_mesa.gd")
 
 var _total := 0
 var _falhas := 0
@@ -256,12 +260,162 @@ func _correr() -> void:
 	_tocar(Vector2(root.get_visible_rect().size.x * 0.5, root.get_visible_rect().size.y * 0.5))
 	await _quadros(2)
 	_ok(not hud.caixa_mostrada()["expandida"], "toque: com a caixa aberta, um toque fora dela fecha-a")
+	await _interacao(hud)
 	hud.queue_free()
 	_figs = []
 	await process_frame
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
+
+
+## §10 (Ordem CAIXA-EXPANDE-INTERACAO): o tabuleiro por baixo da caixa — a CÂMARA DA MESA a sério (camera/camera_mesa.gd,
+## a que dá a arena o `toque` → mover/escolher a casa, e a roda → zoom), no HUD a sério, com 12 e 16 figuras em 844×390 e
+## 780×360. Os gestos vão pelo Input do motor (Input.parse_input_event, em píxeis da janela), o caminho do aparelho: o
+## motor imita o rato a partir do toque e despacha esse rato ANTES do toque.
+##   D1  com a expandida aberta por toque, um toque fora fecha-a e o tabuleiro fica QUIETO: o `toque` da câmara não
+##       dispara (nenhuma casa escolhida: nenhuma figura movida nem seleccionada) e ela não fica com o toque armado. De
+##       controlo: o toque seguinte, com a caixa fechada, chega ao tabuleiro (o `toque` dispara uma vez).
+##   D3  a roda em cima da expandida, no topo e no fim da lista, não muda o zoom do tabuleiro (medido antes e depois); a
+##       lista rola com ela pelo meio. De controlo: a roda fora da caixa dá zoom.
+func _interacao(hud: Node) -> void:
+	print("== 10. Ordem CAIXA-EXPANDE-INTERACAO: o tabuleiro por baixo da caixa (toque fora, roda nos fins) ==")
+	var cam := CameraMesa.new()
+	cam.name = "CameraDaMesa"
+	root.add_child(cam)
+	cam.configurar_arena(Vector3(15.0, 0.0, 15.0), Vector2(30.0, 30.0))
+	var toques: Array = []
+	cam.toque.connect(func(p: Vector2): toques.append(p))
+	await _quadros(2)
+	var cx: Control = hud._caixa
+	for n in [12, 16]:
+		_figs = []
+		var ordem: Array = []
+		for i in n:
+			var fid := "j1" if i == 0 else ("j2" if i == 1 else "m%d" % (i - 1))
+			_figs.append(_figura(fid, NOMES_8[i % NOMES_8.size()], "jogadora" if i < 2 else "criatura", 2 + (i % 16)))
+			ordem.append(fid)
+		_snapshot({"ligada": true, "ordemPor": "dinamico", "ordemDinamica": {"ordem": ordem, "fechada": true, "ultimo": "j1"}})
+		await _quadros(2)
+		for tam in [Vector2i(844, 390), Vector2i(780, 360)]:
+			root.size = tam
+			await process_frame
+			if root.size != tam:
+				_ok(false, "§10 %d figuras: %s pedida, mas a janela ficou %s: sem medida" % [n, tam, root.size])
+				continue
+			hud._ao_redimensionar()
+			await _quadros(4)
+			var rot := "§10 %d figuras %dx%d" % [n, tam.x, tam.y]
+			var fora := _fora_da_caixa(hud)
+			# D1 — o toque fora que fecha a expandida não chega ao tabuleiro.
+			var r0: Rect2 = hud.caixa_mostrada()["rect"]
+			_tocar_motor(r0.get_center())
+			await _quadros(3)
+			var abriu: bool = hud.caixa_mostrada()["expandida"] and (hud.caixa_mostrada()["ordem_expandida"] as Array).size() == n
+			var n_toques := toques.size()
+			_tocar_motor(fora)
+			await _quadros(3)
+			var fechou: bool = not hud.caixa_mostrada()["expandida"]
+			var depois_fechar := toques.size() - n_toques
+			var armado: bool = cam._esq
+			_tocar_motor(fora)
+			await _quadros(3)
+			var depois_controlo := toques.size() - n_toques - depois_fechar
+			print("  MEDIDA D1 %s: abriu por toque %s · toque fora em %s u: fechou %s, «toque» do tabuleiro %d vez(es), toque armado %s · controlo (caixa fechada): «toque» %d vez(es)" % [
+				rot, abriu, fora, fechou, depois_fechar, armado, depois_controlo])
+			_ok(abriu and fechou and depois_fechar == 0 and not armado,
+				"%s: [D1] com a expandida aberta, um toque fora fecha-a e o tabuleiro fica quieto (o «toque» da câmara não dispara: %d; não fica armado)" % [rot, depois_fechar])
+			_ok(depois_controlo == 1 and not hud.caixa_mostrada()["expandida"],
+				"%s: [D1] de controlo, o toque seguinte (caixa fechada) chega ao tabuleiro (o «toque» dispara %d vez)" % [rot, depois_controlo])
+			# D3 — a roda nos fins da lista fica na caixa.
+			_rato(r0.get_center())
+			await _quadros(3)
+			var rol := cx.find_child("Expandida", true, false) as ScrollContainer
+			var p := rol.get_global_rect().get_center()
+			var rola: bool = cx.expandida_rola()
+			cam.definir_zoom(cam.ZOOM_PADRAO)
+			var z0 := cam.zoom
+			# A lista guarda a posição de uma abertura para a outra: leva-se ao topo com a própria roda (para cima até parar).
+			var s_aberta := rol.scroll_vertical
+			var ultimo := -1
+			var subir := 0
+			while rol.scroll_vertical != ultimo and subir < 200:
+				ultimo = rol.scroll_vertical
+				_roda(p, false)
+				subir += 1
+				await _quadros(1)
+			var z_subida := cam.zoom
+			var s0 := rol.scroll_vertical
+			_roda(p, false)  # no topo, para cima: a lista não rola mais
+			await _quadros(2)
+			var z_topo := cam.zoom
+			var s_topo := rol.scroll_vertical
+			ultimo = -1
+			var passos := 0
+			while rol.scroll_vertical != ultimo and passos < 200:
+				ultimo = rol.scroll_vertical
+				_roda(p, true)
+				passos += 1
+				await _quadros(1)
+			var s_fim := rol.scroll_vertical
+			var z_meio := cam.zoom
+			_roda(p, true)  # no fim, para baixo: a lista não rola mais
+			await _quadros(2)
+			var z_fim := cam.zoom
+			var s_fim2 := rol.scroll_vertical
+			_rato(fora)
+			await _quadros(3)
+			_roda(fora, false)  # de controlo: fora da caixa, a roda dá zoom ao tabuleiro
+			await _quadros(2)
+			var z_controlo := cam.zoom
+			cam.definir_zoom(cam.ZOOM_PADRAO)
+			print("  MEDIDA D3 %s: rola %s · zoom antes %.3f · abriu na posição %d u, %d passos para cima até ao topo: lista %d u, zoom %.3f · roda para cima no topo: lista %d → %d u, zoom %.3f · %d passos para baixo até ao fim: lista %d u, zoom %.3f · roda para baixo no fim: lista %d → %d u, zoom %.3f · controlo (roda fora da caixa): zoom %.3f" % [
+				rot, rola, z0, s_aberta, subir, s0, z_subida, s0, s_topo, z_topo, passos, s_fim, z_meio, s_fim, s_fim2, z_fim, z_controlo])
+			_ok(rola and s0 == 0 and s_topo == 0 and s_fim > 0 and s_fim2 == s_fim and z_subida == z0 and z_topo == z0 and z_meio == z0 and z_fim == z0,
+				"%s: [D3] a roda no topo e no fim da lista não dá zoom ao tabuleiro (zoom %.3f → %.3f no topo, %.3f no fim; a lista rolou 0 → %d u)" % [rot, z0, z_topo, z_fim, s_fim])
+			_ok(not is_equal_approx(z_controlo, z0), "%s: [D3] de controlo, a roda fora da caixa dá zoom ao tabuleiro (%.3f → %.3f)" % [rot, z0, z_controlo])
+	cam.queue_free()
+	await process_frame
+
+
+## §10: um sítio do tabuleiro fora da caixa, da ⚙/ficha, da barra e da faixa (o meio do ecrã, um pouco abaixo da faixa).
+func _fora_da_caixa(hud: Node) -> Vector2:
+	var v := root.get_visible_rect().size
+	return Vector2(v.x * 0.4, v.y * 0.55)
+
+
+## §10: um toque pelo Input do motor (carrega e levanta no mesmo sítio), dado em unidades do HUD e enviado em píxeis
+## da janela — o motor imita o rato a partir dele, como no aparelho.
+func _tocar_motor(p: Vector2) -> void:
+	var px: Vector2 = root.get_final_transform() * p
+	for k in 2:
+		var t := InputEventScreenTouch.new()
+		t.index = 0
+		t.pressed = k == 0
+		t.position = px
+		Input.parse_input_event(t)
+		Input.flush_buffered_events()
+		await process_frame
+
+
+## §10: um movimento do rato a sério, em coordenadas da janela (unidades do HUD).
+func _rato(p: Vector2) -> void:
+	var e := InputEventMouseMotion.new()
+	e.position = p
+	e.global_position = p
+	root.push_input(e, true)
+
+
+## §10: um passo da roda do rato a sério (carregar e largar), em coordenadas da janela (unidades do HUD).
+func _roda(p: Vector2, para_baixo: bool) -> void:
+	for carregado in [true, false]:
+		var e := InputEventMouseButton.new()
+		e.button_index = MOUSE_BUTTON_WHEEL_DOWN if para_baixo else MOUSE_BUTTON_WHEEL_UP
+		e.pressed = carregado
+		e.factor = 1.0
+		e.position = p
+		e.global_position = p
+		root.push_input(e, true)
 
 
 ## §9: um toque (carrega e levanta no mesmo sítio), em coordenadas da janela.

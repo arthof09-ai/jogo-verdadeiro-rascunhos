@@ -1,0 +1,12 @@
+abrir_scripts rc=0 erros=0 108 scripts, 0 falhas
+rodar_testes rc=0 erros=0 321 de 321 verificações passaram.
+abrir_clareira rc=0 erros=0 22 de 22 verificações passaram.
+medir_painel_config rc=0 erros=0 painel ⚙: 0 falha(s), 0 sem medida
+abrir_mestre rc=0 erros=0 67 de 67 verificações passaram.
+pecas_mestre rc=0 erros=0 286 de 286 verificações passaram.
+medir_mestre rc=0 erros=0 ecrã do Mestre: 0 falha(s), 0 sem medida
+hud_acoes rc=0 erros=0 50 de 50 verificações passaram.
+canario_privacidade rc=0 erros=0 10 de 10 verificações passaram.
+teste_relato_caixa rc=0 erros=0 teste do relato da caixa: 31 de 31 verificações passaram.
+teste_nomes_relato rc=0 erros=0 teste dos nomes do relato da caixa-janela: 26 de 26 verificações passaram.
+arranque «pronto» 2 vez(es), erros de script 0

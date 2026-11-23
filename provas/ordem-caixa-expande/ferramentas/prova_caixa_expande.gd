@@ -1,4 +1,14 @@
 extends SceneTree
+## Ordem CAIXA-EXPANDE-INTERACAO (22/11/2026, F14 da sentença da CAIXA-EXPANDE): a mesma prova, com dois acertos —
+##   8      a lista rola até ao fim com a RODA DO RATO a sério (push_input), e não com `scroll_vertical` posto pelo código.
+##   11     os 3 gestos a sério, com 12 e 16 figuras (o Mestre põe mais criaturas), em 844×390 e 780×360:
+##       D2  a roda rola a lista (posição medida antes e depois); o arrastar com o rato mede-se e regista-se;
+##       D3  a roda no fim e no topo da lista não muda o zoom do tabuleiro (a câmara da arena; medido antes e depois);
+##       D1  com a expandida aberta por toque (pelo Input do motor, que imita o rato a partir dele), um toque fora fecha-a e
+##           o tabuleiro fica quieto: o «toque» da câmara não dispara, as figuras não se mexem, a arena não muda de modo
+##           nem de cursor e não sai intenção nenhuma.
+##   bash provas/ordem-caixa-expande-interacao/ferramentas/correr-prova-interacao.sh <godot.exe> <vlab-completo.js> <pasta-tmp>
+##
 ## Prova da Ordem CAIXA-EXPANDE (22/11/2026) — cópia da prova da CAIXA-PADRAO-CORRECOES
 ## (provas/ordem-caixa-padrao-correcoes/ferramentas/prova_caixa_padrao_correcoes.gd): os mesmos 5 momentos e os casos do
 ## retrato, com a regra do Mestre (21/11/2026 23:10) e os momentos novos:
@@ -756,6 +766,7 @@ func _correr() -> void:
 	await _gravar("5-reentrou.png")
 	await _expande()
 	await _casos()
+	await _interacao()
 	_fim()
 
 
@@ -1094,11 +1105,17 @@ func _expande() -> void:
 			roundi(l0.size.y * _janela().y), a_vista, "SIM" if cx.expandida_rola() else "NÃO"])
 		await _gravar("8-expandida-%dx%d.png" % [tam.x, tam.y])
 		if cx.expandida_rola():
-			rol.scroll_vertical = int(rol.get_v_scroll_bar().max_value)
-			await _quadros(4)
-			_ok(rol.scroll_vertical > 0, rot + ": a lista rola até ao fim (a última figura à vista)")
+			# Ordem CAIXA-EXPANDE-INTERACAO (D2): rola-se com a roda do rato a sério, em cima da lista (era
+			# `scroll_vertical = max_value` posto pelo código). Mede-se a posição antes e no fim.
+			var antes8 := rol.scroll_vertical
+			var passos8 := await _rodar_ate_parar(rol.get_global_rect().get_center(), true)
+			var max8 := int(rol.get_v_scroll_bar().max_value - rol.get_v_scroll_bar().page)
+			var ul := lista.get_child(n - 1) as Control
+			_linha("  MEDIDA RODA %s: lista %d → %d u (máximo %d u) em %d passos da roda" % [rot, antes8, rol.scroll_vertical, max8, passos8])
+			_ok(antes8 == 0 and rol.scroll_vertical > 0 and rol.scroll_vertical == max8 and rol.get_global_rect().grow(0.5).encloses(ul.get_global_rect()),
+				rot + ": a roda do rato rola a lista até ao fim (%d → %d u; a última figura à vista)" % [antes8, rol.scroll_vertical])
 			await _gravar("8-expandida-%dx%d-fim.png" % [tam.x, tam.y])
-			rol.scroll_vertical = 0
+			await _rodar_ate_parar(rol.get_global_rect().get_center(), false)
 		_rato(_fora())
 		await _quadros(4)
 		_ok(not _caixa()["expandida"], rot + ": tirar o rato volta à compacta")
@@ -1120,6 +1137,202 @@ func _expande() -> void:
 		_ok(desvio <= tecto and not rf.intersects(r) and rf.size.x >= precisa,
 			"9 %dx%d: a faixa fica o mais perto do centro que o espaço deixa — desvio %.1f u ≤ tecto %.1f u, numa linha, sem tocar na caixa" % [tam.x, tam.y, desvio, tecto])
 		await _gravar("9-faixa-%dx%d.png" % [tam.x, tam.y])
+	await _janela_em(Vector2i(1280, 720))
+
+
+# ------------------------------------------------------------------ 11. Ordem CAIXA-EXPANDE-INTERACAO: os 3 gestos a sério
+
+## Um passo da roda do rato a sério (carregar e largar), nas coordenadas do ecrã do HUD.
+func _roda(p: Vector2, para_baixo: bool) -> void:
+	for carregado in [true, false]:
+		var e := InputEventMouseButton.new()
+		e.button_index = MOUSE_BUTTON_WHEEL_DOWN if para_baixo else MOUSE_BUTTON_WHEEL_UP
+		e.pressed = carregado
+		e.factor = 1.0
+		e.position = p
+		e.global_position = p
+		root.push_input(e, true)
+
+
+## Passos da roda (para baixo ou para cima) em `p` até a lista parar. Devolve quantos passos deu.
+func _rodar_ate_parar(p: Vector2, para_baixo: bool) -> int:
+	var rol := _cx().find_child("Expandida", true, false) as ScrollContainer
+	var ultimo := -1
+	var passos := 0
+	while rol.scroll_vertical != ultimo and passos < 200:
+		ultimo = rol.scroll_vertical
+		_roda(p, para_baixo)
+		passos += 1
+		await _quadros(2)
+	return passos
+
+
+## Um toque pelo Input do motor (carrega e levanta no mesmo sítio): dado nas unidades do HUD, enviado em píxeis da
+## janela. O motor imita o rato a partir dele e despacha esse rato antes do toque, como num aparelho de toque.
+func _tocar_motor(p: Vector2) -> void:
+	var px: Vector2 = root.get_final_transform() * p
+	for k in 2:
+		var t := InputEventScreenTouch.new()
+		t.index = 0
+		t.pressed = k == 0
+		t.position = px
+		Input.parse_input_event(t)
+		Input.flush_buffered_events()
+		await _quadros(1)
+
+
+## O estado do tabuleiro que um toque pode mudar: onde estão as figuras (o nó em cena e a casa do Estado), o modo da
+## arena (mover/atacar/…), a casa sob o cursor, os alvos e a última intenção enviada.
+func _tabuleiro() -> Dictionary:
+	var pos := {}
+	for id in _arena._nos:
+		var no: Node3D = _arena._nos[id]
+		pos[id] = "%.2f,%.2f,%.2f" % [no.global_position.x, no.global_position.y, no.global_position.z]
+	var casas := {}
+	for id in _estado.figuras:
+		var f: Dictionary = _estado.figuras[id]
+		casas[str(id)] = "%s,%s" % [f.get("x"), f.get("y")]
+	return {"nos": pos, "casas": casas, "modo": _arena.modo, "cursor": _arena._cursor, "alvos": _arena._alvos.size(),
+		"item": _arena._item.size(), "ultima_intencao": _arena._ultimo_id}
+
+
+## O Mestre põe criaturas na luta até a ordem ter `alvo` figuras (MASTER_PLACE em combate), e volta a escolher a
+## iniciativa (o snapshot que leva a ordem nova à jogadora). Devolve quantas pôs.
+func _por_ate(alvo: int) -> int:
+	var fichas: Array = []
+	for cr in _cenario["criaturas"]:
+		if not fichas.has(cr["fichaId"]):
+			fichas.append(cr["fichaId"])
+	var falta := alvo - (_caixa()["ids"] as Array).size()
+	var postas := 0
+	for y in [5, 7, 9, 13, 14, 18, 4, 6, 8, 3, 19]:
+		for x in [3, 5, 7, 9, 11, 14, 16, 18, 10, 12]:
+			if postas >= falta:
+				break
+			if await _comando_b("MASTER_PLACE", {"fichaId": fichas[postas % fichas.size()], "casa": {"x": x, "y": y}}):
+				postas += 1
+	await _caixa_b(true, "iniciativa")
+	await _esperar(func(): return (_caixa()["ids"] as Array).size() >= alvo, 15.0)
+	await _quadros(20)
+	return postas
+
+
+func _interacao() -> void:
+	_linha("== 11. Ordem CAIXA-EXPANDE-INTERACAO: a roda rola a lista; a roda nos fins não dá zoom; o toque fora deixa o tabuleiro quieto ==")
+	var cam = _arena.camera
+	var toques: Array = []
+	cam.toque.connect(func(p: Vector2): toques.append(p))
+	_linha("  ecrã de toque nesta máquina (DisplayServer.is_touchscreen_available): %s" % ("SIM" if DisplayServer.is_touchscreen_available() else "NÃO"))
+	for alvo in [12, 16]:
+		var postas := await _por_ate(alvo)
+		var n := (_caixa()["ids"] as Array).size()
+		_ok(n == alvo, "11: o Mestre pôs %d criaturas a mais; a caixa dela tem %d figuras (pedidas %d)" % [postas, n, alvo])
+		await _conferir_manequins("11 %d" % n)
+		for tam in [Vector2i(844, 390), Vector2i(780, 360)]:
+			if not await _janela_em(tam):
+				continue
+			var rot := "11 %d figuras %dx%d" % [n, tam.x, tam.y]
+			var cx := _cx()
+			var rol := cx.find_child("Expandida", true, false) as ScrollContainer
+			var lista: Node = cx.find_child("Lista", true, false)
+			# D2 — a roda rola a lista (o rato por cima abre a expandida; a lista leva-se ao topo com a roda).
+			_rato(cx.get_global_rect().get_center())
+			await _quadros(6)
+			var p := rol.get_global_rect().get_center()
+			await _rodar_ate_parar(p, false)
+			cam.definir_zoom(cam.ZOOM_PADRAO)
+			await _quadros(2)
+			var z0: float = cam.zoom
+			var s0 := rol.scroll_vertical
+			_roda(p, true)
+			await _quadros(2)
+			var s1 := rol.scroll_vertical
+			var passos := await _rodar_ate_parar(p, true)
+			var s_fim := rol.scroll_vertical
+			var max_l := int(rol.get_v_scroll_bar().max_value - rol.get_v_scroll_bar().page)
+			var ul := lista.get_child(lista.get_child_count() - 1) as Control
+			var z_meio: float = cam.zoom
+			_linha("  MEDIDA RODA %s: rola %s · lista %d u → 1 passo %d u → fim %d u (máximo %d u, %d passos) · zoom do tabuleiro %.3f → %.3f" % [
+				rot, "SIM" if cx.expandida_rola() else "NÃO", s0, s1, s_fim, max_l, passos + 1, z0, z_meio])
+			_ok(cx.expandida_rola() and s0 == 0 and s1 > 0 and s_fim == max_l and rol.get_global_rect().grow(0.5).encloses(ul.get_global_rect()),
+				rot + ": [D2] a roda do rato rola a lista (%d → %d → %d u; a última figura à vista)" % [s0, s1, s_fim])
+			await _gravar("11-roda-fim-%d-figuras-%dx%d.png" % [n, tam.x, tam.y])
+			# D3 — no fim e no topo, a roda fica na caixa.
+			_roda(p, true)
+			await _quadros(3)
+			var z_fim: float = cam.zoom
+			var s_fim2 := rol.scroll_vertical
+			await _rodar_ate_parar(p, false)
+			var s_topo := rol.scroll_vertical
+			_roda(p, false)
+			await _quadros(3)
+			var z_topo: float = cam.zoom
+			var s_topo2 := rol.scroll_vertical
+			_linha("  MEDIDA D3 %s: roda para baixo no fim: lista %d → %d u, zoom %.3f · roda para cima no topo: lista %d → %d u, zoom %.3f (antes %.3f)" % [
+				rot, s_fim, s_fim2, z_fim, s_topo, s_topo2, z_topo, z0])
+			_ok(s_fim2 == s_fim and s_topo == 0 and s_topo2 == 0 and z_meio == z0 and z_fim == z0 and z_topo == z0,
+				rot + ": [D3] a roda no fim e no topo da lista não dá zoom ao tabuleiro (%.3f → %.3f no fim, %.3f no topo)" % [z0, z_fim, z_topo])
+			# O arrastar com o botão do rato na lista: medido e registado (no PC sem ecrã de toque o motor não rola assim).
+			var b := InputEventMouseButton.new()
+			b.button_index = MOUSE_BUTTON_LEFT
+			b.pressed = true
+			b.position = p
+			b.global_position = p
+			root.push_input(b, true)
+			var d := Vector2(0.0, -0.75 * rol.size.y)
+			for k in 6:
+				var m := InputEventMouseMotion.new()
+				m.button_mask = MOUSE_BUTTON_MASK_LEFT
+				m.position = p + d * float(k + 1) / 6.0
+				m.global_position = m.position
+				m.relative = d / 6.0
+				root.push_input(m, true)
+				await _quadros(1)
+			var b2 := b.duplicate() as InputEventMouseButton
+			b2.pressed = false
+			b2.position = p + d
+			b2.global_position = b2.position
+			root.push_input(b2, true)
+			await _quadros(3)
+			_linha("  REGISTO ARRASTAR %s: ecrã de toque %s · arrastar com o rato na lista %d → %d u (não conta: é o que a plataforma faz)" % [
+				rot, "SIM" if DisplayServer.is_touchscreen_available() else "NÃO", s_topo2, rol.scroll_vertical])
+			await _rodar_ate_parar(p, false)
+			# De controlo: a roda fora da caixa dá zoom ao tabuleiro (a câmara está a ouvir). O zoom volta ao padrão a seguir.
+			_rato(_fora())
+			await _quadros(4)
+			_roda(_fora(), false)
+			await _quadros(3)
+			var z_ctl: float = cam.zoom
+			cam.definir_zoom(cam.ZOOM_PADRAO)
+			_ok(not is_equal_approx(z_ctl, z0), rot + ": [D3] de controlo, a roda fora da caixa dá zoom ao tabuleiro (%.3f → %.3f)" % [z0, z_ctl])
+			await _quadros(6)
+			# D1 — o toque fora que fecha a expandida deixa o tabuleiro quieto.
+			await _tocar_motor(cx.get_global_rect().get_center())
+			await _quadros(6)
+			var abriu: bool = _caixa()["expandida"]
+			await _gravar("11-toque-aberta-%d-figuras-%dx%d.png" % [n, tam.x, tam.y])
+			var t0 := _tabuleiro()
+			var n0 := toques.size()
+			await _tocar_motor(_fora())
+			await _quadros(10)
+			var t1 := _tabuleiro()
+			var disparou := toques.size() - n0
+			var fechou: bool = not _caixa()["expandida"]
+			_linha("  MEDIDA D1 %s: abriu por toque %s · toque fora em %s u: fechou %s · «toque» do tabuleiro %d vez(es) · toque armado na câmara %s · modo da arena %d → %d · figuras no mesmo sítio %s · casas do Estado iguais %s · cursor %s → %s · última intenção igual %s" % [
+				rot, abriu, _fora(), fechou, disparou, cam._esq, t0["modo"], t1["modo"], t0["nos"] == t1["nos"], t0["casas"] == t1["casas"],
+				t0["cursor"], t1["cursor"], t0["ultima_intencao"] == t1["ultima_intencao"]])
+			_ok(abriu and fechou and disparou == 0 and not cam._esq and t0 == t1,
+				rot + ": [D1] com a expandida aberta por toque, um toque fora fecha-a e o tabuleiro fica quieto (o «toque» não dispara; nenhuma figura movida nem seleccionada; nenhuma intenção enviada)")
+			await _gravar("11-toque-fora-%d-figuras-%dx%d.png" % [n, tam.x, tam.y])
+			# De controlo: com a caixa fechada, o mesmo toque chega ao tabuleiro. Só se a arena não estiver num modo que
+			# o transforme num comando (modo NENHUM: o toque não escolhe casa nenhuma).
+			if _arena.modo == 0:
+				await _tocar_motor(_fora())
+				await _quadros(6)
+				_ok(toques.size() - n0 == 1 and _tabuleiro() == t1,
+					rot + ": [D1] de controlo, com a caixa fechada o toque seguinte chega ao tabuleiro («toque» %d vez; a arena sem modo, nada muda)" % (toques.size() - n0))
+			else:
+				_linha("  (controlo do D1 saltado: a arena está no modo %d e o toque seria um comando)" % _arena.modo)
 	await _janela_em(Vector2i(1280, 720))
 
 

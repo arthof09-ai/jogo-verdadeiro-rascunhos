@@ -1,0 +1,331 @@
+== Ordem CAIXA-EXPANDE — os 5 momentos da caixa no HUD da jogadora (manequim de referência), a vista expandida, a recentragem da faixa e os casos do retrato ==
+servidor ws://127.0.0.1:8794/ws · render NVIDIA GeForce RTX 4060
+  ok    o manequim de referência abriu (Mannequin_F · UAL2 · ANDAR v3 · sha256 8413b0395d6b9f16…)
+== 0. batalha de bancada (IA de bancada, lugares próprios) ==
+  IA: Arqueira de Bancada → {"destino":{"x":11,"y":10},"tipo":"mover"} (APLICADA)
+  IA: Arqueira de Bancada → {"tipo":"encerrar"} (APLICADA)
+  IA: Lobo → {"destino":{"x":12,"y":10},"tipo":"mover"} (APLICADA)
+  IA: Lobo → {"tipo":"encerrar"} (APLICADA)
+  IA: Espadachim de Bancada → {"destino":{"x":11,"y":8},"tipo":"mover"} (APLICADA)
+  IA: Espadachim de Bancada → {"tipo":"encerrar"} (APLICADA)
+  a batalha a meio: fase combate, rodada 1.0, vez de Bruto, ordem dinâmica (Mestre) ["Arqueira de Bancada","Lobo","Espadachim de Bancada"]
+  ok    batalha de bancada a meio: em combate e com a ordem dinâmica formada no servidor (≥ 2 figuras)
+== 1. a jogadora (a heroína 1 do cenário) entra pelo ecrã a sério ==
+  ok    1: a jogadora entrou a meio da batalha (fase combate, rodada 1)
+  caixa da jogadora: visível=true modo=dinamico ordem=["Arqueira de Bancada","Lobo","Espadachim de Bancada"] vez=Espadachim de Bancada
+  ok    1: a caixa aparece no HUD dela como o Mestre a tem (ligada, dinâmico)
+  ok    1: a ordem é a do servidor ["Arqueira de Bancada","Lobo","Espadachim de Bancada"]
+  ok    1: a figura na vez (dinâmico: quem agiu por último) é a do servidor (Espadachim de Bancada)
+  ok    1: a própria jogadora está na ordem (agiu antes de entrar, pelo lugar de bancada)
+  ok    1: nenhuma mensagem do Mestre chegou ao aparelho dela (1 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    1: o estado dela não guarda nada do Mestre
+  ok    1: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica {"ligada":true,"ordemDinamica":{"fechada":false,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"],"ultimo":"f20af3254ba898103"},"ordemPor":"dinamico"}
+  ok    1: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa (0 achados; o texto achado não se repete aqui)
+  ok    1: as 4 figuras em cena vestem o manequim de referência, nenhuma cápsula à vista (4 com manequim, 0 cápsulas)
+  ok    1: os 3 retratos da caixa são do manequim, nenhum da cápsula []
+  ok    1: a tabela tem as cores do protótipo (painel 100c088c, moldura c9a227d9, letras f3e9d2ff, retrato 0a0805d1)
+  ok    1: o painel da caixa é rgba(16,12,8,.55)
+  ok    1: 5 letras a pergaminho (só o cartão grande / a linha da vez a ouro) e 3 molduras a ouro .85 com o fundo do retrato, nenhuma outra cor []
+  ok    1: a figura na vez destaca-se com a moldura de ouro grossa (1)
+  compacta: cartão grande Espadachim de Bancada · caixinhas ["Arqueira de Bancada","Lobo"]
+  ok    1: as caixinhas são os 2 próximos a jogar, a contar de quem vem depois da vez, sem a figura na vez ["Arqueira de Bancada","Lobo"]
+  escala HUD→janela 0.5354 (janela 1028x720, área do HUD 1920x1344 u)
+  quadradinhos (px reais da janela): «Arqueir…» (7 letras à vista) 46x60 px (85x112 u), «Lobo» (4 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · célula fixa 85x112 u · cartão na vez 62x62 px
+  ok    1: os 2 quadradinhos têm TODOS o mesmo tamanho, ao píxel (["46x60"]; retrato ["46x46"])
+  ok    1: e esse tamanho é a célula fixa da caixa (85x112 u)
+  ok    1: o cartão grande da figura na vez continua maior (62x62 px contra 46)
+    retrato Arqueira de Bancada: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Lobo: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Espadachim de Bancada: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+  ok    1: os 3 retratos são busto — rosto e peitoral no quadro; cintura, joelhos e pés fora; de frente []
+    esfola figura ff2acf60bd672e76e: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f08e6e9dc41e7a378: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f20af3254ba898103: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+  ok    1: a caixa dos 3 retratos contém, um a um, a malha esfolada pelo motor, e a esfola por CPU é igual à do motor []
+  ok    captura 1-entrou-dinamica.png (1028×720)
+== 2. o Mestre carrega em «Modo iniciativa» ==
+  ok    2: o servidor aceitou a escolha do Mestre (ligada, iniciativa)
+  ok    2: a caixa da jogadora passou ao modo iniciativa
+  caixa da jogadora: visível=true modo=iniciativa ordem=["Arqueira de Bancada","Lobo","Espadachim de Bancada","Bruto"] vez=Bruto
+  ok    2: a ordem é a de iniciativa do servidor ["Arqueira de Bancada","Lobo","Espadachim de Bancada","Bruto"] e a vez é a do servidor (Bruto)
+  ok    2: nenhuma mensagem do Mestre chegou ao aparelho dela (2 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    2: o estado dela não guarda nada do Mestre
+  ok    2: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica {"ligada":true,"ordemDinamica":{"fechada":false,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"],"ultimo":"f20af3254ba898103"},"ordemPor":"iniciativa"}
+  ok    2: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa (0 achados; o texto achado não se repete aqui)
+  ok    2: as 4 figuras em cena vestem o manequim de referência, nenhuma cápsula à vista (4 com manequim, 0 cápsulas)
+  ok    2: os 4 retratos da caixa são do manequim, nenhum da cápsula []
+  ok    2: a tabela tem as cores do protótipo (painel 100c088c, moldura c9a227d9, letras f3e9d2ff, retrato 0a0805d1)
+  ok    2: o painel da caixa é rgba(16,12,8,.55)
+  ok    2: 6 letras a pergaminho (só o cartão grande / a linha da vez a ouro) e 4 molduras a ouro .85 com o fundo do retrato, nenhuma outra cor []
+  ok    2: a figura na vez destaca-se com a moldura de ouro grossa (1)
+  compacta: cartão grande Bruto · caixinhas ["Arqueira de Bancada","Lobo","Espadachim de Bancada"]
+  ok    2: as caixinhas são os 3 próximos a jogar, a contar de quem vem depois da vez, sem a figura na vez ["Arqueira de Bancada","Lobo","Espadachim de Bancada"]
+  escala HUD→janela 0.5354 (janela 1028x720, área do HUD 1920x1344 u)
+  quadradinhos (px reais da janela): «Arqueir…» (7 letras à vista) 46x60 px (85x112 u), «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Espada…» (6 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · célula fixa 85x112 u · cartão na vez 62x62 px
+  ok    2: os 3 quadradinhos têm TODOS o mesmo tamanho, ao píxel (["46x60"]; retrato ["46x46"])
+  ok    2: e esse tamanho é a célula fixa da caixa (85x112 u)
+  ok    2: o cartão grande da figura na vez continua maior (62x62 px contra 46)
+    retrato Arqueira de Bancada: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Lobo: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Espadachim de Bancada: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Bruto: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+  ok    2: os 4 retratos são busto — rosto e peitoral no quadro; cintura, joelhos e pés fora; de frente []
+    esfola figura ff2acf60bd672e76e: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f08e6e9dc41e7a378: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f20af3254ba898103: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f1c67641aa5cdfe28: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+  ok    2: a caixa dos 4 retratos contém, um a um, a malha esfolada pelo motor, e a esfola por CPU é igual à do motor []
+  ok    captura 2-iniciativa.png (1028×720)
+== 3. o Mestre desliga a caixa ==
+  ok    3: o servidor aceitou (desligada)
+  ok    3: a caixa desapareceu do HUD da jogadora
+  ok    3: as 4 figuras em cena vestem o manequim de referência, nenhuma cápsula à vista (4 com manequim, 0 cápsulas)
+  ok    captura 3-desligada.png (1028×720)
+== 4. o Mestre volta a ligar no modo dinâmico; a bancada joga mais duas vezes ==
+  ok    4: o servidor aceitou (ligada, dinâmico)
+  ok    4: a caixa voltou ao HUD dela no modo dinâmico
+  IA: Bruto → {"destino":{"x":10,"y":10},"tipo":"mover"} (APLICADA)
+  IA: Bruto → {"tipo":"encerrar"} (APLICADA)
+  ok    4: a bancada jogou a vez de Bruto
+  IA: Arqueira de Bancada → {"alvoId":"f08e6e9dc41e7a378","arma":"tiro-certeiro-bancada","tipo":"atacar"} (APLICADA)
+  IA: Arqueira de Bancada → {"tipo":"encerrar"} (APLICADA)
+  ok    4: a bancada jogou a vez de Arqueira de Bancada
+  caixa da jogadora: visível=true modo=dinamico ordem=["Arqueira de Bancada","Lobo","Espadachim de Bancada","Bruto"] vez=Arqueira de Bancada
+  ok    4: pelos eventos que recebeu, a caixa dela adiantou-se e é igual à ordem do servidor ["Arqueira de Bancada","Lobo","Espadachim de Bancada","Bruto"] (vez: Arqueira de Bancada, fechada: true)
+  ok    4: nenhuma mensagem do Mestre chegou ao aparelho dela (9 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    4: o estado dela não guarda nada do Mestre
+  ok    4: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica {"ligada":true,"ordemDinamica":{"fechada":false,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103"],"ultimo":"f20af3254ba898103"},"ordemPor":"dinamico"}
+  ok    4: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa (0 achados; o texto achado não se repete aqui)
+  ok    4: as 4 figuras em cena vestem o manequim de referência, nenhuma cápsula à vista (4 com manequim, 0 cápsulas)
+  ok    4: os 4 retratos da caixa são do manequim, nenhum da cápsula []
+  ok    4: a tabela tem as cores do protótipo (painel 100c088c, moldura c9a227d9, letras f3e9d2ff, retrato 0a0805d1)
+  ok    4: o painel da caixa é rgba(16,12,8,.55)
+  ok    4: 6 letras a pergaminho (só o cartão grande / a linha da vez a ouro) e 4 molduras a ouro .85 com o fundo do retrato, nenhuma outra cor []
+  ok    4: a figura na vez destaca-se com a moldura de ouro grossa (1)
+  compacta: cartão grande Arqueira de Bancada · caixinhas ["Lobo","Espadachim de Bancada","Bruto"]
+  ok    4: as caixinhas são os 3 próximos a jogar, a contar de quem vem depois da vez, sem a figura na vez ["Lobo","Espadachim de Bancada","Bruto"]
+  escala HUD→janela 0.5354 (janela 1028x720, área do HUD 1920x1344 u)
+  quadradinhos (px reais da janela): «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Espada…» (6 letras à vista) 46x60 px (85x112 u), «Bruto» (5 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · célula fixa 85x112 u · cartão na vez 62x62 px
+  ok    4: os 3 quadradinhos têm TODOS o mesmo tamanho, ao píxel (["46x60"]; retrato ["46x46"])
+  ok    4: e esse tamanho é a célula fixa da caixa (85x112 u)
+  ok    4: o cartão grande da figura na vez continua maior (62x62 px contra 46)
+    retrato Arqueira de Bancada: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Lobo: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Espadachim de Bancada: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Bruto: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+  ok    4: os 4 retratos são busto — rosto e peitoral no quadro; cintura, joelhos e pés fora; de frente []
+    esfola figura ff2acf60bd672e76e: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f08e6e9dc41e7a378: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f20af3254ba898103: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f1c67641aa5cdfe28: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+  ok    4: a caixa dos 4 retratos contém, um a um, a malha esfolada pelo motor, e a esfola por CPU é igual à do motor []
+  ok    captura 4-religada-avancou.png (1028×720)
+== 5. a jogadora sai e volta a entrar ==
+  ok    5: a jogadora saiu
+  ok    5: a jogadora entrou a meio da batalha (fase combate, rodada 2)
+  caixa da jogadora: visível=true modo=dinamico ordem=["Arqueira de Bancada","Lobo","Espadachim de Bancada","Bruto"] vez=Arqueira de Bancada
+  ok    5: a caixa reconstruiu-se do snapshot, igual à de antes de sair
+  ok    5: nenhuma mensagem do Mestre chegou ao aparelho dela (1 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    5: o estado dela não guarda nada do Mestre
+  ok    5: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica {"ligada":true,"ordemDinamica":{"fechada":true,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103","f1c67641aa5cdfe28"],"ultimo":"ff2acf60bd672e76e"},"ordemPor":"dinamico"}
+  ok    5: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa (0 achados; o texto achado não se repete aqui)
+  ok    5: as 4 figuras em cena vestem o manequim de referência, nenhuma cápsula à vista (4 com manequim, 0 cápsulas)
+  ok    5: os 4 retratos da caixa são do manequim, nenhum da cápsula []
+  ok    5: a tabela tem as cores do protótipo (painel 100c088c, moldura c9a227d9, letras f3e9d2ff, retrato 0a0805d1)
+  ok    5: o painel da caixa é rgba(16,12,8,.55)
+  ok    5: 6 letras a pergaminho (só o cartão grande / a linha da vez a ouro) e 4 molduras a ouro .85 com o fundo do retrato, nenhuma outra cor []
+  ok    5: a figura na vez destaca-se com a moldura de ouro grossa (1)
+  compacta: cartão grande Arqueira de Bancada · caixinhas ["Lobo","Espadachim de Bancada","Bruto"]
+  ok    5: as caixinhas são os 3 próximos a jogar, a contar de quem vem depois da vez, sem a figura na vez ["Lobo","Espadachim de Bancada","Bruto"]
+  escala HUD→janela 0.5354 (janela 1028x720, área do HUD 1920x1344 u)
+  quadradinhos (px reais da janela): «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Espada…» (6 letras à vista) 46x60 px (85x112 u), «Bruto» (5 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · célula fixa 85x112 u · cartão na vez 62x62 px
+  ok    5: os 3 quadradinhos têm TODOS o mesmo tamanho, ao píxel (["46x60"]; retrato ["46x46"])
+  ok    5: e esse tamanho é a célula fixa da caixa (85x112 u)
+  ok    5: o cartão grande da figura na vez continua maior (62x62 px contra 46)
+    retrato Arqueira de Bancada: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Lobo: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Espadachim de Bancada: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+    retrato Bruto: em pose 1.01×1.77 m (a malha em T: 1.76×1.81), de pé true, rosto+peito no quadro true, cintura/joelhos/pés fora true, de frente true
+  ok    5: os 4 retratos são busto — rosto e peitoral no quadro; cintura, joelhos e pés fora; de frente []
+    esfola figura ff2acf60bd672e76e: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f08e6e9dc41e7a378: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f20af3254ba898103: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+    esfola figura f1c67641aa5cdfe28: retrato 0.483×1.769×1.008, motor 0.433×1.748×0.981, folga máx 0.050 m, CPU = motor true
+  ok    5: a caixa dos 4 retratos contém, um a um, a malha esfolada pelo motor, e a esfola por CPU é igual à do motor []
+  ok    captura 5-reentrou.png (1028×720)
+== 6. (a) o rato por cima da caixa: a vista expandida (na janela da prova) ==
+  compacta: cartão grande Arqueira de Bancada · caixinhas ["Lobo","Espadachim de Bancada","Bruto"]
+  ok    6: as caixinhas são os 3 próximos a jogar, a contar de quem vem depois da vez, sem a figura na vez ["Lobo","Espadachim de Bancada","Bruto"]
+  expandida (465x307 u = 249x164 px reais; compacta 465x233 u): «Arqueira de Bancada» (na vez), «Lobo», «Espadachim de Bancada», «Bruto» · rola NÃO
+  ok    6: a caixa cresceu e mostra a ordem completa (4 figuras), a figura na vez primeiro e as outras pela ordem em que vão jogar
+  ok    6: todos os nomes completos, sem corte []
+  ok    6: a figura na vez vem realçada como no cartão grande (moldura grossa, nome a ouro, «na vez»), e só ela
+  ok    6: todas as linhas têm o retrato da figura (4 de 4)
+  ok    6: cabe no ecrã, acima da barra, sem tapar a faixa ([P: (1431.0, 24.0), S: (465.0, 307.0)])
+  ok    6: cresce para a esquerda e para baixo, encostada ao mesmo canto; a faixa não se mexe
+  ok    6: a tabela tem as cores do protótipo (painel 100c088c, moldura c9a227d9, letras f3e9d2ff, retrato 0a0805d1)
+  ok    6: o painel da caixa é rgba(16,12,8,.55)
+  ok    6: 7 letras a pergaminho (só o cartão grande / a linha da vez a ouro) e 4 molduras a ouro .85 com o fundo do retrato, nenhuma outra cor []
+  ok    6: a figura na vez destaca-se com a moldura de ouro grossa (1)
+  ok    6: nenhuma mensagem do Mestre chegou ao aparelho dela (1 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    6: o estado dela não guarda nada do Mestre
+  ok    6: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica {"ligada":true,"ordemDinamica":{"fechada":true,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103","f1c67641aa5cdfe28"],"ultimo":"ff2acf60bd672e76e"},"ordemPor":"dinamico"}
+  ok    6: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa (0 achados; o texto achado não se repete aqui)
+  ok    captura 6-rato-expandida.png (1028×720)
+  ok    6: tirar o rato volta ao tamanho compacto ([P: (1431.0, 24.0), S: (465.0, 233.0)])
+== 7. (b) 8+ figuras na vista expandida: o Mestre põe mais criaturas na luta e escolhe a iniciativa ==
+  ok    7: o Mestre pôs 5 criaturas a mais na luta (5 tentativas de casa)
+  ok    7: o servidor aceitou (ligada, iniciativa)
+  ok    7: a caixa dela tem 9 figuras na ordem de iniciativa do servidor
+  ok    7: as 9 figuras em cena vestem o manequim de referência, nenhuma cápsula à vista (9 com manequim, 0 cápsulas)
+  ok    7: os 9 retratos da caixa são do manequim, nenhum da cápsula []
+  caixa da jogadora: visível=true modo=iniciativa ordem=["Arqueira de Bancada","Lobo","Lobo","Lobo","Espadachim de Bancada","Bruto","Bruto","Bruto","Bruto"] vez=Lobo
+  ok    7: a ordem e a vez são as do servidor (9 figuras)
+  compacta: cartão grande Lobo · caixinhas ["Lobo","Lobo","Espadachim de Bancada","Bruto"]
+  ok    7: as caixinhas são os 4 próximos a jogar, a contar de quem vem depois da vez, sem a figura na vez ["Lobo","Lobo","Espadachim de Bancada","Bruto"]
+  ok    7: a tabela tem as cores do protótipo (painel 100c088c, moldura c9a227d9, letras f3e9d2ff, retrato 0a0805d1)
+  ok    7: o painel da caixa é rgba(16,12,8,.55)
+  ok    7: 7 letras a pergaminho (só o cartão grande / a linha da vez a ouro) e 5 molduras a ouro .85 com o fundo do retrato, nenhuma outra cor []
+  ok    7: a figura na vez destaca-se com a moldura de ouro grossa (1)
+  escala HUD→janela 0.5354 (janela 1028x720, área do HUD 1920x1344 u)
+  quadradinhos (px reais da janela): «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Espada…» (6 letras à vista) 46x60 px (85x112 u), «Bruto» (5 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · célula fixa 85x112 u · cartão na vez 62x62 px
+  ok    7: os 4 quadradinhos têm TODOS o mesmo tamanho, ao píxel (["46x60"]; retrato ["46x46"])
+  ok    7: e esse tamanho é a célula fixa da caixa (85x112 u)
+  ok    7: o cartão grande da figura na vez continua maior (62x62 px contra 46)
+  expandida (487x627 u = 261x336 px reais; compacta 487x233 u): «Lobo» (na vez), «Lobo», «Lobo», «Espadachim de Bancada», «Bruto», «Bruto», «Bruto», «Bruto», «Arqueira de Bancada» · rola NÃO
+  ok    7: a caixa cresceu e mostra a ordem completa (9 figuras), a figura na vez primeiro e as outras pela ordem em que vão jogar
+  ok    7: todos os nomes completos, sem corte []
+  ok    7: a figura na vez vem realçada como no cartão grande (moldura grossa, nome a ouro, «na vez»), e só ela
+  ok    7: todas as linhas têm o retrato da figura (9 de 9)
+  ok    7: cabe no ecrã, acima da barra, sem tapar a faixa ([P: (1409.0, 24.0), S: (487.0, 627.0)])
+  ok    7: cresce para a esquerda e para baixo, encostada ao mesmo canto; a faixa não se mexe
+  ok    7: a tabela tem as cores do protótipo (painel 100c088c, moldura c9a227d9, letras f3e9d2ff, retrato 0a0805d1)
+  ok    7: o painel da caixa é rgba(16,12,8,.55)
+  ok    7: 12 letras a pergaminho (só o cartão grande / a linha da vez a ouro) e 9 molduras a ouro .85 com o fundo do retrato, nenhuma outra cor []
+  ok    7: a figura na vez destaca-se com a moldura de ouro grossa (1)
+  ok    7: nenhuma mensagem do Mestre chegou ao aparelho dela (7 mensagens; sem caixaMestre, bloco mestre, MASTER_VIEW)
+  ok    7: o estado dela não guarda nada do Mestre
+  ok    7: a caixa que lhe chegou só tem ligada, ordemPor e ordemDinamica {"ligada":true,"ordemDinamica":{"fechada":true,"ordem":["ff2acf60bd672e76e","f08e6e9dc41e7a378","f20af3254ba898103","f1c67641aa5cdfe28"],"ultimo":"ff2acf60bd672e76e"},"ordemPor":"iniciativa"}
+  ok    7: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa (0 achados; o texto achado não se repete aqui)
+  ok    captura 7-expandida-9-figuras.png (1028×720)
+  ok    7: tirar o rato volta ao tamanho compacto ([P: (1409.0, 24.0), S: (487.0, 233.0)])
+  ok    7: no toque, um toque na caixa abre a mesma vista expandida, outro fecha, e um toque fora também fecha (true/true)
+== 8. (c) a vista expandida num ecrã baixo, com 9 figuras ==
+  escala HUD→janela 0.3611 (janela 844x390, área do HUD 2337x1080 u)
+  compacta: cartão grande Lobo · caixinhas ["Lobo","Lobo","Espadachim de Bancada","Bruto"]
+  ok    8 844x390: as caixinhas são os 4 próximos a jogar, a contar de quem vem depois da vez, sem a figura na vez ["Lobo","Lobo","Espadachim de Bancada","Bruto"]
+  expandida (686x876 u = 248x316 px reais; compacta 686x323 u): «Lobo» (na vez), «Lobo», «Lobo», «Espadachim de Bancada», «Bruto», «Bruto», «Bruto», «Bruto», «Arqueira de Bancada» · rola NÃO
+  ok    8 844x390: a caixa cresceu e mostra a ordem completa (9 figuras), a figura na vez primeiro e as outras pela ordem em que vão jogar
+  ok    8 844x390: todos os nomes completos, sem corte []
+  ok    8 844x390: a figura na vez vem realçada como no cartão grande (moldura grossa, nome a ouro, «na vez»), e só ela
+  ok    8 844x390: todas as linhas têm o retrato da figura (9 de 9)
+  ok    8 844x390: cabe no ecrã, acima da barra, sem tapar a faixa ([P: (1627.0, 24.0), S: (686.0, 876.0)])
+  MEDIDA EXPANDIDA 9 figuras 844x390: 9 linhas de 86 u (31 px reais), 9 à vista sem rolar, rola NÃO
+  ok    captura 8-expandida-844x390.png (844×390)
+  ok    8 844x390: tirar o rato volta à compacta
+  escala HUD→janela 0.3333 (janela 780x360, área do HUD 2340x1080 u)
+  compacta: cartão grande Lobo · caixinhas ["Lobo","Lobo","Espadachim de Bancada","Bruto"]
+  ok    8 780x360: as caixinhas são os 4 próximos a jogar, a contar de quem vem depois da vez, sem a figura na vez ["Lobo","Lobo","Espadachim de Bancada","Bruto"]
+  expandida (744x903 u = 248x301 px reais; compacta 744x349 u): «Lobo» (na vez), «Lobo», «Lobo», «Espadachim de Bancada», «Bruto», «Bruto», «Bruto», «Bruto», «Arqueira de Bancada» · rola SIM
+  ok    8 780x360: a caixa cresceu e mostra a ordem completa (9 figuras), a figura na vez primeiro e as outras pela ordem em que vão jogar
+  ok    8 780x360: todos os nomes completos, sem corte []
+  ok    8 780x360: a figura na vez vem realçada como no cartão grande (moldura grossa, nome a ouro, «na vez»), e só ela
+  ok    8 780x360: todas as linhas têm o retrato da figura (9 de 9)
+  ok    8 780x360: cabe no ecrã, acima da barra, sem tapar a faixa ([P: (1572.0, 24.0), S: (744.0, 903.0)])
+  MEDIDA EXPANDIDA 9 figuras 780x360: 9 linhas de 94 u (31 px reais), 8 à vista sem rolar, rola SIM
+  ok    captura 8-expandida-780x360.png (780×360)
+  MEDIDA RODA 8 780x360: lista 0 → 49 u (máximo 49 u) em 2 passos da roda
+  ok    8 780x360: a roda do rato rola a lista até ao fim (0 → 49 u; a última figura à vista)
+  ok    captura 8-expandida-780x360-fim.png (780×360)
+  ok    8 780x360: tirar o rato volta à compacta
+== 9. (d) a recentragem da faixa (F4) com a caixa nova, nas 3 resoluções ==
+  MEDIDA F4 844x390 (9 figuras): caixa compacta 686x323 u · faixa 881 u (precisa 729 u), margens esq 704 / dir 704 u · desvio do centro 0.0 u (tecto 0.0 u) · faixa e caixa não se tocam
+  ok    9 844x390: a faixa fica o mais perto do centro que o espaço deixa — desvio 0.0 u ≤ tecto 0.0 u, numa linha, sem tocar na caixa
+  ok    captura 9-faixa-844x390.png (844×390)
+  MEDIDA F4 780x360 (9 figuras): caixa compacta 744x349 u · faixa 788 u (precisa 788 u), margens esq 740 / dir 763 u · desvio do centro 11.5 u (tecto 11.5 u) · faixa e caixa não se tocam
+  ok    9 780x360: a faixa fica o mais perto do centro que o espaço deixa — desvio 11.5 u ≤ tecto 11.5 u, numa linha, sem tocar na caixa
+  ok    captura 9-faixa-780x360.png (780×360)
+  MEDIDA F4 1920x1080 (9 figuras): caixa compacta 434x212 u · faixa 982 u (precisa 453 u), margens esq 445 / dir 445 u · desvio do centro 0.0 u (tecto 0.0 u) · faixa e caixa não se tocam
+  ok    9 1920x1080: a faixa fica o mais perto do centro que o espaço deixa — desvio 0.0 u ≤ tecto 0.0 u, numa linha, sem tocar na caixa
+  ok    captura 9-faixa-1920x1080.png (1920×1080)
+== 10. os casos do retrato, com o render a sério (B1, B2, B4, B5) ==
+  ok    10 (B1): o manequim da figura ff2acf60bd672e76e, nos 42 quadros do ANDAR, está sempre de pé (pela caixa toda e pelo tronco)
+  ok    10 (B1): a profundidade máxima do ANDAR é 1.008 m (quadro 0), a 0.466 m do limiar 1.474 m; o tronco não passa de 0.653 m
+    retrato do caso guardado em retratos/casos/passada-longa.png: true
+  ok    10 (B1): a passada longa (1.59 m de fundo, 1.58 de alto): pela caixa toda não diria «de pé», pelo tronco (0.92 m) diz, e no render o retrato é o busto []
+    retrato do caso guardado em retratos/casos/arma-levantada.png: true
+  ok    10 (B2): com a arma levantada (ponta a 2.40 m, cabeça a 1.80 m) o corpo não muda e no render o retrato continua o busto []
+    retrato do caso guardado em retratos/casos/braco-levantado.png: true
+  ok    10 (B2, limite): com o braço levantado a figura sobe a 2.13 m; o rosto fica no quadro, o peito sai (limite documentado)
+    retrato do caso guardado em retratos/casos/deitada.png: true
+  ok    10 (B4): o manequim deitado (0.48 × 1.01 × 1.77 m) dá o corpo inteiro, todo no quadro
+    retrato do caso guardado em retratos/casos/quadrupede.png: true
+  ok    10 (B4): o quadrúpede esfolado (0.45 × 1.23 × 1.80 m) dá o corpo inteiro, todo no quadro; o motor esfola-o (0.45 × 1.23 × 1.80 m, dentro da caixa)
+    retrato do caso guardado em retratos/casos/caixa-zero.png: true
+  ok    10 (B4): a caixa zero (nada visível) desenha a figura de recurso sem erro (câmara à frente, planos 0.01–5.18 m)
+  ok    10 (B5): em repouso, a conta por ossos dá a caixa da malha (1.762 × 1.806 × 0.309 m contra 1.762 × 1.806 × 0.309), e a esfola do motor também (1.762 × 1.806 × 0.309)
+== 11. Ordem CAIXA-EXPANDE-INTERACAO: a roda rola a lista; a roda nos fins não dá zoom; o toque fora deixa o tabuleiro quieto ==
+  ecrã de toque nesta máquina (DisplayServer.is_touchscreen_available): NÃO
+  ok    11: o Mestre pôs 3 criaturas a mais; a caixa dela tem 12 figuras (pedidas 12)
+  ok    11 12: as 12 figuras em cena vestem o manequim de referência, nenhuma cápsula à vista (12 com manequim, 0 cápsulas)
+  ok    11 12: os 12 retratos da caixa são do manequim, nenhum da cápsula []
+  MEDIDA RODA 11 12 figuras 844x390: rola SIM · lista 0 u → 1 passo 105 u → fim 233 u (máximo 233 u, 4 passos) · zoom do tabuleiro 1.500 → 1.500
+  ok    11 12 figuras 844x390: [D2] a roda do rato rola a lista (0 → 105 → 233 u; a última figura à vista)
+  ok    captura 11-roda-fim-12-figuras-844x390.png (844×390)
+  MEDIDA D3 11 12 figuras 844x390: roda para baixo no fim: lista 233 → 233 u, zoom 1.500 · roda para cima no topo: lista 0 → 0 u, zoom 1.500 (antes 1.500)
+  ok    11 12 figuras 844x390: [D3] a roda no fim e no topo da lista não dá zoom ao tabuleiro (1.500 → 1.500 no fim, 1.500 no topo)
+  REGISTO ARRASTAR 11 12 figuras 844x390: ecrã de toque NÃO · arrastar com o rato na lista 0 → 0 u (não conta: é o que a plataforma faz)
+  ok    11 12 figuras 844x390: [D3] de controlo, a roda fora da caixa dá zoom ao tabuleiro (1.500 → 1.815)
+  ok    captura 11-toque-aberta-12-figuras-844x390.png (844×390)
+  MEDIDA D1 11 12 figuras 844x390: abriu por toque true · toque fora em (934.8, 594.0) u: fechou true · «toque» do tabuleiro 0 vez(es) · toque armado na câmara false · modo da arena 0 → 0 · figuras no mesmo sítio true · casas do Estado iguais true · cursor (-1, -1) → (-1, -1) · última intenção igual true
+  ok    11 12 figuras 844x390: [D1] com a expandida aberta por toque, um toque fora fecha-a e o tabuleiro fica quieto (o «toque» não dispara; nenhuma figura movida nem seleccionada; nenhuma intenção enviada)
+  ok    captura 11-toque-fora-12-figuras-844x390.png (844×390)
+  ok    11 12 figuras 844x390: [D1] de controlo, com a caixa fechada o toque seguinte chega ao tabuleiro («toque» 1 vez; a arena sem modo, nada muda)
+  MEDIDA RODA 11 12 figuras 780x360: rola SIM · lista 0 u → 1 passo 103 u → fim 344 u (máximo 344 u, 5 passos) · zoom do tabuleiro 1.500 → 1.500
+  ok    11 12 figuras 780x360: [D2] a roda do rato rola a lista (0 → 103 → 344 u; a última figura à vista)
+  ok    captura 11-roda-fim-12-figuras-780x360.png (780×360)
+  MEDIDA D3 11 12 figuras 780x360: roda para baixo no fim: lista 344 → 344 u, zoom 1.500 · roda para cima no topo: lista 0 → 0 u, zoom 1.500 (antes 1.500)
+  ok    11 12 figuras 780x360: [D3] a roda no fim e no topo da lista não dá zoom ao tabuleiro (1.500 → 1.500 no fim, 1.500 no topo)
+  REGISTO ARRASTAR 11 12 figuras 780x360: ecrã de toque NÃO · arrastar com o rato na lista 0 → 0 u (não conta: é o que a plataforma faz)
+  ok    11 12 figuras 780x360: [D3] de controlo, a roda fora da caixa dá zoom ao tabuleiro (1.500 → 1.815)
+  ok    captura 11-toque-aberta-12-figuras-780x360.png (780×360)
+  MEDIDA D1 11 12 figuras 780x360: abriu por toque true · toque fora em (936.0, 594.0) u: fechou true · «toque» do tabuleiro 0 vez(es) · toque armado na câmara false · modo da arena 0 → 0 · figuras no mesmo sítio true · casas do Estado iguais true · cursor (-1, -1) → (-1, -1) · última intenção igual true
+  ok    11 12 figuras 780x360: [D1] com a expandida aberta por toque, um toque fora fecha-a e o tabuleiro fica quieto (o «toque» não dispara; nenhuma figura movida nem seleccionada; nenhuma intenção enviada)
+  ok    captura 11-toque-fora-12-figuras-780x360.png (780×360)
+  ok    11 12 figuras 780x360: [D1] de controlo, com a caixa fechada o toque seguinte chega ao tabuleiro («toque» 1 vez; a arena sem modo, nada muda)
+  ok    11: o Mestre pôs 4 criaturas a mais; a caixa dela tem 16 figuras (pedidas 16)
+  ok    11 16: as 16 figuras em cena vestem o manequim de referência, nenhuma cápsula à vista (16 com manequim, 0 cápsulas)
+  ok    11 16: os 16 retratos da caixa são do manequim, nenhum da cápsula []
+  MEDIDA RODA 11 16 figuras 844x390: rola SIM · lista 0 u → 1 passo 105 u → fim 593 u (máximo 593 u, 7 passos) · zoom do tabuleiro 1.500 → 1.500
+  ok    11 16 figuras 844x390: [D2] a roda do rato rola a lista (0 → 105 → 593 u; a última figura à vista)
+  ok    captura 11-roda-fim-16-figuras-844x390.png (844×390)
+  MEDIDA D3 11 16 figuras 844x390: roda para baixo no fim: lista 593 → 593 u, zoom 1.500 · roda para cima no topo: lista 0 → 0 u, zoom 1.500 (antes 1.500)
+  ok    11 16 figuras 844x390: [D3] a roda no fim e no topo da lista não dá zoom ao tabuleiro (1.500 → 1.500 no fim, 1.500 no topo)
+  REGISTO ARRASTAR 11 16 figuras 844x390: ecrã de toque NÃO · arrastar com o rato na lista 0 → 0 u (não conta: é o que a plataforma faz)
+  ok    11 16 figuras 844x390: [D3] de controlo, a roda fora da caixa dá zoom ao tabuleiro (1.500 → 1.815)
+  ok    captura 11-toque-aberta-16-figuras-844x390.png (844×390)
+  MEDIDA D1 11 16 figuras 844x390: abriu por toque true · toque fora em (934.8, 594.0) u: fechou true · «toque» do tabuleiro 0 vez(es) · toque armado na câmara false · modo da arena 0 → 0 · figuras no mesmo sítio true · casas do Estado iguais true · cursor (-1, -1) → (-1, -1) · última intenção igual true
+  ok    11 16 figuras 844x390: [D1] com a expandida aberta por toque, um toque fora fecha-a e o tabuleiro fica quieto (o «toque» não dispara; nenhuma figura movida nem seleccionada; nenhuma intenção enviada)
+  ok    captura 11-toque-fora-16-figuras-844x390.png (844×390)
+  ok    11 16 figuras 844x390: [D1] de controlo, com a caixa fechada o toque seguinte chega ao tabuleiro («toque» 1 vez; a arena sem modo, nada muda)
+  MEDIDA RODA 11 16 figuras 780x360: rola SIM · lista 0 u → 1 passo 103 u → fim 736 u (máximo 736 u, 9 passos) · zoom do tabuleiro 1.500 → 1.500
+  ok    11 16 figuras 780x360: [D2] a roda do rato rola a lista (0 → 103 → 736 u; a última figura à vista)
+  ok    captura 11-roda-fim-16-figuras-780x360.png (780×360)
+  MEDIDA D3 11 16 figuras 780x360: roda para baixo no fim: lista 736 → 736 u, zoom 1.500 · roda para cima no topo: lista 0 → 0 u, zoom 1.500 (antes 1.500)
+  ok    11 16 figuras 780x360: [D3] a roda no fim e no topo da lista não dá zoom ao tabuleiro (1.500 → 1.500 no fim, 1.500 no topo)
+  REGISTO ARRASTAR 11 16 figuras 780x360: ecrã de toque NÃO · arrastar com o rato na lista 0 → 0 u (não conta: é o que a plataforma faz)
+  ok    11 16 figuras 780x360: [D3] de controlo, a roda fora da caixa dá zoom ao tabuleiro (1.500 → 1.815)
+  ok    captura 11-toque-aberta-16-figuras-780x360.png (780×360)
+  MEDIDA D1 11 16 figuras 780x360: abriu por toque true · toque fora em (936.0, 594.0) u: fechou true · «toque» do tabuleiro 0 vez(es) · toque armado na câmara false · modo da arena 0 → 0 · figuras no mesmo sítio true · casas do Estado iguais true · cursor (-1, -1) → (-1, -1) · última intenção igual true
+  ok    11 16 figuras 780x360: [D1] com a expandida aberta por toque, um toque fora fecha-a e o tabuleiro fica quieto (o «toque» não dispara; nenhuma figura movida nem seleccionada; nenhuma intenção enviada)
+  ok    captura 11-toque-fora-16-figuras-780x360.png (780×360)
+  ok    11 16 figuras 780x360: [D1] de controlo, com a caixa fechada o toque seguinte chega ao tabuleiro («toque» 1 vez; a arena sem modo, nada muda)
+
+tamanhos medidos dos quadradinhos (px reais da janela) e os nomes À VISTA (B3), por momento:
+  1: «Arqueir…» (7 letras à vista) 46x60 px (85x112 u), «Lobo» (4 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · cartão na vez 62x62
+  2: «Arqueir…» (7 letras à vista) 46x60 px (85x112 u), «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Espada…» (6 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · cartão na vez 62x62
+  4: «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Espada…» (6 letras à vista) 46x60 px (85x112 u), «Bruto» (5 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · cartão na vez 62x62
+  5: «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Espada…» (6 letras à vista) 46x60 px (85x112 u), «Bruto» (5 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · cartão na vez 62x62
+  7: «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Lobo» (4 letras à vista) 46x60 px (85x112 u), «Espada…» (6 letras à vista) 46x60 px (85x112 u), «Bruto» (5 letras à vista) 46x60 px (85x112 u) · retrato ["46x46"] · cartão na vez 62x62
+letras à vista por nome, em todos os momentos: [7, 4, 7, 4, 6, 4, 6, 5, 4, 6, 5, 4, 4, 6, 5] (LADO_RETRATO_EM_LETRAS = 3.4; a escolha 7 ou 10 letras é do Mestre)
+prova da caixa (expande, com os manequins): 209 de 209 verificações passaram.

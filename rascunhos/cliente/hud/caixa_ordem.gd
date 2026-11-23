@@ -19,6 +19,11 @@ extends PanelContainer
 ##   Tirar o rato (ou outro toque, na caixa ou fora dela) volta à compacta. Só mostra o que a compacta já mostra: os
 ##   nomes e a ordem das figuras da luta.
 ## Os toques e cliques EM CIMA da caixa ficam na caixa (abrem/fecham a vista); fora dela, o tabuleiro recebe-os.
+## Ordem CAIXA-EXPANDE-INTERACAO: duas excepções, para a caixa nunca dar ordens ao tabuleiro por engano —
+## - D1: com a expandida aberta por toque, o toque FORA que a fecha é só isso: fecha-a e fica na caixa (o carregar, o
+##   arrastar e o levantar desse dedo, e o rato que o motor imita a partir dele). O toque a seguir já vai ao tabuleiro.
+## - D3: a roda do rato em cima da caixa fica na caixa, mesmo quando a lista já está no topo ou no fim e não rola mais
+##   (nunca vai dar zoom ao tabuleiro por baixo).
 
 ## O Mestre carregou em «Modo iniciativa» (true = ligar).
 signal pediu_iniciativa(ligar: bool)
@@ -92,6 +97,9 @@ var _sobre := false
 var _aberta_toque := false
 ## Onde começou o toque em curso (local), ou INF se não há toque a começar na caixa.
 var _toque_em := Vector2.INF
+## Ordem CAIXA-EXPANDE-INTERACAO (D1): o toque fora fechou a expandida e todo o gesto fica na caixa, até o dedo
+## se levantar (o índice do dedo; -1 = nenhum).
+var _engolir_toque := -1
 ## Para os testes e as provas: o que a caixa mostra agora.
 ## `ids_mostrados`: a ordem completa (a que a expandida mostra); `ids_fila`: as caixinhas pequenas da compacta.
 var ids_mostrados: Array[String] = []
@@ -107,6 +115,10 @@ func _init() -> void:
 	# Ordem CAIXA-EXPANDE: a caixa apanha o rato e os toques EM CIMA DELA (abrem a vista expandida); fora dela, o
 	# tabuleiro continua a recebê-los. Os filhos não apanham nada (só o botão do Mestre).
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	# Ordem CAIXA-EXPANDE-INTERACAO (D3): o motor deixa passar a roda por um Control com STOP (a opção vem ligada por
+	# omissão) quando ninguém a gastou — e a lista no topo ou no fim não a gasta. Desligada aqui, a roda que a lista não
+	# gasta pára na caixa e não chega ao tabuleiro (camera_mesa.gd: roda → zoom).
+	mouse_force_pass_scroll_events = false
 	var fundo := StyleBoxFlat.new()
 	fundo.bg_color = COR_PAINEL
 	fundo.set_corner_radius_all(8)
@@ -451,25 +463,62 @@ func _contem(ev: InputEvent) -> bool:
 
 
 ## O rato a sério (não o que o motor imita a partir de um toque) por cima ou fora da caixa; o toque abre/fecha. Lê-se
-## no _input (antes do tabuleiro e dos botões) sem consumir nada: quem consome os cliques em cima da caixa é o
-## mouse_filter dela; o arrastar continua a chegar à lista para rolar.
+## no _input (antes do tabuleiro e dos botões). Não consome nada, com uma excepção (D1): o toque fora que fecha a
+## expandida. Quem consome os cliques em cima da caixa é o mouse_filter dela; o arrastar continua a chegar à lista.
 func _input(ev: InputEvent) -> void:
 	if not is_visible_in_tree():
 		return
+	if _engolir(ev):
+		get_viewport().set_input_as_handled()
+		return
 	if ev is InputEventMouseMotion and ev.device != InputEvent.DEVICE_ID_EMULATION:
 		definir_sobre(_contem(ev))
+	elif ev is InputEventMouseButton and ev.device == InputEvent.DEVICE_ID_EMULATION:
+		# D1: o rato que o motor imita a partir de um toque chega ANTES do próprio toque (o Input despacha primeiro o
+		# rato imitado). Se for esse o carregar fora que fecha, é ele que tem de ficar na caixa — senão o tabuleiro
+		# arma o «toque» com ele e dispara-o no levantar.
+		var b := ev as InputEventMouseButton
+		if b.pressed and b.button_index == MOUSE_BUTTON_LEFT and _aberta_toque and not _contem(b):
+			_fechar_por_toque_fora(0)
 	elif ev is InputEventScreenTouch:
 		var t := ev as InputEventScreenTouch
 		var dentro := _contem(t)
 		if t.pressed:
 			_toque_em = t.position if dentro else Vector2.INF
 			if not dentro and _aberta_toque:
-				alternar_toque()  # um toque fora fecha a expandida (e o tabuleiro recebe-o)
+				_fechar_por_toque_fora(t.index)  # D1: fecha a expandida e o toque fica na caixa (não vai ao tabuleiro)
 		else:
 			var tocou := _toque_em != Vector2.INF and dentro and t.position.distance_to(_toque_em) <= float(_fonte) * TOQUE_MAX_EM_LETRAS
 			_toque_em = Vector2.INF
 			if tocou:
 				alternar_toque()
+
+
+## D1: o toque fora fecha a expandida e esse gesto inteiro fica na caixa (consumido aqui e até o dedo se levantar).
+func _fechar_por_toque_fora(indice: int) -> void:
+	_toque_em = Vector2.INF
+	_engolir_toque = indice
+	alternar_toque()
+	get_viewport().set_input_as_handled()
+
+
+## D1: este evento é o resto do gesto que fechou a expandida (o carregar, o arrastar e o levantar do mesmo dedo, e o
+## rato que o motor imita dele)? O levantar do dedo acaba o gesto.
+func _engolir(ev: InputEvent) -> bool:
+	if _engolir_toque < 0:
+		return false
+	if ev is InputEventScreenTouch:
+		var t := ev as InputEventScreenTouch
+		if t.index != _engolir_toque:
+			return false
+		if not t.pressed:
+			_engolir_toque = -1
+		return true
+	if ev is InputEventScreenDrag:
+		return (ev as InputEventScreenDrag).index == _engolir_toque
+	if (ev is InputEventMouseButton or ev is InputEventMouseMotion) and ev.device == InputEvent.DEVICE_ID_EMULATION:
+		return _engolir_toque == 0  # o motor só imita o rato a partir do primeiro dedo
+	return false
 
 
 func _notification(what: int) -> void:
@@ -480,6 +529,7 @@ func _notification(what: int) -> void:
 		_sobre = false
 		_aberta_toque = false
 		_toque_em = Vector2.INF
+		_engolir_toque = -1
 		_mudar_vista(antes)
 
 
