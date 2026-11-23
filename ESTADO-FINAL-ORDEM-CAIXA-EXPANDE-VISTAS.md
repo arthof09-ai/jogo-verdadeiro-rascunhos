@@ -15,7 +15,7 @@ Este ficheiro não tem nomes verdadeiros, nem pedaços deles, nem o valor de nen
 
 **`rascunhos/cliente/cenas/mestre/mestre.gd`** (o único ficheiro do jogo tocado; `hud/caixa_ordem.gd` não mudou):
 - **O tecto da largura.** `_posicionar_caixa` passa a chamar `_caixa.limitar_largura(...)` até ao fim do tabuleiro, menos
-  meia letra. É o mesmo tecto que o HUD já tinha. Com ele, o `teto` de `_aplicar_vista` deixa de ser `INF` no ecrã do
+  meia letra. É o mesmo mecanismo de tecto do HUD. Com ele, o `teto` de `_aplicar_vista` deixa de ser `INF` no ecrã do
   Mestre: a caixa, compacta ou expandida, nunca passa para a folha.
   - Se a fila da compacta não couber, parte em linhas.
   - Na expandida, se um nome não couber, corta-se com «…», como no HUD.
@@ -35,12 +35,12 @@ Este ficheiro não tem nomes verdadeiros, nem pedaços deles, nem o valor de nen
   - a caixa aberta fica dentro do tabuleiro, sem tocar a folha, e não passa do fundo do ecrã;
   - nunca fica mais estreita que a compacta;
   - o rato e um clique na folha, à altura da caixa, vão à folha (o clique é contado no `gui_input` do controlo), e a
-    caixa volta à compacta. O ponto é o pior sítio: se a caixa entrar na folha, o ponto fica no meio da parte tapada.
+    caixa volta à compacta. O fecho medido é pelo rato na folha; o fecho pelo clique não foi medido em separado. O ponto é o pior sítio: se a caixa entrar na folha, o ponto fica no meio da parte tapada.
 - Na câmara livre, a sobreposição com o «Voltar», a dica e os controlos de andar mede-se também **com a vista aberta**.
 - Para o clique não dar uma ordem ao cartão, finge-se um comando em voo: o `tocar` do Mestre não age com comandos em
   voo.
 
-**A prova viva, passo 12 (novo)** (`provas/ordem-caixa-expande/ferramentas/prova_caixa_expande.gd`):
+**A prova viva, passo 12 (novo)** (`provas/ordem-caixa-expande/ferramentas/prova_caixa_expande.gd` — o passo 12 editou este ficheiro, +98/−0, ficheiro entregue pela F14):
 - Corre dentro do ciclo do 11, porque só aí há 12 e depois 16 figuras, e acontece a seguir aos 3 gestos.
 - Em 844×390 e 780×360, com a expandida aberta pelo rato, mede-se:
   - a lista no topo, sem rolar: as linhas inteiras à vista e a que a borda inferior corta;
@@ -91,7 +91,7 @@ Ferramenta com render: `foto_mestre_vistas.gd`, **30/30** com a correcção e 25
 | ecrã · figuras | caixa aberta (x, y, l×a) | fim do tabuleiro / início da folha | linhas inteiras sem rolar | rato e clique na folha | sem a correcção |
 |---|---|---|---|---|---|
 | 844×390 · 12 | (36, 179, 787×884) | 968 | 9 de 12 | à folha, 1 clique; a caixa fecha | igual: neste ecrã já cabia |
-| 844×390 · 16 | (36, 179, 821×884) | 968 | 9 de 16 | à folha, 1 clique; a caixa fecha | igual |
+| 844×390 · 16 | (36, 179, 821×884) | 968 | 9 de 16 | à folha, 1 clique; a caixa fecha | 883 u na suite, 884 u com render; neste ecrã já cabia |
 | 780×360 · 12 | (39, 194, **808**×867), acaba em 847 | 867 | 8 de 12 | à folha, 1 clique; a caixa fecha | 844 de largo, acaba em **883**: entra 16 u na folha e fica aberta com o rato lá |
 | 780×360 · 16 | (39, 194, **808**×867), acaba em 847 | 867 | 8 de 16 | à folha, 1 clique; a caixa fecha | 878 de largo, acaba em **917**: entra 50 u e fica aberta |
 | câmara livre 1920×1080 · 16 | (22, 122, 521×**793**), acaba em 915 | manípulo em y = 926 | 13 de 16 | | 521×947, acaba em 1069: **tapa o manípulo** |
@@ -113,12 +113,16 @@ Ferramenta com render: `foto_mestre_vistas.gd`, **30/30** com a correcção e 25
 
 ## 4. D2 — a barra e a prova viva 12/16, medidas (a matéria da F20)
 **Prova viva: 241/241** (`provas/ordem-caixa-expande-vistas/cliente/`, com o relato em `relato.txt`):
-- o cliente real pela Rede;
+- o cliente real pela ligação (127.0.0.1:8794);
 - o servidor de mesa real, com o motor VLAB real (`a91c021c…`) e a semente 7;
 - o manequim de referência, com o SHA conferido.
 
+**Emenda da conferência (F32, 23/11/2026):** fontes da proveniência — semente 7 no lançador (`correr-prova-vistas.sh:20`); hash VLAB `a91c021c…` no log do job `motor-real` da run Testes 45101519738.
+
 Por passo: 0 → 1 · 1 → 22 · 2 → 20 · 3 → 4 · 4 → 22 · 5 → 20 · 6 → 17 · 7 → 31 · 8 → 18 · 9 → 6 · 10 → 9 · 11 → 38 ·
-**12 → 32**, mais 1 da abertura do manequim. Os passos 0 a 11 dão os mesmos 209 da CAIXA-EXPANDE-INTERACAO.
+**12 → 32**, mais 1 da abertura do manequim. Os passos 0 a 11 dão os mesmos 209 da CAIXA-EXPANDE-INTERACAO — os mesmos 209 ok; um valor deriva 1 u (ver a linha seguinte).
+
+**Emenda da conferência (F33, 23/11/2026):** na re-corrida do passo 11 (16 figuras, 780×360), o fim da lista deriva de 736 u para 735 u, em 3 linhas do relato (relato.txt:344, 345, 347).
 
 **A barra como é hoje.** Medida no HUD da jogadora: «u» são unidades do HUD e «px» são píxeis reais da janela.
 
@@ -133,6 +137,7 @@ Por passo: 0 → 1 · 1 → 22 · 2 → 20 · 3 → 4 · 4 → 22 · 5 → 20 ·
 - O que diz que a lista continua é a linha cortada a meio na borda inferior, a 38–48 %, e a pega da barra, que é tanto
   mais curta quanto mais figuras há.
 - **No ecrã do Mestre** (§3), sem rolar, vêem-se 9 linhas em 844×390 e 8 em 780×360, com 12 ou 16 figuras.
+- **Emenda da conferência (F35, 23/11/2026):** a tabela arredonda os valores ao inteiro.
 
 **As capturas** são a matéria da pergunta ao olho do Mestre (barra discreta ou mais visível). Estão em `cliente/`:
 - `12-barra-topo-N-figuras-WxH.png`: a lista cortada, sem rolar;
@@ -151,8 +156,8 @@ verde**. Os jobs são `servidor`, `validador-glb`, `foto-mestre`, `godot-cliente
 
 No Linux do CI os números são os de cá:
 - `medir_mestre`: **130 ok, 0 falhas** («ecrã do Mestre: 0 falha(s), 0 sem medida»), com as 6 medidas da expandida e a
-  da câmara livre. Os rectângulos da caixa são os de cá. O tabuleiro em 780×360 mede 866 u no Linux contra 867 cá,
-  por causa do arredondamento da letra, e a caixa aberta continua a acabar em 847;
+  da câmara livre. Os rectângulos da caixa são os de cá. O tabuleiro em 780×360 mede 866 u no Linux contra 867 cá — diferença de 1 u nas medidas da letra entre Linux e
+  Windows, causa por determinar — e a caixa aberta continua a acabar em 847;
 - `caixa_janela` 123/123, e a guarda «123 de 123» passou;
 - `caixa_jogadora` 58/58;
 - `rodar_testes` 321/321, nos jobs `cliente` e `godot-cliente`;
@@ -162,6 +167,8 @@ No Linux do CI os números são os de cá:
 - o guião de mutação da CAIXA-JANELA-CI: 9 falhas, todas da B6, e «114 de 123».
 
 O `foto-mestre`, que fotografa o ecrã do Mestre com render, passou. O `retoma-pc` passou com as listas do commit 2.
+
+**Emenda da conferência (F35, 23/11/2026):** `sem-correcao/medir_mestre.log:73` traz a coluna `compacta` mal etiquetada (o valor é o da aberta).
 
 **Listas da retoma:** corri o `actualizar-listas.py` depois do commit 1, porque ele lê o `HEAD`. Deu 0 novos e 0
 tirados; só mudam os SHA de 2 ficheiros, `cenas/mestre/mestre.gd` e `testes/medir_mestre.gd`. O `depois.txt` e o
@@ -188,6 +195,8 @@ Conferidor: `provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs`, crité
   ferramenta e a suite escrevem dão 0.
 - **Os logs da `caixa_janela`** têm as mesmas linhas de sempre (o padrão aceite na CAIXA-JANELA-CI).
 - **O lançador** herda a linha do servidor de ensaio, como o da CAIXA-EXPANDE-INTERACAO.
+- **Emenda da conferência (F34, 23/11/2026):** padrão herdado aceite por decisão do juiz — o lançador dá 2/2 no critério alargado e 0 inteiros; o pedaço está no caminho herdado do servidor de ensaio (EXPANDE), pré-existente na base. A renomeação fica como higiene futura (F38).
+- **Emenda da conferência (F31, 23/11/2026):** o README trocou «Cada» por «Todas» na l.41 no commit 2 — em `53c2945` tinha 2/2; na ponta fica 0/0.
 - **O relato** imprime os nomes **públicos** das figuras, que é o que a caixa mostra: 108, como na
   CAIXA-EXPANDE-INTERACAO. As linhas novas do passo 12 não têm nomes.
 - **As minhas linhas** tinham palavras correntes que partilham pedaços com os nomes.
@@ -207,8 +216,7 @@ Conferidor: `provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs`, crité
      de rolagem escondidos.
    - Como o rato na folha ainda estava «dentro» da caixa, ela ficava aberta por baixo.
    - Ambos estão na captura sem correcção e nas 2 falhas correspondentes.
-2. **«Nunca passa a barra.»** O ecrã do Mestre não tem a barra das acções do HUD. Li-o como o fundo do ecrã (a caixa
-   acaba em 1063 e 1061, abaixo de 1080) e como os controlos de andar da câmara livre, que são o que fica em baixo.
+2. **«Nunca passa a barra.»** A prova pedida não tem referente no ecrã do Mestre (não tem a barra das acções do HUD) — mediu-se o fundo do ecrã (a caixa acaba em 1063 e 1061, abaixo de 1080) e os controlos de andar da câmara livre, que são o que fica em baixo.
 3. **A câmara livre nos ecrãs baixos.** Em 844×390 e 780×360, dentro da câmara livre, a caixa já saía de cena antes
    desta ordem, porque nem a compacta cabe entre a dica e o manípulo. Não mudou. A medida com a vista aberta na câmara
    livre só tem caixa à vista em 1920×1080.
