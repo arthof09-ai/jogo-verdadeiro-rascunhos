@@ -123,3 +123,15 @@ estão fora do repo, em `tmp/`.
 
 1. `ba165e3` — a obra: o caso novo e a frase no README (sobre `77ba415`, a F128).
 2. Este ESTADO-FINAL.
+3. A nota do CI da ponta do commit 2, acrescentada no fim deste ficheiro.
+
+## 7. Nota do CI — ponta `da4f73e` (este ESTADO-FINAL)
+
+Testes **45196173144** + Sonda **45196172992**: **10/10 jobs verdes e a Sonda verde**, com o passo da F51 a correr.
+No log do job `cliente` (job 137767083151):
+
+- «auto-teste do redigir-nomes: **31 de 31** verificações passaram»;
+- o registo da COBERTURA-CORRECOES-6 deu «**igual byte a byte** ao redigido (3437 bytes, sem os CR)».
+
+**Nomes inteiros no log:** 0 + 0. O ESTADO-FINAL da F128 (`b9c7129`) entrou na linha por cima desta ponta. Esta nota
+fica sobre ele, e o commit só acrescenta esta secção a este ficheiro.
