@@ -153,6 +153,8 @@ canário, deram rc=0. **Até alguém o aplicar, a ferramenta não corre no CI.**
 `rodar_testes` 321/321 (também no `godot-cliente`), `caixa_janela` 123/123, `caixa_jogadora` 70/70 e mutação das
 células «114 de 123». O commit desta nota só acrescenta este parágrafo a este ficheiro.
 
+**CI da ponta `74f5fa9` (F65, remendo do CI aplicado), já na linha** (Testes 45119507335 + Sonda 45119507357): **10/10 jobs verdes e a Sonda verde, COM o passo novo a correr** — lido no log do job `cliente`: auto-teste do redigir-nomes «12 de 12 verificações passaram» e o registo da COBERTURA-CORRECOES-6 «igual byte a byte ao redigido (3464 bytes, sem os CR)». A condição da fusão da F51 está cumprida.
+
 ## 6. Ficheiros
 
 - `provas/ordem-caixa-relato/ferramentas/redigir-nomes.mjs`: a ferramenta.
