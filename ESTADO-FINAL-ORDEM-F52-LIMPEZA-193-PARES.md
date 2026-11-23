@@ -107,7 +107,24 @@ As suites do CI estão no §4.
 
 ## 4. CI da ponta
 
-*(Preenche-se no commit da nota do CI.)*
+**CI da ponta `5a906cf` (a obra): verde.**
+- **Testes dos rascunhos**, run `45183219926`: os 10 jobs passaram (`servidor`, `validador-glb`, `motor-real`,
+  `protocolo`, `cliente`, `godot-cliente`, `ponta-a-ponta`, `provas-mapa`, `foto-mestre`, `retoma-pc`).
+- **Sonda de privacidade**, run `45183219813`: verde.
+- **No job `cliente`:** o canário dá 26 de 26. As suites ficam com os números de antes: `rodar_testes` 321/321,
+  `caixa_janela` 123/123, a caixa no HUD da jogadora 70/70 e a mutação das células 114/123 (as 9 falhas da B6). O
+  passo da F51 dá o auto-teste 29/29 e «igual byte a byte ao redigido (3437 bytes, sem os CR)». O `godot-cliente`
+  também dá `rodar_testes` 321/321.
+- O `retoma-pc` está verde, o que confirma que as listas da retoma batem certo.
+
+**CI da ponta `697f90c` (a obra mais este ESTADO-FINAL): verde.** Testes, run `45183545241`: 10/10 jobs. Sonda, run
+`45183545355`: verde. No job `cliente`, os mesmos números: 26/26, 321/321, 123/123, 70/70, mutação 114/123,
+auto-teste 29/29, igual byte a byte.
+
+**Logs do CI:** 0 pares de nomes verdadeiros inteiros nos logs dos jobs `cliente` (das duas pontas) e
+`godot-cliente` (de `5a906cf`).
+
+Este commit só acrescenta texto a este ficheiro.
 
 ## 5. Privacidade re-derivada
 
