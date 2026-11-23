@@ -23,6 +23,19 @@ fica na caixa. Nenhum ficheiro do jogo muda com esta ordem. As conclusões estã
     de quando a arena ficou pronta. As tabelas saem iguais às da 1.ª corrida, menos o deslocamento do arrastar, que muda
     na 4.ª casa decimal. Ver `ESTADO-FINAL-ORDEM-F61-SEGUNDA-CORRIDA-D1.md`, na raiz.
 
+- **A ferramenta das L1–L3 (Ordem F64, sentença da F28):** `medicao/medir_custo_d1_hud-f64.log` (na ponta) e
+  `medicao/medir_custo_d1_hud-sem-d1-f64.log` (sem o D1, com a mesma troca do `caixa_ordem.gd`). A ferramenta passou a
+  escrever mais linhas, e as linhas TABELA continuam iguais byte a byte às da 2.ª corrida:
+  - `MEDIDA CASA` (L1): o toque numa casa do Mover, com a lista aberta por toque e de controlo, no mesmo ponto. Diz se
+    a casa fecha a lista sem mover a figura ou se a move (a intenção «mover» na fila).
+  - a `MEDIDA PINÇA` diz também quanto o foco da câmara andou e o rumo e a inclinação. A `MEDIDA PINÇA A DESLOCAR` (L2)
+    é uma 2.ª pinça cujo meio anda 60 u: no controlo a câmara desloca-se, e com a lista aberta mede-se se se desloca.
+  - `PARTIDA` e `DEPOIS` (L3): o estado antes do gesto medido (a caixa, o modo, a gaveta, os painéis, a figura dela e a
+    casa onde está, o cursor, a declaração do Mover, a fila e a câmara) e o que mudou ao 1.º toque e no fim.
+  - `medicao/resumo-f64.txt` tem o rc, as contagens, a comparação das tabelas e as linhas novas. Escreve-o
+    `bash ferramentas/resumo_f64.sh <raiz-do-repo> <rc-ponta> <rc-sem-d1> <partida>`. Ver
+    `ESTADO-FINAL-ORDEM-F64-FERRAMENTA-MEDICAO-D1.md`, na raiz.
+
 Para correr (Godot 4.7.2; num clone novo, faz antes o `--import`):
 
     godot --headless --path rascunhos/cliente --import

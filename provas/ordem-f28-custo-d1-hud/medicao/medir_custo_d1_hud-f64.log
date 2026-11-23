@@ -1,0 +1,417 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[floresta] pronta em 1850 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":1850,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+pronto
+== F28: o custo do D1 nos botões do HUD (12 figuras, a jogadora na vez; arena a sério, sem servidor) ==
+== F61: a câmara repõe-se entre casos (modo 0, foco (0.75, -0.085046, 0.75), zoom 1.500, rumo 0.0, inclinação 55.0) ==
+== F64: linhas MEDIDA CASA e MEDIDA PINÇA A DESLOCAR; o deslocamento da câmara na pinça; PARTIDA e DEPOIS em todos os casos ==
+-- 844x390: botão a botão --
+  PARTIDA Mover · 844x390 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (-1, -1) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Mover · 844x390 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Mover · 844x390 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; modo: Nenhum → Mover; gaveta: fechada → à vista, de o Mover; cursor: (-1, -1) → (10, 10)
+  PARTIDA Mover · 844x390 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Mover · 844x390 (controlo, caixa fechada) (ao 1.º toque): mudou modo: Nenhum → Mover; gaveta: fechada → à vista, de o Mover
+  DEPOIS Mover · 844x390 (controlo, caixa fechada) (no fim, 1 toques): mudou modo: Nenhum → Mover; gaveta: fechada → à vista, de o Mover
+  MEDIDA Mover · 844x390: lista aberta por toque · botão em (1026.5, 1005.5) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Ataque · 844x390 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Ataque · 844x390 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Ataque · 844x390 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; modo: Nenhum → Ataque; gaveta: fechada → à vista, de o Ataque
+  PARTIDA Ataque · 844x390 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Ataque · 844x390 (controlo, caixa fechada) (ao 1.º toque): mudou modo: Nenhum → Ataque; gaveta: fechada → à vista, de o Ataque
+  DEPOIS Ataque · 844x390 (controlo, caixa fechada) (no fim, 1 toques): mudou modo: Nenhum → Ataque; gaveta: fechada → à vista, de o Ataque
+  MEDIDA Ataque · 844x390: lista aberta por toque · botão em (742.5, 1005.5) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Consumível · 844x390 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Consumível · 844x390 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Consumível · 844x390 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; modo: Nenhum → Consumivel
+  PARTIDA Consumível · 844x390 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Consumível · 844x390 (controlo, caixa fechada) (ao 1.º toque): mudou modo: Nenhum → Consumivel
+  DEPOIS Consumível · 844x390 (controlo, caixa fechada) (no fim, 1 toques): mudou modo: Nenhum → Consumivel
+  MEDIDA Consumível · 844x390: lista aberta por toque · botão em (1310.5, 1005.5) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Encerrar · 844x390 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Encerrar · 844x390 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Encerrar · 844x390 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; painéis: nenhum → escolha
+  PARTIDA Encerrar · 844x390 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Encerrar · 844x390 (controlo, caixa fechada) (ao 1.º toque): mudou painéis: nenhum → escolha
+  DEPOIS Encerrar · 844x390 (controlo, caixa fechada) (no fim, 1 toques): mudou painéis: nenhum → escolha
+  MEDIDA Encerrar · 844x390: lista aberta por toque · botão em (1594.5, 1005.5) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA ⚙ (config.) · 844x390 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS ⚙ (config.) · 844x390 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS ⚙ (config.) · 844x390 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; painéis: nenhum → Configurações
+  PARTIDA ⚙ (config.) · 844x390 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS ⚙ (config.) · 844x390 (controlo, caixa fechada) (ao 1.º toque): mudou painéis: nenhum → Configurações
+  DEPOIS ⚙ (config.) · 844x390 (controlo, caixa fechada) (no fim, 1 toques): mudou painéis: nenhum → Configurações
+  MEDIDA ⚙ (config.) · 844x390: lista aberta por toque · botão em (67.2, 67.5) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA FICHA ▸ · 844x390 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS FICHA ▸ · 844x390 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS FICHA ▸ · 844x390 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; painéis: nenhum → ficha
+  PARTIDA FICHA ▸ · 844x390 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS FICHA ▸ · 844x390 (controlo, caixa fechada) (ao 1.º toque): mudou painéis: nenhum → ficha
+  DEPOIS FICHA ▸ · 844x390 (controlo, caixa fechada) (no fim, 1 toques): mudou painéis: nenhum → ficha
+  MEDIDA FICHA ▸ · 844x390: lista aberta por toque · botão em (132.0, 164.5) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Declarar Defender (na ficha) · 844x390 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis ficha · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Declarar Defender (na ficha) · 844x390 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Declarar Defender (na ficha) · 844x390 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; painéis: ficha → nenhum; fila: vazia → 1 (defender)
+  PARTIDA Declarar Defender (na ficha) · 844x390 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis ficha · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Declarar Defender (na ficha) · 844x390 (controlo, caixa fechada) (ao 1.º toque): mudou painéis: ficha → nenhum; fila: vazia → 1 (defender)
+  DEPOIS Declarar Defender (na ficha) · 844x390 (controlo, caixa fechada) (no fim, 1 toques): mudou painéis: ficha → nenhum; fila: vazia → 1 (defender)
+  MEDIDA Declarar Defender (na ficha) · 844x390: lista aberta por toque · botão em (330.0, 333.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA » Correr (gaveta do Mover) · 844x390 (lista aberta por toque): caixa expandida por toque · modo Mover · gaveta à vista, de o Mover · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS » Correr (gaveta do Mover) · 844x390 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS » Correr (gaveta do Mover) · 844x390 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (correr)
+  PARTIDA » Correr (gaveta do Mover) · 844x390 (controlo, caixa fechada): caixa compacta · modo Mover · gaveta à vista, de o Mover · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS » Correr (gaveta do Mover) · 844x390 (controlo, caixa fechada) (ao 1.º toque): mudou modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (correr)
+  DEPOIS » Correr (gaveta do Mover) · 844x390 (controlo, caixa fechada) (no fim, 1 toques): mudou modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (correr)
+  MEDIDA » Correr (gaveta do Mover) · 844x390: lista aberta por toque · botão em (1187.0, 890.5) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA ↩ Sair c/ segurança (gaveta do Mover) · 844x390 (lista aberta por toque): caixa expandida por toque · modo Mover · gaveta à vista, de o Mover · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS ↩ Sair c/ segurança (gaveta do Mover) · 844x390 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS ↩ Sair c/ segurança (gaveta do Mover) · 844x390 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; declaração do Mover: não → sim
+  PARTIDA ↩ Sair c/ segurança (gaveta do Mover) · 844x390 (controlo, caixa fechada): caixa compacta · modo Mover · gaveta à vista, de o Mover · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS ↩ Sair c/ segurança (gaveta do Mover) · 844x390 (controlo, caixa fechada) (ao 1.º toque): mudou declaração do Mover: não → sim
+  DEPOIS ↩ Sair c/ segurança (gaveta do Mover) · 844x390 (controlo, caixa fechada) (no fim, 1 toques): mudou declaração do Mover: não → sim
+  MEDIDA ↩ Sair c/ segurança (gaveta do Mover) · 844x390: lista aberta por toque · botão em (830.5, 890.5) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Apagar o fogo (gaveta do Mover) · 844x390 (lista aberta por toque): caixa expandida por toque · modo Mover · gaveta à vista, de o Mover · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Apagar o fogo (gaveta do Mover) · 844x390 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Apagar o fogo (gaveta do Mover) · 844x390 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (apagar_fogo)
+  PARTIDA Apagar o fogo (gaveta do Mover) · 844x390 (controlo, caixa fechada): caixa compacta · modo Mover · gaveta à vista, de o Mover · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Apagar o fogo (gaveta do Mover) · 844x390 (controlo, caixa fechada) (ao 1.º toque): mudou modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (apagar_fogo)
+  DEPOIS Apagar o fogo (gaveta do Mover) · 844x390 (controlo, caixa fechada) (no fim, 1 toques): mudou modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (apagar_fogo)
+  MEDIDA Apagar o fogo (gaveta do Mover) · 844x390: lista aberta por toque · botão em (1525.0, 890.5) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA ✦ Transformação (gaveta do Ataque) · 844x390 (lista aberta por toque): caixa expandida por toque · modo Ataque · gaveta à vista, de o Ataque · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS ✦ Transformação (gaveta do Ataque) · 844x390 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS ✦ Transformação (gaveta do Ataque) · 844x390 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; painéis: nenhum → escolha
+  PARTIDA ✦ Transformação (gaveta do Ataque) · 844x390 (controlo, caixa fechada): caixa compacta · modo Ataque · gaveta à vista, de o Ataque · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS ✦ Transformação (gaveta do Ataque) · 844x390 (controlo, caixa fechada) (ao 1.º toque): mudou painéis: nenhum → escolha
+  DEPOIS ✦ Transformação (gaveta do Ataque) · 844x390 (controlo, caixa fechada) (no fim, 1 toques): mudou painéis: nenhum → escolha
+  MEDIDA ✦ Transformação (gaveta do Ataque) · 844x390: lista aberta por toque · botão em (1168.5, 890.5) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Sim, encerrar (painel de escolha) · 844x390 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis escolha · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Sim, encerrar (painel de escolha) · 844x390 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Sim, encerrar (painel de escolha) · 844x390 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; painéis: escolha → nenhum; fila: vazia → 1 (encerrar)
+  PARTIDA Sim, encerrar (painel de escolha) · 844x390 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis escolha · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Sim, encerrar (painel de escolha) · 844x390 (controlo, caixa fechada) (ao 1.º toque): mudou painéis: escolha → nenhum; fila: vazia → 1 (encerrar)
+  DEPOIS Sim, encerrar (painel de escolha) · 844x390 (controlo, caixa fechada) (no fim, 1 toques): mudou painéis: escolha → nenhum; fila: vazia → 1 (encerrar)
+  MEDIDA Sim, encerrar (painel de escolha) · 844x390: lista aberta por toque · botão em (1168.5, 442.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Cancelar (painel de escolha) · 844x390 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis escolha · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Cancelar (painel de escolha) · 844x390 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Cancelar (painel de escolha) · 844x390 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; painéis: escolha → nenhum
+  PARTIDA Cancelar (painel de escolha) · 844x390 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis escolha · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Cancelar (painel de escolha) · 844x390 (controlo, caixa fechada) (ao 1.º toque): mudou painéis: escolha → nenhum
+  DEPOIS Cancelar (painel de escolha) · 844x390 (controlo, caixa fechada) (no fim, 1 toques): mudou painéis: escolha → nenhum
+  MEDIDA Cancelar (painel de escolha) · 844x390: lista aberta por toque · botão em (1168.5, 528.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Fechar (Configurações) · 844x390 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis Configurações · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Fechar (Configurações) · 844x390 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Fechar (Configurações) · 844x390 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; painéis: Configurações → nenhum
+  PARTIDA Fechar (Configurações) · 844x390 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis Configurações · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Fechar (Configurações) · 844x390 (controlo, caixa fechada) (ao 1.º toque): mudou painéis: Configurações → nenhum
+  DEPOIS Fechar (Configurações) · 844x390 (controlo, caixa fechada) (no fim, 1 toques): mudou painéis: Configurações → nenhum
+  MEDIDA Fechar (Configurações) · 844x390: lista aberta por toque · botão em (330.0, 754.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Repor o zoom (Configurações) · 844x390 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis Configurações · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 2.250, rumo 0.0, inclinação 55.0
+  DEPOIS Repor o zoom (Configurações) · 844x390 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Repor o zoom (Configurações) · 844x390 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; câmara: foco (0.750, -0.085, 0.750), zoom 2.250, rumo 0.0, inclinação 55.0 → foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  PARTIDA Repor o zoom (Configurações) · 844x390 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis Configurações · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 2.250, rumo 0.0, inclinação 55.0
+  DEPOIS Repor o zoom (Configurações) · 844x390 (controlo, caixa fechada) (ao 1.º toque): mudou câmara: foco (0.750, -0.085, 0.750), zoom 2.250, rumo 0.0, inclinação 55.0 → foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Repor o zoom (Configurações) · 844x390 (controlo, caixa fechada) (no fim, 1 toques): mudou câmara: foco (0.750, -0.085, 0.750), zoom 2.250, rumo 0.0, inclinação 55.0 → foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA Repor o zoom (Configurações) · 844x390: lista aberta por toque · botão em (330.0, 410.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+-- 844x390: o resto (gestos e roda) --
+  PARTIDA ARRASTAR 844x390 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA ARRASTAR 844x390 (lista aberta por toque): 1 dedo arrastado 90 u no tabuleiro · a câmara deslocou-se 0.000 m · lista fechada no fim sim
+  DEPOIS ARRASTAR 844x390 (lista aberta por toque) (no fim): mudou caixa: expandida por toque → compacta
+  PARTIDA PINÇA 844x390 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA PINÇA 844x390 (lista aberta por toque): 2 dedos afastam-se 100 u · zoom 1.500 → 1.500 · a câmara deslocou-se 0.000 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  DEPOIS PINÇA 844x390 (lista aberta por toque) (no fim): mudou caixa: expandida por toque → compacta
+  PARTIDA ARRASTAR 844x390 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA ARRASTAR 844x390 (controlo, caixa fechada): 1 dedo arrastado 90 u no tabuleiro · a câmara deslocou-se 2.269 m · lista fechada no fim sim
+  DEPOIS ARRASTAR 844x390 (controlo, caixa fechada) (no fim): mudou câmara: foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0 → foco (3.018, -0.010, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  PARTIDA PINÇA 844x390 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA PINÇA 844x390 (controlo, caixa fechada): 2 dedos afastam-se 100 u · zoom 1.500 → 3.000 · a câmara deslocou-se 0.028 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  DEPOIS PINÇA 844x390 (controlo, caixa fechada) (no fim): mudou câmara: foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0 → foco (0.778, -0.084, 0.750), zoom 3.000, rumo 0.0, inclinação 55.0
+  PARTIDA RODA 844x390 sobre compacta: caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA RODA 844x390 sobre a caixa compacta (sem o rato ter passado por cima): 1 passo para cima · zoom 1.500 → 1.500 · a expandida está aberta não
+  DEPOIS RODA 844x390 sobre compacta (no fim): mudou nada
+  PARTIDA RODA 844x390 sobre expandida pelo rato: caixa expandida · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA RODA 844x390 sobre a caixa, depois de o rato entrar nela (abre a expandida): 1 passo para cima · zoom 1.500 → 1.500 · a expandida está aberta sim
+  DEPOIS RODA 844x390 sobre expandida pelo rato (no fim): mudou nada
+  PARTIDA RODA 844x390 sobre fora: caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA RODA 844x390 sobre o tabuleiro (controlo): 1 passo para cima · zoom 1.500 → 1.650 · a expandida está aberta não
+  DEPOIS RODA 844x390 sobre fora (no fim): mudou câmara: foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0 → foco (0.750, -0.085, 0.750), zoom 1.650, rumo 0.0, inclinação 55.0
+-- 844x390: o rato --
+  PARTIDA RATO Mover · 844x390 (rato): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS RATO Mover · 844x390 (rato) (no fim, 1 cliques): mudou modo: Nenhum → Mover; gaveta: fechada → à vista, de o Mover
+  MEDIDA RATO Mover · 844x390 (só o rato, a expandida pelo rato por cima): abriu sim · o rato saiu da caixa para o botão: a lista fechou sim · cliques até a acção sair 1 («pressed» 1) · a lista continua aberta no fim não
+  PARTIDA RATO Mover · 844x390 (toque-depois-rato): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS RATO Mover · 844x390 (toque-depois-rato) (no fim, 1 cliques): mudou modo: Nenhum → Mover; gaveta: fechada → à vista, de o Mover
+  MEDIDA RATO Mover · 844x390 (a lista aberta por TOQUE, depois o rato a sério): abriu sim · o rato saiu da caixa para o botão: a lista fechou não · cliques até a acção sair 1 («pressed» 1) · a lista continua aberta no fim sim
+  PARTIDA RATO Encerrar · 844x390 (rato): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (6, 11) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS RATO Encerrar · 844x390 (rato) (no fim, 1 cliques): mudou painéis: nenhum → escolha
+  MEDIDA RATO Encerrar · 844x390 (só o rato, a expandida pelo rato por cima): abriu sim · o rato saiu da caixa para o botão: a lista fechou sim · cliques até a acção sair 1 («pressed» 1) · a lista continua aberta no fim não
+  PARTIDA RATO Encerrar · 844x390 (toque-depois-rato): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (6, 11) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS RATO Encerrar · 844x390 (toque-depois-rato) (no fim, 1 cliques): mudou painéis: nenhum → escolha
+  MEDIDA RATO Encerrar · 844x390 (a lista aberta por TOQUE, depois o rato a sério): abriu sim · o rato saiu da caixa para o botão: a lista fechou não · cliques até a acção sair 1 («pressed» 1) · a lista continua aberta no fim sim
+  PARTIDA RATO ⚙ (config.) · 844x390 (rato): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (6, 11) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS RATO ⚙ (config.) · 844x390 (rato) (no fim, 1 cliques): mudou painéis: nenhum → Configurações
+  MEDIDA RATO ⚙ (config.) · 844x390 (só o rato, a expandida pelo rato por cima): abriu sim · o rato saiu da caixa para o botão: a lista fechou sim · cliques até a acção sair 1 («pressed» 1) · a lista continua aberta no fim não
+  PARTIDA RATO ⚙ (config.) · 844x390 (toque-depois-rato): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (6, 11) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS RATO ⚙ (config.) · 844x390 (toque-depois-rato) (no fim, 1 cliques): mudou painéis: nenhum → Configurações
+  MEDIDA RATO ⚙ (config.) · 844x390 (a lista aberta por TOQUE, depois o rato a sério): abriu sim · o rato saiu da caixa para o botão: a lista fechou não · cliques até a acção sair 1 («pressed» 1) · a lista continua aberta no fim sim
+-- 844x390: a jogada típica --
+  PARTIDA JOGADA 844x390 (ver a ordem: nunca): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (6, 11) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS JOGADA 844x390 (ver a ordem: nunca) (no fim): mudou cursor: (6, 11) → (10, 10); fila: vazia → 1 (encerrar)
+  MEDIDA JOGADA 844x390 (ver a ordem: nunca): 4 toques [Mover 1, casa 1, Encerrar 1, Sim, encerrar 1] · completa sim
+  PARTIDA JOGADA 844x390 (ver a ordem: no começo da vez): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS JOGADA 844x390 (ver a ordem: no começo da vez) (no fim): mudou fila: vazia → 1 (encerrar)
+  MEDIDA JOGADA 844x390 (ver a ordem: no começo da vez): 6 toques [abrir a lista 1, Mover 2, casa 1, Encerrar 1, Sim, encerrar 1] · completa sim
+  PARTIDA JOGADA 844x390 (ver a ordem: com o Mover aberto): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS JOGADA 844x390 (ver a ordem: com o Mover aberto) (no fim): mudou fila: vazia → 1 (encerrar)
+  MEDIDA JOGADA 844x390 (ver a ordem: com o Mover aberto): 6 toques [Mover 1, abrir a lista 1, casa 2, Encerrar 1, Sim, encerrar 1] · completa sim
+-- 844x390: F64 — o toque numa casa e a pinça a deslocar --
+  PARTIDA CASA 844x390 (lista aberta por toque): caixa expandida por toque · modo Mover · gaveta à vista, de o Mover · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS CASA 844x390 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS CASA 844x390 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (mover)
+  MEDIDA CASA 844x390 (lista aberta por toque): toque na casa (7, 11) do Mover, em (983.0017, 588.6998) u · 1.º toque: a casa fecha a lista sem mover a figura (fechou a lista sim, a intenção «mover» saiu não) · toques até a figura ser mandada mover: 2
+  PARTIDA CASA 844x390 (controlo, caixa fechada): caixa compacta · modo Mover · gaveta à vista, de o Mover · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS CASA 844x390 (controlo, caixa fechada) (ao 1.º toque): mudou modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (mover)
+  DEPOIS CASA 844x390 (controlo, caixa fechada) (no fim, 1 toques): mudou modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (mover)
+  MEDIDA CASA 844x390 (controlo, caixa fechada): toque na casa (7, 11) do Mover, em (983.0017, 588.6998) u · 1.º toque: a casa move a figura (fechou a lista não, a intenção «mover» saiu sim) · toques até a figura ser mandada mover: 1
+  PARTIDA PINÇA A DESLOCAR 844x390 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA PINÇA A DESLOCAR 844x390 (lista aberta por toque): 2 dedos afastam-se 100 u e o meio anda 60 u para a esquerda · zoom 1.500 → 1.500 · a câmara deslocou-se 0.000 m (foco) · lista fechada no fim sim
+  DEPOIS PINÇA A DESLOCAR 844x390 (lista aberta por toque) (no fim): mudou caixa: expandida por toque → compacta
+  PARTIDA PINÇA A DESLOCAR 844x390 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA PINÇA A DESLOCAR 844x390 (controlo, caixa fechada): 2 dedos afastam-se 100 u e o meio anda 60 u para a esquerda · zoom 1.500 → 2.963 · a câmara deslocou-se 0.854 m (foco) · lista fechada no fim sim
+  DEPOIS PINÇA A DESLOCAR 844x390 (controlo, caixa fechada) (no fim): mudou câmara: foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0 → foco (1.604, -0.058, 0.750), zoom 2.963, rumo 0.0, inclinação 55.0
+-- 780x360: botão a botão --
+  PARTIDA Mover · 780x360 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Mover · 780x360 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Mover · 780x360 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; modo: Nenhum → Mover; gaveta: fechada → à vista, de o Mover
+  PARTIDA Mover · 780x360 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Mover · 780x360 (controlo, caixa fechada) (ao 1.º toque): mudou modo: Nenhum → Mover; gaveta: fechada → à vista, de o Mover
+  DEPOIS Mover · 780x360 (controlo, caixa fechada) (no fim, 1 toques): mudou modo: Nenhum → Mover; gaveta: fechada → à vista, de o Mover
+  MEDIDA Mover · 780x360: lista aberta por toque · botão em (1016.5, 1001.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Ataque · 780x360 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Ataque · 780x360 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Ataque · 780x360 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; modo: Nenhum → Ataque; gaveta: fechada → à vista, de o Ataque
+  PARTIDA Ataque · 780x360 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Ataque · 780x360 (controlo, caixa fechada) (ao 1.º toque): mudou modo: Nenhum → Ataque; gaveta: fechada → à vista, de o Ataque
+  DEPOIS Ataque · 780x360 (controlo, caixa fechada) (no fim, 1 toques): mudou modo: Nenhum → Ataque; gaveta: fechada → à vista, de o Ataque
+  MEDIDA Ataque · 780x360: lista aberta por toque · botão em (709.5, 1001.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Consumível · 780x360 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Consumível · 780x360 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Consumível · 780x360 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; modo: Nenhum → Consumivel
+  PARTIDA Consumível · 780x360 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Consumível · 780x360 (controlo, caixa fechada) (ao 1.º toque): mudou modo: Nenhum → Consumivel
+  DEPOIS Consumível · 780x360 (controlo, caixa fechada) (no fim, 1 toques): mudou modo: Nenhum → Consumivel
+  MEDIDA Consumível · 780x360: lista aberta por toque · botão em (1323.5, 1001.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Encerrar · 780x360 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Encerrar · 780x360 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Encerrar · 780x360 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; painéis: nenhum → escolha
+  PARTIDA Encerrar · 780x360 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Encerrar · 780x360 (controlo, caixa fechada) (ao 1.º toque): mudou painéis: nenhum → escolha
+  DEPOIS Encerrar · 780x360 (controlo, caixa fechada) (no fim, 1 toques): mudou painéis: nenhum → escolha
+  MEDIDA Encerrar · 780x360: lista aberta por toque · botão em (1630.5, 1001.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA ⚙ (config.) · 780x360 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS ⚙ (config.) · 780x360 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS ⚙ (config.) · 780x360 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; painéis: nenhum → Configurações
+  PARTIDA ⚙ (config.) · 780x360 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS ⚙ (config.) · 780x360 (controlo, caixa fechada) (ao 1.º toque): mudou painéis: nenhum → Configurações
+  DEPOIS ⚙ (config.) · 780x360 (controlo, caixa fechada) (no fim, 1 toques): mudou painéis: nenhum → Configurações
+  MEDIDA ⚙ (config.) · 780x360: lista aberta por toque · botão em (70.8, 71.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA FICHA ▸ · 780x360 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS FICHA ▸ · 780x360 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS FICHA ▸ · 780x360 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; painéis: nenhum → ficha
+  PARTIDA FICHA ▸ · 780x360 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS FICHA ▸ · 780x360 (controlo, caixa fechada) (ao 1.º toque): mudou painéis: nenhum → ficha
+  DEPOIS FICHA ▸ · 780x360 (controlo, caixa fechada) (no fim, 1 toques): mudou painéis: nenhum → ficha
+  MEDIDA FICHA ▸ · 780x360: lista aberta por toque · botão em (141.0, 175.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Declarar Defender (na ficha) · 780x360 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis ficha · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Declarar Defender (na ficha) · 780x360 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Declarar Defender (na ficha) · 780x360 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; painéis: ficha → nenhum; fila: vazia → 1 (defender)
+  PARTIDA Declarar Defender (na ficha) · 780x360 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis ficha · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Declarar Defender (na ficha) · 780x360 (controlo, caixa fechada) (ao 1.º toque): mudou painéis: ficha → nenhum; fila: vazia → 1 (defender)
+  DEPOIS Declarar Defender (na ficha) · 780x360 (controlo, caixa fechada) (no fim, 1 toques): mudou painéis: ficha → nenhum; fila: vazia → 1 (defender)
+  MEDIDA Declarar Defender (na ficha) · 780x360: lista aberta por toque · botão em (355.5, 353.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA » Correr (gaveta do Mover) · 780x360 (lista aberta por toque): caixa expandida por toque · modo Mover · gaveta à vista, de o Mover · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS » Correr (gaveta do Mover) · 780x360 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS » Correr (gaveta do Mover) · 780x360 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (correr)
+  PARTIDA » Correr (gaveta do Mover) · 780x360 (controlo, caixa fechada): caixa compacta · modo Mover · gaveta à vista, de o Mover · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS » Correr (gaveta do Mover) · 780x360 (controlo, caixa fechada) (ao 1.º toque): mudou modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (correr)
+  DEPOIS » Correr (gaveta do Mover) · 780x360 (controlo, caixa fechada) (no fim, 1 toques): mudou modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (correr)
+  MEDIDA » Correr (gaveta do Mover) · 780x360: lista aberta por toque · botão em (1189.0, 877.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA ↩ Sair c/ segurança (gaveta do Mover) · 780x360 (lista aberta por toque): caixa expandida por toque · modo Mover · gaveta à vista, de o Mover · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS ↩ Sair c/ segurança (gaveta do Mover) · 780x360 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS ↩ Sair c/ segurança (gaveta do Mover) · 780x360 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; declaração do Mover: não → sim
+  PARTIDA ↩ Sair c/ segurança (gaveta do Mover) · 780x360 (controlo, caixa fechada): caixa compacta · modo Mover · gaveta à vista, de o Mover · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS ↩ Sair c/ segurança (gaveta do Mover) · 780x360 (controlo, caixa fechada) (ao 1.º toque): mudou declaração do Mover: não → sim
+  DEPOIS ↩ Sair c/ segurança (gaveta do Mover) · 780x360 (controlo, caixa fechada) (no fim, 1 toques): mudou declaração do Mover: não → sim
+  MEDIDA ↩ Sair c/ segurança (gaveta do Mover) · 780x360: lista aberta por toque · botão em (805.0, 877.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Apagar o fogo (gaveta do Mover) · 780x360 (lista aberta por toque): caixa expandida por toque · modo Mover · gaveta à vista, de o Mover · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Apagar o fogo (gaveta do Mover) · 780x360 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Apagar o fogo (gaveta do Mover) · 780x360 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (apagar_fogo)
+  PARTIDA Apagar o fogo (gaveta do Mover) · 780x360 (controlo, caixa fechada): caixa compacta · modo Mover · gaveta à vista, de o Mover · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Apagar o fogo (gaveta do Mover) · 780x360 (controlo, caixa fechada) (ao 1.º toque): mudou modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (apagar_fogo)
+  DEPOIS Apagar o fogo (gaveta do Mover) · 780x360 (controlo, caixa fechada) (no fim, 1 toques): mudou modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (apagar_fogo)
+  MEDIDA Apagar o fogo (gaveta do Mover) · 780x360: lista aberta por toque · botão em (1554.0, 877.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA ✦ Transformação (gaveta do Ataque) · 780x360 (lista aberta por toque): caixa expandida por toque · modo Ataque · gaveta à vista, de o Ataque · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS ✦ Transformação (gaveta do Ataque) · 780x360 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS ✦ Transformação (gaveta do Ataque) · 780x360 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; painéis: nenhum → escolha
+  PARTIDA ✦ Transformação (gaveta do Ataque) · 780x360 (controlo, caixa fechada): caixa compacta · modo Ataque · gaveta à vista, de o Ataque · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS ✦ Transformação (gaveta do Ataque) · 780x360 (controlo, caixa fechada) (ao 1.º toque): mudou painéis: nenhum → escolha
+  DEPOIS ✦ Transformação (gaveta do Ataque) · 780x360 (controlo, caixa fechada) (no fim, 1 toques): mudou painéis: nenhum → escolha
+  MEDIDA ✦ Transformação (gaveta do Ataque) · 780x360: lista aberta por toque · botão em (1170.0, 877.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Sim, encerrar (painel de escolha) · 780x360 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis escolha · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Sim, encerrar (painel de escolha) · 780x360 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Sim, encerrar (painel de escolha) · 780x360 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; painéis: escolha → nenhum; fila: vazia → 1 (encerrar)
+  PARTIDA Sim, encerrar (painel de escolha) · 780x360 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis escolha · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Sim, encerrar (painel de escolha) · 780x360 (controlo, caixa fechada) (ao 1.º toque): mudou painéis: escolha → nenhum; fila: vazia → 1 (encerrar)
+  DEPOIS Sim, encerrar (painel de escolha) · 780x360 (controlo, caixa fechada) (no fim, 1 toques): mudou painéis: escolha → nenhum; fila: vazia → 1 (encerrar)
+  MEDIDA Sim, encerrar (painel de escolha) · 780x360: lista aberta por toque · botão em (1170.0, 438.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Cancelar (painel de escolha) · 780x360 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis escolha · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Cancelar (painel de escolha) · 780x360 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Cancelar (painel de escolha) · 780x360 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; painéis: escolha → nenhum
+  PARTIDA Cancelar (painel de escolha) · 780x360 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis escolha · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Cancelar (painel de escolha) · 780x360 (controlo, caixa fechada) (ao 1.º toque): mudou painéis: escolha → nenhum
+  DEPOIS Cancelar (painel de escolha) · 780x360 (controlo, caixa fechada) (no fim, 1 toques): mudou painéis: escolha → nenhum
+  MEDIDA Cancelar (painel de escolha) · 780x360: lista aberta por toque · botão em (1170.0, 528.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Fechar (Configurações) · 780x360 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis Configurações · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Fechar (Configurações) · 780x360 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Fechar (Configurações) · 780x360 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; painéis: Configurações → nenhum
+  PARTIDA Fechar (Configurações) · 780x360 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis Configurações · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Fechar (Configurações) · 780x360 (controlo, caixa fechada) (ao 1.º toque): mudou painéis: Configurações → nenhum
+  DEPOIS Fechar (Configurações) · 780x360 (controlo, caixa fechada) (no fim, 1 toques): mudou painéis: Configurações → nenhum
+  MEDIDA Fechar (Configurações) · 780x360: lista aberta por toque · botão em (355.5, 791.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+  PARTIDA Repor o zoom (Configurações) · 780x360 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis Configurações · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 2.250, rumo 0.0, inclinação 55.0
+  DEPOIS Repor o zoom (Configurações) · 780x360 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS Repor o zoom (Configurações) · 780x360 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; câmara: foco (0.750, -0.085, 0.750), zoom 2.250, rumo 0.0, inclinação 55.0 → foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  PARTIDA Repor o zoom (Configurações) · 780x360 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis Configurações · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 2.250, rumo 0.0, inclinação 55.0
+  DEPOIS Repor o zoom (Configurações) · 780x360 (controlo, caixa fechada) (ao 1.º toque): mudou câmara: foco (0.750, -0.085, 0.750), zoom 2.250, rumo 0.0, inclinação 55.0 → foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS Repor o zoom (Configurações) · 780x360 (controlo, caixa fechada) (no fim, 1 toques): mudou câmara: foco (0.750, -0.085, 0.750), zoom 2.250, rumo 0.0, inclinação 55.0 → foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA Repor o zoom (Configurações) · 780x360: lista aberta por toque · botão em (355.5, 431.0) u, sob a expandida não · 1.º toque: fechou a lista sim, «pressed» 0, acção saiu não · toques até a acção sair: 2 («pressed» total 1) · CONTROLO (caixa fechada): 1.º toque acção saiu sim, toques 1
+-- 780x360: o resto (gestos e roda) --
+  PARTIDA ARRASTAR 780x360 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA ARRASTAR 780x360 (lista aberta por toque): 1 dedo arrastado 90 u no tabuleiro · a câmara deslocou-se 0.000 m · lista fechada no fim sim
+  DEPOIS ARRASTAR 780x360 (lista aberta por toque) (no fim): mudou caixa: expandida por toque → compacta
+  PARTIDA PINÇA 780x360 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA PINÇA 780x360 (lista aberta por toque): 2 dedos afastam-se 100 u · zoom 1.500 → 1.500 · a câmara deslocou-se 0.000 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  DEPOIS PINÇA 780x360 (lista aberta por toque) (no fim): mudou caixa: expandida por toque → compacta
+  PARTIDA ARRASTAR 780x360 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA ARRASTAR 780x360 (controlo, caixa fechada): 1 dedo arrastado 90 u no tabuleiro · a câmara deslocou-se 2.269 m · lista fechada no fim sim
+  DEPOIS ARRASTAR 780x360 (controlo, caixa fechada) (no fim): mudou câmara: foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0 → foco (3.018, -0.010, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  PARTIDA PINÇA 780x360 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA PINÇA 780x360 (controlo, caixa fechada): 2 dedos afastam-se 100 u · zoom 1.500 → 3.000 · a câmara deslocou-se 0.028 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  DEPOIS PINÇA 780x360 (controlo, caixa fechada) (no fim): mudou câmara: foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0 → foco (0.778, -0.084, 0.750), zoom 3.000, rumo 0.0, inclinação 55.0
+  PARTIDA RODA 780x360 sobre compacta: caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA RODA 780x360 sobre a caixa compacta (sem o rato ter passado por cima): 1 passo para cima · zoom 1.500 → 1.500 · a expandida está aberta não
+  DEPOIS RODA 780x360 sobre compacta (no fim): mudou nada
+  PARTIDA RODA 780x360 sobre expandida pelo rato: caixa expandida · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA RODA 780x360 sobre a caixa, depois de o rato entrar nela (abre a expandida): 1 passo para cima · zoom 1.500 → 1.500 · a expandida está aberta sim
+  DEPOIS RODA 780x360 sobre expandida pelo rato (no fim): mudou nada
+  PARTIDA RODA 780x360 sobre fora: caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA RODA 780x360 sobre o tabuleiro (controlo): 1 passo para cima · zoom 1.500 → 1.650 · a expandida está aberta não
+  DEPOIS RODA 780x360 sobre fora (no fim): mudou câmara: foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0 → foco (0.750, -0.085, 0.750), zoom 1.650, rumo 0.0, inclinação 55.0
+-- 780x360: o rato --
+  PARTIDA RATO Mover · 780x360 (rato): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS RATO Mover · 780x360 (rato) (no fim, 1 cliques): mudou modo: Nenhum → Mover; gaveta: fechada → à vista, de o Mover
+  MEDIDA RATO Mover · 780x360 (só o rato, a expandida pelo rato por cima): abriu sim · o rato saiu da caixa para o botão: a lista fechou sim · cliques até a acção sair 1 («pressed» 1) · a lista continua aberta no fim não
+  PARTIDA RATO Mover · 780x360 (toque-depois-rato): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS RATO Mover · 780x360 (toque-depois-rato) (no fim, 1 cliques): mudou modo: Nenhum → Mover; gaveta: fechada → à vista, de o Mover
+  MEDIDA RATO Mover · 780x360 (a lista aberta por TOQUE, depois o rato a sério): abriu sim · o rato saiu da caixa para o botão: a lista fechou não · cliques até a acção sair 1 («pressed» 1) · a lista continua aberta no fim sim
+  PARTIDA RATO Encerrar · 780x360 (rato): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (6, 11) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS RATO Encerrar · 780x360 (rato) (no fim, 1 cliques): mudou painéis: nenhum → escolha
+  MEDIDA RATO Encerrar · 780x360 (só o rato, a expandida pelo rato por cima): abriu sim · o rato saiu da caixa para o botão: a lista fechou sim · cliques até a acção sair 1 («pressed» 1) · a lista continua aberta no fim não
+  PARTIDA RATO Encerrar · 780x360 (toque-depois-rato): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (6, 11) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS RATO Encerrar · 780x360 (toque-depois-rato) (no fim, 1 cliques): mudou painéis: nenhum → escolha
+  MEDIDA RATO Encerrar · 780x360 (a lista aberta por TOQUE, depois o rato a sério): abriu sim · o rato saiu da caixa para o botão: a lista fechou não · cliques até a acção sair 1 («pressed» 1) · a lista continua aberta no fim sim
+  PARTIDA RATO ⚙ (config.) · 780x360 (rato): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (6, 11) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS RATO ⚙ (config.) · 780x360 (rato) (no fim, 1 cliques): mudou painéis: nenhum → Configurações
+  MEDIDA RATO ⚙ (config.) · 780x360 (só o rato, a expandida pelo rato por cima): abriu sim · o rato saiu da caixa para o botão: a lista fechou sim · cliques até a acção sair 1 («pressed» 1) · a lista continua aberta no fim não
+  PARTIDA RATO ⚙ (config.) · 780x360 (toque-depois-rato): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (6, 11) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS RATO ⚙ (config.) · 780x360 (toque-depois-rato) (no fim, 1 cliques): mudou painéis: nenhum → Configurações
+  MEDIDA RATO ⚙ (config.) · 780x360 (a lista aberta por TOQUE, depois o rato a sério): abriu sim · o rato saiu da caixa para o botão: a lista fechou não · cliques até a acção sair 1 («pressed» 1) · a lista continua aberta no fim sim
+-- 780x360: a jogada típica --
+  PARTIDA JOGADA 780x360 (ver a ordem: nunca): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (6, 11) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS JOGADA 780x360 (ver a ordem: nunca) (no fim): mudou cursor: (6, 11) → (10, 10); fila: vazia → 1 (encerrar)
+  MEDIDA JOGADA 780x360 (ver a ordem: nunca): 4 toques [Mover 1, casa 1, Encerrar 1, Sim, encerrar 1] · completa sim
+  PARTIDA JOGADA 780x360 (ver a ordem: no começo da vez): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS JOGADA 780x360 (ver a ordem: no começo da vez) (no fim): mudou fila: vazia → 1 (encerrar)
+  MEDIDA JOGADA 780x360 (ver a ordem: no começo da vez): 6 toques [abrir a lista 1, Mover 2, casa 1, Encerrar 1, Sim, encerrar 1] · completa sim
+  PARTIDA JOGADA 780x360 (ver a ordem: com o Mover aberto): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS JOGADA 780x360 (ver a ordem: com o Mover aberto) (no fim): mudou fila: vazia → 1 (encerrar)
+  MEDIDA JOGADA 780x360 (ver a ordem: com o Mover aberto): 6 toques [Mover 1, abrir a lista 1, casa 2, Encerrar 1, Sim, encerrar 1] · completa sim
+-- 780x360: F64 — o toque numa casa e a pinça a deslocar --
+  PARTIDA CASA 780x360 (lista aberta por toque): caixa expandida por toque · modo Mover · gaveta à vista, de o Mover · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS CASA 780x360 (lista aberta por toque) (ao 1.º toque): mudou caixa: expandida por toque → compacta
+  DEPOIS CASA 780x360 (lista aberta por toque) (no fim, 2 toques): mudou caixa: expandida por toque → compacta; modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (mover)
+  MEDIDA CASA 780x360 (lista aberta por toque): toque na casa (7, 11) do Mover, em (984.5017, 588.6998) u · 1.º toque: a casa fecha a lista sem mover a figura (fechou a lista sim, a intenção «mover» saiu não) · toques até a figura ser mandada mover: 2
+  PARTIDA CASA 780x360 (controlo, caixa fechada): caixa compacta · modo Mover · gaveta à vista, de o Mover · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  DEPOIS CASA 780x360 (controlo, caixa fechada) (ao 1.º toque): mudou modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (mover)
+  DEPOIS CASA 780x360 (controlo, caixa fechada) (no fim, 1 toques): mudou modo: Mover → Nenhum; gaveta: à vista, de o Mover → à vista, de nenhum modo; fila: vazia → 1 (mover)
+  MEDIDA CASA 780x360 (controlo, caixa fechada): toque na casa (7, 11) do Mover, em (984.5017, 588.6998) u · 1.º toque: a casa move a figura (fechou a lista não, a intenção «mover» saiu sim) · toques até a figura ser mandada mover: 1
+  PARTIDA PINÇA A DESLOCAR 780x360 (lista aberta por toque): caixa expandida por toque · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA PINÇA A DESLOCAR 780x360 (lista aberta por toque): 2 dedos afastam-se 100 u e o meio anda 60 u para a esquerda · zoom 1.500 → 1.500 · a câmara deslocou-se 0.000 m (foco) · lista fechada no fim sim
+  DEPOIS PINÇA A DESLOCAR 780x360 (lista aberta por toque) (no fim): mudou caixa: expandida por toque → compacta
+  PARTIDA PINÇA A DESLOCAR 780x360 (controlo, caixa fechada): caixa compacta · modo Nenhum · gaveta fechada · painéis nenhum · figura j1 (a dela) na casa (10, 10) · cursor (10, 10) · declaração do Mover não · fila vazia · câmara foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0
+  MEDIDA PINÇA A DESLOCAR 780x360 (controlo, caixa fechada): 2 dedos afastam-se 100 u e o meio anda 60 u para a esquerda · zoom 1.500 → 2.963 · a câmara deslocou-se 0.854 m (foco) · lista fechada no fim sim
+  DEPOIS PINÇA A DESLOCAR 780x360 (controlo, caixa fechada) (no fim): mudou câmara: foco (0.750, -0.085, 0.750), zoom 1.500, rumo 0.0, inclinação 55.0 → foco (1.604, -0.058, 0.750), zoom 2.963, rumo 0.0, inclinação 55.0
+
+TABELA (caso | ecrã | 1.º toque com a lista aberta | toques com a lista aberta | toques com a caixa fechada | custo | acção | sob a expandida)
+TABELA | Mover | 844x390 | fecha só a lista | 2 | 1 | 1 | abre o Mover (casas a azul) | false
+TABELA | Ataque | 844x390 | fecha só a lista | 2 | 1 | 1 | abre o Ataque (alvos) | false
+TABELA | Consumível | 844x390 | fecha só a lista | 2 | 1 | 1 | abre o Consumível (alvos) | false
+TABELA | Encerrar | 844x390 | fecha só a lista | 2 | 1 | 1 | abre «Encerrar a sua vez?» | false
+TABELA | ⚙ (config.) | 844x390 | fecha só a lista | 2 | 1 | 1 | abre as Configurações | false
+TABELA | FICHA ▸ | 844x390 | fecha só a lista | 2 | 1 | 1 | abre a ficha | false
+TABELA | Declarar Defender (na ficha) | 844x390 | fecha só a lista | 2 | 1 | 1 | envia «defender» | false
+TABELA | » Correr (gaveta do Mover) | 844x390 | fecha só a lista | 2 | 1 | 1 | envia «correr» | false
+TABELA | ↩ Sair c/ segurança (gaveta do Mover) | 844x390 | fecha só a lista | 2 | 1 | 1 | liga a declaração | false
+TABELA | Apagar o fogo (gaveta do Mover) | 844x390 | fecha só a lista | 2 | 1 | 1 | envia «apagar_fogo» | false
+TABELA | ✦ Transformação (gaveta do Ataque) | 844x390 | fecha só a lista | 2 | 1 | 1 | abre a confirmação | false
+TABELA | Sim, encerrar (painel de escolha) | 844x390 | fecha só a lista | 2 | 1 | 1 | envia «encerrar» | false
+TABELA | Cancelar (painel de escolha) | 844x390 | fecha só a lista | 2 | 1 | 1 | fecha o painel | false
+TABELA | Fechar (Configurações) | 844x390 | fecha só a lista | 2 | 1 | 1 | fecha as Configurações | false
+TABELA | Repor o zoom (Configurações) | 844x390 | fecha só a lista | 2 | 1 | 1 | repõe o zoom | false
+TABELA | arrastar 1 dedo (deslocar a câmara) | 844x390 | lista | 0.0 | 0 | 0 | câmara desloca-se | false
+TABELA | pinça 2 dedos (zoom) | 844x390 | lista | 1.0 | 0 | 0 | zoom muda | false
+TABELA | arrastar 1 dedo (deslocar a câmara) | 844x390 | controlo | 2.26925158500671 | 0 | 0 | câmara desloca-se | false
+TABELA | pinça 2 dedos (zoom) | 844x390 | controlo | 2.0 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 844x390 | compacta | 1.0 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 844x390 | expandida pelo rato | 1.0 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 844x390 | fora | 1.1 | 0 | 0 | zoom muda | false
+TABELA | rato · Mover | 844x390 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · Mover | 844x390 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | rato · Encerrar | 844x390 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · Encerrar | 844x390 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | rato · ⚙ (config.) | 844x390 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · ⚙ (config.) | 844x390 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | jogada típica (mover + encerrar) | 844x390 | nunca | 4 | 0 | 0 | Mover 1, casa 1, Encerrar 1, Sim, encerrar 1 | false
+TABELA | jogada típica (mover + encerrar) | 844x390 | no começo da vez | 6 | 0 | 0 | abrir a lista 1, Mover 2, casa 1, Encerrar 1, Sim, encerrar 1 | false
+TABELA | jogada típica (mover + encerrar) | 844x390 | com o Mover aberto | 6 | 0 | 0 | Mover 1, abrir a lista 1, casa 2, Encerrar 1, Sim, encerrar 1 | false
+TABELA | Mover | 780x360 | fecha só a lista | 2 | 1 | 1 | abre o Mover (casas a azul) | false
+TABELA | Ataque | 780x360 | fecha só a lista | 2 | 1 | 1 | abre o Ataque (alvos) | false
+TABELA | Consumível | 780x360 | fecha só a lista | 2 | 1 | 1 | abre o Consumível (alvos) | false
+TABELA | Encerrar | 780x360 | fecha só a lista | 2 | 1 | 1 | abre «Encerrar a sua vez?» | false
+TABELA | ⚙ (config.) | 780x360 | fecha só a lista | 2 | 1 | 1 | abre as Configurações | false
+TABELA | FICHA ▸ | 780x360 | fecha só a lista | 2 | 1 | 1 | abre a ficha | false
+TABELA | Declarar Defender (na ficha) | 780x360 | fecha só a lista | 2 | 1 | 1 | envia «defender» | false
+TABELA | » Correr (gaveta do Mover) | 780x360 | fecha só a lista | 2 | 1 | 1 | envia «correr» | false
+TABELA | ↩ Sair c/ segurança (gaveta do Mover) | 780x360 | fecha só a lista | 2 | 1 | 1 | liga a declaração | false
+TABELA | Apagar o fogo (gaveta do Mover) | 780x360 | fecha só a lista | 2 | 1 | 1 | envia «apagar_fogo» | false
+TABELA | ✦ Transformação (gaveta do Ataque) | 780x360 | fecha só a lista | 2 | 1 | 1 | abre a confirmação | false
+TABELA | Sim, encerrar (painel de escolha) | 780x360 | fecha só a lista | 2 | 1 | 1 | envia «encerrar» | false
+TABELA | Cancelar (painel de escolha) | 780x360 | fecha só a lista | 2 | 1 | 1 | fecha o painel | false
+TABELA | Fechar (Configurações) | 780x360 | fecha só a lista | 2 | 1 | 1 | fecha as Configurações | false
+TABELA | Repor o zoom (Configurações) | 780x360 | fecha só a lista | 2 | 1 | 1 | repõe o zoom | false
+TABELA | arrastar 1 dedo (deslocar a câmara) | 780x360 | lista | 0.0 | 0 | 0 | câmara desloca-se | false
+TABELA | pinça 2 dedos (zoom) | 780x360 | lista | 1.0 | 0 | 0 | zoom muda | false
+TABELA | arrastar 1 dedo (deslocar a câmara) | 780x360 | controlo | 2.26925158500671 | 0 | 0 | câmara desloca-se | false
+TABELA | pinça 2 dedos (zoom) | 780x360 | controlo | 2.0 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 780x360 | compacta | 1.0 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 780x360 | expandida pelo rato | 1.0 | 0 | 0 | zoom muda | false
+TABELA | roda do rato (zoom) | 780x360 | fora | 1.1 | 0 | 0 | zoom muda | false
+TABELA | rato · Mover | 780x360 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · Mover | 780x360 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | rato · Encerrar | 780x360 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · Encerrar | 780x360 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | rato · ⚙ (config.) | 780x360 | rato | 1 | 1 | 0 | lista aberta no fim: não; fechou ao sair: sim | false
+TABELA | rato · ⚙ (config.) | 780x360 | toque-depois-rato | 1 | 1 | 0 | lista aberta no fim: sim; fechou ao sair: não | false
+TABELA | jogada típica (mover + encerrar) | 780x360 | nunca | 4 | 0 | 0 | Mover 1, casa 1, Encerrar 1, Sim, encerrar 1 | false
+TABELA | jogada típica (mover + encerrar) | 780x360 | no começo da vez | 6 | 0 | 0 | abrir a lista 1, Mover 2, casa 1, Encerrar 1, Sim, encerrar 1 | false
+TABELA | jogada típica (mover + encerrar) | 780x360 | com o Mover aberto | 6 | 0 | 0 | Mover 1, abrir a lista 1, casa 2, Encerrar 1, Sim, encerrar 1 | false
+
+Medição acabada: 62 casos, 0 erros de medição.

@@ -20,6 +20,19 @@ extends SceneTree
 ##
 ## F61 (segunda corrida, a pedido da F64): a câmara repõe-se entre casos. O `_repor` volta a pôr o modo, o foco, o zoom,
 ## o rumo e a inclinação que a câmara tinha quando a arena ficou pronta, e salta para lá sem a suavização.
+##
+## F64 (sentença da F28, L1–L3; a L4, a câmara reposta, é a da F61 acima). Só acrescenta linhas ao registo; as linhas
+## TABELA e a contagem de casos ficam as mesmas.
+## - L1, a casa: `_casa` mede o toque numa casa do Mover, com a lista aberta por toque e de controlo, no mesmo ponto, e
+##   escreve uma linha `MEDIDA CASA` com o resultado: a casa fecha a lista sem mover a figura, ou move-a (a intenção
+##   «mover» vai para a fila; sem servidor o movimento não se aplica).
+## - L2, a pinça: a linha `MEDIDA PINÇA` passa a dizer também quanto o foco da câmara andou (m) e o rumo e a inclinação.
+##   Como a pinça desta ferramenta é simétrica (o meio fica parado), `_pinca_a_deslocar` junta uma 2.ª pinça cujo meio
+##   anda 60 u para a esquerda: no controlo a câmara tem de se deslocar, para o 0 com a lista aberta ser medido e não
+##   apenas lido no código. Linha `MEDIDA PINÇA A DESLOCAR`.
+## - L3, o estado de partida: antes do gesto medido, uma linha `PARTIDA` diz o estado (a caixa, o modo da arena, a gaveta,
+##   os painéis, a figura dela e a casa onde está, o cursor, a declaração do Mover, a fila e a câmara). Depois, linhas
+##   `DEPOIS` dizem o que mudou em relação à partida (ao 1.º toque e no fim).
 
 const NOMES := ["Espadachim", "Arqueira", "Criatura", "Criatura", "Personagem", "Criatura", "Criatura", "Criatura"]
 const CASA_DELA := Vector2i(10, 10)
@@ -154,6 +167,59 @@ func _fila() -> int:
 	return (_rede.fila._itens as Dictionary).size()
 
 
+## F64 (L3): o estado do HUD e da arena, só lido (não espera quadros nem mexe em nada).
+func _estado_agora() -> Dictionary:
+	var cx = hud._caixa
+	var caixa := "compacta"
+	if hud.caixa_mostrada()["expandida"]:
+		caixa = "expandida por toque" if ("_aberta_toque" in cx and cx._aberta_toque) else "expandida"
+	var M = arena.Modo
+	var paineis: Array = []
+	for par in [["Configurações", hud._painel_config], ["escolha", hud._painel_escolha], ["ficha", hud._painel_ficha]]:
+		if (par[1] as Control).visible:
+			paineis.append(par[0])
+	var gaveta := "fechada"
+	if (hud._gaveta as Control).is_visible_in_tree():
+		var de := "nenhum modo" if hud._gaveta_de == M.NENHUM else "o " + str(M.find_key(hud._gaveta_de)).capitalize()
+		gaveta = "à vista, de %s" % de
+	var minha: String = _estado.minha_figura_id
+	var cam = arena.camera
+	var f: Vector3 = cam.foco
+	var acao := _acao_na_fila()
+	return {"caixa": caixa, "modo": str(M.find_key(arena.modo)).capitalize(), "gaveta": gaveta,
+		"painéis": "nenhum" if paineis.is_empty() else " + ".join(paineis),
+		"figura": "%s (a dela) na casa %s" % [minha, _estado.casa_de(_estado.figuras.get(minha))],
+		"cursor": str(arena._cursor), "declaração do Mover": _sim(_declarar_saida()),
+		"fila": "vazia" if _fila() == 0 else "%d (%s)" % [_fila(), acao if acao != "" else "sem acção"],
+		"câmara": "foco (%.3f, %.3f, %.3f), zoom %.3f, rumo %.1f, inclinação %.1f" % [f.x, f.y, f.z, cam.zoom, cam.rumo, cam.inclinacao]}
+
+
+func _texto_estado(e: Dictionary) -> String:
+	var partes: Array = []
+	for k in e:
+		partes.append("%s %s" % [k, e[k]])
+	return " · ".join(partes)
+
+
+## O que mudou de `a` (a partida) para `b`.
+func _mudou(a: Dictionary, b: Dictionary) -> String:
+	var partes: Array = []
+	for k in a:
+		if a[k] != b.get(k):
+			partes.append("%s: %s → %s" % [k, a[k], b.get(k)])
+	return "nada" if partes.is_empty() else "; ".join(partes)
+
+
+func _partida(rot: String) -> Dictionary:
+	var e := _estado_agora()
+	print("  PARTIDA %s: %s" % [rot, _texto_estado(e)])
+	return e
+
+
+func _depois(rot: String, quando: String, e0: Dictionary) -> void:
+	print("  DEPOIS %s (%s): mudou %s" % [rot, quando, _mudou(e0, _estado_agora())])
+
+
 func _acao_na_fila() -> String:
 	for id in _rede.fila._itens:
 		var t = _rede.fila._itens[id].get("texto")
@@ -269,7 +335,7 @@ func _premir_controlo(b: Control) -> void:
 
 ## Mede um caso. `abrir`: "toque" (a expandida aberta por toque antes), "nenhuma" (controlo: a caixa fechada).
 ## Devolve {primeiro: {fechou, pressed, saiu}, toques, saiu, sobreposto}.
-func _medir(caso: Array, abrir: String) -> Dictionary:
+func _medir(caso: Array, abrir: String, rot := "") -> Dictionary:
 	await _repor()
 	await caso[1].call()
 	await _quadros(2)
@@ -293,6 +359,8 @@ func _medir(caso: Array, abrir: String) -> Dictionary:
 	var primeiro := {}
 	var toques := 0
 	var saiu := false
+	var r_e := "%s (%s)" % [rot, "lista aberta por toque" if abrir == "toque" else "controlo, caixa fechada"]
+	var e0 := _partida(r_e)
 	while toques < MAX_TOQUES and not saiu:
 		await _tocar(centro)
 		await _quadros(3)
@@ -300,6 +368,8 @@ func _medir(caso: Array, abrir: String) -> Dictionary:
 		saiu = caso[3].call()
 		if toques == 1:
 			primeiro = {"fechou": not hud.caixa_mostrada()["expandida"], "pressed": _pressed[caso[0]] - p0, "saiu": saiu}
+			_depois(r_e, "ao 1.º toque", e0)
+	_depois(r_e, "no fim, %d toques" % toques, e0)
 	return {"primeiro": primeiro, "toques": toques if saiu else -1, "saiu": saiu, "sobreposto": sobreposto,
 		"pressed": _pressed[caso[0]] - p0, "sitio": centro, "caixa": r_exp}
 
@@ -310,9 +380,9 @@ func _sim(v: bool) -> String:
 
 func _botoes(tam: Vector2i) -> void:
 	for caso in _casos():
-		var com: Dictionary = await _medir(caso, "toque")
-		var sem: Dictionary = await _medir(caso, "nenhuma")
 		var rot := "%s · %dx%d" % [caso[0], tam.x, tam.y]
+		var com: Dictionary = await _medir(caso, "toque", rot)
+		var sem: Dictionary = await _medir(caso, "nenhuma", rot)
 		if com.has("erro") or sem.has("erro"):
 			_erros += 1
 			printerr("  ERRO %s: com a lista aberta %s · controlo %s" % [rot, com.get("erro", "ok"), sem.get("erro", "ok")])
@@ -336,6 +406,8 @@ func _resto(tam: Vector2i) -> void:
 		await _repor()
 		if abrir == "toque":
 			await _abrir_por_toque()
+		var r_a := "ARRASTAR %dx%d (%s)" % [tam.x, tam.y, "lista aberta por toque" if abrir == "toque" else "controlo, caixa fechada"]
+		var e_a := _partida(r_a)
 		var foco0: Vector3 = cam.foco
 		var px0: Vector2 = root.get_final_transform() * fora
 		var esc: float = root.get_final_transform().get_scale().x
@@ -365,6 +437,7 @@ func _resto(tam: Vector2i) -> void:
 		var fechou: bool = not hud.caixa_mostrada()["expandida"]
 		print("  MEDIDA ARRASTAR %dx%d (%s): 1 dedo arrastado 90 u no tabuleiro · a câmara deslocou-se %.3f m · lista fechada no fim %s" % [
 			tam.x, tam.y, "lista aberta por toque" if abrir == "toque" else "controlo, caixa fechada", andou, _sim(fechou)])
+		_depois(r_a, "no fim", e_a)
 		_tabela.append(["arrastar 1 dedo (deslocar a câmara)", tam, "lista" if abrir == "toque" else "controlo", andou, 0, 0, "câmara desloca-se", false])
 		# A pinça (2 dedos que se afastam): o 1.º dedo carrega primeiro.
 		await _repor()
@@ -372,6 +445,11 @@ func _resto(tam: Vector2i) -> void:
 			await _abrir_por_toque()
 		cam.definir_zoom(cam.ZOOM_PADRAO)
 		var z0: float = cam.zoom
+		var r_p := "PINÇA %dx%d (%s)" % [tam.x, tam.y, "lista aberta por toque" if abrir == "toque" else "controlo, caixa fechada"]
+		var e_p := _partida(r_p)
+		var fp0: Vector3 = cam.foco
+		var rumo0: float = cam.rumo
+		var incl0: float = cam.inclinacao
 		var a := root.get_final_transform() * (fora - Vector2(30, 0))
 		var bb := root.get_final_transform() * (fora + Vector2(30, 0))
 		for idx in [0, 1]:
@@ -402,8 +480,10 @@ func _resto(tam: Vector2i) -> void:
 			await process_frame
 		await _quadros(3)
 		var z1: float = cam.zoom
-		print("  MEDIDA PINÇA %dx%d (%s): 2 dedos afastam-se 100 u · zoom %.3f → %.3f · lista fechada no fim %s" % [
-			tam.x, tam.y, "lista aberta por toque" if abrir == "toque" else "controlo, caixa fechada", z0, z1, _sim(not hud.caixa_mostrada()["expandida"])])
+		print("  MEDIDA PINÇA %dx%d (%s): 2 dedos afastam-se 100 u · zoom %.3f → %.3f · a câmara deslocou-se %.3f m (foco), rumo %.1f → %.1f, inclinação %.1f → %.1f · lista fechada no fim %s" % [
+			tam.x, tam.y, "lista aberta por toque" if abrir == "toque" else "controlo, caixa fechada", z0, z1,
+			(cam.foco as Vector3).distance_to(fp0), rumo0, cam.rumo, incl0, cam.inclinacao, _sim(not hud.caixa_mostrada()["expandida"])])
+		_depois(r_p, "no fim", e_p)
 		_tabela.append(["pinça 2 dedos (zoom)", tam, "lista" if abrir == "toque" else "controlo", z1 / z0, 0, 0, "zoom muda", false])
 		cam.definir_zoom(cam.ZOOM_PADRAO)
 	# A roda do rato sobre a caixa (a F14 registou-a engolida: D3, mouse_force_pass_scroll_events) e fora dela.
@@ -418,6 +498,8 @@ func _resto(tam: Vector2i) -> void:
 			await _rato(p, false)
 			await _quadros(2)
 			p = (hud.caixa_mostrada()["rect"] as Rect2).get_center()
+		var r_r := "RODA %dx%d sobre %s" % [tam.x, tam.y, sitio]
+		var e_r := _partida(r_r)
 		var px: Vector2 = root.get_final_transform() * p
 		for carregado in [true, false]:
 			var w := InputEventMouseButton.new()
@@ -433,6 +515,7 @@ func _resto(tam: Vector2i) -> void:
 			tam.x, tam.y, {"compacta": "a caixa compacta (sem o rato ter passado por cima)",
 				"expandida pelo rato": "a caixa, depois de o rato entrar nela (abre a expandida)", "fora": "o tabuleiro (controlo)"}[sitio],
 			z0, cam.zoom, _sim(hud.caixa_mostrada()["expandida"])])
+		_depois(r_r, "no fim", e_r)
 		_tabela.append(["roda do rato (zoom)", tam, sitio, cam.zoom / z0, 0, 0, "zoom muda", false])
 		await _rato(fora, false)
 		await _quadros(2)
@@ -463,6 +546,8 @@ func _rato_botoes(tam: Vector2i) -> void:
 			await _rato(centro, false)  # o rato chega ao botão
 			await _quadros(2)
 			var fechou_ao_sair: bool = not hud.caixa_mostrada()["expandida"]
+			var r_m := "RATO %s · %dx%d (%s)" % [caso[0], tam.x, tam.y, via]
+			var e_m := _partida(r_m)
 			var p0: int = _pressed[caso[0]]
 			var cliques := 0
 			var saiu := false
@@ -471,6 +556,7 @@ func _rato_botoes(tam: Vector2i) -> void:
 				await _quadros(3)
 				cliques += 1
 				saiu = caso[2].call()
+			_depois(r_m, "no fim, %d cliques" % cliques, e_m)
 			var aberta_fim: bool = hud.caixa_mostrada()["expandida"]
 			print("  MEDIDA RATO %s · %dx%d (%s): abriu %s · o rato saiu da caixa para o botão: a lista fechou %s · cliques até a acção sair %d («pressed» %d) · a lista continua aberta no fim %s" % [
 				caso[0], tam.x, tam.y, "só o rato, a expandida pelo rato por cima" if via == "rato" else "a lista aberta por TOQUE, depois o rato a sério",
@@ -486,6 +572,8 @@ func _rato_botoes(tam: Vector2i) -> void:
 func _jogada(tam: Vector2i) -> void:
 	for quando in ["nunca", "no começo da vez", "com o Mover aberto"]:
 		await _repor()
+		var r_j := "JOGADA %dx%d (ver a ordem: %s)" % [tam.x, tam.y, quando]
+		var e_j := _partida(r_j)
 		var toques := 0
 		var passos: Array = []
 		if quando == "no começo da vez":
@@ -536,8 +624,116 @@ func _jogada(tam: Vector2i) -> void:
 		toques += n
 		passos.append("Sim, encerrar %d" % n)
 		var completa := _acao_na_fila() == "encerrar"
+		_depois(r_j, "no fim", e_j)
 		print("  MEDIDA JOGADA %dx%d (ver a ordem: %s): %d toques [%s] · completa %s" % [tam.x, tam.y, quando, toques, ", ".join(passos), _sim(completa)])
 		_tabela.append(["jogada típica (mover + encerrar)", tam, quando, toques if completa else -1, 0, 0, ", ".join(passos), false])
+
+
+## F64 (L1): o toque numa casa do Mover, com a lista aberta por toque e de controlo (a caixa fechada), no MESMO ponto
+## do ecrã: o que a lista aberta escolhe (`_sitio_casa`, fora do HUD e da expandida), reusado no controlo. Toques até a
+## intenção «mover» sair (máx. 4). Não entra na TABELA (a contagem de casos fica a da F28).
+func _casa(tam: Vector2i) -> void:
+	var sitio := Vector2.INF
+	var alvo := Vector2i(-1, -1)
+	for abrir in ["toque", "nenhuma"]:
+		var r_c := "CASA %dx%d (%s)" % [tam.x, tam.y, "lista aberta por toque" if abrir == "toque" else "controlo, caixa fechada"]
+		await _repor()
+		await _premir_controlo(hud._b_mover)
+		await _quadros(2)
+		if arena.modo != arena.Modo.MOVER:
+			_erros += 1
+			printerr("  ERRO %s: o Mover não abriu" % r_c)
+			continue
+		if abrir == "toque" and not await _abrir_por_toque():
+			_erros += 1
+			printerr("  ERRO %s: a expandida não abriu por toque" % r_c)
+			continue
+		if sitio == Vector2.INF:
+			sitio = _sitio_casa()
+			alvo = arena.casa_em_tela(sitio) if sitio != Vector2.INF else Vector2i(-1, -1)
+		if sitio == Vector2.INF or arena.casa_em_tela(sitio) != alvo or not arena._casas.has(alvo):
+			_erros += 1
+			printerr("  ERRO %s: não há casa do Mover à vista fora do HUD" % r_c)
+			continue
+		var aberta: bool = hud.caixa_mostrada()["expandida"]
+		var e0 := _partida(r_c)
+		var toques := 0
+		var saiu := false
+		var fechou1 := false
+		var saiu1 := false
+		while toques < MAX_TOQUES and not saiu:
+			await _tocar(sitio)
+			await _quadros(4)
+			toques += 1
+			saiu = _acao_na_fila() == "mover"
+			if toques == 1:
+				fechou1 = aberta and not hud.caixa_mostrada()["expandida"]
+				saiu1 = saiu
+				_depois(r_c, "ao 1.º toque", e0)
+		_depois(r_c, "no fim, %d toques" % toques, e0)
+		var resultado := "nada"
+		if saiu1:
+			resultado = "a casa fecha a lista e move a figura" if fechou1 else "a casa move a figura"
+		elif fechou1:
+			resultado = "a casa fecha a lista sem mover a figura"
+		print("  MEDIDA CASA %dx%d (%s): toque na casa %s do Mover, em %s u · 1.º toque: %s (fechou a lista %s, a intenção «mover» saiu %s) · toques até a figura ser mandada mover: %d" % [
+			tam.x, tam.y, "lista aberta por toque" if abrir == "toque" else "controlo, caixa fechada", alvo, sitio,
+			resultado, _sim(fechou1), _sim(saiu1), toques if saiu else -1])
+
+
+## F64 (L2): a pinça cujo meio anda. O 1.º dedo vai 22 u para a esquerda por passo e o 2.º 2 u: afastam-se 20 u por
+## passo, como na pinça do `_resto`, e o meio anda 12 u por passo (60 u em 5 passos). No controlo a câmara tem de se
+## deslocar; com a lista aberta mede-se se se desloca.
+func _pinca_a_deslocar(tam: Vector2i) -> void:
+	var cam = arena.camera
+	var v := root.get_visible_rect().size
+	var fora := Vector2(v.x * 0.4, v.y * 0.55)
+	for abrir in ["toque", "nenhuma"]:
+		var r_p := "PINÇA A DESLOCAR %dx%d (%s)" % [tam.x, tam.y, "lista aberta por toque" if abrir == "toque" else "controlo, caixa fechada"]
+		await _repor()
+		if abrir == "toque" and not await _abrir_por_toque():
+			_erros += 1
+			printerr("  ERRO %s: a expandida não abriu por toque" % r_p)
+			continue
+		cam.definir_zoom(cam.ZOOM_PADRAO)
+		var e0 := _partida(r_p)
+		var z0: float = cam.zoom
+		var f0: Vector3 = cam.foco
+		var esc: float = root.get_final_transform().get_scale().x
+		var a := root.get_final_transform() * (fora - Vector2(30, 0))
+		var bb := root.get_final_transform() * (fora + Vector2(30, 0))
+		for idx in [0, 1]:
+			var tt := InputEventScreenTouch.new()
+			tt.index = idx
+			tt.pressed = true
+			tt.position = a if idx == 0 else bb
+			Input.parse_input_event(tt)
+			Input.flush_buffered_events()
+			await process_frame
+		var passo := [Vector2(-22.0 * esc, 0.0), Vector2(-2.0 * esc, 0.0)]
+		for k in 5:
+			for idx in [0, 1]:
+				var d2 := InputEventScreenDrag.new()
+				d2.index = idx
+				d2.position = (a if idx == 0 else bb) + passo[idx] * (k + 1)
+				d2.relative = passo[idx]
+				Input.parse_input_event(d2)
+				Input.flush_buffered_events()
+			await process_frame
+		for idx in [1, 0]:
+			var tt := InputEventScreenTouch.new()
+			tt.index = idx
+			tt.pressed = false
+			tt.position = (a if idx == 0 else bb) + passo[idx] * 5
+			Input.parse_input_event(tt)
+			Input.flush_buffered_events()
+			await process_frame
+		await _quadros(3)
+		print("  MEDIDA PINÇA A DESLOCAR %dx%d (%s): 2 dedos afastam-se 100 u e o meio anda 60 u para a esquerda · zoom %.3f → %.3f · a câmara deslocou-se %.3f m (foco) · lista fechada no fim %s" % [
+			tam.x, tam.y, "lista aberta por toque" if abrir == "toque" else "controlo, caixa fechada", z0, cam.zoom,
+			(cam.foco as Vector3).distance_to(f0), _sim(not hud.caixa_mostrada()["expandida"])])
+		_depois(r_p, "no fim", e0)
+		cam.definir_zoom(cam.ZOOM_PADRAO)
 
 
 func _sitio_casa() -> Vector2:
@@ -590,6 +786,7 @@ func _correr() -> void:
 	print("== F28: o custo do D1 nos botões do HUD (12 figuras, a jogadora na vez; arena a sério, sem servidor) ==")
 	print("== F61: a câmara repõe-se entre casos (modo %d, foco %s, zoom %.3f, rumo %.1f, inclinação %.1f) ==" % [
 		_cam0["modo"], _cam0["foco"], _cam0["zoom"], _cam0["rumo"], _cam0["inclinacao"]])
+	print("== F64: linhas MEDIDA CASA e MEDIDA PINÇA A DESLOCAR; o deslocamento da câmara na pinça; PARTIDA e DEPOIS em todos os casos ==")
 	for tam in [Vector2i(844, 390), Vector2i(780, 360)]:
 		root.size = tam
 		await process_frame
@@ -609,6 +806,9 @@ func _correr() -> void:
 		await _rato_botoes(tam)
 		print("-- %dx%d: a jogada típica --" % [tam.x, tam.y])
 		await _jogada(tam)
+		print("-- %dx%d: F64 — o toque numa casa e a pinça a deslocar --" % [tam.x, tam.y])
+		await _casa(tam)
+		await _pinca_a_deslocar(tam)
 	print("")
 	print("TABELA (caso | ecrã | 1.º toque com a lista aberta | toques com a lista aberta | toques com a caixa fechada | custo | acção | sob a expandida)")
 	for l in _tabela:
