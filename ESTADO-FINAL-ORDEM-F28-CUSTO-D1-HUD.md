@@ -128,7 +128,18 @@ o de abrir a lista para ver quem vem. Os dois ecrãs deram o mesmo.
   figura** (provado na F27), e o arrastar ou a pinça mexem a câmara por baixo da lista que se fecha.
 
 ## 5. CI
-*(A preencher no commit 3 com o CI da ponta do commit 2.)*
+**CI da ponta `e75b961` (commit 2), já na linha** (Testes 45108370448 + Sonda 45108370440): **10/10 jobs verdes e a
+Sonda verde**. Os jobs são `servidor`, `validador-glb`, `foto-mestre`, `godot-cliente`, `cliente`, `ponta-a-ponta`,
+`retoma-pc`, `provas-mapa`, `motor-real` e `protocolo`.
+
+Os números no Linux do CI são os da F27, porque esta ordem não toca em nada do que o CI corre:
+- `caixa_jogadora` 70/70 · `caixa_janela` 123/123 (a guarda «123 de 123» passou) · `rodar_testes` 321/321;
+- `abrir_scripts` 108 scripts e 0 falhas · `abrir_clareira` 22/22 · `abrir_mestre` 67/67 · `pecas_mestre` 286/286 ·
+  `hud_acoes` 50/50 · `medir_painel_config` e `medir_mestre` com 0 sem medida;
+- `teste_relato_caixa` 31/31 · `teste_nomes_relato` 26/26 · o canário 10/10;
+- o guião de mutação dá «114 de 123»: as 9 falhas são todas da B6, como tem de ser.
+
+O `retoma-pc` passou com as listas tal como estavam: nenhum SHA mudou.
 
 ## 6. Privacidade: o conferidor estrito, re-derivado nos dois critérios
 Conferidor: `provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs`, critério alargado / `--velho`. Na coluna dos
