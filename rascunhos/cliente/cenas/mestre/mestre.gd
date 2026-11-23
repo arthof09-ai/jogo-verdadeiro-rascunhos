@@ -1048,6 +1048,9 @@ func _montar() -> void:
 	_caixa.com_botao = true
 	_caixa.visible = false
 	_caixa.pediu_iniciativa.connect(definir_modo_iniciativa)
+	# Ordem CAIXA-EXPANDE-VISTAS (D4): ao abrir e fechar a expandida, a caixa volta a arrumar-se (tecto e protecção com
+	# o rectângulo da vista aberta), como no HUD.
+	_caixa.vista_mudou.connect(func(_e: bool): _posicionar_caixa())
 	add_child(_caixa)
 	# A caixa fica por baixo dos controlos de cima do tabuleiro: ao entrar/sair da câmara livre, muda de sítio
 	# (em diferido: o «Entrar» muda antes dos outros controlos da câmara livre).
@@ -1390,12 +1393,31 @@ func _posicionar_caixa() -> void:
 		if c.visible:
 			y = maxf(y, _livre.position.y + c.position.y + c.size.y + margem)
 	_caixa.position = Vector2(margem * 2.0, y)
+	# Ordem CAIXA-EXPANDE-VISTAS (D4): o tecto da largura que o HUD já tinha — a caixa (compacta ou expandida) nunca
+	# passa do tabuleiro para a folha; a fila da compacta parte em linhas e os nomes da expandida cortam-se com «…».
+	_caixa.limitar_largura(maxf(1.0, _tabuleiro.size.x - _caixa.position.x - margem))
 	# Ordem CAIXA-EXPANDE: a vista expandida (rato por cima / toque) cresce para a direita e para baixo, por cima do
-	# resto, até ao fundo do ecrã (depois a lista rola); o sítio decide-se pela caixa COMPACTA.
-	_caixa.limitar_altura(maxf(1.0, get_viewport_rect().size.y - y - margem))
+	# resto, até ao fundo do ecrã (depois a lista rola).
+	var fundo := get_viewport_rect().size.y - margem
+	_caixa.limitar_altura(maxf(1.0, fundo - y))
 	_caixa.size = _caixa.get_combined_minimum_size()
-	var r := Rect2(_caixa.position, _caixa.tamanho_compacto())
-	for n in [_livre.manipulo, _livre.sobe_botao, _livre.desce_botao, _livre.vel_caixa]:
+	var de_andar := [_livre.manipulo, _livre.sobe_botao, _livre.desce_botao, _livre.vel_caixa]
+	# Ordem CAIXA-EXPANDE-VISTAS (D4): a protecção dos controlos de andar usa o rectângulo da vista que está à vista —
+	# o EXPANDIDO quando a caixa está aberta, não o da compacta. Aberta, a expandida pára acima do controlo que ia tapar
+	# (a lista rola por dentro).
+	if _caixa.expandida():
+		var aberta := Rect2(_caixa.position, _caixa.size)
+		var baixo := fundo
+		for n in de_andar:
+			var c := n as Control
+			var rc := Rect2(_livre.position + c.position, c.size)
+			if c.visible and aberta.intersects(rc):
+				baixo = minf(baixo, rc.position.y - margem)
+		if baixo < fundo:
+			_caixa.limitar_altura(maxf(1.0, baixo - y))
+			_caixa.size = _caixa.get_combined_minimum_size()
+	var r := Rect2(_caixa.position, _caixa.size)
+	for n in de_andar:
 		var c := n as Control
 		if c.visible and r.intersects(Rect2(_livre.position + c.position, c.size)):
 			_caixa.visible = false

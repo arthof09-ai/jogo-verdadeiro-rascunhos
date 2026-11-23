@@ -1,4 +1,12 @@
 extends SceneTree
+## Ordem CAIXA-EXPANDE-VISTAS (22/11/2026, F15 da sentença da CAIXA-EXPANDE, D2): a mesma prova, com um passo novo, o 12,
+## corrido dentro do ciclo do 11 (as mesmas 12 e 16 figuras, em 844×390 e 780×360, depois dos 3 gestos):
+##   12     a barra de rolagem da expandida COMO É HOJE (não se muda): a lista no topo sem rolar (linhas inteiras à vista,
+##          a cortada pela borda), a meio (um passo da roda) e no fim; a barra do tema medida (à vista, largura, altura,
+##          pega; unidades do HUD e px reais). Capturas 12-barra-{topo,meio,fim}-N-figuras-WxH.png e o recorte ampliado
+##          3× de todas (-recorte.png): a matéria da pergunta ao olho do Mestre (barra discreta ou mais visível).
+##   bash provas/ordem-caixa-expande-vistas/ferramentas/correr-prova-vistas.sh <godot.exe> <vlab-completo.js> <pasta-tmp>
+##
 ## Ordem CAIXA-EXPANDE-INTERACAO (22/11/2026, F14 da sentença da CAIXA-EXPANDE): a mesma prova, com dois acertos —
 ##   8      a lista rola até ao fim com a RODA DO RATO a sério (push_input), e não com `scroll_vertical` posto pelo código.
 ##   11     os 3 gestos a sério, com 12 e 16 figuras (o Mestre põe mais criaturas), em 844×390 e 780×360:
@@ -1333,7 +1341,97 @@ func _interacao() -> void:
 					rot + ": [D1] de controlo, com a caixa fechada o toque seguinte chega ao tabuleiro («toque» %d vez; a arena sem modo, nada muda)" % (toques.size() - n0))
 			else:
 				_linha("  (controlo do D1 saltado: a arena está no modo %d e o toque seria um comando)" % _arena.modo)
+			# Ordem CAIXA-EXPANDE-VISTAS (D2): a barra de rolagem como é hoje, medida e fotografada (não se muda).
+			await _barra(n, tam)
 	await _janela_em(Vector2i(1280, 720))
+
+
+# ------------------------------------------------------------------ 12. Ordem CAIXA-EXPANDE-VISTAS (D2): a barra como é hoje
+
+## As linhas da lista agora: quantas estão inteiras dentro da vista dela e a primeira cortada pela borda (superior ou
+## inferior: índice a contar de 1 e a fracção à vista).
+func _linhas_vista(rol: ScrollContainer, lista: Node) -> Dictionary:
+	var vr := rol.get_global_rect()
+	var inteiras := 0
+	var cortada := 0
+	var fraccao := 0.0
+	var k := 0
+	for l in lista.get_children():
+		k += 1
+		var lr := (l as Control).get_global_rect()
+		if vr.grow(0.5).encloses(lr):
+			inteiras += 1
+		elif vr.intersects(lr) and cortada == 0:
+			cortada = k
+			fraccao = vr.intersection(lr).size.y / lr.size.y
+	return {"inteiras": inteiras, "cortada": cortada, "fraccao": fraccao}
+
+
+## A captura de agora recortada na caixa (o rectângulo `r`, em unidades do HUD) e ampliada 3× ao píxel (sem filtro),
+## para o olho ver a barra: é a mesma imagem da captura inteira, só recortada.
+func _gravar_recorte(nome: String, r: Rect2) -> void:
+	await RenderingServer.frame_post_draw
+	var img := root.get_texture().get_image()
+	if img == null or img.is_empty():
+		_ok(false, nome + ": sem imagem (o render não correu)")
+		return
+	var px: Rect2 = root.get_final_transform() * r
+	var ri := Rect2i(Vector2i(px.position.floor()), Vector2i(px.size.ceil())).intersection(Rect2i(Vector2i.ZERO, img.get_size()))
+	var rec := img.get_region(ri)
+	rec.resize(ri.size.x * 3, ri.size.y * 3, Image.INTERPOLATE_NEAREST)
+	var erro := rec.save_png(_saida.path_join(nome))
+	_ok(erro == OK, "captura %s (recorte %d×%d px da janela, ampliado 3×)" % [nome, ri.size.x, ri.size.y])
+
+
+## D2: com `n` figuras no ecrã `tam`, a expandida aberta pelo rato: a lista no topo (sem rolar: quantas linhas inteiras
+## à vista, qual a cortada pela borda inferior), a meio (um passo da roda) e no fim; e a barra de rolagem DO TEMA, tal
+## como é hoje: à vista ou não, a largura e a altura dela e o comprimento da pega, em unidades do HUD e em px reais.
+## Captura inteira e recorte ampliado nos três sítios. Nada se muda na barra.
+func _barra(n: int, tam: Vector2i) -> void:
+	var rot := "12 %d figuras %dx%d" % [n, tam.x, tam.y]
+	var cx := _cx()
+	var rol := cx.find_child("Expandida", true, false) as ScrollContainer
+	var lista: Node = cx.find_child("Lista", true, false)
+	_rato(cx.get_global_rect().get_center())
+	await _quadros(6)
+	var p := rol.get_global_rect().get_center()
+	await _rodar_ate_parar(p, false)
+	await _quadros(2)
+	var esc := _janela().x  # px reais por unidade do HUD
+	var sb := rol.get_v_scroll_bar()
+	var sr := sb.get_global_rect()
+	var pega := 0.0
+	if sb.max_value > 0.0:
+		pega = sr.size.y * clampf(sb.page / sb.max_value, 0.0, 1.0)
+	var topo := _linhas_vista(rol, lista)
+	_linha("  MEDIDA BARRA %s: expandida %s · rola %s · lista no topo: %d de %d linhas inteiras à vista sem rolar · cortada pela borda inferior: linha %d (%.0f por cento à vista) · barra à vista %s · barra %.1f × %.1f u (%.1f × %.1f px reais) · pega %.1f u (%.1f px reais) · caixa %.0f × %.0f u" % [
+		rot, _caixa()["expandida"], "SIM" if cx.expandida_rola() else "NÃO", topo["inteiras"], lista.get_child_count(), topo["cortada"],
+		topo["fraccao"] * 100.0, "SIM" if sb.is_visible_in_tree() else "NÃO", sr.size.x, sr.size.y, sr.size.x * esc, sr.size.y * esc, pega, pega * esc,
+		cx.size.x, cx.size.y])
+	_ok(cx.expandida_rola() and topo["inteiras"] < lista.get_child_count() and rol.scroll_vertical == 0,
+		rot + ": a lista no topo não mostra todas as figuras (%d de %d inteiras à vista sem rolar)" % [topo["inteiras"], lista.get_child_count()])
+	await _gravar("12-barra-topo-%d-figuras-%dx%d.png" % [n, tam.x, tam.y])
+	await _gravar_recorte("12-barra-topo-%d-figuras-%dx%d-recorte.png" % [n, tam.x, tam.y], cx.get_global_rect())
+	_roda(p, true)
+	await _quadros(3)
+	var meio := _linhas_vista(rol, lista)
+	_linha("  MEDIDA BARRA %s: um passo da roda: lista em %d u de %d u · %d linhas inteiras à vista · pega a %.1f u do topo da barra" % [
+		rot, rol.scroll_vertical, int(sb.max_value - sb.page), meio["inteiras"],
+		(sr.size.y - pega) * (float(rol.scroll_vertical) / maxf(1.0, sb.max_value - sb.page))])
+	await _gravar("12-barra-meio-%d-figuras-%dx%d.png" % [n, tam.x, tam.y])
+	await _gravar_recorte("12-barra-meio-%d-figuras-%dx%d-recorte.png" % [n, tam.x, tam.y], cx.get_global_rect())
+	await _rodar_ate_parar(p, true)
+	var fim := _linhas_vista(rol, lista)
+	var ul := lista.get_child(lista.get_child_count() - 1) as Control
+	var ultima := rol.get_global_rect().grow(0.5).encloses(ul.get_global_rect())
+	_linha("  MEDIDA BARRA %s: no fim: lista em %d u · %d linhas inteiras à vista · a última figura inteira à vista %s · cortada pela borda superior: linha %d (%.0f por cento à vista)" % [
+		rot, rol.scroll_vertical, fim["inteiras"], "SIM" if ultima else "NÃO", fim["cortada"], fim["fraccao"] * 100.0])
+	_ok(ultima and rol.scroll_vertical == int(sb.max_value - sb.page), rot + ": no fim da lista a última figura está inteira à vista")
+	await _gravar("12-barra-fim-%d-figuras-%dx%d.png" % [n, tam.x, tam.y])
+	await _gravar_recorte("12-barra-fim-%d-figuras-%dx%d-recorte.png" % [n, tam.x, tam.y], cx.get_global_rect())
+	await _rodar_ate_parar(p, false)
+	_rato(_fora())
+	await _quadros(6)
 
 
 func _fim() -> void:
