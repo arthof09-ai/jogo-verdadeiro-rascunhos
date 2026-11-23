@@ -198,3 +198,9 @@ nome inteiro.
 4. **O valor neutro do cursor.** Repus o (−1, −1) com que a arena nasce, e não um valor guardado quando a arena fica
    pronta, como a F61 faz com a câmara. Aqui os dois são o mesmo, e a 1.ª `PARTIDA` da F64 já dava (−1, −1).
 5. **Este PC não tem ecrã de toque.** Como na F28, os toques são os que o motor recebe de um aparelho.
+
+
+## Nota do CI (coordenador, 23/11/2026)
+
+- Ponta `70e994b` (emendas F98/F99 registadas): Testes 45148268056 + Sonda 45148268106, 10/10 jobs verdes.
+- **A F78+F79+F81+F82 está FUNDIDA** (conferência 970, unânime; um só defeito D1, peso 30, corrigido na emenda F98; precisão F99 registada).
