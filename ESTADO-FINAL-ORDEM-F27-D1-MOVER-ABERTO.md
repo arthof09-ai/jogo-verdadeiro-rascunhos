@@ -136,7 +136,9 @@ Os dois vão sincronizados no commit 2. A ferramenta da prova está em `provas/`
 
 ## 6. CI
 **CI da ponta `3ed5368` (commit 2), já na linha** (Testes 45105992689 + Sonda 45105992711): **10/10 jobs verdes e a
-Sonda verde**. Os jobs são `servidor`, `validador-glb`, `foto-mestre`, `godot-cliente`, `cliente`, `ponta-a-ponta`,
+Sonda verde**.
+
+**CI da ponta `07d0a87` (F40, emendas da conferência), já na linha** (Testes 45110483676 + Sonda 45110483808): **10/10 jobs verdes e a Sonda verde** — a condição da fusão da F27 está cumprida (F41). Os jobs são `servidor`, `validador-glb`, `foto-mestre`, `godot-cliente`, `cliente`, `ponta-a-ponta`,
 `retoma-pc`, `provas-mapa`, `motor-real` e `protocolo`.
 
 No Linux do CI os números são os de cá:
