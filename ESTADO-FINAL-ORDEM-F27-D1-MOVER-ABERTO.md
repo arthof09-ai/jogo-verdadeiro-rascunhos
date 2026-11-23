@@ -136,7 +136,20 @@ de um ficheiro, `rascunhos/cliente/testes/caixa_jogadora.gd`, em `retoma-i0004/d
 Os dois vão sincronizados no commit 2. A ferramenta da prova está em `provas/`, fora das listas.
 
 ## 6. CI
-O resultado do CI da ponta do commit 2 entra aqui no commit 3.
+**CI da ponta `3ed5368` (commit 2), já na linha** (Testes 45105992689 + Sonda 45105992711): **10/10 jobs verdes e a
+Sonda verde**. Os jobs são `servidor`, `validador-glb`, `foto-mestre`, `godot-cliente`, `cliente`, `ponta-a-ponta`,
+`retoma-pc`, `provas-mapa`, `motor-real` e `protocolo`.
+
+No Linux do CI os números são os de cá:
+- **`caixa_jogadora` 70/70**: o §11 corre lá com a arena a sério;
+- `caixa_janela` 123/123, e a guarda «123 de 123» passou;
+- `rodar_testes` 321/321, nos jobs `cliente` e `godot-cliente`;
+- `abrir_scripts` 108 scripts e 0 falhas · `abrir_clareira` 22/22 · `abrir_mestre` 67/67 · `pecas_mestre` 286/286 ·
+  `hud_acoes` 50/50 · `medir_painel_config` e `medir_mestre` com 0 falhas e 0 sem medida;
+- `teste_relato_caixa` 31/31 · `teste_nomes_relato` 26/26 · o canário 10/10;
+- o guião de mutação: 9 falhas, todas da B6, e «114 de 123».
+
+O `retoma-pc` passou com as listas do commit 2.
 
 ## 7. Privacidade: o conferidor estrito, re-derivado nos dois critérios
 Conferidor: `provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs`, critério alargado / `--velho`. Na coluna dos
