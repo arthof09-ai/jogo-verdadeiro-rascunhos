@@ -137,6 +137,13 @@ O deslocamento do arrastar, em metros:
   - a mutação das células deu «114 de 123» e «MUTACAO APANHADA: 9 falhas, todas do assert B6».
 - O `retoma-pc` ficou verde, o que confirma que as listas da retoma batem certo sem mudar.
 
+**CI da ponta `53ae12a` (a obra mais este ESTADO-FINAL): verde.**
+- Testes dos rascunhos, run `45125978651`: passaram os 10 jobs.
+- Sonda de privacidade, run `45125978637`: verde.
+- Os números são os mesmos: canário 26/26 (redacção 12/12), `rodar_testes` 321/321 (também no `godot-cliente`),
+  `caixa_janela` 123/123, `caixa_jogadora` 70/70 e mutação das células «114 de 123».
+- O commit desta nota só acrescenta este parágrafo a este ficheiro.
+
 ## 6. Privacidade re-derivada
 Conferidor: `provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs`, nos dois critérios (alargado e `--velho`).
 Na coluna dos nomes inteiros conta-se um achado cujo pedaço tem o comprimento do nome inteiro.
