@@ -2,8 +2,7 @@
 
 A F52 da sentença da F25 (§7.3 do `ESTADO-FINAL-ORDEM-F25-LIMPEZA-11-FICHEIROS.md`). Os 193 pares (linha, nome) de
 nomes verdadeiros inteiros que sobravam na ponta, em 19 ficheiros de `provas/` que a F25 não tocou, passam à redacção
-«nome n.º 1» / «nome n.º 2» da DECISÃO O1, com o mesmo tratamento do §2 da F25. Os 58 pares por desenho ficam como
-estavam. O histórico publicado não foi reescrito (é a F26).
+«nome n.º 1» / «nome n.º 2» da DECISÃO O1, com o mesmo tratamento do §2 da F25. Os 57 pares por desenho ficam como estavam. O histórico publicado não foi reescrito (é a F26).
 
 - **Linha:** trabalho directo em `fable/integracao-50`, sem ramo lateral nem fusão.
 - **Base:** `681a9e9` (a nota do CI da F116, o `HEAD` do clone à hora do lançamento). O `fetch` antes do push não
@@ -38,7 +37,7 @@ Conferi com `git grep` sobre a árvore inteira (fora dos `.md`), pelos caminhos 
   `mutacoes.mjs:20-21`. **Os nomes estavam só em dois comentários por ferramenta** (l. 359 e 385 da jogadora, l. 447 e
   473 do manequim; a forma em minúsculas). Nenhuma das substituições textuais de `mutacoes.mjs` procura essas linhas
   (conferi os `de:` todos). O código não muda.
-- **Os dois READMEs:** só os `actualizar-listas.log` antigos os citam, num `diff --stat`.
+- **Os dois READMEs:** só o README da CAIXA-JANELA é citado (4 `actualizar-listas.log` antigos — cobertura-correções-2/4/5/6 — num `diff --stat`); o README da HUD-JOGADORA não é citado em nenhum ficheiro fora dos `.md`.
 - **Hashes:** nenhum ficheiro do repo cita o sha256 (12 caracteres) nem o blob (10) de nenhum dos 19.
 - **O CI** (`.github/workflows/testes.yml`) não cita nenhum dos 19.
 - `retoma-i0004/actualizar-listas.py` só trata de `rascunhos/`. Os 19 estão em `provas/`.
@@ -47,8 +46,7 @@ Conferi com `git grep` sobre a árvore inteira (fora dos `.md`), pelos caminhos 
 
 Regra (a do §2 da F25, que a `redigir-nomes.mjs` aplica): todo o nome verdadeiro inteiro, sem distinguir
 maiúsculas, passa a `nome n.º 1` ou `nome n.º 2`. A forma toda em minúsculas passa a `nome n.º N em minúsculas`.
-Também estavam previstos o corte na origem e o canário mudado, mas **nenhum dos 19 os tem**; a forma sem a preposição
-(F97) também não aparece. **Nenhuma linha foi acrescentada nem tirada**, os fins de linha ficaram como estavam (todos
+Também estavam previstos o corte na origem e o canário mudado, mas nenhum dos 19 os tem como caso próprio; a forma sem a preposição (F97) também não aparece. (Ressalva: o fim da l. 61 do README da CAIXA-JANELA é um corte pela definição da ferramenta — pedaço inicial do nome maior do que o nome público — mas é o nome inteiro partido pela quebra de linha, não truncagem; ver o caso partido abaixo.) **Nenhuma linha foi acrescentada nem tirada**, os fins de linha ficaram como estavam (todos
 LF; o `git diff` não tem nenhum CR) e as referências de linha dos documentos continuam certas.
 
 | ficheiro (em `provas/`) | linhas | pares antes → depois | ocorrências antes → depois | linhas mudadas |
@@ -85,8 +83,7 @@ pares dão 5 linhas.
 - **O nome partido pela quebra de linha do README da CAIXA-JANELA (l. 61–62).** Além dos 3 pares, o nome n.º 2 está
   inteiro mas partido pela quebra de linha do markdown: as duas primeiras palavras no fim da l. 61, a última no início
   da l. 62. A ferramenta trata o fim da l. 61 como «cortado na origem», o que aqui seria falso: não é truncagem, é o
-  nome inteiro. Apliquei a regra 1: a l. 61 acaba em «nome n.º 2» e a última palavra do nome sai do início da l. 62
-  (fica «na linha 7»). Por isso este README tem 4 linhas mudadas para 3 pares. Ver §7, ponto 1.
+  nome inteiro. Apliquei a regra 1: a l. 61 acaba em «nome n.º 2, sem fechar a aspa — o » fecha a citação na l. 62, depois de «linha 7» — e a última palavra do nome sai do início da l. 62 (fica «na linha 7»). Por isso este README tem 4 linhas mudadas para 3 pares. Ver §7, ponto 1.
 - **Os 8 `relato.txt` de 6 pares.** A ferramenta redige-os, mas sai com 3 e não escreve a saída. A rede da F97 dá
   «1 nome sem a preposição» em todos eles (l. 39, 45, 72, 39, 45, 39, 45 e 53). Fui ver: é um **falso positivo**. A
   linha acaba no **nome público** n.º 1 e a seguinte começa pela etiqueta da linha, que é a última palavra do nome; o
@@ -162,7 +159,7 @@ Este commit só acrescenta texto a este ficheiro.
 - **Listas da retoma:** `python retoma-i0004/actualizar-listas.py` depois da obra: «0 novos, 0 tirados». Nenhum
   ficheiro de `rascunhos/` mudou, por isso nenhum SHA das listas mudou e não houve nada a sincronizar.
 
-## 6. Os 58 por desenho e a árvore inteira
+## 6. Os 57 por desenho e a árvore inteira
 
 Não toquei em nenhum dos ficheiros por desenho. Contagem na ponta nova, na árvore inteira, sem distinguir maiúsculas:
 **57 pares em 3 ficheiros**, todos por desenho: as fichas (`rascunhos/servidor/autojogo/`, 2), o
@@ -182,10 +179,6 @@ ponto 3).
    porque está fora do território desta ordem. Se a rede deve barrar a quebra de linha nesse padrão (como a F114 fez
    no padrão das variantes), é outra ordem.
 3. **O canário tem 33 pares, não 34.** O §7.3 da F25 diz 34; na ponta `681a9e9` contei 33 (40 ocorrências). Não lhe
-   toquei, porque é por desenho. A diferença deve vir de uma ordem posterior à F25 que mudou o canário; não a fui
-   procurar.
-4. **Os 19 já não são saída crua.** o `.log` dos lançadores externos da `b7-correcoes-6` (l. 20) e `b7-correcoes-7/corridas.log:14`
-   dizem que uma corrida deu igual a `s1.jsonl` linha a linha. Quem repetir essa comparação tem de aplicar primeiro a
-   mesma redacção à saída nova (como no ponto 5 do §7 da F25). O mesmo vale para os `relato.txt`, que as provas
-   reescrevem em todas as corridas.
+   toquei, porque é por desenho. A causa é a F97, commit `879bac2`: redigiu os nomes em 4 mensagens de diagnóstico do canário e a l. 112 perdeu o seu único par (−1 par, −5 ocorrências: 34→33, 45→40).
+4. **Os 19 já não são saída crua.** o `.log` dos lançadores externos da `b7-correcoes-6` (l. 20) e `b7-correcoes-7/corridas.log:14` dizem que uma corrida deu igual a `s1.jsonl` linha a linha. São comparações **manuais, registadas em logs** — nenhum código nem passo do CI as faz (ver §1). Quem repetir essa comparação tem de aplicar primeiro a mesma redacção à saída nova (como no ponto 5 do §7 da F25). O mesmo vale para os `resumo.json`/`resumo.md` — uma corrida nova reescreve-os também (`correr-autojogo.sh:61`) — e para os `relato.txt`, que as provas reescrevem em todas as corridas (a comparação manual de um relato está registada em `provas/ordem-caixa-relato/b7-correcoes-7/lancador-caixa.log:7, 17`, um `diff` contra o `relato.txt` cometido da `ordem-caixa`).
 5. **O histórico.** Os 19 ficheiros com os nomes inteiros continuam nos commits publicados até `681a9e9` (é a F26).
