@@ -3,9 +3,9 @@
 ## B1 — o passo novo do CI, corrido localmente com o corpo exacto do remendo (bash -e; GODOT = Godot 4.7.2 _console.exe)
 ### verde (o teste como está): rc=0
 teste dos nomes do relato da caixa-janela: 14 de 14 verificações passaram.
-### canário mudado (na fixture, linha 7: «Lobo de Bancada» → «Lobo da Bancada»; reposto com cp, cmp igual): rc=1
-  FALHA 4: o canário apanha no relato antigo 22 achados (28 ocorrências brutas), o 1.º «Lobo de Bancada na linha 7» (21 achado(s), linhas [8,9,10,11,12,13,14,17,18,19,20,21,22,23,24,25,31,32,33,34]; 27 brutas)
-  ok    3: «Bruto de Bancada» na linha 5 → o canário FALHA (1 achado(s), linhas [5])
+### canário mudado (na fixture, linha 7: «nome n.º 2» → «nome n.º 2 com a preposição mudada»; reposto com cp, cmp igual): rc=1
+  FALHA 4: o canário apanha no relato antigo 22 achados (28 ocorrências brutas), o 1.º «nome n.º 2 na linha 7» (21 achado(s), linhas [8,9,10,11,12,13,14,17,18,19,20,21,22,23,24,25,31,32,33,34]; 27 brutas)
+  ok    3: «nome n.º 1» na linha 5 → o canário FALHA (1 achado(s), linhas [5])
 teste dos nomes do relato da caixa-janela: 13 de 14 verificações passaram.
 
 ## B3 — fuga de volta (nome_publico lê «nome») + a prova pára no passo 0, antes de qualquer passagem do canário

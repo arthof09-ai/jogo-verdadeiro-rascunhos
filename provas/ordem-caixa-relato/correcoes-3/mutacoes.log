@@ -10,12 +10,12 @@
 # mutações — modo base (ficheiros das provas de 6a87b9e) · 2026-11-22 00:04:17 -0300 · 6a87b9e
 # Godot: 4.7.2.stable.official.ed1daf0bf  ·  motor sha256 a91c021cda11…
 
-== B1-nome-verdadeiro (hud) — CORRECOES-2 B1: `_nome_publico` lê o `nome` (o verdadeiro) — o relato traz «Bruto de Bancada»
+== B1-nome-verdadeiro (hud) — CORRECOES-2 B1: `_nome_publico` lê o `nome` (o verdadeiro) — o relato traz «nome n.º 1»
 rc=1
-  FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["Lobo de Bancada na linha 6", "Lobo de Bancada na linha 7", "Bruto de Bancada na linha 10", "Lobo de Bancada na linha 10"]
-  FALHA 4: nenhum nome verdadeiro no relato (49 linhas; canários: 2 nome(s) que diferem do público) ["Lobo de Bancada na linha 6", "Lobo de Bancada na linha 7", "Bruto de Bancada na linha 10", "Lobo de Bancada na linha 10", "Bruto de Bancada na linha 23", "Lobo de Bancada na linha 23", "Bruto de Bancada na linha 38", "Bruto de Bancada na linha 39"]
-  FALHA 5: nenhum nome verdadeiro no relato (62 linhas; canários: 2 nome(s) que diferem do público) ["Lobo de Bancada na linha 6", "Lobo de Bancada na linha 7", "Bruto de Bancada na linha 10", "Lobo de Bancada na linha 10", "Bruto de Bancada na linha 23", "Lobo de Bancada na linha 23", "Bruto de Bancada na linha 38", "Bruto de Bancada na linha 39", "Bruto de Bancada na linha 50", "Lobo de Bancad
-  FALHA fim: o relato inteiro (65 linhas) não traz nenhum dos 2 nome(s) verdadeiro(s) ["Lobo de Bancada na linha 6", "Lobo de Bancada na linha 7", "Bruto de Bancada na linha 10", "Lobo de Bancada na linha 10", "Bruto de Bancada na linha 23", "Lobo de Bancada na linha 23", "Bruto de Bancada na linha 38", "Bruto de Bancada na linha 39", "Bruto de Bancada na linha 50", "Lobo de Bancada na linha 50",
+  FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["nome n.º 2 na linha 6", "nome n.º 2 na linha 7", "nome n.º 1 na linha 10", "nome n.º 2 na linha 10"]
+  FALHA 4: nenhum nome verdadeiro no relato (49 linhas; canários: 2 nome(s) que diferem do público) ["nome n.º 2 na linha 6", "nome n.º 2 na linha 7", "nome n.º 1 na linha 10", "nome n.º 2 na linha 10", "nome n.º 1 na linha 23", "nome n.º 2 na linha 23", "nome n.º 1 na linha 38", "nome n.º 1 na linha 39"]
+  FALHA 5: nenhum nome verdadeiro no relato (62 linhas; canários: 2 nome(s) que diferem do público) ["nome n.º 2 na linha 6", "nome n.º 2 na linha 7", "nome n.º 1 na linha 10", "nome n.º 2 na linha 10", "nome n.º 1 na linha 23", "nome n.º 2 na linha 23", "nome n.º 1 na linha 38", "nome n.º 1 na linha 39", "nome n.º 1 na linha 50", "nome n.º 2 (cortado na origem)
+  FALHA fim: o relato inteiro (65 linhas) não traz nenhum dos 2 nome(s) verdadeiro(s) ["nome n.º 2 na linha 6", "nome n.º 2 na linha 7", "nome n.º 1 na linha 10", "nome n.º 2 na linha 10", "nome n.º 1 na linha 23", "nome n.º 2 na linha 23", "nome n.º 1 na linha 38", "nome n.º 1 na linha 39", "nome n.º 1 na linha 50", "nome n.º 2 na linha 50",
 prova da caixa no HUD da jogadora: 39 de 43 verificações passaram.
 
 == B2-fuga-linhas-hora (teste) — CORRECOES-2 B2: uma fuga «nome » só nas linhas de seq 13 (as do caso da hora)
@@ -44,7 +44,7 @@ rc=1
   FALHA a linha diz de que snapshot é o velho (seq 9, revisão 31, 7 eventos com os tipos, 3 de actor) e a revisão da actual (35)
 teste do relato da caixa: 21 de 23 verificações passaram.
 
-== N-B2-canario-minusculas-relato (hud) — CORRECOES-3 B2: o relato traz o nome verdadeiro em minúsculas («bruto de bancada»)
+== N-B2-canario-minusculas-relato (hud) — CORRECOES-3 B2: o relato traz o nome verdadeiro em minúsculas («nome n.º 1 em minúsculas»)
 rc=0
 prova da caixa no HUD da jogadora: 43 de 43 verificações passaram.
 
@@ -83,22 +83,22 @@ prova da caixa no HUD da jogadora: 43 de 43 verificações passaram.
 
 == N-B1-canario-no-resumo-hud (hud) — CORRECOES-3 B1: a última linha do relato (o resumo) traz um canário
 rc=0
-prova da caixa no HUD da jogadora: 43 de 43 verificações passaram. Bruto de Bancada
+prova da caixa no HUD da jogadora: 43 de 43 verificações passaram. nome n.º 1
 
 == N-B1-canario-no-resumo-manequim (manequim) — CORRECOES-3 B1: a última linha do relato (o resumo) traz um canário — manequim
 rc=0
-prova da caixa com os manequins: 53 de 53 verificações passaram. Bruto de Bancada
+prova da caixa com os manequins: 53 de 53 verificações passaram. nome n.º 1
 
 
 # mutações — modo novo · 2026-11-22 00:05:34 -0300 · 6a87b9e
 # Godot: 4.7.2.stable.official.ed1daf0bf  ·  motor sha256 a91c021cda11…
 
-== B1-nome-verdadeiro (hud) — CORRECOES-2 B1: `_nome_publico` lê o `nome` (o verdadeiro) — o relato traz «Bruto de Bancada»
+== B1-nome-verdadeiro (hud) — CORRECOES-2 B1: `_nome_publico` lê o `nome` (o verdadeiro) — o relato traz «nome n.º 1»
 rc=1
-  FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["Lobo de Bancada na linha 6", "Lobo de Bancada na linha 7", "Bruto de Bancada na linha 10", "Lobo de Bancada na linha 10"]
-  FALHA 4: nenhum nome verdadeiro no relato (49 linhas; canários: 2 nome(s) que diferem do público) ["Lobo de Bancada na linha 6", "Lobo de Bancada na linha 7", "Bruto de Bancada na linha 10", "Lobo de Bancada na linha 10", "Bruto de Bancada na linha 23", "Lobo de Bancada na linha 23", "Bruto de Bancada na linha 38", "Bruto de Bancada na linha 39"]
-  FALHA 5: nenhum nome verdadeiro no relato (62 linhas; canários: 2 nome(s) que diferem do público) ["Lobo de Bancada na linha 6", "Lobo de Bancada na linha 7", "Bruto de Bancada na linha 10", "Lobo de Bancada na linha 10", "Bruto de Bancada na linha 23", "Lobo de Bancada na linha 23", "Bruto de Bancada na linha 38", "Bruto de Bancada na linha 39", "Bruto de Bancada na linha 50", "Lobo de Bancad
-  FALHA fim: o relato inteiro (68 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["Lobo de Bancada na linha 6", "Lobo de Bancada na linha 7", "Bruto de Bancada na linha 10", "Lobo de Bancada na linha 10", "Bruto de Bancada na linha 23", "Lobo de Bancada na linha 23", "Bruto de Bancada na linha 38", "Bruto de Bancada na linha 39", "Bruto d
+  FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["nome n.º 2 na linha 6", "nome n.º 2 na linha 7", "nome n.º 1 na linha 10", "nome n.º 2 na linha 10"]
+  FALHA 4: nenhum nome verdadeiro no relato (49 linhas; canários: 2 nome(s) que diferem do público) ["nome n.º 2 na linha 6", "nome n.º 2 na linha 7", "nome n.º 1 na linha 10", "nome n.º 2 na linha 10", "nome n.º 1 na linha 23", "nome n.º 2 na linha 23", "nome n.º 1 na linha 38", "nome n.º 1 na linha 39"]
+  FALHA 5: nenhum nome verdadeiro no relato (62 linhas; canários: 2 nome(s) que diferem do público) ["nome n.º 2 na linha 6", "nome n.º 2 na linha 7", "nome n.º 1 na linha 10", "nome n.º 2 na linha 10", "nome n.º 1 na linha 23", "nome n.º 2 na linha 23", "nome n.º 1 na linha 38", "nome n.º 1 na linha 39", "nome n.º 1 na linha 50", "nome n.º 2 (cortado na origem)
+  FALHA fim: o relato inteiro (68 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["nome n.º 2 na linha 6", "nome n.º 2 na linha 7", "nome n.º 1 na linha 10", "nome n.º 2 na linha 10", "nome n.º 1 na linha 23", "nome n.º 2 na linha 23", "nome n.º 1 na linha 38", "nome n.º 1 na linha 39", "nome n.º 1 (cortado na origem)
 prova da caixa no HUD da jogadora: 39 de 43 verificações passaram.
 
 == B2-fuga-linhas-hora (teste) — CORRECOES-2 B2: uma fuga «nome » só nas linhas de seq 13 (as do caso da hora)
@@ -127,23 +127,23 @@ rc=1
   FALHA a linha diz de que snapshot é o velho (seq 9, revisão 31, 7 eventos com os tipos, 3 de actor) e a revisão da actual (35)
 teste do relato da caixa: 22 de 24 verificações passaram.
 
-== N-B2-canario-minusculas-relato (hud) — CORRECOES-3 B2: o relato traz o nome verdadeiro em minúsculas («bruto de bancada»)
+== N-B2-canario-minusculas-relato (hud) — CORRECOES-3 B2: o relato traz o nome verdadeiro em minúsculas («nome n.º 1 em minúsculas»)
 rc=1
-  FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["Lobo de Bancada na linha 6", "Lobo de Bancada na linha 7", "Bruto de Bancada na linha 10", "Lobo de Bancada na linha 10"]
-  FALHA 4: nenhum nome verdadeiro no relato (49 linhas; canários: 2 nome(s) que diferem do público) ["Lobo de Bancada na linha 6", "Lobo de Bancada na linha 7", "Bruto de Bancada na linha 10", "Lobo de Bancada na linha 10", "Bruto de Bancada na linha 23", "Lobo de Bancada na linha 23", "Bruto de Bancada na linha 38", "Bruto de Bancada na linha 39"]
-  FALHA 5: nenhum nome verdadeiro no relato (62 linhas; canários: 2 nome(s) que diferem do público) ["Lobo de Bancada na linha 6", "Lobo de Bancada na linha 7", "Bruto de Bancada na linha 10", "Lobo de Bancada na linha 10", "Bruto de Bancada na linha 23", "Lobo de Bancada na linha 23", "Bruto de Bancada na linha 38", "Bruto de Bancada na linha 39", "Bruto de Bancada na linha 50", "Lobo de Bancad
-  FALHA fim: o relato inteiro (68 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["Lobo de Bancada na linha 6", "Lobo de Bancada na linha 7", "Bruto de Bancada na linha 10", "Lobo de Bancada na linha 10", "Bruto de Bancada na linha 23", "Lobo de Bancada na linha 23", "Bruto de Bancada na linha 38", "Bruto de Bancada na linha 39", "Bruto d
+  FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["nome n.º 2 na linha 6", "nome n.º 2 na linha 7", "nome n.º 1 na linha 10", "nome n.º 2 na linha 10"]
+  FALHA 4: nenhum nome verdadeiro no relato (49 linhas; canários: 2 nome(s) que diferem do público) ["nome n.º 2 na linha 6", "nome n.º 2 na linha 7", "nome n.º 1 na linha 10", "nome n.º 2 na linha 10", "nome n.º 1 na linha 23", "nome n.º 2 na linha 23", "nome n.º 1 na linha 38", "nome n.º 1 na linha 39"]
+  FALHA 5: nenhum nome verdadeiro no relato (62 linhas; canários: 2 nome(s) que diferem do público) ["nome n.º 2 na linha 6", "nome n.º 2 na linha 7", "nome n.º 1 na linha 10", "nome n.º 2 na linha 10", "nome n.º 1 na linha 23", "nome n.º 2 na linha 23", "nome n.º 1 na linha 38", "nome n.º 1 na linha 39", "nome n.º 1 na linha 50", "nome n.º 2 (cortado na origem)
+  FALHA fim: o relato inteiro (68 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["nome n.º 2 na linha 6", "nome n.º 2 na linha 7", "nome n.º 1 na linha 10", "nome n.º 2 na linha 10", "nome n.º 1 na linha 23", "nome n.º 2 na linha 23", "nome n.º 1 na linha 38", "nome n.º 1 na linha 39", "nome n.º 1 (cortado na origem)
 prova da caixa no HUD da jogadora: 39 de 43 verificações passaram.
 
 == N-B2-canario-minusculas-caixa (hud) — CORRECOES-3 B2: um texto da caixa traz o nome verdadeiro em minúsculas
 rc=1
-  FALHA 1: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa ["Bruto de Bancada em «bruto de bancada»"]
-  FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["Bruto de Bancada na linha 22"]
-  FALHA 4: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa ["Bruto de Bancada em «bruto de bancada»"]
-  FALHA 4: nenhum nome verdadeiro no relato (49 linhas; canários: 2 nome(s) que diferem do público) ["Bruto de Bancada na linha 22", "Bruto de Bancada na linha 23", "Bruto de Bancada na linha 49"]
-  FALHA 5: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa ["Bruto de Bancada em «bruto de bancada»"]
-  FALHA 5: nenhum nome verdadeiro no relato (62 linhas; canários: 2 nome(s) que diferem do público) ["Bruto de Bancada na linha 22", "Bruto de Bancada na linha 23", "Bruto de Bancada na linha 49", "Bruto de Bancada na linha 50", "Bruto de Bancada na linha 62"]
-  FALHA fim: o relato inteiro (68 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["Bruto de Bancada na linha 22", "Bruto de Bancada na linha 23", "Bruto de Bancada na linha 49", "Bruto de Bancada na linha 50", "Bruto de Bancada na linha 62", "Bruto de Bancada na linha 63"]
+  FALHA 1: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa ["nome n.º 1 em «nome n.º 1 em minúsculas»"]
+  FALHA 1: nenhum nome verdadeiro no relato (22 linhas; canários: 2 nome(s) que diferem do público) ["nome n.º 1 na linha 22"]
+  FALHA 4: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa ["nome n.º 1 em «nome n.º 1 em minúsculas»"]
+  FALHA 4: nenhum nome verdadeiro no relato (49 linhas; canários: 2 nome(s) que diferem do público) ["nome n.º 1 na linha 22", "nome n.º 1 na linha 23", "nome n.º 1 na linha 49"]
+  FALHA 5: nenhum dado do Mestre (nome verdadeiro, vida, PA) nos textos da caixa ["nome n.º 1 em «nome n.º 1 em minúsculas»"]
+  FALHA 5: nenhum nome verdadeiro no relato (62 linhas; canários: 2 nome(s) que diferem do público) ["nome n.º 1 na linha 22", "nome n.º 1 na linha 23", "nome n.º 1 na linha 49", "nome n.º 1 na linha 50", "nome n.º 1 na linha 62"]
+  FALHA fim: o relato inteiro (68 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["nome n.º 1 na linha 22", "nome n.º 1 na linha 23", "nome n.º 1 na linha 49", "nome n.º 1 na linha 50", "nome n.º 1 na linha 62", "nome n.º 1 na linha 63"]
 prova da caixa no HUD da jogadora: 36 de 43 verificações passaram.
 
 == N-B3-heroina-nome-publico-hud (hud) — CORRECOES-3 B3: cenário com a heroína que entra com nome ≠ nomePublico («Espadachim de Bancada» / «Espadachim») — sem mutação de código
@@ -167,16 +167,16 @@ teste do relato da caixa: 22 de 24 verificações passaram.
 
 == N-B1-canario-na-linha-em-branco (hud) — CORRECOES-3 B1: a linha em branco final traz um canário (só a escrita; a pré-varredura não o vê — apanha-o a re-varredura)
 rc=1
-  FALHA fim: a re-varredura do relato escrito (68 linhas) achou nome(s) verdadeiro(s) ["Bruto de Bancada na linha 67"]
+  FALHA fim: a re-varredura do relato escrito (68 linhas) achou nome(s) verdadeiro(s) ["nome n.º 1 na linha 67"]
 prova da caixa no HUD da jogadora: 43 de 43 verificações passaram.
 prova da caixa no HUD da jogadora: 43 de 44 verificações passaram.
 
 == N-B1-canario-no-resumo-hud (hud) — CORRECOES-3 B1: a última linha do relato (o resumo) traz um canário
 rc=1
-  FALHA fim: o relato inteiro (68 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["Bruto de Bancada na linha 68"]
-prova da caixa no HUD da jogadora: 42 de 43 verificações passaram. Bruto de Bancada
+  FALHA fim: o relato inteiro (68 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["nome n.º 1 na linha 68"]
+prova da caixa no HUD da jogadora: 42 de 43 verificações passaram. nome n.º 1
 
 == N-B1-canario-no-resumo-manequim (manequim) — CORRECOES-3 B1: a última linha do relato (o resumo) traz um canário — manequim
 rc=1
-  FALHA fim: o relato inteiro (78 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["Bruto de Bancada na linha 78"]
-prova da caixa com os manequins: 52 de 53 verificações passaram. Bruto de Bancada
+  FALHA fim: o relato inteiro (78 linhas — todas as do ficheiro, contando esta e as 2 finais) não traz nenhum dos 2 nome(s) verdadeiro(s) ["nome n.º 1 na linha 78"]
+prova da caixa com os manequins: 52 de 53 verificações passaram. nome n.º 1
