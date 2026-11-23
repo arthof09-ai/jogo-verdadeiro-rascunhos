@@ -25,7 +25,7 @@ motor VLAB é o `a91c021c…`. A cena usa o manequim de referência.
 Verificações por passo: 0 → 1 · 1 → 22 · 2 → 20 · 3 → 4 · 4 → 22 · 5 → 20 · 6 → 17 · 7 → 31 · 8 → 18 · 9 → 6 ·
 10 → 9 · 11 → 38 · mais 1 da abertura do manequim.
 
-O PIN do Mestre é novo em cada corrida e só passa por `--pin=`. O info e o log do servidor ficam na pasta temporária.
+O PIN do Mestre é novo por corrida e só passa por `--pin=`. O info e o log do servidor ficam na pasta temporária.
 O relato só leva nomes públicos: 0 nomes verdadeiros inteiros.
 
 ## suite/ — as suites da caixa
@@ -35,7 +35,7 @@ O relato só leva nomes públicos: 0 nomes verdadeiros inteiros.
 - `caixa_jogadora.log` dá **58/58**. Eram 42; o §10 junta 16 verificações (D1 e D3 com a câmara da mesa a sério, com 12
   e 16 figuras, em 844×390 e 780×360). Com `--estrita` dá 57/58 (`caixa_jogadora-estrita.log`): a falha é a de
   sempre, 780×360 com 11,5 u.
-- `resumo-alheios.txt` tem a última linha de cada um dos outros passos do cliente. Os logs inteiros desses passos não se
+- `resumo-alheios.txt` tem a última linha dos outros passos do cliente, um a um. Os logs inteiros desses passos não se
   cometem, porque trazem o texto das suites deles, e o `teste_nomes_relato` imprime nomes verdadeiros de propósito.
 
 ## sem-correcao/ — as suites novas contra a caixa da ponta 0bebd76
