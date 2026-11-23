@@ -88,6 +88,8 @@ largura, +2 u. Essa mutação não variava com o id. A minha varia, e o assert a
 | `caixa_janela` no CI | — | **sem número: o passo não está no workflow** (§1) |
 | CI da ponta `02267d1`: Testes dos rascunhos | run **45087490267** | verde, 10/10 jobs (`cliente` e `retoma-pc` incluídos) |
 | CI da ponta `02267d1`: Sonda de privacidade | run **45087490221** | verde |
+| CI da ponta `ff6d69f`: Testes dos rascunhos | run **45087967745** | verde, 10/10 jobs (`cliente` e `retoma-pc` incluídos) |
+| CI da ponta `ff6d69f`: Sonda de privacidade | run **45087967730** | verde |
 
 **Listas da retoma:** corri `retoma-i0004/actualizar-listas.py` antes do commit. Deu 0 novos e 0 tirados (antes.txt
 37, depois.txt 416, MANIFESTO 460), o que bate certo: não mudei nada em `rascunhos/`. O `retoma-pc` passou.
@@ -106,11 +108,11 @@ Conferidor: `provas/ordem-caixa-relato/ferramentas/conferir-registo.mjs`, crité
 | `README.md`, `remendo-ci-testes.yml.patch`, `ferramentas/mutacao-celulas.sh` | **0 / 0** | 0 |
 | `ensaio-passos/passo-suite.sh`, `passo-mutacao.sh`, os dois `mutacao-celulas.resumo.txt` | **0 / 0** | 0 |
 | as linhas que o remendo junta ao `testes.yml` (só o `+`) | **0 / 0** | 0 |
-| os 4 logs da corrida da suite, sem edição (`local/` e `ensaio-passos/`) | 3 / 2 | **0** |
+| os 4 logs da corrida da suite, sem edição (`local/` e `ensaio-passos/`) | **3 / 2 por log** | **0** |
 
 Os achados dos logs da corrida vêm do texto da própria suite: duas palavras correntes que partilham pedaços com os nomes
 verdadeiros. São linhas que a suite imprime e que eu não escrevi. Cabem no padrão aceite para logs da corrida (4/2, 0
-inteiros). O `testes.yml` inteiro já tinha 18 achados antes desta ordem; não lhes toquei. No guião, troquei duas
+inteiros) — isto é, 3/2 **por log**, não no total dos 4 logs (emenda do coordenador, F6 da sentença da CAIXA-JANELA-CI). O `testes.yml` inteiro já tinha 18 achados antes desta ordem; não lhes toquei. No guião, troquei duas
 palavras minhas para ele chegar a 0 / 0.
 
 ## 6. Pontos para o coordenador
