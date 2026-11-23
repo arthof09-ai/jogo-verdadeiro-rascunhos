@@ -1,0 +1,49 @@
+Ordem F78+F79+F81+F82 (sentença da F64) — resumo da medição do custo do D1 com a ferramenta acabada
+Ferramenta: provas/ordem-f28-custo-d1-hud/ferramentas/medir_custo_d1_hud.gd (a da F64, mais: o cursor reposto no _repor,
+«do Mover», rumo e inclinação na pinça a deslocar, PARTIDA/DEPOIS/MEDIDA por esta ordem). Godot 4.7.2 --headless
+(_console.exe), Windows 11; a saída passa por tr -d '\r' (logs em LF).
+Partida: 10e21f0.
+
+== Na ponta (com o D1): medicao/medir_custo_d1_hud-f78.log
+rc=0 · Medição acabada: 62 casos, 0 erros de medição. · linhas com MEDIDA 70 · linhas TABELA (sem o cabeçalho) 62 · PARTIDA 100 · DEPOIS 164 · linhas com error/warning 0
+cursor nas PARTIDA: 84 × (-1, -1); 16 × (10, 10) · «de o Mover» 0 · MEDIDA seguida de DEPOIS 0 · bytes CR 0 (LF)
+
+== Sem o D1 (caixa_ordem.gd de 0bebd76 só na cópia de trabalho, reposto a seguir; sha cc26f56c… igual ao HEAD): medicao/medir_custo_d1_hud-sem-d1-f78.log
+rc=0 · Medição acabada: 62 casos, 0 erros de medição. · linhas com MEDIDA 70 · linhas TABELA (sem o cabeçalho) 62 · PARTIDA 100 · DEPOIS 164 · linhas com error/warning 0
+cursor nas PARTIDA: 84 × (-1, -1); 16 × (10, 10) · «de o Mover» 0 · MEDIDA seguida de DEPOIS 0 · bytes CR 0 (LF)
+
+== Antes (os logs da F64), para comparar
+cursor nas PARTIDA: 1 × (-1, -1); 89 × (10, 10); 10 × (6, 11) · «de o Mover» 44 · MEDIDA seguida de DEPOIS 18 · bytes CR 417 (CRLF)
+cursor nas PARTIDA: 1 × (-1, -1); 89 × (10, 10); 10 × (6, 11) · «de o Mover» 52 · MEDIDA seguida de DEPOIS 18 · bytes CR 417 (CRLF)
+
+== As tabelas não mudaram (linhas TABELA, diff 2.ª corrida da F61 → F78)
+-- na ponta: 0 de 62 linhas TABELA diferem
+-- sem o D1: 0 de 62 linhas TABELA diferem
+
+== As linhas da casa e das pinças, na ponta
+  MEDIDA PINÇA 844x390 (lista aberta por toque): 2 dedos afastam-se 100 u · zoom 1.500 → 1.500 · a câmara deslocou-se 0.000 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  MEDIDA PINÇA 844x390 (controlo, caixa fechada): 2 dedos afastam-se 100 u · zoom 1.500 → 3.000 · a câmara deslocou-se 0.028 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  MEDIDA CASA 844x390 (lista aberta por toque): toque na casa (7, 11) do Mover, em (983.0017, 588.6998) u · 1.º toque: a casa fecha a lista sem mover a figura (fechou a lista sim, a intenção «mover» saiu não) · toques até a figura ser mandada mover: 2
+  MEDIDA CASA 844x390 (controlo, caixa fechada): toque na casa (7, 11) do Mover, em (983.0017, 588.6998) u · 1.º toque: a casa move a figura (fechou a lista não, a intenção «mover» saiu sim) · toques até a figura ser mandada mover: 1
+  MEDIDA PINÇA A DESLOCAR 844x390 (lista aberta por toque): 2 dedos afastam-se 100 u e o meio anda 60 u para a esquerda · zoom 1.500 → 1.500 · a câmara deslocou-se 0.000 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  MEDIDA PINÇA A DESLOCAR 844x390 (controlo, caixa fechada): 2 dedos afastam-se 100 u e o meio anda 60 u para a esquerda · zoom 1.500 → 2.963 · a câmara deslocou-se 0.854 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  MEDIDA PINÇA 780x360 (lista aberta por toque): 2 dedos afastam-se 100 u · zoom 1.500 → 1.500 · a câmara deslocou-se 0.000 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  MEDIDA PINÇA 780x360 (controlo, caixa fechada): 2 dedos afastam-se 100 u · zoom 1.500 → 3.000 · a câmara deslocou-se 0.028 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  MEDIDA CASA 780x360 (lista aberta por toque): toque na casa (7, 11) do Mover, em (984.5017, 588.6998) u · 1.º toque: a casa fecha a lista sem mover a figura (fechou a lista sim, a intenção «mover» saiu não) · toques até a figura ser mandada mover: 2
+  MEDIDA CASA 780x360 (controlo, caixa fechada): toque na casa (7, 11) do Mover, em (984.5017, 588.6998) u · 1.º toque: a casa move a figura (fechou a lista não, a intenção «mover» saiu sim) · toques até a figura ser mandada mover: 1
+  MEDIDA PINÇA A DESLOCAR 780x360 (lista aberta por toque): 2 dedos afastam-se 100 u e o meio anda 60 u para a esquerda · zoom 1.500 → 1.500 · a câmara deslocou-se 0.000 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  MEDIDA PINÇA A DESLOCAR 780x360 (controlo, caixa fechada): 2 dedos afastam-se 100 u e o meio anda 60 u para a esquerda · zoom 1.500 → 2.963 · a câmara deslocou-se 0.854 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+
+== As linhas da casa e das pinças, sem o D1
+  MEDIDA PINÇA 844x390 (lista aberta por toque): 2 dedos afastam-se 100 u · zoom 1.500 → 3.000 · a câmara deslocou-se 0.028 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  MEDIDA PINÇA 844x390 (controlo, caixa fechada): 2 dedos afastam-se 100 u · zoom 1.500 → 3.000 · a câmara deslocou-se 0.028 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  MEDIDA CASA 844x390 (lista aberta por toque): toque na casa (7, 11) do Mover, em (983.0017, 588.6998) u · 1.º toque: a casa fecha a lista e move a figura (fechou a lista sim, a intenção «mover» saiu sim) · toques até a figura ser mandada mover: 1
+  MEDIDA CASA 844x390 (controlo, caixa fechada): toque na casa (7, 11) do Mover, em (983.0017, 588.6998) u · 1.º toque: a casa move a figura (fechou a lista não, a intenção «mover» saiu sim) · toques até a figura ser mandada mover: 1
+  MEDIDA PINÇA A DESLOCAR 844x390 (lista aberta por toque): 2 dedos afastam-se 100 u e o meio anda 60 u para a esquerda · zoom 1.500 → 2.963 · a câmara deslocou-se 0.854 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  MEDIDA PINÇA A DESLOCAR 844x390 (controlo, caixa fechada): 2 dedos afastam-se 100 u e o meio anda 60 u para a esquerda · zoom 1.500 → 2.963 · a câmara deslocou-se 0.854 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  MEDIDA PINÇA 780x360 (lista aberta por toque): 2 dedos afastam-se 100 u · zoom 1.500 → 3.000 · a câmara deslocou-se 0.028 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  MEDIDA PINÇA 780x360 (controlo, caixa fechada): 2 dedos afastam-se 100 u · zoom 1.500 → 3.000 · a câmara deslocou-se 0.028 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  MEDIDA CASA 780x360 (lista aberta por toque): toque na casa (7, 11) do Mover, em (984.5017, 588.6998) u · 1.º toque: a casa fecha a lista e move a figura (fechou a lista sim, a intenção «mover» saiu sim) · toques até a figura ser mandada mover: 1
+  MEDIDA CASA 780x360 (controlo, caixa fechada): toque na casa (7, 11) do Mover, em (984.5017, 588.6998) u · 1.º toque: a casa move a figura (fechou a lista não, a intenção «mover» saiu sim) · toques até a figura ser mandada mover: 1
+  MEDIDA PINÇA A DESLOCAR 780x360 (lista aberta por toque): 2 dedos afastam-se 100 u e o meio anda 60 u para a esquerda · zoom 1.500 → 2.963 · a câmara deslocou-se 0.854 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim
+  MEDIDA PINÇA A DESLOCAR 780x360 (controlo, caixa fechada): 2 dedos afastam-se 100 u e o meio anda 60 u para a esquerda · zoom 1.500 → 2.963 · a câmara deslocou-se 0.854 m (foco), rumo 0.0 → 0.0, inclinação 55.0 → 55.0 · lista fechada no fim sim

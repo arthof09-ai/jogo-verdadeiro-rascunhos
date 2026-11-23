@@ -33,6 +33,14 @@ extends SceneTree
 ## - L3, o estado de partida: antes do gesto medido, uma linha `PARTIDA` diz o estado (a caixa, o modo da arena, a gaveta,
 ##   os painéis, a figura dela e a casa onde está, o cursor, a declaração do Mover, a fila e a câmara). Depois, linhas
 ##   `DEPOIS` dizem o que mudou em relação à partida (ao 1.º toque e no fim).
+##
+## F78/F79/F81 (sentença da F64). Só a prova muda; as linhas TABELA ficam as mesmas.
+## - F78: o `_repor` repõe também o cursor da arena (o (-1, -1) com que ela nasce): a partida é neutra em todos os casos.
+## - F79: a gaveta escreve «à vista, do Mover» (era «de o Mover»).
+## - F81: a `MEDIDA PINÇA A DESLOCAR` traz o rumo e a inclinação, como a `MEDIDA PINÇA`. Em todos os casos a ordem é a
+##   mesma: PARTIDA, as DEPOIS e só então a MEDIDA (nos botões a MEDIDA junta a lista aberta e o controlo, e sai no fim).
+## - O gesto da pinça a deslocar (22 u e 2 u por passo, o meio a andar 60 u) é arbitrário, escolhido para o controlo dar
+##   um número grande; os 0,854 m dele não são um gesto real (ver o README).
 
 const NOMES := ["Espadachim", "Arqueira", "Criatura", "Criatura", "Personagem", "Criatura", "Criatura", "Criatura"]
 const CASA_DELA := Vector2i(10, 10)
@@ -122,6 +130,7 @@ func _repor() -> void:
 		cx._engolir_toque = -1
 	_rede.fila._itens.clear()
 	_rede._envios_recentes.clear()
+	arena._cursor = Vector2i(-1, -1)  # F78: o cursor de quando a arena nasce (arena.gd), para a partida ser neutra
 	arena.definir_modo(arena.Modo.NENHUM)
 	hud._gaveta_de = arena.Modo.NENHUM
 	_declarar_saida(false)
@@ -180,8 +189,8 @@ func _estado_agora() -> Dictionary:
 			paineis.append(par[0])
 	var gaveta := "fechada"
 	if (hud._gaveta as Control).is_visible_in_tree():
-		var de := "nenhum modo" if hud._gaveta_de == M.NENHUM else "o " + str(M.find_key(hud._gaveta_de)).capitalize()
-		gaveta = "à vista, de %s" % de
+		var de := "de nenhum modo" if hud._gaveta_de == M.NENHUM else "do " + str(M.find_key(hud._gaveta_de)).capitalize()
+		gaveta = "à vista, %s" % de  # F79: «do Mover» (era «de o Mover»)
 	var minha: String = _estado.minha_figura_id
 	var cam = arena.camera
 	var f: Vector3 = cam.foco
@@ -435,9 +444,9 @@ func _resto(tam: Vector2i) -> void:
 		await _quadros(3)
 		var andou: float = (cam.foco as Vector3).distance_to(foco0)
 		var fechou: bool = not hud.caixa_mostrada()["expandida"]
+		_depois(r_a, "no fim", e_a)
 		print("  MEDIDA ARRASTAR %dx%d (%s): 1 dedo arrastado 90 u no tabuleiro · a câmara deslocou-se %.3f m · lista fechada no fim %s" % [
 			tam.x, tam.y, "lista aberta por toque" if abrir == "toque" else "controlo, caixa fechada", andou, _sim(fechou)])
-		_depois(r_a, "no fim", e_a)
 		_tabela.append(["arrastar 1 dedo (deslocar a câmara)", tam, "lista" if abrir == "toque" else "controlo", andou, 0, 0, "câmara desloca-se", false])
 		# A pinça (2 dedos que se afastam): o 1.º dedo carrega primeiro.
 		await _repor()
@@ -480,10 +489,10 @@ func _resto(tam: Vector2i) -> void:
 			await process_frame
 		await _quadros(3)
 		var z1: float = cam.zoom
+		_depois(r_p, "no fim", e_p)
 		print("  MEDIDA PINÇA %dx%d (%s): 2 dedos afastam-se 100 u · zoom %.3f → %.3f · a câmara deslocou-se %.3f m (foco), rumo %.1f → %.1f, inclinação %.1f → %.1f · lista fechada no fim %s" % [
 			tam.x, tam.y, "lista aberta por toque" if abrir == "toque" else "controlo, caixa fechada", z0, z1,
 			(cam.foco as Vector3).distance_to(fp0), rumo0, cam.rumo, incl0, cam.inclinacao, _sim(not hud.caixa_mostrada()["expandida"])])
-		_depois(r_p, "no fim", e_p)
 		_tabela.append(["pinça 2 dedos (zoom)", tam, "lista" if abrir == "toque" else "controlo", z1 / z0, 0, 0, "zoom muda", false])
 		cam.definir_zoom(cam.ZOOM_PADRAO)
 	# A roda do rato sobre a caixa (a F14 registou-a engolida: D3, mouse_force_pass_scroll_events) e fora dela.
@@ -511,11 +520,11 @@ func _resto(tam: Vector2i) -> void:
 			Input.parse_input_event(w)
 			Input.flush_buffered_events()
 		await _quadros(2)
+		_depois(r_r, "no fim", e_r)
 		print("  MEDIDA RODA %dx%d sobre %s: 1 passo para cima · zoom %.3f → %.3f · a expandida está aberta %s" % [
 			tam.x, tam.y, {"compacta": "a caixa compacta (sem o rato ter passado por cima)",
 				"expandida pelo rato": "a caixa, depois de o rato entrar nela (abre a expandida)", "fora": "o tabuleiro (controlo)"}[sitio],
 			z0, cam.zoom, _sim(hud.caixa_mostrada()["expandida"])])
-		_depois(r_r, "no fim", e_r)
 		_tabela.append(["roda do rato (zoom)", tam, sitio, cam.zoom / z0, 0, 0, "zoom muda", false])
 		await _rato(fora, false)
 		await _quadros(2)
@@ -699,6 +708,8 @@ func _pinca_a_deslocar(tam: Vector2i) -> void:
 		var e0 := _partida(r_p)
 		var z0: float = cam.zoom
 		var f0: Vector3 = cam.foco
+		var rumo0: float = cam.rumo
+		var incl0: float = cam.inclinacao
 		var esc: float = root.get_final_transform().get_scale().x
 		var a := root.get_final_transform() * (fora - Vector2(30, 0))
 		var bb := root.get_final_transform() * (fora + Vector2(30, 0))
@@ -729,10 +740,10 @@ func _pinca_a_deslocar(tam: Vector2i) -> void:
 			Input.flush_buffered_events()
 			await process_frame
 		await _quadros(3)
-		print("  MEDIDA PINÇA A DESLOCAR %dx%d (%s): 2 dedos afastam-se 100 u e o meio anda 60 u para a esquerda · zoom %.3f → %.3f · a câmara deslocou-se %.3f m (foco) · lista fechada no fim %s" % [
-			tam.x, tam.y, "lista aberta por toque" if abrir == "toque" else "controlo, caixa fechada", z0, cam.zoom,
-			(cam.foco as Vector3).distance_to(f0), _sim(not hud.caixa_mostrada()["expandida"])])
 		_depois(r_p, "no fim", e0)
+		print("  MEDIDA PINÇA A DESLOCAR %dx%d (%s): 2 dedos afastam-se 100 u e o meio anda 60 u para a esquerda · zoom %.3f → %.3f · a câmara deslocou-se %.3f m (foco), rumo %.1f → %.1f, inclinação %.1f → %.1f · lista fechada no fim %s" % [
+			tam.x, tam.y, "lista aberta por toque" if abrir == "toque" else "controlo, caixa fechada", z0, cam.zoom,
+			(cam.foco as Vector3).distance_to(f0), rumo0, cam.rumo, incl0, cam.inclinacao, _sim(not hud.caixa_mostrada()["expandida"])])
 		cam.definir_zoom(cam.ZOOM_PADRAO)
 
 
@@ -787,6 +798,7 @@ func _correr() -> void:
 	print("== F61: a câmara repõe-se entre casos (modo %d, foco %s, zoom %.3f, rumo %.1f, inclinação %.1f) ==" % [
 		_cam0["modo"], _cam0["foco"], _cam0["zoom"], _cam0["rumo"], _cam0["inclinacao"]])
 	print("== F64: linhas MEDIDA CASA e MEDIDA PINÇA A DESLOCAR; o deslocamento da câmara na pinça; PARTIDA e DEPOIS em todos os casos ==")
+	print("== F78/F79/F81: o cursor reposto entre casos; «do Mover»; rumo e inclinação na pinça a deslocar; PARTIDA, DEPOIS e MEDIDA por esta ordem ==")
 	for tam in [Vector2i(844, 390), Vector2i(780, 360)]:
 		root.size = tam
 		await process_frame

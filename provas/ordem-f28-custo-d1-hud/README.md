@@ -35,10 +35,28 @@ fica na caixa. Nenhum ficheiro do jogo muda com esta ordem. As conclusões estã
   - `medicao/resumo-f64.txt` tem o rc, as contagens, a comparação das tabelas e as linhas novas. Escreve-o
     `bash ferramentas/resumo_f64.sh <raiz-do-repo> <rc-ponta> <rc-sem-d1> <partida>`. Ver
     `ESTADO-FINAL-ORDEM-F64-FERRAMENTA-MEDICAO-D1.md`, na raiz.
+  - **O gesto da `PINÇA A DESLOCAR` é arbitrário (F82):** 22 u e 2 u por passo, durante 5 passos, e o meio anda 60 u.
+    Foi escolhido só para o controlo dar um número grande e não vem de nenhum aparelho. Os 0,854 m que ele dá provam
+    que a medida funciona. Nunca são o que um gesto real da jogadora desloca, nem se citam assim.
+
+- **Os acabamentos (Ordem F78+F79+F81+F82, sentença da F64):** `medicao/medir_custo_d1_hud-f78.log` (na ponta) e
+  `medicao/medir_custo_d1_hud-sem-d1-f78.log` (sem o D1, com a mesma troca do `caixa_ordem.gd`), em LF. As linhas TABELA
+  continuam iguais byte a byte às da 2.ª corrida.
+  - F78: o `_repor` repõe também o cursor da arena, no (−1, −1) com que ela nasce, e a partida passa a ser neutra. Só
+    nos casos em que a preparação abre o Mover a `PARTIDA` traz o cursor na casa dela, que é onde a arena o põe.
+  - F79: a gaveta escreve «à vista, do Mover» (era «de o Mover»).
+  - F81: a `MEDIDA PINÇA A DESLOCAR` traz o rumo e a inclinação, e em todos os casos as linhas saem pela ordem `PARTIDA`,
+    `DEPOIS` e `MEDIDA`. Os logs passam a LF.
+  - `medicao/resumo-f78.txt` escreve-se com `bash ferramentas/resumo_f78.sh <raiz-do-repo> <rc-ponta> <rc-sem-d1> <partida>`.
+    Ver `ESTADO-FINAL-ORDEM-F78-F79-F81-F82-FERRAMENTA-D1.md`, na raiz.
+  - Os logs mais antigos (F28, F61, F64) ficam como foram cometidos, em CRLF.
 
 Para correr (Godot 4.7.2; num clone novo, faz antes o `--import`):
 
     godot --headless --path rascunhos/cliente --import
     godot --headless --path rascunhos/cliente -s "$PWD/provas/ordem-f28-custo-d1-hud/ferramentas/medir_custo_d1_hud.gd"
+
+No Windows, o Godot escreve CRLF. Desde a F81, o log guarda-se em LF, com a saída a passar por `tr -d '\r'`
+(`… 2>&1 | tr -d '\r' > log`, com o rc tirado de `${PIPESTATUS[0]}`).
 
 Não usa servidor nem PIN.
