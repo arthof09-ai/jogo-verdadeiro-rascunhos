@@ -94,7 +94,15 @@ não lêem estes registos. O CI do §4 confirma-as.
 
 ## 4. CI da ponta
 
-(Acrescentado no commit da nota do CI.)
+**CI da ponta `dd16afe`** (a obra mais este ESTADO-FINAL): **verde**.
+- **Testes dos rascunhos**, run `45105083910`: os 10 jobs passaram (`servidor`, `validador-glb`, `motor-real`,
+  `protocolo`, `cliente`, `godot-cliente`, `ponta-a-ponta`, `provas-mapa`, `foto-mestre`, `retoma-pc`).
+- **Sonda de privacidade**, run `45105083935`: verde.
+- **No job `cliente`**, o passo do canário deu «26 de 26 verificações passaram», o mesmo que cá. As suites
+  continuam com os números de antes: `rodar_testes` 321/321, `caixa_janela` 123/123 e `caixa_jogadora` 58/58.
+- O `retoma-pc` está verde, o que confirma que as listas da retoma batem certo.
+
+Este commit só acrescenta texto a este ficheiro.
 
 ## 5. Privacidade re-derivada
 
