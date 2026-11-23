@@ -57,6 +57,7 @@ de todos os casos de um ecrã, depois da jogada típica.
 
 ### L3 — o estado de partida fica registado
 - **Antes do gesto medido, uma linha `PARTIDA <caso>` regista o estado.** Os campos são estes:
+  **Errata do coordenador (F80, 23/11/2026): a PARTIDA é pós-preparação, antes do gesto medido — não «antes do caso».**
   - a caixa (compacta, expandida, ou expandida por toque);
   - o modo da arena;
   - a gaveta (fechada ou à vista, e de que modo);
@@ -203,11 +204,12 @@ Na coluna dos nomes inteiros conta-se um achado cujo pedaço tem o comprimento d
    pode querer a casa como linha TABELA ou outro estado de partida.
 2. **A casa não entrou na TABELA.** A ordem pede uma linha MEDIDA e, ao mesmo tempo, «as mesmas tabelas da F28». Escolhi
    a leitura que não muda a tabela: a casa tem a sua linha MEDIDA e aparece no `resumo-f64.txt`, mas a TABELA continua
-   com 62 linhas. Pô-la na TABELA é uma decisão do coordenador.
+   com 62 linhas. **Decisão do coordenador (F77, 23/11/2026): a casa fica FORA da TABELA** — a comparabilidade 62↔62 vale mais; o conteúdo está nas linhas `MEDIDA CASA` e no `resumo-f64.txt`.
 3. **«A figura seleccionada» não existe no cliente.** Registo a figura dela, o modo da arena e o cursor. Se a sentença
    quiser outra coisa com este nome (por exemplo, o alvo escolhido no Ataque), é preciso dizer qual.
+   **Decisão do coordenador (F83, 23/11/2026): «figura seleccionada» fica pelo substituto** (figura dela + modo + cursor), com a ressalva registada — se a sentença da F28 quiser dizer «alvo no Ataque», reabre-se como trabalho novo.
 4. **O cursor passa de um caso para o seguinte** (§3). Repô-lo no `_repor` seria mudar a reposição entre casos, que é da
-   F61, e a ordem diz para não a repetir. Fica para decidir: não muda nenhuma medida, mas torna a partida menos neutra.
+   F61, e a ordem diz para não a repetir. **Decisão do coordenador (F78, 23/11/2026): a partida do cursor fica registada como não-neutra** (10/100 PARTIDA com (6, 11) residual); repô-lo no `_repor` (uma linha) fica para a próxima ordem que mexer na ferramenta.
 5. **A pinça a deslocar é um gesto novo.** Escolhi um meio que anda 60 u, para o controlo dar um número grande. Os
    valores (22 u e 2 u por passo) são meus, e não vêm de nenhum aparelho.
 6. **Este PC não tem ecrã de toque.** Como na F28, os toques são os que o motor recebe de um aparelho.
