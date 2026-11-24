@@ -27,14 +27,14 @@ O que está aqui, por ordem de data. O relatório é o `ESTADO-FINAL-ORDEM-F3.md
 Para correr de novo (no PC, Git Bash, com o projecto do cliente importado):
 
 ```
-GODOT=/c/Users/txcga/godot-472/Godot_v4.7.2-stable_win64.exe
+GODOT=<o caminho do teu Godot 4.7.2 no teu PC>
 GARGS="--fixed-fps 2001" bash provas/ordem-f3/ferramentas/medir-ponta.sh sem    <pasta> 2
 GARGS="--fixed-fps 2001" bash provas/ordem-f3/ferramentas/medir-ponta.sh padrao <pasta> 2
 bash provas/ordem-f3/ferramentas/cinco-seguidas-ponta.sh <pasta>
 ```
 
 **Porquê 2001 fps e não 3001, como em 21/11.** Com 3001 fps fixos, o passo de 1,5 m esgotava os 10 s de relógio da
-espera do «assente». São 750 frames de tween, e a arena da ponta desenha cada frame mais devagar do que a de 21/11.
+espera do «assente». São 750 frames de tween. A tentativa a 3001 fps não chegou ao fim (a 1.ª verificação falhou por tempo esgotado na espera do «assente»); o registo não foi guardado, por isso a afirmação não se pode conferir a partir das provas.
 Com 2001 fps:
 - o tween de 0,25 s dura 500,25 frames;
 - o frame 500 cai 0,125 ms antes do fim, dentro da janela de 1e-3 m dos passos de 1,5 m e de 1 m;

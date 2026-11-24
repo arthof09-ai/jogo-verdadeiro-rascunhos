@@ -1,7 +1,7 @@
 ## Corridas lado a lado — primeira × ci: números 461/461 iguais, bits 73/73 iguais (bits só registados)
 
 - **primeira**: `provas/ordem-mapa-jogavel/provas-bancada`
-- **ci**: `C:/Users/txcga/RPG_Local/jogo-verdadeiro/ordem-f3-antes-determinista-pc/cinco-ponta/r3/ci`
+- **ci**: `cinco-ponta/r3/ci`
 
 ### Números (o portão)
 

@@ -22,6 +22,7 @@ for k in 1 2 3 4 5; do
   C=0; bash provas/ordem-provas-mapa-corr9/ferramentas/correr-provas-mapa.sh "$O/ci" "$PC" > "$O/ci.out" 2>&1 || C=$?
   echo "   guião do CI: saída $C — $(grep terreno-original "$O/ci.out") — $(grep -h 'verificações passaram' "$O/ci/bancada-jogadora.log")"
   R=0; node provas/ordem-provas-mapa-corr9/ferramentas/comparar-corridas.mjs --md="$O/repeticao.md" primeira=provas/ordem-mapa-jogavel/provas-bancada ci="$O/ci" > "$O/repeticao.out" 2>&1 || R=$?
+  sed -i "s|$O/ci|r$k/ci|g" "$O/repeticao.md"  # redigir o caminho absoluto do PC no gerado
   echo "   comparador: saída $R — $(tail -1 "$O/repeticao.out")"
   echo "   bancada padrão: $(node "$AQUI/resumir-jogadora.mjs" "$(win "$O/bancada/bancada-jogadora.json")")"
   echo "   guião do CI:    $(node "$AQUI/resumir-jogadora.mjs" "$(win "$O/ci/bancada-jogadora.json")")"

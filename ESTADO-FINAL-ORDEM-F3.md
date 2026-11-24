@@ -13,7 +13,10 @@
    `73975d6` («o «antes» da bancada só se lê com os nós quietos»), e foi fundida na linha em `d6348d5` (21/11).
    - Faltavam na linha este ESTADO-FINAL e o README das provas. O relatório de então ficou só no clone desse dia.
    - Esta corrida **não muda nenhuma ferramenta da bancada**. Volta a medir a causa e a provar a correcção sobre a
-     ponta `3d8c187`, porque a arena e a bancada mudaram muito desde 21/11 (o lago maior, a F1, a F2 e a D-AUD-16).
+     ponta `3d8c187`, porque o mapa mudou desde 21/11 (é o que deixou a referência desactualizada — ver §4) e a arena
+     ganhou a câmara que segue a figura (F1) e o arranque directo no ecrã do Mestre (D-AUD-16). A bancada é
+     byte-idêntica desde `73975d6` e o tween de 0,25 s não mexeu — esta corrida é uma re-prova do mesmo mecanismo
+     sobre um mapa novo, não de um mecanismo novo.
 2. **A causa está medida e é a que a F2 escreveu.** A arena leva a figura ao pé da casa com um **tween linear de
    0,25 s** (`arena.gd:715-717`, sem mudança). O «assente» aceita o nó a ≤ 1e-3 m do pé, por isso um frame que caia no
    último ~0,1-0,25 ms do tween grava o «antes» ainda a deslizar.
@@ -53,23 +56,26 @@ Tudo em `provas/ordem-mapa-jogavel/provas-bancada/ferramentas/bancada_jogadora_m
 
 | ensaio | corridas | «assente» com o nó a deslizar | «antes» com resto (desvio ≠ exacto) |
 |---|---|---|---|
-| **forçado `--fixed-fps 2001`, `sem`** | 2 | 2 de 2. Passo de 1,5 m: resto z −0,000750 m. Passo de 1 m: −0,000500 m | **2 de 2**: `1 m` desvio (−0.25, **0.2507495880126953**) e `2 m` desvio (0, **0.000499725341796875**). 49/49 verificações passam: as verificações têm folga de meia casa e não o vêem, só o comparador |
+| **forçado `--fixed-fps 2001`, `sem`** | 2 | 2 de 2. Passo de 1,5 m: resto z −0,000750 m. Passo de 1 m: −0,000500 m | **2 de 2 (a mesma trajectória determinística repetida; c1 e c2 dão os mesmos números)**: `1 m` desvio (−0.25, **0.2507495880126953**) e `2 m` desvio (0, **0.000499725341796875**). 49/49 verificações passam: as verificações têm folga de meia casa e não o vêem, só o comparador |
 | **forçado `--fixed-fps 2001`, `padrao`** | 2 | 2 de 2, os mesmos restos. A espera demorou 3 frames | **0 de 2**: `1 m` (−0.25, 0.25) e `2 m` (0, 0), exactos |
 | natural, `sem` | 30 | 1, no passo de 2 m (resto z 0,00088 m) | 0. O «antes» do passo de 2 m já não se compara, porque não há fase depois |
 | natural, `padrao` | 30 | 4: 1,5 m (−0,000565), 2 m (0,000534), 1 m (−0,000792) e 2 m (0,000542) | **0 de 30** |
 | as 5 seguidas (§3), bancada padrão + guião do CI | 10 | 2: r1 bancada, passo de 2 m; r2 guião do CI, passo de 1 m (−0,000589) | **0 de 10** |
 
 **O que os números dizem:**
-- **A janela é real.** No PC, o «assente» apanhou o nó a deslizar em **7 de 210 passos** (3,3 %). Desses passos, 3
+- **A janela é real.** No PC, nas corridas naturais e nas cinco seguidas (70 corridas × 3 passos), o «assente» apanhou o nó a deslizar em **7 de 210 passos** (3,3 %). As 4 corridas forçadas a 2001 fps ficam de fora desta taxa e tiveram 8 restos em 12 passos. Desses passos, 3
   eram de 1,5 m ou de 1 m, que são os que alimentam um «antes» comparado. Sem a correcção, cada um desses 3 dava
   `NÃO SE REPETE` (460/461 nos números e 72/73 nos bits).
-  - Em 21/11 tinha sido 1 em 30 corridas no PC. No CI (Linux), os frames são mais curtos e tinha sido 2 em 4.
+  - Em 21/11 tinha sido 1 em 30 corridas no PC. No CI (Linux), os frames são mais curtos: houve 2 falhas com o defeito em 21/11 (08:07 e 08:37; extractos em `registos/`).
 - **A correcção apaga o resto inteiro.** O desvio sai exacto em todos os casos, forçados e naturais, em que o resto
   foi apanhado: as 2 forçadas, as 4 naturais e as 2 das cinco seguidas.
 - **Porque 2001 fps e não 3001, como em 21/11.** Com 3001 fps, o passo de 1,5 m esgotava os 10 s de relógio da espera
-  do «assente»: são 750 frames, e a arena da ponta desenha cada frame mais devagar. Com 2001 fps, o tween dura 500,25
+  do «assente»: são 750 frames. A tentativa a 3001 fps não chegou ao fim (a 1.ª verificação falhou por tempo esgotado na espera do «assente»); o registo não foi guardado, por isso a afirmação não se pode conferir a partir das provas. Com 2001 fps, o tween dura 500,25
   frames, o frame 500 cai 0,125 ms antes do fim, e as 49 verificações passam. O registo da tentativa a 3001 fps não
   entrou nas provas: a 1.ª verificação falhou por tempo, e com isso o «antes» de 1,5 m ficou lido a meio do caminho.
+
+Artefactos: só os JSON da c1 forçada estão cometidos; a c2 forçada e as 60 corridas naturais assentam só nas linhas
+dos `.log`.
 
 ## 3. As 5 corridas seguidas (`provas/ordem-f3/ponta-3d8c187/cinco-seguidas/`)
 
@@ -88,27 +94,35 @@ Correu das 04:19:07 às 04:35:47. O Godot é o 4.7.2.stable.official.ed1daf0bf (
 | r4 | idem | idem | **REPETE-SE 461/461, 73/73** | nenhum |
 | r5 | idem | idem | **REPETE-SE 461/461, 73/73** | nenhum |
 
+Lido só por si, o 5/5 prova pouco: com a taxa medida de restos em passos comparados (3 em 140, ≈ 2,1 %), cinco
+corridas limpas sairiam ≈ 81 % das vezes mesmo sem o conserto. O peso da prova está no §2 (a medição forçada, que
+mostra o resto e o seu desaparecimento) e no §4 (0 desvios em 321 runs do CI).
+
 O registo termina em `== fim 04:35:47 — 5/5 corridas com bancada 0, guião do CI 0 e REPETE-SE 461/461 e 73/73`.
+
+Nota: o `r4/bancada.out` trazia na 1.ª linha o erro do `grep` com o caminho absoluto do PC; essa linha foi apagada.
 
 ## 4. O CI desde a correcção (medido com `gh run list` / `gh run view`)
 
-- Desde a fusão `d6348d5` (21/11, 11:54 UTC) até à ponta `3d8c187`, houve **322 runs** do «Testes dos rascunhos», em
-  todos os ramos: **311 verdes e 11 vermelhos, todos à 1.ª tentativa** (nenhum `attempt > 1`).
-- Dos 11 vermelhos, 9 foram só em outros jobs: 7 com `retoma-pc`, 2 com `cliente` e 1 com `servidor` + `protocolo` (um
-  run pode ter mais de um).
-- Só **2** tiveram o `provas-mapa` vermelho: 44901330020 (`d6348d5`) e 44901395254 (`3a98be4`), os dois de
-  21/11 ~11:55 UTC.
-  - Deram 284/461, por causa do **terreno pós-LAGO**: `bloq. srv`, os marcos e a marca `água` das figuras. A referência
-    só foi regenerada depois, no `3c0c43a`.
-  - **Nos dois, os desvios saíram exactos**: `1 m` (−0.25, 0.25) e `2 m` (0, 0). O hash `jogadora: nós desenhados` foi
-    igual (`9efe237b91d09495`).
+- Desde a fusão `d6348d5` (21/11, 11:54 UTC) até ao run da própria ponta `3d8c187` inclusive (45340029866), houve
+  **322 runs** do «Testes dos rascunhos», em todos os ramos: **311 verdes e 11 vermelhos, todos à 1.ª tentativa**
+  (com corte na hora do commit da ponta são 321). Dos 11 vermelhos, 9 sem `provas-mapa` vermelho: 7 com `retoma-pc`,
+  2 com `cliente` e 1 com `servidor` + `protocolo` (44965513217, ficheiro de teste truncado noutro ramo). Os 2 com
+  `provas-mapa` vermelho falharam também `servidor` + `protocolo`, pela mesma asserção do terreno. No total da
+  janela: 17 falhas de job — `retoma-pc` 7, `cliente` 2, `servidor` 3, `protocolo` 3, `provas-mapa` 2. Nos dois,
+  os números deram 284/461 e os bits 25/73.
+- **Nos dois, os desvios saíram exactos**: `1 m` (−0.25, 0.25) e `2 m` (0, 0). O hash `jogadora: nós desenhados` foi
+  igual (`9efe237b91d09495`).
 - **Conclusão:** não houve nenhum desvio de «antes» no CI desde a correcção.
 
 ## 5. Porque a rota (a) e não a (b)
 
 1. **A (b) não chegava.** O mesmo resto entra também no campo de bits `jogadora: nós desenhados`, que é o hash de
-   `noXZ` e `antesXZ`. Nas duas falhas do CI de 21/11 esse campo deu 72/73. Uma tolerância só no campo dos números
-   deixava os bits a falhar, e a aceitação pede 73/73.
+   `noXZ` e `antesXZ`. Nas duas falhas pré-correcção do CI de 21/11 (08:07 e 08:37, extractos em
+   `provas/ordem-f3/registos/`) esse campo deu 72/73. O passo «Repetição» do CI corre o comparador sem `--bits`
+   (`.github/workflows/testes.yml:357`), por isso os bits são aí só registados — uma tolerância só nos números
+   deixaria o CI verde com bits 72/73. A aceitação da ordem pede 73/73 («Aceitação», l. 30: «5 corridas seguidas a
+   dar `REPETE-SE` 461/461 e 73/73»; §3 «Provar», l. 19).
 2. **A (a) remove a causa.** O «antes» passa a ser a posição final exacta do tween, que é o valor que a primeira
    corrida gravou. Com a (b), o número continuaria a variar e o comparador só passaria a fechar os olhos.
 3. **A (a) não toca no comparador.** A série K continua a morder sem mudar uma linha:
@@ -127,17 +141,18 @@ Entra só isto:
   `cinco-seguidas-ponta.sh`;
 - as provas em `provas/ordem-f3/ponta-3d8c187/`.
 
-Nada em `rascunhos/` muda. Mesmo assim, corri `python3 retoma-i0004/actualizar-listas.py` depois do commit: ver §7.
+Nada em `rascunhos/` muda. Mesmo assim, corri `retoma-i0004/actualizar-listas.py` com o Python 3.12 de
+`AppData\Local\Programs\Python` (este PC não tem `python3` no PATH) depois do commit: ver §7.
 
 Só se usaram as fichas fictícias de bancada.
 
 ## 7. Commits e CI
 
 - `7bca758`: as provas, as ferramentas de medição, o README e este ESTADO-FINAL.
-- Listas da retoma: corri `actualizar-listas.py` (Python 3.12; este PC não tem `python3` no PATH) depois do
-  `7bca758`. Deu «antes.txt: 38 · depois.txt: 434 · MANIFESTO: 477 ficheiros (0 novos, 0 tirados)» e a árvore ficou
-  limpa, por isso não há commit de listas. Nada em `rascunhos/` mudou.
-- O commit da nota do CI, a seguir a este.
+- Listas da retoma: corri `actualizar-listas.py` com o Python 3.12 de `AppData\Local\Programs\Python` (este PC
+  não tem `python3` no PATH) depois do `7bca758`. Deu 0 novos e 0 tirados, e a árvore ficou limpa, por isso não há
+  commit de listas. Nada em `rascunhos/` mudou. (Os números da corrida são palavra do executor, sem artefacto
+  nas provas.)
 
 ### Nota do CI (no `3a3497e`)
 
