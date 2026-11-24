@@ -76,7 +76,7 @@ Todas deram exit 0, com 0 `SCRIPT ERROR / Parse Error / Compile Error`.
 - `0ba3245`: listas da retoma sincronizadas com `retoma-i0004/actualizar-listas.py` (0 novos, 0 tirados). Só
   mudaram os 3 SHA dos ficheiros desta ordem, no `depois.txt` e no `MANIFESTO-SHA256.txt`. Corri o guião com o
   `python` (3.12), porque neste PC o `python3` é o atalho da Microsoft Store.
-- O commit das provas e deste ESTADO-FINAL não mexe em `rascunhos/`, por isso as listas não precisam de nova passagem.
+- `1198fe2`: provas e este ESTADO-FINAL. Não mexe em `rascunhos/`, por isso as listas não precisam de nova passagem.
 
 ## 5. Perímetro e privacidade
 
@@ -84,3 +84,10 @@ Todas deram exit 0, com 0 `SCRIPT ERROR / Parse Error / Compile Error`.
   retoma mudaram pelo guião da casa. O servidor, os workflows, os dados e a `main` ficaram como estavam.
 - O motor real das suites veio da pasta privada da bancada da D-AUD-01 (`MOTOR_MJS`, fora do repo). Não foi copiado.
 - Nomes: só os fictícios das fichas de teste. Tirei dos logs o caminho com o utilizador da máquina (`<sede>`).
+
+## Nota do CI
+
+- `1198fe2` (correcção + listas + provas + ESTADO-FINAL): **Testes dos rascunhos 45296800714: success**, com os 10
+  jobs verdes (servidor, validador-glb, motor-real, protocolo, cliente, godot-cliente, foto-mestre, provas-mapa,
+  ponta-a-ponta, retoma-pc), e **Sonda de privacidade 45296800662: success**. No log do CI: `pecas_mestre` 294 de 294,
+  com as 2 D-AUD-01-CORRECCOES-2 «ok», e `rodar_testes` 321 de 321. O `retoma-pc` passou à primeira.
