@@ -1,0 +1,11 @@
+#19 [ia,ataque,dano,estado] depois: rodada 2, vez Orc Verdadeiro Teste 1 | autor: rodada 2, vez Orc Verdadeiro Teste 1
+#15 [turno] depois: rodada 2, vez Orc Verdadeiro Teste 1 | autor: rodada 2, vez Heroína Teste
+#14 [ia,turno] depois: rodada 2, vez Heroína Teste | autor: rodada 1, vez Orc Verdadeiro Teste 1
+#12 [ia,ataque,dano,estado] depois: rodada 1, vez Orc Verdadeiro Teste 1 | autor: rodada 1, vez Orc Verdadeiro Teste 1
+#8 [ia,movimento] depois: rodada 1, vez Orc Verdadeiro Teste 1 | autor: rodada 1, vez Orc Verdadeiro Teste 1
+#6 [turno] depois: rodada 1, vez Orc Verdadeiro Teste 1 | autor: rodada 1, vez Heroína Teste
+#5 [colocacao] depois: rodada 1, vez Heroína Teste | autor: rodada 1, vez Heroína Teste
+#4 [colocacao,turno] depois: rodada 1, vez Heroína Teste | autor: rodada 0, vez —
+#2 [lobby] depois: rodada 0, vez — | autor: rodada 0, vez —
+#1 [entrada] depois: rodada 0, vez — | autor: rodada 0, vez —
+#0 [inicio] depois: rodada 0, vez — | autor: rodada 0, vez —

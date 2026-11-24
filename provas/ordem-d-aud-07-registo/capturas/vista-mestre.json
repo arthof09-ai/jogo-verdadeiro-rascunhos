@@ -1,0 +1,335 @@
+{
+ "v": 2,
+ "type": "MASTER_VIEW",
+ "roomId": "sala-teste",
+ "journalSeq": 21,
+ "fase": "combate",
+ "mapa": {
+  "largura": 20,
+  "altura": 20,
+  "casaM": 1.5
+ },
+ "figuras": [
+  {
+   "id": "fba2529d0fcfbedbf",
+   "nomePublico": "Heroína Teste",
+   "lado": "jogadora",
+   "x": 2,
+   "y": 2,
+   "orientacao": "S",
+   "visivel": "de_pe"
+  },
+  {
+   "id": "f0eca9c7df5e7493f",
+   "nomePublico": "Orc 1",
+   "lado": "criatura",
+   "x": 2,
+   "y": 3,
+   "orientacao": "S",
+   "visivel": "de_pe"
+  }
+ ],
+ "iniciativa": [
+  "fba2529d0fcfbedbf",
+  "f0eca9c7df5e7493f"
+ ],
+ "vezId": "fba2529d0fcfbedbf",
+ "rodada": 3,
+ "ambiente": {
+  "clima": null,
+  "luz": null
+ },
+ "fogo": {
+  "casas": [],
+  "aArder": []
+ },
+ "mestre": {
+  "figuras": [
+   {
+    "id": "fba2529d0fcfbedbf",
+    "fichaId": "heroina-teste",
+    "lado": "jogadora",
+    "colocada": true,
+    "x": 2,
+    "y": 2,
+    "orientacao": "S",
+    "casaInicial": {
+     "x": 2,
+     "y": 2
+    },
+    "vidaActual": 2798,
+    "paGasto": 0,
+    "vivo": true,
+    "caido": false,
+    "estadoMorte": null,
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "transformada": false,
+    "reacaoDisponivel": true,
+    "defendendo": false,
+    "modo": null,
+    "casaColocacao": {
+     "x": 2,
+     "y": 2,
+     "orientacao": "S",
+     "ordem": 1
+    },
+    "nome": "Heroína Teste",
+    "nomePublico": "Heroína Teste",
+    "vidaTotal": 5150,
+    "paTotal": 4040,
+    "alturaM": 2.625,
+    "marcador": "marcador",
+    "verbos": null
+   },
+   {
+    "id": "f0eca9c7df5e7493f",
+    "fichaId": "orc-teste",
+    "lado": "criatura",
+    "colocada": true,
+    "x": 2,
+    "y": 3,
+    "orientacao": "S",
+    "casaInicial": null,
+    "vidaActual": 7777,
+    "paGasto": 0,
+    "vivo": true,
+    "caido": false,
+    "estadoMorte": null,
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "transformada": false,
+    "reacaoDisponivel": true,
+    "defendendo": false,
+    "modo": "auto",
+    "casaColocacao": {
+     "x": 2,
+     "y": 6,
+     "orientacao": "S",
+     "ordem": 2
+    },
+    "ordinal": 1,
+    "nome": "Orc Verdadeiro Teste 1",
+    "nomePublico": "Orc 1",
+    "vidaTotal": 7777,
+    "paTotal": 313,
+    "alturaM": 3.6,
+    "marcador": "marcador",
+    "verbos": {
+     "acerto": "desferiu o machado",
+     "falha": "tentou desferir o machado"
+    }
+   }
+  ],
+  "lobby": {
+   "mapaId": "arena-teste",
+   "criaturasDisponiveis": [
+    "orc-teste",
+    "lobo-teste"
+   ],
+   "npcsDisponiveis": [
+    "bandido-teste"
+   ]
+  },
+  "vez": {
+   "figuraId": "fba2529d0fcfbedbf",
+   "atacou": false,
+   "andouM": 0,
+   "reservaM": 9,
+   "correrUsado": false,
+   "desvinculou": false,
+   "cobertos": [],
+   "iaMoveu": false,
+   "iaPausada": false,
+   "recusas": 0,
+   "intencoes": 0
+  },
+  "ambiente": {
+   "hora": null,
+   "clima": null,
+   "futuro": null,
+   "raios": false,
+   "raioPendente": false,
+   "raioPedidoRodada": 0
+  },
+  "fogo": {
+   "casas": [],
+   "aArder": []
+  },
+  "cartoes": [],
+  "pausa": null,
+  "marchaLivreRodada": null
+ },
+ "pontos": [
+  {
+   "journalSeq": 19,
+   "ts": "2026-11-06T20:00:05.000Z",
+   "fase": "combate",
+   "rodada": 2,
+   "vezId": "f0eca9c7df5e7493f",
+   "autorId": "f0eca9c7df5e7493f",
+   "rodadaAutor": 2,
+   "tipos": [
+    "ia",
+    "ataque",
+    "dano",
+    "estado"
+   ]
+  },
+  {
+   "journalSeq": 15,
+   "ts": "2026-11-06T20:00:04.750Z",
+   "fase": "combate",
+   "rodada": 2,
+   "vezId": "f0eca9c7df5e7493f",
+   "autorId": "fba2529d0fcfbedbf",
+   "rodadaAutor": 2,
+   "tipos": [
+    "turno"
+   ]
+  },
+  {
+   "journalSeq": 14,
+   "ts": "2026-11-06T20:00:04.250Z",
+   "fase": "combate",
+   "rodada": 2,
+   "vezId": "fba2529d0fcfbedbf",
+   "autorId": "f0eca9c7df5e7493f",
+   "rodadaAutor": 1,
+   "tipos": [
+    "ia",
+    "turno"
+   ]
+  },
+  {
+   "journalSeq": 12,
+   "ts": "2026-11-06T20:00:04.000Z",
+   "fase": "combate",
+   "rodada": 1,
+   "vezId": "f0eca9c7df5e7493f",
+   "autorId": "f0eca9c7df5e7493f",
+   "rodadaAutor": 1,
+   "tipos": [
+    "ia",
+    "ataque",
+    "dano",
+    "estado"
+   ]
+  },
+  {
+   "journalSeq": 8,
+   "ts": "2026-11-06T20:00:03.750Z",
+   "fase": "combate",
+   "rodada": 1,
+   "vezId": "f0eca9c7df5e7493f",
+   "autorId": "f0eca9c7df5e7493f",
+   "rodadaAutor": 1,
+   "tipos": [
+    "ia",
+    "movimento"
+   ]
+  },
+  {
+   "journalSeq": 6,
+   "ts": "2026-11-06T20:00:03.500Z",
+   "fase": "combate",
+   "rodada": 1,
+   "vezId": "f0eca9c7df5e7493f",
+   "autorId": "fba2529d0fcfbedbf",
+   "rodadaAutor": 1,
+   "tipos": [
+    "turno"
+   ]
+  },
+  {
+   "journalSeq": 5,
+   "ts": "2026-11-06T20:00:03.000Z",
+   "fase": "combate",
+   "rodada": 1,
+   "vezId": "fba2529d0fcfbedbf",
+   "autorId": "fba2529d0fcfbedbf",
+   "rodadaAutor": 1,
+   "tipos": [
+    "colocacao"
+   ]
+  },
+  {
+   "journalSeq": 4,
+   "ts": "2026-11-06T20:00:02.500Z",
+   "fase": "combate",
+   "rodada": 1,
+   "vezId": "fba2529d0fcfbedbf",
+   "autorId": null,
+   "rodadaAutor": 0,
+   "tipos": [
+    "colocacao",
+    "turno"
+   ]
+  },
+  {
+   "journalSeq": 2,
+   "ts": "2026-11-06T20:00:02.000Z",
+   "fase": "lobby",
+   "rodada": 0,
+   "vezId": null,
+   "autorId": null,
+   "rodadaAutor": 0,
+   "tipos": [
+    "lobby"
+   ]
+  },
+  {
+   "journalSeq": 1,
+   "ts": "2026-11-06T20:00:01.250Z",
+   "fase": "lobby",
+   "rodada": 0,
+   "vezId": null,
+   "autorId": null,
+   "rodadaAutor": 0,
+   "tipos": [
+    "entrada"
+   ]
+  },
+  {
+   "journalSeq": 0,
+   "ts": null,
+   "fase": "lobby",
+   "rodada": 0,
+   "vezId": null,
+   "autorId": null,
+   "rodadaAutor": 0,
+   "tipos": [
+    "inicio"
+   ]
+  }
+ ],
+ "avisoMotor": null,
+ "selo": null,
+ "estatisticas": {
+  "eventos": 21,
+  "rodada": 3,
+  "ataques": {
+   "f0eca9c7df5e7493f": 2
+  },
+  "danoCausado": {
+   "f0eca9c7df5e7493f": 2352
+  },
+  "danoSofrido": {
+   "fba2529d0fcfbedbf": 2352
+  },
+  "cartoes": {}
+ },
+ "ordemDinamica": {
+  "ordem": [
+   "f0eca9c7df5e7493f"
+  ],
+  "fechada": false,
+  "ultimo": "f0eca9c7df5e7493f"
+ },
+ "caixaMestre": {
+  "ligada": true,
+  "modo": "dinamico"
+ }
+}
