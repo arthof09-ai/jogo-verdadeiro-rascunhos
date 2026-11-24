@@ -1,0 +1,97 @@
+# comando: (cd rascunhos/cliente && <godot> --headless --path . -s testes/abrir_mestre.gd)
+# hora: início 2026-11-24 12:08:10 -0300
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Unicode parsing error, some characters were replaced with � (U+FFFD): Unexpected NUL character
+  ok    a fixture do servidor lê-se
+  ok    a cena do Mestre carrega
+== recusa noutro papel ==
+ecrã do Mestre recusado: papel «jogadora»
+  ok    com o papel jogadora a cena recusa e sai
+== Mestre ==
+[floresta] pronta em 2502 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":2502,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+  ok    com o papel mestre a cena abre
+  ok    pede a MASTER_VIEW ao abrir
+  ok    aviso da 1.ª entrada visível fora da batalha
+  ok    «Entendido» esconde o aviso
+  ok    uma linha por figura do Mestre (4)
+  ok    o orc com nome verdadeiro e número, vida a/b e PA a/b (L1, D-AUD-12)
+  ok    a heroína com a vida total
+  ok    ambiente: hora exacta e o que a Party vê
+  ok    título do cartão de desgraça
+  ok    mostra a frase que a Party vai ler
+  ok    botões (sem «Sem desgraça»: no site a rolagem não se deita fora): ["Confirmar", "Escolher outra"]
+  ok    nada se decide por tempo (120 quadros, zero comandos)
+  ok    recusar a desgraça não existe (regra-mãe: vale o site)
+  ok    «Escolher outra» abre a lista por cima da coluna 2
+  ok    a lista é a do cartão (L2)
+  ok    uma desgraça fora da lista não sai
+  ok    editar → MASTER_APPROVE editar {desgraca: cai}
+  ok    com um comando em voo, os botões não mandam outro
+  ok    Confirmar → MASTER_APPROVE aprovar
+  ok    a recusa do servidor vai para os alertas
+  ok    o mesmo cartão a chegar outra vez não se duplica
+  ok    cartão de IA com a razão
+  ok    marcha pura: o primeiro botão é «Continuar a rodada» (L6)
+  ok    «Escolher outra» da IA ligado (L10)
+  ok    «Jogo eu» (dois toques) → recusar
+  ok    dados: Confirmar → MASTER_CONFIRM_DICE aceitar
+  ok    progresso: «Encerrar a vez» → aprovar
+  ok    o cartão sai quando o servidor o fecha
+  ok    a lista do cartão tem o «acerta-amigo»
+  ok    com dois amigos, «Acerta um amigo» pergunta qual (do mais perto) ["f0c1870b843e1465f", "f1a88a9eef918a8b4"]
+  ok    um amigo fora da lista do cartão não sai
+  ok    o amigo escolhido → MASTER_APPROVE editar {acerta-amigo, aliadoAtingidoId}
+  ok    com um só amigo, não há pergunta (vale o mais perto)
+  ok    a lista do «Escolher outra» tem «Não acontece nada»
+  ok    «Não acontece nada» fica depois das desgraças da tabela e antes do «Voltar»
+  ok    não é uma linha da tabela
+  ok    «Não acontece nada» → MASTER_APPROVE recusar {semDesgraca: true}
+  ok    a lista fecha depois da escolha
+  ok    noutro cartão (progresso) o «nada» não manda nada
+  ok    a aba Sala mostra a escala actual (Escala: 1,5 m por casa)
+  ok    com a mesma escala, «Mudar a escala» fica desligado
+  ok    + três vezes: pára em 2 m por casa (ordem 11: só 1 / 1,5 / 2)
+  ok    primeiro toque: só pede confirmação («Sim, mudar para 2 m»)
+  ok    segundo toque → MASTER_SUPERVISOR escala {casaM: 2}
+  ok    a escala do ecrã não desce de 1 m (ordem 11)
+  ok    − e + andam só pelos valores que valem: 1 → 1,5
+  ok    nenhum texto visível com «prime» ou «carregar» []
+[floresta] pronta em 64 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":64,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+  ok    o aviso da 1.ª entrada não volta depois de «Entendido»
+== o pedido da vista que não saiu volta a ser pedido (ordem 35) ==
+  ok    com a janela de 10 envios/s cheia, a Rede diz que o pedido da vista não saiu
+  ok    e não gastou mais nada da janela
+[floresta] pronta em 58 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":58,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+  ok    ao abrir: o pedido que não saiu volta a ser feito até sair (3 pedidos)
+  ok    depois de sair, não há mais pedidos à espera
+  ok    depois de um evento: o pedido que não saiu volta a ser feito até sair (3 pedidos)
+  ok    e pára quando sai
+== o pedido da vista tem tecto e, ao fim dele, uma falha nomeada (ordem 49) ==
+  ok    o tecto é de 40 tentativas (40 × 0,25 s = 10 s): 40
+[floresta] pronta em 60 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":60,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+WARNING: MASTER_VIEW: vista_sem_pedido — o pedido não saiu 40 vezes seguidas (10 s); parei
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _tentar_vista (res://cenas/mestre/mestre.gd:291)
+       [1] _process (res://cenas/mestre/mestre.gd:244)
+       [2] _correr (res://testes/abrir_mestre.gd:362)
+  ok    falha permanente: a nova tentativa pára no tecto (40 pedidos; sem tecto seriam 201)
+  ok    ao fim do tecto não fica nenhum pedido à espera (nem ciclo)
+  ok    ao fim do tecto a falha tem nome: «vista_sem_pedido»
+  ok    e vai ao Mestre num alerta, um só: ["A vista da mesa não se pediu (40 tentativas). Toque em «Atualizar»."]
+  ok    depois do tecto, um evento dá-lhe uma tentativa só e nenhum alerta novo (1 pedidos)
+WARNING: MASTER_VIEW: vista_sem_pedido — o pedido não saiu 40 vezes seguidas (10 s); parei
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _tentar_vista (res://cenas/mestre/mestre.gd:291)
+       [1] _process (res://cenas/mestre/mestre.gd:244)
+       [2] _correr (res://testes/abrir_mestre.gd:378)
+  ok    «Atualizar» recomeça a conta: outra vez 40 pedidos e o alerta (40 pedidos)
+  ok    o pedido que sai na 40.ª tentativa chega: sem falha, sem alerta (40 pedidos)
+  ok    o pedido que sai à 1.ª: um pedido só, sem falha (1)
+== o mapa da mesma grelha não se constrói outra vez (ordem 54) ==
+  ok    4 aberturas do ecrã do Mestre: 1 mapa construído, 3 vestidos do molde ({ "guardados": 1, "vestidos": 3 })
+
+67 de 67 verificações passaram.
+# hora: fim 2026-11-24 12:08:20 -0300 rc=0

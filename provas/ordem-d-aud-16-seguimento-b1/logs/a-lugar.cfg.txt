@@ -1,0 +1,7 @@
+[lugar]
+
+servidor="ws://127.0.0.1:8790/ws"
+roomId="sala-ficticia"
+seatId="lugar-ficticio"
+seatToken=""
+papel="mestre"

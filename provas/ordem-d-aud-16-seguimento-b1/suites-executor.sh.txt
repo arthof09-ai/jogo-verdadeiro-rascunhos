@@ -1,0 +1,33 @@
+#!/bin/bash
+# ORDEM-D-AUD-16-SEGUIMENTO-B1: as suites do PC. Cada log abre com «# comando:» (a linha exacta, com <godot> = Godot 4.7.2
+# win64 e o directório de trabalho) e «# hora:» (início e fim).
+S=<sede>
+R=$S/repo; C=$R/rascunhos/cliente; O=$R/provas/ordem-d-aud-16-seguimento-b1/suites
+G=<godot>
+mkdir -p $O; rm -f $O/*.log $O/RESUMO.txt
+RES=$O/RESUMO.txt
+echo "# comando: bash tmp/suites.sh   (o executor desta ordem; cada log abaixo traz a sua linha «# comando:»)" > $RES
+echo "# hora: início $(date '+%Y-%m-%d %H:%M:%S %z')" >> $RES
+erros() { grep -cE "SCRIPT ERROR|Parse Error|Compile Error" "$1"; }
+for s in abrir_scripts rodar_testes abrir_clareira medir_painel_config abrir_mestre pecas_mestre medir_mestre hud_acoes caixa_jogadora caixa_janela canario_privacidade camera_segue; do
+  L=$O/$s.log
+  { echo "# comando: (cd rascunhos/cliente && <godot> --headless --path . -s testes/$s.gd)"; echo "# hora: início $(date '+%Y-%m-%d %H:%M:%S %z')"; } > $L
+  (cd $C && timeout 900 $G --headless --path . -s testes/$s.gd) >> $L 2>&1; rc=$?
+  echo "# hora: fim $(date '+%Y-%m-%d %H:%M:%S %z') rc=$rc" >> $L
+  fim=$(grep -E "verificações passaram|scripts, [0-9]+ falhas|falha\(s\), [0-9]+ sem medida" $L | tail -1)
+  echo "$s rc=$rc erros_script=$(erros $L) | $fim" >> $RES
+done
+# arranque da cena principal, sem lugar (user:// vazio), como o passo do CI
+rm -rf $S/tmp/appdata-arranque; mkdir -p $S/tmp/appdata-arranque
+L=$O/arranque.log
+{ echo "# comando: (cd rascunhos/cliente && APPDATA=<tmp vazio> <godot> --headless --path . --quit-after 600)   (sem lugar guardado)"; echo "# hora: início $(date '+%Y-%m-%d %H:%M:%S %z')"; } > $L
+(cd $C && APPDATA="$(cygpath -w $S/tmp/appdata-arranque)" timeout 200 $G --headless --path . --quit-after 600) >> $L 2>&1; rc=$?
+echo "# hora: fim $(date '+%Y-%m-%d %H:%M:%S %z') rc=$rc" >> $L
+echo "arranque rc=$rc pronto=$(grep -c '^pronto$' $L) erros_script=$(erros $L)   (2 «pronto» esperados sem lugar: arena.gd:171 e lobby.gd:84 — ver o ESTADO-FINAL da D-AUD-16-SEGUIMENTO §4)" >> $RES
+L=$O/servidor.log
+{ echo "# comando: (cd rascunhos/servidor && node --test testes/*.test.mjs)"; echo "# hora: início $(date '+%Y-%m-%d %H:%M:%S %z')"; } > $L
+(cd $R/rascunhos/servidor && node --test testes/*.test.mjs) >> $L 2>&1; rc=$?
+echo "# hora: fim $(date '+%Y-%m-%d %H:%M:%S %z') rc=$rc" >> $L
+echo "servidor rc=$rc $(grep -E '^ℹ (tests|pass|fail) ' $L | tr '\n' ' ')" >> $RES
+echo "# hora: fim $(date '+%Y-%m-%d %H:%M:%S %z')" >> $RES
+echo FIM >> $RES

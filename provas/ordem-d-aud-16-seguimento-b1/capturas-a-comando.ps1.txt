@@ -1,0 +1,24 @@
+# comando: o bloco abaixo, corrido pelo agente da sessão 1 (tmp/s1-agente.ps1, cópia do da D-AUD-16-SEGUIMENTO-B com a sede desta ordem; $sede = a pasta desta ordem no PC)
+# ORDEM-D-AUD-16-SEGUIMENTO-B1, corrida a: o recipe da ordem: arranque directo, lugar do Mestre SEM token, servidor fora do ar, código sem mudanças
+Add-Type -Namespace W -Name S5 -MemberDefinition '[DllImport("user32.dll")] public static extern bool SetWindowPos(System.IntPtr h, System.IntPtr a, int x, int y, int cx, int cy, uint f); [DllImport("user32.dll")] public static extern bool ShowWindow(System.IntPtr h, int c); [DllImport("user32.dll")] public static extern bool IsIconic(System.IntPtr h);' -ErrorAction SilentlyContinue
+function Mostrar() { if ([W.S5]::IsIconic($script:M)) { [W.S5]::ShowWindow($script:M, 9) | Out-Null; [W.S5]::SetWindowPos($script:M, [IntPtr](-1), 0, 40, 976, 579, 0x40) | Out-Null; Start-Sleep -Milliseconds 500; return '(estava minimizada: reposta) ' }; return '' }
+$cliente = "$sede\repo\rascunhos\cliente"
+$godot = '<godot 4.7.2>'
+$antes = $env:APPDATA
+$env:APPDATA = "$sede\tmp\appdata-a"
+$t0 = Get-Date
+"arranque: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz')"
+$p = Start-Process -FilePath $godot -ArgumentList @('--path', "`"$cliente`"", '--windowed', '--resolution', '960x540', '--position', '0,40', '--', '--servidor=127.0.0.1:8790') -WindowStyle Normal -PassThru -WorkingDirectory $cliente
+$env:APPDATA = $antes
+"godot pid $($p.Id)"
+while (((Get-Date)-$t0).TotalSeconds -lt 8) { Start-Sleep -Milliseconds 200 }
+$script:M = JanelaDe $p.Id
+[W.S5]::ShowWindow($M, 9) | Out-Null  # o agente corre escondido: a janela do Godot nasce minimizada
+[W.S5]::SetWindowPos($M, [IntPtr](-1), 0, 40, 976, 579, 0x40) | Out-Null
+while (((Get-Date)-$t0).TotalSeconds -lt 12) { Start-Sleep -Milliseconds 200 }
+"a01 (t=$([int]((Get-Date)-$t0).TotalSeconds) s): $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz') $(Mostrar)$(Captura $M "$sede\tmp\cap\a01-lobby-12s.png")"
+while (((Get-Date)-$t0).TotalSeconds -lt 25) { Start-Sleep -Milliseconds 200 }
+"a02 (t=$([int]((Get-Date)-$t0).TotalSeconds) s): $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz') $(Mostrar)$(Captura $M "$sede\tmp\cap\a02-lobby-25s.png")"
+[W.S5]::SetWindowPos($M, [IntPtr](-2), 0, 0, 0, 0, 0x13) | Out-Null
+Stop-Process -Id $p.Id -Force
+"fechado: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz')"

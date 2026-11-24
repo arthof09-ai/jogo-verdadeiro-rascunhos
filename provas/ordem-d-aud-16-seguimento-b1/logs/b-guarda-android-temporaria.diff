@@ -1,0 +1,13 @@
+diff --git a/rascunhos/cliente/rede/rede.gd b/rascunhos/cliente/rede/rede.gd
+index 70f7e72..370622b 100644
+--- a/rascunhos/cliente/rede/rede.gd
++++ b/rascunhos/cliente/rede/rede.gd
+@@ -423,7 +423,7 @@ func _ligar() -> void:
+ 	var url := url_servidor()
+ 	# Ordem PLANO-2-F2 (JV2.1b): no Android o tráfego em claro só vai para a rede local. O Godot usa sockets nativos (o
+ 	# NetworkSecurityPolicy do Android não os filtra), por isso a guarda é aqui: ws:// para fora da rede local não liga.
+-	if OS.has_feature("android") and not url_permitida_no_android(url):
++	if true and not url_permitida_no_android(url):  # TEMPORÁRIO B1: a guarda do Android no PC (só na cópia de trabalho)
+ 		_ws = null
+ 		texto_ultimo_erro = "Este endereço não é da rede de casa. Peça ao Mestre o link certo."
+ 		_mudar_estado(Ligacao.DESLIGADA)

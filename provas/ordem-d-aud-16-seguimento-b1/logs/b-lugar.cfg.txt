@@ -1,0 +1,7 @@
+[lugar]
+
+servidor="ws://servidor-de-fora.example:8790/ws"
+roomId="sala-ficticia"
+seatId="lugar-ficticio"
+seatToken="token-ficticio-seguimento-b1"
+papel="mestre"
