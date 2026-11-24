@@ -87,10 +87,10 @@ Todas sem `SCRIPT ERROR` / `Parse Error` / `Compile Error`. Os registos estão e
 - [x] O cliente da jogadora continua em `arena.tscn` (`c01`, `pronto` no log), e o lobby dela não mudou.
 - [x] Os dois clientes estiveram abertos em simultâneo na bancada de rede (`c03`).
 - [x] Suites do PC verdes (§4).
-- [ ] CI verde (Testes + Sonda): ver a nota do CI.
+- [x] CI verde (Testes + Sonda): ver a nota do CI.
 - [x] Listas da retoma sincronizadas depois do commit em `rascunhos/` (`97dc8c1`: 0 novos, 0 tirados).
 - [x] A C-7 não foi decidida. A predefinição é reversível e a linha da reversão está no §2.
 
 ## Nota do CI
 
-(por preencher depois do push)
+No `a2c3c83` (código, listas, provas e este ESTADO-FINAL): **Testes dos rascunhos 45339473687: success** (os 10 jobs, incluindo `cliente`, `godot-cliente`, `ponta-a-ponta`, `foto-mestre` e `retoma-pc`) · **Sonda de privacidade 45339473715: success**.
