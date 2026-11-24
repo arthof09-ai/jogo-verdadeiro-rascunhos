@@ -1,0 +1,15 @@
+✔ dados da expressão: a gramática do motor (NdM(+NdM)* com bónus; objecto decomposto) (1.2495ms)
+✔ intervalo face a face: d20 do ataque e d6 do dano (0.4144ms)
+✔ o d100 da desgraça e o dano derivado (falha crítica) cabem; o resto dos dados segue o dano (0.095ms)
+✔ componentes, repartição e testes.ataque da ficha (0.1857ms)
+✔ na sala: um valor físico DENTRO do intervalo passa — o cartão de dados vai ao Mestre (20.5027ms)
+✔ na sala: um valor físico FORA do intervalo é recusado — sem cartão, sem vez gasta, o porquê só ao Mestre (9.4113ms)
+✔ na sala: a recusa fica gravada (o mesmo intentId devolve a mesma recusa, e a consulta dá RECUSADA) (2.7987ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 108.8425

@@ -1,0 +1,6 @@
+# ponta: bcf02d15cc0185b509a168c2ab49f8a2fbdfa312
+$ git grep -nE 'bonusTeste|CA\s*/\s*3|round\(\s*CA' -- rascunhos/cliente rascunhos/servidor/nucleo rascunhos/servidor/adaptadores   # aceite da JV1.1 (Plano A v1.1)
+achados: 0
+
+$ git grep -nE 'conferirFacesFisicas|FORA_DO_INTERVALO|dadosDaExpressao|faces?\s*(<|>|<=|>=)\s*[0-9]' -- 'rascunhos/cliente/*.gd'   # a validação do intervalo dos dados físicos não está no cliente
+achados: 0

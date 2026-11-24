@@ -1,0 +1,1331 @@
+VETORES-OURO {"passaram":457,"total":517,"percentagem":88.39,"porGrupo":{"01-ataque-normal":"96/96","02-ataque-critico":"44/44","03-falha-critica":"6/66","04-morte-3x3":"68/68","05-desvincular":"47/47","06-defender":"40/40","07-transformacao":"30/30","08-consumiveis":"24/24","09-acumulacao-dmg":"102/102"}}
+✔ vetores-ouro: o conjunto gravado tem 9 grupos, ≥ 20 casos por grupo e ≥ 500 no total (5.8481ms)
+✖ vetores-ouro: o motor do CI é o dos vetores (SHA-256) (4.4772ms)
+✖ vetores-ouro: 100 % dos casos reproduzem a saída gravada (278.8847ms)
+✖ vetores-ouro: duas corridas são byte-idênticas entre si e iguais aos ficheiros gravados (425.2055ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 1
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 800.5653
+
+✖ failing tests:
+
+test at testes-motor-real\vetores-ouro.test.mjs:36:1
+✖ vetores-ouro: o motor do CI é o dos vetores (SHA-256) (4.4772ms)
+  AssertionError [ERR_ASSERTION]: O motor vivo mudou. Regenerar com testes-motor-real/gerar-vetores.mjs e REVER a diferença (é divergência de regras).
+  + actual - expected
+  
+  + '41ffaba3d97733e8d381d19f2dacb448114127764ff00e35d07482be33a075c5'
+  - 'a91c021cda11df675c78c63277e6f2679faa79c716c7ba104373198689993261'
+  
+      at TestContext.<anonymous> (file:///<pasta-da-ordem>/repo/rascunhos/servidor/testes-motor-real/vetores-ouro.test.mjs:39:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '41ffaba3d97733e8d381d19f2dacb448114127764ff00e35d07482be33a075c5',
+    expected: 'a91c021cda11df675c78c63277e6f2679faa79c716c7ba104373198689993261',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at testes-motor-real\vetores-ouro.test.mjs:43:1
+✖ vetores-ouro: 100 % dos casos reproduzem a saída gravada (278.8847ms)
+  AssertionError [ERR_ASSERTION]: casos que não reproduzem
+  + actual - expected
+  
+  + [
+  +   {
+  +     esperado: {
+  +       contraAtaquePendente: null,
+  +       danoAplicado: null,
+  +       defesaUsada: {
+  +         nomeDaRegra: 'CA',
+  +         origem: 'alvo.ca — comparação base, sem reacção defensiva declarada (código original do VLAB)',
+  +         valor: 12
+  +       },
+  +       desgracaPendente: null,
+  +       erro: null,
+  +       pa: {
+  +         custo: 2,
+  +         exaustao: false,
+  +         paLivreAntes: 10,
+  +         paLivreDepois: 8
+  +       },
+  +       publico: {
+  +         recibo: '1d20+4 → [15] = 19 vs CA 12 → FALHACRITICA → FALHA CRÍTICA — Ele cai'
+  +       },
+  +       rdAplicada: null,
+  +       reacaoConsumida: false,
+  +       resultado: 'falhaCritica',
+  +       rolagem: {
+  +         ajusteVantagemDesvantagem: 0,
+  +         bonus: 4,
+  +         conjuntosDeFaces: [
+  +           [
+  +             15
+  +           ]
+  +         ],
+  +         escolhido: 19,
+  +         expressao: '1d20+4',
+  +         niveisLiquidos: 0,
+  +         resultados: [
+  +           19
+  +         ],
+  +         total: 19
+  +       },
+  +       soDoMestre: {
+  +         alvoDepois: {
+  +           estadosNovos: [],
+  +           estadosRemovidos: [],
+  +           vidaActual: 30
+  +         },
+  +         atacanteDepois: {
+  +           estadosNovos: [
+  +             'caido'
+  +           ]
+  +         },
+  +         efeitosAtacante: [],
+  +         falhaCritica: {
+  +           aplicado: true,
+  +           desgraca: {
+  +             gravidade: 1,
+  +             id: 'cai',
+  +             nome: 'Ele cai'
+  +           },
+  +           excluidas: [],
+  +           jaCaido: false,
+  +           modo: 'escolha',
+  +           rolagemDesgraca: null,
+  +           tabelaEfectiva: [
+  +             {
+  +               banda: [
+  +                 1,
+  +                 35
+  +               ],
+  +               gravidade: 1,
+  +               id: 'cai',
+  +               nome: 'Ele cai',
+  +               pesoOriginal: 35,
+  +               probabilidadeReal: 35
+  +             },
+  +             {
+  +               banda: [
+  +                 36,
+  +                 61
+  +               ],
+  +               gravidade: 2,
+  +               id: 'arma-cai',
+  +               nome: 'A arma cai',
+  +               pesoOriginal: 26,
+  +               probabilidadeReal: 26
+  +             },
+  +             {
+  +               banda: [
+  +                 62,
+  +                 78
+  +               ],
+  +               gravidade: 3,
+  +               id: 'acerta-amigo',
+  +               nome: 'Acerta um amigo sem querer',
+  +               pesoOriginal: 17,
+  +               probabilidadeReal: 17
+  +             },
+  +             {
+  +               banda: [
+  +                 79,
+  +                 94
+  +               ],
+  +               gravidade: 4,
+  +               id: 'acerta-se',
+  +               nome: 'Acerta-se a si próprio',
+  +               pesoOriginal: 16,
+  +               probabilidadeReal: 16
+  +             },
+  +             {
+  +               banda: [
+  +                 95,
+  +                 97
+  +               ],
+  +               gravidade: 5,
+  +               id: 'arma-quebra',
+  +               nome: 'A arma quebra',
+  +               pesoOriginal: 3,
+  +               probabilidadeReal: 3
+  +             },
+  +             {
+  +               banda: [
+  +                 98,
+  +                 100
+  +               ],
+  +               gravidade: 6,
+  +               id: 'quebra-corpo',
+  +               nome: 'Quebra parte do corpo',
+  +               pesoOriginal: 3,
+  +               probabilidadeReal: 3
+  +             }
+  +           ]
+  +         }
+  +       },
+  +       totalEfectivo: 0
+  +     },
+  +     id: '03-001',
+  +     veio: {
+  +       contraAtaquePendente: null,
+  +       danoAplicado: null,
+  +       defesaUsada: {
+  +         nomeDaRegra: 'CA',
+  +         origem: 'alvo.ca — comparação base, sem reacção defensiva declarada (código original do VLAB)',
+  +         valor: 12
+  +       },
+  +       desgracaPendente: null,
+  +       erro: null,
+  +       pa: {
+  +         custo: 2,
+  +         exaustao: false,
+  +         paLivreAntes: 10,
+  +         paLivreDepois: 8
+  +       },
+  +       publico: {
+  +         recibo: '1d20+4 → [15] = 19 vs CA 12 → FALHACRITICA → FALHA CRÍTICA — Ele cai'
+  +       },
+  +       rdAplicada: null,
+  +       reacaoConsumida: false,
+  +       resultado: 'falhaCritica',
+  +       rolagem: {
+  +         ajusteVantagemDesvantagem: 0,
+  +         bonus: 4,
+  +         conjuntosDeFaces: [
+  +           [
+  +             15
+  +           ]
+  +         ],
+  +         escolhido: 19,
+  +         expressao: '1d20+4',
+  +         niveisLiquidos: 0,
+  +         resultados: [
+  +           19
+  +         ],
+  +         total: 19
+  +       },
+  +       soDoMestre: {
+  +         alvoDepois: {
+  +           estadosNovos: [],
+  +           estadosRemovidos: [],
+  +           vidaActual: 30
+  +         },
+  +         atacanteDepois: {
+  +           estadosNovos: [
+  +             'caido'
+  +           ]
+  +         },
+  +         efeitosAtacante: [],
+  +         falhaCritica: {
+  +           aplicado: true,
+  +           desgraca: {
+  +             gravidade: 1,
+  +             id: 'cai',
+  +             nome: 'Ele cai'
+  +           },
+  +           excluidas: [],
+  +           jaCaido: false,
+  +           modo: 'escolha',
+  +           rolagemDesgraca: null,
+  +           tabelaEfectiva: [
+  +             {
+  +               banda: [
+  +                 1,
+  +                 34
+  +               ],
+  +               gravidade: 1,
+  +               id: 'cai',
+  +               nome: 'Ele cai',
+  +               pesoOriginal: 34,
+  +               probabilidadeReal: 34.3
+  +             },
+  +             {
+  +               banda: [
+  +                 35,
+  +                 61
+  +               ],
+  +               gravidade: 2,
+  +               id: 'arma-cai',
+  +               nome: 'A arma cai',
+  +               pesoOriginal: 26,
+  +               probabilidadeReal: 26.3
+  +             },
+  +             {
+  +               banda: [
+  +                 62,
+  +                 78
+  +               ],
+  +               gravidade: 3,
+  +               id: 'acerta-amigo',
+  +               nome: 'Acerta um amigo sem querer',
+  +               pesoOriginal: 17,
+  +               probabilidadeReal: 17.2
+  +             },
+  +             {
+  +               banda: [
+  +                 79,
+  +                 94
+  +               ],
+  +               gravidade: 4,
+  +               id: 'acerta-se',
+  +               nome: 'Acerta-se a si próprio',
+  +               pesoOriginal: 16,
+  +               probabilidadeReal: 16.2
+  +             },
+  +             {
+  +               banda: [
+  +                 95,
+  +                 97
+  +               ],
+  +               gravidade: 5,
+  +               id: 'arma-quebra',
+  +               nome: 'A arma quebra',
+  +               pesoOriginal: 3,
+  +               probabilidadeReal: 3
+  +             },
+  +             {
+  +               banda: [
+  +                 98,
+  +                 100
+  +               ],
+  +               gravidade: 6,
+  +               id: 'quebra-corpo',
+  +               nome: 'Quebra parte do corpo',
+  +               pesoOriginal: 3,
+  +               probabilidadeReal: 3
+  +             }
+  +           ]
+  +         }
+  +       },
+  +       totalEfectivo: 0
+  +     }
+  +   },
+  +   {
+  +     esperado: {
+  +       contraAtaquePendente: null,
+  +       danoAplicado: null,
+  +       defesaUsada: {
+  +         nomeDaRegra: 'CA',
+  +         origem: 'alvo.ca — comparação base, sem reacção defensiva declarada (código original do VLAB)',
+  +         valor: 12
+  +       },
+  +       desgracaPendente: null,
+  +       erro: null,
+  +       pa: {
+  +         custo: 0,
+  +         exaustao: false,
+  +         paLivreAntes: 10,
+  +         paLivreDepois: 10
+  +       },
+  +       publico: {
+  +         recibo: '1d20+2 → [6] = 8 vs CA 12 → FALHACRITICA → FALHA CRÍTICA — Ele cai'
+  +       },
+  +       rdAplicada: null,
+  +       reacaoConsumida: false,
+  +       resultado: 'falhaCritica',
+  +       rolagem: {
+  +         ajusteVantagemDesvantagem: 0,
+  +         bonus: 2,
+  +         conjuntosDeFaces: [
+  +           [
+  +             6
+  +           ]
+  +         ],
+  +         escolhido: 8,
+  +         expressao: '1d20+2',
+  +         niveisLiquidos: 0,
+  +         resultados: [
+  +           8
+  +         ],
+  +         total: 8
+  +       },
+  +       soDoMestre: {
+  +         alvoDepois: {
+  +           estadosNovos: [],
+  +           estadosRemovidos: [],
+  +           vidaActual: 30
+  +         },
+  +         atacanteDepois: {
+  +           estadosNovos: [
+  +             'caido'
+  +           ]
+  +         },
+  +         efeitosAtacante: [],
+  +         falhaCritica: {
+  +           aplicado: true,
+  +           desgraca: {
+  +             gravidade: 1,
+  +             id: 'cai',
+  +             nome: 'Ele cai'
+  +           },
+  +           excluidas: [
+  +             {
+  +               id: 'arma-cai',
+  +               motivo: 'o ataque não usa arma'
+  +             },
+  +             {
+  +               id: 'arma-quebra',
+  +               motivo: 'o ataque não usa arma'
+  +             }
+  +           ],
+  +           jaCaido: false,
+  +           modo: 'escolha',
+  +           rolagemDesgraca: null,
+  +           tabelaEfectiva: [
+  +             {
+  +               banda: [
+  +                 1,
+  +                 49
+  +               ],
+  +               gravidade: 1,
+  +               id: 'cai',
+  +               nome: 'Ele cai',
+  +               pesoOriginal: 35,
+  +               probabilidadeReal: 49.3
+  +             },
+  +             {
+  +               banda: [
+  +                 50,
+  +                 73
+  +               ],
+  +               gravidade: 3,
+  +               id: 'acerta-amigo',
+  +               nome: 'Acerta um amigo sem querer',
+  +               pesoOriginal: 17,
+  +               probabilidadeReal: 23.9
+  +             },
+  +             {
+  +               banda: [
+  +                 74,
+  +                 96
+  +               ],
+  +               gravidade: 4,
+  +               id: 'acerta-se',
+  +               nome: 'Acerta-se a si próprio',
+  +               pesoOriginal: 16,
+  +               probabilidadeReal: 22.5
+  +             },
+  +             {
+  +               banda: [
+  +                 97,
+  +                 100
+  +               ],
+  +               gravidade: 6,
+  +               id: 'quebra-corpo',
+  +               nome: 'Quebra parte do corpo',
+  +               pesoOriginal: 3,
+  +               probabilidadeReal: 4.2
+  +             }
+  +           ]
+  +         }
+  +       },
+  +       totalEfectivo: 0
+  +     },
+  +     id: '03-002',
+  +     veio: {
+  +       contraAtaquePendente: null,
+  +       danoAplicado: null,
+  +       defesaUsada: {
+  +         nomeDaRegra: 'CA',
+  +         origem: 'alvo.ca — comparação base, sem reacção defensiva declarada (código original do VLAB)',
+  +         valor: 12
+  +       },
+  +       desgracaPendente: null,
+  +       erro: null,
+  +       pa: {
+  +         custo: 0,
+  +         exaustao: false,
+  +         paLivreAntes: 10,
+  +         paLivreDepois: 10
+  +       },
+  +       publico: {
+  +         recibo: '1d20+2 → [6] = 8 vs CA 12 → FALHACRITICA → FALHA CRÍTICA — Ele cai'
+  +       },
+  +       rdAplicada: null,
+  +       reacaoConsumida: false,
+  +       resultado: 'falhaCritica',
+  +       rolagem: {
+  +         ajusteVantagemDesvantagem: 0,
+  +         bonus: 2,
+  +         conjuntosDeFaces: [
+  +           [
+  +             6
+  +           ]
+  +         ],
+  +         escolhido: 8,
+  +         expressao: '1d20+2',
+  +         niveisLiquidos: 0,
+  +         resultados: [
+  +           8
+  +         ],
+  +         total: 8
+  +       },
+  +       soDoMestre: {
+  +         alvoDepois: {
+  +           estadosNovos: [],
+  +           estadosRemovidos: [],
+  +           vidaActual: 30
+  +         },
+  +         atacanteDepois: {
+  +           estadosNovos: [
+  +             'caido'
+  +           ]
+  +         },
+  +         efeitosAtacante: [],
+  +         falhaCritica: {
+  +           aplicado: true,
+  +           desgraca: {
+  +             gravidade: 1,
+  +             id: 'cai',
+  +             nome: 'Ele cai'
+  +           },
+  +           excluidas: [
+  +             {
+  +               id: 'arma-cai',
+  +               motivo: 'o ataque não usa arma'
+  +             },
+  +             {
+  +               id: 'arma-quebra',
+  +               motivo: 'o ataque não usa arma'
+  +             }
+  +           ],
+  +           jaCaido: false,
+  +           modo: 'escolha',
+  +           rolagemDesgraca: null,
+  +           tabelaEfectiva: [
+  +             {
+  +               banda: [
+  +                 1,
+  +                 49
+  +               ],
+  +               gravidade: 1,
+  +               id: 'cai',
+  +               nome: 'Ele cai',
+  +               pesoOriginal: 34,
+  +               probabilidadeReal: 48.6
+  +             },
+  +             {
+  +               banda: [
+  +                 50,
+  +                 73
+  +               ],
+  +               gravidade: 3,
+  +               id: 'acerta-amigo',
+  +               nome: 'Acerta um amigo sem querer',
+  +               pesoOriginal: 17,
+  +               probabilidadeReal: 24.3
+  +             },
+  +             {
+  +               banda: [
+  +                 74,
+  +                 96
+  +               ],
+  +               gravidade: 4,
+  +               id: 'acerta-se',
+  +               nome: 'Acerta-se a si próprio',
+  +               pesoOriginal: 16,
+  +               probabilidadeReal: 22.9
+  +             },
+  +             {
+  +               banda: [
+  +                 97,
+  +                 100
+  +               ],
+  +               gravidade: 6,
+  +               id: 'quebra-corpo',
+  +               nome: 'Quebra parte do corpo',
+  +               pesoOriginal: 3,
+  +               probabilidadeReal: 4.3
+  +             }
+  +           ]
+  +         }
+  +       },
+  +       totalEfectivo: 0
+  +     }
+  +   },
+  +   {
+  +     esperado: {
+  +       contraAtaquePendente: null,
+  +       danoAplicado: null,
+  +       defesaUsada: {
+  +         nomeDaRegra: 'CA',
+  +         origem: 'alvo.ca — comparação base, sem reacção defensiva declarada (código original do VLAB)',
+  +         valor: 12
+  +       },
+  +       desgracaPendente: null,
+  +       erro: null,
+  +       pa: {
+  +         custo: 0,
+  +         exaustao: false,
+  +         paLivreAntes: 10,
+  +         paLivreDepois: 10
+  +       },
+  +       publico: {
+  +         recibo: '1d20+7 → [16] = 23 vs CA 12 → FALHACRITICA → FALHA CRÍTICA — Ele cai'
+  +       },
+  +       rdAplicada: null,
+  +       reacaoConsumida: false,
+  +       resultado: 'falhaCritica',
+  +       rolagem: {
+  +         ajusteVantagemDesvantagem: 0,
+  +         bonus: 7,
+  +         conjuntosDeFaces: [
+  +           [
+  +             16
+  +           ]
+  +         ],
+  +         escolhido: 23,
+  +         expressao: '1d20+7',
+  +         niveisLiquidos: 0,
+  +         resultados: [
+  +           23
+  +         ],
+  +         total: 23
+  +       },
+  +       soDoMestre: {
+  +         alvoDepois: {
+  +           estadosNovos: [],
+  +           estadosRemovidos: [],
+  +           vidaActual: 30
+  +         },
+  +         atacanteDepois: {
+  +           estadosNovos: [
+  +             'caido'
+  +           ]
+  +         },
+  +         efeitosAtacante: [],
+  +         falhaCritica: {
+  +           aplicado: true,
+  +           desgraca: {
+  +             gravidade: 1,
+  +             id: 'cai',
+  +             nome: 'Ele cai'
+  +           },
+  +           excluidas: [
+  +             {
+  +               id: 'acerta-amigo',
+  +               motivo: 'sem aliado adjacente ou na linha (o «se possível» do Mestre)'
+  +             }
+  +           ],
+  +           jaCaido: false,
+  +           modo: 'escolha',
+  +           rolagemDesgraca: null,
+  +           tabelaEfectiva: [
+  +             {
+  +               banda: [
+  +                 1,
+  +                 42
+  +               ],
+  +               gravidade: 1,
+  +               id: 'cai',
+  +               nome: 'Ele cai',
+  +               pesoOriginal: 35,
+  +               probabilidadeReal: 42.2
+  +             },
+  +             {
+  +               banda: [
+  +                 43,
+  +                 73
+  +               ],
+  +               gravidade: 2,
+  +               id: 'arma-cai',
+  +               nome: 'A arma cai',
+  +               pesoOriginal: 26,
+  +               probabilidadeReal: 31.3
+  +             },
+  +             {
+  +               banda: [
+  +                 74,
+  +                 93
+  +               ],
+  +               gravidade: 4,
+  +               id: 'acerta-se',
+  +               nome: 'Acerta-se a si próprio',
+  +               pesoOriginal: 16,
+  +               probabilidadeReal: 19.3
+  +             },
+  +             {
+  +               banda: [
+  +                 94,
+  +                 96
+  +               ],
+  +               gravidade: 5,
+  +               id: 'arma-quebra',
+  +               nome: 'A arma quebra',
+  +               pesoOriginal: 3,
+  +               probabilidadeReal: 3.6
+  +             },
+  +             {
+  +               banda: [
+  +                 97,
+  +                 100
+  +               ],
+  +               gravidade: 6,
+  +               id: 'quebra-corpo',
+  +               nome: 'Quebra parte do corpo',
+  +               pesoOriginal: 3,
+  +               probabilidadeReal: 3.6
+  +             }
+  +           ]
+  +         }
+  +       },
+  +       totalEfectivo: 0
+  +     },
+  +     id: '03-003',
+  +     veio: {
+  +       contraAtaquePendente: null,
+  +       danoAplicado: null,
+  +       defesaUsada: {
+  +         nomeDaRegra: 'CA',
+  +         origem: 'alvo.ca — comparação base, sem reacção defensiva declarada (código original do VLAB)',
+  +         valor: 12
+  +       },
+  +       desgracaPendente: null,
+  +       erro: null,
+  +       pa: {
+  +         custo: 0,
+  +         exaustao: false,
+  +         paLivreAntes: 10,
+  +         paLivreDepois: 10
+  +       },
+  +       publico: {
+  +         recibo: '1d20+7 → [16] = 23 vs CA 12 → FALHACRITICA → FALHA CRÍTICA — Ele cai'
+  +       },
+  +       rdAplicada: null,
+  +       reacaoConsumida: false,
+  +       resultado: 'falhaCritica',
+  +       rolagem: {
+  +         ajusteVantagemDesvantagem: 0,
+  +         bonus: 7,
+  +         conjuntosDeFaces: [
+  +           [
+  +             16
+  +           ]
+  +         ],
+  +         escolhido: 23,
+  +         expressao: '1d20+7',
+  +         niveisLiquidos: 0,
+  +         resultados: [
+  +           23
+  +         ],
+  +         total: 23
+  +       },
+  +       soDoMestre: {
+  +         alvoDepois: {
+  +           estadosNovos: [],
+  +           estadosRemovidos: [],
+  +           vidaActual: 30
+  +         },
+  +         atacanteDepois: {
+  +           estadosNovos: [
+  +             'caido'
+  +           ]
+  +         },
+  +         efeitosAtacante: [],
+  +         falhaCritica: {
+  +           aplicado: true,
+  +           desgraca: {
+  +             gravidade: 1,
+  +             id: 'cai',
+  +             nome: 'Ele cai'
+  +           },
+  +           excluidas: [
+  +             {
+  +               id: 'acerta-amigo',
+  +               motivo: 'sem aliado adjacente ou na linha (o «se possível» do Mestre)'
+  +             }
+  +           ],
+  +           jaCaido: false,
+  +           modo: 'escolha',
+  +           rolagemDesgraca: null,
+  +           tabelaEfectiva: [
+  +             {
+  +               banda: [
+  +                 1,
+  +                 41
+  +               ],
+  +               gravidade: 1,
+  +               id: 'cai',
+  +               nome: 'Ele cai',
+  +               pesoOriginal: 34,
+  +               probabilidadeReal: 41.5
+  +             },
+  +             {
+  +               banda: [
+  +                 42,
+  +                 73
+  +               ],
+  +               gravidade: 2,
+  +               id: 'arma-cai',
+  +               nome: 'A arma cai',
+  +               pesoOriginal: 26,
+  +               probabilidadeReal: 31.7
+  +             },
+  +             {
+  +               banda: [
+  +                 74,
+  +                 93
+  +               ],
+  +               gravidade: 4,
+  +               id: 'acerta-se',
+  +               nome: 'Acerta-se a si próprio',
+  +               pesoOriginal: 16,
+  +               probabilidadeReal: 19.5
+  +             },
+  +             {
+  +               banda: [
+  +                 94,
+  +                 96
+  +               ],
+  +               gravidade: 5,
+  +               id: 'arma-quebra',
+  +               nome: 'A arma quebra',
+  +               pesoOriginal: 3,
+  +               probabilidadeReal: 3.7
+  +             },
+  +             {
+  +               banda: [
+  +                 97,
+  +                 100
+  +               ],
+  +               gravidade: 6,
+  +               id: 'quebra-corpo',
+  +               nome: 'Quebra parte do corpo',
+  +               pesoOriginal: 3,
+  +               probabilidadeReal: 3.7
+  +             }
+  +           ]
+  +         }
+  +       },
+  +       totalEfectivo: 0
+  +     }
+  +   },
+  +   {
+  +     esperado: {
+  +       contraAtaquePendente: null,
+  +       danoAplicado: null,
+  +       defesaUsada: {
+  +         nomeDaRegra: 'CA',
+  +         origem: 'alvo.ca — comparação base, sem reacção defensiva declarada (código original do VLAB)',
+  +         valor: 12
+  +       },
+  +       desgracaPendente: null,
+  +       erro: null,
+  +       pa: {
+  +         custo: 2,
+  +         exaustao: false,
+  +         paLivreAntes: 10,
+  +         paLivreDepois: 8
+  +       },
+  +       publico: {
+  +         recibo: '1d20+4 → [14] = 18 vs CA 12 → FALHACRITICA → FALHA CRÍTICA — Ele cai'
+  +       },
+  +       rdAplicada: null,
+  +       reacaoConsumida: false,
+  +       resultado: 'falhaCritica',
+  +       rolagem: {
+  +         ajusteVantagemDesvantagem: 0,
+  +         bonus: 4,
+  +         conjuntosDeFaces: [
+  +           [
+  +             14
+  +           ]
+  +         ],
+  +         escolhido: 18,
+  +         expressao: '1d20+4',
+  +         niveisLiquidos: 0,
+  +         resultados: [
+  +           18
+  +         ],
+  +         total: 18
+  +       },
+  +       soDoMestre: {
+  +         alvoDepois: {
+  +           estadosNovos: [],
+  +           estadosRemovidos: [],
+  +           vidaActual: 30
+  +         },
+  +         atacanteDepois: {
+  +           estadosNovos: [
+  +             'caido'
+  +           ]
+  +         },
+  +         efeitosAtacante: [],
+  +         falhaCritica: {
+  +           aplicado: true,
+  +           desgraca: {
+  +             gravidade: 1,
+  +             id: 'cai',
+  +             nome: 'Ele cai'
+  +           },
+  +           excluidas: [
+  +             {
+  +               id: 'arma-cai',
+  +               motivo: 'o ataque não usa arma'
+  +             },
+  +             {
+  +               id: 'acerta-amigo',
+  +               motivo: 'sem aliado adjacente ou na linha (o «se possível» do Mestre)'
+  +             },
+  +             {
+  +               id: 'arma-quebra',
+  +               motivo: 'o ataque não usa arma'
+  +             }
+  +           ],
+  +           jaCaido: false,
+  +           modo: 'escolha',
+  +           rolagemDesgraca: null,
+  +           tabelaEfectiva: [
+  +             {
+  +               banda: [
+  +                 1,
+  +                 65
+  +               ],
+  +               gravidade: 1,
+  +               id: 'cai',
+  +               nome: 'Ele cai',
+  +               pesoOriginal: 35,
+  +               probabilidadeReal: 64.8
+  +             },
+  +             {
+  +               banda: [
+  +                 66,
+  +                 94
+  +               ],
+  +               gravidade: 4,
+  +               id: 'acerta-se',
+  +               nome: 'Acerta-se a si próprio',
+  +               pesoOriginal: 16,
+  +               probabilidadeReal: 29.6
+  +             },
+  +             {
+  +               banda: [
+  +                 95,
+  +                 100
+  +               ],
+  +               gravidade: 6,
+  +               id: 'quebra-corpo',
+  +               nome: 'Quebra parte do corpo',
+  +               pesoOriginal: 3,
+  +               probabilidadeReal: 5.6
+  +             }
+  +           ]
+  +         }
+  +       },
+  +       totalEfectivo: 0
+  +     },
+  +     id: '03-004',
+  +     veio: {
+  +       contraAtaquePendente: null,
+  +       danoAplicado: null,
+  +       defesaUsada: {
+  +         nomeDaRegra: 'CA',
+  +         origem: 'alvo.ca — comparação base, sem reacção defensiva declarada (código original do VLAB)',
+  +         valor: 12
+  +       },
+  +       desgracaPendente: null,
+  +       erro: null,
+  +       pa: {
+  +         custo: 2,
+  +         exaustao: false,
+  +         paLivreAntes: 10,
+  +         paLivreDepois: 8
+  +       },
+  +       publico: {
+  +         recibo: '1d20+4 → [14] = 18 vs CA 12 → FALHACRITICA → FALHA CRÍTICA — Ele cai'
+  +       },
+  +       rdAplicada: null,
+  +       reacaoConsumida: false,
+  +       resultado: 'falhaCritica',
+  +       rolagem: {
+  +         ajusteVantagemDesvantagem: 0,
+  +         bonus: 4,
+  +         conjuntosDeFaces: [
+  +           [
+  +             14
+  +           ]
+  +         ],
+  +         escolhido: 18,
+  +         expressao: '1d20+4',
+  +         niveisLiquidos: 0,
+  +         resultados: [
+  +           18
+  +         ],
+  +         total: 18
+  +       },
+  +       soDoMestre: {
+  +         alvoDepois: {
+  +           estadosNovos: [],
+  +           estadosRemovidos: [],
+  +           vidaActual: 30
+  +         },
+  +         atacanteDepois: {
+  +           estadosNovos: [
+  +             'caido'
+  +           ]
+  +         },
+  +         efeitosAtacante: [],
+  +         falhaCritica: {
+  +           aplicado: true,
+  +           desgraca: {
+  +             gravidade: 1,
+  +             id: 'cai',
+  +             nome: 'Ele cai'
+  +           },
+  +           excluidas: [
+  +             {
+  +               id: 'arma-cai',
+  +               motivo: 'o ataque não usa arma'
+  +             },
+  +             {
+  +               id: 'acerta-amigo',
+  +               motivo: 'sem aliado adjacente ou na linha (o «se possível» do Mestre)'
+  +             },
+  +             {
+  +               id: 'arma-quebra',
+  +               motivo: 'o ataque não usa arma'
+  +             }
+  +           ],
+  +           jaCaido: false,
+  +           modo: 'escolha',
+  +           rolagemDesgraca: null,
+  +           tabelaEfectiva: [
+  +             {
+  +               banda: [
+  +                 1,
+  +                 64
+  +               ],
+  +               gravidade: 1,
+  +               id: 'cai',
+  +               nome: 'Ele cai',
+  +               pesoOriginal: 34,
+  +               probabilidadeReal: 64.2
+  +             },
+  +             {
+  +               banda: [
+  +                 65,
+  +                 94
+  +               ],
+  +               gravidade: 4,
+  +               id: 'acerta-se',
+  +               nome: 'Acerta-se a si próprio',
+  +               pesoOriginal: 16,
+  +               probabilidadeReal: 30.2
+  +             },
+  +             {
+  +               banda: [
+  +                 95,
+  +                 100
+  +               ],
+  +               gravidade: 6,
+  +               id: 'quebra-corpo',
+  +               nome: 'Quebra parte do corpo',
+  +               pesoOriginal: 3,
+  +               probabilidadeReal: 5.7
+  +             }
+  +           ]
+  +         }
+  +       },
+  +       totalEfectivo: 0
+  +     }
+  +   },
+  +   {
+  +     esperado: {
+  +       contraAtaquePendente: null,
+  +       danoAplicado: null,
+  +       defesaUsada: {
+  +         nomeDaRegra: 'CA',
+  +         origem: 'alvo.ca — comparação base, sem reacção defensiva declarada (código original do VLAB)',
+  +         valor: 12
+  +       },
+  +       desgracaPendente: null,
+  +       erro: null,
+  +       pa: {
+  +         custo: 0,
+  +         exaustao: false,
+  +         paLivreAntes: 10,
+  +         paLivreDepois: 10
+  +       },
+  +       publico: {
+  +         recibo: '1d20+2 → [6] = 8 vs CA 12 → FALHACRITICA → FALHA CRÍTICA — A arma cai'
+  +       },
+  +       rdAplicada: null,
+  +       reacaoConsumida: false,
+  +       resultado: 'falhaCritica',
+  +       rolagem: {
+  +         ajusteVantagemDesvantagem: 0,
+  +         bonus: 2,
+  +         conjuntosDeFaces: [
+  +           [
+  +             6
+  +           ]
+  +         ],
+  +         escolhido: 8,
+  +         expressao: '1d20+2',
+  +         niveisLiquidos: 0,
+  +         resultados: [
+  +           8
+  +         ],
+  +         total: 8
+  +       },
+  +       soDoMestre: {
+  +         alvoDepois: {
+  +           estadosNovos: [],
+  +           estadosRemovidos: [],
+  +           vidaActual: 30
+  +         },
+  +         atacanteDepois: {
+  +           armaCaida: true,
+  +           custoRecuperacao: '1 accao de movimento'
+  +         },
+  +         efeitosAtacante: [],
+  +         falhaCritica: {
+  +           aplicado: true,
+  +           desgraca: {
+  +             gravidade: 2,
+  +             id: 'arma-cai',
+  +             nome: 'A arma cai'
+  +           },
+  +           excluidas: [],
+  +           modo: 'escolha',
+  +           rolagemDesgraca: null,
+  +           tabelaEfectiva: [
+  +             {
+  +               banda: [
+  +                 1,
+  +                 35
+  +               ],
+  +               gravidade: 1,
+  +               id: 'cai',
+  +               nome: 'Ele cai',
+  +               pesoOriginal: 35,
+  +               probabilidadeReal: 35
+  +             },
+  +             {
+  +               banda: [
+  +                 36,
+  +                 61
+  +               ],
+  +               gravidade: 2,
+  +               id: 'arma-cai',
+  +               nome: 'A arma cai',
+  +               pesoOriginal: 26,
+  +               probabilidadeReal: 26
+  +             },
+  +             {
+  +               banda: [
+  +                 62,
+  +                 78
+  +               ],
+  +               gravidade: 3,
+  +               id: 'acerta-amigo',
+  +               nome: 'Acerta um amigo sem querer',
+  +               pesoOriginal: 17,
+  +               probabilidadeReal: 17
+  +             },
+  +             {
+  +               banda: [
+  +                 79,
+  +                 94
+  +               ],
+  +               gravidade: 4,
+  +               id: 'acerta-se',
+  +               nome: 'Acerta-se a si próprio',
+  +               pesoOriginal: 16,
+  +               probabilidadeReal: 16
+  +             },
+  +             {
+  +               banda: [
+  +                 95,
+  +                 97
+  +               ],
+  +               gravidade: 5,
+  +               id: 'arma-quebra',
+  +               nome: 'A arma quebra',
+  +               pesoOriginal: 3,
+  +               probabilidadeReal: 3
+  +             },
+  +             {
+  +               banda: [
+  +                 98,
+  +                 100
+  +               ],
+  +               gravidade: 6,
+  +               id: 'quebra-corpo',
+  +               nome: 'Quebra parte do corpo',
+  +               pesoOriginal: 3,
+  +               probabilidadeReal: 3
+  +             }
+  +           ]
+  +         }
+  +       },
+  +       totalEfectivo: 0
+  +     },
+  +     id: '03-005',
+  +     veio: {
+  +       contraAtaquePendente: null,
+  +       danoAplicado: null,
+  +       defesaUsada: {
+  +         nomeDaRegra: 'CA',
+  +         origem: 'alvo.ca — comparação base, sem reacção defensiva declarada (código original do VLAB)',
+  +         valor: 12
+  +       },
+  +       desgracaPendente: null,
+  +       erro: null,
+  +       pa: {
+  +         custo: 0,
+  +         exaustao: false,
+  +         paLivreAntes: 10,
+  +         paLivreDepois: 10
+  +       },
+  +       publico: {
+  +         recibo: '1d20+2 → [6] = 8 vs CA 12 → FALHACRITICA → FALHA CRÍTICA — A arma cai'
+  +       },
+  +       rdAplicada: null,
+  +       reacaoConsumida: false,
+  +       resultado: 'falhaCritica',
+  +       rolagem: {
+  +         ajusteVantagemDesvantagem: 0,
+  +         bonus: 2,
+  +         conjuntosDeFaces: [
+  +           [
+  +             6
+  +           ]
+  +         ],
+  +         escolhido: 8,
+  +         expressao: '1d20+2',
+  +         niveisLiquidos: 0,
+  +         resultados: [
+  +           8
+  +         ],
+  +         total: 8
+  +       },
+  +       soDoMestre: {
+  +         alvoDepois: {
+  +           estadosNovos: [],
+  +           estadosRemovidos: [],
+  +           vidaActual: 30
+  +         },
+  +         atacanteDepois: {
+  +           armaCaida: true,
+  +           custoRecuperacao: '1 accao de movimento'
+  +         },
+  +         efeitosAtacante: [],
+  +         falhaCritica: {
+  +           aplicado: true,
+  +           desgraca: {
+  +             gravidade: 2,
+  +             id: 'arma-cai',
+  +             nome: 'A arma cai'
+  +           },
+  +           excluidas: [],
+  +           modo: 'escolha',
+  +           rolagemDesgraca: null,
+  +           tabelaEfectiva: [
+  +             {
+  +               banda: [
+  +                 1,
+  +                 34
+  +               ],
+  +               gravidade: 1,
+  +               id: 'cai',
+  +               nome: 'Ele cai',
+  +               pesoOriginal: 34,
+  +               probabilidadeReal: 34.3
+  +             },
+  +             {
+  +               banda: [
+  +                 35,
+  +                 61
+  +               ],
+  +               gravidade: 2,
+  +               id: 'arma-cai',
+  +               nome: 'A arma cai',
+  +               pesoOriginal: 26,
+  +               probabilidadeReal: 26.3
+  +             },
+  +             {
+  +               banda: [
+  +                 62,
+  +                 78
+  +               ],
+  +               gravidade: 3,
+  +               id: 'acerta-amigo',
+  +               nome: 'Acerta um amigo sem querer',
+  +               pesoOriginal: 17,
+  +               probabilidadeReal: 17.2
+  +             },
+  +             {
+  +               banda: [
+  +                 79,
+  +                 94
+  +               ],
+  +               gravidade: 4,
+  +               id: 'acerta-se',
+  +               nome: 'Acerta-se a si próprio',
+  +               pesoOriginal: 16,
+  +               probabilidadeReal: 16.2
+  +             },
+  +             {
+  +               banda: [
+  +                 95,
+  +                 97
+  +               ],
+  +               gravidade: 5,
+  +               id: 'arma-quebra',
+  +               nome: 'A arma quebra',
+  +               pesoOriginal: 3,
+  +               probabilidadeReal: 3
+  +             },
+  +             {
+  +               banda: [
+  +                 98,
+  +                 100
+  +               ],
+  +               gravidade: 6,
+  +               id: 'quebra-corpo',
+  +               nome: 'Quebra parte do corpo',
+  +               pesoOriginal: 3,
+  +               probabilidadeReal: 3
+  +             }
+  +           ]
+  +         }
+  +       },
+  +       totalEfectivo: 0
+  +     }
+  +   }
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///<pasta-da-ordem>/repo/rascunhos/servidor/testes-motor-real/vetores-ouro.test.mjs:61:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ { id: '03-001', esperado: [Object], veio: [Object] }, { id: '03-002', esperado: [Object], veio: [Object] }, { id: '03-003', esperado: [Object], veio: [Object] }, { id: '03-004', esperado: [Object], veio: [Object] }, { id: '03-005', esperado: [Object], veio: [Object] } ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at testes-motor-real\vetores-ouro.test.mjs:65:1
+✖ vetores-ouro: duas corridas são byte-idênticas entre si e iguais aos ficheiros gravados (425.2055ms)
+  AssertionError [ERR_ASSERTION]: 01-ataque-normal.json: a corrida difere do ficheiro gravado
+      at TestContext.<anonymous> (file:///<pasta-da-ordem>/repo/rascunhos/servidor/testes-motor-real/vetores-ouro.test.mjs:72:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
