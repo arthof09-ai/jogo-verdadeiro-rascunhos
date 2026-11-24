@@ -223,3 +223,7 @@ Sobre o `aac7f8f`, os dois workflows deram **success**:
   protocolo, validador-glb, ponta-a-ponta, foto-mestre, provas-mapa e retoma-pc. As suites Godot headless, que não
   correram neste PC (§6), estão incluídas aqui;
 - **Sonda de privacidade** (run `45293982242`).
+
+Sobre a errata A1–A10 (`2fec62b`), os dois workflows deram **success**:
+- **Testes dos rascunhos** (run `45303441022`);
+- **Sonda de privacidade** (run `45303441155`).
