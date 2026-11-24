@@ -2,7 +2,8 @@
 
 Todas as horas são de 24/11/2026 (-03). Os caminhos do PC estão redigidos (`<sede>` = a pasta desta ordem no PC,
 `<godot>` / `<godot 4.7.2>` = o Godot 4.7.2 win64). Todos os nomes são os fictícios das fichas da bancada; o lugar da
-corrida A é inventado (token `token-ficticio-servidor-fora`, sala `sala-ficticia`).
+corrida A é inventado (ficheiro `lugar.cfg` com token e sala fictícios; conteúdo:
+`token-ficticio-servidor-fora`, sala `sala-ficticia`).
 
 ## 1. A1 — o estado «a ligar…» no ecrã do Mestre (servidor fora do ar, sem nunca ter estado na mesa)
 
@@ -39,7 +40,11 @@ O `servidor.log` da bancada não está aqui (traz endereços da rede local); fic
 
 ## 3. F1/F4 — o rasto das provas
 
-- Cada log em `suites/` e em `medicao/` abre com **`# comando: …`** e **`# hora: início …`**, e fecha com `# hora: fim … rc=…`.
+- Cada log em `suites/` abre com **`# comando: …`** (o directório de trabalho é exacto; o caminho do
+  binário é redigido como `<godot>`, documentado no executor) e **`# hora: início …`**, e fecha com
+  `# hora: fim … rc=…`. Os 3 logs de `medicao/` abrem com **`# comando: …`** (binário `godot`, sem
+  caminho; directório redigido como `<tmp>`) e **`# hora: …`** (sem «início») e fecham com `# rc=0`,
+  sem linha `# hora: fim`.
   O `suites/RESUMO.txt` também.
 - A saída dos comandos de captura, com as horas, está em `capturas-a-saida.txt` e `capturas-r-saida.txt`.
 

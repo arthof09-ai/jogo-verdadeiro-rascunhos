@@ -39,12 +39,16 @@ Mestre aberto com a Rede a ligar a uma porta sem nada à escuta, durante 75 s.
 | 61 169 | `A_ESPERAR` | outra vez ~30 s em `A_LIGAR` |
 | 63 389 | `A_LIGAR` | a espera durou **2,2 s** |
 
-Em 75 s, a Rede esteve **~3,3 s em `A_ESPERAR` e ~69 s em `A_LIGAR`**. As esperas (1 → 2 → 4 → 8 s, ±20 %) são
-curtas e partidas por tentativas longas. Com isto, a opção do alerta não serve:
+Entre `t=2816` e `t=30006` os alertas passam de 0 para 1: é o alerta pré-existente da vista
+(Ordem 49), que aparece aos ~10 s — ver §1.3. Não é o alerta «A ligação caiu».
+
+Em 75 s, a Rede esteve **~3,3 s em `A_ESPERAR` e ~69 s em `A_LIGAR`**. As esperas medidas foram 1,1 s e 2,2 s; a sequência 1 → 2 → 4 → 8 s (±20 %,
+  tecto 9,6 s) é a do código (`rede.gd:54,495-496`). São curtas e partidas por tentativas longas. Com isto, a opção do alerta não serve:
 
 - um alerta «ao fim de N s **em `A_ESPERAR`**» com N > ~9,6 s (o tecto da espera, 8 s × 1,2) **nunca** dispara. Com
   N pequeno, só dispararia ao fim de ~30 s;
-- os primeiros ~30 s, que são exactamente o defeito, ficavam calados em qualquer dos casos.
+- os primeiros ~30 s, que são exactamente o defeito, ficavam calados *quanto à ligação* em
+qualquer dos casos (o único aviso que aparece nesse intervalo é o da vista, aos ~10 s — ver §1.3).
 
 **Escolha: o estado visível.** Aparece logo quando o ecrã abre, não precisa de N nem de relógio, e cobre `A_LIGAR`,
 `A_ENTRAR` e `A_ESPERAR`.
@@ -69,7 +73,8 @@ Um cliente Godot 4.7.2 com janela, aberto pela cena principal, com um `lugar.cfg
 - `a02` (07:05:38, aos 34 s): «A ligar à mesa…» continua visível.
 
 **Achado (não mexi: está fora do âmbito):** a D-AUD-16 escreveu que, neste arranque, «não há outro aviso de ligação no
-ecrã dele». Não é exacto. Aos **~10 s** aparece um alerta **pré-existente** (Ordem 49, o tecto do pedido da vista),
+ecrã dele». No sentido estrito está certo — o alerta que aparece é da vista, não da ligação — mas no ecrã,
+aos ~10 s, um alerta aparece e aponta a causa errada. Aos **~10 s** aparece um alerta **pré-existente** (Ordem 49, o tecto do pedido da vista),
 «A vista da mesa não se pediu (40 tentativas). Toque em «Atualizar».», e está em `a02` e no `godot.log`
 (`WARNING: MASTER_VIEW: vista_sem_pedido`). Com o servidor fora do ar, esse alerta **aponta a causa errada**: manda
 tocar em «Atualizar», quando o que falta é a ligação. Agora o «A ligar à mesa…» aparece por baixo dele e diz a causa
@@ -115,8 +120,11 @@ foi parada e **apagada**.
 
 ## 3. F1/F4 — o rasto das provas
 
-- **F1:** cada log em `provas/ordem-d-aud-16-seguimento/suites/` e `medicao/` abre com **`# comando: …`** (a linha
-  exacta, com o directório de trabalho), depois `# hora: início …`, e fecha com `# hora: fim … rc=…`. O `RESUMO.txt`
+- **F1:** cada log em `provas/ordem-d-aud-16-seguimento/suites/` abre com `# comando: …` (o directório
+  de trabalho é exacto; o caminho do binário é redigido como `<godot>`, documentado no executor)
+  e `# hora: início …`, e fecha com `# hora: fim … rc=…`. Os 3 logs de `medicao/` abrem com
+  `# comando: …` (binário `godot`, sem caminho; directório redigido como `<tmp>`) e `# hora: …`
+  (sem «início») e fecham com `# rc=0`, sem linha `# hora: fim`. O `RESUMO.txt`
   também. O executor está em `suites-executor.sh.txt`.
 - **F4:** a saída dos comandos de captura, com as horas de cada captura, está cometida (`capturas-a-saida.txt`,
   `capturas-r-saida.txt`, ao lado dos comandos `capturas-*-comando.ps1.txt`). Além disso, cada PNG desta ordem traz
@@ -154,7 +162,7 @@ Corridas das 07:08:56 às 07:10:42, com `tmp/suites.sh` (`suites-executor.sh.txt
 | `medir_painel_config` | 0 falhas, 0 sem medida | igual |
 | `abrir_mestre` | 67 / 67 | 67 |
 | `pecas_mestre` | **307 / 307** (+10, §1.4) | 297 |
-| `medir_mestre` | 0 falhas, 0 sem medida. A saída é igual, linha a linha, à da D-AUD-16 (tirando a linha de tempo da floresta): fora do arranque o rótulo novo está escondido e não ocupa lugar | igual |
+| `medir_mestre` | 0 falhas, 0 sem medida. A saída é igual, linha a linha, à da D-AUD-16 (tirando a linha de tempo da floresta e as linhas novas `# comando:`/`# hora:` desta ordem): fora do arranque o rótulo novo está escondido e não ocupa lugar | igual |
 | `hud_acoes` | 50 / 50 | 50 |
 | `caixa_jogadora` | 70 / 70 | 70 |
 | `caixa_janela` | 123 / 123 | 123 |
@@ -188,10 +196,10 @@ cada um com a linha `# comando:` no topo.
 | `7f83006` | A1: o rótulo «A ligar à mesa…» (`mestre.gd`, `textos_mestre.gd`), o teste novo (`pecas_mestre.gd`) e a ferramenta da medição (`medir_ligacao_arranque.gd`) |
 | `ac9584a` | as listas da retoma sincronizadas depois de `7f83006` (`actualizar-listas`: 1 novo, 0 tirados) |
 | `024d3e7` | as provas (`provas/ordem-d-aud-16-seguimento/`: README, capturas, logs, medição, suites) e este ESTADO-FINAL |
+| `0acc41c` | a nota do CI neste ESTADO-FINAL (Testes 45372456991 + Sonda 45372457338, ambos `success` no `024d3e7`) |
 
 O `actualizar-listas.py` correu com `python` (o Python 3.12 do PC); no Windows, o `python3` é só o atalho da loja.
 O commit das provas não muda `rascunhos/`, por isso as listas não precisam de nova passagem.
-| (a seguir) | a nota do CI neste ESTADO-FINAL |
 
 ## Nota do CI
 

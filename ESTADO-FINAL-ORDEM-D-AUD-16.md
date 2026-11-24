@@ -29,7 +29,9 @@ Mudar a cena principal mudava também o arranque da jogadora, e por isso não a 
 **A linha do log** (no `godot.log` do cliente do Mestre):
 `arranque: lugar do Mestre -> res://cenas/mestre/mestre.tscn (ORDEM-D-AUD-16)`.
 
-**Limite conhecido:** no arranque directo, com o servidor fora do ar, o ecrã do Mestre abre e volta a tentar ligar em silêncio — o alerta «A ligação caiu» só aparece depois de o Mestre já ter estado na mesa (`mestre.gd:654-660`), e não há outro aviso de ligação no ecrã dele. O «Conectando à mesa…» do lobby (`lobby.gd:284`) fica fora deste arranque. A correcção (um estado «a ligar…» visível até ao primeiro WELCOME, com teste no `pecas_mestre` para o `A_ESPERAR` sem nunca ter estado na mesa) fica para uma ordem seguinte.
+**Limite conhecido:** no arranque directo, com o servidor fora do ar, o ecrã do Mestre abre e volta a tentar ligar em silêncio — o alerta «A ligação caiu» só aparece depois de o Mestre já ter estado na mesa (`mestre.gd:654-660`), e não há outro aviso de ligação no ecrã dele — impreciso no sentido largo: o alerta
+pré-existente da vista (Ordem 49) aparece aos ~10 s neste arranque; ver
+ORDEM-D-AUD-16-SEGUIMENTO §1.3. O «Conectando à mesa…» do lobby (`lobby.gd:284`) fica fora deste arranque. A correcção (um estado «a ligar…» visível até ao primeiro WELCOME, com teste no `pecas_mestre` para o `A_ESPERAR` sem nunca ter estado na mesa) fica para uma ordem seguinte.
 
 ## 2. A predefinição reversível (C-7 é do Mestre)
 
