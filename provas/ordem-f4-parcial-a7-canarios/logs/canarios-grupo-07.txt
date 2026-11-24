@@ -1,0 +1,5 @@
+Canários da fixture no 07-transformacao.json (ocorrências da cadeia no ficheiro):
+  4040: antes 0, depois 0
+  5150: antes 74, depois 0
+  5551: antes 30, depois 0
+Casos: antes 30, depois 30; casos com saída diferente: 30

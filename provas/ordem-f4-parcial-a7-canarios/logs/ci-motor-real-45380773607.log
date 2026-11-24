@@ -1,0 +1,582 @@
+motor-real	Set up job	﻿2026-11-24T11:04:34.7786802Z Current runner version: '2.338.2'
+motor-real	Set up job	2026-11-24T11:04:34.7813125Z ##[group]Runner Image Provisioner
+motor-real	Set up job	2026-11-24T11:04:34.7814261Z Hosted Compute Agent
+motor-real	Set up job	2026-11-24T11:04:34.7814934Z Version: 20261111.635
+motor-real	Set up job	2026-11-24T11:04:34.7815529Z Commit: b8a594ea514ff44cadb5342986c68b1eac6e22ed
+motor-real	Set up job	2026-11-24T11:04:34.7816200Z Build Date: 2026-11-11T01:49:01Z
+motor-real	Set up job	2026-11-24T11:04:34.7816876Z Worker ID: {4eeeeb8e-4c59-4cba-b760-27ca5d8c5d09}
+motor-real	Set up job	2026-11-24T11:04:34.7817578Z Region: northcentralus
+motor-real	Set up job	2026-11-24T11:04:34.7818131Z Cloud: Azure
+motor-real	Set up job	2026-11-24T11:04:34.7818652Z ##[endgroup]
+motor-real	Set up job	2026-11-24T11:04:34.7819949Z ##[group]Operating System
+motor-real	Set up job	2026-11-24T11:04:34.7820547Z Ubuntu
+motor-real	Set up job	2026-11-24T11:04:34.7821094Z 26.04.1
+motor-real	Set up job	2026-11-24T11:04:34.7821588Z LTS
+motor-real	Set up job	2026-11-24T11:04:34.7822329Z ##[endgroup]
+motor-real	Set up job	2026-11-24T11:04:34.7822854Z ##[group]Runner Image
+motor-real	Set up job	2026-11-24T11:04:34.7823763Z Image: ubuntu-26.04
+motor-real	Set up job	2026-11-24T11:04:34.7824333Z Version: 20261116.202.1
+motor-real	Set up job	2026-11-24T11:04:34.7825309Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261116.202/images/ubuntu/Ubuntu2604-Readme.md
+motor-real	Set up job	2026-11-24T11:04:34.7827039Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261116.202
+motor-real	Set up job	2026-11-24T11:04:34.7827959Z ##[endgroup]
+motor-real	Set up job	2026-11-24T11:04:34.7829019Z ##[group]GITHUB_TOKEN Permissions
+motor-real	Set up job	2026-11-24T11:04:34.7831296Z Contents: read
+motor-real	Set up job	2026-11-24T11:04:34.7832089Z Metadata: read
+motor-real	Set up job	2026-11-24T11:04:34.7832838Z ##[endgroup]
+motor-real	Set up job	2026-11-24T11:04:34.7835284Z Secret source: Actions
+motor-real	Set up job	2026-11-24T11:04:34.7836179Z Cache mode: write
+motor-real	Set up job	2026-11-24T11:04:34.7836882Z Prepare workflow directory
+motor-real	Set up job	2026-11-24T11:04:34.8223172Z Prepare all required actions
+motor-real	Set up job	2026-11-24T11:04:34.8273244Z Getting action download info
+motor-real	Set up job	2026-11-24T11:04:35.0268346Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+motor-real	Set up job	2026-11-24T11:04:35.1322626Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+motor-real	Set up job	2026-11-24T11:04:35.2752899Z Complete job name: motor-real
+motor-real	Run actions/checkout@v4	﻿2026-11-24T11:04:35.3523046Z ##[group]Run actions/checkout@v4
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.3523988Z with:
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.3524635Z   repository: arthof09-ai/jogo-verdadeiro-rascunhos
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.3528586Z   token: ***
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.3529123Z   ssh-strict: true
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.3529614Z   ssh-user: git
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.3530101Z   persist-credentials: true
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.3530664Z   clean: true
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.3531150Z   sparse-checkout-cone-mode: true
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.3531949Z   fetch-depth: 1
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.3532494Z   fetch-tags: false
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.3532983Z   show-progress: true
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.3533528Z   lfs: false
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.3533991Z   submodules: false
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.3534509Z   set-safe-directory: true
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.3535072Z   allow-unsafe-pr-checkout: false
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.3536149Z ##[endgroup]
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6135415Z Syncing repository: arthof09-ai/jogo-verdadeiro-rascunhos
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6138707Z ##[group]Getting Git version info
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6140270Z Working directory is '/home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos'
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6142839Z [command]/usr/bin/git version
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6143530Z git version 2.56.1
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6145580Z ##[endgroup]
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6155316Z Temporarily overriding HOME='/home/runner/work/_temp/09e4bc70-1eae-4b80-a427-8f84a706c3fe' before making global git config changes
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6157880Z Adding repository directory to the temporary git global config as a safe directory
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6162914Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6222372Z Deleting the contents of '/home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos'
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6226950Z ##[group]Initializing the repository
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6233050Z [command]/usr/bin/git init /home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6335223Z hint: Using 'master' as the name for the initial branch. This default branch name
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6337576Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6340340Z hint: to use in all of your new repositories, which will suppress this warning,
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6342015Z hint: call:
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6343197Z hint:
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6344385Z hint: 	git config --global init.defaultBranch <name>
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6345737Z hint:
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6347025Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6348745Z hint: 'development'. The just-created branch can be renamed via this command:
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6350005Z hint:
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6350738Z hint: 	git branch -m <name>
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6351910Z hint:
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6353533Z hint: Disable this message with "git config set advice.defaultBranchName false"
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6357221Z Initialized empty Git repository in /home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos/.git/
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6369655Z [command]/usr/bin/git remote add origin https://github.com/arthof09-ai/jogo-verdadeiro-rascunhos
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6545452Z ##[endgroup]
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6546555Z ##[group]Disabling automatic garbage collection
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6548132Z [command]/usr/bin/git config --local gc.auto 0
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6581453Z ##[endgroup]
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6583185Z ##[group]Setting up auth
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6589092Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.6618539Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.7043364Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.7078812Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.7298717Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.7328811Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.7558443Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.7597698Z ##[endgroup]
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.7599565Z ##[group]Fetching the repository
+motor-real	Run actions/checkout@v4	2026-11-24T11:04:35.7608477Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f71b07090e6f396a829b17f797d94b30f30c1e20:refs/remotes/origin/fable/integracao-50
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:06.7322633Z From https://github.com/arthof09-ai/jogo-verdadeiro-rascunhos
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:06.7323921Z  * [new ref]         f71b07090e6f396a829b17f797d94b30f30c1e20 -> origin/fable/integracao-50
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:06.7326637Z ##[endgroup]
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:06.7327401Z ##[group]Determining the checkout info
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:06.7329267Z ##[endgroup]
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:06.7335481Z [command]/usr/bin/git sparse-checkout disable
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:06.7390680Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:06.7422525Z ##[group]Checking out the ref
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:06.7434516Z [command]/usr/bin/git checkout --progress --force -B fable/integracao-50 refs/remotes/origin/fable/integracao-50
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:07.7534281Z Updating files:  41% (1056/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:07.7597123Z Updating files:  42% (1070/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:07.7901177Z Updating files:  43% (1096/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:07.7915401Z Updating files:  44% (1121/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:07.7923973Z Updating files:  45% (1147/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:07.8784483Z Updating files:  46% (1172/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:07.9118236Z Updating files:  47% (1198/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:07.9305264Z Updating files:  48% (1223/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:07.9601588Z Updating files:  49% (1249/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:07.9775732Z Updating files:  50% (1274/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:07.9889474Z Updating files:  51% (1299/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.1266068Z Updating files:  52% (1325/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.1440248Z Updating files:  53% (1350/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.1530993Z Updating files:  54% (1376/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.1687853Z Updating files:  55% (1401/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.1801145Z Updating files:  56% (1427/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.1817273Z Updating files:  57% (1452/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.1826055Z Updating files:  58% (1478/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.1833433Z Updating files:  59% (1503/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.1839763Z Updating files:  60% (1529/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.1853213Z Updating files:  61% (1554/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.1886667Z Updating files:  62% (1580/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.2512435Z Updating files:  63% (1605/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.2974238Z Updating files:  64% (1631/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.3002056Z Updating files:  65% (1656/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.3129280Z Updating files:  66% (1682/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.3149036Z Updating files:  67% (1707/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.3170096Z Updating files:  68% (1732/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.3735449Z Updating files:  69% (1758/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.3766628Z Updating files:  70% (1783/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.3774366Z Updating files:  71% (1809/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.3804645Z Updating files:  72% (1834/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.3825043Z Updating files:  73% (1860/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.3870651Z Updating files:  74% (1885/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.3986892Z Updating files:  75% (1911/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.4054682Z Updating files:  76% (1936/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.4102645Z Updating files:  77% (1962/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.4114610Z Updating files:  78% (1987/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.4141383Z Updating files:  79% (2013/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.4158835Z Updating files:  80% (2038/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.4172061Z Updating files:  81% (2064/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.4385929Z Updating files:  82% (2089/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.4446791Z Updating files:  83% (2115/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.4465931Z Updating files:  84% (2140/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.4488838Z Updating files:  85% (2165/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.4613521Z Updating files:  86% (2191/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.4954273Z Updating files:  87% (2216/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5175547Z Updating files:  88% (2242/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5191765Z Updating files:  89% (2267/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5222795Z Updating files:  90% (2293/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5533227Z Updating files:  91% (2318/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5540073Z Updating files:  92% (2344/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5547027Z Updating files:  93% (2369/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5562397Z Updating files:  94% (2395/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5606972Z Updating files:  95% (2420/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5646923Z Updating files:  96% (2446/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5664738Z Updating files:  97% (2471/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5680410Z Updating files:  98% (2497/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5702164Z Updating files:  99% (2522/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5702808Z Updating files: 100% (2547/2547)
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5703285Z Updating files: 100% (2547/2547), done.
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5743349Z Switched to a new branch 'fable/integracao-50'
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5749794Z branch 'fable/integracao-50' set up to track 'origin/fable/integracao-50'.
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5841925Z ##[endgroup]
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5890292Z [command]/usr/bin/git log -1 --format=%H
+motor-real	Run actions/checkout@v4	2026-11-24T11:05:08.5913406Z f71b07090e6f396a829b17f797d94b30f30c1e20
+motor-real	Run actions/setup-node@v4	﻿2026-11-24T11:05:08.6174283Z ##[group]Run actions/setup-node@v4
+motor-real	Run actions/setup-node@v4	2026-11-24T11:05:08.6174689Z with:
+motor-real	Run actions/setup-node@v4	2026-11-24T11:05:08.6174997Z   node-version: 22
+motor-real	Run actions/setup-node@v4	2026-11-24T11:05:08.6175287Z   always-auth: false
+motor-real	Run actions/setup-node@v4	2026-11-24T11:05:08.6175622Z   check-latest: false
+motor-real	Run actions/setup-node@v4	2026-11-24T11:05:08.6178372Z   token: ***
+motor-real	Run actions/setup-node@v4	2026-11-24T11:05:08.6178641Z ##[endgroup]
+motor-real	Run actions/setup-node@v4	2026-11-24T11:05:08.7656266Z (node:2415) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+motor-real	Run actions/setup-node@v4	2026-11-24T11:05:08.7659763Z Found in cache @ /opt/hostedtoolcache/node/22.23.5/x64
+motor-real	Run actions/setup-node@v4	2026-11-24T11:05:08.7660836Z ##[group]Environment details
+motor-real	Run actions/setup-node@v4	2026-11-24T11:05:08.7662136Z (Use `node --trace-deprecation ...` to show where the warning was created)
+motor-real	Run actions/setup-node@v4	2026-11-24T11:05:09.1600818Z node: v22.23.5
+motor-real	Run actions/setup-node@v4	2026-11-24T11:05:09.1601451Z npm: 10.9.9
+motor-real	Run actions/setup-node@v4	2026-11-24T11:05:09.1602183Z yarn: 1.22.22
+motor-real	Run actions/setup-node@v4	2026-11-24T11:05:09.1603273Z ##[endgroup]
+motor-real	Baixar o motor vivo (público)	﻿2026-11-24T11:05:09.1723718Z ##[group]Run curl -fsSL --max-time 30 -o "$RUNNER_TEMP/vlab-completo.js" https://arthof09-ai.github.io/arena-das-bestas-prototipo-cm9/jogo-t1/vlab-completo.js && sha256sum "$RUNNER_TEMP/vlab-completo.js"
+motor-real	Baixar o motor vivo (público)	2026-11-24T11:05:09.1725166Z ^[[36;1mcurl -fsSL --max-time 30 -o "$RUNNER_TEMP/vlab-completo.js" https://arthof09-ai.github.io/arena-das-bestas-prototipo-cm9/jogo-t1/vlab-completo.js && sha256sum "$RUNNER_TEMP/vlab-completo.js"^[[0m
+motor-real	Baixar o motor vivo (público)	2026-11-24T11:05:09.1758132Z shell: /usr/bin/bash -e {0}
+motor-real	Baixar o motor vivo (público)	2026-11-24T11:05:09.1758693Z ##[endgroup]
+motor-real	Baixar o motor vivo (público)	2026-11-24T11:05:09.4097189Z a91c021cda11df675c78c63277e6f2679faa79c716c7ba104373198689993261  /home/runner/work/_temp/vlab-completo.js
+motor-real	Prova da porta dos motores (JV1.1-a)	﻿2026-11-24T11:05:09.4141037Z ##[group]Run node motores/prova-motor.mjs "$RUNNER_TEMP/vlab-completo.js" "$RUNNER_TEMP/prova"
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4141914Z ^[[36;1mnode motores/prova-motor.mjs "$RUNNER_TEMP/vlab-completo.js" "$RUNNER_TEMP/prova"^[[0m
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4164635Z shell: /usr/bin/bash -e {0}
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4165091Z ##[endgroup]
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4748911Z {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4749594Z  "conclusao": {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4750212Z   "defeitoA": true,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4750802Z   "embrulhoB": true
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4751292Z  },
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4752228Z  "sha": "a91c021cda11df675c78c63277e6f2679faa79c716c7ba104373198689993261",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4753010Z  "bytes": 102282,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4753481Z  "textosSensiveis": [
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4753998Z   {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4754450Z    "texto": "exec(",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4754841Z    "posicao": 4160,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4755529Z    "contexto": "; for(const part of parts) { const m=/^(\\d+)d(\\d+)$/i.exec(part); if(m) { const n=integer(Number(m[1]),1,100), side"
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4756279Z   }
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4756619Z  ],
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4756895Z  "A": {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4757244Z   "chaves": [
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4757598Z    "resolverAtaque",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4757941Z    "validarForcarPassagem",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4758323Z    "validarSaidaDeAdjacencia",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4758690Z    "validarCorrer",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4759028Z    "resolverSalvaguarda",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4759375Z    "aplicarCura",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4759689Z    "resolverTesteDeMorte"
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4760012Z   ],
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4760406Z   "temCalcularDano": false,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4760811Z   "amostra": [
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4761097Z    {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4761425Z     "s": 1,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4761864Z     "resultado": null,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4762344Z     "danoAplicado": null,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4762964Z     "totalEfectivo": null,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4763450Z     "erro": "DMG_INDISPONIVEL"
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4763925Z    },
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4764294Z    {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4764557Z     "s": 2,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4764901Z     "resultado": null,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4765211Z     "danoAplicado": null,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4765529Z     "totalEfectivo": null,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4765879Z     "erro": "DMG_INDISPONIVEL"
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4766214Z    },
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4766537Z    {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4766801Z     "s": 3,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4767090Z     "resultado": null,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4767403Z     "danoAplicado": null,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4767730Z     "totalEfectivo": null,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4768148Z     "erro": "DMG_INDISPONIVEL"
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4768458Z    },
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4768736Z    {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4769012Z     "s": 4,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4769336Z     "resultado": null,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4769792Z     "danoAplicado": null,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4770504Z     "totalEfectivo": null,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4770940Z     "erro": "DMG_INDISPONIVEL"
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4771342Z    }
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4771802Z   ]
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4772169Z  },
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4772506Z  "B": {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4772905Z   "temDmg": true,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4773293Z   "temVlab": true,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4773695Z   "deterministico": true,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4774152Z   "saidasDistintas": 14,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4774752Z   "acertosComDano": 14,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4775167Z   "errosDistintos": [],
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4775569Z   "amostra": [
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4775998Z    {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4776365Z     "s": 1,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4776780Z     "resultado": "acerta",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4777271Z     "danoAplicado": {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4777857Z      "parcelas": [
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4778253Z       {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4778615Z        "tipo": "cortante",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4779091Z        "expressao": "1d8+2",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4779527Z        "faces": [
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4779977Z         6
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4780475Z        ],
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4780972Z        "subtotal": 8
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4781335Z       }
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4781861Z      ],
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4782525Z      "total": 8,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4782932Z      "dme": 6.5,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4783672Z      "recibo": "1d8+2 → [6] = 8 (cortante)",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4784216Z      "rdAplicada": null,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4784635Z      "erro": null
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4785015Z     },
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4785491Z     "totalEfectivo": 8,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4785874Z     "erro": null
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4786243Z    },
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4786620Z    {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4786989Z     "s": 2,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4787396Z     "resultado": "acerta",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4787875Z     "danoAplicado": {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4788340Z      "parcelas": [
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4788731Z       {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4789212Z        "tipo": "cortante",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4789658Z        "expressao": "1d8+2",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4790099Z        "faces": [
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4790510Z         6
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4790853Z        ],
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4791216Z        "subtotal": 8
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4791794Z       }
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4792242Z      ],
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4792550Z      "total": 8,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4792833Z      "dme": 6.5,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4793290Z      "recibo": "1d8+2 → [6] = 8 (cortante)",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4793658Z      "rdAplicada": null,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4794065Z      "erro": null
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4794730Z     },
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4795147Z     "totalEfectivo": 8,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4795575Z     "erro": null
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4795942Z    },
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4796346Z    {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4796607Z     "s": 3,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4796890Z     "resultado": "acerta",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4797234Z     "danoAplicado": {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4797536Z      "parcelas": [
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4797824Z       {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4798131Z        "tipo": "cortante",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4798463Z        "expressao": "1d8+2",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4798810Z        "faces": [
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4799086Z         6
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4799360Z        ],
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4799631Z        "subtotal": 8
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4800379Z       }
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4800704Z      ],
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4800979Z      "total": 8,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4801281Z      "dme": 6.5,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4801837Z      "recibo": "1d8+2 → [6] = 8 (cortante)",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4802218Z      "rdAplicada": null,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4802622Z      "erro": null
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4802897Z     },
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4803194Z     "totalEfectivo": 8,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4803492Z     "erro": null
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4803771Z    },
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4804064Z    {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4804368Z     "s": 4,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4804662Z     "resultado": "acerta",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4804971Z     "danoAplicado": {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4805277Z      "parcelas": [
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4805586Z       {
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4805858Z        "tipo": "cortante",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4806368Z        "expressao": "1d8+2",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4806683Z        "faces": [
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4806986Z         8
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4807288Z        ],
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4807568Z        "subtotal": 10
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4807852Z       }
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4808177Z      ],
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4808426Z      "total": 10,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4808794Z      "dme": 6.5,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4809190Z      "recibo": "1d8+2 → [8] = 10 (cortante)",
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4809551Z      "rdAplicada": null,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4809862Z      "erro": null
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4810182Z     },
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4810489Z     "totalEfectivo": 10,
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4810791Z     "erro": null
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4811061Z    }
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4811351Z   ]
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4811616Z  }
+motor-real	Prova da porta dos motores (JV1.1-a)	2026-11-24T11:05:09.4812198Z }
+motor-real	Gerar o módulo embrulhado	﻿2026-11-24T11:05:09.4847948Z ##[group]Run node motores/embrulhar.mjs "$RUNNER_TEMP/vlab-completo.js" "$RUNNER_TEMP/motores.mjs"
+motor-real	Gerar o módulo embrulhado	2026-11-24T11:05:09.4848719Z ^[[36;1mnode motores/embrulhar.mjs "$RUNNER_TEMP/vlab-completo.js" "$RUNNER_TEMP/motores.mjs"^[[0m
+motor-real	Gerar o módulo embrulhado	2026-11-24T11:05:09.4871491Z shell: /usr/bin/bash -e {0}
+motor-real	Gerar o módulo embrulhado	2026-11-24T11:05:09.4872045Z ##[endgroup]
+motor-real	Gerar o módulo embrulhado	2026-11-24T11:05:09.5208427Z {"ok":true,"sha":"a91c021cda11df675c78c63277e6f2679faa79c716c7ba104373198689993261","bytes":102282,"saida":"/home/runner/work/_temp/motores.mjs"}
+motor-real	Integração da sala com o motor real	﻿2026-11-24T11:05:09.5315247Z ##[group]Run node --test --test-reporter=spec "testes-motor-real/*.test.mjs"
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.5315845Z ^[[36;1mnode --test --test-reporter=spec "testes-motor-real/*.test.mjs"^[[0m
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.5337972Z shell: /usr/bin/bash -e {0}
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.5338426Z env:
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.5338794Z   MOTOR_MJS: /home/runner/work/_temp/motores.mjs
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.5339255Z ##[endgroup]
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.7634744Z ✔ motor real: a estabilizada curada pelo aplicarCura do site fica com 1 + cura, levanta-se e age na vez dela (106.415002ms)
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9074298Z DIAGNOSTICO-MOTOR-REAL {
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9093329Z  "sha": "a91c021cda11df675c78c63277e6f2679faa79c716c7ba104373198689993261",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9100140Z  "chamadas": 52,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9122832Z  "resultados": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9152494Z   "acerta",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9182604Z   "erra",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9185755Z   "falhaCritica",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9212523Z   "critico"
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9213159Z  ],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9230356Z  "desconhecidos": [],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9243333Z  "excecoes": [],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9248528Z  "erros": [],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9249216Z  "exemploSaida": {
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9249686Z   "resultado": "acerta",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9250265Z   "danoAplicado": {
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9251085Z    "parcelas": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9251598Z     {
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9252769Z      "tipo": "cortante",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9253224Z      "expressao": "1d6+2",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9253743Z      "faces": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9254062Z       4
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9254425Z      ],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9254860Z      "subtotal": 6
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9255959Z     }
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9256358Z    ],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9256766Z    "total": 6,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9257155Z    "dme": 5.5,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9257909Z    "recibo": "1d6+2 → [4] = 6 (cortante)",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9260102Z    "rdAplicada": null,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9260596Z    "erro": null
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9260981Z   },
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9261405Z   "erro": null,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9262005Z   "chavesRolagem": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9262517Z    "ajusteVantagemDesvantagem",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9263009Z    "bonus",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9263402Z    "conjuntosDeFaces",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9263797Z    "escolhido",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9264261Z    "expressao",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9264690Z    "niveisLiquidos",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9265133Z    "resultados",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9265521Z    "total"
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9265860Z   ],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9266333Z   "rolagemExemplo": {
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9266838Z    "expressao": "1d20+4",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9267299Z    "conjuntosDeFaces": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9268143Z     [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9268488Z      11
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9268921Z     ]
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9269272Z    ],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9269646Z    "bonus": 4,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9270059Z    "ajusteVantagemDesvantagem": 0,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9270535Z    "niveisLiquidos": 0,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9271038Z    "resultados": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9271421Z     15
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9271903Z    ],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9272342Z    "escolhido": 15,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9272709Z    "total": 15
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9273158Z   },
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9273542Z   "totalEfectivo": 6,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9273969Z   "chavesPublico": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9274382Z    "recibo"
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9274845Z   ],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9275451Z   "chavesFalhaCritica": null,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9275949Z   "desgracaPendente": null,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9276454Z   "chavesTopo": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9276925Z    "contraAtaquePendente",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9277398Z    "danoAplicado",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9277934Z    "defesaUsada",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9278393Z    "desgracaPendente",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9278843Z    "erro",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9279262Z    "pa",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9279661Z    "publico",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9280135Z    "rdAplicada",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9280625Z    "reacaoConsumida",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9281070Z    "resultado",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9281518Z    "rolagem",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9282467Z    "soDoMestre",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9282917Z    "totalEfectivo"
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9283324Z   ],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9283788Z   "chavesSoDoMestre": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9284242Z    "alvoDepois",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9284695Z    "efeitosAtacante"
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9285146Z   ],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9285538Z   "alvoDepois": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9285932Z    "estadosNovos",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9286447Z    "estadosRemovidos",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9286992Z    "vidaActual"
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9287436Z   ]
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9287806Z  },
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9288193Z  "exemploFalhaCritica": {
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9288795Z   "resultado": "falhaCritica",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9289336Z   "danoAplicado": null,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9289787Z   "erro": null,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9290188Z   "chavesRolagem": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9290645Z    "ajusteVantagemDesvantagem",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9291165Z    "bonus",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9291592Z    "conjuntosDeFaces",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9292355Z    "escolhido",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9292751Z    "expressao",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9293124Z    "niveisLiquidos",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9293578Z    "resultados",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9294171Z    "total"
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9294811Z   ],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9295310Z   "rolagemExemplo": {
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9295724Z    "expressao": "1d20+7",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9296195Z    "conjuntosDeFaces": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9296636Z     [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9297009Z      5
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9297377Z     ]
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9297740Z    ],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9298165Z    "bonus": 7,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9298601Z    "ajusteVantagemDesvantagem": 0,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9299089Z    "niveisLiquidos": 0,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9299525Z    "resultados": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9299902Z     12
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9300326Z    ],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9300696Z    "escolhido": 12,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9301102Z    "total": 12
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9301476Z   },
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9302101Z   "totalEfectivo": 0,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9302577Z   "chavesPublico": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9303028Z    "recibo"
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9303394Z   ],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9303783Z   "chavesFalhaCritica": null,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9304254Z   "desgracaPendente": null,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9304759Z   "chavesTopo": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9305178Z    "contraAtaquePendente",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9305679Z    "danoAplicado",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9306099Z    "defesaUsada",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9306557Z    "desgracaPendente",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9307044Z    "erro",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9307408Z    "pa",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9307793Z    "publico",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9308188Z    "rdAplicada",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9308594Z    "reacaoConsumida",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9309360Z    "resultado",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9309743Z    "rolagem",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9310133Z    "soDoMestre",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9310539Z    "totalEfectivo"
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9310946Z   ],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9311350Z   "chavesSoDoMestre": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9311910Z    "alvoDepois",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9312378Z    "efeitosAtacante",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9312827Z    "falhaCritica"
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9313240Z   ],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9314160Z   "alvoDepois": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9314568Z    "estadosNovos",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9315031Z    "estadosRemovidos",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9315464Z    "vidaActual"
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9315876Z   ]
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9316262Z  },
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9316643Z  "voltas": 25,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9317010Z  "contagem": {
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9317569Z   "ROOM_RECEIPT:APLICADA": 24,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9318141Z   "ROOM_RECEIPT:AGUARDANDO_MESTRE": 1
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9318853Z  },
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9319223Z  "recusas": [],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9319604Z  "desgracas": [
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9320044Z   {
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9320497Z    "tipo": "desgraca",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9320946Z    "proposta": {
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9321359Z     "id": "acerta-se",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9322987Z     "nome": "Acerta-se a si próprio",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9323532Z     "gravidade": 4
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9323957Z    },
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9324394Z    "doMonstro": true,
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9325091Z    "aprovacao": {
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9325477Z     "type": "ROOM_RECEIPT",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9326001Z     "estado": "APLICADA"
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9326407Z    }
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9326769Z   },
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9327177Z   {
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9327528Z    "tipo": "desgraca",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9328019Z    "proposta": {
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9328414Z     "id": "cai",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9328826Z     "nome": "Ele cai",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9329254Z     "gravidade": 1
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9329669Z    },
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9330120Z    "aprovacao": {
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9330556Z     "type": "ROOM_RECEIPT",
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9331324Z     "estado": "APLICADA"
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9331902Z    }
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9332277Z   }
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9332743Z  ],
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9333135Z  "eventosDanoHeroina": 9
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9333577Z }
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:09.9334776Z ✔ motor real: ataques da heroína ao orc resolvem sem erro de ponte, com dano, e sem vazar o motor (295.32946ms)
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:10.2585097Z VETORES-OURO {"passaram":517,"total":517,"percentagem":100,"porGrupo":{"01-ataque-normal":"96/96","02-ataque-critico":"44/44","03-falha-critica":"66/66","04-morte-3x3":"68/68","05-desvincular":"47/47","06-defender":"40/40","07-transformacao":"30/30","08-consumiveis":"24/24","09-acumulacao-dmg":"102/102"}}
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:10.9630095Z VETORES-OURO-BYTES {"01-ataque-normal":"ca7a50a7b2fe041cc7cb3d7af3f111db6d0355223818b3a07b6341f9b02e59b2","02-ataque-critico":"6d2de0cc5d30bf72d5f4308992de1edfe48c611a53e0173b601975ed34f24dbe","03-falha-critica":"3a585cddf83c1a0a579546ad1d99951afe2f47ca385fdf6ec1fb2c65a1aee324","04-morte-3x3":"731b6b8f622263843dc9a9e9109a9550505bba1f82843149a56305fd9870af27","05-desvincular":"a02e0a1710ee0c653a35f0319ba0378dab6778df9bde558386ba299bf46690e6","06-defender":"9159c96af3fc125be4d4f50221638d84fe7f90fce0865f8a191b63a8c1473e9b","07-transformacao":"db2b87aec69b79c7788139b83735b09f3e01f15c65cee1f1e875b9c01d87dd4c","08-consumiveis":"d04f4bf0a81ca6198ecda918202c4b51ac6d94fe27b53dcc17c019d442877503","09-acumulacao-dmg":"469486a27cc5dc9ca85892b94b48a07ad30ad85a7797a668e7e5f67aa0b1e2d5"}
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:10.9648833Z ✔ vetores-ouro: o conjunto gravado tem 9 grupos, ≥ 20 casos por grupo e ≥ 500 no total (14.113004ms)
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:10.9651988Z ✔ vetores-ouro: o motor do CI é o dos vetores (SHA-256) (4.152572ms)
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:10.9655974Z ✔ vetores-ouro: 100 % dos casos reproduzem a saída gravada (584.363981ms)
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:10.9659095Z ✔ vetores-ouro: duas corridas são byte-idênticas entre si e iguais aos ficheiros gravados (706.137596ms)
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:10.9768451Z ℹ tests 6
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:10.9768886Z ℹ suites 0
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:10.9769236Z ℹ pass 6
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:10.9769591Z ℹ fail 0
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:10.9769895Z ℹ cancelled 0
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:10.9770216Z ℹ skipped 0
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:10.9770518Z ℹ todo 0
+motor-real	Integração da sala com o motor real	2026-11-24T11:05:10.9770877Z ℹ duration_ms 1410.474515
+motor-real	Post Run actions/setup-node@v4	﻿2026-11-24T11:05:10.9918606Z Post job cleanup.
+motor-real	Post Run actions/setup-node@v4	2026-11-24T11:05:11.1124154Z (node:2497) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+motor-real	Post Run actions/setup-node@v4	2026-11-24T11:05:11.1125565Z (Use `node --trace-deprecation ...` to show where the warning was created)
+motor-real	Post Run actions/checkout@v4	﻿2026-11-24T11:05:11.1325352Z Post job cleanup.
+motor-real	Post Run actions/checkout@v4	2026-11-24T11:05:11.2269532Z [command]/usr/bin/git version
+motor-real	Post Run actions/checkout@v4	2026-11-24T11:05:11.2314818Z git version 2.56.1
+motor-real	Post Run actions/checkout@v4	2026-11-24T11:05:11.2406039Z Temporarily overriding HOME='/home/runner/work/_temp/f80e7061-87ba-4332-a400-89d48a62794b' before making global git config changes
+motor-real	Post Run actions/checkout@v4	2026-11-24T11:05:11.2423173Z Adding repository directory to the temporary git global config as a safe directory
+motor-real	Post Run actions/checkout@v4	2026-11-24T11:05:11.2424694Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos
+motor-real	Post Run actions/checkout@v4	2026-11-24T11:05:11.2427057Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+motor-real	Post Run actions/checkout@v4	2026-11-24T11:05:11.2429226Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+motor-real	Post Run actions/checkout@v4	2026-11-24T11:05:11.2715170Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+motor-real	Post Run actions/checkout@v4	2026-11-24T11:05:11.2743863Z http.https://github.com/.extraheader
+motor-real	Post Run actions/checkout@v4	2026-11-24T11:05:11.2760128Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+motor-real	Post Run actions/checkout@v4	2026-11-24T11:05:11.2794534Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+motor-real	Post Run actions/checkout@v4	2026-11-24T11:05:11.3063105Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+motor-real	Post Run actions/checkout@v4	2026-11-24T11:05:11.3113398Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+motor-real	Complete job	﻿2026-11-24T11:05:11.3566391Z Cleaning up orphan processes
+motor-real	Complete job	2026-11-24T11:05:11.3908087Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
