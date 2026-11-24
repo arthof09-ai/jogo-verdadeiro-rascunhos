@@ -96,6 +96,10 @@ var _espera_vista := -1.0
 ## Ordem 49 (A): pedidos da vista que não saíram, seguidos, desde o último pedido novo (o tecto é TENTATIVAS_VISTA_MAX).
 var _vista_nao_saiu := 0
 var _repassar := false
+## ORDEM-D-AUD-14-LARGURA: o mínimo da barra das abas com que a folha foi medida da última vez (-1 = ainda não medida).
+## A barra só sabe a letra nova um pouco depois de o tema mudar; quando o mínimo dela muda, a folha volta a medir-se.
+var _abas_medidas := -1.0
+var _remedir_pendente := false
 
 var _tabuleiro: SubViewportContainer
 var _arena: ArenaMestre
@@ -1234,6 +1238,7 @@ func _montar() -> void:
 	_abas.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_abas.clip_tabs = false
 	col2.add_child(_abas)
+	_abas.get_tab_bar().minimum_size_changed.connect(_ao_mudar_barra_abas)
 	_lista_figuras = _aba(Textos.ABA_FIGURAS)
 	_aba_agir = _aba_com(Textos.ABA_AGIR, AbaAgir.new()) as AbaAgir
 	_aba_agir.montar(self)
@@ -1428,7 +1433,8 @@ func _ao_redimensionar() -> void:
 		largura_folha = largura_col1 + margem * 2.0
 	# A barra das abas nunca se corta: a folha alarga o que for preciso (o tabuleiro encolhe).
 	if not _encolhida:
-		var largura_abas := _abas.get_tab_bar().get_minimum_size().x + float(_fonte)
+		_abas_medidas = _abas.get_tab_bar().get_minimum_size().x
+		var largura_abas := _abas_medidas + float(_fonte)
 		largura_folha = maxf(largura_folha, largura_col1 + largura_abas + margem * 3.0)
 		largura_folha = minf(largura_folha, area.x * 0.85)
 	largura_folha = maxf(largura_folha, largura_col1 + margem * 2.0)
@@ -1459,6 +1465,25 @@ func _ao_redimensionar() -> void:
 	else:
 		_repassar = true
 		_ao_redimensionar.call_deferred()
+
+
+## ORDEM-D-AUD-14-LARGURA: a barra das abas mudou de tamanho mínimo (a letra nova chegou-lhe, ou uma aba mudou de
+## título). Se a folha foi medida com outro mínimo, mede-se outra vez — uma só, no fim do quadro. Sem isto a folha
+## ficava com a largura da letra ANTERIOR até a janela voltar a mudar (abrir a 800×450 e passar a 1600×900 dava
+## 712 px de tabuleiro em vez de 864).
+func _ao_mudar_barra_abas() -> void:
+	if _remedir_pendente or _folha == null:
+		return
+	if is_equal_approx(_abas.get_tab_bar().get_minimum_size().x, _abas_medidas):
+		return
+	_remedir_pendente = true
+	_remedir_folha.call_deferred()
+
+
+func _remedir_folha() -> void:
+	_remedir_pendente = false
+	if is_inside_tree():
+		_ao_redimensionar()
 
 
 # ---------------------------------------------------------------- Ordem HUD: a caixa da ordem de turnos

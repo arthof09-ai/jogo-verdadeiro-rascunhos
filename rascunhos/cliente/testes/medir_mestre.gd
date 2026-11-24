@@ -48,6 +48,7 @@ func _medir_todas() -> void:
 	_rede.papel = "mestre"
 	for j in JANELAS:
 		await _medir(j)
+	await _medir_historia()
 	print("ecrã do Mestre: %d falha(s), %d sem medida" % [_falhas, _sem_medida])
 	quit(1 if _falhas > 0 else (2 if _sem_medida > 0 else 0))
 
@@ -209,6 +210,62 @@ func _medir(janela: Vector2i) -> void:
 	for b in _botoes_visiveis(m):
 		_verificar(_dentro(b, visivel), "%s (folha encolhida) botão «%s» à vista" % [janela, b.text])
 	_verificar(_dentro(m._titulo_cartao, visivel), "%s (folha encolhida) título do cartão à vista" % [janela])
+	m.queue_free()
+	await process_frame
+
+
+# ---------------------------------------------------------------- ORDEM-D-AUD-14-LARGURA
+
+## A janela onde se compara a largura do tabuleiro, e a janela pequena por onde o segundo percurso passa antes.
+const JANELA_HISTORIA := Vector2i(1600, 900)
+const JANELA_PEQUENA := Vector2i(800, 450)
+
+
+## O ecrã do Mestre montado numa janela já com `janela`, depois de os quadros assentarem.
+func _montar_mestre(janela: Vector2i):
+	root.size = janela
+	await process_frame
+	var m = (load(CENA) as PackedScene).instantiate()
+	m.enviar_fn = func(_t, _c, _r): return ""
+	m.pedir_vista_fn = func(): pass
+	root.add_child(m)
+	for i in 4:
+		await process_frame
+	return m
+
+
+## A folha que a regra do _ao_redimensionar pede com a letra de AGORA (unidades): 45 % da área, alargada até caber a
+## coluna 1 + a barra das abas + uma letra + 3 margens, com o tecto de 85 %.
+func _folha_pedida(m) -> float:
+	var f := float(m._fonte)
+	var area: float = m.get_viewport_rect().size.x
+	var abas: float = m._abas.get_tab_bar().get_minimum_size().x
+	return minf(maxf(area * (1.0 - m.FRACAO_TABULEIRO), f * 14.0 + abas + f + f * 0.5 * 3.0), area * 0.85)
+
+
+## D-AUD-14: a largura do tabuleiro do Mestre não depende do caminho até à janela. Aberto directo a 1600×900, ou aberto
+## a 800×450 e passado a 1600×900, o tabuleiro tem os mesmos píxeis — e a folha é a que a regra pede com a letra
+## actual (não a da letra anterior, em cache na barra das abas). Antes da correcção: 880 contra 712 px.
+func _medir_historia() -> void:
+	var escala := minf(float(JANELA_HISTORIA.x) / 1920.0, float(JANELA_HISTORIA.y) / 1080.0)
+	var m = await _montar_mestre(JANELA_HISTORIA)
+	var directo: float = m._tabuleiro.size.x * escala
+	_verificar(absf(m._folha.size.x - _folha_pedida(m)) <= 0.5, "%s directo: a folha é a da letra actual (%.0f = %.0f unidades)"
+		% [JANELA_HISTORIA, m._folha.size.x, _folha_pedida(m)])
+	m.queue_free()
+	await process_frame
+	m = await _montar_mestre(JANELA_PEQUENA)
+	_verificar(absf(m._folha.size.x - _folha_pedida(m)) <= 0.5, "%s: a folha é a da letra actual (%.0f = %.0f unidades)"
+		% [JANELA_PEQUENA, m._folha.size.x, _folha_pedida(m)])
+	root.size = JANELA_HISTORIA
+	for i in 4:
+		await process_frame
+	var depois: float = m._tabuleiro.size.x * escala
+	print("  MEDIDA MESTRE-LARGURA %s directo=%.0f px depois de %s=%.0f px" % [JANELA_HISTORIA, directo, JANELA_PEQUENA, depois])
+	_verificar(absf(m._folha.size.x - _folha_pedida(m)) <= 0.5, "%s → %s: a folha é a da letra actual (%.0f = %.0f unidades)"
+		% [JANELA_PEQUENA, JANELA_HISTORIA, m._folha.size.x, _folha_pedida(m)])
+	_verificar(absf(directo - depois) <= 1.0, "%s: o tabuleiro tem a mesma largura aberto directo (%.0f px) e depois de %s (%.0f px)"
+		% [JANELA_HISTORIA, directo, JANELA_PEQUENA, depois])
 	m.queue_free()
 	await process_frame
 
