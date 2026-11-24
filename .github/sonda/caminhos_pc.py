@@ -17,11 +17,11 @@ isso a base não repete o caminho do PC. É um multiconjunto: uma linha repetida
 
 Saída 0: todas as ocorrências estão na base. Saída 1: há pelo menos uma ocorrência nova (ficheiro:linha e forma,
 sem o texto). As entradas da base que já não existem (ficheiro redigido) são só informadas; para encolher a base,
-corre-se com --gerar.
+corre-se com --gerar. Crescer a base exige o sinal --permitir-crescer com a referência da ordem que o autoriza; sem ele, o --gerar recusa com saída 1.
 
 Uso:
   python3 caminhos_pc.py [--raiz .] [--base .github/sonda/caminhos-pc-base.txt]
-  python3 caminhos_pc.py --raiz . --gerar .github/sonda/caminhos-pc-base.txt
+  python3 caminhos_pc.py --raiz . --gerar .github/sonda/caminhos-pc-base.txt [--permitir-crescer <referência da ordem>]
   python3 caminhos_pc.py --auto-teste
 """
 import argparse
@@ -70,19 +70,46 @@ def procurar(raiz: str):
 
 def ler_base(caminho: str):
     base = collections.Counter()
-    with open(caminho, "r", encoding="utf-8") as f:
-        for linha in f:
+    try:
+        f = open(caminho, "r", encoding="utf-8")
+    except OSError:
+        print(f"::error::A linha de base não existe ou não se lê: {os.path.basename(caminho)}")
+        sys.exit(1)
+    with f:
+        for n, linha in enumerate(f, 1):
             linha = linha.rstrip("\r\n")
             if not linha or linha.startswith("#"):
                 continue
-            rel, h = linha.split("\t")
+            try:
+                rel, h = linha.split("\t")
+            except ValueError:
+                print(f"::error::Linha de base mal formada na linha {n} de {os.path.basename(caminho)}: esperava caminho<TAB>sha")
+                sys.exit(1)
             base[(rel, h)] += 1
     return base
 
 
-def gerar(raiz: str, destino: str) -> int:
+def gerar(raiz: str, destino: str, permitir: str | None = None) -> int:
     achados = procurar(raiz)
     entradas = sorted(f"{rel}\t{h}" for rel, _, _, h in achados)
+    if os.path.isfile(destino):
+        # A base antiga existe: crescer só com sinal explícito (A.4).
+        base_antiga = ler_base(destino)
+        resto = base_antiga.copy()
+        novos = []
+        for rel, _, _, h in achados:
+            if resto[(rel, h)] > 0:
+                resto[(rel, h)] -= 1
+            else:
+                novos.append((rel, h))
+        if novos:
+            if permitir is None:
+                print("::error::A base cresceria: há ocorrências novas sem entrada na base antiga — recuso gerar.")
+                for rel, h in sorted(novos):
+                    print(f"{rel}\t{h}")
+                print("  (para crescer é preciso o sinal --permitir-crescer <referência da ordem>)")
+                return 1
+            print(f"a base cresce com autorização: {permitir}")
     with open(destino, "w", encoding="utf-8", newline="\n") as f:
         f.write("# Linha de base da Sonda dos caminhos do PC (ORDEM-SONDA-CAMINHOS-PC). Gerada por caminhos_pc.py --gerar.\n")
         f.write("# Cada linha: caminho relativo <TAB> sha256 da linha que traz o caminho do PC. Só pode encolher.\n")
@@ -171,6 +198,48 @@ def auto_teste() -> int:
            {"v.log": velho, "outro.log": velho}, 1, base={"v.log": velho})
     correr("linha de base: a mesma linha repetida no mesmo ficheiro é apanhada",
            {"v.log": velho + velho}, 1, base={"v.log": velho})
+    def correr_gerar(rot, arvore, base, permitir, esperado):
+        nonlocal falhas
+        with tempfile.TemporaryDirectory() as t:
+            for rel, txt in arvore.items():
+                p = os.path.join(t, rel)
+                os.makedirs(os.path.dirname(p), exist_ok=True)
+                with open(p, "w", encoding="utf-8", newline="") as f:
+                    f.write(txt)
+            bcam = os.path.join(t, ".base")
+            if base is not None:
+                with tempfile.TemporaryDirectory() as t2:
+                    for rel, txt in base.items():
+                        p = os.path.join(t2, rel)
+                        os.makedirs(os.path.dirname(p), exist_ok=True)
+                        with open(p, "w", encoding="utf-8", newline="") as f:
+                            f.write(txt)
+                    gerar(t2, bcam)
+            antes = None
+            if os.path.isfile(bcam):
+                with open(bcam, "rb") as f:
+                    antes = f.read()
+            print(f"--- {rot} (esperado: saída {esperado})")
+            r = gerar(t, bcam, permitir)
+            depois = None
+            if os.path.isfile(bcam):
+                with open(bcam, "rb") as f:
+                    depois = f.read()
+            ok = r == esperado
+            if esperado == 1 and antes is not None and depois != antes:
+                print("=== a base foi reescrita apesar da recusa")
+                ok = False
+            print(f"=== {rot}: saída {r} -> {'OK' if ok else 'FALHOU'}")
+            if not ok:
+                falhas += 1
+
+    # A guarda do --gerar: crescer sem sinal recusa (e não reescreve a base); com sinal passa; encolher passa.
+    correr_gerar("gerar: sem base antiga, passa", {"v.log": velho}, None, None, 0)
+    correr_gerar("gerar: encolher passa", {"v.log": ""}, {"v.log": velho}, None, 0)
+    correr_gerar("gerar: crescer sem sinal recusa",
+                 {"v.log": velho + "linha nova " + casos["forma 3"] + "\n"}, {"v.log": velho}, None, 1)
+    correr_gerar("gerar: crescer com sinal passa",
+                 {"v.log": velho + "linha nova " + casos["forma 3"] + "\n"}, {"v.log": velho}, "ORDEM-TESTE", 0)
     print(f"AUTO-TESTE: {falhas} falha(s)")
     return 1 if falhas else 0
 
@@ -180,12 +249,13 @@ def main() -> int:
     ap.add_argument("--raiz", default=".")
     ap.add_argument("--base")
     ap.add_argument("--gerar")
+    ap.add_argument("--permitir-crescer", default=None, metavar="REFERÊNCIA")
     ap.add_argument("--auto-teste", action="store_true")
     a = ap.parse_args()
     if a.auto_teste:
         return auto_teste()
     if a.gerar:
-        return gerar(a.raiz, a.gerar)
+        return gerar(a.raiz, a.gerar, a.permitir_crescer)
     return conferir(a.raiz, a.base)
 
 

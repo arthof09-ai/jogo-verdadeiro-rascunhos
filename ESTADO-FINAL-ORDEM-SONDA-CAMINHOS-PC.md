@@ -59,7 +59,7 @@ multiconjunto:
   copiada para outro ficheiro ou repetida no mesmo ficheiro (os quatro casos estão no auto-teste);
 - quando uma errata redige um ficheiro, as entradas dele **sobram**. A Sonda informa («N entradas da base já não
   existem») mas não falha. Para encolher a base: `python3 .github/sonda/caminhos_pc.py --raiz . --gerar
-  .github/sonda/caminhos-pc-base.txt`. A base só deve encolher. Para a fazer crescer, é precisa uma ordem.
+  .github/sonda/caminhos-pc-base.txt`. A base só pode encolher. Para a fazer crescer, é precisa uma ordem **e** o sinal `--permitir-crescer` com a referência dessa ordem — o código recusa crescer sem ele.
 
 Se o coordenador preferir a rede crua, isto é, a Sonda vermelha até a redacção acabar, basta tirar o `--base` do
 passo.
