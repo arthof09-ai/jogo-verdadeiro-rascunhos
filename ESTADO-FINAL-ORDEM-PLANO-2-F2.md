@@ -180,4 +180,14 @@ arranque), não da F2. Quem chega pelo QR vê isto primeiro. Fica como sugestão
 
 ## Nota do CI
 
-(a preencher depois do push das provas)
+- `525e314` (código + listas): **Testes dos rascunhos 45328734361: success** e **Sonda de privacidade 45328734356:
+  success**. O `retoma-pc`, vermelho na ponta `4052913` (run 45305120396), ficou verde.
+- `0cdf245` (provas + ESTADO-FINAL): **Testes dos rascunhos 45328919592: success**, com os 10 jobs verdes (servidor,
+  validador-glb, motor-real, protocolo, cliente, godot-cliente, foto-mestre, provas-mapa, ponta-a-ponta, retoma-pc),
+  e **Sonda de privacidade 45328919620: success**.
+  - No log do CI, o `servidor` dá 435 testes: 425 pass, 0 fail e 10 skipped, os saltos antigos do job sem rede. Os 6
+    testes da F2 (JV3.4 ×4, V1.0 ×2) estão «✔».
+  - O `rodar_testes` dá 321 de 321.
+- **O workflow «Aparelhos (F2)» não correu**: está em `ci-pendente/` (§5.1). Os três exports, a web no Chromium, o
+  `.exe` do Windows, os 3 bots e o QR estão provados só no PC. O APK a correr num Android não está provado em lado
+  nenhum: ele constrói, mas falta o job `android`.
