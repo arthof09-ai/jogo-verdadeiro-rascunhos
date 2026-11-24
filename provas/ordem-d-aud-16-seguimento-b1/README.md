@@ -49,7 +49,7 @@ DNS ou socket), `seatToken="token-ficticio-seguimento-b1"`, papel `mestre`. Arra
 |---|---|
 | `capturas/b01-lobby-pelo-ramo-do-mestre-12s.png` | aos 12 s: o lobby **no modo do Mestre** («Entre com o PIN do Mestre.», «Entrar como Mestre»), com o motivo da Rede em amarelo: **«Este endereço não é da rede de casa. Peça ao Mestre o link certo.»** (`Rede.motivo_entrada = "rede_local"`, `lobby.gd:38`) |
 | `capturas/b02-lobby-pelo-ramo-do-mestre-25s.png` | o mesmo aos 25 s: fica no lobby, sem voltar ao Mestre |
-| `logs/b-godot-arranque-mestre-guarda-android.log` | o `godot.log`: **`arranque: lugar do Mestre -> res://cenas/mestre/mestre.tscn (ORDEM-D-AUD-16)`**, depois **`ecrã do Mestre aberto sem ligação (estado 0): para o lobby`** (`mestre.gd:222`), depois `pronto` (lobby). Sem a floresta da arena (a arena não se monta), 0 `ERROR` |
+| `logs/b-godot-arranque-mestre-guarda-android.log` | o `godot.log`: **`arranque: lugar do Mestre -> res://cenas/mestre/mestre.tscn (ORDEM-D-AUD-16)`**, depois **`ecrã do Mestre aberto sem ligação (estado 0): para o lobby`** (`mestre.gd:222`), depois `pronto` (lobby). A arena não se monta (só um «pronto», o do lobby), mas a floresta carrega — é a do ecrã do Mestre (`[floresta] pronta em 1785 ms`). 0 `ERROR` |
 | `logs/bh-godot-headless-guarda-android.log` | a mesma corrida sem janela, antes: as mesmas 3 linhas |
 | `logs/b-guarda-android-temporaria.diff` | a mudança de uma linha que se aplica e se desfaz |
 | `capturas-b-comando.ps1.txt` / `capturas-b-saida.txt` | o comando e a saída com as horas. Arranque 12:06:59; `b01` 12:07:12; `b02` 12:07:25 |

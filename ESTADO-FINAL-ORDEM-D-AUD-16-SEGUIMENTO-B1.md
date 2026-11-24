@@ -70,8 +70,10 @@ local. A guarda pára antes de haver DNS ou socket. O caminho foi este:
 3. `mestre.gd` `_ready`: papel `mestre`, `current_scene == self`, `abre_sem_saida(DESLIGADA)` → **o ramo** → lobby.
 
 - `godot.log` (com janela, às 12:06:59; e sem janela, às ~12:01): **`arranque: lugar do Mestre ->
-  res://cenas/mestre/mestre.tscn (ORDEM-D-AUD-16)`**, depois **`ecrã do Mestre aberto sem ligação (estado 0): para
-  o lobby`**, depois `pronto` (o lobby). Não carrega a floresta (a arena não chega a montar-se). 0 `ERROR`.
+  res://cenas/mestre/mestre.tscn (ORDEM-D-AUD-16)`**, depois **`ecrã do Mestre aberto sem ligação (estado 0):
+  para o lobby`**, depois `pronto` (o lobby). A arena não chega a montar-se (só um «pronto», o do lobby), mas
+  a floresta carrega na mesma — é a do ecrã do Mestre, montada no `_montar()` antes do ramo (`[floresta]
+  pronta em 1785 ms` com janela, `3603 ms` sem janela). 0 `ERROR`.
 - `b01` (12:07:12, t = 12 s) e `b02` (12:07:25, t = 25 s): o lobby **no modo do Mestre** («Entre com o PIN do
   Mestre.»), com o motivo **«Este endereço não é da rede de casa. Peça ao Mestre o link certo.»**. Fica no lobby e
   não volta ao Mestre.

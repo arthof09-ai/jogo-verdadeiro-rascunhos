@@ -54,11 +54,13 @@ durante a corrida** (`logs/b-versao-temporaria.diff`). Assim o servidor responde
 
 **Não fiz bancada** do caminho `DESLIGADA` → lobby: esse caminho está coberto só pela verificação pura do
 `abre_sem_saida` (§4, item 8). A troca de cena usa o mesmo `get_tree().current_scene == self` →
-`change_scene_to_file.call_deferred(CENA_LOBBY)` do `recusar()`. Fica uma corrida viva por fazer (sentença
-desta ordem, secção B, B-1): arranque directo com um `lugar.cfg` de papel mestre sem token, com captura do
-lobby e do motivo. (Correcção: a frase anterior dizia que no PC não há maneira de o provocar sem mexer no
-código — há: esse arranque deixa a Rede `DESLIGADA` com o papel certo e o ramo dispara; a corrida ficou por
-fazer.)
+`change_scene_to_file.call_deferred(CENA_LOBBY)` do `recusar()`. A corrida viva do B-1 (24/11/2026) provou que
+o arranque directo com um `lugar.cfg` de papel mestre sem token NÃO chega ao ramo: sem token o
+`papel_do_arranque()` devolve `""` (`rede.gd:727`) e a arena abre o lobby pela jogadora, sem o ecrã do Mestre.
+A frase original deste §1.3 («no PC não há maneira de o provocar sem mexer no código») estava certa para o
+código desta linha. O ramo correu vivo na mesma ordem, mas só com uma linha temporária a forçar a guarda do
+Android (`rede.gd:426`), desfeita a seguir e nunca cometida. Falta uma prova viva sem mexer no código: um APK
+num Android real, ou um gancho de teste no código (sentença da B1, secção B).
 
 ## 2. B-2: o alerta da vista sem rede, e o limite de linhas
 
