@@ -90,3 +90,5 @@ decisões do Mestre. Nenhum deles foi tocado.
 
 O commit `c256016` (as provas e este ESTADO-FINAL) também deu verde: Testes dos rascunhos `45366638939` e Sonda de
 privacidade `45366638791`, ambos `success`.
+
+O commit da errata `072cefbd` (A-1 a A-6 + A-8) deu verde na Sonda (`45374845446`, `success`); o Testes `45374845493` só falhou no job `retoma-pc` (as listas da retoma traziam os SHAs velhos de `dados-fisicos.js` e `dados-fisicos.test.mjs`). A sincronização das listas no commit `baaa31f` deu verde nos dois: Testes dos rascunhos `45376200437` e Sonda de privacidade `45376200376`, ambos `success`.
