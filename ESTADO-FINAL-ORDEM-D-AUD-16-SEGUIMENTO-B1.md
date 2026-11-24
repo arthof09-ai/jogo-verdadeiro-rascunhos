@@ -147,3 +147,5 @@ No `b159e9a` (as provas e este ESTADO-FINAL), os dois workflows deram `success`:
 - **Sonda de privacidade 45422561586.**
 
 Depois disso só entrou o commit desta nota, que muda só este ficheiro.
+
+Nota da conferência (880): erratas E-1' + E-2' + E-3' aplicadas no `b3b3a869` (base `90c16b4`). CI verde no `b3b3a869` — Testes 45443198051 + Sonda 45443197565, ambos success.
