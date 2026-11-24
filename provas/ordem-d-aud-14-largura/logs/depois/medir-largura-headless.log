@@ -1,0 +1,15 @@
+# comando: godot --headless --path . -s <raiz>/provas/ordem-d-aud-14-largura/ferramentas/medir_largura.gd
+# código: HEAD afc7e85 + correcção do mestre.gd (cópia de trabalho)
+# hora: 24/11/2026 11:34:47 -0300
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ORDEM-D-AUD-14-LARGURA — o tabuleiro do Mestre a 1600×900 (DisplayServer: headless)
+Percurso A: abertura directa a 1600×900
+  A 1600×900 (directo)           janela 1600×900  letra 22  tabuleiro  864 px  folha  736 px ( 883 unid., a regra pede  883)  barra: mínimo 520 unid., acaba em 1920 de 1920  →  certa
+Percurso B: abertura a 800×450, depois 1600×900
+  B 800×450                      janela  800×450  letra 32  tabuleiro  287 px  folha  513 px (1231 unid., a regra pede 1231)  barra: mínimo 703 unid., acaba em 1920 de 1920  →  certa
+  B 800×450 → 1600×900           janela 1600×900  letra 22  tabuleiro  864 px  folha  736 px ( 883 unid., a regra pede  883)  barra: mínimo 520 unid., acaba em 1920 de 1920  →  certa
+Percurso C: a seguir, 1600×898 → 1600×900
+  C … → 1600×898 → 1600×900      janela 1600×900  letra 22  tabuleiro  864 px  folha  736 px ( 883 unid., a regra pede  883)  barra: mínimo 520 unid., acaba em 1920 de 1920  →  certa
+RESULTADO tabuleiro A=864 px  B=864 px  C=864 px  →  IGUAIS; folha na regra da letra actual nos quatro passos: sim
+# saída: 0
