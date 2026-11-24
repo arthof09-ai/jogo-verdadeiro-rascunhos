@@ -1,0 +1,61 @@
+{
+  "formato": "vetores-ouro/1",
+  "motorSha256": "a91c021cda11df675c78c63277e6f2679faa79c716c7ba104373198689993261",
+  "grupos": [
+    {
+      "grupo": "01-ataque-normal",
+      "ficheiro": "01-ataque-normal.json",
+      "casos": 96,
+      "sha256": "ca7a50a7b2fe041cc7cb3d7af3f111db6d0355223818b3a07b6341f9b02e59b2"
+    },
+    {
+      "grupo": "02-ataque-critico",
+      "ficheiro": "02-ataque-critico.json",
+      "casos": 44,
+      "sha256": "6d2de0cc5d30bf72d5f4308992de1edfe48c611a53e0173b601975ed34f24dbe"
+    },
+    {
+      "grupo": "03-falha-critica",
+      "ficheiro": "03-falha-critica.json",
+      "casos": 66,
+      "sha256": "3a585cddf83c1a0a579546ad1d99951afe2f47ca385fdf6ec1fb2c65a1aee324"
+    },
+    {
+      "grupo": "04-morte-3x3",
+      "ficheiro": "04-morte-3x3.json",
+      "casos": 68,
+      "sha256": "731b6b8f622263843dc9a9e9109a9550505bba1f82843149a56305fd9870af27"
+    },
+    {
+      "grupo": "05-desvincular",
+      "ficheiro": "05-desvincular.json",
+      "casos": 47,
+      "sha256": "a02e0a1710ee0c653a35f0319ba0378dab6778df9bde558386ba299bf46690e6"
+    },
+    {
+      "grupo": "06-defender",
+      "ficheiro": "06-defender.json",
+      "casos": 40,
+      "sha256": "9159c96af3fc125be4d4f50221638d84fe7f90fce0865f8a191b63a8c1473e9b"
+    },
+    {
+      "grupo": "07-transformacao",
+      "ficheiro": "07-transformacao.json",
+      "casos": 30,
+      "sha256": "43706ae3def33333273c65f34af9bac6645a9cf306e91c26846988a05c6a9d8a"
+    },
+    {
+      "grupo": "08-consumiveis",
+      "ficheiro": "08-consumiveis.json",
+      "casos": 24,
+      "sha256": "d04f4bf0a81ca6198ecda918202c4b51ac6d94fe27b53dcc17c019d442877503"
+    },
+    {
+      "grupo": "09-acumulacao-dmg",
+      "ficheiro": "09-acumulacao-dmg.json",
+      "casos": 102,
+      "sha256": "469486a27cc5dc9ca85892b94b48a07ad30ad85a7797a668e7e5f67aa0b1e2d5"
+    }
+  ],
+  "total": 517
+}
