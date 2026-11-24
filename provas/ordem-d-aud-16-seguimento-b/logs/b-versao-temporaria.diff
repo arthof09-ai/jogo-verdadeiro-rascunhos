@@ -1,0 +1,7 @@
+--- a/rascunhos/cliente/rede/rede.gd
++++ b/rascunhos/cliente/rede/rede.gd
+@@ -44,3 +44,3 @@ enum Ligacao { DESLIGADA, A_LIGAR, A_ENTRAR, NA_MESA, A_ESPERAR, PARADA }
+ 
+-const PROTOCOLO := 2
++const PROTOCOLO := 3
+ const VERSAO_CLIENTE := "0.2.0-jv3.1"

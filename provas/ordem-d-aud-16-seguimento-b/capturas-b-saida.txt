@@ -1,0 +1,6 @@
+arranque: 2026-11-24 08:45:12 -03:00
+godot pid 38324
+b01 (t=10 s): 2026-11-24 08:45:22 -03:00 <sede>\tmp\cap\b01-mestre-versao-rejeitada-10s.png 960x540
+b02 (t=25 s): 2026-11-24 08:45:37 -03:00 <sede>\tmp\cap\b02-mestre-versao-rejeitada-25s.png 960x540
+fechado: 2026-11-24 08:45:38 -03:00
+

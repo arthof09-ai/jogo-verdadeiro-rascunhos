@@ -1,0 +1,31 @@
+# comando: (cd rascunhos/cliente && <godot> --headless --path . -s testes/abrir_clareira.gd)
+# hora: início 2026-11-24 08:47:02 -0300
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+== Clareira de prova ==
+  ok    a cena carrega
+[clareira] pronta: perfil=medio hora=15.0 (PLACEHOLDERS)
+  ok    tem o nó Ambiente
+  ok    tem o nó Sol
+  ok    tem o nó Camera
+  ok    tem o nó Perfis
+  ok    tem o nó Medicao/Rotulo
+  ok    o céu é o shader pintado
+  ok    um sol no grupo «sol»
+  ok    um ambiente no grupo «ambiente»
+  ok    5 figuras no grupo «figura» (4 + a besta)
+  ok    8 no grupo «folhagem» (7 copas + arbustos)
+  ok    os arbustos no grupo «folhagem_densa»
+  ok    o perfil inicial (médio) foi aplicado
+  ok    nenhuma copa com pontilhado (REF_23: à espera do Mestre)
+  ok    as 4 horas-chave aplicam-se (fica nas 22 h)
+  ok    o sol aponta para baixo
+  ok    Baixo: aplica e tira o contorno
+  ok    Alto: aplica e repõe o contorno
+  ok    «Médio» da ⚙ aplica-se
+  ok    Baixo: metade dos arbustos
+  ok    Alto: todos os arbustos
+  ok    o rótulo de medição actualiza-se
+
+22 de 22 verificações passaram.
+# hora: fim 2026-11-24 08:47:04 -0300 rc=0

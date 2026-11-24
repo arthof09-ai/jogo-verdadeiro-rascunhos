@@ -1,0 +1,20 @@
+# comando: o bloco abaixo, corrido pelo agente da sessão 1 (tmp/s1-agente.ps1, cópia do da D-AUD-16-SEGUIMENTO com a sede desta ordem; $sede = a pasta desta ordem no PC)
+# ORDEM-D-AUD-16-SEGUIMENTO-B, corrida V (B-2): o alerta da vista, quando aparece (na mesa, tecto da Ordem 49), cabe inteiro.
+Add-Type -Namespace W -Name S2 -MemberDefinition '[DllImport("user32.dll")] public static extern bool SetWindowPos(System.IntPtr h, System.IntPtr a, int x, int y, int cx, int cy, uint f);' -ErrorAction SilentlyContinue
+$cliente = "$sede\repo\rascunhos\cliente"
+$godot = '<godot 4.7.2>'
+$antes = $env:APPDATA
+$env:APPDATA = "$sede\tmp\appdata-v"
+$t0 = Get-Date
+"arranque: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz')"
+$p = Start-Process -FilePath $godot -ArgumentList @('--path', "`"$cliente`"", '--windowed', '--resolution', '960x540', '--position', '0,40', '-s', "`"$sede\tmp\foto_alerta_vista.gd`"") -PassThru -WorkingDirectory $cliente -RedirectStandardOutput "$sede\tmp\v-saida.log" -RedirectStandardError "$sede\tmp\v-erros.log"
+$env:APPDATA = $antes
+"godot pid $($p.Id)"
+while (-not (Select-String -Path "$sede\tmp\v-saida.log" -Pattern 'CAPTURAR' -Quiet -ErrorAction SilentlyContinue)) { Start-Sleep -Milliseconds 200; if (((Get-Date)-$t0).TotalSeconds -gt 60) { break } }
+$script:M = JanelaDe $p.Id
+[W.S2]::SetWindowPos($M, [IntPtr](-1), 0, 40, 976, 579, 0x40) | Out-Null
+Start-Sleep -Milliseconds 1500
+"v01 (t=$([int]((Get-Date)-$t0).TotalSeconds) s): $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz') $(Captura $M "$sede\tmp\cap\v01-mestre-alerta-da-vista-inteiro.png")"
+[W.S2]::SetWindowPos($M, [IntPtr](-2), 0, 0, 0, 0, 0x13) | Out-Null
+$p.WaitForExit(20000) | Out-Null
+"fechado: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz')"

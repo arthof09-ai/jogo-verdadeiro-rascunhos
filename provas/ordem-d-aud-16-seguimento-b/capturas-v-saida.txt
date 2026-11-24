@@ -1,0 +1,5 @@
+arranque: 2026-11-24 08:46:08 -03:00
+godot pid 38484
+v01 (t=6 s): 2026-11-24 08:46:14 -03:00 <sede>\tmp\cap\v01-mestre-alerta-da-vista-inteiro.png 960x540
+fechado: 2026-11-24 08:46:20 -03:00
+

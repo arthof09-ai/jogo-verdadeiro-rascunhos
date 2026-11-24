@@ -1,0 +1,45 @@
+## ORDEM-D-AUD-16-SEGUIMENTO-B (B-2): o ecrã do Mestre, com janela, NA MESA e com o pedido da vista a não sair até ao
+## tecto da Ordem 49 — o único caso em que o alerta «A vista da mesa não se pediu (40 tentativas). Toque em
+## «Atualizar».» aparece agora. Serve para a captura mostrar o texto inteiro no rótulo dos alertas (eram 2 linhas e ficava
+## «A vista da mesa não se»). Não é suite: fica aberto 8 s para a captura e sai.
+## Uso: <godot> --path rascunhos/cliente --windowed --resolution 960x540 -s <este ficheiro>
+extends SceneTree
+
+const CENA := "res://cenas/mestre/mestre.tscn"
+
+
+func _initialize() -> void:
+	_correr.call_deferred()
+
+
+func _correr() -> void:
+	var rede = root.get_node("Rede")
+	rede.persistir = false
+	rede.papel = "mestre"
+	rede._ja_esteve_na_mesa = true
+	rede.estado_ligacao = rede.Ligacao.NA_MESA
+	var pedidos := [0]
+	var c = (load(CENA) as PackedScene).instantiate()
+	c.enviar_fn = func(_t, _c = null, _r = null): return ""
+	c.pedir_vista_fn = func():
+		pedidos[0] += 1
+		return false  # na mesa, o pedido não sai (o limite de 10 envios/s, sempre cheio)
+	c.pesquisar_fn = func(_t): pass
+	c.consultar_fn = func(_ids): pass
+	c.confirmar_alertas_fn = func(_ids, _p): pass
+	root.add_child(c)
+	for i in 3:
+		await process_frame
+	c._aviso_entendido()
+	c.set_process(false)
+	for i in 45:
+		c._process(0.26)
+	for i in 3:
+		await process_frame
+	var al: Label = c._alerta
+	print("pedidos=%d alertas=%s" % [pedidos[0], c.alertas])
+	print("rótulo dos alertas: linhas=%d visíveis=%d máximo=%d texto=«%s»" % [al.get_line_count(),
+		al.get_visible_line_count(), al.max_lines_visible, al.text.replace("\n", " ⏎ ")])
+	print("CAPTURAR")
+	await create_timer(8.0).timeout
+	quit(0)

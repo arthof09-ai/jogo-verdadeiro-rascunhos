@@ -1,0 +1,6 @@
+arranque: 2026-11-24 08:43:06 -03:00
+godot pid 35024
+c01 (t=13 s): 2026-11-24 08:43:19 -03:00 <sede>\tmp\cap\c01-mestre-servidor-fora-13s.png 960x540
+c02 (t=35 s): 2026-11-24 08:43:41 -03:00 <sede>\tmp\cap\c02-mestre-servidor-fora-35s.png 960x540
+fechado: 2026-11-24 08:43:41 -03:00
+

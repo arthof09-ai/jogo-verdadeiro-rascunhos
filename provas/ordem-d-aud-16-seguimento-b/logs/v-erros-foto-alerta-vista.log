@@ -1,0 +1,6 @@
+WARNING: MASTER_VIEW: vista_sem_pedido — o pedido não saiu 40 vezes seguidas (10 s); parei
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _tentar_vista (res://cenas/mestre/mestre.gd:287)
+       [1] _process (res://cenas/mestre/mestre.gd:240)
+       [2] _correr (<sede>/tmp/foto_alerta_vista.gd:36)

@@ -1,0 +1,22 @@
+# comando: o bloco abaixo, corrido pelo agente da sessão 1 (tmp/s1-agente.ps1, cópia do da D-AUD-16-SEGUIMENTO com a sede desta ordem; $sede = a pasta desta ordem no PC)
+# ORDEM-D-AUD-16-SEGUIMENTO-B, corrida B (B-1): o cliente do Mestre com janela, servidor EM CIMA (bancada) a rejeitar a versao: o cliente manda v=3 (so na copia de trabalho), sem nunca ter estado na mesa.
+Add-Type -Namespace W -Name S2 -MemberDefinition '[DllImport("user32.dll")] public static extern bool SetWindowPos(System.IntPtr h, System.IntPtr a, int x, int y, int cx, int cy, uint f);' -ErrorAction SilentlyContinue
+$cliente = "$sede\repo\rascunhos\cliente"
+$godot = '<godot 4.7.2>'
+$antes = $env:APPDATA
+$env:APPDATA = "$sede\tmp\appdata-b"
+$t0 = Get-Date
+"arranque: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz')"
+$p = Start-Process -FilePath $godot -ArgumentList @('--path', "`"$cliente`"", '--windowed', '--resolution', '960x540', '--position', '0,40', '--', '--servidor=127.0.0.1:8790') -PassThru -WorkingDirectory $cliente
+$env:APPDATA = $antes
+"godot pid $($p.Id)"
+while (((Get-Date)-$t0).TotalSeconds -lt 8) { Start-Sleep -Milliseconds 200 }
+$script:M = JanelaDe $p.Id
+[W.S2]::SetWindowPos($M, [IntPtr](-1), 0, 40, 976, 579, 0x40) | Out-Null
+while (((Get-Date)-$t0).TotalSeconds -lt 10) { Start-Sleep -Milliseconds 200 }
+"b01 (t=$([int]((Get-Date)-$t0).TotalSeconds) s): $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz') $(Captura $M "$sede\tmp\cap\b01-mestre-versao-rejeitada-10s.png")"
+while (((Get-Date)-$t0).TotalSeconds -lt 25) { Start-Sleep -Milliseconds 200 }
+"b02 (t=$([int]((Get-Date)-$t0).TotalSeconds) s): $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz') $(Captura $M "$sede\tmp\cap\b02-mestre-versao-rejeitada-25s.png")"
+[W.S2]::SetWindowPos($M, [IntPtr](-2), 0, 0, 0, 0, 0x13) | Out-Null
+Stop-Process -Id $p.Id -Force
+"fechado: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz')"
