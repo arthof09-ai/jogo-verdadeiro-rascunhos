@@ -60,6 +60,7 @@ Por grupo, nas três corridas depois da troca: 01 96/96 · 02 44/44 · 03 66/66 
 | `b3c3c8d` | A troca na l. 225, o `07-transformacao.json` e o `MANIFESTO.json` regenerados, e os `sha256-corrida-*.txt` da F4-PARCIAL actualizados (com a nota no README dela) |
 | `f71b070` | As listas da retoma sincronizadas com `retoma-i0004/actualizar-listas.py` depois do `b3c3c8d`: 0 novos, 0 tirados. Mudam só 3 SHAs, no `depois.txt` e no `MANIFESTO-SHA256.txt` |
 | `607a88b` | As provas (`provas/ordem-f4-parcial-a7-canarios/`) e este ESTADO-FINAL. Não muda `rascunhos/`, por isso não precisa de nova sincronização. CI: Testes `45381580578` e Sonda `45381580689`, ambos `success` |
+| `dd7d00c` | Erratas A-1 e A-2 da conferência (970) no README das provas. Não muda `rascunhos/`. CI: Testes `45388031925` e Sonda `45388031992`, ambos `success` |
 | (este) | Esta nota do CI. Também não muda `rascunhos/` |
 
 ## 5. Provas
