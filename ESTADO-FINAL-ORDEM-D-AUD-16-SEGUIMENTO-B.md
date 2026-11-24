@@ -173,3 +173,6 @@ No `52ad009` (o código, as listas, as provas e este ESTADO-FINAL), os dois work
 
 Depois do `52ad009` entrou o `dd7d00c`, de outra ordem: só um README de provas da F4-PARCIAL-A7. Nesse commit os dois
 workflows também deram `success` (45388031925 + 45388031992).
+
+Depois do `dacf670` (erratas E-1 + E-2 da conferência desta ordem, sentença 885), os dois workflows também
+deram `success` (45396760140 + 45396760024): os 10 jobs dos Testes passaram, e a Sonda passou.
