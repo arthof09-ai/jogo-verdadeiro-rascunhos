@@ -154,7 +154,18 @@ ninguém à escuta. O agente da sessão 1 foi parado e a tarefa agendada `DAud16
 |---|---|
 | `31b3f1a` | B-1/B-2/B-3: `mestre.gd`, `textos_mestre.gd`, `rede.gd` (`motivo_parada`) e `pecas_mestre.gd` |
 | `5163106` | as listas da retoma sincronizadas depois de `31b3f1a` (`actualizar-listas`: 0 novos, 0 tirados; só os SHAs) |
-| (este) | as provas (`provas/ordem-d-aud-16-seguimento-b/`) e este ESTADO-FINAL |
+| `52ad009` | as provas (`provas/ordem-d-aud-16-seguimento-b/`) e este ESTADO-FINAL |
 
 O `actualizar-listas.py` correu com `python` (o Python 3.12 do PC). O commit das provas não muda `rascunhos/`, por
 isso as listas não precisam de nova passagem.
+
+## Nota do CI
+
+No `52ad009` (o código, as listas, as provas e este ESTADO-FINAL), os dois workflows deram `success`:
+- **Testes dos rascunhos 45387917813:** os 10 jobs passaram — `motor-real`, `foto-mestre`, `cliente`, `servidor`,
+  `validador-glb`, `retoma-pc`, `protocolo`, `ponta-a-ponta`, `godot-cliente` e `provas-mapa`. O `ponta-a-ponta` (o
+  Mestre Godot sem janela, pela ligação real) e o `foto-mestre` passaram com as mudanças desta ordem;
+- **Sonda de privacidade 45387917574.**
+
+Depois do `52ad009` entrou o `dd7d00c`, de outra ordem: só um README de provas da F4-PARCIAL-A7. Nesse commit os dois
+workflows também deram `success` (45388031925 + 45388031992).
