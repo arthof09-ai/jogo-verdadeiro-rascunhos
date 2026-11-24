@@ -222,7 +222,7 @@ function casosMotor() {
 function fichasComTransformacao(custo, forma) {
   const lista = listaDeFichas();
   const h = lista.find((f) => f.id === 'heroina-teste');
-  h.paTotal = 20; // fictício (o canário 4040 da fixture não importa aqui: o guião não varre privacidade)
+  h.paTotal = 20; h.vidaTotal = 60; h.ca = 12; // fictícios (os canários 4040, 5150 e 5551 da fixture não importam aqui: o guião não varre privacidade)
   h.transformacao = { custo, ...forma };
   const orc = lista.find((f) => f.id === 'orc-teste');
   orc.ca = 11; orc.rd = { geral: 0, porTipo: {} }; orc.vidaTotal = 200; // fictício e baixo: o ataque pode acertar
