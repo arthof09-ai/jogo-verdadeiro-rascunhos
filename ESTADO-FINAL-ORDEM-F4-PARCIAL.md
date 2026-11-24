@@ -2,8 +2,8 @@
 
 **Estado: FEITA.**
 
-O servidor confere agora cada face física declarada contra o dado da técnica. Um valor fora do intervalo é recusado e
-fica gravado. Os vetores-ouro da JV0.3 têm **517 casos em 9 grupos** e dão **517/517 (100 %) no CI**. Duas gerações
+O servidor confere agora cada face física declarada contra o dado da técnica. Um valor fora do intervalo em todas as leituras possíveis é recusado e
+fica gravado (uma lista curta que caiba nalguma leitura passa ao cartão do Mestre; o motor resolve as faces depois). Os vetores-ouro da JV0.3 têm **517 casos em 9 grupos** e dão **517/517 (100 %) no CI**. Duas gerações
 em processos separados são byte-idênticas. O grep da regra no cliente dá **0**. CI verde (Testes + Sonda).
 
 - **Executor:** Claude (opus), PC (conta 2). **Data:** 24/11/2026, das ~04:57 às ~06:40 (-03). Uma primeira corrida
@@ -13,7 +13,7 @@ em processos separados são byte-idênticas. O grep da regra no cliente dá **0*
   também não.
 - **Ponta de partida:** `1e2baab`. Entretanto a F3 pôs 3 commits por cima (`04d29e6`, `a8efed6`, `cb759ec`), que só
   mexem em provas e em documentos da F3 (`git diff --stat bcf02d1 cb759ec -- rascunhos` vem vazio). Na ponta nova,
-  os 7 testes dos dados físicos voltaram a passar (7/7).
+  os 7 testes dos dados físicos voltaram a passar (7/7) — ver o log do job `servidor` do run `45367695349` (ponta `ba01d1e`).
 - **Vigia:** a janela do PC fechou às 05:03 (AVISO-VIGIA). Depois disso só corri trabalho leve (um `node --test` de
   7 testes, sem Godot).
 
@@ -31,7 +31,7 @@ em processos separados são byte-idênticas. O grep da regra no cliente dá **0*
 
 | Peça | O quê |
 |---|---|
-| `rascunhos/servidor/nucleo/dados-fisicos.js` (novo, puro, sem `node:*`) | Lê a expressão da técnica com a gramática do motor (`NdM(+NdM)*` com bónus, e componentes → repartição → `expressaoDano`). Confere cada face pela ordem em que o motor oficial as consome (`vlab-completo.js`, D10): primeiro os conjuntos do ataque (1 a 5, conforme a V/D líquida, que só o motor sabe) e depois os dados do dano. Na falha crítica entram o d100 da desgraça e o dano derivado |
+| `rascunhos/servidor/nucleo/dados-fisicos.js` (novo, puro, sem `node:*`) | Lê a expressão da técnica com a gramática do motor (`NdM(+NdM)*` com bónus, e componentes → repartição → `expressaoDano`; sem repartição e com vários tipos, não há dados de dano — o motor recusa a técnica). Confere cada face pela ordem em que o motor oficial as consome (`vlab-completo.js`, D10): primeiro os conjuntos do ataque e depois os dados do dano. Na falha crítica entram o d100 da desgraça e o dano derivado. Como o servidor não sabe a V/D líquida (só o motor a sabe), aceita-se a lista se ALGUM número de conjuntos de 1 a 5, com ou sem o d100, a explicar; a leitura verdadeira é a do motor, que resolve as faces depois (`FACES_INSUFICIENTES`) |
 | `rascunhos/servidor/nucleo/sala.js` | O `dadosFisicosBemFormados` só vê a forma. O intervalo confere-se em `aplicarIntencao`, no ramo `atacar`, com `conferirFacesFisicas`. **Fora do intervalo:** `ROOM_REJECT acao_invalida`, gravado (RECUSADA na consulta, e o mesmo `intentId` devolve a mesma recusa), sem cartão ao Mestre e sem vez gasta. O porquê (`DADOS_FISICOS_FORA_DO_INTERVALO: …`) vai só ao Mestre, no evento interno `recusa`. **Dentro:** como antes, `AGUARDANDO_MESTRE` e o cartão de dados |
 | `rascunhos/servidor/testes/dados-fisicos.test.mjs` (novo) | 7 testes: 4 da função pura e 3 na sala (dentro passa, fora é recusado, a recusa fica gravada) |
 
@@ -50,7 +50,7 @@ O cliente Godot não calcula regra. As duas buscas do `logs/grep-regra-cliente.l
 | 07 transformação | 30 |
 | 08 consumíveis | 24 |
 | 09 acumulação do DMG | 102 |
-| **Total** | **517** (≥ 500, cada grupo ≥ 20) |
+| **Total** | **517** (≥ 500 do Plano 2, F4 item 6; cada grupo ≥ 20 é fasquia do teste, Plano A, JV0.3) |
 
 - **Ficheiros:** `rascunhos/servidor/testes-motor-real/` → `vetores-ouro.mjs` (os casos), `gerar-vetores.mjs` (gera),
   `vetores-ouro.test.mjs` (4 testes) e `vetores-ouro/*.json` (9 grupos + `MANIFESTO.json`). Cada caso traz a entrada
@@ -60,7 +60,7 @@ O cliente Godot não calcula regra. As duas buscas do `logs/grep-regra-cliente.l
   para regenerar e rever.
 - **O que os vetores NÃO decidem:** os valores do Defender são fictícios (o valor é do Mestre). O grupo dos
   consumíveis congela a ausência de hoje (`consumiveis: []` e a intenção recusada), porque o conteúdo é do Mestre
-  (JV0.6b). Quando o Mestre decidir, regeneram-se esses dois grupos e revêem-se. A transformação vai pelo caminho do
+  (JV0.6b) — 24 casos, mas só 2 saídas distintas (23× `acao_invalida`, 1× `formato`): o grupo congela a recusa, não cobre resultados. Quando o Mestre decidir, regeneram-se esses dois grupos e revêem-se. A transformação vai pelo caminho do
   servidor (a acção `transformar` e a `fichaEfetiva`), porque o `levelup.js` não chega ao job `motor-real`.
 
 ## 4. Os números

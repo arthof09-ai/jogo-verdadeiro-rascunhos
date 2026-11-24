@@ -1,16 +1,16 @@
 // Dados físicos (JV1.3, M-28; ORDEM-F4-PARCIAL): o intervalo de cada face validado contra a expressão da técnica.
 //
 // REGRA: sem node:*, sem relógio, sem acaso. Função pura: não decide nenhuma regra de jogo, só diz se as faces que a
-// jogadora declarou PODEM ter saído dos dados da técnica, pela mesma ordem em que o motor oficial as consome
+// jogadora declarou PODEM ter saído dos dados da técnica, nalguma leitura pela mesma ordem em que o motor oficial as consome (a leitura verdadeira é a do motor, que o servidor não sabe)
 // (vlab-completo.js, resolverAtaque, «D10. Determinismo: contexto.faces consumidas por ordem (conjuntos do ataque
 // primeiro, dano a seguir)»):
 //   1. os conjuntos do ataque: cada conjunto tem TODOS os dados da expressão de ataque, e há 1 + |V − D| conjuntos,
 //      com a V/D líquida entre −4 e +4 (1 a 5 conjuntos). Quantos conjuntos há é o motor que sabe (lê estados que o
 //      servidor não recalcula); por isso aceita-se a lista se ALGUM número de conjuntos de 1 a 5 a explicar;
-//   2. depois, ou os dados do dano (os componentes da técnica; sem eles, a `reparticao`; sem ela, a `expressaoDano`),
+//   2. depois, ou os dados do dano (os componentes da técnica; sem eles, a `reparticao` se existir, senão a `expressaoDano` quando há um só tipo — com vários tipos e sem `reparticao` não há dados de dano e o motor recusa a técnica),
 //      ou — na falha crítica — o d100 da desgraça seguido dos dados do mesmo dano (dano derivado, rolarDerivado).
 // As faces podem parar a meio do dano (o motor diz-o depois, ao resolver: FACES_INSUFICIENTES); o que NUNCA passa é
-// uma face fora do intervalo do dado em que cai, nem uma lista mais comprida do que os dados da técnica.
+// uma face fora do intervalo em TODAS as leituras possíveis, nem uma lista mais comprida do que os dados da técnica. Uma face fora do intervalo na leitura verdadeira mas dentro do intervalo noutra leitura passa ao cartão do Mestre.
 // A gramática é a do motor (analisarExpressao / analisarExpressaoAtaque): NdM(+NdM)* com um bónus inteiro opcional,
 // ou o objecto decomposto {qtd, faces, bonus}.
 
@@ -32,7 +32,8 @@ export function dadosDaExpressao(expr) {
     const [q, f] = termo.toLowerCase().split('d').map(Number);
     if (!(q >= 1 && f >= 2)) return null;
     // Teto de segurança: o formato do ROOM_INTENT já limita a lista a 10 faces; não há porque expandir mais.
-    for (let i = 0; i < q && dados.length <= 64; i += 1) dados.push(f);
+    // Acima de 64 dados a expressão sai da gramática: recusa-se, em vez de truncar.
+    for (let i = 0; i < q; i += 1) { if (dados.length >= 64) return null; dados.push(f); }
   }
   return dados;
 }

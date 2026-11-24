@@ -3,6 +3,7 @@
 Tudo isto foi corrido no PC, com Node `v26.13.0` (ver `logs/node-versao.txt`), na ponta `bcf02d1` da linha
 `fable/integracao-50`. As provas do CI são as dos runs `45353754892` (Testes dos rascunhos) e `45353754800` (Sonda de
 privacidade), ambos `success` na mesma ponta.
+Na ponta nova (`ba01d1e`), os 7 testes dos dados físicos voltaram a passar (7/7) — ver o log do job `servidor` do run `45367695349` (Testes dos rascunhos), com a suite a 442 testes, 432 passam, 0 falham, 10 saltados.
 
 Os caminhos absolutos do PC foram redigidos nos logs (`<TEMP>` e `<pasta-da-ordem>`). Nada mais mudou nos logs.
 

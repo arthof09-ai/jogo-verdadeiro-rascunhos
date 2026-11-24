@@ -1,7 +1,7 @@
 // ORDEM-F4-PARCIAL (Plano 2, F4 ponto 3; JV1.3, M-28): os dados físicos validados por intervalo, no servidor.
-// A jogadora declara as faces que lhe saíram; o servidor confere cada face contra o dado da técnica em que cai (pela
-// ordem do motor: os conjuntos do ataque e depois o dano) ANTES de o cartão ir ao Mestre. Dentro do intervalo:
-// AGUARDANDO_MESTRE (o Mestre confirma com um toque). Fora: RECUSADA, sem cartão, sem vez gasta, e o porquê só ao
+// A jogadora declara as faces que lhe saíram; o servidor confere cada face contra o dado da técnica em que cai (nalguma
+// leitura pela ordem do motor: os conjuntos do ataque e depois o dano; a leitura verdadeira é a do motor) ANTES de o cartão ir ao Mestre. Dentro do intervalo nalguma leitura:
+// AGUARDANDO_MESTRE (o Mestre confirma com um toque). Fora em todas as leituras: RECUSADA, sem cartão, sem vez gasta, e o porquê só ao
 // Mestre. O cliente Godot não confere nada: tudo isto é do servidor.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -16,6 +16,7 @@ test('dados da expressão: a gramática do motor (NdM(+NdM)* com bónus; objecto
   assert.deepEqual(dadosDaExpressao('2d6+1d4-1'), [6, 6, 4]);
   assert.deepEqual(dadosDaExpressao(' 1D8 + 3 '), [8]);
   assert.deepEqual(dadosDaExpressao({ qtd: 3, faces: 10, bonus: 2 }), [10, 10, 10]);
+  assert.equal(dadosDaExpressao('65d6'), null, 'acima de 64 dados: fora da gramática');
   for (const fora of ['d20', '1d1', '5', '1d20+1d', 'abc', '', null, 7, ['1d20']]) {
     assert.equal(dadosDaExpressao(fora), null, 'fora da gramática: ' + JSON.stringify(fora));
   }
