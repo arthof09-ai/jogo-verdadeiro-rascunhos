@@ -9,8 +9,8 @@ apareciam como «vez de Orc…», passam a dizer a heroína.
 
 - **Executor:** Claude (opus), PC, conta 2. **Data:** 24/11/2026 (-03).
 - **Linha:** `fable/integracao-50`, trabalho directo. **Ponta de partida:** `d256202`. A `main` não foi tocada.
-- **Commits:** `5208fb0` (código + testes + fixture), `38170f6` (listas da retoma), e o commit destas provas e
-  deste ESTADO-FINAL (o hash fica na nota do CI).
+- **Commits:** `5208fb0` (código + testes + fixture), `38170f6` (listas da retoma), `09e5875` (provas + este
+  ESTADO-FINAL) e a nota do CI.
 - **Não toquei** na C-6, no «na vez» da caixa (D-AUD-03), nos dados, nos workflows, na `main` nem no cliente da
   jogadora. No servidor, só o rótulo dos pontos do «voltar» (ver §1).
 
@@ -96,4 +96,8 @@ CI ficam para o CI.
 
 ## Nota do CI
 
-_(por preencher depois do push)_
+No `09e5875` (ponta com o código `5208fb0`, as listas `38170f6` e estas provas):
+
+- **Testes dos rascunhos** — run `45394005913`: **success**. Os 10 jobs verdes: `servidor`, `protocolo`, `cliente`,
+  `godot-cliente`, `ponta-a-ponta`, `motor-real`, `foto-mestre`, `retoma-pc`, `validador-glb`, `provas-mapa`.
+- **Sonda de privacidade** — run `45394005999`: **success**.
