@@ -232,3 +232,6 @@ arranque), não da F2. Quem chega pelo QR vê isto primeiro. Fica como sugestão
   («android a correr no emulador à hora desta nota») era verdade na hora da escrita; o resultado final é
   este. O F1 da sentença 595 («o Android NUNCA recebeu o `ROOM_SNAPSHOT` em lado nenhum») continua por
   provar no CI.
+
+- `5f9e11a8` (adenda à Nota do CI — resultado final do run #45457086158): **Testes dos rascunhos 45461942972:
+  success** e **Sonda de privacidade 45461943016: success**.
