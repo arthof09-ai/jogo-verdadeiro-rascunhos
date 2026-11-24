@@ -1,0 +1,19 @@
+Add-Type -Namespace W -Name S2 -MemberDefinition '[DllImport("user32.dll")] public static extern bool ShowWindow(System.IntPtr h, int c); [DllImport("user32.dll")] public static extern bool SetWindowPos(System.IntPtr h, System.IntPtr a, int x, int y, int cx, int cy, uint f);' -ErrorAction SilentlyContinue
+$lg = "$sede\tmp\lancar2.log"
+$t0 = Get-Date
+$p = Start-Process powershell.exe -ArgumentList '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$sede\repo\bancada-rede\lancar.ps1`"", '-SemEspera', '-HostServidor', '127.0.0.1', '-Motor', 'auto' -RedirectStandardOutput $lg -RedirectStandardError "$lg.err" -WindowStyle Hidden -PassThru
+while (-not $p.HasExited -and ((Get-Date) - $t0).TotalSeconds -lt 180) { Start-Sleep -Milliseconds 500 }
+"lancar: saiu=$($p.HasExited) rc=$($p.ExitCode) em $([int]((Get-Date) - $t0).TotalSeconds) s"
+Start-Sleep -Seconds 25
+Ligar
+foreach ($h in @($J, $M)) { [W.S2]::ShowWindow($h, 9) | Out-Null }
+Start-Sleep -Milliseconds 500
+[W.S2]::SetWindowPos($J, [IntPtr](-1), -1920, 0, 960, 572, 0x40) | Out-Null
+[W.S2]::SetWindowPos($M, [IntPtr](-1), -960, 0, 960, 572, 0x40) | Out-Null
+Start-Sleep -Seconds 6
+Ligar
+"hora da captura: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz')"
+Captura $J "$sede\tmp\cap\c01-jogadora-abre-na-arena.png"
+Captura $M "$sede\tmp\cap\c02-mestre-abre-no-ecra-dele.png"
+CapturaAmbas "$sede\tmp\cap\c03-os-dois-clientes-em-simultaneo.png"
+foreach ($h in @($J, $M)) { [W.S2]::SetWindowPos($h, [IntPtr](-2), 0, 0, 0, 0, 0x13) | Out-Null }

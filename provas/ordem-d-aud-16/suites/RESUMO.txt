@@ -1,0 +1,15 @@
+abrir_scripts rc=0 erros_script=0 | 111 scripts, 0 falhas
+rodar_testes rc=0 erros_script=0 | 333 de 333 verificações passaram.
+abrir_clareira rc=0 erros_script=0 | 22 de 22 verificações passaram.
+medir_painel_config rc=0 erros_script=0 | painel ⚙: 0 falha(s), 0 sem medida
+abrir_mestre rc=0 erros_script=0 | 67 de 67 verificações passaram.
+pecas_mestre rc=0 erros_script=0 | 297 de 297 verificações passaram.
+medir_mestre rc=0 erros_script=0 | ecrã do Mestre: 0 falha(s), 0 sem medida
+hud_acoes rc=0 erros_script=0 | 50 de 50 verificações passaram.
+caixa_jogadora rc=0 erros_script=0 | 70 de 70 verificações passaram.
+caixa_janela rc=0 erros_script=0 | 123 de 123 verificações passaram.
+canario_privacidade rc=0 erros_script=0 | 10 de 10 verificações passaram.
+camera_segue rc=0 erros_script=0 | 17 de 17 verificações passaram.
+arranque pronto=2 erros_script=0
+servidor rc=0 tests 435 pass 435 fail 0
+FIM
