@@ -1,4 +1,4 @@
-# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 436 ficheiros mudados ou novos em rascunhos/.
+# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 449 ficheiros mudados ou novos em rascunhos/.
 93c8f082052020ffc4a3a95831f74a5a16a295f366e54842045791c071fc83e4  rascunhos/cliente/README.md
 2a9bda1fa4349cfa9ece76842797ac96adc27ef919c525b3843a6f1cd01e58d5  rascunhos/cliente/arte/README.md
 2bc9bbf8ab270183116aa4eca383ce5b521fe7a466e9db9a065d96cca0da28fa  rascunhos/cliente/arte/ambiente/color_script.gd
@@ -374,7 +374,20 @@ dd5267db96366e781bd33817c6fa0a14c8aa59913b8a30e0bdd37e9f8cd9ea48  rascunhos/serv
 b3d1c9d27cc627e0715e95a4a22d25b007ea72a121fe2001005c8aa7b5eba06b  rascunhos/servidor/nucleo/sala.js
 810f8c90b0a0b0f2456e87455facc894f7614570b2714a0f043e9ef43e8f6675  rascunhos/servidor/nucleo/terreno.js
 7405ef6162aab717e2fbb6e0dc666c3f438d3c52f6fcd611a20caf8b1cd8af82  rascunhos/servidor/testes-motor-real/cura-real.test.mjs
+9c5ed685745303c2e152f5a1efed1853eeb366caae2a505e4ae447040827ba89  rascunhos/servidor/testes-motor-real/gerar-vetores.mjs
 7191918ac84bd9ce197dcaaa0d1fdf0d2559029b8dbc21033a0cae45466b92b8  rascunhos/servidor/testes-motor-real/integracao.test.mjs
+a87f98d4bc66202ddf4010014e37ca8be3fbcd190a288af2ed75f2e950c12e98  rascunhos/servidor/testes-motor-real/vetores-ouro.mjs
+6db06db36abe0280b4c71f3a4d8969ebb9531c08b50c384754180d01ae8d0812  rascunhos/servidor/testes-motor-real/vetores-ouro.test.mjs
+ca7a50a7b2fe041cc7cb3d7af3f111db6d0355223818b3a07b6341f9b02e59b2  rascunhos/servidor/testes-motor-real/vetores-ouro/01-ataque-normal.json
+6d2de0cc5d30bf72d5f4308992de1edfe48c611a53e0173b601975ed34f24dbe  rascunhos/servidor/testes-motor-real/vetores-ouro/02-ataque-critico.json
+3a585cddf83c1a0a579546ad1d99951afe2f47ca385fdf6ec1fb2c65a1aee324  rascunhos/servidor/testes-motor-real/vetores-ouro/03-falha-critica.json
+731b6b8f622263843dc9a9e9109a9550505bba1f82843149a56305fd9870af27  rascunhos/servidor/testes-motor-real/vetores-ouro/04-morte-3x3.json
+a02e0a1710ee0c653a35f0319ba0378dab6778df9bde558386ba299bf46690e6  rascunhos/servidor/testes-motor-real/vetores-ouro/05-desvincular.json
+9159c96af3fc125be4d4f50221638d84fe7f90fce0865f8a191b63a8c1473e9b  rascunhos/servidor/testes-motor-real/vetores-ouro/06-defender.json
+43706ae3def33333273c65f34af9bac6645a9cf306e91c26846988a05c6a9d8a  rascunhos/servidor/testes-motor-real/vetores-ouro/07-transformacao.json
+d04f4bf0a81ca6198ecda918202c4b51ac6d94fe27b53dcc17c019d442877503  rascunhos/servidor/testes-motor-real/vetores-ouro/08-consumiveis.json
+469486a27cc5dc9ca85892b94b48a07ad30ad85a7797a668e7e5f67aa0b1e2d5  rascunhos/servidor/testes-motor-real/vetores-ouro/09-acumulacao-dmg.json
+7b297ee5a026f1d23fc7d62f9610567d70d09bbdd8112f863b4f38bcc226b7c4  rascunhos/servidor/testes-motor-real/vetores-ouro/MANIFESTO.json
 64b087cb94e91b9d8df45c6faf8a04c4c24b8f1fd11b70796d97c2088cfb60b4  rascunhos/servidor/testes/ajudantes-ws.mjs
 2600fb323b65b601cfd38347d2e851f937875356f9dca5656f2f93c37087ca32  rascunhos/servidor/testes/ajudantes.mjs
 8c6bbf3d71caec010f4d2c09288969119a420e6bfcb34d087859b11ff2c268d3  rascunhos/servidor/testes/amigo-ao-alcance.test.mjs
