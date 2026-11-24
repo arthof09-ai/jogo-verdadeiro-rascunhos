@@ -103,3 +103,10 @@ No `09e5875` (ponta com o código `5208fb0`, as listas `38170f6` e estas provas)
 - **Testes dos rascunhos** — run `45394005913`: **success**. Os 10 jobs verdes: `servidor`, `protocolo`, `cliente`,
   `godot-cliente`, `ponta-a-ponta`, `motor-real`, `foto-mestre`, `retoma-pc`, `validador-glb`, `provas-mapa`.
 - **Sonda de privacidade** — run `45394005999`: **success**.
+
+## Errata da conferência (905) — nota do CI
+
+No `80e69bb` (erratas E-1 a E-5 da sentença 905):
+
+- **Testes dos rascunhos** — run `45407422052`: **success**.
+- **Sonda de privacidade** — run `45407422058`: **success**.
