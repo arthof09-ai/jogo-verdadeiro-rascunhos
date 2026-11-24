@@ -138,3 +138,12 @@ Só se usaram as fichas fictícias de bancada.
   `7bca758`. Deu «antes.txt: 38 · depois.txt: 434 · MANIFESTO: 477 ficheiros (0 novos, 0 tirados)» e a árvore ficou
   limpa, por isso não há commit de listas. Nada em `rascunhos/` mudou.
 - O commit da nota do CI, a seguir a este.
+
+### Nota do CI (no `3a3497e`)
+
+- **«Testes dos rascunhos», run 45349563092: verde, os 10 jobs**, à 1.ª tentativa: godot-cliente, cliente,
+  provas-mapa, foto-mestre, retoma-pc, motor-real, protocolo, validador-glb, servidor e ponta-a-ponta.
+  - No `provas-mapa`: `terreno-original=0 terreno-adaptada=0 Mestre/espectador=0 jogadora=0 sonda-do-fio=0
+    erros-de-script=0`, e **`REPETE-SE — números 461/461, bits 73/73`**.
+  - `1 m: figuras` deu desvio (−0.25, 0.25) e `2 m: figuras` deu desvio (0, 0).
+- **«Sonda de privacidade», run 45349563091: verde.**
