@@ -147,3 +147,9 @@ Os logs estão em `provas/ordem-sonda-caminhos-pc/suites/`. Cada um abre com `# 
 
 No `aa31e3a`: **Testes `45377701821` success** (os 10 jobs) + **Sonda `45377701648` success**. A Sonda que correu é
 a **antiga** (só os e-mails): o remendo não está aplicado (§3, §6.1). A rede nova só foi provada no PC (§2).
+
+**Nota do CI das erratas (conferência 745):** erratas de registo A.1/A.2/A.3/A.6 (`0344114`), guarda A.4 (`ddb76db`) e
+remendo A.5 (`9ab44e2`) — CI verde nos três commits (Testes + Sonda). No `9ab44e2`: **Testes `45383839052` success** (os 10
+jobs) + **Sonda `45383839777` success** — a 1.ª corrida da Sonda nova: «A rede morde» com `AUTO-TESTE: 0 falha(s)` (15 casos:
+11 do auto-teste + 4 da guarda) e «Procurar caminhos reais do PC» com 348 ocorrências, 348 na base, **0 novas**. A aceitação
+«CI verde (Testes + Sonda)» com a rede nova fica cumprida.
