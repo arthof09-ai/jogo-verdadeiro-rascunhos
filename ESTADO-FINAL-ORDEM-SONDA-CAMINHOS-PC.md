@@ -104,7 +104,7 @@ rascunhos/cliente`) antes da conferência final.
 - **O push dele foi recusado:** *«refusing to allow an OAuth App to create or update workflow
   `.github/workflows/privacidade.yml` without `workflow` scope»*. O guião e a base estão em `.github/sonda/`, que não
   é pasta de workflows, e esses subiram.
-- **CI desta entrega** (Testes + Sonda antiga): ver a nota do fim.
+- **CI desta entrega** (Testes + Sonda antiga): ver a nota do fim. A rede nova ainda não correu no CI.
 
 ## 4. As suites
 
@@ -123,7 +123,8 @@ Os logs estão em `provas/ordem-sonda-caminhos-pc/suites/`. Cada um abre com `# 
 | commit | o quê |
 |---|---|
 | `ae20ea2` | a rede (`caminhos_pc.py`) e a linha de base (348 entradas) |
-| (seguinte) | este ESTADO-FINAL, as provas, o remendo |
+| `aa31e3a` | este ESTADO-FINAL, as provas, o remendo |
+| (seguinte) | a nota do CI |
 
 ## 6. Pontos para o coordenador
 
@@ -133,3 +134,8 @@ Os logs estão em `provas/ordem-sonda-caminhos-pc/suites/`. Cada um abre com `# 
    cumprido o «CI verde (Sonda)» com a rede nova.**
 2. **Confirmar ou recusar a linha de base** (§1.1).
 3. **Encolher a base** depois de cada errata de redacção (`--gerar`). Com o tempo, a base deve chegar a 0 entradas.
+
+## Nota do CI
+
+No `aa31e3a`: **Testes `45377701821` success** (os 11 jobs) + **Sonda `45377701648` success**. A Sonda que correu é
+a **antiga** (só os e-mails): o remendo não está aplicado (§3, §6.1). A rede nova só foi provada no PC (§2).
