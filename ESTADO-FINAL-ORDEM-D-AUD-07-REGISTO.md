@@ -18,10 +18,10 @@ apareciam como «vez de Orc…», passam a dizer a heroína.
 
 | ficheiro | mudança |
 |---|---|
-| `rascunhos/servidor/nucleo/sala.js:1121-1126` | `transacao()` guarda no `tx`, a partir do `antes` (`:1108` na ponta de partida), `autorId: antes.vez?.figuraId ?? null` e `rodadaAutor: antes.rodada ?? 0` — quem tinha a vez, e em que rodada, **antes** da transacção |
-| `rascunhos/servidor/nucleo/sala.js:1244-1247` | `guardarCheckpoint` põe os dois em cada ponto. Sem `tx` (o ponto inicial) não houve jogada: ficam iguais ao estado. A `rodada`/`vezId` do ponto **não mudam**: são o estado para onde o «voltar» vai; o «voltar» continua a usar só o `journalSeq` |
+| `rascunhos/servidor/nucleo/sala.js:1123-1126` | `transacao()` guarda no `tx`, a partir do `antes` (`:1110` na ponta de partida e no `5208fb0`), `autorId: antes.vez?.figuraId ?? null` (`:1125`) e `rodadaAutor: antes.rodada ?? 0` (`:1126`) — quem tinha a vez, e em que rodada, **antes** da transacção |
+| `rascunhos/servidor/nucleo/sala.js:1244-1247` | `guardarCheckpoint` põe os dois em cada ponto. Sem `tx` (o ponto inicial) não houve jogada: ficam iguais ao estado. A `rodada`/`vezId` do ponto **não mudam**: são o estado para onde o «voltar» vai; o «voltar» continua a usar só o `journalSeq` Limite conhecido: numa sala restaurada a meio do jogo, o ponto inicial (`["inicio"]`) fica com `autorId`/`rodadaAutor` iguais ao estado restaurado, porque o `guardarCheckpoint()` sem `tx` corre também no restauro. O rótulo não o mostra (o ponto inicial tem texto próprio) e nenhum teste o cobre. |
 | `rascunhos/protocolo/v2/MASTER_VIEW.schema.json:193-194` + `protocolo/README.md` | `autorId` (`idOuNull`) e `rodadaAutor` (inteiro ≥ 0) em `$defs/ponto`, **fora do `required`** (vistas de antes desta ordem continuam válidas). Era preciso: o `ponto` tem `additionalProperties: false` |
-| `rascunhos/cliente/cenas/mestre/modelo_mestre.gd:276-292` (`linha_ponto`) | o cliente compõe o rótulo, por isso passa a usar `rodadaAutor`/`autorId`. Sem os dois campos (sala de antes desta ordem) fica a linha de antes. O texto (`textos_mestre.gd` `PONTO`) não mudou |
+| `rascunhos/cliente/cenas/mestre/modelo_mestre.gd:279-293` (`linha_ponto`; `:276` na ponta de partida) | o cliente compõe o rótulo, por isso passa a usar `rodadaAutor`/`autorId`. Sem os dois campos (sala de antes desta ordem) fica a linha de antes. O texto (`textos_mestre.gd` `PONTO`) não mudou |
 | `rascunhos/servidor/dados-exemplo/mesa-mestre.json` | regenerada com `ESCREVER_FIXTURE=1` (o `fixture-mestre.test.mjs` exige que seja o que o servidor gera hoje): o diff são **só** as linhas `autorId`/`rodadaAutor` novas em cada ponto |
 
 **Privacidade:** os pontos só vão na `MASTER_VIEW` (só o Mestre). O teste novo confere que nenhuma mensagem da heroína,
@@ -54,12 +54,14 @@ afectados só o `servidor/testes/mestre-vista.test.mjs` («o único que lê `pon
 
 | teste | lê | afectado por esta ordem? |
 |---|---|---|
-| `servidor/testes/fixture-mestre.test.mjs` | gera e compara a fixture inteira (com `pontos`) | **sim — foi o único que caiu**; resolvido regenerando a fixture (§1) |
-| `servidor/testes/mestre-vista.test.mjs:116-155` (L8) | `pontos` (`journalSeq`, `tipos`, `rodada`) | não (os campos novos são aditivos); passou sem mudança |
+| `servidor/testes/fixture-mestre.test.mjs` | gera e compara a fixture inteira (com `pontos`) | **sim — foi o único que caiu**; resolvido regenerando a fixture (§1) (reconstrução: não há log commitado da corrida a falhar; a queda é certa porque o teste compara o ficheiro guardado byte a byte com o gerado, e os dois campos novos entram em 15 pontos.) |
+| `servidor/testes/mestre-vista.test.mjs:115-155` (L8) | `pontos` (`journalSeq`, `tipos`, `rodada`) | não (os campos novos são aditivos); passou sem mudança |
 | `servidor/testes/caixa-hud-jogadora.test.mjs:215`, `:236`, `:293` | `pontos` (o «voltar» e a caixa) | não; passou sem mudança. **Faltava na lista** |
 | `cliente/testes/pecas_mestre.gd:98-101` (N25-2) e `:160-161` (um botão por ponto) | `linha_ponto` / `pontos` | não (só o fim da linha / a contagem); passou. A `:160-161` **faltava na lista** |
 | `cliente/testes/e2e_mestre.gd:107-110` | `pontos[1].journalSeq` (o «voltar» real) | não; 17/17. **Faltava na lista** |
 | `provas/ordem-caixa/ferramentas/prova-servidor.mjs:141`, `provas/ordem-iniciativa/ferramentas/prova-servidor.mjs:86` | `p.vezId` | não: o `vezId` não mudou. **Faltavam na lista** |
+
+O consumidor de produção dos pontos é `rascunhos/cliente/cenas/mestre/aba_registo.gd` (lê `vista.get("pontos")` e chama `Modelo.linha_ponto`); não precisou de mudança porque o contrato do `linha_ponto` não mudou. A `provas/ordem-caixa/ferramentas/prova-servidor.mjs` lê também `pontos.length` (:60, :68, :82), além do `p.vezId` da :141.
 
 `ordem32-varredura.test.mjs` e `ordem25-n24-1.test.mjs` não lêem `pontos` — aqui o relatório estava certo. Os nomes
 dos testes novos dizem o que provam (todos começam por «D-AUD-07:»).
@@ -78,7 +80,7 @@ dos testes novos dizem o que provam (todos começam por «D-AUD-07:»).
 | `pecas_mestre.gd` | **329/329** (4 novas) |
 | `rodar_testes` 333/333 · `abrir_scripts` 112/0 falhas · `abrir_mestre` 67/67 · `medir_mestre` 0 falhas · `medir_painel_config` 0 falhas · `hud_acoes` 50/50 · `caixa_jogadora` 70/70 · `caixa_janela` 123/123 · `canario_privacidade` 10/10 · `teste_relato_caixa` 31/31 · `teste_nomes_relato` 26/26 | todas verdes |
 | e2e (servidor + jogadora + Mestre, motor falso) | Mestre 17/17; jogadora OK |
-| sonda de caminhos do PC (local) | 0 novas no que vai para o git |
+| sonda de caminhos do PC (local) | 0 novas no que vai para o git (corrida local sem log commitado; a Sonda do CI, run 45394005999, passou.) |
 
 Logs e capturas: `provas/ordem-d-aud-07-registo/` (README). Os testes com o motor real (VLAB) e as fotos com render do
 CI ficam para o CI.

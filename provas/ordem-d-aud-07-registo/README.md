@@ -41,7 +41,7 @@ depende do valor). Reposto o código, 4/4. Os caminhos do PC no log estão troca
 | suite | resultado | log |
 |---|---|---|
 | servidor, `node --test --test-isolation=none "testes/*.test.mjs"` | **446/446** (4 novos) | `logs/servidor-testes.log` |
-| tráfego dos testes do servidor contra os schemas (`conferir-schemas.py`) | 0 falhas nas mensagens que saem; 64 mensagens com `rodadaAutor` validadas | `logs/protocolo-conferir-schemas.log` |
+| tráfego dos testes do servidor contra os schemas (`conferir-schemas.py`) | 0 falhas nas mensagens que saem (a secção «Falhas nas mensagens que SAEM» do log está vazia; 513 `MASTER_VIEW` à saída) | `logs/protocolo-conferir-schemas.log` |
 | `pecas_mestre.gd` | **329/329** (4 novas: «rótulo do Registo: quem fez a jogada») | `logs/cliente-pecas_mestre.log` |
 | `rodar_testes.gd` | 333/333 | `logs/cliente-rodar_testes.log` |
 | `abrir_scripts.gd` | 112 scripts, 0 falhas | `logs/cliente-abrir_scripts.log` |
