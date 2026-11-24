@@ -1,6 +1,6 @@
 # Provas — ORDEM-D-AUD-14-LARGURA (a largura do tabuleiro do Mestre não depende do caminho até à janela)
 
-Godot 4.7.2 (win64), PC, 24/11/2026 (-03). Ponta de partida `afc7e85`; correcção em `672f3c1`.
+Godot 4.7.2 (win64), PC, 24/11/2026 (-03). Ponta de partida `afc7e85`; correcção em `7c65fb8`.
 
 ## Ferramenta
 
@@ -21,7 +21,7 @@ escreve «MEDIDA VELHA». Sai com o código 0 só se A = B = C (±1 px) e a folh
 
 ## Números (iguais com e sem janela)
 
-| passo | antes (`afc7e85`) | depois (`672f3c1`) |
+| passo | antes (`afc7e85`) | depois (`7c65fb8`) |
 |---|---|---|
 | A — 1600×900 directo | **880 px** de tabuleiro (folha 864 u.; a regra pede 883) — MEDIDA VELHA | **864 px** (folha 883 u.) — certa |
 | B — 800×450 | 407 px (folha 943 u.; a regra pede 1231; a barra acaba em 2140 de 1920 — **«Registo» e «Sala» fora do ecrã**) | 287 px (folha 1231 u.; a barra acaba em 1920) — certa |

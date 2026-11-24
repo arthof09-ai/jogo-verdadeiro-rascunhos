@@ -1,6 +1,6 @@
 # ESTADO-FINAL — ORDEM-D-AUD-14-LARGURA (o tabuleiro do Mestre não muda de largura com o tamanho da janela)
 
-**Estado: FEITA** (o resultado do CI fica na nota do fim).
+**Estado: FEITA** — CI verde (Testes + Sonda) no `93853dd`.
 
 A largura do tabuleiro do Mestre a 1600×900 deixou de depender do caminho até essa janela. **Antes: 880 px** com
 abertura directa, **712 px** depois de 800×450 → 1600×900 e 864 px depois de mais um redimensionamento. **Depois: 864 px
@@ -8,7 +8,7 @@ nos três percursos.** Medido em píxeis reais, com e sem janela.
 
 - **Executor:** Claude (opus), PC, conta 2. **Data:** 24/11/2026 (-03).
 - **Linha:** `fable/integracao-50`, trabalho directo. **Ponta de partida:** `afc7e85`. A `main` não foi tocada.
-- **Commits:** `672f3c1` (código + teste), `f3864aa` (listas da retoma), o commit das provas e deste ESTADO-FINAL, e a
+- **Commits:** `7c65fb8` (código + teste), `cac934b` (listas da retoma), `93853dd` (provas + este ESTADO-FINAL) e a
   nota do CI.
 - **Não toquei** na posição da caixa (ponto 5), no «na vez» (C-6), na largura da caixa da jogadora, no servidor, nos
   dados, nos workflows, na `main` nem no cliente da jogadora. A regra da largura da folha (45 %, coluna 1, tecto de
@@ -36,7 +36,7 @@ Isto é a opção 1 da ordem («recalcular no `minimum_size_changed`»). A medid
 
 Ferramenta: `provas/ordem-d-aud-14-largura/ferramentas/medir_largura.gd`. Pormenor no README das provas.
 
-| percurso | antes (`afc7e85`) | depois (`672f3c1`) |
+| percurso | antes (`afc7e85`) | depois (`7c65fb8`) |
 |---|---|---|
 | A — abertura directa a 1600×900 | **880 px** (MEDIDA VELHA) | **864 px** |
 | B — 800×450 → 1600×900 | **712 px** (MEDIDA VELHA) | **864 px** |
@@ -92,13 +92,25 @@ correcção não mexe em comandos. As suites do servidor (node) não foram tocad
 
 ## 4. Listas da retoma
 
-`py -3 retoma-i0004/actualizar-listas.py` depois de `672f3c1`: 0 novos, 0 tirados (só os hashes dos dois ficheiros
-mudados) → `f3864aa`. Esta ordem não muda mais nada em `rascunhos/`.
+`py -3 retoma-i0004/actualizar-listas.py` depois de `7c65fb8`: 0 novos, 0 tirados (só os hashes dos dois ficheiros
+mudados) → `cac934b`. Esta ordem não muda mais nada em `rascunhos/`.
 
 ## Critérios da ordem
 
 - [x] `_ao_redimensionar` mede a folha com a letra nova (recalcula no `minimum_size_changed` da barra das abas).
 - [x] Medição antes/depois nos dois percursos, em píxeis: antes 880 / 712, depois **864 / 864**.
-- [x] Suites verdes no PC. CI: ver a nota.
+- [x] Suites verdes no PC e CI verde (ver a nota).
 - [x] ESTADO-FINAL e provas em `provas/ordem-d-aud-14-largura/` (README + logs + capturas); listas da retoma
   sincronizadas.
+
+## Nota do CI
+
+Ao fazer push, a ponta tinha avançado (`6bbf552`, duas notas da conferência da D-AUD-07, sem `rascunhos/`). Fiz rebase
+e os commits mudaram de hash: `672f3c1` → `7c65fb8` e `f3864aa` → `cac934b` (este ficheiro e o README já usam os
+novos). Corri o `actualizar-listas` outra vez depois do rebase: nada mudou.
+
+No `93853dd`, os dois workflows deram **success**:
+- **Testes dos rascunhos** (run `45416808039`). O passo «Ecrã do Mestre em ecrãs baixos» imprimiu
+  `MEDIDA MESTRE-LARGURA (1600, 900) directo=864 px depois de (800, 450)=864 px` e `ecrã do Mestre: 0 falha(s), 0 sem
+  medida`;
+- **Sonda de privacidade** (run `45416807952`).
