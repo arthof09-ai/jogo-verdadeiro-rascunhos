@@ -5,9 +5,11 @@ F4-PARCIAL (`logs/sha256-motor-usado.txt`). Foi baixado do endereço público do
 `motores/embrulhar.mjs`, como no CI.
 
 - Ponta de partida: `e8b9dc3`.
-- Commits da ordem: `b3c3c8d` (a troca e a regeneração) e `f71b070` (as listas da retoma).
+- Commits da ordem: `b3c3c8d` (a troca e a regeneração), `f71b070` (as listas da retoma), `607a88b` (o ESTADO-FINAL e as provas desta ordem) e `953d550` (a nota do CI no ESTADO-FINAL).
 - CI no `f71b070`: Testes dos rascunhos `45380773607` (10/10 jobs `success`, incluído o `motor-real`) e Sonda de
   privacidade `45380773642` (`success`).
+- CI no `607a88b`: Testes dos rascunhos `45381580578` (`success`) e Sonda de privacidade `45381580689` (`success`).
+- CI no `953d550`: Testes dos rascunhos `45382057684` (`success`) e Sonda de privacidade `45382057781` (`success`).
 
 Os caminhos absolutos do PC foram redigidos nos dois logs de geração (`<pasta-da-ordem>`). Nada mais mudou nos logs.
 
@@ -28,7 +30,7 @@ Os caminhos absolutos do PC foram redigidos nos dois logs de geração (`<pasta-
 | `logs/sha256-corrida-1.txt`, `logs/sha256-corrida-2.txt` | O `sha256sum` dos 10 ficheiros gerados em cada corrida. Os dois são **iguais** (`diff` vazio). Comparados com os ficheiros gravados antes da troca, só mudam duas linhas: `07-transformacao.json` e `MANIFESTO.json`. Para o repositório copiei só esses dois ficheiros |
 | `logs/canarios-grupo-07.txt` | No `07-transformacao.json` gravado, o 5150 aparecia 74 vezes e o 5551 aparecia 30 vezes. Agora aparecem **0** vezes cada um. O 4040 já não aparecia antes (0 → 0). Os 30 casos continuam 30, e a saída de todos mudou (a vida e a CA da heroína entram na saída) |
 | `logs/motor-real-corrida-1.log`, `logs/motor-real-corrida-2.log` | O job `motor-real` reproduzido no PC, depois da troca, duas vezes: 6/6 testes. Os vetores-ouro dão **517/517**, com o **07 a 30/30**. O teste dos bytes compara duas gerações com os ficheiros gravados e passa |
-| `logs/ci-motor-real-45380773607.log` | O mesmo job no CI (run `45380773607`, ponta `f71b070`): motor `a91c021c…`, 6/6 testes, **517/517**, 07 a 30/30 |
+| `logs/ci-motor-real-45380773607.log` | O mesmo job no CI (run `45380773607`, ponta `f71b070`): motor `a91c021c…`, 6/6 testes, **517/517**, 07 a 30/30. Nota: os escapes ANSI do log vivo aparecem aqui como texto literal (`^[` em vez do byte ESC) em 4 linhas (ll. 184, 189, 352 e 357, os ecos dos comandos `curl`, `prova-motor.mjs`, `embrulhar.mjs` e `node --test`); o conteúdo é o mesmo. |
 | `logs/servidor-com-allow-net.log` | A suite do servidor com o comando do CI e mais `--allow-net` (Node 26 neste PC): 442 testes, 432 passam, **0 falham**, 10 saltados. São os mesmos números da F4-PARCIAL. No CI, o job `servidor` deu o mesmo: 442, 432, 0 e 10 |
 
 ## Os SHAs novos
