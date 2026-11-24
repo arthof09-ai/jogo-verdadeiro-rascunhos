@@ -1,0 +1,30 @@
+  ok    linha 1 MASTER_SUPERVISOR voltar
+  ok    linha 2 MASTER_MODE 
+  ok    linha 3 MASTER_PLACE 
+  ok    linha 4 MASTER_PLACE 
+  ok    linha 5 MASTER_PLACE 
+  ok    linha 6 MASTER_ACT 
+  ok    linha 7 MASTER_ACT 
+  ok    linha 8 MASTER_ACT 
+  ok    linha 9 MASTER_APPROVE editar
+  ok    linha 10 MASTER_APPROVE aprovar
+  ok    linha 11 MASTER_SUPERVISOR terminar
+  ok    linha 12 MASTER_SUPERVISOR recomecar
+  ok    linha 13 MASTER_APPROVE recusar
+  ok    linha 14 MASTER_LOBBY_SET 
+  ok    linha 15 MASTER_START 
+  ok    linha 16 MASTER_PLACE 
+  ok    linha 17 MASTER_PLACE 
+  ok    linha 18 MASTER_PLACE 
+  ok    linha 19 MASTER_PLACE 
+  ok    linha 20 MASTER_AMBIENTE 
+  ok    linha 21 MASTER_AMBIENTE 
+  ok    linha 22 MASTER_AMBIENTE 
+  ok    linha 23 MASTER_AMBIENTE 
+  ok    linha 24 ROOM_JOIN 
+  ok    linha 25 ROOM_JOIN 
+  ok    linha 26 ROOM_JOIN 
+  ok    linha 27 MASTER_APPROVE aprovar
+  ok    linha 28 MASTER_PLACE 
+  ok    linha 29 MASTER_PLACE 
+29 mensagens, 0 falhas
