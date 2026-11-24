@@ -216,7 +216,10 @@ func _correr() -> void:
 		"D-AUD-01-CORRECCOES: com o «Mover» armado, escolher outra ficha no «Colocar» → o toque põe a ficha nova (%d MASTER_PLACE %s, 0 da velha)" % [places_5.size(), places_5])
 	if not places_5.is_empty():
 		_responder(c, _ultimo())
-	# D-AUD-01-CORRECCOES-2 (conferência D-AUD-01-CORRECCOES): armar o «Mover» duas vezes (duplo clique — no mesmo botão ou no botão refeito pelo `atualizar()`, que só o volta a ligar a `iniciar_mover()`) guardava "" por cima da ficha — o «Cancelar» já não repunha o «Colocar».
+	# D-AUD-01-CORRECCOES-2 (conferência D-AUD-01-CORRECCOES): armar o «Mover» duas vezes guardava "" por cima da
+	# ficha — o «Cancelar» já não repunha o «Colocar». D-AUD-01-CORRECCOES-3 (errata A3): o `atualizar()` não re-arma
+	# o «Mover»; só refaz o botão e o liga outra vez a `iniciar_mover()`. O 2.º armar é sempre um 2.º
+	# `iniciar_mover()`: duplo clique no mesmo botão, ou um clique no botão refeito.
 	c._aba_mesa.escolher_colocar("orc-teste")
 	c._aba_agir.iniciar_mover()
 	c._aba_agir.iniciar_mover()
@@ -271,6 +274,48 @@ func _correr() -> void:
 	if places_vez > 0:
 		c._aba_mesa.parar()
 		_responder(c, _ultimo())  # sem isto o MASTER_PLACE a mais ficava em voo e derrubava as verificações seguintes
+	# D-AUD-01-CORRECCOES-3 (conferência D-AUD-01-CORRECCOES-2, B1): o teste de cima não isola o ramo da vez — a guarda
+	# já era "" antes de a vez mudar (o mover usado passou por parar_mover). Aqui a guarda está VIVA quando a vez muda:
+	# «Colocar» armado → «Mover» armado sem o usar → a vez passa a OUTRA criatura, com opções válidas para ela. Assim
+	# o único parar_mover() do atualizar() que corre é o do ramo `vez != _vez` (o de «sem figura» e o de «sem opções»
+	# não correm). Sem esse ramo o «Mover» ficava armado com a ficha guardada e o «Cancelar» repunha o «Colocar».
+	var op_orig: Dictionary = _estado.opcoes
+	var outra_id := "outra-criatura-teste"
+	var vista_vez := vista.duplicate(true)
+	for lista in [vista_vez["figuras"], Modelo.figuras(vista_vez)]:  # a pública e a do Mestre (a que o Agir lê)
+		var gemea: Dictionary = {}
+		for fig in lista:
+			if fig is Dictionary and fig.get("id") == vista["vezId"]:
+				gemea = fig.duplicate(true)
+		if not gemea.is_empty():
+			gemea["id"] = outra_id
+			(lista as Array).append(gemea)
+	vista_vez["vezId"] = outra_id
+	c._aba_mesa.escolher_colocar("orc-teste")
+	c._aba_agir.iniciar_mover()
+	var guarda_viva: bool = c._aba_agir.a_mover and c._colocar_guardado == "orc-teste" and c._aba_mesa.a_colocar == ""
+	var op_vez: Dictionary = op_orig.duplicate(true)
+	op_vez["vezId"] = outra_id
+	_estado.opcoes = op_vez  # as opções da criatura nova, na mesma revisão (sem sinal: chegam com a vista)
+	c.aplicar_vista(vista_vez)
+	var vez_mudou: bool = c._aba_agir._vez == outra_id and not c._aba_agir.botoes_de_accao().is_empty()
+	var guarda_depois: String = c._colocar_guardado
+	c._aba_agir._cancelar.pressed.emit()
+	var antes_viva := _comandos.size()
+	c.casa_tocada(Vector2i(19, 19))
+	var places_viva: Array = []
+	for cmd in _comandos.slice(antes_viva):
+		if cmd.get("type") == "MASTER_PLACE":
+			places_viva.append(str(cmd.get("fichaId", "")))
+	_ok(guarda_viva and vez_mudou and guarda_depois == "" and not c._aba_agir.a_mover and c._aba_mesa.a_colocar == ""
+		and places_viva.is_empty(),
+		"D-AUD-01-CORRECCOES-3: «Colocar» → «Mover» armado (guarda viva: %s) → a vez muda para outra criatura com opções (%s) → «Cancelar» não repõe (guarda depois «%s», a_colocar «%s», %d MASTER_PLACE %s)"
+		% [guarda_viva, vez_mudou, guarda_depois, c._aba_mesa.a_colocar, places_viva.size(), places_viva])
+	if not places_viva.is_empty():
+		c._aba_mesa.parar()
+		_responder(c, _ultimo())  # para uma falha aqui não derrubar as verificações seguintes
+	_estado.opcoes = op_orig
+	c.aplicar_vista(vista)
 	if not opcoes["ataques"].is_empty():
 		var a: Dictionary = opcoes["ataques"][0]
 		c._aba_agir.agir({"tipo": "atacar", "alvoId": a["alvoId"], "arma": a["arma"]})
