@@ -1,4 +1,4 @@
-# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 434 ficheiros mudados ou novos em rascunhos/.
+# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 436 ficheiros mudados ou novos em rascunhos/.
 93c8f082052020ffc4a3a95831f74a5a16a295f366e54842045791c071fc83e4  rascunhos/cliente/README.md
 2a9bda1fa4349cfa9ece76842797ac96adc27ef919c525b3843a6f1cd01e58d5  rascunhos/cliente/arte/README.md
 2bc9bbf8ab270183116aa4eca383ce5b521fe7a466e9db9a065d96cca0da28fa  rascunhos/cliente/arte/ambiente/color_script.gd
@@ -366,11 +366,12 @@ d4d9971c606ae3367f499c97abec76d1bb4edd53bd1ba4c7e2ab562d579cbb83  rascunhos/serv
 2108409873a3af84c0820e09cc785ac21d7d1064001fca9697a3dda3c7a5b81e  rascunhos/servidor/nucleo/ambiente.js
 7703fc80ab4f7141e4b775c08f37f2e9b25bf04d6300bf2bcf1586109aec6f3a  rascunhos/servidor/nucleo/carregar-fichas.js
 08a68d77983f5953a5a22088a218c14f2839562c2ad3ac91917c24b871eb2fb4  rascunhos/servidor/nucleo/conferir-estado.js
+019d6b43adda54a79a356a9baefaacb8c32f7beaf86749a9e423b6aca4c0f870  rascunhos/servidor/nucleo/dados-fisicos.js
 8b96c349bccf4822d23ae17897720c20786386d82c0ec47e45ba825b94e9b6aa  rascunhos/servidor/nucleo/fila-alertas.js
 c6f53df26cbe10bf5377481e3c50c018125b2146e17ca654bc2890445970bebb  rascunhos/servidor/nucleo/journal.js
 aba110470284e787ed1836c965a15abe5b48829b6b99d67c737b28f6ba484ad7  rascunhos/servidor/nucleo/ordem-dinamica.js
 dd5267db96366e781bd33817c6fa0a14c8aa59913b8a30e0bdd37e9f8cd9ea48  rascunhos/servidor/nucleo/projecao.js
-510b553fefa6c15b975e12b6d182cc0e5fbb73ee05ca0560bd4a8642e939bf2b  rascunhos/servidor/nucleo/sala.js
+b3d1c9d27cc627e0715e95a4a22d25b007ea72a121fe2001005c8aa7b5eba06b  rascunhos/servidor/nucleo/sala.js
 810f8c90b0a0b0f2456e87455facc894f7614570b2714a0f043e9ef43e8f6675  rascunhos/servidor/nucleo/terreno.js
 7405ef6162aab717e2fbb6e0dc666c3f438d3c52f6fcd611a20caf8b1cd8af82  rascunhos/servidor/testes-motor-real/cura-real.test.mjs
 7191918ac84bd9ce197dcaaa0d1fdf0d2559029b8dbc21033a0cae45466b92b8  rascunhos/servidor/testes-motor-real/integracao.test.mjs
@@ -382,6 +383,7 @@ e14511a90bcc17de22e2daf6c4634b9c2a7a3dc1390e5fc883f521a4ffd5006e  rascunhos/serv
 749ce1c296d67b1bab0497c9d04884408645c1833e5031b86a74e92866cd2ab4  rascunhos/servidor/testes/casa-unica.test.mjs
 d8e8e5b5319d3df004810523c3ba47de3c5f46fd0dab1d1224c469fae7af38cc  rascunhos/servidor/testes/cura.test.mjs
 f189327ea35a04e976dd036aefc19774ca422dd07f665d1e7c7c658bafb1674c  rascunhos/servidor/testes/d-aud-12-ordinal.test.mjs
+ed38d8eec8ec0cfa34e999304b4c0406411cbd0a87adf68247d7d748c5fc4f58  rascunhos/servidor/testes/dados-fisicos.test.mjs
 fa1a0c32fc929ce55db46b744caaebaa9468143f14007c3c3131a5a22fae65b1  rascunhos/servidor/testes/fixture-mestre.test.mjs
 ff4b82b520c40525253723d1c2f1562f8cad03e2495660e4eb27386097f7c0ff  rascunhos/servidor/testes/mestre-vista.test.mjs
 a825516748641e10019efd688163d5ff79be44b8a85467baab5cb8e424a5363c  rascunhos/servidor/testes/morte.test.mjs
