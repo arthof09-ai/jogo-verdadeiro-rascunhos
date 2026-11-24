@@ -187,7 +187,15 @@ cada um com a linha `# comando:` no topo.
 |---|---|
 | `7f83006` | A1: o rótulo «A ligar à mesa…» (`mestre.gd`, `textos_mestre.gd`), o teste novo (`pecas_mestre.gd`) e a ferramenta da medição (`medir_ligacao_arranque.gd`) |
 | `ac9584a` | as listas da retoma sincronizadas depois de `7f83006` (`actualizar-listas`: 1 novo, 0 tirados) |
-| (este) | as provas (`provas/ordem-d-aud-16-seguimento/`: README, capturas, logs, medição, suites) e este ESTADO-FINAL |
+| `024d3e7` | as provas (`provas/ordem-d-aud-16-seguimento/`: README, capturas, logs, medição, suites) e este ESTADO-FINAL |
 
 O `actualizar-listas.py` correu com `python` (o Python 3.12 do PC); no Windows, o `python3` é só o atalho da loja.
 O commit das provas não muda `rascunhos/`, por isso as listas não precisam de nova passagem.
+| (a seguir) | a nota do CI neste ESTADO-FINAL |
+
+## Nota do CI
+
+No `024d3e7` (código, listas, provas e este ESTADO-FINAL): **Testes dos rascunhos 45372456991: success** (os 10 jobs:
+`provas-mapa`, `validador-glb`, `motor-real`, `godot-cliente`, `protocolo`, `retoma-pc`, `servidor`, `ponta-a-ponta`,
+`cliente`, `foto-mestre`) · **Sonda de privacidade 45372457338: success**. O `ponta-a-ponta` (o Mestre Godot sem janela
+pela ligação real) e o `foto-mestre` passaram com o rótulo novo.
