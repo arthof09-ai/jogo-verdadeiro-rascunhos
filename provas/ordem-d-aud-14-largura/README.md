@@ -11,9 +11,12 @@ percursos até 1600×900:
 - **B** — a janela abre a 800×450, o ecrã monta-se, e a janela passa a 1600×900;
 - **C** — a seguir a B, 1600×898 → 1600×900 (o «repassado» da INVESTIGA, `l11`).
 
-Em cada passo compara a folha com a regra do próprio `_ao_redimensionar`, mas com o mínimo da barra das abas **na letra
-de agora**: `max(45 % da área, coluna 1 + barra + 1 letra + 3 margens)`, com o tecto de 85 %. Se a folha não é essa,
-escreve «MEDIDA VELHA». Sai com o código 0 só se A = B = C (±1 px) e a folha seguir a regra em todos os passos.
+Em cada passo compara a folha com a regra do próprio `_ao_redimensionar`, mas com o mínimo da barra das abas
+**na letra de agora**: `max(45 % da área, coluna 1 + barra + 1 letra + 3 margens)`, com o tecto de 85 % — sem
+o piso final (`max` com coluna 1 + 2 margens) nem o ramo da folha encolhida, que nestas janelas não ligam. A
+medida é «certa» só quando as duas condições se cumprem: a folha é a pedida (±0,5 u.) **e** a barra não passa
+do fim do ecrã (±0,5 u.); se alguma falhar, escreve «MEDIDA VELHA». Sai com o código 0 só se A = B = C (±1 px)
+e a folha seguir a regra em todos os passos.
 
     cd rascunhos/cliente
     godot --headless --path . -s <raiz>/provas/ordem-d-aud-14-largura/ferramentas/medir_largura.gd
@@ -29,9 +32,9 @@ escreve «MEDIDA VELHA». Sai com o código 0 só se A = B = C (±1 px) e a folh
 | C — … → 1600×898 → 1600×900 | 864 px — certa | 864 px — certa |
 | resultado | A=880, B=712, C=864 → **DIFERENTES**, saída 1 | A=B=C=**864** → **IGUAIS**, saída 0 |
 
-O «880» directo de antes também estava errado: a folha foi medida com a barra das abas ainda na letra da passagem
-anterior. A largura certa a 1600×900 é a do percurso C, que já era 864 antes da correcção (a INVESTIGA mediu 865 na
-janela real, `l11`).
+O «880» directo de antes também estava errado (inferência: a folha ficou no termo dos 45 %): a folha foi
+medida com a barra das abas ainda na letra da passagem anterior. A largura certa a 1600×900 é 864 px (±1 px; a
+INVESTIGA mediu 865 na janela real, `l11`), a do percurso C, que já era 864 antes da correcção.
 
 ## Logs
 
@@ -39,8 +42,10 @@ janela real, `l11`).
   `mestre.gd` de HEAD posto na cópia de trabalho), sem e com janela.
 - `logs/antes/medir-mestre-sem-correccao.log` — o teste novo do `medir_mestre.gd` com o `mestre.gd` **sem** a
   correcção: **4 falhas**, todas do bloco novo (as outras medidas passam). Prova de que o teste dispara.
-- `logs/depois/medir-largura-headless.log`, `logs/depois/medir-largura-janela.log` — a ferramenta com a correcção.
-- `logs/suites/*.log` — as 13 suites Godot que o CI corre, com a correcção (todas saída 0; ver ESTADO-FINAL §3). O
+- `logs/depois/medir-largura-headless.log`, `logs/depois/medir-largura-janela.log` — a ferramenta com a
+correcção, em cópia de trabalho (`afc7e85` + correcção; a prova sobre o código cometido é o CI no `93853dd`).
+- `logs/suites/*.log` — as 13 suites Godot que o CI corre, com a correcção, em cópia de trabalho (todas saída
+0; ver ESTADO-FINAL §3). O
   caminho temporário dos comandos do Mestre está redigido como `<temp>`. As linhas `[floresta] pronta em …` (o
   relatório da carga do mapa, um JSON longo e igual em todas as corridas) foram tiradas dos logs.
 

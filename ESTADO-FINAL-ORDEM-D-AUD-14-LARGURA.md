@@ -26,11 +26,14 @@ o mínimo novo só chega depois. A folha fica então com a largura da letra ante
 | `rascunhos/cliente/cenas/mestre/mestre.gd:99-102` | `_abas_medidas`: o mínimo da barra com que a folha foi medida da última vez; `_remedir_pendente` |
 | `mestre.gd:1241` (`_montar`) | liga `minimum_size_changed` da `TabBar` a `_ao_mudar_barra_abas` |
 | `mestre.gd:1436-1437` (`_ao_redimensionar`) | guarda o mínimo lido em `_abas_medidas` (a conta não mudou) |
-| `mestre.gd:1470-1486` | `_ao_mudar_barra_abas`: se o mínimo actual difere de `_abas_medidas`, mede a folha outra vez com `call_deferred` (uma só por quadro: `_remedir_pendente`). `_remedir_folha` chama `_ao_redimensionar` |
+| `mestre.gd:1474-1486` (1470-1473: comentário) | `_ao_mudar_barra_abas`: se o mínimo actual difere de
+`_abas_medidas`, mede a folha outra vez com `call_deferred` (uma só por quadro: `_remedir_pendente`).
+`_remedir_folha` chama `_ao_redimensionar` |
 
-Isto é a opção 1 da ordem («recalcular no `minimum_size_changed`»). A medida converge: depois da nova passagem,
-`_abas_medidas` é igual ao mínimo da barra, e o sinal seguinte já não muda nada. Os números de linha da ordem
-(`:1311-1365`) são os da ponta da INVESTIGA (`96baf99`). Na ponta de partida desta ordem, a função está em `:1407-1461`.
+Isto é a opção 1 da ordem («recalcular no `minimum_size_changed`»). A medida converge por evento: quando o
+mínimo novo chega, a passagem diferida repõe `_abas_medidas` igual ao mínimo da barra, e o sinal seguinte já
+não muda nada. Os números de linha da ordem (`:1311-1365`) são os da ponta da INVESTIGA (`96baf99`). Na ponta
+de partida desta ordem, a função está em `:1407-1461`.
 
 ## 2. A prova (antes/depois, píxeis reais)
 
@@ -43,9 +46,13 @@ Ferramenta: `provas/ordem-d-aud-14-largura/ferramentas/medir_largura.gd`. Pormen
 | C — … → 1600×898 → 1600×900 | 864 px | 864 px |
 | resultado da ferramenta | DIFERENTES, saída 1 | **IGUAIS**, saída 0 |
 
-Os mesmos números na janela real (DisplayServer Windows, com capturas) e em `--headless`. O «880» directo de antes
-também vinha da letra anterior: a folha tinha 864 unidades e a regra pedia 883. **A largura certa é 864 px**, a do
-percurso C, que a INVESTIGA já tinha medido na janela real como 865 (`l11`).
+Os mesmos números na janela real (DisplayServer Windows, com capturas) e em `--headless`. As corridas do PC
+(janela, headless e as 13 suites) foram feitas da cópia de trabalho `afc7e85` + correcção; a prova sobre o
+código cometido `7c65fb8` é o CI no `93853dd` (Testes 45416808039 + Sonda 45416807952). A prova de que o teste
+dispara (4 falhas, `logs/antes/medir-mestre-sem-correccao.log`) é local e não se reproduz a partir de nenhuma
+árvore cometida. O «880» directo de antes também vinha (inferência: a folha ficou no termo dos 45 %) da letra
+anterior: a folha tinha 864 unidades e a regra pedia 883. **A largura certa é 864 px (±1 px; a INVESTIGA mediu
+865 na janela real, `l11`)**, a do percurso C.
 
 **Consequência a 800×450 (para o Mestre ver):** com a letra certa (32), a barra das abas mede 703 unidades e a regra
 «a barra das abas nunca se corta» alarga a folha. O tabuleiro a 800×450 passa de **407 px para 287 px**. Antes, a
@@ -68,7 +75,7 @@ do Mestre em ecrãs baixos»). Monta o Mestre directo a 1600×900, depois a 800�
 **O teste dispara:** com o `mestre.gd` de `afc7e85` dá **4 falhas**, todas do bloco novo
 (`logs/antes/medir-mestre-sem-correccao.log`: `directo=880 px depois de (800, 450)=712 px`, saída 1).
 
-### 3.2 Suites (PC, Godot 4.7.2 `--headless`, com a correcção)
+### 3.2 Suites (PC, Godot 4.7.2 `--headless`, com a correcção, em cópia de trabalho)
 
 | suite | resultado |
 |---|---|
