@@ -205,3 +205,5 @@ Todas deram exit 0, com 0 `SCRIPT ERROR / Parse Error / Compile Error`.
   verdes (servidor, validador-glb, motor-real, protocolo, cliente, godot-cliente, foto-mestre, provas-mapa,
   ponta-a-ponta, retoma-pc), e **Sonda de privacidade 45333270447: success**. No log do CI: `pecas_mestre` 295 de
   295, com a D-AUD-01-CORRECCOES-3 «ok», e `rodar_testes` 321 de 321. O `retoma-pc` passou à primeira.
+
+Nota da conferência (930): erratas A1–A8 aplicadas no `90c16b46` (base `0c57f2bb`). CI verde no `90c16b46` — Testes 45442684178 + Sonda 45442684015, ambos success.
