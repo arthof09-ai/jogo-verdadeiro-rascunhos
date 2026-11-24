@@ -41,3 +41,7 @@ O cliente do Mestre abre na **arena da jogadora**. A cena principal é `arena.ts
 ## Nota do CI
 
 Commit do relatório e deste ESTADO-FINAL `b3f3382`: **Testes dos rascunhos 45292070232: success** · **Sonda de privacidade 45292070110: success**.
+
+Sobre a errata E1–E13 + condição de fecho (a) (`2fe0b3f`), os dois workflows deram **success**:
+- **Testes dos rascunhos** (run `45304270254`);
+- **Sonda de privacidade** (run `45304270210`).
