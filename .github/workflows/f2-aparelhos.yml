@@ -1,8 +1,3 @@
-# PENDENTE DE ACTIVAÇÃO (Ordem PLANO-2-F2, 24/11/2026). O lugar deste ficheiro é .github/workflows/f2-aparelhos.yml.
-# O push foi recusado: a credencial do PC não tem o âmbito «workflow» do GitHub (só gist, read:org, repo), e sem ele
-# nenhum commit pode criar ou mudar ficheiros em .github/workflows/. Para activar (uma vez, pelo dono da conta):
-#   gh auth refresh -h github.com -s workflow
-#   git mv ci-pendente/f2-aparelhos.yml .github/workflows/f2-aparelhos.yml && git commit && git push
 name: Aparelhos (F2)
 # Ordem PLANO-2-F2 (CM-000009, 2026-11-23): cada um no seu aparelho.
 #  - exportar:      os três exports (JV2.1b) a cada commit — Web (sem threads), Windows e Android (arm64-v8a + x86_64) —
@@ -138,7 +133,7 @@ jobs:
         working-directory: rascunhos/servidor
         run: |
           google-chrome --version
-          node aparelhos/prova-web.mjs --estatica=../../build/web --saida="$RUNNER_TEMP/prova-web" --medir 2>&1 \
+          node aparelhos/prova-web.mjs --estatica=../../build/web --saida="$RUNNER_TEMP/prova-web" --medir --repetir-medicao 2>&1 \
             | grep -vE "^\[ *[0-9.]+ s\] \[consola\] (WARNING|   at)"
       - uses: actions/upload-artifact@v4
         if: always()
