@@ -121,3 +121,6 @@ No `93853dd`, os dois workflows deram **success**:
   `MEDIDA MESTRE-LARGURA (1600, 900) directo=864 px depois de (800, 450)=864 px` e `ecrã do Mestre: 0 falha(s), 0 sem
   medida`;
 - **Sonda de privacidade** (run `45416807952`).
+
+Nota da conferência (805): erratas A1–A6 aplicadas no `3b94e373` (base `f0f70dd`). CI verde no
+`3b94e373` — Testes 45431820657 + Sonda 45431820526, ambos success.
