@@ -11,7 +11,7 @@ O ESTADO-FINAL está em `ESTADO-FINAL-ORDEM-D-AUD-04-BANCADA.md`, na raiz.
 | pasta / ficheiro | o que prova |
 | --- | --- |
 | `journal/config-da-sala.json` | **a fonte do §5.3**: a config com que o servidor arrancou. A sala não tem `mapa`, por isso a grelha é a grelha-mapa da linha. O PIN e as senhas estão redigidos |
-| `journal/journal-extracto.json` | o journal do servidor (Mestre-only, fora do Git), já extraído: `mapa: {largura: 50, altura: 50, casaM: 1.5}`, `fase: fim`, `desfecho: morte`, rodada 14 e os 70 eventos da batalha com o recibo do Mestre. **Não tem nenhuma semente.** Os ids estão trocados pelo fichaId fictício |
+| `journal/journal-extracto.json` | o journal do servidor (Mestre-only, fora do Git), já extraído: `mapa: {largura: 50, altura: 50, casaM: 1.5}`, `fase: fim`, `desfecho: morte`, rodada 14 e os 70 eventos da batalha com o recibo do Mestre (o extracto descarta os tipos `turno` e `ia`; o journal bruto tem 132 eventos). **Não tem nenhuma semente.** Os ids estão trocados pelo fichaId fictício |
 | `journal/medicoes.json` | as medições: 18 ataques (d20, total, CA, 3d6 do crítico, dano, vida do alvo antes → depois) e 10 testes de morte (dado, Constituição somada, total, CD) |
 | `relato.txt` | o relato da batalha em texto, um evento por linha, com a hora e o segundo da gravação bruta |
 | `capturas/c00`–`c17` | os dois ecrãs nos momentos medidos (os nomes dizem o momento) |

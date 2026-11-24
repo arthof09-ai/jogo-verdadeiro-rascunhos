@@ -15,9 +15,7 @@ corrigidos. O CI está na nota do fim.
   Antes de commitar, `git fetch` mostrou que a linha tinha andado para `cef07e7` (os 2 commits da D-AUD-INVESTIGA, só
   em `provas/ordem-d-aud-investiga/` e no ESTADO-FINAL dela, sem ficheiros em comum com esta ordem). Avancei por
   fast-forward. Os commits desta ordem assentam em **`cef07e7`**.
-- **A janela do PC fechou às 18:33** (aviso na sede). A GPU estava a 45 % por causa dos clientes Godot, os desta
-  ordem e 2 órfãos da INVESTIGA. A batalha acabou às 18:40 e todos os processos da bancada (servidor, porteiro e
-  2 clientes) estão parados. No fecho não lancei nada pesado. As suites Godot ficaram para o CI (§6), porque esta
+- **A corrida da 1.ª volta morreu às 18:44:28 pelo limite de 5 h; o fecho foi retomado às 20:55 do ponto exacto e feito das ~20:55 às ~21:20.** A batalha acabou às 18:40:57 e todos os processos da bancada (servidor, porteiro e 2 clientes) estão parados. As suites Godot ficaram para o CI (§6), porque esta
   ordem não muda nenhum ficheiro que elas leiam.
 
 ## 1. Como a bancada passou a acertar
@@ -41,13 +39,15 @@ O defeito era da bancada, não do jogo. O `preparar.mjs` só escrevia as fichas 
 | Bruto de Bancada | criatura | 12 | 34 | 1 | `clava-bancada` 1d20+4, 1,5 m | 1d10+3 contundente |
 | (Espadachim de Bancada, com `-Aliada`) | jogadora | 14 | 30 | 0 | — (não entrou nesta batalha) | — |
 
+Aviso: o `cenario-bancada.json` traz `mapa: {20, 20}` e `mapaId: "floresta"` («na grelha 20 x 20 da arena») — é o mapa do harness do AUTOJOGO, que o `preparar.mjs` não lê (só lê `cenario.fichas`, `cenario.heroinas` e `cenario.iniciativa`); a batalha usou a grelha-mapa 50×50 @ 1,5 m (§2).
+
 **As casas:** a arqueira em (38,4), em terra a norte do lago, que é a casa da heroína de origem. O lobo em (36,3) e o
 bruto em (41,1), também em terra e ao alcance do arco. Ficaram em terra de propósito, porque dentro de água as figuras
 somem (D-AUD-02).
 
 **Calibração sem janelas** (`provas/.../ferramentas/ensaio-rede.mjs`, servidor de produção pela rede, motor real):
 - No 1.º ensaio o bruto estava em (34,5), encurralado entre uma árvore e rochas. A IA ficou em «nada a fazer» até à
-  rodada 61 (3 ataques). Por isso o bruto passou para (41,1).
+  rodada 61 (3 ataques). Por isso o bruto passou para (41,1). (A posição (34,5) está no nome do ficheiro e no comentário do `preparar.mjs`, não no JSON do ensaio.)
 - O 2.º ensaio chegou ao fim: rodada 23, **28 ataques, 18 acertos**, 16 testes de morte, desfecho `morte`
   (`provas/.../ensaios/`).
 
@@ -60,7 +60,7 @@ de produção (`servidor-ws.js`) correu com o motor real (VLAB, em cache). O por
 (Godot) entrou na sala» (`logs/porteiro.log`). Os dois `godot.log` dizem Godot 4.7.2 com a RTX 4060 e
 **0 SCRIPT ERROR**. Entre as 18:34 e as 18:35 o Mestre saiu da sala e voltou a entrar pelo ecrã do PIN do próprio
 Godot. O servidor pôs a sala em pausa (`mestre_desconectado`, journal #7) e retomou-a quando o Mestre carregou em
-«Continuar» (#8). Foi operação da bancada, não um defeito.
+«Continuar» (#8). O journal só regista `mestre_desconectado` e a retoma por «Continuar»; nada nas provas distingue uma saída deliberada de uma queda.
 
 **§5.3 — a batalha correu na grelha-mapa 50×50 @ 1,5 m.** As fontes são estas:
 1. **A configuração da sala que produziu a batalha** (`provas/ordem-d-aud-04-bancada/journal/config-da-sala.json`,
@@ -71,11 +71,13 @@ Godot. O servidor pôs a sala em pausa (`mestre_desconectado`, journal #7) e ret
 3. **O ecrã do Mestre em Godot** mostra «Escala: 1,5 m por casa» na aba Sala (`capturas/c01`). O `godot.log` dos dois
    clientes dá `casas: 2500` (= 50 × 50).
 
+O `mapaId: "arena-teste"` que o journal e o `porteiro.log` trazem é um rótulo fixo do porteiro (`porteiro.mjs`, l.125), guardado como metadado do lobby (`sala.js`, l.2592) e nunca lido para construir a geometria — a grelha vem de `config.mapa` ou do omisso MAPA-JOGÁVEL (`sala.js`, l.316–322, l.573). Não é um mapa.
+
 ## 3. As medições (provas em `provas/ordem-d-aud-04-bancada/`, mapa no README de lá)
 
 ### 3.1 Dano, ataque a ataque
 
-Os números vêm de `journal/medicoes.json`. O 3d6 é a verificação de crítico do VLAB.
+Os números vêm de `journal/medicoes.json`. O 3d6 é a verificação de crítico do VLAB. Regra do crítico (VLAB, `sala.js`): crítico é o 3d6 «6,6 e o 3.º ≥ 5» (margem 0); o 20 natural não é crítico por si só — por isso o #40 (d20 20, 3d6 [5,6,6]) é acerto e o único crítico é o #90 (d20 17, 3d6 [6,6,6]).
 
 | # | Atacante → alvo | d20 | Total vs CA | 3d6 | Resultado | Dano (expressão) | Vida do alvo |
 |---|---|---|---|---|---|---|---|
@@ -98,7 +100,7 @@ Os números vêm de `journal/medicoes.json`. O 3d6 é a verificação de crític
 | 121 | Bruto → Arqueira | 11 | 15 vs 13 | 4,1,6 | acerto | **9** | 0 |
 | 129 | Bruto → Arqueira | 17 | 21 vs 13 | 6,4,2 | acerto | **12** | 0 → **morta** |
 
-- **Contas:** 18 ataques, com 10 acertos, 1 crítico e 7 erros. Dano total: arqueira 19, lobo 7, bruto 98.
+- **Contas:** 18 ataques, com 10 acertos, 1 crítico e 7 erros. Dano total **rolado**: arqueira 19, lobo 7, bruto 98. (Rolado, não aplicado: a arqueira só tinha 22 de vida; a maior parte dos 98 caiu sobre uma figura já a 0.)
 - **Todos os danos cabem na expressão da arma:** 2d6+2 ∈ [4,14], 1d6+2 ∈ [3,8], 1d10+3 ∈ [4,13]. O crítico deu 22,
   o que cabe tanto em 2×(1d10+3) como em 2d10+3.
 - **Toda a vida bate com o dano:** 22 − 7 − 11 = 4, e 16 − 8 = 8. Nenhuma ficha que levou dano tinha RD, por isso o
@@ -167,7 +169,7 @@ Os números vêm de `journal/medicoes.json`. O 3d6 é a verificação de crític
 | **DV-2** | Motor / testes de morte | **Total igual à CD dá falha** (14 vs CD 14 → falha, #110). Se a regra for «≥ CD», é defeito. Se for «> CD», está certo e o recibo devia dizê-lo | #110 |
 | **DV-3** | Motor / regras | Um **crítico** num moribundo soma só **1** falha (#90 → #94: 1 falha), como um golpe normal. É matéria de regra (o Mestre decide) | #90, #94 |
 | **DV-4** | HUD do Mestre | A lista das Figuras **não marca «caída»**. A arqueira caída aparece «vida 0/22 · PA 0/6», sem estado, enquanto o lobo morto tem «· morta» | `c14` |
-| **DV-5** | Animações / Mestre | No tabuleiro do Mestre **não há sinal nenhum de dano**: nem número, nem clarão, nem marca de queda (a figura caída fica de pé). A única mudança que se vê é a da morte: o peão deita-se | `f02`, `f06`, `z01` |
+| **DV-5** | Animações / Mestre | No tabuleiro do Mestre **não há sinal nenhum de dano**: nem número, nem clarão, nem marca de queda (a figura caída fica de pé). A única mudança que se vê é a da morte da arqueira: o peão deita-se. A morte do lobo não mudou pose nenhuma no tabuleiro do Mestre. | `f02`, `f06`, `z01` |
 | **DV-6** | Animações / jogadora | Dois danos no mesmo instante → **números sobrepostos** no mesmo ponto, ilegíveis | `c08`, `v02` |
 | **DV-7** | Animações (ambos) | **Não há animação de ataque**: nem projéctil, nem golpe, nem reacção do alvo. A morte é instantânea: na jogadora a figura some, e no Mestre o peão aparece já deitado, sem transição. Pode ser âmbito ainda não feito, e não um defeito. Fica para a nota de Animações | `f01`–`f06` |
 | **DV-8** | Journal | As **faces dos dados de dano** não ficam no journal, só o total. O dano não se pode auditar parcela a parcela. O d20 e o 3d6 do crítico ficam | `journal-extracto.json` (eventos `ataque`) |
@@ -203,8 +205,7 @@ Nenhum destes desvios impediu a bancada de medir. A batalha correu do princípio
 | `preparar.mjs --fichas=acertam --aliada` | 2 jogadoras, 2 criaturas, CA 12–14, sem `sala.mapa` |
 | clientes Godot da batalha | 0 SCRIPT ERROR (jogadora e Mestre) |
 
-**As suites Godot headless não correram neste PC.** A janela estava fechada (aviso das 18:33), e esta ordem não muda
-nenhum ficheiro do cliente, do servidor, dos testes nem do CI. Os únicos ficheiros mudados são `bancada-rede/*`,
+**As suites Godot headless não correram neste PC.** A corrida tinha morrido às 18:44:28 pelo limite de 5 h e o fecho foi feito depois, das ~20:55 às ~21:20; esta ordem não muda nenhum ficheiro do cliente, do servidor, dos testes nem do CI. Os únicos ficheiros mudados são `bancada-rede/*`,
 `provas/ordem-d-aud-04-bancada/*` e este ESTADO-FINAL, e nenhuma suite lê `bancada-rede/` (conferido por `grep`). As
 suites Godot correm no CI sobre estes commits (nota do fim). `retoma-i0004/actualizar-listas.py` não se aplica, porque
 nada em `rascunhos/` mudou.
