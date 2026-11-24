@@ -1,0 +1,18 @@
+# comando: godot --headless --path rascunhos/cliente -s testes/medir_ligacao_arranque.gd -- --servidor=127.0.0.1:8790
+# hora: 2026-11-24 07:02:22 -0300 (porta 8790 sem nada à escuta: netstat 0 linhas)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+servidor: ws://127.0.0.1:8790/ws (fora do ar)
+t=  2816 ms  A_LIGAR     alertas=0  rótulo: A ligar à mesa…  [o ecrã do Mestre abriu]
+WARNING: MASTER_VIEW: vista_sem_pedido — o pedido não saiu 40 vezes seguidas (10 s); parei
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _tentar_vista (res://cenas/mestre/mestre.gd:267)
+       [1] _process (res://cenas/mestre/mestre.gd:227)
+t= 30006 ms  A_ESPERAR   alertas=1  rótulo: A ligar à mesa… o servidor não responde; a tentar de novo.  [ligacao_mudou]
+t= 31165 ms  A_LIGAR     alertas=1  rótulo: A ligar à mesa…  [ligacao_mudou]
+t= 61169 ms  A_ESPERAR   alertas=1  rótulo: A ligar à mesa… o servidor não responde; a tentar de novo.  [ligacao_mudou]
+t= 63389 ms  A_LIGAR     alertas=1  rótulo: A ligar à mesa…  [ligacao_mudou]
+t= 75004 ms  A_LIGAR     alertas=1  rótulo: A ligar à mesa…  [fim da medição]
+mudanças da ligação em 75 s: 4; alertas no fim: 1; na mesa alguma vez: false
+# rc=0

@@ -1,0 +1,7 @@
+# comando: APPDATA=<tmp>/appdata-vazio godot --headless --path rascunhos/cliente --quit-after 600   (sem lugar; MARCAS TEMPORÁRIAS em arena.gd:171 e lobby.gd:84, repostas a seguir com git checkout — não cometidas)
+# hora: 2026-11-24 07:04:04 -0300
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+pronto  <- arena.gd:171
+pronto  <- lobby.gd:84
+# rc=0

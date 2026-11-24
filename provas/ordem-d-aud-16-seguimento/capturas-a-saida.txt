@@ -1,0 +1,7 @@
+# saída do comando de captura (capturas-a-comando.ps1.txt), com as horas; caminhos do PC redigidos para <sede>
+arranque: 2026-11-24 07:05:03 -03:00
+godot pid 10668
+c01 (t=11 s): 2026-11-24 07:05:14 -03:00 <sede>\tmp\cap\a01-mestre-servidor-fora-a-ligar.png 960x540
+c02 (t=34 s): 2026-11-24 07:05:38 -03:00 <sede>\tmp\cap\a02-mestre-servidor-fora-30s.png 960x540
+fechado: 2026-11-24 07:05:38 -03:00
+

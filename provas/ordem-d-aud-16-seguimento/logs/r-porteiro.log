@@ -1,0 +1,8 @@
+[porteiro] Mestre na sala sala-bancada-rede
+[porteiro] MASTER_LOBBY_SET {"mapaId":"arena-teste","criaturasDisponiveis":["orc-teste"],"npcsDisponiveis":[]} → ROOM_RECEIPT APLICADA
+[porteiro] MASTER_START {} → ROOM_RECEIPT APLICADA
+[porteiro] MASTER_PLACE {"fichaId":"orc-teste","casa":{"x":38,"y":11}} → ROOM_RECEIPT APLICADA
+[porteiro] Heroína Teste: lugar guardado no cliente (jogadora)
+[porteiro] Mestre: lugar guardado no cliente (mestre)
+pronto-porteiro
+[porteiro] o ecrã do Mestre (Godot) entrou na sala; o porteiro sai

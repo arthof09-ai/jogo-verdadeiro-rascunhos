@@ -1,0 +1,24 @@
+# comando: o bloco abaixo, corrido pelo agente da sessão 1 (tmp/s1-agente.ps1, cópia do da D-AUD-16 com a sede desta ordem; $sede = a pasta desta ordem no PC)
+Add-Type -Namespace W -Name S2 -MemberDefinition '[DllImport("user32.dll")] public static extern bool ShowWindow(System.IntPtr h, int c); [DllImport("user32.dll")] public static extern bool SetWindowPos(System.IntPtr h, System.IntPtr a, int x, int y, int cx, int cy, uint f);' -ErrorAction SilentlyContinue
+$cliente = "$sede\repo\rascunhos\cliente"
+$godot = '<godot 4.7.2>'
+$antes = $env:APPDATA
+$env:APPDATA = "$sede\tmp\appdata-mestre-fora"
+$t0 = Get-Date
+"arranque: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz')"
+$p = Start-Process -FilePath $godot -ArgumentList @('--path', "`"$cliente`"", '--windowed', '--resolution', '960x540', '--position', '0,40', '--', '--servidor=127.0.0.1:8790') -PassThru -WorkingDirectory $cliente
+$env:APPDATA = $antes
+"godot pid $($p.Id)"
+Start-Sleep -Seconds 8
+$script:M = JanelaDe $p.Id
+[W.S2]::SetWindowPos($M, [IntPtr](-1), 0, 40, 976, 579, 0x40) | Out-Null
+Start-Sleep -Seconds 2
+"c01 (t=$([int]((Get-Date)-$t0).TotalSeconds) s): $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz') $(Captura $M "$sede\tmp\cap\a01-mestre-servidor-fora-a-ligar.png")"
+[W.S2]::SetWindowPos($M, [IntPtr](-2), 0, 0, 0, 0, 0x13) | Out-Null
+while (((Get-Date)-$t0).TotalSeconds -lt 34) { Start-Sleep -Milliseconds 200 }
+[W.S2]::SetWindowPos($M, [IntPtr](-1), 0, 0, 0, 0, 0x13) | Out-Null
+Start-Sleep -Milliseconds 300
+"c02 (t=$([int]((Get-Date)-$t0).TotalSeconds) s): $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz') $(Captura $M "$sede\tmp\cap\a02-mestre-servidor-fora-30s.png")"
+[W.S2]::SetWindowPos($M, [IntPtr](-2), 0, 0, 0, 0, 0x13) | Out-Null
+Stop-Process -Id $p.Id -Force
+"fechado: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz')"

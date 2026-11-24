@@ -1,0 +1,20 @@
+# saída do comando de captura (capturas-r-comando.ps1.txt), com as horas; caminhos do PC redigidos para <sede>
+lancar: inicio 2026-11-24 07:06:35 -03:00
+lancar: saiu=True rc= em 7 s
+J=2823158 (pid 26388) {"y":32,"w":800,"h":450,"x":-1920}  M=5900586 (pid 36496) {"y":32,"w":800,"h":450,"x":-1120}
+J=2823158 (pid 26388) {"y":71,"w":960,"h":540,"x":8}  M=5900586 (pid 36496) {"y":71,"w":960,"h":540,"x":984}
+hora da captura: 2026-11-24 07:07:15 -03:00
+<sede>\tmp\cap\r01-jogadora-na-arena.png 960x540
+<sede>\tmp\cap\r02-mestre-pelo-lobby-no-ecra-dele.png 960x540
+<sede>\tmp\cap\r03-os-dois-clientes-em-simultaneo.png
+fim: 2026-11-24 07:07:15 -03:00
+
+--- b02
+J=2823158 (pid 26388) {"y":71,"w":960,"h":540,"x":8}  M=5900586 (pid 36496) {"y":71,"w":960,"h":540,"x":984}
+J=2823158 (pid 26388) {"y":31,"w":944,"h":533,"x":-1912}  M=5900586 (pid 36496) {"y":31,"w":944,"h":533,"x":-952}
+hora da captura: 2026-11-24 07:07:38 -03:00
+<sede>\tmp\cap\r01-jogadora-na-arena.png 944x533
+<sede>\tmp\cap\r02-mestre-pelo-lobby-no-ecra-dele.png 944x533
+<sede>\tmp\cap\r03-os-dois-clientes-em-simultaneo.png
+fim: 2026-11-24 07:07:38 -03:00
+

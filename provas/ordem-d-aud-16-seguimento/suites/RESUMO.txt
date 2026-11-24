@@ -1,0 +1,18 @@
+# comando: bash tmp/suites.sh   (o executor desta ordem; cada log abaixo traz a sua linha «# comando:»)
+# hora: início 2026-11-24 07:08:56 -0300
+abrir_scripts rc=0 erros_script=0 | 112 scripts, 0 falhas
+rodar_testes rc=0 erros_script=0 | 333 de 333 verificações passaram.
+abrir_clareira rc=0 erros_script=0 | 22 de 22 verificações passaram.
+medir_painel_config rc=0 erros_script=0 | painel ⚙: 0 falha(s), 0 sem medida
+abrir_mestre rc=0 erros_script=0 | 67 de 67 verificações passaram.
+pecas_mestre rc=0 erros_script=0 | 307 de 307 verificações passaram.
+medir_mestre rc=0 erros_script=0 | ecrã do Mestre: 0 falha(s), 0 sem medida
+hud_acoes rc=0 erros_script=0 | 50 de 50 verificações passaram.
+caixa_jogadora rc=0 erros_script=0 | 70 de 70 verificações passaram.
+caixa_janela rc=0 erros_script=0 | 123 de 123 verificações passaram.
+canario_privacidade rc=0 erros_script=0 | 10 de 10 verificações passaram.
+camera_segue rc=0 erros_script=0 | 17 de 17 verificações passaram.
+arranque rc=0 pronto=2 erros_script=0   (2 «pronto» esperados sem lugar: arena.gd:171 e lobby.gd:84 — ver o ESTADO-FINAL §4)
+servidor rc=0 ℹ tests 442 ℹ pass 442 ℹ fail 0 
+# hora: fim 2026-11-24 07:10:42 -0300
+FIM

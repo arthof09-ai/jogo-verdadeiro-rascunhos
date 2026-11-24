@@ -1,0 +1,13 @@
+diff --git a/rascunhos/cliente/cenas/arena/arena.gd b/rascunhos/cliente/cenas/arena/arena.gd
+index 1d7a839..021814c 100644
+--- a/rascunhos/cliente/cenas/arena/arena.gd
++++ b/rascunhos/cliente/cenas/arena/arena.gd
+@@ -20,7 +20,7 @@ const CENA_LOBBY := "res://cenas/lobby/lobby.tscn"
+ ## ORDEM-D-AUD-16: para onde vai o arranque quando o lugar guardado é o do Mestre. PREDEFINIÇÃO REVERSÍVEL do
+ ## coordenador (a pergunta C-7, «directo ou pelo lobby?», é do Mestre): directo no ecrã dele. Para passar pelo lobby,
+ ## esta linha passa a "res://cenas/lobby/lobby.tscn" (o lobby, com a Rede já a ligar, manda o Mestre para o ecrã dele).
+-const CENA_ARRANQUE_MESTRE := "res://cenas/mestre/mestre.tscn"
++const CENA_ARRANQUE_MESTRE := "res://cenas/lobby/lobby.tscn"
+ ## `orientacao` do servidor é uma letra (sala.js: 'S' por omissão; MASTER_PLACE aceita até 8 letras).
+ ## Rumo em graus à volta do Y; a frente do Node3D é -Z e a casa y cresce para +Z (sul).
+ ## PROVISÓRIO: o conjunto exato de letras não está na especificação; aceitam-se N/S/L/O e E/W.
