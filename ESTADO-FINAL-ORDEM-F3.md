@@ -133,6 +133,8 @@ Só se usaram as fichas fictícias de bancada.
 
 ## 7. Commits e CI
 
-- `<COMMIT-PROVAS>`: as provas, as ferramentas de medição, o README e este ESTADO-FINAL.
-- Listas da retoma: `<LISTAS>`.
-- CI na ponta: `<CI>`.
+- `7bca758`: as provas, as ferramentas de medição, o README e este ESTADO-FINAL.
+- Listas da retoma: corri `actualizar-listas.py` (Python 3.12; este PC não tem `python3` no PATH) depois do
+  `7bca758`. Deu «antes.txt: 38 · depois.txt: 434 · MANIFESTO: 477 ficheiros (0 novos, 0 tirados)» e a árvore ficou
+  limpa, por isso não há commit de listas. Nada em `rascunhos/` mudou.
+- O commit da nota do CI, a seguir a este.
