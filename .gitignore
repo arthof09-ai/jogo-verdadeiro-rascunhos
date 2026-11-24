@@ -10,3 +10,5 @@ rascunhos/cliente/cenas/arena/capturas/_ensaio/
 rascunhos/servidor/autojogo/.cache/
 # Ordem CORR10-C1: ficheiros .uid que o Godot 4 gera ao importar (regeneráveis)
 *.uid
+# Ordem PLANO-2-F2: as saídas dos exports (web, Android, Windows) — vão por artefacto do CI, não pelo git
+/build/

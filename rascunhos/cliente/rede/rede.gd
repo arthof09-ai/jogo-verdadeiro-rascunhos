@@ -7,7 +7,10 @@ extends Node
 ##
 ## - Liga a ws://<mesma origem>/ws (wss se a página for https). Na web a origem vem de
 ##   location.host; fora dela, do campo do lobby (user://rede.cfg) ou de "-- --servidor=".
-## - Reconecta com espera crescente (1 s, 2 s, 4 s ... até 30 s, com variação).
+## - Reconecta com espera crescente (1 s, 2 s, 4 s, até 8 s, com variação). Ordem PLANO-2-F2 (JV3.4b): o tecto era
+##   30 s; com 25 s sem Wi-Fi a tentativa seguinte podia cair até ~36 s depois de a rede voltar (o aceite é ≤ 30 s).
+##   Na web, o evento `online` do navegador faz tentar logo.
+## - Ordem PLANO-2-F2 (JV2.1b): no Android, ws:// (em claro) só para a rede local; fora dela, só wss://.
 ## - Guarda o seatToken em user:// (nunca na URL, nunca no log). PIN e senha: só em memória.
 ## - Mantém a fila das intenções da jogadora (ENVIADA, DESCONHECIDA, AGUARDANDO_MESTRE ...).
 ## - O ping é só da camada WebSocket (princípio 6): nada de ping de aplicação.
@@ -48,7 +51,7 @@ const CAMINHO_WS := "/ws"
 ## Fora da web, o Godot também pinga (a propriedade não tem efeito na web: o navegador cuida).
 const HEARTBEAT_S := 20.0
 const ESPERA_MIN_S := 1.0
-const ESPERA_MAX_S := 30.0
+const ESPERA_MAX_S := 8.0
 const LIMITE_BYTES := 16384  # §2: mensagem do cliente ≤ 16 KB
 const LIMITE_COMANDOS_POR_S := 10  # §2: ≤ 10 por segundo (o servidor conta ROOM_INTENT e MASTER_*)
 const CODIGO_OUTRO_APARELHO := 4002  # E-P9: o segundo JOIN fecha o primeiro
@@ -75,6 +78,8 @@ var alertas_vistos: Dictionary = {}
 var perdidos_mostrados := 0
 ## Os testes sem tela desligam a escrita em disco.
 var persistir := true
+## Ordem PLANO-2-F2 (V1.0): no link de medição a Rede não liga (a arena mede-se sozinha; ver medicao/medicao.gd).
+var modo_medicao := false
 
 var _ws: WebSocketPeer = null
 var _ativo := false
@@ -89,6 +94,8 @@ var _ja_esteve_na_mesa := false
 var _espera_s := ESPERA_MIN_S
 var _relogio_reconexao := 0.0
 var _envios_recentes: Array = []
+var _snapshots_nesta_ligacao := 0
+var _ao_online_js = null  # Ordem PLANO-2-F2: o callback do evento `online` (tem de viver enquanto a página vive)
 
 
 func _ready() -> void:
@@ -99,16 +106,55 @@ func _ready() -> void:
 
 ## Chamado pela cena do lobby (e, por segurança, pela arena). Nos testes sem tela ninguém chama.
 func iniciar() -> void:
-	if _ativo:
+	if _ativo or modo_medicao:
 		return
 	_ativo = true
 	_carregar_lugar()
 	_carregar_pendentes()
 	set_process(true)
+	_escutar_online()
 	if _seat_token != "":
 		_ligar()
-	else:
-		_pedir_entrada("")
+		return
+	# Ordem PLANO-2-F2 (JV2.1b): fora da web, a entrada pode vir da linha de comando (as provas do ROOM_SNAPSHOT no
+	# Windows e no Android: «-- --servidor=IP:porta --entrar-nome=… --entrar-senha=…»). Só fichas fictícias.
+	var auto := entrada_da_linha_de_comando()
+	if not auto.is_empty():
+		entrar(auto["nome"], auto["senha"])
+		return
+	_pedir_entrada("")
+
+
+## Ordem PLANO-2-F2: {"nome", "senha"} dos argumentos «--entrar-nome=» e «--entrar-senha=» (fora da web), ou {}.
+func entrada_da_linha_de_comando(args: PackedStringArray = OS.get_cmdline_user_args()) -> Dictionary:
+	if OS.has_feature("web"):
+		return {}
+	var nome := ""
+	var senha := ""
+	for arg in args:
+		if arg.begins_with("--entrar-nome="):
+			nome = arg.substr("--entrar-nome=".length())
+		elif arg.begins_with("--entrar-senha="):
+			senha = arg.substr("--entrar-senha=".length())
+	if nome == "" or senha == "":
+		return {}
+	return {"nome": nome, "senha": senha}
+
+
+## Ordem PLANO-2-F2 (JV3.4b): na web, quando o navegador volta a ter rede, tenta já (sem esperar o resto da espera).
+func _escutar_online() -> void:
+	if not OS.has_feature("web") or _ao_online_js != null:
+		return
+	_ao_online_js = JavaScriptBridge.create_callback(_ao_online)
+	var janela = JavaScriptBridge.get_interface("window")
+	if janela != null:
+		janela.addEventListener("online", _ao_online_js)
+
+
+func _ao_online(_args: Array) -> void:
+	if estado_ligacao == Ligacao.A_ESPERAR:
+		_espera_s = ESPERA_MIN_S
+		_relogio_reconexao = 0.0
 
 
 ## Entrada da jogadora com o nome da personagem e a senha simples.
@@ -372,6 +418,15 @@ func _comecar_entrada(novo_papel: String) -> void:
 
 func _ligar() -> void:
 	var url := url_servidor()
+	# Ordem PLANO-2-F2 (JV2.1b): no Android o tráfego em claro só vai para a rede local. O Godot usa sockets nativos (o
+	# NetworkSecurityPolicy do Android não os filtra), por isso a guarda é aqui: ws:// para fora da rede local não liga.
+	if OS.has_feature("android") and not url_permitida_no_android(url):
+		_ws = null
+		texto_ultimo_erro = "Este endereço não é da rede de casa. Peça ao Mestre o link certo."
+		_mudar_estado(Ligacao.DESLIGADA)
+		_pedir_entrada("rede_local")
+		return
+	_snapshots_nesta_ligacao = 0
 	_ws = WebSocketPeer.new()
 	_ws.inbound_buffer_size = 1 << 20  # snapshots grandes cabem
 	if not OS.has_feature("web"):
@@ -470,6 +525,12 @@ func _ao_receber(texto: String) -> void:
 		"ROOM_WELCOME":
 			_ao_boas_vindas(msg)
 		"ROOM_SNAPSHOT":
+			_snapshots_nesta_ligacao += 1
+			if _snapshots_nesta_ligacao == 1:
+				# Ordem PLANO-2-F2 (JV2.1b): a linha que as provas do Windows, do Android e da web procuram no registo.
+				# Só o seq, a fase e a plataforma: nada da ficha nem do Mestre.
+				print("rede: ROOM_SNAPSHOT seq=%d fase=%s plataforma=%s" % [_int(msg.get("seq")),
+					_texto(msg.get("fase")), OS.get_name()])
 			snapshot_recebido.emit(msg)
 		"ROOM_EVENT":
 			_ao_evento(msg)
@@ -729,3 +790,47 @@ static func _normalizar(v):
 	if v is float and v == floorf(v):
 		return int(v)
 	return v
+
+
+# ---------------------------------------------------------------- Ordem PLANO-2-F2: rede local
+
+## ws:// só para a rede local; wss:// para qualquer sítio. Rede local: localhost, 127/8, 10/8, 172.16/12, 192.168/16,
+## 169.254/16, ::1, fc00::/7, fe80::/10 e nomes «.local» (mDNS).
+static func url_permitida_no_android(url: String) -> bool:
+	if url.begins_with("wss://"):
+		return true
+	if not url.begins_with("ws://"):
+		return false
+	var resto := url.substr("ws://".length())
+	var fim := resto.find("/")
+	var autoridade := resto if fim < 0 else resto.substr(0, fim)
+	return host_da_rede_local(autoridade)
+
+
+## `autoridade` é «host», «host:porta», «[v6]» ou «[v6]:porta».
+static func host_da_rede_local(autoridade: String) -> bool:
+	var host := autoridade.strip_edges().to_lower()
+	if host.begins_with("["):
+		var f := host.find("]")
+		if f < 0:
+			return false
+		host = host.substr(1, f - 1)
+	elif host.count(":") == 1:
+		host = host.substr(0, host.find(":"))
+	if host == "":
+		return false
+	if host == "localhost" or host.ends_with(".local"):
+		return true
+	if host.contains(":"):
+		return host == "::1" or host.begins_with("fc") or host.begins_with("fd") or host.begins_with("fe8") \
+			or host.begins_with("fe9") or host.begins_with("fea") or host.begins_with("feb")
+	var p := host.split(".")
+	if p.size() != 4:
+		return false
+	var n: Array[int] = []
+	for x in p:
+		if not x.is_valid_int() or int(x) < 0 or int(x) > 255:
+			return false
+		n.append(int(x))
+	return n[0] == 127 or n[0] == 10 or (n[0] == 172 and n[1] >= 16 and n[1] <= 31) \
+		or (n[0] == 192 and n[1] == 168) or (n[0] == 169 and n[1] == 254)

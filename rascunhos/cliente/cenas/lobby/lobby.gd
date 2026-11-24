@@ -34,6 +34,8 @@ const FRASES := {
 	"nome": "Escreva o nome da personagem.",
 	"pin": "Escreva o PIN do Mestre.",
 	"bloqueado": "Muitas tentativas. Espere um pouco.",
+	# Ordem PLANO-2-F2 (JV2.1b): no Android, ws:// para fora da rede local não liga (rede.gd).
+	"rede_local": "Este endereço não é da rede de casa. Peça ao Mestre o link certo.",
 }
 
 var _tema := Theme.new()
@@ -77,7 +79,14 @@ func _ready() -> void:
 	Rede.iniciar()  # com token guardado, entra sozinha; sem token, pede a entrada
 	_atualizar()
 	_verificar_fase()
+	# Ordem PLANO-2-F2 (JV3.4): quem chega pelo QR ou pelo link escreve logo o nome (Tab → senha → Enter entra).
+	_focar_nome.call_deferred()
 	print("pronto")  # o CI (JV0.2) espera esta linha no console
+
+
+func _focar_nome() -> void:
+	if is_instance_valid(_campo_nome) and _campo_nome.is_visible_in_tree() and _campo_nome.editable:
+		_campo_nome.grab_focus()
 
 
 # ---------------------------------------------------------------- montagem

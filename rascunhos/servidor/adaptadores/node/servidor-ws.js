@@ -11,11 +11,13 @@
 import http from 'node:http';
 import { createHash, webcrypto } from 'node:crypto';
 import { readFile, stat, realpath } from 'node:fs/promises';
-import { readFileSync, writeFileSync, renameSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, renameSync, rmSync, mkdirSync } from 'node:fs';
+import { networkInterfaces } from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { ErroJournal } from '../../nucleo/journal.js';
 import { conferirTextoFilaAlertas, ErroFilaAlertas } from '../../nucleo/fila-alertas.js';
+import { qrEmSvg, qrNoTerminal } from './qr.js';
 
 const GUID_WS = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
 export const LIMITE_MENSAGEM = 16 * 1024;
@@ -566,6 +568,119 @@ export function criarGravadorAlertas({ sala, caminho, registo = () => {}, escrev
   };
 }
 
+// ---------------------------------------------------------------------------
+// Ordem PLANO-2-F2 (JV3.4 e V1.0): o QR da mesa e o link de medição.
+//   GET  /qr        → página com o QR do link da mesa (e o do link de medição) para cada endereço da rede local.
+//   POST /medicao   → o JSON da V1.0 que o aparelho manda sozinho; grava-se na pasta das medições (fora da estática).
+// Nada disto toca na sala: são rotas HTTP ao lado da estática, na mesma origem do ws://…/ws.
+// ---------------------------------------------------------------------------
+export const ROTA_QR = '/qr';
+export const ROTA_MEDICAO = '/medicao';
+export const FORMATO_MEDICAO = 'medicao-v1.0/1';
+export const LIMITE_MEDICAO = 16 * 1024;
+export const MAX_MEDICOES = 500; // por arranque do servidor: ninguém enche o disco do Mestre pela rede
+
+/** IPv4 da rede local (10/8, 172.16/12, 192.168/16) das interfaces da máquina, 192.168 primeiro. */
+export function ipsDaRede(interfaces = networkInterfaces()) {
+  const ips = [];
+  for (const lista of Object.values(interfaces ?? {})) {
+    for (const i of lista ?? []) {
+      const familia = i.family === 4 ? 'IPv4' : i.family;
+      if (familia !== 'IPv4' || i.internal) continue;
+      const n = String(i.address).split('.').map(Number);
+      const local = n[0] === 10 || (n[0] === 172 && n[1] >= 16 && n[1] <= 31) || (n[0] === 192 && n[1] === 168);
+      if (local && !ips.includes(i.address)) ips.push(i.address);
+    }
+  }
+  const ordem = (ip) => (ip.startsWith('192.168.') ? 0 : ip.startsWith('10.') ? 1 : 2);
+  return ips.sort((a, b) => ordem(a) - ordem(b));
+}
+
+/** Os links da mesa («http://IP:porta/») para cada IP da rede local. */
+export function urlsDaRede(porta, interfaces = networkInterfaces()) {
+  return ipsDaRede(interfaces).map((ip) => `http://${ip}:${porta}/`);
+}
+
+const ENTIDADES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+const escaparHtml = (t) => String(t).replace(/[&<>"']/g, (c) => ENTIDADES[c]);
+
+/** A página do QR: um cartão por endereço, com o QR para entrar e o QR da medição de 1 minuto. */
+export function paginaQr(urls) {
+  const cartoes = urls.length
+    ? urls.map((u) => `<section><h2>Entrar na mesa</h2>${qrEmSvg(u, { modulo: 10 })}`
+      + `<p class="url">${escaparHtml(u)}</p><p>Leia com a câmara do telemóvel ou abra o link no PC. Não instala nada.</p>`
+      + `<details><summary>Medir este aparelho (1 minuto)</summary>${qrEmSvg(u + '?medir=1', { modulo: 6 })}`
+      + `<p class="url">${escaparHtml(u + '?medir=1')}</p><p>Abra e espere 1 minuto, sem tocar no ecrã.</p></details>`
+      + '</section>').join('')
+    : '<p>Não encontrei nenhum endereço da rede local nesta máquina. Ligue o PC ao Wi-Fi ou ao cabo de casa.</p>';
+  return '<!doctype html><html lang="pt"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">'
+    + '<title>Assimilação — entrar na mesa</title><style>body{font-family:sans-serif;background:#1b1d22;color:#eee;'
+    + 'text-align:center}section{display:inline-block;margin:1em;padding:1em;background:#2a2d35;border-radius:12px}'
+    + 'svg{max-width:90vw;height:auto}.url{font:1.4em monospace}</style></head><body><h1>Assimilação</h1>'
+    + cartoes + '</body></html>';
+}
+
+/** O QR do primeiro endereço no terminal do Mestre, com os links por extenso. */
+export function textoQrDoTerminal(urls) {
+  if (!urls.length) return 'QR: nenhum endereço da rede local nesta máquina (ligue o PC ao Wi-Fi ou ao cabo de casa).';
+  return ['Entrar na mesa (leia o QR com o telemóvel ou abra o link):', qrNoTerminal(urls[0]),
+    ...urls.map((u) => '  ' + u), 'Página com o QR grande: ' + urls[0] + ROTA_QR.slice(1),
+    'Medir um aparelho (abra e espere 1 minuto): ' + urls[0] + '?medir=1'].join('\n');
+}
+
+/** Confere o JSON da V1.0: um objecto com o formato certo e os números principais. Devolve o objecto ou null. */
+export function conferirMedicao(texto) {
+  let o;
+  try {
+    o = JSON.parse(texto);
+  } catch {
+    return null;
+  }
+  if (!o || typeof o !== 'object' || Array.isArray(o) || o.formato !== FORMATO_MEDICAO) return null;
+  for (const c of ['fps_mediana', 'fps_p5', 'chamadas_mediana', 'quadros']) if (typeof o[c] !== 'number') return null;
+  return o;
+}
+
+function criarRecetorMedicoes(pasta, registo) {
+  let n = 0;
+  return function receber(req, res) {
+    const cab = { 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' };
+    if (!pasta) return void res.writeHead(404, cab).end();
+    if (req.method !== 'POST') return void res.writeHead(405, { ...cab, Allow: 'POST' }).end();
+    if (Number(req.headers['content-length'] ?? 0) > LIMITE_MEDICAO) return void res.writeHead(413, cab).end();
+    const partes = [];
+    let total = 0;
+    let cortado = false;
+    req.on('data', (b) => {
+      if (cortado) return;
+      total += b.length;
+      if (total > LIMITE_MEDICAO) {
+        cortado = true;
+        res.writeHead(413, { ...cab, Connection: 'close' }).end();
+        req.destroy();
+      } else partes.push(b);
+    });
+    req.on('error', () => {});
+    req.on('end', () => {
+      if (cortado) return;
+      const o = conferirMedicao(Buffer.concat(partes).toString('utf8'));
+      if (!o) return void res.writeHead(400, cab).end();
+      if (n >= MAX_MEDICOES) return void res.writeHead(429, cab).end();
+      n += 1;
+      const recebida = new Date().toISOString();
+      const nome = `medicao-${recebida.replace(/[:.]/g, '-')}-${String(n).padStart(3, '0')}.json`;
+      try {
+        gravarFicheiroAtomico(path.join(pasta, nome), JSON.stringify({ recebida, ip: ipDe(req), medicao: o }, null, 1) + '\n');
+      } catch (e) {
+        registo('medição: falhou a gravação (' + (e?.code ?? e?.message ?? 'erro') + ')');
+        return void res.writeHead(500, cab).end();
+      }
+      registo(`medição recebida: ${nome} (FPS mediana ${o.fps_mediana}, p5 ${o.fps_p5})`);
+      res.writeHead(204, cab).end();
+    });
+  };
+}
+
 /**
  * Cria o servidor HTTP+WS para uma sala.
  * @param {{sala:Object, pastaEstatica?:string, caminhoWs?:string, registo?:(t:string)=>void,
@@ -574,7 +689,11 @@ export function criarGravadorAlertas({ sala, caminho, registo = () => {}, escrev
  * `journal` (ordem 16): o gravador de criarGravadorJournal; grava ANTES de entregar as saídas.
  * `alertas` (ordem 34, N32-1): o gravador de criarGravadorAlertas; grava a fila ANTES de entregar as saídas.
  */
-export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', registo = () => {}, journal = null, alertas = null }) {
+export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', registo = () => {}, journal = null, alertas = null,
+  medicoes = null, urlsMesa = null }) {
+  // Ordem PLANO-2-F2: `medicoes` = pasta das medições V1.0 (null = POST /medicao dá 404); `urlsMesa` = () => [links]
+  // para a página do QR (null = os IPs da rede local desta máquina, na porta em que o servidor ouve).
+  const receberMedicao = criarRecetorMedicoes(medicoes, registo);
   const porLugar = new Map(); // seatId → Set<Ligacao>
   const todas = new Set();
 
@@ -741,9 +860,27 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
   };
 
   const servidor = http.createServer((req, res) => {
+    let rota = null;
+    try {
+      rota = new URL(req.url, 'http://local').pathname;
+    } catch {
+      /* o servirEstatico responde 400 */
+    }
+    if (rota === ROTA_MEDICAO) return void receberMedicao(req, res);
+    if (rota === ROTA_QR && (req.method === 'GET' || req.method === 'HEAD')) {
+      const porta = servidor.address()?.port ?? 8080;
+      const corpo = Buffer.from(paginaQr(urlsMesa ? urlsMesa() : urlsDaRede(porta)), 'utf8');
+      res.writeHead(200, {
+        'Content-Type': 'text/html; charset=utf-8', 'Content-Length': corpo.length, 'Cache-Control': 'no-cache',
+        'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer',
+        'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'; img-src data:",
+      });
+      return void res.end(req.method === 'HEAD' ? undefined : corpo);
+    }
     servirEstatico(req, res, pastaEstatica).catch(() => {
       if (!res.headersSent) res.writeHead(500).end();
     });
+    return undefined;
   });
 
   servidor.on('upgrade', semCair('upgrade', (req, socket, head) => {
@@ -850,7 +987,11 @@ export function criarServidor({ sala, pastaEstatica = null, caminhoWs = '/ws', r
 //    "motores":"../motores/gerado/motores.mjs", "fichas":"../dados-exemplo/fichas-ficticias.json",
 //    "sala":{ ...config de criarSala: lugares, iniciativa, mapa... },
 //    "journal":"../privado/registo-MESTRE-ONLY-sala.json", "chaveJournal":"<opcional, HMAC>",
-//    "terreno":"../dados/terreno-floresta.json"}
+//    "terreno":"../dados/terreno-floresta.json",
+//    "medicoes":"../privado/medicoes", "qr":true}
+// Ordem PLANO-2-F2: "pastaEstatica" aponta para o export web (build/web) — a jogadora abre-o pelo QR, na mesma origem
+// do ws://…/ws; "medicoes" é a pasta dos JSON da V1.0 (POST /medicao; fora da estática); "qr":false cala o QR do
+// terminal (a página /qr continua).
 // Ordem 44: com "terreno", a sala conhece o relevo e os obstáculos do mapa (o pacote que o cliente gera com
 // cliente/cenas/arena/ferramentas/exportar_terreno.gd). Pacote com forma desconhecida → a sala não abre.
 // Ordem 48: o pacote é o mapa inteiro e a sala recorta dele a grelha do tamanho que tiver; um tamanho que não caiba
@@ -921,14 +1062,29 @@ async function principal(argv) {
     alertas = criarGravadorAlertas({ sala, caminho: caminhoAlertas, registo: (t) => console.error(t) });
     alertas.gravar();
   }
+  // Ordem PLANO-2-F2 (V1.0): "medicoes" = a pasta onde caem os JSON do link de medição (fora da pasta estática).
+  let medicoes = null;
+  if (cfg.medicoes) {
+    medicoes = path.resolve(base, cfg.medicoes);
+    if (pastaEstatica && dentroDaPasta(path.resolve(pastaEstatica), medicoes)) {
+      console.error('a pasta das medições não pode ficar dentro da pasta estática');
+      process.exitCode = 1;
+      return;
+    }
+    mkdirSync(medicoes, { recursive: true });
+  }
   const servidor = criarServidor({
     sala,
     pastaEstatica,
     registo: (t) => console.log(t),
     journal,
     alertas,
+    medicoes,
   });
-  servidor.listen(cfg.porta ?? 8080, cfg.host ?? '0.0.0.0');
+  servidor.listen(cfg.porta ?? 8080, cfg.host ?? '0.0.0.0', () => {
+    // Ordem PLANO-2-F2 (JV3.4): o QR da mesa no terminal do Mestre (e a página /qr com o QR grande).
+    if (cfg.qr !== false) console.log(textoQrDoTerminal(urlsDaRede(servidor.address().port)));
+  });
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {

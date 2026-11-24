@@ -22,6 +22,8 @@ rede/sala_padrao="mesa"
 
 Rede="*res://rede/rede.gd"
 Estado="*res://estado/estado.gd"
+; Ordem PLANO-2-F2 (V1.0): o link de medição (?medir=1 / -- --medir). Sem o pedido, não faz nada.
+Medicao="*res://medicao/medicao.gd"
 
 [display]
 
