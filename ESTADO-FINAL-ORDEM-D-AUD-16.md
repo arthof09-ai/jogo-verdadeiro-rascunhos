@@ -7,8 +7,8 @@ na bancada de rede, com os dois clientes Godot abertos ao mesmo tempo. As suites
 - **Executor:** Claude (opus), PC, conta 2. **Data:** 24/11/2026, ~02:59–03:25 (-03).
 - **Linha:** `fable/integracao-50`, trabalho directo. A `main` não foi tocada.
 - **Ponta de partida:** `b149a7b` (a nota do CI da D-AUD-01-CORRECCOES-3). `git fetch` antes do commit: não andou.
-- **Commits:** `d0dfb00` (código + testes), `97dc8c1` (listas da retoma), e o commit das provas e deste ESTADO-FINAL
-  (o que traz este ficheiro).
+- **Commits:** `d0dfb00` (código + testes), `97dc8c1` (listas da retoma), `a2c3c83` (provas e este ESTADO-FINAL) e
+  `3d8c187` (nota do CI neste ESTADO-FINAL).
 - **Não toquei** no servidor, nos workflows, nos dados, no `project.godot`, no lobby nem no arranque da jogadora.
 
 ## 1. A causa e a correcção
@@ -28,6 +28,8 @@ Mudar a cena principal mudava também o arranque da jogadora, e por isso não a 
 
 **A linha do log** (no `godot.log` do cliente do Mestre):
 `arranque: lugar do Mestre -> res://cenas/mestre/mestre.tscn (ORDEM-D-AUD-16)`.
+
+**Limite conhecido:** no arranque directo, com o servidor fora do ar, o ecrã do Mestre abre e volta a tentar ligar em silêncio — o alerta «A ligação caiu» só aparece depois de o Mestre já ter estado na mesa (`mestre.gd:654-660`), e não há outro aviso de ligação no ecrã dele. O «Conectando à mesa…» do lobby (`lobby.gd:284`) fica fora deste arranque. A correcção (um estado «a ligar…» visível até ao primeiro WELCOME, com teste no `pecas_mestre` para o `A_ESPERAR` sem nunca ter estado na mesa) fica para uma ordem seguinte.
 
 ## 2. A predefinição reversível (C-7 é do Mestre)
 
@@ -79,7 +81,7 @@ desta ordem** (`ordem-plano-2-f1-pc\tmp\ffmpeg.exe`, aberto às 01:59) e que nã
 | arranque da cena principal (`--quit-after 600`, sem lugar) | `pronto`, 0 `SCRIPT ERROR` |
 | servidor (`node --test testes/*.test.mjs`) | 435 / 435 (não mudou; corri-o por inteireza) |
 
-Todas sem `SCRIPT ERROR` / `Parse Error` / `Compile Error`. Os registos estão em `provas/ordem-d-aud-16/suites/`.
+Todas sem `SCRIPT ERROR` / `Compile Error` (0 ocorrências em todos os logs). Nota: 4 logs trazem na linha 3 o aviso pré-existente do Godot `Unicode parsing error ... Unexpected NUL character` (`abrir_mestre`, `canario_privacidade`, `medir_mestre`, `pecas_mestre`) — aviso de leitura, não falha; já existia na ordem anterior e nenhum ficheiro desta ordem tem bytes NUL. Os registos estão em `provas/ordem-d-aud-16/suites/`.
 
 ## 5. Critérios da ordem
 
@@ -94,3 +96,5 @@ Todas sem `SCRIPT ERROR` / `Parse Error` / `Compile Error`. Os registos estão e
 ## Nota do CI
 
 No `a2c3c83` (código, listas, provas e este ESTADO-FINAL): **Testes dos rascunhos 45339473687: success** (os 10 jobs, incluindo `cliente`, `godot-cliente`, `ponta-a-ponta`, `foto-mestre` e `retoma-pc`) · **Sonda de privacidade 45339473715: success**.
+
+Na ponta `3d8c187`: **Testes dos rascunhos 45340029866: success** · **Sonda de privacidade 45340029870: success** (o código é idêntico ao do `a2c3c83`; só este ESTADO-FINAL mudou).
