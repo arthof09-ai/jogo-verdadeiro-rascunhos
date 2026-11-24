@@ -19,3 +19,13 @@ jobs:
             exit 1
           fi
           echo 'Sonda limpa: nenhum e-mail pessoal encontrado.'
+      # ORDEM-SONDA-CAMINHOS-PC (CM-000009, 24/11/2026): a Sonda era cega aos caminhos reais do PC. As três formas
+      # (unidade C com barra, com barra invertida, e a do Git Bash) estão em .github/sonda/caminhos_pc.py, escritas
+      # de modo a não se apanharem a si mesmas. As ocorrências que já estavam no ramo ficam congeladas na linha de
+      # base (só hashes, sem o caminho); qualquer ocorrência nova falha o push. A base só pode encolher.
+      - name: A rede morde (auto-teste com as três formas, uma a uma)
+        if: always()
+        run: python3 .github/sonda/caminhos_pc.py --auto-teste
+      - name: Procurar caminhos reais do PC
+        if: always()
+        run: python3 .github/sonda/caminhos_pc.py --raiz . --base .github/sonda/caminhos-pc-base.txt
