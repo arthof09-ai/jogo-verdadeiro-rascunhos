@@ -18,6 +18,7 @@ import { projetarEvento, projetarSnapshot, efeitoAmbiente, nomePublicoDe, nomePu
 import * as Amb from './ambiente.js';
 import { criarFilaAlertas } from './fila-alertas.js';
 import { prepararTerreno } from './terreno.js';
+import { conferirFacesFisicas } from './dados-fisicos.js';
 import { ordemDinamicaVazia, registarEvento as registarNaOrdemDinamica, ordemParaVista, caixaMestrePadrao, caixaBemFormada, caixaParaVista } from './ordem-dinamica.js';
 
 export const PROTOCOLO = 2;
@@ -198,7 +199,8 @@ export function acaoBemFormada(a) {
 function dadosFisicosBemFormados(d) {
   if (d === undefined || d === null) return true;
   if (typeof d !== 'object' || Array.isArray(d) || Object.keys(d).some((k) => k !== 'faces')) return false;
-  // TODO(JV1.x M-28): validar o intervalo de cada face contra a expressão da técnica (ex.: 1..20 num d20).
+  // Só a forma aqui (sem a técnica não se sabe o dado). O intervalo de cada face contra a expressão da técnica
+  // (JV1.3, M-28) confere-se em aplicarIntencao, no ramo `atacar`, com conferirFacesFisicas (ORDEM-F4-PARCIAL).
   return Array.isArray(d.faces) && d.faces.length >= 1 && d.faces.length <= 10
     && d.faces.every((x) => Number.isInteger(x) && x >= 1 && x <= 100);
 }
@@ -2153,6 +2155,11 @@ export function criarSala({
         const alvo = m.figuras[acao.alvoId];
         const t = fichaEfetiva(f).tecnicas.find((x) => x.id === acao.arma);
         if (origem.dadosFisicos) {
+          // JV1.3 (M-28; ORDEM-F4-PARCIAL): cada face tem de caber no dado da técnica em que cai (ex.: 1..20 num d20),
+          // pela ordem em que o motor as consome. Fora do intervalo: recusa já, sem cartão ao Mestre nem vez gasta
+          // (a transacção desfaz o resto). O porquê vai só ao Mestre (evento interno `recusa`).
+          const fora = conferirFacesFisicas(origem.dadosFisicos.faces, t, fichaEfetiva(f));
+          if (fora) throw new ErroRecusa('acao_invalida', 'DADOS_FISICOS_FORA_DO_INTERVALO: ' + fora);
           // §8.2: dados físicos → cartão ao Mestre; a vez fica parada.
           abrirCartao(tx, {
             tipo: 'dados', figuraId: f.id, alvoId: alvo.id, tecnicaId: t.id,
