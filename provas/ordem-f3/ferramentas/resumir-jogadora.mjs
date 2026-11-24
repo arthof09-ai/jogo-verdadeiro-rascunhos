@@ -9,10 +9,12 @@ for (const f of process.argv.slice(2)) {
     const h = Object.values(fa.figuras).find((x) => x.quem === 'heroína');
     return `${fa.casaM} m desvio=${h.desvioXZ ? `(${h.desvioXZ.join(', ')})` : '-'}`;
   });
-  // os desvios esperados por casa: 1,5 m → 0; 1 m → −0,25, 0 ou 0,25; 2 m → 0
-  const ESPERADO = { '1.5': [0], '1': [-0.25, 0, 0.25], '2': [0] };
+  // os desvios esperados por casa, como pares: 1,5 m sem desvio; 1 m (−0.25, 0.25); 2 m (0, 0)
+  const ESPERADO = { '1.5': null, '1': [-0.25, 0.25], '2': [0, 0] };
   const exacto = d.fases.every((fa) => Object.values(fa.figuras).every((x) => !x.desvioXZ
-    || x.desvioXZ.every((v) => (ESPERADO[String(fa.casaM)] ?? [0]).includes(v))));
+    || (ESPERADO[String(fa.casaM)] !== null && x.desvioXZ.length === 2
+      && x.desvioXZ[0] === ESPERADO[String(fa.casaM)][0]
+      && x.desvioXZ[1] === ESPERADO[String(fa.casaM)][1])));
   const restos = (d.quietos ?? []).flatMap((q) => Object.entries(q.resto)
     .filter(([, r]) => r !== 'Vector3(0, 0, 0)')
     .map(([id, r]) => `${q.onde} ${id.slice(0, 6)} ${r} (${q.frames} frames)`));

@@ -111,6 +111,8 @@ Nota: o `r4/bancada.out` trazia na 1.ª linha o erro do `grep` com o caminho abs
   `provas-mapa` vermelho falharam também `servidor` + `protocolo`, pela mesma asserção do terreno. No total da
   janela: 17 falhas de job — `retoma-pc` 7, `cliente` 2, `servidor` 3, `protocolo` 3, `provas-mapa` 2. Nos dois,
   os números deram 284/461 e os bits 25/73.
+
+  Os 2 runs com `provas-mapa` vermelho foram 44901330020 (`d6348d5`) e 44901395254 (`3a98be4`), 21/11 ~11:55 UTC, pela asserção do terreno pós-LAGO; a referência só foi regenerada depois, no `3c0c43a`.
 - **Nos dois, os desvios saíram exactos**: `1 m` (−0.25, 0.25) e `2 m` (0, 0). O hash `jogadora: nós desenhados` foi
   igual (`9efe237b91d09495`).
 - **Conclusão:** não houve nenhum desvio de «antes» no CI desde a correcção.
