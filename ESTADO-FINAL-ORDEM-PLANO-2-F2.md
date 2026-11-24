@@ -213,6 +213,12 @@ arranque), não da F2. Quem chega pelo QR vê isto primeiro. Fica como sugestão
   - No log do CI, o `servidor` dá 435 testes: 425 pass, 0 fail e 10 skipped, os saltos antigos do job sem rede. Os 6
     testes da F2 (JV3.4 ×4, V1.0 ×2) estão «✔».
   - O `rodar_testes` dá 321 de 321.
-- **O workflow «Aparelhos (F2)» não correu**: está em `ci-pendente/` (§5.1). Os três exports, a web no Chromium, o
-  `.exe` do Windows, os 3 bots e o QR estão provados só no PC. O APK a correr num Android não está provado em lado
-  nenhum: ele constrói, mas falta o job `android`.
+- `0815eb96` (errata E-1 a E-13 da conferência 595): **Testes dos rascunhos 45456801173: success** e **Sonda
+  de privacidade 45456801155: success**.
+- `1035436b` (activação do workflow, B-1 da conferência 595): **Testes dos rascunhos 45457086008: success** e
+  **Sonda de privacidade 45457086090: success**.
+- **O workflow «Aparelhos (F2)» está activo** (desde o commit `1035436b`): o ficheiro saiu de `ci-pendente/`
+  para `.github/workflows/f2-aparelhos.yml` (com `--repetir-medicao` no job `web-chromium`). Primeiro run
+  #45457086158 sobre o `1035436b`: `exportar`, `rede-3-bots`, `qr`, `windows` e `web-chromium` success;
+  `android` a correr no emulador à hora desta nota. Os três exports, a web no Chromium, o `.exe` do Windows,
+  os 3 bots e o QR passam a ter prova no CI, não só no PC.
