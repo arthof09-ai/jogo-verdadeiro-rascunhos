@@ -1,0 +1,2307 @@
+{
+ "fonte": "bancada-rede/privado/registo-MESTRE-ONLY-bancada-rede.json (journal do servidor de produção; fora do Git)",
+ "mapa": {
+  "altura": 50,
+  "casaM": 1.5,
+  "largura": 50
+ },
+ "fase": "fim",
+ "rodada": 14,
+ "desfecho": "morte",
+ "figurasNoFim": [
+  {
+   "ficha": "bruto-bancada",
+   "lado": "criatura",
+   "x": 39,
+   "y": 4,
+   "vida": 34,
+   "vivo": true,
+   "caido": false,
+   "estadoMorte": null
+  },
+  {
+   "ficha": "lobo-bancada",
+   "lado": "criatura",
+   "x": 38,
+   "y": 3,
+   "vida": 0,
+   "vivo": false,
+   "caido": false,
+   "estadoMorte": null
+  },
+  {
+   "ficha": "arqueira-bancada",
+   "lado": "jogadora",
+   "x": 38,
+   "y": 4,
+   "vida": 0,
+   "vivo": false,
+   "caido": true,
+   "estadoMorte": {
+    "falhas": 3,
+    "fase": "aMorrer",
+    "sucessos": 2
+   }
+  }
+ ],
+ "totalDeEventos": 132,
+ "eventos": [
+  {
+   "dados": {},
+   "journalSeq": 1,
+   "soMestre": {
+    "criaturasDisponiveis": [
+     "lobo-bancada",
+     "bruto-bancada"
+    ],
+    "mapaId": "arena-teste",
+    "npcsDisponiveis": []
+   },
+   "tipo": "lobby",
+   "ts": "2026-11-23T21:26:58.769Z"
+  },
+  {
+   "dados": {
+    "figuraId": "arqueira-bancada",
+    "lado": "jogadora",
+    "nomePublico": "Arqueira de Bancada",
+    "orientacao": "S",
+    "visivel": "de_pe",
+    "x": 38,
+    "y": 4
+   },
+   "journalSeq": 2,
+   "soMestre": {
+    "fichaId": "arqueira-bancada"
+   },
+   "tipo": "colocacao",
+   "ts": "2026-11-23T21:26:58.876Z"
+  },
+  {
+   "dados": {
+    "figuraId": "lobo-bancada",
+    "lado": "criatura",
+    "nomePublico": "Lobo",
+    "orientacao": "S",
+    "visivel": "de_pe",
+    "x": 36,
+    "y": 3
+   },
+   "journalSeq": 4,
+   "soMestre": {
+    "fichaId": "lobo-bancada",
+    "modo": "auto"
+   },
+   "tipo": "colocacao",
+   "ts": "2026-11-23T21:26:58.985Z"
+  },
+  {
+   "dados": {
+    "figuraId": "bruto-bancada",
+    "lado": "criatura",
+    "nomePublico": "Bruto",
+    "orientacao": "S",
+    "visivel": "de_pe",
+    "x": 41,
+    "y": 1
+   },
+   "journalSeq": 5,
+   "soMestre": {
+    "fichaId": "bruto-bancada",
+    "modo": "auto"
+   },
+   "tipo": "colocacao",
+   "ts": "2026-11-23T21:26:59.095Z"
+  },
+  {
+   "dados": {
+    "figuraId": "arqueira-bancada",
+    "lado": "jogadora",
+    "nomePublico": "Arqueira de Bancada"
+   },
+   "journalSeq": 6,
+   "soMestre": null,
+   "tipo": "entrada",
+   "ts": "2026-11-23T21:26:59.206Z"
+  },
+  {
+   "dados": {
+    "motivo": "mestre_desconectado"
+   },
+   "journalSeq": 7,
+   "soMestre": {
+    "origem": "desconexao"
+   },
+   "tipo": "pausa",
+   "ts": "2026-11-23T21:34:30.680Z"
+  },
+  {
+   "dados": {
+    "motivo": "mestre_desconectado"
+   },
+   "journalSeq": 8,
+   "soMestre": null,
+   "tipo": "retomada",
+   "ts": "2026-11-23T21:35:33.232Z"
+  },
+  {
+   "dados": {
+    "alvoId": "lobo-bancada",
+    "arma": "tiro-certeiro-bancada",
+    "atacanteId": "arqueira-bancada",
+    "ataqueDeOportunidade": false,
+    "expressao": "1d20+6",
+    "faces": [
+     15
+    ],
+    "resultado": "acerto",
+    "total": 21
+   },
+   "journalSeq": 9,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      3,
+      6,
+      2
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     15
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+6 → [15] = 21 vs CA 13 → ACERTA · dano 8 (perfurante)",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadosNovos": [],
+      "estadosRemovidos": [],
+      "vidaActual": 8
+     },
+     "efeitosAtacante": []
+    },
+    "total": 21,
+    "totalEfectivo": 8,
+    "verificacaoCritico": [
+     3,
+     6,
+     2
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:36:31.990Z"
+  },
+  {
+   "dados": {
+    "alvoId": "lobo-bancada",
+    "autorId": "arqueira-bancada",
+    "tipos": [
+     "perfurante"
+    ],
+    "valor": 8
+   },
+   "journalSeq": 10,
+   "soMestre": null,
+   "tipo": "dano",
+   "ts": "2026-11-23T21:36:31.990Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": null,
+    "figuraId": "arqueira-bancada",
+    "paLivre": 4,
+    "vidaActual": 22,
+    "visivel": "de_pe"
+   },
+   "journalSeq": 11,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:36:31.990Z"
+  },
+  {
+   "dados": {
+    "caminho": [
+     {
+      "x": 36,
+      "y": 3
+     },
+     {
+      "x": 37,
+      "y": 3
+     },
+     {
+      "x": 38,
+      "y": 3
+     }
+    ],
+    "custoM": 3,
+    "de": {
+     "x": 36,
+     "y": 3
+    },
+    "figuraId": "lobo-bancada",
+    "para": {
+     "x": 38,
+     "y": 3
+    },
+    "reservaM": 9
+   },
+   "journalSeq": 14,
+   "soMestre": null,
+   "tipo": "movimento",
+   "ts": "2026-11-23T21:37:38.239Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "arma": "mordida-bancada",
+    "atacanteId": "lobo-bancada",
+    "ataqueDeOportunidade": false,
+    "resultado": "erro"
+   },
+   "journalSeq": 16,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      3,
+      6,
+      6
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     5
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+4 → [5] = 9 vs CA 13 → ERRA",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadosNovos": [],
+      "estadosRemovidos": [],
+      "vidaActual": 22
+     },
+     "efeitosAtacante": []
+    },
+    "total": 9,
+    "totalEfectivo": null,
+    "verificacaoCritico": [
+     3,
+     6,
+     6
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:37:38.247Z"
+  },
+  {
+   "dados": {
+    "caminho": [
+     {
+      "x": 41,
+      "y": 1
+     },
+     {
+      "x": 40,
+      "y": 1
+     },
+     {
+      "x": 39,
+      "y": 1
+     },
+     {
+      "x": 39,
+      "y": 2
+     },
+     {
+      "x": 39,
+      "y": 3
+     }
+    ],
+    "custoM": 6,
+    "de": {
+     "x": 41,
+     "y": 1
+    },
+    "figuraId": "bruto-bancada",
+    "para": {
+     "x": 39,
+     "y": 3
+    },
+    "reservaM": 0
+   },
+   "journalSeq": 20,
+   "soMestre": null,
+   "tipo": "movimento",
+   "ts": "2026-11-23T21:37:38.252Z"
+  },
+  {
+   "dados": {
+    "alvoId": "lobo-bancada",
+    "arma": "tiro-certeiro-bancada",
+    "atacanteId": "arqueira-bancada",
+    "ataqueDeOportunidade": false,
+    "expressao": "1d20+6",
+    "faces": [
+     3
+    ],
+    "resultado": "erro",
+    "total": 9
+   },
+   "journalSeq": 23,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      4,
+      3,
+      6
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     3
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+6 → [3] = 9 vs CA 13 → ERRA",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadosNovos": [],
+      "estadosRemovidos": [],
+      "vidaActual": 8
+     },
+     "efeitosAtacante": []
+    },
+    "total": 9,
+    "totalEfectivo": null,
+    "verificacaoCritico": [
+     4,
+     3,
+     6
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:38:02.612Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": null,
+    "figuraId": "arqueira-bancada",
+    "paLivre": 2,
+    "vidaActual": 22,
+    "visivel": "de_pe"
+   },
+   "journalSeq": 24,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:38:02.612Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "arma": "mordida-bancada",
+    "atacanteId": "lobo-bancada",
+    "ataqueDeOportunidade": false,
+    "resultado": "acerto"
+   },
+   "journalSeq": 27,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [
+      {
+       "id": "f14d77ad5fdfc5592",
+       "posicao": "adjacente"
+      }
+     ],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      3,
+      5,
+      6
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     15
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+4 → [15] = 19 vs CA 13 → ACERTA · dano 7 (perfurante)",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadosNovos": [],
+      "estadosRemovidos": [],
+      "vidaActual": 15
+     },
+     "efeitosAtacante": []
+    },
+    "total": 19,
+    "totalEfectivo": 7,
+    "verificacaoCritico": [
+     3,
+     5,
+     6
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:38:10.962Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "autorId": "lobo-bancada",
+    "tipos": [
+     "perfurante"
+    ],
+    "valor": 7
+   },
+   "journalSeq": 28,
+   "soMestre": null,
+   "tipo": "dano",
+   "ts": "2026-11-23T21:38:10.962Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": null,
+    "figuraId": "arqueira-bancada",
+    "paLivre": 2,
+    "vidaActual": 15,
+    "visivel": "de_pe"
+   },
+   "journalSeq": 29,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:38:10.962Z"
+  },
+  {
+   "dados": {
+    "caminho": [
+     {
+      "x": 39,
+      "y": 3
+     },
+     {
+      "x": 39,
+      "y": 4
+     }
+    ],
+    "custoM": 1.5,
+    "de": {
+     "x": 39,
+     "y": 3
+    },
+    "figuraId": "bruto-bancada",
+    "para": {
+     "x": 39,
+     "y": 4
+    },
+    "reservaM": 4.5
+   },
+   "journalSeq": 33,
+   "soMestre": null,
+   "tipo": "movimento",
+   "ts": "2026-11-23T21:38:10.966Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "arma": "clava-bancada",
+    "atacanteId": "bruto-bancada",
+    "ataqueDeOportunidade": false,
+    "resultado": "acerto"
+   },
+   "journalSeq": 35,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      3,
+      6,
+      5
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     15
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+4 → [15] = 19 vs CA 13 → ACERTA · dano 11 (contundente)",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadosNovos": [],
+      "estadosRemovidos": [],
+      "vidaActual": 4
+     },
+     "efeitosAtacante": []
+    },
+    "total": 19,
+    "totalEfectivo": 11,
+    "verificacaoCritico": [
+     3,
+     6,
+     5
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:38:10.968Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "autorId": "bruto-bancada",
+    "tipos": [
+     "contundente"
+    ],
+    "valor": 11
+   },
+   "journalSeq": 36,
+   "soMestre": null,
+   "tipo": "dano",
+   "ts": "2026-11-23T21:38:10.968Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": null,
+    "figuraId": "arqueira-bancada",
+    "paLivre": 2,
+    "vidaActual": 4,
+    "visivel": "de_pe"
+   },
+   "journalSeq": 37,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:38:10.968Z"
+  },
+  {
+   "dados": {
+    "alvoId": "lobo-bancada",
+    "arma": "tiro-certeiro-bancada",
+    "atacanteId": "arqueira-bancada",
+    "ataqueDeOportunidade": false,
+    "expressao": "1d20+6",
+    "faces": [
+     20
+    ],
+    "resultado": "acerto",
+    "total": 26
+   },
+   "journalSeq": 40,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      5,
+      6,
+      6
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     20
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+6 → [20] = 26 vs CA 13 → ACERTA · dano 11 (perfurante)",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadosNovos": [
+       "foraDeCombate"
+      ],
+      "estadosRemovidos": [],
+      "morteAdjudicada": false,
+      "vidaActual": 0
+     },
+     "efeitosAtacante": []
+    },
+    "total": 26,
+    "totalEfectivo": 11,
+    "verificacaoCritico": [
+     5,
+     6,
+     6
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:38:47.283Z"
+  },
+  {
+   "dados": {
+    "alvoId": "lobo-bancada",
+    "autorId": "arqueira-bancada",
+    "tipos": [
+     "perfurante"
+    ],
+    "valor": 11
+   },
+   "journalSeq": 41,
+   "soMestre": null,
+   "tipo": "dano",
+   "ts": "2026-11-23T21:38:47.283Z"
+  },
+  {
+   "dados": {
+    "figuraId": "lobo-bancada",
+    "visivel": "morta"
+   },
+   "journalSeq": 42,
+   "soMestre": {
+    "estadoMorte": null,
+    "vidaActual": 0
+   },
+   "tipo": "estado",
+   "ts": "2026-11-23T21:38:47.283Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": null,
+    "figuraId": "arqueira-bancada",
+    "paLivre": 0,
+    "vidaActual": 4,
+    "visivel": "de_pe"
+   },
+   "journalSeq": 43,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:38:47.283Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "arma": "clava-bancada",
+    "atacanteId": "bruto-bancada",
+    "ataqueDeOportunidade": false,
+    "resultado": "acerto"
+   },
+   "journalSeq": 46,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      4,
+      1,
+      4
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     19
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+4 → [19] = 23 vs CA 13 → ACERTA · dano 13 (contundente)",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadoMorte": {
+       "falhas": 0,
+       "fase": "aMorrer",
+       "sucessos": 0
+      },
+      "estadosNovos": [
+       "foraDeCombate"
+      ],
+      "estadosRemovidos": [],
+      "morteAdjudicada": false,
+      "vidaActual": 0
+     },
+     "efeitosAtacante": []
+    },
+    "total": 23,
+    "totalEfectivo": 13,
+    "verificacaoCritico": [
+     4,
+     1,
+     4
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:39:10.016Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "autorId": "bruto-bancada",
+    "tipos": [
+     "contundente"
+    ],
+    "valor": 13
+   },
+   "journalSeq": 47,
+   "soMestre": null,
+   "tipo": "dano",
+   "ts": "2026-11-23T21:39:10.016Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": {
+     "falhas": 0,
+     "fase": "aMorrer",
+     "sucessos": 0
+    },
+    "figuraId": "arqueira-bancada",
+    "paLivre": 0,
+    "vidaActual": 0,
+    "visivel": "caida"
+   },
+   "journalSeq": 48,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:39:10.016Z"
+  },
+  {
+   "dados": {
+    "figuraId": "arqueira-bancada"
+   },
+   "journalSeq": 51,
+   "soMestre": {
+    "saida": {
+     "cd": 14,
+     "cdEfectiva": 14,
+     "desfecho": "continua",
+     "erro": null,
+     "estabilizado": false,
+     "estadoMorte": {
+      "falhas": 0,
+      "fase": "aMorrer",
+      "sucessos": 1
+     },
+     "morteAdjudicada": false,
+     "morteVia": null,
+     "publico": {
+      "recibo": "teste de morte → aguenta-se"
+     },
+     "soDoMestre": {
+      "cd": 14,
+      "cdEfectiva": 14,
+      "estadoMorte": {
+       "falhas": 0,
+       "fase": "aMorrer",
+       "sucessos": 1
+      },
+      "rodadaPor": "moribundo"
+     },
+     "sucesso": true,
+     "teste": {
+      "bonusFonte": "nenhum",
+      "bonusFortitude": 0,
+      "conjuntos": [
+       [
+        15
+       ]
+      ],
+      "constituicaoSomada": 11,
+      "expressao": "1d20+1",
+      "origem": "testes.fortitude do moribundo",
+      "reducaoCD": 0,
+      "somaDados": 15,
+      "total": 26
+     }
+    }
+   },
+   "tipo": "teste_morte",
+   "ts": "2026-11-23T21:39:10.019Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": {
+     "falhas": 0,
+     "fase": "aMorrer",
+     "sucessos": 1
+    },
+    "figuraId": "arqueira-bancada",
+    "paLivre": 0,
+    "vidaActual": 0,
+    "visivel": "caida"
+   },
+   "journalSeq": 52,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:39:10.019Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "arma": "clava-bancada",
+    "atacanteId": "bruto-bancada",
+    "ataqueDeOportunidade": false,
+    "resultado": "erro"
+   },
+   "journalSeq": 55,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      3,
+      3,
+      5
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     1
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+4 → [1] = 5 vs CA 13 → ERRA",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadosNovos": [],
+      "estadosRemovidos": [],
+      "vidaActual": 0
+     },
+     "efeitosAtacante": []
+    },
+    "total": 5,
+    "totalEfectivo": null,
+    "verificacaoCritico": [
+     3,
+     3,
+     5
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:39:50.357Z"
+  },
+  {
+   "dados": {
+    "figuraId": "arqueira-bancada"
+   },
+   "journalSeq": 58,
+   "soMestre": {
+    "saida": {
+     "cd": 14,
+     "cdEfectiva": 14,
+     "desfecho": "continua",
+     "erro": null,
+     "estabilizado": false,
+     "estadoMorte": {
+      "falhas": 0,
+      "fase": "aMorrer",
+      "sucessos": 2
+     },
+     "morteAdjudicada": false,
+     "morteVia": null,
+     "publico": {
+      "recibo": "teste de morte → aguenta-se"
+     },
+     "soDoMestre": {
+      "cd": 14,
+      "cdEfectiva": 14,
+      "estadoMorte": {
+       "falhas": 0,
+       "fase": "aMorrer",
+       "sucessos": 2
+      },
+      "rodadaPor": "moribundo"
+     },
+     "sucesso": true,
+     "teste": {
+      "bonusFonte": "nenhum",
+      "bonusFortitude": 0,
+      "conjuntos": [
+       [
+        5
+       ]
+      ],
+      "constituicaoSomada": 11,
+      "expressao": "1d20+1",
+      "origem": "testes.fortitude do moribundo",
+      "reducaoCD": 0,
+      "somaDados": 5,
+      "total": 16
+     }
+    }
+   },
+   "tipo": "teste_morte",
+   "ts": "2026-11-23T21:39:50.360Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": {
+     "falhas": 0,
+     "fase": "aMorrer",
+     "sucessos": 2
+    },
+    "figuraId": "arqueira-bancada",
+    "paLivre": 0,
+    "vidaActual": 0,
+    "visivel": "caida"
+   },
+   "journalSeq": 59,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:39:50.360Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "arma": "clava-bancada",
+    "atacanteId": "bruto-bancada",
+    "ataqueDeOportunidade": false,
+    "resultado": "erro"
+   },
+   "journalSeq": 62,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      6,
+      1,
+      3
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     6
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+4 → [6] = 10 vs CA 13 → ERRA",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadosNovos": [],
+      "estadosRemovidos": [],
+      "vidaActual": 0
+     },
+     "efeitosAtacante": []
+    },
+    "total": 10,
+    "totalEfectivo": null,
+    "verificacaoCritico": [
+     6,
+     1,
+     3
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:40:02.044Z"
+  },
+  {
+   "dados": {
+    "figuraId": "arqueira-bancada"
+   },
+   "journalSeq": 65,
+   "soMestre": {
+    "saida": {
+     "cd": 14,
+     "cdEfectiva": 14,
+     "desfecho": "continua",
+     "erro": null,
+     "estabilizado": false,
+     "estadoMorte": {
+      "falhas": 1,
+      "fase": "aMorrer",
+      "sucessos": 2
+     },
+     "morteAdjudicada": false,
+     "morteVia": null,
+     "publico": {
+      "recibo": "teste de morte → agrava-se"
+     },
+     "soDoMestre": {
+      "cd": 14,
+      "cdEfectiva": 14,
+      "estadoMorte": {
+       "falhas": 1,
+       "fase": "aMorrer",
+       "sucessos": 2
+      },
+      "rodadaPor": "moribundo"
+     },
+     "sucesso": false,
+     "teste": {
+      "bonusFonte": "nenhum",
+      "bonusFortitude": 0,
+      "conjuntos": [
+       [
+        1
+       ]
+      ],
+      "constituicaoSomada": 11,
+      "expressao": "1d20+1",
+      "origem": "testes.fortitude do moribundo",
+      "reducaoCD": 0,
+      "somaDados": 1,
+      "total": 12
+     }
+    }
+   },
+   "tipo": "teste_morte",
+   "ts": "2026-11-23T21:40:02.045Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": {
+     "falhas": 1,
+     "fase": "aMorrer",
+     "sucessos": 2
+    },
+    "figuraId": "arqueira-bancada",
+    "paLivre": 0,
+    "vidaActual": 0,
+    "visivel": "caida"
+   },
+   "journalSeq": 66,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:40:02.045Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "arma": "clava-bancada",
+    "atacanteId": "bruto-bancada",
+    "ataqueDeOportunidade": false,
+    "resultado": "acerto"
+   },
+   "journalSeq": 69,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      3,
+      3,
+      4
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     13
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+4 → [13] = 17 vs CA 13 → ACERTA · dano 10 (contundente)",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadoMorte": {
+       "falhas": 2,
+       "fase": "aMorrer",
+       "sucessos": 2
+      },
+      "estadosNovos": [],
+      "estadosRemovidos": [],
+      "morteAdjudicada": false,
+      "vidaActual": 0
+     },
+     "efeitosAtacante": []
+    },
+    "total": 17,
+    "totalEfectivo": 10,
+    "verificacaoCritico": [
+     3,
+     3,
+     4
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:40:12.246Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "autorId": "bruto-bancada",
+    "tipos": [
+     "contundente"
+    ],
+    "valor": 10
+   },
+   "journalSeq": 70,
+   "soMestre": null,
+   "tipo": "dano",
+   "ts": "2026-11-23T21:40:12.246Z"
+  },
+  {
+   "dados": {
+    "figuraId": "arqueira-bancada"
+   },
+   "journalSeq": 73,
+   "soMestre": {
+    "saida": {
+     "cd": 14,
+     "cdEfectiva": 14,
+     "desfecho": "estabilizado",
+     "erro": null,
+     "estabilizado": true,
+     "estadoMorte": {
+      "falhas": 2,
+      "fase": "estabilizado",
+      "sucessos": 3
+     },
+     "morteAdjudicada": false,
+     "morteVia": null,
+     "publico": {
+      "recibo": "teste de morte → estabilizou"
+     },
+     "soDoMestre": {
+      "cd": 14,
+      "cdEfectiva": 14,
+      "estadoMorte": {
+       "falhas": 2,
+       "fase": "estabilizado",
+       "sucessos": 3
+      },
+      "rodadaPor": "moribundo"
+     },
+     "sucesso": true,
+     "teste": {
+      "bonusFonte": "nenhum",
+      "bonusFortitude": 0,
+      "conjuntos": [
+       [
+        18
+       ]
+      ],
+      "constituicaoSomada": 11,
+      "expressao": "1d20+1",
+      "origem": "testes.fortitude do moribundo",
+      "reducaoCD": 0,
+      "somaDados": 18,
+      "total": 29
+     }
+    }
+   },
+   "tipo": "teste_morte",
+   "ts": "2026-11-23T21:40:12.250Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": {
+     "falhas": 2,
+     "fase": "estabilizado",
+     "sucessos": 3
+    },
+    "figuraId": "arqueira-bancada",
+    "paLivre": 0,
+    "vidaActual": 1,
+    "visivel": "caida"
+   },
+   "journalSeq": 74,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:40:12.250Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "arma": "clava-bancada",
+    "atacanteId": "bruto-bancada",
+    "ataqueDeOportunidade": false,
+    "resultado": "erro"
+   },
+   "journalSeq": 77,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      5,
+      6,
+      3
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     7
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+4 → [7] = 11 vs CA 13 → ERRA",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadosNovos": [],
+      "estadosRemovidos": [],
+      "vidaActual": 1
+     },
+     "efeitosAtacante": []
+    },
+    "total": 11,
+    "totalEfectivo": null,
+    "verificacaoCritico": [
+     5,
+     6,
+     3
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:40:17.751Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "arma": "clava-bancada",
+    "atacanteId": "bruto-bancada",
+    "ataqueDeOportunidade": false,
+    "resultado": "acerto"
+   },
+   "journalSeq": 81,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      5,
+      3,
+      4
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     15
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+4 → [15] = 19 vs CA 13 → ACERTA · dano 11 (contundente)",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadoMorte": {
+       "falhas": 0,
+       "fase": "aMorrer",
+       "sucessos": 0
+      },
+      "estadosNovos": [
+       "foraDeCombate"
+      ],
+      "estadosRemovidos": [],
+      "morteAdjudicada": false,
+      "vidaActual": 0
+     },
+     "efeitosAtacante": []
+    },
+    "total": 19,
+    "totalEfectivo": 11,
+    "verificacaoCritico": [
+     5,
+     3,
+     4
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:40:17.754Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "autorId": "bruto-bancada",
+    "tipos": [
+     "contundente"
+    ],
+    "valor": 11
+   },
+   "journalSeq": 82,
+   "soMestre": null,
+   "tipo": "dano",
+   "ts": "2026-11-23T21:40:17.754Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": {
+     "falhas": 0,
+     "fase": "aMorrer",
+     "sucessos": 0
+    },
+    "figuraId": "arqueira-bancada",
+    "paLivre": 0,
+    "vidaActual": 0,
+    "visivel": "caida"
+   },
+   "journalSeq": 83,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:40:17.754Z"
+  },
+  {
+   "dados": {
+    "figuraId": "arqueira-bancada"
+   },
+   "journalSeq": 86,
+   "soMestre": {
+    "saida": {
+     "cd": 14,
+     "cdEfectiva": 14,
+     "desfecho": "continua",
+     "erro": null,
+     "estabilizado": false,
+     "estadoMorte": {
+      "falhas": 0,
+      "fase": "aMorrer",
+      "sucessos": 1
+     },
+     "morteAdjudicada": false,
+     "morteVia": null,
+     "publico": {
+      "recibo": "teste de morte → aguenta-se"
+     },
+     "soDoMestre": {
+      "cd": 14,
+      "cdEfectiva": 14,
+      "estadoMorte": {
+       "falhas": 0,
+       "fase": "aMorrer",
+       "sucessos": 1
+      },
+      "rodadaPor": "moribundo"
+     },
+     "sucesso": true,
+     "teste": {
+      "bonusFonte": "nenhum",
+      "bonusFortitude": 0,
+      "conjuntos": [
+       [
+        19
+       ]
+      ],
+      "constituicaoSomada": 11,
+      "expressao": "1d20+1",
+      "origem": "testes.fortitude do moribundo",
+      "reducaoCD": 0,
+      "somaDados": 19,
+      "total": 30
+     }
+    }
+   },
+   "tipo": "teste_morte",
+   "ts": "2026-11-23T21:40:17.756Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": {
+     "falhas": 0,
+     "fase": "aMorrer",
+     "sucessos": 1
+    },
+    "figuraId": "arqueira-bancada",
+    "paLivre": 0,
+    "vidaActual": 0,
+    "visivel": "caida"
+   },
+   "journalSeq": 87,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:40:17.756Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "arma": "clava-bancada",
+    "atacanteId": "bruto-bancada",
+    "ataqueDeOportunidade": false,
+    "resultado": "critico"
+   },
+   "journalSeq": 90,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      6,
+      6,
+      6
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     17
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+4 → [17] = 21 vs CA 13 → CRITICO · dano 22 (contundente)",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadoMorte": {
+       "falhas": 1,
+       "fase": "aMorrer",
+       "sucessos": 1
+      },
+      "estadosNovos": [],
+      "estadosRemovidos": [],
+      "morteAdjudicada": false,
+      "vidaActual": 0
+     },
+     "efeitosAtacante": []
+    },
+    "total": 21,
+    "totalEfectivo": 22,
+    "verificacaoCritico": [
+     6,
+     6,
+     6
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:40:23.433Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "autorId": "bruto-bancada",
+    "tipos": [
+     "contundente"
+    ],
+    "valor": 22
+   },
+   "journalSeq": 91,
+   "soMestre": null,
+   "tipo": "dano",
+   "ts": "2026-11-23T21:40:23.433Z"
+  },
+  {
+   "dados": {
+    "figuraId": "arqueira-bancada"
+   },
+   "journalSeq": 94,
+   "soMestre": {
+    "saida": {
+     "cd": 14,
+     "cdEfectiva": 14,
+     "desfecho": "continua",
+     "erro": null,
+     "estabilizado": false,
+     "estadoMorte": {
+      "falhas": 1,
+      "fase": "aMorrer",
+      "sucessos": 2
+     },
+     "morteAdjudicada": false,
+     "morteVia": null,
+     "publico": {
+      "recibo": "teste de morte → aguenta-se"
+     },
+     "soDoMestre": {
+      "cd": 14,
+      "cdEfectiva": 14,
+      "estadoMorte": {
+       "falhas": 1,
+       "fase": "aMorrer",
+       "sucessos": 2
+      },
+      "rodadaPor": "moribundo"
+     },
+     "sucesso": true,
+     "teste": {
+      "bonusFonte": "nenhum",
+      "bonusFortitude": 0,
+      "conjuntos": [
+       [
+        8
+       ]
+      ],
+      "constituicaoSomada": 11,
+      "expressao": "1d20+1",
+      "origem": "testes.fortitude do moribundo",
+      "reducaoCD": 0,
+      "somaDados": 8,
+      "total": 19
+     }
+    }
+   },
+   "tipo": "teste_morte",
+   "ts": "2026-11-23T21:40:23.435Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": {
+     "falhas": 1,
+     "fase": "aMorrer",
+     "sucessos": 2
+    },
+    "figuraId": "arqueira-bancada",
+    "paLivre": 0,
+    "vidaActual": 0,
+    "visivel": "caida"
+   },
+   "journalSeq": 95,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:40:23.435Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "arma": "clava-bancada",
+    "atacanteId": "bruto-bancada",
+    "ataqueDeOportunidade": false,
+    "resultado": "erro"
+   },
+   "journalSeq": 98,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      4,
+      6,
+      2
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     6
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+4 → [6] = 10 vs CA 13 → ERRA",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadosNovos": [],
+      "estadosRemovidos": [],
+      "vidaActual": 0
+     },
+     "efeitosAtacante": []
+    },
+    "total": 10,
+    "totalEfectivo": null,
+    "verificacaoCritico": [
+     4,
+     6,
+     2
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:40:29.140Z"
+  },
+  {
+   "dados": {
+    "figuraId": "arqueira-bancada"
+   },
+   "journalSeq": 101,
+   "soMestre": {
+    "saida": {
+     "cd": 14,
+     "cdEfectiva": 14,
+     "desfecho": "estabilizado",
+     "erro": null,
+     "estabilizado": true,
+     "estadoMorte": {
+      "falhas": 1,
+      "fase": "estabilizado",
+      "sucessos": 3
+     },
+     "morteAdjudicada": false,
+     "morteVia": null,
+     "publico": {
+      "recibo": "teste de morte → estabilizou"
+     },
+     "soDoMestre": {
+      "cd": 14,
+      "cdEfectiva": 14,
+      "estadoMorte": {
+       "falhas": 1,
+       "fase": "estabilizado",
+       "sucessos": 3
+      },
+      "rodadaPor": "moribundo"
+     },
+     "sucesso": true,
+     "teste": {
+      "bonusFonte": "nenhum",
+      "bonusFortitude": 0,
+      "conjuntos": [
+       [
+        8
+       ]
+      ],
+      "constituicaoSomada": 11,
+      "expressao": "1d20+1",
+      "origem": "testes.fortitude do moribundo",
+      "reducaoCD": 0,
+      "somaDados": 8,
+      "total": 19
+     }
+    }
+   },
+   "tipo": "teste_morte",
+   "ts": "2026-11-23T21:40:29.142Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": {
+     "falhas": 1,
+     "fase": "estabilizado",
+     "sucessos": 3
+    },
+    "figuraId": "arqueira-bancada",
+    "paLivre": 0,
+    "vidaActual": 1,
+    "visivel": "caida"
+   },
+   "journalSeq": 102,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:40:29.142Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "arma": "clava-bancada",
+    "atacanteId": "bruto-bancada",
+    "ataqueDeOportunidade": false,
+    "resultado": "acerto"
+   },
+   "journalSeq": 105,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      6,
+      2,
+      5
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     14
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+4 → [14] = 18 vs CA 13 → ACERTA · dano 10 (contundente)",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadoMorte": {
+       "falhas": 0,
+       "fase": "aMorrer",
+       "sucessos": 0
+      },
+      "estadosNovos": [
+       "foraDeCombate"
+      ],
+      "estadosRemovidos": [],
+      "morteAdjudicada": false,
+      "vidaActual": 0
+     },
+     "efeitosAtacante": []
+    },
+    "total": 18,
+    "totalEfectivo": 10,
+    "verificacaoCritico": [
+     6,
+     2,
+     5
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:40:42.988Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "autorId": "bruto-bancada",
+    "tipos": [
+     "contundente"
+    ],
+    "valor": 10
+   },
+   "journalSeq": 106,
+   "soMestre": null,
+   "tipo": "dano",
+   "ts": "2026-11-23T21:40:42.988Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": {
+     "falhas": 0,
+     "fase": "aMorrer",
+     "sucessos": 0
+    },
+    "figuraId": "arqueira-bancada",
+    "paLivre": 0,
+    "vidaActual": 0,
+    "visivel": "caida"
+   },
+   "journalSeq": 107,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:40:42.988Z"
+  },
+  {
+   "dados": {
+    "figuraId": "arqueira-bancada"
+   },
+   "journalSeq": 110,
+   "soMestre": {
+    "saida": {
+     "cd": 14,
+     "cdEfectiva": 14,
+     "desfecho": "continua",
+     "erro": null,
+     "estabilizado": false,
+     "estadoMorte": {
+      "falhas": 1,
+      "fase": "aMorrer",
+      "sucessos": 0
+     },
+     "morteAdjudicada": false,
+     "morteVia": null,
+     "publico": {
+      "recibo": "teste de morte → agrava-se"
+     },
+     "soDoMestre": {
+      "cd": 14,
+      "cdEfectiva": 14,
+      "estadoMorte": {
+       "falhas": 1,
+       "fase": "aMorrer",
+       "sucessos": 0
+      },
+      "rodadaPor": "moribundo"
+     },
+     "sucesso": false,
+     "teste": {
+      "bonusFonte": "nenhum",
+      "bonusFortitude": 0,
+      "conjuntos": [
+       [
+        3
+       ]
+      ],
+      "constituicaoSomada": 11,
+      "expressao": "1d20+1",
+      "origem": "testes.fortitude do moribundo",
+      "reducaoCD": 0,
+      "somaDados": 3,
+      "total": 14
+     }
+    }
+   },
+   "tipo": "teste_morte",
+   "ts": "2026-11-23T21:40:42.990Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": {
+     "falhas": 1,
+     "fase": "aMorrer",
+     "sucessos": 0
+    },
+    "figuraId": "arqueira-bancada",
+    "paLivre": 0,
+    "vidaActual": 0,
+    "visivel": "caida"
+   },
+   "journalSeq": 111,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:40:42.990Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "arma": "clava-bancada",
+    "atacanteId": "bruto-bancada",
+    "ataqueDeOportunidade": false,
+    "resultado": "erro"
+   },
+   "journalSeq": 114,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      6,
+      1,
+      6
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     3
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+4 → [3] = 7 vs CA 13 → ERRA",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadosNovos": [],
+      "estadosRemovidos": [],
+      "vidaActual": 0
+     },
+     "efeitosAtacante": []
+    },
+    "total": 7,
+    "totalEfectivo": null,
+    "verificacaoCritico": [
+     6,
+     1,
+     6
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:40:47.583Z"
+  },
+  {
+   "dados": {
+    "figuraId": "arqueira-bancada"
+   },
+   "journalSeq": 117,
+   "soMestre": {
+    "saida": {
+     "cd": 14,
+     "cdEfectiva": 14,
+     "desfecho": "continua",
+     "erro": null,
+     "estabilizado": false,
+     "estadoMorte": {
+      "falhas": 1,
+      "fase": "aMorrer",
+      "sucessos": 1
+     },
+     "morteAdjudicada": false,
+     "morteVia": null,
+     "publico": {
+      "recibo": "teste de morte → aguenta-se"
+     },
+     "soDoMestre": {
+      "cd": 14,
+      "cdEfectiva": 14,
+      "estadoMorte": {
+       "falhas": 1,
+       "fase": "aMorrer",
+       "sucessos": 1
+      },
+      "rodadaPor": "moribundo"
+     },
+     "sucesso": true,
+     "teste": {
+      "bonusFonte": "nenhum",
+      "bonusFortitude": 0,
+      "conjuntos": [
+       [
+        6
+       ]
+      ],
+      "constituicaoSomada": 11,
+      "expressao": "1d20+1",
+      "origem": "testes.fortitude do moribundo",
+      "reducaoCD": 0,
+      "somaDados": 6,
+      "total": 17
+     }
+    }
+   },
+   "tipo": "teste_morte",
+   "ts": "2026-11-23T21:40:47.584Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": {
+     "falhas": 1,
+     "fase": "aMorrer",
+     "sucessos": 1
+    },
+    "figuraId": "arqueira-bancada",
+    "paLivre": 0,
+    "vidaActual": 0,
+    "visivel": "caida"
+   },
+   "journalSeq": 118,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:40:47.584Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "arma": "clava-bancada",
+    "atacanteId": "bruto-bancada",
+    "ataqueDeOportunidade": false,
+    "resultado": "acerto"
+   },
+   "journalSeq": 121,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      4,
+      1,
+      6
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     11
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+4 → [11] = 15 vs CA 13 → ACERTA · dano 9 (contundente)",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadoMorte": {
+       "falhas": 2,
+       "fase": "aMorrer",
+       "sucessos": 1
+      },
+      "estadosNovos": [],
+      "estadosRemovidos": [],
+      "morteAdjudicada": false,
+      "vidaActual": 0
+     },
+     "efeitosAtacante": []
+    },
+    "total": 15,
+    "totalEfectivo": 9,
+    "verificacaoCritico": [
+     4,
+     1,
+     6
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:40:52.264Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "autorId": "bruto-bancada",
+    "tipos": [
+     "contundente"
+    ],
+    "valor": 9
+   },
+   "journalSeq": 122,
+   "soMestre": null,
+   "tipo": "dano",
+   "ts": "2026-11-23T21:40:52.264Z"
+  },
+  {
+   "dados": {
+    "figuraId": "arqueira-bancada"
+   },
+   "journalSeq": 125,
+   "soMestre": {
+    "saida": {
+     "cd": 14,
+     "cdEfectiva": 14,
+     "desfecho": "continua",
+     "erro": null,
+     "estabilizado": false,
+     "estadoMorte": {
+      "falhas": 2,
+      "fase": "aMorrer",
+      "sucessos": 2
+     },
+     "morteAdjudicada": false,
+     "morteVia": null,
+     "publico": {
+      "recibo": "teste de morte → aguenta-se"
+     },
+     "soDoMestre": {
+      "cd": 14,
+      "cdEfectiva": 14,
+      "estadoMorte": {
+       "falhas": 2,
+       "fase": "aMorrer",
+       "sucessos": 2
+      },
+      "rodadaPor": "moribundo"
+     },
+     "sucesso": true,
+     "teste": {
+      "bonusFonte": "nenhum",
+      "bonusFortitude": 0,
+      "conjuntos": [
+       [
+        13
+       ]
+      ],
+      "constituicaoSomada": 11,
+      "expressao": "1d20+1",
+      "origem": "testes.fortitude do moribundo",
+      "reducaoCD": 0,
+      "somaDados": 13,
+      "total": 24
+     }
+    }
+   },
+   "tipo": "teste_morte",
+   "ts": "2026-11-23T21:40:52.266Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": {
+     "falhas": 2,
+     "fase": "aMorrer",
+     "sucessos": 2
+    },
+    "figuraId": "arqueira-bancada",
+    "paLivre": 0,
+    "vidaActual": 0,
+    "visivel": "caida"
+   },
+   "journalSeq": 126,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:40:52.266Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "arma": "clava-bancada",
+    "atacanteId": "bruto-bancada",
+    "ataqueDeOportunidade": false,
+    "resultado": "acerto"
+   },
+   "journalSeq": 129,
+   "soMestre": {
+    "contexto": {
+     "aliadosAoAlcance": [],
+     "atacanteCaido": false,
+     "atacanteFraco": false,
+     "ataqueDeOportunidade": false,
+     "flanqueando": false,
+     "modoDesgraca": "proposta",
+     "niveisDesvantagem": 0,
+     "niveisVantagem": 0,
+     "verificacaoCritico": [
+      6,
+      4,
+      2
+     ]
+    },
+    "contraAtaquePendente": null,
+    "desgracaPendente": null,
+    "faces": [
+     17
+    ],
+    "reacaoConsumida": false,
+    "recibo": "1d20+4 → [17] = 21 vs CA 13 → ACERTA · dano 12 (contundente)",
+    "soDoMestre": {
+     "alvoDepois": {
+      "estadoMorte": {
+       "falhas": 3,
+       "fase": "aMorrer",
+       "sucessos": 2
+      },
+      "estadosNovos": [],
+      "estadosRemovidos": [],
+      "morteAdjudicada": true,
+      "morteVia": "testesDeMorte",
+      "vidaActual": 0
+     },
+     "efeitosAtacante": []
+    },
+    "total": 21,
+    "totalEfectivo": 12,
+    "verificacaoCritico": [
+     6,
+     4,
+     2
+    ]
+   },
+   "tipo": "ataque",
+   "ts": "2026-11-23T21:40:57.166Z"
+  },
+  {
+   "dados": {
+    "alvoId": "arqueira-bancada",
+    "autorId": "bruto-bancada",
+    "tipos": [
+     "contundente"
+    ],
+    "valor": 12
+   },
+   "journalSeq": 130,
+   "soMestre": null,
+   "tipo": "dano",
+   "ts": "2026-11-23T21:40:57.166Z"
+  },
+  {
+   "dados": {
+    "armaCaida": false,
+    "armaQuebrada": false,
+    "corpoPartido": false,
+    "estadoMorte": {
+     "falhas": 3,
+     "fase": "aMorrer",
+     "sucessos": 2
+    },
+    "figuraId": "arqueira-bancada",
+    "paLivre": 0,
+    "vidaActual": 0,
+    "visivel": "morta"
+   },
+   "journalSeq": 131,
+   "soMestre": null,
+   "tipo": "estado",
+   "ts": "2026-11-23T21:40:57.166Z"
+  },
+  {
+   "dados": {
+    "desfecho": "morte"
+   },
+   "journalSeq": 132,
+   "soMestre": null,
+   "tipo": "fim",
+   "ts": "2026-11-23T21:40:57.166Z"
+  }
+ ]
+}

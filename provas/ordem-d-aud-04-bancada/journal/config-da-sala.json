@@ -1,0 +1,55 @@
+{
+  "porta": 8791,
+  "host": "127.0.0.1",
+  "motores": "motores.mjs",
+  "fichas": "fichas.json",
+  "terreno": "../../rascunhos/servidor/dados/terreno-floresta.json",
+  "journal": "registo-MESTRE-ONLY-bancada-rede.json",
+  "sala": {
+    "roomId": "sala-bancada-rede",
+    "teste": true,
+    "iniciativa": {
+      "arqueira-bancada": 16,
+      "lobo-bancada": 14,
+      "espadachim-bancada": 12,
+      "bruto-bancada": 10
+    },
+    "modoPadrao": "auto",
+    "lugares": [
+      {
+        "papel": "jogadora",
+        "nome": "Arqueira de Bancada",
+        "senha": "(redigida)",
+        "fichaId": "arqueira-bancada",
+        "casa": {
+          "x": 38,
+          "y": 4
+        }
+      },
+      {
+        "papel": "mestre",
+        "nome": "Mestre",
+        "pin": "(redigido)"
+      }
+    ]
+  },
+  "bancada": {
+    "fichas": "acertam",
+    "criaturas": [
+      {
+        "fichaId": "lobo-bancada",
+        "casa": {
+          "x": 36,
+          "y": 3
+        }
+      },
+      {
+        "fichaId": "bruto-bancada",
+        "casa": {
+          "x": 41,
+          "y": 1
+        }
+      }
+    ]
+  }
+}

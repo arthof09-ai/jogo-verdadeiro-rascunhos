@@ -1,0 +1,72 @@
+21:26:58.769Z [vídeo t=-550.4 s]  #1 LOBBY {}
+21:26:58.876Z [vídeo t=-550.3 s]  #2 COLOCACAO {"figuraId":"arqueira-bancada","lado":"jogadora","nomePublico":"Arqueira de Bancada","orientacao":"S","visivel":"de_pe","x":38,"y":4}
+21:26:58.985Z [vídeo t=-550.2 s]  #4 COLOCACAO {"figuraId":"lobo-bancada","lado":"criatura","nomePublico":"Lobo","orientacao":"S","visivel":"de_pe","x":36,"y":3}
+21:26:59.095Z [vídeo t=-550.1 s]  #5 COLOCACAO {"figuraId":"bruto-bancada","lado":"criatura","nomePublico":"Bruto","orientacao":"S","visivel":"de_pe","x":41,"y":1}
+21:26:59.206Z [vídeo t=-550.0 s]  #6 ENTRADA {"figuraId":"arqueira-bancada","lado":"jogadora","nomePublico":"Arqueira de Bancada"}
+21:34:30.680Z [vídeo t=-98.5 s]  #7 PAUSA {"motivo":"mestre_desconectado"}
+21:35:33.232Z [vídeo t=-36.0 s]  #8 RETOMADA {"motivo":"mestre_desconectado"}
+21:36:31.990Z [vídeo t=22.8 s]  #9 ATAQUE arqueira-bancada → lobo-bancada com tiro-certeiro-bancada: ACERTO | recibo: 1d20+6 → [15] = 21 vs CA 13 → ACERTA · dano 8 (perfurante)
+21:36:31.990Z [vídeo t=22.8 s]  #10 DANO 8 (perfurante) de arqueira-bancada em lobo-bancada
+21:36:31.990Z [vídeo t=22.8 s]  #11 ESTADO arqueira-bancada: vida=22 visivel=de_pe estadoMorte=null paLivre=4
+21:37:38.239Z [vídeo t=89.0 s]  #14 MOVIMENTO lobo-bancada (36,3) → (38,3) 3 m
+21:37:38.247Z [vídeo t=89.0 s]  #16 ATAQUE lobo-bancada → arqueira-bancada com mordida-bancada: ERRO | recibo: 1d20+4 → [5] = 9 vs CA 13 → ERRA
+21:37:38.252Z [vídeo t=89.0 s]  #20 MOVIMENTO bruto-bancada (41,1) → (39,3) 6 m
+21:38:02.612Z [vídeo t=113.4 s]  #23 ATAQUE arqueira-bancada → lobo-bancada com tiro-certeiro-bancada: ERRO | recibo: 1d20+6 → [3] = 9 vs CA 13 → ERRA
+21:38:02.612Z [vídeo t=113.4 s]  #24 ESTADO arqueira-bancada: vida=22 visivel=de_pe estadoMorte=null paLivre=2
+21:38:10.962Z [vídeo t=121.8 s]  #27 ATAQUE lobo-bancada → arqueira-bancada com mordida-bancada: ACERTO | recibo: 1d20+4 → [15] = 19 vs CA 13 → ACERTA · dano 7 (perfurante)
+21:38:10.962Z [vídeo t=121.8 s]  #28 DANO 7 (perfurante) de lobo-bancada em arqueira-bancada
+21:38:10.962Z [vídeo t=121.8 s]  #29 ESTADO arqueira-bancada: vida=15 visivel=de_pe estadoMorte=null paLivre=2
+21:38:10.966Z [vídeo t=121.8 s]  #33 MOVIMENTO bruto-bancada (39,3) → (39,4) 1.5 m
+21:38:10.968Z [vídeo t=121.8 s]  #35 ATAQUE bruto-bancada → arqueira-bancada com clava-bancada: ACERTO | recibo: 1d20+4 → [15] = 19 vs CA 13 → ACERTA · dano 11 (contundente)
+21:38:10.968Z [vídeo t=121.8 s]  #36 DANO 11 (contundente) de bruto-bancada em arqueira-bancada
+21:38:10.968Z [vídeo t=121.8 s]  #37 ESTADO arqueira-bancada: vida=4 visivel=de_pe estadoMorte=null paLivre=2
+21:38:47.283Z [vídeo t=158.1 s]  #40 ATAQUE arqueira-bancada → lobo-bancada com tiro-certeiro-bancada: ACERTO | recibo: 1d20+6 → [20] = 26 vs CA 13 → ACERTA · dano 11 (perfurante)
+21:38:47.283Z [vídeo t=158.1 s]  #41 DANO 11 (perfurante) de arqueira-bancada em lobo-bancada
+21:38:47.283Z [vídeo t=158.1 s]  #42 ESTADO lobo-bancada: vida=(não dita) visivel=morta estadoMorte=null
+21:38:47.283Z [vídeo t=158.1 s]  #43 ESTADO arqueira-bancada: vida=4 visivel=de_pe estadoMorte=null paLivre=0
+21:39:10.016Z [vídeo t=180.8 s]  #46 ATAQUE bruto-bancada → arqueira-bancada com clava-bancada: ACERTO | recibo: 1d20+4 → [19] = 23 vs CA 13 → ACERTA · dano 13 (contundente)
+21:39:10.016Z [vídeo t=180.8 s]  #47 DANO 13 (contundente) de bruto-bancada em arqueira-bancada
+21:39:10.016Z [vídeo t=180.8 s]  #48 ESTADO arqueira-bancada: vida=0 visivel=caida estadoMorte={"falhas":0,"fase":"aMorrer","sucessos":0} paLivre=0
+21:39:10.019Z [vídeo t=180.8 s]  #51 TESTE DE MORTE arqueira-bancada: 1d20+1 → 26 vs CD 14 → sucesso · {"falhas":0,"fase":"aMorrer","sucessos":1} · desfecho continua | recibo público: «teste de morte → aguenta-se»
+21:39:10.019Z [vídeo t=180.8 s]  #52 ESTADO arqueira-bancada: vida=0 visivel=caida estadoMorte={"falhas":0,"fase":"aMorrer","sucessos":1} paLivre=0
+21:39:50.357Z [vídeo t=221.1 s]  #55 ATAQUE bruto-bancada → arqueira-bancada com clava-bancada: ERRO | recibo: 1d20+4 → [1] = 5 vs CA 13 → ERRA
+21:39:50.360Z [vídeo t=221.2 s]  #58 TESTE DE MORTE arqueira-bancada: 1d20+1 → 16 vs CD 14 → sucesso · {"falhas":0,"fase":"aMorrer","sucessos":2} · desfecho continua | recibo público: «teste de morte → aguenta-se»
+21:39:50.360Z [vídeo t=221.2 s]  #59 ESTADO arqueira-bancada: vida=0 visivel=caida estadoMorte={"falhas":0,"fase":"aMorrer","sucessos":2} paLivre=0
+21:40:02.044Z [vídeo t=232.8 s]  #62 ATAQUE bruto-bancada → arqueira-bancada com clava-bancada: ERRO | recibo: 1d20+4 → [6] = 10 vs CA 13 → ERRA
+21:40:02.045Z [vídeo t=232.8 s]  #65 TESTE DE MORTE arqueira-bancada: 1d20+1 → 12 vs CD 14 → falha · {"falhas":1,"fase":"aMorrer","sucessos":2} · desfecho continua | recibo público: «teste de morte → agrava-se»
+21:40:02.045Z [vídeo t=232.8 s]  #66 ESTADO arqueira-bancada: vida=0 visivel=caida estadoMorte={"falhas":1,"fase":"aMorrer","sucessos":2} paLivre=0
+21:40:12.246Z [vídeo t=243.0 s]  #69 ATAQUE bruto-bancada → arqueira-bancada com clava-bancada: ACERTO | recibo: 1d20+4 → [13] = 17 vs CA 13 → ACERTA · dano 10 (contundente)
+21:40:12.246Z [vídeo t=243.0 s]  #70 DANO 10 (contundente) de bruto-bancada em arqueira-bancada
+21:40:12.250Z [vídeo t=243.0 s]  #73 TESTE DE MORTE arqueira-bancada: 1d20+1 → 29 vs CD 14 → sucesso · {"falhas":2,"fase":"estabilizado","sucessos":3} · desfecho estabilizado | recibo público: «teste de morte → estabilizou»
+21:40:12.250Z [vídeo t=243.0 s]  #74 ESTADO arqueira-bancada: vida=1 visivel=caida estadoMorte={"falhas":2,"fase":"estabilizado","sucessos":3} paLivre=0
+21:40:17.751Z [vídeo t=248.5 s]  #77 ATAQUE bruto-bancada → arqueira-bancada com clava-bancada: ERRO | recibo: 1d20+4 → [7] = 11 vs CA 13 → ERRA
+21:40:17.754Z [vídeo t=248.5 s]  #81 ATAQUE bruto-bancada → arqueira-bancada com clava-bancada: ACERTO | recibo: 1d20+4 → [15] = 19 vs CA 13 → ACERTA · dano 11 (contundente)
+21:40:17.754Z [vídeo t=248.5 s]  #82 DANO 11 (contundente) de bruto-bancada em arqueira-bancada
+21:40:17.754Z [vídeo t=248.5 s]  #83 ESTADO arqueira-bancada: vida=0 visivel=caida estadoMorte={"falhas":0,"fase":"aMorrer","sucessos":0} paLivre=0
+21:40:17.756Z [vídeo t=248.5 s]  #86 TESTE DE MORTE arqueira-bancada: 1d20+1 → 30 vs CD 14 → sucesso · {"falhas":0,"fase":"aMorrer","sucessos":1} · desfecho continua | recibo público: «teste de morte → aguenta-se»
+21:40:17.756Z [vídeo t=248.5 s]  #87 ESTADO arqueira-bancada: vida=0 visivel=caida estadoMorte={"falhas":0,"fase":"aMorrer","sucessos":1} paLivre=0
+21:40:23.433Z [vídeo t=254.2 s]  #90 ATAQUE bruto-bancada → arqueira-bancada com clava-bancada: CRITICO | recibo: 1d20+4 → [17] = 21 vs CA 13 → CRITICO · dano 22 (contundente)
+21:40:23.433Z [vídeo t=254.2 s]  #91 DANO 22 (contundente) de bruto-bancada em arqueira-bancada
+21:40:23.435Z [vídeo t=254.2 s]  #94 TESTE DE MORTE arqueira-bancada: 1d20+1 → 19 vs CD 14 → sucesso · {"falhas":1,"fase":"aMorrer","sucessos":2} · desfecho continua | recibo público: «teste de morte → aguenta-se»
+21:40:23.435Z [vídeo t=254.2 s]  #95 ESTADO arqueira-bancada: vida=0 visivel=caida estadoMorte={"falhas":1,"fase":"aMorrer","sucessos":2} paLivre=0
+21:40:29.140Z [vídeo t=259.9 s]  #98 ATAQUE bruto-bancada → arqueira-bancada com clava-bancada: ERRO | recibo: 1d20+4 → [6] = 10 vs CA 13 → ERRA
+21:40:29.142Z [vídeo t=259.9 s]  #101 TESTE DE MORTE arqueira-bancada: 1d20+1 → 19 vs CD 14 → sucesso · {"falhas":1,"fase":"estabilizado","sucessos":3} · desfecho estabilizado | recibo público: «teste de morte → estabilizou»
+21:40:29.142Z [vídeo t=259.9 s]  #102 ESTADO arqueira-bancada: vida=1 visivel=caida estadoMorte={"falhas":1,"fase":"estabilizado","sucessos":3} paLivre=0
+21:40:42.988Z [vídeo t=273.8 s]  #105 ATAQUE bruto-bancada → arqueira-bancada com clava-bancada: ACERTO | recibo: 1d20+4 → [14] = 18 vs CA 13 → ACERTA · dano 10 (contundente)
+21:40:42.988Z [vídeo t=273.8 s]  #106 DANO 10 (contundente) de bruto-bancada em arqueira-bancada
+21:40:42.988Z [vídeo t=273.8 s]  #107 ESTADO arqueira-bancada: vida=0 visivel=caida estadoMorte={"falhas":0,"fase":"aMorrer","sucessos":0} paLivre=0
+21:40:42.990Z [vídeo t=273.8 s]  #110 TESTE DE MORTE arqueira-bancada: 1d20+1 → 14 vs CD 14 → falha · {"falhas":1,"fase":"aMorrer","sucessos":0} · desfecho continua | recibo público: «teste de morte → agrava-se»
+21:40:42.990Z [vídeo t=273.8 s]  #111 ESTADO arqueira-bancada: vida=0 visivel=caida estadoMorte={"falhas":1,"fase":"aMorrer","sucessos":0} paLivre=0
+21:40:47.583Z [vídeo t=278.4 s]  #114 ATAQUE bruto-bancada → arqueira-bancada com clava-bancada: ERRO | recibo: 1d20+4 → [3] = 7 vs CA 13 → ERRA
+21:40:47.584Z [vídeo t=278.4 s]  #117 TESTE DE MORTE arqueira-bancada: 1d20+1 → 17 vs CD 14 → sucesso · {"falhas":1,"fase":"aMorrer","sucessos":1} · desfecho continua | recibo público: «teste de morte → aguenta-se»
+21:40:47.584Z [vídeo t=278.4 s]  #118 ESTADO arqueira-bancada: vida=0 visivel=caida estadoMorte={"falhas":1,"fase":"aMorrer","sucessos":1} paLivre=0
+21:40:52.264Z [vídeo t=283.1 s]  #121 ATAQUE bruto-bancada → arqueira-bancada com clava-bancada: ACERTO | recibo: 1d20+4 → [11] = 15 vs CA 13 → ACERTA · dano 9 (contundente)
+21:40:52.264Z [vídeo t=283.1 s]  #122 DANO 9 (contundente) de bruto-bancada em arqueira-bancada
+21:40:52.266Z [vídeo t=283.1 s]  #125 TESTE DE MORTE arqueira-bancada: 1d20+1 → 24 vs CD 14 → sucesso · {"falhas":2,"fase":"aMorrer","sucessos":2} · desfecho continua | recibo público: «teste de morte → aguenta-se»
+21:40:52.266Z [vídeo t=283.1 s]  #126 ESTADO arqueira-bancada: vida=0 visivel=caida estadoMorte={"falhas":2,"fase":"aMorrer","sucessos":2} paLivre=0
+21:40:57.166Z [vídeo t=288.0 s]  #129 ATAQUE bruto-bancada → arqueira-bancada com clava-bancada: ACERTO | recibo: 1d20+4 → [17] = 21 vs CA 13 → ACERTA · dano 12 (contundente)
+21:40:57.166Z [vídeo t=288.0 s]  #130 DANO 12 (contundente) de bruto-bancada em arqueira-bancada
+21:40:57.166Z [vídeo t=288.0 s]  #131 ESTADO arqueira-bancada: vida=0 visivel=morta estadoMorte={"falhas":3,"fase":"aMorrer","sucessos":2} paLivre=0
+21:40:57.166Z [vídeo t=288.0 s]  #132 FIM {"desfecho":"morte"}
+
+CONTAGEM: {"ataques":18,"porResultado":{"acerto":10,"erro":7,"critico":1},"danoPorAutor":{"arqueira-bancada":[8,11],"lobo-bancada":[7],"bruto-bancada":[11,13,10,11,22,10,9,12]},"testesDeMorte":10,"fase":"fim","rodada":14,"desfecho":"morte","figurasNoFim":[{"ficha":"bruto-bancada","vida":34,"vivo":true,"caido":false,"estadoMorte":null},{"ficha":"lobo-bancada","vida":0,"vivo":false,"caido":false,"estadoMorte":null},{"ficha":"arqueira-bancada","vida":0,"vivo":false,"caido":true,"estadoMorte":{"falhas":3,"fase":"aMorrer","sucessos":2}}]}
