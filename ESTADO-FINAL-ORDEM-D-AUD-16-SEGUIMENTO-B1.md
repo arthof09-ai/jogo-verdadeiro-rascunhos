@@ -115,7 +115,7 @@ Godot. Não houve servidor nesta ordem.
   Traz na corrida B (§2), que precisou de uma mudança temporária, não cometida.
 - [x] Captura do lobby cometida (as quatro: `a01`/`a02` e `b01`/`b02`).
 - [x] Suites verdes (§3).
-- [x] CI verde (Testes + Sonda): ver a nota do CI.
+- [x] CI verde (Testes + Sonda) no `b159e9a`: ver a nota do CI.
 - [x] ESTADO-FINAL com os números e os commits (§5).
 - [x] A C-7 não foi decidida. Não toquei no servidor, nos workflows, nos dados, na `main` nem no cliente da
   jogadora.
@@ -133,6 +133,15 @@ fiz nenhum deles.
 
 | commit | o quê |
 |---|---|
-| `<a preencher>` | as provas (`provas/ordem-d-aud-16-seguimento-b1/`) e este ESTADO-FINAL |
+| `b159e9a` | as provas (`provas/ordem-d-aud-16-seguimento-b1/`) e este ESTADO-FINAL |
 
 Nenhum commit desta ordem muda `rascunhos/`, por isso não foi preciso passar o `actualizar-listas.py`.
+
+## Nota do CI
+
+No `b159e9a` (as provas e este ESTADO-FINAL), os dois workflows deram `success`:
+- **Testes dos rascunhos 45422561272:** passaram os 10 jobs — `motor-real`, `foto-mestre`, `cliente`, `servidor`,
+  `validador-glb`, `retoma-pc`, `protocolo`, `ponta-a-ponta`, `godot-cliente` e `provas-mapa`;
+- **Sonda de privacidade 45422561586.**
+
+Depois disso só entrou o commit desta nota, que muda só este ficheiro.
