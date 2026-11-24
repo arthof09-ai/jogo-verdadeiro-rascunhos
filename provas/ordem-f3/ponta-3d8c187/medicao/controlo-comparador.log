@@ -1,0 +1,37 @@
+OK  K0 positivo: a corrida 1 contra si própria
+     esperado: saída 0, 0 linha(s) «NÃO» · obtido: saída 0, 0 linha(s) «NÃO»
+     REPETE-SE — ref × teste: números 461/461 iguais, bits 73/73 iguais (bits no portão)
+OK  K1 número: grelha 11 (original), casas bloqueadas +1
+     esperado: saída 1, 1 linha(s) «NÃO» · obtido: saída 1, 1 linha(s) «NÃO»
+     NÃO SE REPETE — ref × teste: números 460/461 iguais, bits 73/73 iguais (bits no portão)
+     | original g11 bloq. srv | 348 | 349 | **NÃO** |
+OK  K2 floresta (B1): carga 11 da ferramenta original, casas_bloqueadas +1 (só no .log)
+     esperado: saída 1, 1 linha(s) «NÃO» · obtido: saída 1, 1 linha(s) «NÃO»
+     NÃO SE REPETE — ref × teste: números 460/461 iguais, bits 73/73 iguais (bits no portão)
+     | original floresta carga 11: casas_bloqueadas | 283 | 284 | **NÃO** |
+OK  K3 floresta (B1): uma carga a menos na bancada (a 3.ª linha [floresta] apagada)
+     esperado: saída 1, 2 linha(s) «NÃO» · obtido: saída 1, 2 linha(s) «NÃO»
+     NÃO SE REPETE — ref × teste: números 459/461 iguais, bits 73/73 iguais (bits no portão)
+     | bancada floresta: cargas | 3 | 2 | **NÃO** |
+     | bancada floresta carga 03: casas_bloqueadas | 283 | (falta) | **NÃO** |
+OK  K4 bits: grelha 11 (original), desenhadaY da 1.ª figura + 0,5 m, com --bits
+     esperado: saída 1, 1 linha(s) «NÃO» · obtido: saída 1, 1 linha(s) «NÃO»
+     NÃO SE REPETE — ref × teste: números 461/461 iguais, bits 72/73 iguais (bits no portão)
+     | original g11 figuras (x, y, desenhadaY, peM) | e0b424fad0918251 | 78bd40aa6a0685fb | **NÃO** |
+OK  K5 bits: a mesma mudança SEM --bits (bits só registados, como no CI)
+     esperado: saída 0, 1 linha(s) «NÃO» · obtido: saída 0, 1 linha(s) «NÃO»
+     REPETE-SE — ref × teste: números 461/461 iguais, bits 72/73 iguais (bits só registados)
+     | original g11 figuras (x, y, desenhadaY, peM) | e0b424fad0918251 | 78bd40aa6a0685fb | **NÃO** |
+OK  K6 N3: desvio de altura da grelha 11 trocado entre dentro e fora (0,01/0 contra 0/0,01; o max() era igual)
+     esperado: saída 1, 1 linha(s) «NÃO» · obtido: saída 1, 1 linha(s) «NÃO»
+     NÃO SE REPETE — ref × teste: números 460/461 iguais, bits 73/73 iguais (bits no portão)
+     | original g11 desvio altura dentro/fora · pé dentro/fora · figuras (m) | 0.01/0 · 0/0 · 0 | 0/0.01 · 0/0 · 0 | **NÃO** |
+OK  K7 N2: os marcos da grelha 11 por ordem inversa (o hash é ordenado: tem de dar igual)
+     esperado: saída 0, 0 linha(s) «NÃO» · obtido: saída 0, 0 linha(s) «NÃO»
+     REPETE-SE — ref × teste: números 461/461 iguais, bits 73/73 iguais (bits no portão)
+OK  K8 N2: altura do servidor do 1.º marco da grelha 11 + 0,5 m (o hash ordenado ainda morde)
+     esperado: saída 1, 1 linha(s) «NÃO» · obtido: saída 1, 1 linha(s) «NÃO»
+     NÃO SE REPETE — ref × teste: números 461/461 iguais, bits 72/73 iguais (bits no portão)
+     | original g11 marcos (casa, alturas) | 5ed999672f294bad | 77ae7fce9885c07c | **NÃO** |
+
+TODOS OS CONTROLOS DÃO O ESPERADO (9 controlos)

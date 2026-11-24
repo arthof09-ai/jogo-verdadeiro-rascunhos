@@ -1,0 +1,63 @@
+== a sonda do fio da jogadora: 24 mensagens em 19 lotes ==
+   por type: {"ROOM_WELCOME":1,"ROOM_SNAPSHOT":3,"ROOM_EVENT:colocacao":2,"ROOM_EVENT:turno":1,"ROOM_OPTIONS":7,"ROOM_EVENT:movimento":3,"ROOM_RECEIPT":3,"ROOM_EVENT:escala":2,"ERRO":1,"ROOM_PAUSED":1}
+  ok    (A) fora: 0 achados 
+  ok    (A) mensagens MASTER_* no fio dela: 0
+   textos varridos em (A): [{"type":"ERRO","codigo":"proibido","texto":"Só o Mestre."},{"type":"ROOM_PAUSED","motivo":"mestre_desconectado"}]
+  ok    (A) mensagens de teste no fio: 0 (a corrida padrão não as tem)
+  ok    (B) linha 3 — a escala recusada do Mestre (3 m): 1 lote(s); Mestre ["ROOM_EVENT:recusa","ROOM_REJECT"], jogadora 0, espectador 0
+  ok    (C) linha 4 — o pedido de escala da jogadora (MASTER_SUPERVISOR escala 1): 1 lote(s); ela recebe ["ERRO proibido «Só o Mestre.»"]; outros papéis []
+  ok    (D) ROOM_PAUSED no fio dela: 1 (n=23 conexaoFechada motivo=mestre_desconectado) — varrido em (A)
+== o que chegou à jogadora em cada entrega com um evento `escala` (2) ==
+-- lote 11:
+   10 ROOM_EVENT:escala seq=6 rev=5 dados={}
+   11 ROOM_SNAPSHOT seq=6 rev=5 mapa={"largura":75,"altura":75,"casaM":1} figuras=Heroína Teste(57,8) Orc 1(57,17)
+   12 ROOM_OPTIONS seq=null rev=5 orcamentoM=7.5 mover=99
+-- lote 13:
+   16 ROOM_EVENT:escala seq=8 rev=7 dados={}
+   17 ROOM_SNAPSHOT seq=8 rev=7 mapa={"largura":37,"altura":37,"casaM":2} figuras=Heroína Teste(28,4) Orc 1(28,8)
+   18 ROOM_OPTIONS seq=null rev=7 orcamentoM=6.5 mover=20
+== a cronologia do fio (lote: quem mandou o quê → o que a heroína recebeu) ==
+-- lote 1 entrar ← jogadora ROOM_JOIN: heroína 2; espectador 1, mestre 1
+   0 ROOM_WELCOME seq=null rev=null
+   1 ROOM_SNAPSHOT seq=1 rev=1 mapa={"largura":50,"altura":50,"casaM":1.5} figuras=
+-- lote 2 conexaoAberta ← jogadora : heroína 0
+-- lote 3 entrar ← mestre ROOM_JOIN: heroína 0; mestre 3
+-- lote 4 conexaoAberta ← mestre : heroína 0
+-- lote 5 entrar ← espectador ROOM_JOIN: heroína 0; espectador 2
+-- lote 6 conexaoAberta ← espectador : heroína 0
+-- lote 7 receber ← mestre MASTER_LOBBY_SET: heroína 0; mestre 2
+-- lote 8 receber ← mestre MASTER_START: heroína 3; espectador 2, mestre 3
+   2 ROOM_EVENT:colocacao seq=2 rev=2 dados={"figuraId":"f2fe06ddeb4fa32bd","nomePublico":"Heroína Teste","lado":"jogadora",
+   3 ROOM_EVENT:turno seq=3 rev=2 dados={"figuraId":"f2fe06ddeb4fa32bd","rodada":1,"narra":false}
+   4 ROOM_OPTIONS seq=null rev=2 orcamentoM=9 mover=70
+-- lote 9 receber ← mestre MASTER_PLACE: heroína 2; espectador 1, mestre 2
+   5 ROOM_EVENT:colocacao seq=4 rev=3 dados={"figuraId":"f9a4bb216a37367a1","nomePublico":"Orc 1","lado":"criatura","x":38,"
+   6 ROOM_OPTIONS seq=null rev=3 orcamentoM=9 mover=70
+-- lote 10 receber ← jogadora ROOM_INTENT: heroína 3; espectador 1, mestre 1
+   7 ROOM_EVENT:movimento seq=5 rev=4 dados={"figuraId":"f2fe06ddeb4fa32bd","de":{"x":38,"y":4},"para":{"x":38,"y":5},"camin
+   8 ROOM_RECEIPT seq=5 rev=4
+   9 ROOM_OPTIONS seq=null rev=4 orcamentoM=7.5 mover=51
+-- lote 11 receber ← mestre MASTER_SUPERVISOR escala 1: heroína 3; espectador 2, mestre 3
+   10 ROOM_EVENT:escala seq=6 rev=5 dados={}
+   11 ROOM_SNAPSHOT seq=6 rev=5 mapa={"largura":75,"altura":75,"casaM":1} figuras=Heroína Teste(57,8) Orc 1(57,17)
+   12 ROOM_OPTIONS seq=null rev=5 orcamentoM=7.5 mover=99
+-- lote 12 receber ← jogadora ROOM_INTENT: heroína 3; espectador 1, mestre 1
+   13 ROOM_EVENT:movimento seq=7 rev=6 dados={"figuraId":"f2fe06ddeb4fa32bd","de":{"x":57,"y":8},"para":{"x":57,"y":9},"camin
+   14 ROOM_RECEIPT seq=7 rev=6
+   15 ROOM_OPTIONS seq=null rev=6 orcamentoM=6.5 mover=77
+-- lote 13 receber ← mestre MASTER_SUPERVISOR escala 2: heroína 3; espectador 2, mestre 3
+   16 ROOM_EVENT:escala seq=8 rev=7 dados={}
+   17 ROOM_SNAPSHOT seq=8 rev=7 mapa={"largura":37,"altura":37,"casaM":2} figuras=Heroína Teste(28,4) Orc 1(28,8)
+   18 ROOM_OPTIONS seq=null rev=7 orcamentoM=6.5 mover=20
+-- lote 14 receber ← jogadora MASTER_SUPERVISOR escala 1: heroína 1
+   19 ERRO seq=null rev=null codigo=proibido texto=«Só o Mestre.»
+-- lote 15 receber ← jogadora ROOM_INTENT: heroína 3; espectador 1, mestre 1
+   20 ROOM_EVENT:movimento seq=9 rev=8 dados={"figuraId":"f2fe06ddeb4fa32bd","de":{"x":28,"y":4},"para":{"x":28,"y":3},"camin
+   21 ROOM_RECEIPT seq=9 rev=8
+   22 ROOM_OPTIONS seq=null rev=8 orcamentoM=4.5 mover=10
+-- lote 16 receber ← mestre MASTER_SUPERVISOR escala 3: heroína 0; mestre 2
+-- lote 17 conexaoFechada ← mestre : heroína 1; mestre 2, espectador 1
+   23 ROOM_PAUSED seq=null rev=null motivo=mestre_desconectado
+-- lote 18 conexaoFechada ← espectador : heroína 0
+-- lote 19 conexaoFechada ← jogadora : heroína 0
+TUDO PASSOU

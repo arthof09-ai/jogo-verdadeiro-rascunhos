@@ -1,0 +1,3 @@
+# 2026-11-24 04:01:58 -0300 — ponta 3d8c187, GARGS=--fixed-fps 2001, modo padrao (a bancada da linha)
+corrida 1: mestre=0 jogadora=0 49 de 49 verificações passaram. | 1.5 m desvio=- · 1 m desvio=(-0.25, 0.25) · 2 m desvio=(0, 0) · desvios EXACTOS · restos no «quietos»: 1.5 m: depois do passo faa61a Vector3(0, 0.0003478527, -0.000749588) (3 frames); 1.0 m: depois do passo faa61a Vector3(0, 3.33786e-05, -0.00049972534) (3 frames)
+corrida 2: mestre=0 jogadora=0 49 de 49 verificações passaram. | 1.5 m desvio=- · 1 m desvio=(-0.25, 0.25) · 2 m desvio=(0, 0) · desvios EXACTOS · restos no «quietos»: 1.5 m: depois do passo f3d805 Vector3(0, 0.0003478527, -0.000749588) (3 frames); 1.0 m: depois do passo f3d805 Vector3(0, 3.33786e-05, -0.00049972534) (3 frames)
