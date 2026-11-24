@@ -106,6 +106,7 @@ Pedidas pela revisão do Muse (CM-000009) ao desenho JV3.1 (Notion: «JV3.1 — 
   - O `journalSeq` do ponto é o `ateSeq` a mandar.
   - O ponto actual nunca aparece, porque o servidor recusa voltar a ele.
   - O ponto inicial tem `tipos: ["inicio"]` e `ts: null`.
+  - **ORDEM-D-AUD-07-REGISTO (24/11/2026):** cada ponto leva também `autorId` e `rodadaAutor` (aditivos, fora do `required`): a vez e a rodada **de antes** da transacção, ou seja, quem fez a jogada. A `rodada`/`vezId` continuam a ser o estado **depois** (para onde o «voltar» vai). O rótulo do Registo do Mestre usa os dois campos novos.
 - **Privacidade:** só o lugar do Mestre recebe os pontos. O teste `servidor/testes/mestre-vista.test.mjs` confere que nenhuma mensagem da Party os leva.
 - **Limite conhecido:** os pontos vivem em memória, como os checkpoints. Depois de a sala acordar de um journal guardado, só há pontos a partir daí (é o mesmo TODO(JV1.x) dos checkpoints).
 

@@ -375,7 +375,7 @@ export function criarSala({
   const checkpoints = new Map(); // journalSeq → mundo (para MASTER_SUPERVISOR voltar)
   // L8 do desenho JV3.1 (I0004, 08/11): o resumo de cada ponto guardado, para o Mestre saber a que pontos
   // pode voltar. Vai SÓ na MASTER_VIEW (o lugar do Mestre), em `pontos`.
-  const pontosInfo = new Map(); // journalSeq → {journalSeq, ts, fase, rodada, vezId, tipos}
+  const pontosInfo = new Map(); // journalSeq → {journalSeq, ts, fase, rodada, vezId, autorId, rodadaAutor, tipos}
   // L9 (C-28): sala de TESTE (config.teste === true). O selo só aparece ao Mestre (MASTER_VIEW.selo).
   const seloTeste = config.teste === true ? 'TESTE' : null;
   const fila = [];
@@ -1120,6 +1120,10 @@ export function criarSala({
       snapshotsParty: false, // Ordem CAIXA-HUD-JOGADORA: só a Party recebe snapshot (a caixa mudou)
       ts: isoAgora(),
       baseSeq: journal.journalSeq,
+      // ORDEM-D-AUD-07-REGISTO: quem tinha a vez (e em que rodada) ANTES da transacção — o autor da jogada. É o que o
+      // rótulo do Registo do Mestre mostra; a `rodada`/`vezId` do ponto são o estado DEPOIS (o «voltar» vai para aí).
+      autorId: antes.vez?.figuraId ?? null,
+      rodadaAutor: antes.rodada ?? 0,
     };
     tx.emitir = (tipo, dados, soMestre) => {
       const ev = {
@@ -1237,6 +1241,10 @@ export function criarSala({
       fase: mundo.fase,
       rodada: mundo.rodada ?? 0,
       vezId: mundo.vez?.figuraId ?? null,
+      // ORDEM-D-AUD-07-REGISTO: o autor da jogada e a rodada dela (de antes da transacção). Sem tx (o ponto inicial),
+      // não houve jogada: ficam iguais ao estado.
+      autorId: tx ? tx.autorId : (mundo.vez?.figuraId ?? null),
+      rodadaAutor: tx ? tx.rodadaAutor : (mundo.rodada ?? 0),
       tipos: tx ? [...new Set(tx.eventos.map((e) => e.tipo))] : ['inicio'],
     });
     while (checkpoints.size > MAX_CHECKPOINTS) {

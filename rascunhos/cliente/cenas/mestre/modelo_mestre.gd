@@ -273,6 +273,9 @@ static func cartao_interno(vista: Dictionary, cartao_id: String) -> Dictionary:
 
 
 ## Um ponto de «voltar» (MASTER_VIEW.pontos, L8) em texto: «Rodada 2 · vez de Orc · movimento, vez nova».
+## ORDEM-D-AUD-07-REGISTO: a rodada e a vez do rótulo são as de QUEM FEZ A JOGADA (`rodadaAutor`/`autorId`, a vez de
+## antes da transacção), não as de depois (`rodada`/`vezId`, para onde o «voltar» vai). Sala de antes desta ordem (sem os
+## campos novos): fica a linha de antes.
 static func linha_ponto(vista: Dictionary, p: Dictionary) -> String:
 	var tipos = p.get("tipos")
 	if tipos is Array and tipos.size() == 1 and str(tipos[0]) == "inicio":
@@ -281,11 +284,13 @@ static func linha_ponto(vista: Dictionary, p: Dictionary) -> String:
 	if tipos is Array:
 		for t in tipos:
 			nomes.append(str(Textos.NOME_EVENTO.get(str(t), str(t))))
-	var vez := _texto(p.get("vezId"))
+	var tem_autor := p.has("autorId") and p.has("rodadaAutor")
+	var vez := _texto(p.get("autorId")) if tem_autor else _texto(p.get("vezId"))
+	var rodada := int(p.get("rodadaAutor", 0)) if tem_autor else int(p.get("rodada", 0))
 	var quem := nome_mestre(figura(vista, vez)) if vez != "" else Textos.SEM_VALOR
 	if quem == "":
 		quem = Textos.SEM_VALOR
-	return Textos.PONTO % [int(p.get("rodada", 0)), quem, ", ".join(nomes)]
+	return Textos.PONTO % [rodada, quem, ", ".join(nomes)]
 
 
 # ---------------------------------------------------------------- cartões

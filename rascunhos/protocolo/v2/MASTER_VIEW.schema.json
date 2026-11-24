@@ -190,6 +190,8 @@
         "fase": { "type": ["string", "null"] },
         "rodada": { "type": "integer", "minimum": 0 },
         "vezId": { "$ref": "comum.schema.json#/$defs/idOuNull" },
+        "autorId": { "$ref": "comum.schema.json#/$defs/idOuNull", "description": "ORDEM-D-AUD-07-REGISTO (24/11/2026): a figura que tinha a vez ANTES da transacção que fechou este ponto (o autor da jogada). O `vezId` é a vez DEPOIS (o estado para onde o «voltar» vai). Fica fora do `required` para as vistas de antes desta ordem." },
+        "rodadaAutor": { "type": "integer", "minimum": 0, "description": "ORDEM-D-AUD-07-REGISTO (24/11/2026): a rodada ANTES da transacção que fechou este ponto (a da jogada). Fora do `required`, como o `autorId`." },
         "tipos": { "type": "array", "items": { "type": "string" }, "description": "Tipos dos eventos que fecharam este ponto (ou [\"inicio\"])." }
       },
       "additionalProperties": false

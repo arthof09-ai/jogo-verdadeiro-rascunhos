@@ -100,6 +100,26 @@ func _correr() -> void:
 	var linha_d: String = ModeloN.linha_ponto({}, {"rodada": 1, "vezId": "", "tipos": ["tipo_que_nao_existe", "ataque"]})
 	_ok(linha_d.ends_with(" · tipo_que_nao_existe, ataque"), "tipo desconhecido continua cru, os outros como antes: «%s»" % linha_d)
 
+	print("== rótulo do Registo: quem fez a jogada (ORDEM-D-AUD-07-REGISTO) ==")
+	# O encerrar da IA do orc na rodada 1: depois da transacção a vez já é da heroína na rodada 2 (`rodada`/`vezId`),
+	# mas a linha diz quem jogou e quando (`rodadaAutor`/`autorId`, a vez de antes). Reprodução da auditoria (r-40, l30).
+	var vista_07 := {"mestre": {"figuras": [
+		{"id": "f-her", "nome": "Heroína Teste", "nomePublico": "Heroína Teste"},
+		{"id": "f-orc", "nome": "Orc Verdadeiro Teste", "nomePublico": "Orc"}]}}
+	var p_ia := {"rodada": 2, "vezId": "f-her", "autorId": "f-orc", "rodadaAutor": 1, "tipos": ["ia", "turno"]}
+	var l_ia: String = ModeloN.linha_ponto(vista_07, p_ia)
+	var esperada_ia: String = Textos.PONTO % [1, "Orc Verdadeiro Teste (Orc)", "%s, %s" % [Textos.NOME_EVENTO["ia"], Textos.NOME_EVENTO["turno"]]]
+	_ok(l_ia == esperada_ia, "D-AUD-07: o encerrar da IA do orc diz o orc e a rodada 1 (não a heroína da rodada 2): «%s»" % l_ia)
+	var p_her := {"rodada": 1, "vezId": "f-orc", "autorId": "f-her", "rodadaAutor": 1, "tipos": ["turno"]}
+	var l_her: String = ModeloN.linha_ponto(vista_07, p_her)
+	_ok(l_her.begins_with(Textos.PONTO % [1, "Heroína Teste", ""]), "D-AUD-07: o encerrar da heroína diz a heroína (não o orc que vem a seguir): «%s»" % l_her)
+	var p_start := {"rodada": 1, "vezId": "f-her", "autorId": null, "rodadaAutor": 0, "tipos": ["colocacao", "turno"]}
+	var l_start: String = ModeloN.linha_ponto(vista_07, p_start)
+	_ok(l_start.begins_with(Textos.PONTO % [0, Textos.SEM_VALOR, ""]), "D-AUD-07: o START (sem vez antes) não tem autor: «%s»" % l_start)
+	var p_antigo := {"rodada": 2, "vezId": "f-her", "tipos": ["ia", "turno"]}
+	var l_antigo: String = ModeloN.linha_ponto(vista_07, p_antigo)
+	_ok(l_antigo.begins_with(Textos.PONTO % [2, "Heroína Teste", ""]), "D-AUD-07: ponto de uma sala de antes (sem autorId/rodadaAutor) fica como antes: «%s»" % l_antigo)
+
 	print("== arena 3D ==")
 	var vista: Dictionary = fx["agir"]["vista"]
 	c.aplicar_vista(vista)

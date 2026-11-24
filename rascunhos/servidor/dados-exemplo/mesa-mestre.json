@@ -316,6 +316,8 @@
      "fase": "combate",
      "rodada": 1,
      "vezId": "f1a88a9eef918a8b4",
+     "autorId": "f1a88a9eef918a8b4",
+     "rodadaAutor": 1,
      "tipos": [
       "ambiente"
      ]
@@ -326,6 +328,8 @@
      "fase": "combate",
      "rodada": 1,
      "vezId": "f1a88a9eef918a8b4",
+     "autorId": "f1a88a9eef918a8b4",
+     "rodadaAutor": 1,
      "tipos": [
       "colocacao"
      ]
@@ -336,6 +340,8 @@
      "fase": "combate",
      "rodada": 1,
      "vezId": "f1a88a9eef918a8b4",
+     "autorId": "f1a88a9eef918a8b4",
+     "rodadaAutor": 1,
      "tipos": [
       "colocacao"
      ]
@@ -346,6 +352,8 @@
      "fase": "combate",
      "rodada": 1,
      "vezId": "f1a88a9eef918a8b4",
+     "autorId": null,
+     "rodadaAutor": 0,
      "tipos": [
       "colocacao",
       "turno"
@@ -357,6 +365,8 @@
      "fase": "lobby",
      "rodada": 0,
      "vezId": null,
+     "autorId": null,
+     "rodadaAutor": 0,
      "tipos": [
       "lobby"
      ]
@@ -367,6 +377,8 @@
      "fase": "lobby",
      "rodada": 0,
      "vezId": null,
+     "autorId": null,
+     "rodadaAutor": 0,
      "tipos": [
       "entrada"
      ]
@@ -377,6 +389,8 @@
      "fase": "lobby",
      "rodada": 0,
      "vezId": null,
+     "autorId": null,
+     "rodadaAutor": 0,
      "tipos": [
       "entrada"
      ]
@@ -387,6 +401,8 @@
      "fase": "lobby",
      "rodada": 0,
      "vezId": null,
+     "autorId": null,
+     "rodadaAutor": 0,
      "tipos": [
       "inicio"
      ]
@@ -679,6 +695,8 @@
      "fase": "lobby",
      "rodada": 0,
      "vezId": null,
+     "autorId": null,
+     "rodadaAutor": 0,
      "tipos": [
       "entrada"
      ]
@@ -689,6 +707,8 @@
      "fase": "lobby",
      "rodada": 0,
      "vezId": null,
+     "autorId": null,
+     "rodadaAutor": 0,
      "tipos": [
       "inicio"
      ]
@@ -915,6 +935,8 @@
      "fase": "combate",
      "rodada": 1,
      "vezId": "fba2529d0fcfbedbf",
+     "autorId": "fba2529d0fcfbedbf",
+     "rodadaAutor": 1,
      "tipos": [
       "colocacao"
      ]
@@ -925,6 +947,8 @@
      "fase": "combate",
      "rodada": 1,
      "vezId": "fba2529d0fcfbedbf",
+     "autorId": null,
+     "rodadaAutor": 0,
      "tipos": [
       "colocacao",
       "turno"
@@ -936,6 +960,8 @@
      "fase": "lobby",
      "rodada": 0,
      "vezId": null,
+     "autorId": null,
+     "rodadaAutor": 0,
      "tipos": [
       "lobby"
      ]
@@ -946,6 +972,8 @@
      "fase": "lobby",
      "rodada": 0,
      "vezId": null,
+     "autorId": null,
+     "rodadaAutor": 0,
      "tipos": [
       "entrada"
      ]
@@ -956,6 +984,8 @@
      "fase": "lobby",
      "rodada": 0,
      "vezId": null,
+     "autorId": null,
+     "rodadaAutor": 0,
      "tipos": [
       "inicio"
      ]
