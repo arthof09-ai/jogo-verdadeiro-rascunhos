@@ -209,7 +209,16 @@ nenhum ficheiro do cliente, do servidor, dos testes nem do CI. Os únicos fichei
 suites Godot correm no CI sobre estes commits (nota do fim). `retoma-i0004/actualizar-listas.py` não se aplica, porque
 nada em `rascunhos/` mudou.
 
-## 7. Commits
+## 7. Commits (sobre `cef07e7`)
 
-- bancada: `bancada-rede/` (`-Fichas acertam`) e README;
-- provas e este ESTADO-FINAL.
+- `524d093`: bancada (`bancada-rede/`, `-Fichas acertam`) e README;
+- `aac7f8f`: provas (`provas/ordem-d-aud-04-bancada/`) e este ESTADO-FINAL;
+- este commit: a nota do CI.
+
+## Nota do CI
+
+Sobre o `aac7f8f`, os dois workflows deram **success**:
+- **Testes dos rascunhos** (run `45293983246`). Os 10 jobs passaram: servidor, cliente, godot-cliente, motor-real,
+  protocolo, validador-glb, ponta-a-ponta, foto-mestre, provas-mapa e retoma-pc. As suites Godot headless, que não
+  correram neste PC (§6), estão incluídas aqui;
+- **Sonda de privacidade** (run `45293982242`).
