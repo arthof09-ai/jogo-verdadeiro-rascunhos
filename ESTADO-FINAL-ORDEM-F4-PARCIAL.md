@@ -85,3 +85,8 @@ logs.
 
 Os consumíveis (JV0.6b), a reacção A-4 e o valor do Defender, o dano do raio e as perguntas R0 esperam pelo Lote 2 das
 decisões do Mestre. Nenhum deles foi tocado.
+
+## 6. Nota do CI do commit das provas
+
+O commit `c256016` (as provas e este ESTADO-FINAL) também deu verde: Testes dos rascunhos `45366638939` e Sonda de
+privacidade `45366638791`, ambos `success`.
