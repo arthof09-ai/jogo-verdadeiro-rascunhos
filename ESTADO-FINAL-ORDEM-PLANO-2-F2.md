@@ -222,3 +222,13 @@ arranque), não da F2. Quem chega pelo QR vê isto primeiro. Fica como sugestão
   #45457086158 sobre o `1035436b`: `exportar`, `rede-3-bots`, `qr`, `windows` e `web-chromium` success;
   `android` a correr no emulador à hora desta nota. Os três exports, a web no Chromium, o `.exe` do Windows,
   os 3 bots e o QR passam a ter prova no CI, não só no PC.
+
+- **Adenda (primeiro run do workflow «Aparelhos (F2)», #45457086158, sobre o `1035436b`):** o run concluiu
+  com `failure` — 5 jobs verdes (`exportar`, `rede-3-bots`, `qr`, `windows`, `web-chromium`) e o job
+  `android` em falha. O APK instalou-se e o Godot arrancou no emulador (SwiftShader, OpenGL ES 3.0); a
+  floresta ficou pronta em 6.363 ms. Mas o APK não recebeu o `ROOM_SNAPSHOT` em 120 s (log l. 557, exit code
+  1) e o logcat traz `Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)` (Canvas e
+  Scene, log ll. 517–552). Nenhuma linha `rede:` do APK no log (0 ocorrências). A frase da nota acima
+  («android a correr no emulador à hora desta nota») era verdade na hora da escrita; o resultado final é
+  este. O F1 da sentença 595 («o Android NUNCA recebeu o `ROOM_SNAPSHOT` em lado nenhum») continua por
+  provar no CI.
