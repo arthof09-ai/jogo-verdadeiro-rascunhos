@@ -180,3 +180,10 @@ Todas deram exit 0, com 0 `SCRIPT ERROR / Parse Error / Compile Error`.
 - A errata A4 (`MANIFESTO-SHA256.txt:2`) fica para o coordenador. O guião das listas não tocou nessa linha.
 - O motor real veio da pasta privada da bancada da D-AUD-01 (`MOTOR_MJS`, fora do repo). Não foi copiado.
 - Nomes: só os fictícios das fichas de teste.
+
+## Nota do CI
+
+- `4746c9d` (teste + listas + provas + ESTADO-FINAL): **Testes dos rascunhos 45333270344: success**, com os 10 jobs
+  verdes (servidor, validador-glb, motor-real, protocolo, cliente, godot-cliente, foto-mestre, provas-mapa,
+  ponta-a-ponta, retoma-pc), e **Sonda de privacidade 45333270447: success**. No log do CI: `pecas_mestre` 295 de
+  295, com a D-AUD-01-CORRECCOES-3 «ok», e `rodar_testes` 321 de 321. O `retoma-pc` passou à primeira.
