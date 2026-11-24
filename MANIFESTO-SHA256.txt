@@ -1,5 +1,5 @@
 # MANIFESTO SHA-256 — ponte PC->Drive de jogo-verdadeiro (IBX-249)
-# Fonte: C:\Users\txcga\RPG_Local\jogo-verdadeiro\ (PC do cunhado) · 2026-11-06
+# Fonte: RPG_Local\jogo-verdadeiro\ (PC do cunhado) · 2026-11-06
 # Formato: SHA-256 (minusculas) + dois espacos + caminho relativo a jogo-verdadeiro/
 273dc42e9a934051afa5db98bbdb2dc7bab0edb98c05985385cb69ff15a48a8e  pacotes/P-PC-01/PACOTE.md
 974ac6302fa2c99bb973ab4f3a38e39aa8490875e066c5b0e5d078a9c44df35c  pacotes/P-PC-01/p01.mjs

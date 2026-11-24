@@ -91,26 +91,30 @@ Todas as escritas destes três campos no `estado.gd` emitem `opcoes_mudaram` na 
 | `_aplicar_evento` 404 | 506, se `rev_mudou` |
 
 O `_subir_revisao` (532-539), único escritor da `revisao` além de 117 e 217, só é chamado em 119, 203, 210 e 404.
-Fora de `estado.gd`, nada escreve nestes campos em produção. Os únicos usos externos são de leitura
-(`arena.gd:371/377/804`, `hud.gd:463-584`, `aba_agir.gd:105`).
+Fora de `estado.gd`, nada escreve nestes campos em produção. Os usos externos são só de leitura (por exemplo `arena.gd:371/377/804`, `hud.gd:463-584`, `aba_agir.gd:105`;
+também `lobby.gd:300`, `arena.gd:149/160/392`, `hud.gd:164/165/175`, `mestre.gd:737/813`).
 
-O `opcoes_mudaram` está ligado sem `CONNECT_DEFERRED` a `_aba_agir.atualizar()` (`mestre.gd:196`). A mudança de
-vista também chama o `atualizar()` (`mestre.gd:375` e `mestre.gd:385`). Logo, depois de cada mudança destas
+O `opcoes_mudaram` está ligado sem `CONNECT_DEFERRED` a `_aba_agir.atualizar()` (`mestre.gd:196`). A mudança de vista chama o `atualizar()` (`mestre.gd:385`, dentro de `aplicar_vista`, `mestre.gd:373-385`; a
+linha 375 é `vista = msg` e a 384 é `_aba_mesa.atualizar`). Logo, depois de cada mudança destas
 entradas, o `atualizar()` corre na mesma pilha.
 
 **(d) O botão velho não chega a ser carregado.**
 
-As mensagens chegam no `Rede._process` (`rede.gd:373`, `_ws.poll()`), dentro do `SceneTree.process` do Godot. Este
+As mensagens chegam no `Rede._process` (`rede.gd:373`; `_ws.poll()` na linha 381), dentro do `SceneTree.process` do Godot. Este
 esvazia a fila do `queue_free()` no fim do mesmo quadro. O input da GUI despacha-se fora do `process`. Por isso um
 botão refeito pelo `atualizar()` já não existe quando o próximo clique for despachado.
 
 Daqui sai que o botão «Mover» que recebe um clique foi feito pelo último `atualizar()`, com o mesmo `_opcoes()` de
 agora: `mover` é um Array não vazio.
 
+Este elo assenta em semântica do motor Godot (input despachado antes do
+`_process`; `queue_free()` esvaziada
+no fim do quadro) e não em código lido no repositório nem em prova
+executada.
+
 **(e) Cada item do `mover` é um objecto, logo `_casas` não fica vazio.**
 
-O servidor só faz `mover.push({ x, y, custoM })` (`servidor/nucleo/sala.js:889`, dentro de `calcularOpcoes`,
-`sala.js:881-891`). O schema `protocolo/v2/ROOM_OPTIONS.schema.json:15-26` exige `items.type: object`. A `Rede`
+O servidor só faz `mover.push({ x, y, custoM })` (`servidor/nucleo/sala.js:889`, dentro de `calcularOpcoes` (`sala.js:870`; o `mover.push` está na 889)). O schema `protocolo/v2/ROOM_OPTIONS.schema.json:15-26` exige `items.type: object`. A `Rede`
 passa o ROOM_OPTIONS intacto (`rede.gd:538`). Logo, cada item é `Dictionary`, o ciclo de `aba_agir.gd:120-122` põe
 pelo menos uma casa, e a linha 123 dá `a_mover = true`. O ramo que desarma sem `parar_mover()` não corre.
 
@@ -125,8 +129,17 @@ Seguindo a ordem («se não for, registar a prova»), não mexi no `aba_agir.gd`
 
 **Observação ao lado (não é B2 e não mexi):** se chegarem opções novas da **mesma** vez sem `mover`, mas com
 ataques ou acções, o `atualizar()` não chama o `parar_mover()`. O «Mover» fica armado com as `_casas` velhas e com
-a guarda. É coerente: a guarda vive enquanto o «Mover» está armado, e o «Cancelar» continua a repor. Um toque numa
+a guarda. A guarda é coerente, mas o estado visível não é: o «Mover» fica armado sem botão, com `_casas` velhas e
+destaque velho, e cada toque manda um `MASTER_ACT` que o servidor recusa (`acao_invalida`); o cliente não
+desarma na recusa. Merece ordem de seguimento. O «Cancelar» continua a repor. Um toque numa
 casa velha manda um `MASTER_ACT` que o servidor recusa. Registo-o para o coordenador decidir se merece ordem.
+
+No fluxo normal de produção as ROOM_OPTIONS novas
+chegam antes da MASTER_VIEW (a vista só vem por pedido
+diferido ou resync, sempre depois das opções); por isso
+a guarda morre normalmente na linha 82, e o ramo `vez
+!= _vez` é rede de segurança para a vista chegar antes
+das opções.
 
 ## 3. Errata A3
 
@@ -136,7 +149,12 @@ duplo clique no mesmo botão, ou um clique no botão refeito.
 
 ## 4. Provas (`provas/ordem-d-aud-01-correccoes-3/`, mapa no README)
 
-**Todos os logs começam com a linha do comando**, incluindo o `pecas_mestre.log`. Tirei o caminho da máquina e
+**Todos os logs começam com a linha do comando**, incluindo o `pecas_mestre.log`. A 1.ª linha do `pecas_mestre-SEM-RAMO-DA-VEZ.log` é um comando anotado (a
+mutação descrita entre parênteses,
+sem `MESTRE_COMANDOS` nem `timeout 300`); essa corrida não escreveu
+`comandos-*.jsonl` e o seu exit não está
+no `resumo.txt`.
+Tirei o caminho da máquina e
 pus `<sede>` no lugar.
 
 | Corrida do `pecas_mestre` | Resultado |

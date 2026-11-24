@@ -14,7 +14,12 @@ capturas.
 
 ## Duas corridas do `pecas_mestre` (`suites/`)
 
-**Todos os logs começam com a linha do comando**, incluindo o `pecas_mestre.log`. Tirei o caminho da máquina e
+**Todos os logs começam com a linha do comando**, incluindo o `pecas_mestre.log`. A 1.ª linha do `pecas_mestre-SEM-RAMO-DA-VEZ.log` é um comando anotado (a
+mutação descrita entre parênteses,
+sem `MESTRE_COMANDOS` nem `timeout 300`); essa corrida não escreveu
+`comandos-*.jsonl` e o seu exit não está
+no `resumo.txt`.
+Tirei o caminho da máquina e
 pus `<sede>` no lugar.
 
 1. `pecas_mestre-SEM-RAMO-DA-VEZ.log`: os testes desta ordem com o `aba_agir.gd` **sem** as linhas 63-64
