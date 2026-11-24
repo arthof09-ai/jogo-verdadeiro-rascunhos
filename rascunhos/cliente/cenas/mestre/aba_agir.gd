@@ -160,11 +160,11 @@ func editar(cartao_id: String) -> void:
 
 ## «Cancelar» do Mover: desarma e, se o «Mover» tinha desarmado o «Colocar» da Mesa, o «Colocar» volta
 ## (D-AUD-01-CORRECCOES).
+## D-AUD-01-CORRECCOES-2: repõe ANTES de parar — o parar_mover() apaga a ficha guardada (desarmou_mover).
 func cancelar_mover() -> void:
-	var estava := a_mover
-	parar_mover()
-	if estava and mestre != null:
+	if a_mover and mestre != null:
 		mestre.cancelou_mover()
+	parar_mover()
 
 
 func parar_mover() -> void:
@@ -172,6 +172,7 @@ func parar_mover() -> void:
 	_casas.clear()
 	if mestre != null:
 		mestre.destacar(_casas)
+		mestre.desarmou_mover()  # D-AUD-01-CORRECCOES-2: a ficha guardada pelo «Mover» deixa de valer
 	if _cancelar != null:
 		_cancelar.visible = false
 

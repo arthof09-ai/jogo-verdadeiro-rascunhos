@@ -99,7 +99,9 @@ var _livre: ControlosLivre
 var _aba_registo: AbaRegisto
 var _aba_mesa: AbaMesa
 var _aba_agir: AbaAgir
-var _colocar_guardado := ""  # D-AUD-01-CORRECCOES: a ficha do «Colocar» que o «Mover» desarmou
+## D-AUD-01-CORRECCOES: a ficha do «Colocar» que o «Mover» desarmou. Só vale enquanto esse «Mover» estiver armado:
+## o «Cancelar» gasta-a (cancelou_mover) e qualquer outro desarme apaga-a (desarmou_mover, D-AUD-01-CORRECCOES-2).
+var _colocar_guardado := ""
 var _folha: PanelContainer
 var _colunas: HBoxContainer
 var _col1: VBoxContainer
@@ -710,7 +712,8 @@ func armou_colocar() -> void:
 ## D-AUD-01-CORRECCOES: a ficha que estava a colocar fica guardada, para voltar se o Mestre cancelar o «Mover».
 func armou_mover() -> void:
 	if _aba_mesa != null:
-		_colocar_guardado = _aba_mesa.a_colocar
+		if _aba_mesa.a_colocar != "":  # D-AUD-01-CORRECCOES-2: armar o «Mover» outra vez não apaga a ficha guardada
+			_colocar_guardado = _aba_mesa.a_colocar
 		_aba_mesa.parar()
 
 
@@ -721,6 +724,13 @@ func cancelou_mover() -> void:
 	_colocar_guardado = ""
 	if ficha != "" and _aba_mesa != null:
 		_aba_mesa.escolher_colocar(ficha)
+
+
+## D-AUD-01-CORRECCOES-2: o «Mover» desarmou-se sem «Cancelar» (moveu, a vez mudou, ficou sem opções, ou o Mestre
+## escolheu um «Colocar») — a ficha guardada deixa de valer. Sem isto, como armou_mover() já não a escreve por cima
+## quando não há «Colocar», um «Mover» armado mais tarde e cancelado repunha uma ficha velha.
+func desarmou_mover() -> void:
+	_colocar_guardado = ""
 
 
 func _enviar(tipo: String, campos: Dictionary) -> String:

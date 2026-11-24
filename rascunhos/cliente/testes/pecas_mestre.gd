@@ -216,6 +216,22 @@ func _correr() -> void:
 		"D-AUD-01-CORRECCOES: com o «Mover» armado, escolher outra ficha no «Colocar» → o toque põe a ficha nova (%d MASTER_PLACE %s, 0 da velha)" % [places_5.size(), places_5])
 	if not places_5.is_empty():
 		_responder(c, _ultimo())
+	# D-AUD-01-CORRECCOES-2 (conferência D-AUD-01-CORRECCOES): armar o «Mover» duas vezes (duplo clique, ou o botão
+	# refeito pelo atualizar()) guardava "" por cima da ficha — o «Cancelar» já não repunha o «Colocar».
+	c._aba_mesa.escolher_colocar("orc-teste")
+	c._aba_agir.iniciar_mover()
+	c._aba_agir.iniciar_mover()
+	c._aba_agir._cancelar.pressed.emit()
+	var antes_dup := _comandos.size()
+	c.casa_tocada(Vector2i(19, 19))
+	var places_dup: Array = []
+	for cmd in _comandos.slice(antes_dup):
+		if cmd.get("type") == "MASTER_PLACE":
+			places_dup.append(str(cmd.get("fichaId", "")))
+	_ok(not c._aba_agir.a_mover and c._aba_mesa.a_colocar == "orc-teste" and places_dup == ["orc-teste"],
+		"D-AUD-01-CORRECCOES-2: «Colocar» → armar «Mover» duas vezes → «Cancelar» repõe o «Colocar» e o toque seguinte coloca (%d MASTER_PLACE %s)" % [places_dup.size(), places_dup])
+	if not places_dup.is_empty():
+		_responder(c, _ultimo())
 	var antes_dau := _comandos.size()
 	c._aba_agir.iniciar_mover()
 	_ok(c._aba_mesa.a_colocar == "", "D-AUD-01: armar «Mover» desarma o «Colocar» da Mesa")
@@ -235,6 +251,27 @@ func _correr() -> void:
 			placs += 1
 	_ok(placs == 0, "D-AUD-01: com o «Colocar» escolhido antes, o toque do «Mover» não coloca cópia nenhuma (%d MASTER_PLACE)" % placs)
 	_responder(c, u)
+	# D-AUD-01-CORRECCOES-2: depois de mover, e com a vez a mudar, o «Colocar» velho não volta — nem no «Cancelar»
+	# de um «Mover» armado mais tarde (a ficha guardada não sobrevive ao desarme do sistema).
+	var colocar_depois: String = c._aba_mesa.a_colocar
+	var vista_outra := vista.duplicate(true)
+	vista_outra["vezId"] = "outra-vez-teste"
+	c.aplicar_vista(vista_outra)
+	c.aplicar_vista(vista)
+	c._aba_agir.iniciar_mover()
+	var mover_rearmado: bool = c._aba_agir.a_mover
+	c._aba_agir._cancelar.pressed.emit()
+	var antes_vez := _comandos.size()
+	c.casa_tocada(Vector2i(19, 19))
+	var places_vez := 0
+	for cmd in _comandos.slice(antes_vez):
+		if cmd.get("type") == "MASTER_PLACE":
+			places_vez += 1
+	_ok(colocar_depois == "" and mover_rearmado and c._aba_mesa.a_colocar == "" and places_vez == 0,
+		"D-AUD-01-CORRECCOES-2: mover usado → a vez muda → «Mover» → «Cancelar» não repõe a ficha velha (a_colocar depois do mover «%s», %d MASTER_PLACE)" % [colocar_depois, places_vez])
+	if places_vez > 0:
+		c._aba_mesa.parar()
+		_responder(c, _ultimo())  # sem isto o MASTER_PLACE a mais ficava em voo e derrubava as verificações seguintes
 	if not opcoes["ataques"].is_empty():
 		var a: Dictionary = opcoes["ataques"][0]
 		c._aba_agir.agir({"tipo": "atacar", "alvoId": a["alvoId"], "arma": a["arma"]})
