@@ -218,6 +218,11 @@ const FASE := {"lobby": "Sala: à espera de começar", "combate": "Sala: em comb
 	"pausa": "Sala: em pausa"}
 const RODADA_VEZ := "Rodada %d · vez de %s"
 const ALERTAS := "Alertas: %d"
+## ORDEM-D-AUD-16-SEGUIMENTO: o estado da ligação até ao primeiro WELCOME (mestre.gd `_mostrar_ligacao`).
+const LIGACAO := {
+	"a_ligar": "A ligar à mesa…",
+	"a_esperar": "A ligar à mesa… o servidor não responde; a tentar de novo.",
+}
 ## Ordem 60: na folha (aba Figuras), a figura que o mapa não deixa pôr de pé (a recusa do pé, Ordem 58).
 const NAO_DE_PE := " · ✕ não está de pé: %s (o mapa bloqueia a casa)"
 const ALERTA := {

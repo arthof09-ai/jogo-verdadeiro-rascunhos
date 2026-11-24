@@ -503,6 +503,7 @@ func _correr() -> void:
 	await _fila_alertas(c)
 	await _recibo_perdido(c, fx["mestre"]["cartoes"]["ia"])
 	await _arranque_sem_queda(c)
+	await _arranque_a_ligar(c)
 	await _nomes_juntos(c, fx["mestre"]["vista"])
 	await _camara_livre(c)
 	await _clima(c)
@@ -1304,6 +1305,64 @@ func _arranque_sem_queda(c) -> void:
 	_rede._ja_esteve_na_mesa = esteve_antes
 	_rede.estado_ligacao = estado_antes
 	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	await _quadros(1)
+
+
+## ORDEM-D-AUD-16-SEGUIMENTO (A1): o arranque directo com o servidor fora do ar. A Rede alterna A_LIGAR e A_ESPERAR
+## sem nunca chegar à mesa; antes, o ecrã do Mestre ficava calado (nem alerta, nem outro aviso). Agora mostra o estado
+## «a ligar…» até ao primeiro WELCOME — e sem alerta falso («A ligação caiu» continua só para a queda a sério).
+func _arranque_a_ligar(c) -> void:
+	print("== ORDEM-D-AUD-16-SEGUIMENTO: A_ESPERAR sem nunca ter estado na mesa mostra «a ligar…» ==")
+	var estado_antes: int = _rede.estado_ligacao
+	var esteve_antes: bool = _rede._ja_esteve_na_mesa
+	var n: int = c.alertas.size()
+	var rot: Label = c._ligacao
+	_ok(rot != null and not rot.visible, "o rótulo da ligação existe e, desligada (testes de ecrã), não se vê")
+	_rede._ja_esteve_na_mesa = false
+	_rede.estado_ligacao = _rede.Ligacao.A_LIGAR
+	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	_ok(rot.visible and rot.text == Textos.LIGACAO["a_ligar"], "a ligar, sem nunca ter estado na mesa: «%s» (está «%s»)" % [Textos.LIGACAO["a_ligar"], rot.text])
+	# O caso que faltava: o servidor não respondeu e a Rede espera para tentar de novo (A_ESPERAR), sem nunca ter estado.
+	_rede.estado_ligacao = _rede.Ligacao.A_ESPERAR
+	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	_ok(rot.visible and rot.text == Textos.LIGACAO["a_esperar"], "A_ESPERAR sem nunca ter estado na mesa: «%s» (está «%s»)" % [Textos.LIGACAO["a_esperar"], rot.text])
+	_ok(c.alertas.size() == n, "A_ESPERAR sem nunca ter estado na mesa: nenhum alerta falso (%d → %d)" % [n, c.alertas.size()])
+	# Três voltas do servidor fora do ar (A_LIGAR → A_ESPERAR): o estado vê-se sempre, e nenhum alerta se junta.
+	var sempre := true
+	for i in 3:
+		for e in [_rede.Ligacao.A_LIGAR, _rede.Ligacao.A_ESPERAR]:
+			_rede.estado_ligacao = e
+			_rede.ligacao_mudou.emit(e)
+			sempre = sempre and rot.visible and rot.text != ""
+	_ok(sempre and c.alertas.size() == n, "3 voltas A_LIGAR/A_ESPERAR: o estado vê-se em todas e 0 alertas (%d → %d)" % [n, c.alertas.size()])
+	await _quadros(1)
+	_ok(rot.is_visible_in_tree() and rot.size.y > 0.0 and rot.get_parent() == c._alerta.get_parent()
+		and rot.get_index() == c._alerta.get_index() + 1, "o rótulo está no ecrã, logo abaixo do Alerta (visível na árvore, altura > 0)")
+	# O ecrã que ABRE com a Rede já em A_ESPERAR (o arranque directo: o sinal foi antes de a cena existir).
+	var c2 = (load(CENA) as PackedScene).instantiate()
+	c2.enviar_fn = func(_m): return true
+	c2.pedir_vista_fn = func(): pass
+	c2.pesquisar_fn = func(_t): pass
+	root.add_child(c2)
+	await _quadros(2)
+	_ok(c2._ligacao.visible and c2._ligacao.text == Textos.LIGACAO["a_esperar"] and c2.alertas.is_empty(),
+		"o ecrã que abre com a Rede já em A_ESPERAR mostra logo «%s» e 0 alertas (está «%s», %d)" % [Textos.LIGACAO["a_esperar"], c2._ligacao.text, c2.alertas.size()])
+	root.remove_child(c2)
+	c2.free()
+	# O primeiro WELCOME: na mesa, o estado some.
+	_rede._ja_esteve_na_mesa = true
+	_rede.estado_ligacao = _rede.Ligacao.NA_MESA
+	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	_ok(not rot.visible, "na mesa (depois do WELCOME): o estado da ligação some")
+	# Depois de ter estado na mesa, a queda dá o alerta, como antes; o estado «a ligar…» não volta.
+	_rede.estado_ligacao = _rede.Ligacao.A_ESPERAR
+	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	_ok(not rot.visible and c.alertas.size() == n + 1 and c.alertas[-1] == Textos.ALERTA["ligacao"],
+		"depois de ter estado na mesa, A_ESPERAR dá «%s» e não o estado «a ligar…»" % Textos.ALERTA["ligacao"])
+	_rede._ja_esteve_na_mesa = esteve_antes
+	_rede.estado_ligacao = estado_antes
+	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	_ok(not rot.visible, "de volta ao estado do teste (desligada): o rótulo some")
 	await _quadros(1)
 
 

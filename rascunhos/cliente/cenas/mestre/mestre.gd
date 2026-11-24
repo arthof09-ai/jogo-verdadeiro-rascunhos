@@ -114,6 +114,9 @@ var _botoes: Array[Button] = []
 var _fila: Label
 var _sala: Label
 var _alerta: Label
+## ORDEM-D-AUD-16-SEGUIMENTO: o estado da ligação até ao primeiro WELCOME («A ligar à mesa…»). No arranque directo o
+## ecrã abre com a Rede ainda a ligar; sem isto, com o servidor fora do ar, o Mestre via o painel parado e calado.
+var _ligacao: Label
 var _encolher: Button
 var _abas: TabContainer
 var _lista_figuras: VBoxContainer
@@ -201,6 +204,7 @@ func _ready() -> void:
 	if not Rede.cartao_ativo.is_empty():
 		aplicar_cartao(Rede.cartao_ativo)
 	_mostrar_aviso_se_preciso()
+	_mostrar_ligacao()  # a Rede pode já estar a ligar (arranque directo): o sinal disso foi antes desta cena
 	_pedir_vista_agora()
 
 
@@ -652,6 +656,7 @@ func _ao_retomada() -> void:
 
 
 func _ao_ligacao(_e: int) -> void:
+	_mostrar_ligacao()
 	if not Rede.na_mesa():
 		# ORDEM-D-AUD-16: no arranque directo o ecrã abre com a ligação ainda a abrir; isso não é uma queda.
 		if Rede.ja_esteve_na_mesa():
@@ -660,6 +665,28 @@ func _ao_ligacao(_e: int) -> void:
 		_consultar_em_voo()
 		_recomecar_conta_vista()  # Ordem 49 (A): de volta à mesa, a conta do tecto recomeça
 		_pedir_vista_em_breve()
+
+
+## ORDEM-D-AUD-16-SEGUIMENTO: o estado «a ligar…» no ecrã do Mestre, enquanto ele ainda NÃO esteve na mesa (até ao
+## primeiro WELCOME). A ligar ou a entrar: «A ligar à mesa…»; à espera de tentar de novo (A_ESPERAR: o servidor não
+## respondeu): a mesma frase e que o servidor não responde. Na mesa, desligada (testes de ecrã) ou depois de ter
+## estado na mesa (aí a queda já dá o alerta «A ligação caiu»), o rótulo some e não ocupa lugar.
+func _mostrar_ligacao() -> void:
+	if _ligacao == null:
+		return
+	_ligacao.text = texto_ligacao(Rede.estado_ligacao, Rede.ja_esteve_na_mesa())
+	_ligacao.visible = _ligacao.text != ""
+
+
+## A frase do estado da ligação (pura; "" quando não há nada a mostrar).
+func texto_ligacao(estado: int, ja_esteve: bool) -> String:
+	if ja_esteve:
+		return ""
+	if estado == Rede.Ligacao.A_LIGAR or estado == Rede.Ligacao.A_ENTRAR:
+		return Textos.LIGACAO["a_ligar"]
+	if estado == Rede.Ligacao.A_ESPERAR:
+		return Textos.LIGACAO["a_esperar"]
+	return ""
 
 
 ## Ordem 29 (V25): a ligação caiu com comandos em voo e os recibos deles podem ter-se perdido. Sem eles o `_em_voo`
@@ -1134,6 +1161,9 @@ func _montar() -> void:
 	_sala = _rotulo(_col1, "Sala")
 	_alerta = _rotulo(_col1, "Alerta")
 	_alerta.max_lines_visible = 2
+	_ligacao = _rotulo(_col1, "Ligacao")
+	_ligacao.max_lines_visible = 2
+	_ligacao.visible = false
 	_encolher = Button.new()
 	_encolher.name = "Encolher"
 	_encolher.pressed.connect(_alternar_folha)
