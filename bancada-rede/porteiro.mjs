@@ -13,7 +13,8 @@
 // Passos:
 //   1. espera o servidor (tenta ligar até 60 s);
 //   2. o MESTRE entra com o PIN; sem --so-lobby, prepara a batalha como as bancadas PROVAS-MAPA: MASTER_LOBBY_SET
-//      (o orc disponível) → MASTER_START → MASTER_PLACE do orc DENTRO do lago (38,11). A vez é da heroína;
+//      (o orc disponível) → MASTER_START → MASTER_PLACE do orc DENTRO do lago (38,11). A vez é da heroína.
+//      Com `bancada.criaturas` na config (preparar.mjs --fichas=acertam), põe essas criaturas nessas casas;
 //   3. cada JOGADORA entra com o nome e a senha, recebe o WELCOME, e o porteiro fecha a ligação dela logo a seguir
 //      (assim o cliente Godot não é «segundo aparelho» — 4002 — quando entrar);
 //   4. escreve os lugar.cfg;
@@ -117,15 +118,21 @@ try {
   const snap = () => [...mestre.msgs].reverse().find((m) => m.type === 'ROOM_SNAPSHOT' || m.type === 'MASTER_VIEW');
   const fase = snap()?.fase ?? '?';
   if (!args['so-lobby'] && fase === 'lobby') {
-    await exigir(mestre, 'MASTER_LOBBY_SET', { mapaId: 'arena-teste', criaturasDisponiveis: ['orc-teste'], npcsDisponiveis: [] });
+    // ORDEM-D-AUD-04-BANCADA: as criaturas vêm da config (`bancada.criaturas`, escrita pelo preparar.mjs); sem ela,
+    // a de origem: o orc-teste em --orc (por omissão dentro do lago).
+    const criaturas = cfg.bancada?.criaturas ?? [{ fichaId: 'orc-teste', casa: { x: ORC[0], y: ORC[1] } }];
+    const ids = [...new Set(criaturas.map((c) => c.fichaId))];
+    await exigir(mestre, 'MASTER_LOBBY_SET', { mapaId: 'arena-teste', criaturasDisponiveis: ids, npcsDisponiveis: [] });
     await exigir(mestre, 'MASTER_START');
-    await exigir(mestre, 'MASTER_PLACE', { fichaId: 'orc-teste', casa: { x: ORC[0], y: ORC[1] } });
+    for (const c of criaturas) await exigir(mestre, 'MASTER_PLACE', { fichaId: c.fichaId, casa: c.casa });
   } else {
     log(`batalha não preparada (fase «${fase}»${args['so-lobby'] ? ', --so-lobby' : ''})`);
   }
 
   // 3. as jogadoras
-  const jogadoras = [['jogadora', 'Heroína Teste'], ['aliada', 'Aliada Teste']].filter(([k]) => args[k]);
+  // A 1.ª jogadora da config vai para o cliente --jogadora; a 2.ª (com --aliada) para o --aliada.
+  const nomesJog = cfg.sala.lugares.filter((l) => l.papel === 'jogadora').map((l) => l.nome);
+  const jogadoras = [['jogadora', nomesJog[0]], ['aliada', nomesJog[1]]].filter(([k, nome]) => args[k] && nome);
   for (const [k, nome] of jogadoras) {
     const l = lugarDe('jogadora', nome);
     if (!l) throw new Error(`a config não tem o lugar «${nome}»`);

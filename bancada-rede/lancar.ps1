@@ -1,6 +1,6 @@
 # ORDEM-CORR10-PREP - a bancada de rede verdadeira, num passo.
 #
-#   correr-com-o-mestre.cmd  [-Aliada] [-SoLobby] [-Motor auto|real|falso] [-Modo manual|semi|auto]
+#   correr-com-o-mestre.cmd  [-Aliada] [-SoLobby] [-Motor auto|real|falso] [-Modo manual|semi|auto] [-Fichas canario|acertam]
 #                            [-Porta 8790] [-HostServidor 0.0.0.0] [-Godot <exe>]
 #
 # 1. pára a bancada anterior (se ficou alguma) e arquiva os registos dela em privado\anteriores\<data>\;
@@ -19,6 +19,7 @@ param(
   [string]$HostServidor = '0.0.0.0',
   [ValidateSet('auto', 'real', 'falso')][string]$Motor = 'auto',
   [ValidateSet('manual', 'semi', 'auto')][string]$Modo = 'manual',
+  [ValidateSet('canario', 'acertam')][string]$Fichas = 'canario',
   [switch]$Aliada,
   [switch]$SoLobby,
   [string]$Godot = '',
@@ -73,12 +74,12 @@ if ($antigos.Count -gt 0) {
 New-Item -ItemType Directory -Force $Reg | Out-Null
 
 # ---------------------------------------------------------------- 2. o arranque do servidor
-$argsPrep = @("`"$Bancada\preparar.mjs`"", "--privado=`"$Privado`"", "--porta=$Porta", "--host=$HostServidor", "--motor=$Motor", "--modo=$Modo")
+$argsPrep = @("`"$Bancada\preparar.mjs`"", "--privado=`"$Privado`"", "--porta=$Porta", "--host=$HostServidor", "--motor=$Motor", "--modo=$Modo", "--fichas=$Fichas")
 if ($Aliada) { $argsPrep += '--aliada' }
 $prep = & node @argsPrep 2>&1
 if ($LASTEXITCODE -ne 0) { Falha "preparar.mjs: $prep" }
 $resumo = ($prep | Select-Object -Last 1) | ConvertFrom-Json
-Diz "motor: $($resumo.motor)"
+Diz "motor: $($resumo.motor) | fichas: $($resumo.fichas)"
 $prep | Out-File -Encoding utf8 (Join-Path $Reg 'preparar.log')
 
 # ---------------------------------------------------------------- 3. o import do cliente (uma vez)
@@ -108,11 +109,12 @@ Diz "servidor do jogo de pe na porta $Porta (host $HostServidor)"
 # ---------------------------------------------------------------- 5. o porteiro
 $projecto = Get-Content -Encoding UTF8 (Join-Path $Cliente 'project.godot') -Raw
 $nomeApp = [regex]::Match($projecto, 'config/name="([^"]*)"').Groups[1].Value
+$nomesJog = @((Get-Content -Encoding UTF8 (Join-Path $Privado 'config.json') -Raw | ConvertFrom-Json).sala.lugares | Where-Object { $_.papel -eq 'jogadora' } | ForEach-Object { $_.nome })
 $clientes = @(
-  @{ chave = 'jogadora'; rotulo = 'Jogadora (Heroina Teste)' },
+  @{ chave = 'jogadora'; rotulo = "Jogadora ($($nomesJog[0]))" },
   @{ chave = 'mestre'; rotulo = 'Mestre' }
 )
-if ($Aliada) { $clientes = @($clientes[0], @{ chave = 'aliada'; rotulo = 'Jogadora (Aliada Teste)' }, $clientes[1]) }
+if ($Aliada) { $clientes = @($clientes[0], @{ chave = 'aliada'; rotulo = "Jogadora ($($nomesJog[1]))" }, $clientes[1]) }
 $argsPort = @("`"$Bancada\porteiro.mjs`"", "--config=`"$Privado\config.json`"")
 foreach ($c in $clientes) {
   $c.appdata = Join-Path $Privado "clientes\$($c.chave)\AppData"
