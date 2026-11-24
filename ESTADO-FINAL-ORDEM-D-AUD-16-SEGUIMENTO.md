@@ -207,3 +207,5 @@ No `024d3e7` (código, listas, provas e este ESTADO-FINAL): **Testes dos rascunh
 `provas-mapa`, `validador-glb`, `motor-real`, `godot-cliente`, `protocolo`, `retoma-pc`, `servidor`, `ponta-a-ponta`,
 `cliente`, `foto-mestre`) · **Sonda de privacidade 45372457338: success**. O `ponta-a-ponta` (o Mestre Godot sem janela
 pela ligação real) e o `foto-mestre` passaram com o rótulo novo.
+
+No `6a70bc5` (erratas E-1 a E-8 da conferência, 870): **Testes dos rascunhos 45382379319: success** · **Sonda de privacidade 45382379652: success**.
