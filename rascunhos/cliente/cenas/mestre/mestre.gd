@@ -44,6 +44,11 @@ const FONTE_MIN_PX_REAIS := Apresentacao.FONTE_MIN_PX_REAIS
 const FRACAO_TABULEIRO := 0.55
 const LINHAS_CARTAO := 6
 const LINHAS_TITULO := 2
+## ORDEM-D-AUD-16-SEGUIMENTO-B (B-2): o rótulo dos alertas — a linha «Alertas: N» e até 5 do texto do último.
+const LINHAS_ALERTA := 6
+## ORDEM-D-AUD-16-SEGUIMENTO-B (B-1): o rótulo da ligação. Eram 2: as frases da espera e da versão precisam de 3 na
+## coluna estreita (ficavam cortadas).
+const LINHAS_LIGACAO := 4
 const ARQ_CFG := "user://mestre.cfg"
 const ESPERA_VISTA_S := 0.25
 ## Ordem 49 (A): o tecto da nova tentativa do pedido da vista — 40 pedidos que não saem, de ESPERA_VISTA_S em
@@ -196,6 +201,7 @@ func _ready() -> void:
 	Rede.sala_retomada.connect(_ao_retomada)
 	Rede.ligacao_mudou.connect(_ao_ligacao)
 	Rede.precisa_entrar.connect(_ao_precisa_entrar)
+	Rede.erro_recebido.connect(_ao_erro)  # ORDEM-D-AUD-16-SEGUIMENTO-B (B-1): a PARADA por versão não fica calada
 	Estado.opcoes_mudaram.connect(func(): _aba_agir.atualizar())
 	get_viewport().size_changed.connect(_ao_redimensionar)
 	_ao_redimensionar()
@@ -205,6 +211,13 @@ func _ready() -> void:
 		aplicar_cartao(Rede.cartao_ativo)
 	_mostrar_aviso_se_preciso()
 	_mostrar_ligacao()  # a Rede pode já estar a ligar (arranque directo): o sinal disso foi antes desta cena
+	if is_inside_tree() and get_tree().current_scene == self and abre_sem_saida(Rede.estado_ligacao, Rede.motivo_parada):
+		# ORDEM-D-AUD-16-SEGUIMENTO-B (B-1): desligada (ex.: a guarda da rede local do Android, antes desta cena) ou
+		# parada por outro aparelho, a Rede já pediu a entrada antes de a cena existir e ninguém a ouviu: o lobby
+		# pede-a (e mostra o motivo, Rede.motivo_entrada). Nos testes de ecrã a cena não é a principal: não sai.
+		print("ecrã do Mestre aberto sem ligação (estado %d): para o lobby" % Rede.estado_ligacao)
+		get_tree().change_scene_to_file.call_deferred(CENA_LOBBY)
+		return
 	_pedir_vista_agora()
 
 
@@ -255,6 +268,13 @@ func _tentar_vista() -> void:
 	if pedir_vista_fn.call() != false:
 		_vista_nao_saiu = 0
 		falha_vista = ""
+		return
+	if vista_espera_pela_ligacao():
+		# ORDEM-D-AUD-16-SEGUIMENTO-B (B-2): fora da mesa por a ligação estar a abrir (ou parada) o pedido não pode
+		# sair, e o «Atualizar» também não ajuda. Não se conta para o tecto nem se alerta: o rótulo da ligação já diz
+		# a causa. O pedido fica parado; a ligação que chega à mesa arma um novo, com a conta do zero (`_ao_ligacao`).
+		_espera_vista = -1.0
+		_vista_nao_saiu = 0
 		return
 	_vista_nao_saiu += 1
 	if _vista_nao_saiu < TENTATIVAS_VISTA_MAX:
@@ -655,11 +675,40 @@ func _ao_retomada() -> void:
 	_pedir_vista_em_breve()
 
 
+## ORDEM-D-AUD-16-SEGUIMENTO-B (B-2): o pedido da vista não sai porque a Rede está a ligar, à espera de tentar de
+## novo ou parada — não por causa do limite de envios. (Desligada é o estado dos testes de ecrã: aí fica como antes.)
+func vista_espera_pela_ligacao() -> bool:
+	return Rede.a_ligar() or Rede.estado_ligacao == Rede.Ligacao.PARADA
+
+
+## ORDEM-D-AUD-16-SEGUIMENTO-B (B-1): o ecrã do Mestre que abre (como cena principal) com a Rede desligada, ou parada
+## por outro aparelho, fica sem saída — a Rede já pediu a entrada antes de a cena existir. Vai ao lobby. A PARADA por
+## versão fica: o rótulo diz o que fazer.
+static func abre_sem_saida(estado: int, motivo_parada: String) -> bool:
+	if estado == Rede.Ligacao.DESLIGADA:
+		return true
+	return estado == Rede.Ligacao.PARADA and motivo_parada != "versao"
+
+
+## ORDEM-D-AUD-16-SEGUIMENTO-B (B-1): o ERRO do servidor. O «versao» (o servidor não aceita esta versão; a Rede fica
+## PARADA e não tenta de novo) vai ao Mestre num alerta, uma vez, e o rótulo da ligação mostra-o. Os outros códigos não
+## aparecem (nada técnico no ecrã, como no lobby e no HUD).
+func _ao_erro(codigo: String, _texto: String) -> void:
+	if codigo != "versao":
+		return
+	print("ecrã do Mestre: o servidor não aceita esta versão do jogo (ligação PARADA)")
+	_mostrar_ligacao()
+	if not alertas.has(Textos.ALERTA["versao"]):
+		_juntar_alerta(Textos.ALERTA["versao"])
+
+
 func _ao_ligacao(_e: int) -> void:
 	_mostrar_ligacao()
 	if not Rede.na_mesa():
 		# ORDEM-D-AUD-16: no arranque directo o ecrã abre com a ligação ainda a abrir; isso não é uma queda.
-		if Rede.ja_esteve_na_mesa():
+		# ORDEM-D-AUD-16-SEGUIMENTO-B (B-1): a PARADA não tenta de novo — o «a tentar de novo» seria falso (o alerta
+		# da versão vem por `_ao_erro`).
+		if Rede.ja_esteve_na_mesa() and Rede.estado_ligacao != Rede.Ligacao.PARADA:
 			_juntar_alerta(Textos.ALERTA["ligacao"])
 	else:
 		_consultar_em_voo()
@@ -674,12 +723,15 @@ func _ao_ligacao(_e: int) -> void:
 func _mostrar_ligacao() -> void:
 	if _ligacao == null:
 		return
-	_ligacao.text = texto_ligacao(Rede.estado_ligacao, Rede.ja_esteve_na_mesa())
+	_ligacao.text = texto_ligacao(Rede.estado_ligacao, Rede.ja_esteve_na_mesa(), Rede.motivo_parada)
 	_ligacao.visible = _ligacao.text != ""
 
 
 ## A frase do estado da ligação (pura; "" quando não há nada a mostrar).
-func texto_ligacao(estado: int, ja_esteve: bool) -> String:
+## ORDEM-D-AUD-16-SEGUIMENTO-B (B-1): a PARADA por versão dá a sua frase, tenha ou não estado na mesa.
+func texto_ligacao(estado: int, ja_esteve: bool, motivo_parada := "") -> String:
+	if estado == Rede.Ligacao.PARADA and motivo_parada == "versao":
+		return Textos.LIGACAO["versao"]
 	if ja_esteve:
 		return ""
 	if estado == Rede.Ligacao.A_LIGAR or estado == Rede.Ligacao.A_ENTRAR:
@@ -1160,9 +1212,11 @@ func _montar() -> void:
 	_fila = _rotulo(_col1, "Fila")
 	_sala = _rotulo(_col1, "Sala")
 	_alerta = _rotulo(_col1, "Alerta")
-	_alerta.max_lines_visible = 2
+	# ORDEM-D-AUD-16-SEGUIMENTO-B (B-2): eram 2 linhas («Alertas: N» + 1 linha do texto) e a coluna 1 é estreita
+	# (14 letras de largura): o alerta da vista ficava em «A vista da mesa não se». A linha da conta + 5 do texto.
+	_alerta.max_lines_visible = LINHAS_ALERTA
 	_ligacao = _rotulo(_col1, "Ligacao")
-	_ligacao.max_lines_visible = 2
+	_ligacao.max_lines_visible = LINHAS_LIGACAO
 	_ligacao.visible = false
 	_encolher = Button.new()
 	_encolher.name = "Encolher"

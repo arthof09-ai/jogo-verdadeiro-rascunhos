@@ -91,6 +91,9 @@ var _senha := ""  # só em memória, só até ao ROOM_WELCOME
 var _pin := ""  # idem (E-P13: o PIN nunca vai ao disco)
 var _entrou_com_token := false
 var _ja_esteve_na_mesa := false
+## ORDEM-D-AUD-16-SEGUIMENTO-B (B-1): porque a ligação está PARADA — "versao" (o servidor não aceita esta versão) ou
+## "outro_aparelho" (o lugar abriu-se noutro aparelho); "" fora da PARADA. O ecrã do Mestre lê-o (mestre.gd).
+var motivo_parada := ""
 var _espera_s := ESPERA_MIN_S
 var _relogio_reconexao := 0.0
 var _envios_recentes: Array = []
@@ -427,6 +430,7 @@ func _ligar() -> void:
 		_pedir_entrada("rede_local")
 		return
 	_snapshots_nesta_ligacao = 0
+	motivo_parada = ""
 	_ws = WebSocketPeer.new()
 	_ws.inbound_buffer_size = 1 << 20  # snapshots grandes cabem
 	if not OS.has_feature("web"):
@@ -484,6 +488,7 @@ func _ao_fechar(codigo: int) -> void:
 		# Outro aparelho entrou com este lugar: não brigar por ele.
 		_seat_token = ""
 		_guardar_lugar()
+		motivo_parada = "outro_aparelho"
 		_mudar_estado(Ligacao.PARADA)
 		_pedir_entrada("outro_aparelho")
 		return
@@ -659,6 +664,7 @@ func _ao_erro(msg: Dictionary) -> void:
 
 func _parar_por_versao() -> void:
 	_fechar_socket()
+	motivo_parada = "versao"
 	_mudar_estado(Ligacao.PARADA)
 	erro_recebido.emit("versao", "")
 

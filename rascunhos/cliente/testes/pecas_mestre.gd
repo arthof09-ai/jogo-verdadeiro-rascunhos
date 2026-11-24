@@ -504,6 +504,7 @@ func _correr() -> void:
 	await _recibo_perdido(c, fx["mestre"]["cartoes"]["ia"])
 	await _arranque_sem_queda(c)
 	await _arranque_a_ligar(c)
+	await _seguimento_b(c)
 	await _nomes_juntos(c, fx["mestre"]["vista"])
 	await _camara_livre(c)
 	await _clima(c)
@@ -1327,6 +1328,12 @@ func _arranque_a_ligar(c) -> void:
 	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
 	_ok(rot.visible and rot.text == Textos.LIGACAO["a_esperar"], "A_ESPERAR sem nunca ter estado na mesa: «%s» (está «%s»)" % [Textos.LIGACAO["a_esperar"], rot.text])
 	_ok(c.alertas.size() == n, "A_ESPERAR sem nunca ter estado na mesa: nenhum alerta falso (%d → %d)" % [n, c.alertas.size()])
+	# ORDEM-D-AUD-16-SEGUIMENTO-B (B-3): o A_ENTRAR (o socket abriu e o ROOM_JOIN foi; falta o WELCOME), sem nunca ter
+	# estado na mesa: também «a ligar…» e nenhum alerta falso.
+	_rede.estado_ligacao = _rede.Ligacao.A_ENTRAR
+	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	_ok(rot.visible and rot.text == Textos.LIGACAO["a_ligar"], "B-3: A_ENTRAR sem nunca ter estado na mesa: «%s» (está «%s»)" % [Textos.LIGACAO["a_ligar"], rot.text])
+	_ok(c.alertas.size() == n, "B-3: A_ENTRAR sem nunca ter estado na mesa: nenhum alerta falso (%d → %d)" % [n, c.alertas.size()])
 	# Três voltas do servidor fora do ar (A_LIGAR → A_ESPERAR): o estado vê-se sempre, e nenhum alerta se junta.
 	var sempre := true
 	for i in 3:
@@ -1349,6 +1356,19 @@ func _arranque_a_ligar(c) -> void:
 		"o ecrã que abre com a Rede já em A_ESPERAR mostra logo «%s» e 0 alertas (está «%s», %d)" % [Textos.LIGACAO["a_esperar"], c2._ligacao.text, c2.alertas.size()])
 	root.remove_child(c2)
 	c2.free()
+	# B-3: o ecrã que abre com a Rede já em A_ENTRAR.
+	_rede.estado_ligacao = _rede.Ligacao.A_ENTRAR
+	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	var c3 = (load(CENA) as PackedScene).instantiate()
+	c3.enviar_fn = func(_m): return true
+	c3.pedir_vista_fn = func(): pass
+	c3.pesquisar_fn = func(_t): pass
+	root.add_child(c3)
+	await _quadros(2)
+	_ok(c3._ligacao.visible and c3._ligacao.text == Textos.LIGACAO["a_ligar"] and c3.alertas.is_empty(),
+		"B-3: o ecrã que abre com a Rede já em A_ENTRAR mostra logo «%s» e 0 alertas (está «%s», %d)" % [Textos.LIGACAO["a_ligar"], c3._ligacao.text, c3.alertas.size()])
+	root.remove_child(c3)
+	c3.free()
 	# O primeiro WELCOME: na mesa, o estado some.
 	_rede._ja_esteve_na_mesa = true
 	_rede.estado_ligacao = _rede.Ligacao.NA_MESA
@@ -1365,6 +1385,111 @@ func _arranque_a_ligar(c) -> void:
 	_ok(not rot.visible, "de volta ao estado do teste (desligada): o rótulo some")
 	await _quadros(1)
 
+
+## ORDEM-D-AUD-16-SEGUIMENTO-B: B-1 (a PARADA por versão antes do primeiro WELCOME já não deixa o ecrã calado nem
+## preso) e B-2 (sem rede, o alerta da vista não aponta a causa errada; e o texto dele cabe no rótulo).
+func _seguimento_b(c) -> void:
+	print("== ORDEM-D-AUD-16-SEGUIMENTO-B: a PARADA por versão e o alerta da vista sem rede ==")
+	var estado_antes: int = _rede.estado_ligacao
+	var esteve_antes: bool = _rede._ja_esteve_na_mesa
+	var erro_antes: String = _rede.texto_ultimo_erro
+	var n: int = c.alertas.size()
+	var rot: Label = c._ligacao
+	# B-1: o caminho real da Rede — o servidor (em cima) responde ao ROOM_JOIN com ERRO «versao», antes do WELCOME.
+	_rede._ja_esteve_na_mesa = false
+	_rede.estado_ligacao = _rede.Ligacao.A_ENTRAR
+	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	_rede._ao_erro({"type": "ERRO", "codigo": "versao", "texto": "O pedido não estava certo."})
+	_ok(_rede.estado_ligacao == _rede.Ligacao.PARADA and _rede.motivo_parada == "versao",
+		"B-1: o ERRO «versao» antes do WELCOME põe a Rede PARADA, com motivo «versao» (%d, «%s»)" % [_rede.estado_ligacao, _rede.motivo_parada])
+	_ok(rot.visible and rot.text == Textos.LIGACAO["versao"], "B-1: o ecrã do Mestre mostra «%s» (está «%s»)" % [Textos.LIGACAO["versao"], rot.text])
+	_ok(c.alertas.size() == n + 1 and c.alertas[-1] == Textos.ALERTA["versao"] and c._alerta.text.contains(Textos.ALERTA["versao"]),
+		"B-1: e um alerta «%s» (%s)" % [Textos.ALERTA["versao"], c.alertas.slice(n)])
+	await _quadros(1)
+	_ok(c._alerta.get_visible_line_count() == c._alerta.get_line_count() and rot.get_visible_line_count() == rot.get_line_count()
+		and rot.is_visible_in_tree() and c._alerta.is_visible_in_tree(),
+		"B-1: o alerta e o rótulo cabem inteiros (%d/%d e %d/%d linhas)" % [c._alerta.get_line_count(), c._alerta.max_lines_visible,
+		rot.get_line_count(), rot.max_lines_visible])
+	_rede.erro_recebido.emit("versao", "")
+	_ok(c.alertas.size() == n + 1, "B-1: o ERRO «versao» outra vez não repete o alerta (%d)" % (c.alertas.size() - n))
+	_rede.erro_recebido.emit("interno", "x")
+	_ok(c.alertas.size() == n + 1, "B-1: os outros ERRO não aparecem no ecrã (nada técnico)")
+	# Depois de já ter estado na mesa: a PARADA não dá o «A ligação caiu; a tentar de novo.» (não tenta de novo).
+	_rede._ja_esteve_na_mesa = true
+	_rede.estado_ligacao = _rede.Ligacao.NA_MESA
+	_rede.motivo_parada = ""
+	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	var n2: int = c.alertas.size()
+	_rede._parar_por_versao()
+	_ok(rot.visible and rot.text == Textos.LIGACAO["versao"] and not c.alertas.slice(n2).has(Textos.ALERTA["ligacao"]),
+		"B-1: já tendo estado na mesa, a PARADA por versão mostra «%s» e não «%s» (%s)" % [Textos.LIGACAO["versao"], Textos.ALERTA["ligacao"], c.alertas.slice(n2)])
+	# O ecrã que abre (como cena principal) sem saída vai ao lobby: desligada, ou parada por outro aparelho.
+	var L = _rede.Ligacao
+	var m: Script = c.get_script()
+	_ok(m.abre_sem_saida(L.DESLIGADA, "") and m.abre_sem_saida(L.PARADA, "outro_aparelho")
+		and not m.abre_sem_saida(L.PARADA, "versao") and not m.abre_sem_saida(L.A_LIGAR, "")
+		and not m.abre_sem_saida(L.A_ENTRAR, "") and not m.abre_sem_saida(L.A_ESPERAR, "")
+		and not m.abre_sem_saida(L.NA_MESA, ""),
+		"B-1: abrir desligada ou parada por outro aparelho vai ao lobby; a ligar, na mesa ou parada por versão, fica")
+
+	# B-2: com o servidor fora do ar (A_LIGAR/A_ESPERAR, sem nunca ter estado na mesa) o pedido da vista não sai — e
+	# o alerta da vista («Toque em «Atualizar».») não aparece: a causa é a ligação, que o rótulo já diz.
+	_rede._ja_esteve_na_mesa = false
+	_rede.motivo_parada = ""
+	_rede.estado_ligacao = _rede.Ligacao.A_LIGAR
+	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	var pedidos := [0]
+	var c4 = (load(CENA) as PackedScene).instantiate()
+	c4.enviar_fn = func(_m): return true
+	c4.pedir_vista_fn = func():
+		pedidos[0] += 1
+		return false  # fora da mesa a Rede não deixa sair o pedido
+	c4.pesquisar_fn = func(_t): pass
+	root.add_child(c4)
+	await _quadros(2)
+	c4.set_process(false)
+	for i in 120:  # 31 s de relógio, a alternar A_LIGAR / A_ESPERAR como na medição da D-AUD-16-SEGUIMENTO
+		if i % 40 == 39:
+			var e = _rede.Ligacao.A_ESPERAR if _rede.estado_ligacao == _rede.Ligacao.A_LIGAR else _rede.Ligacao.A_LIGAR
+			_rede.estado_ligacao = e
+			_rede.ligacao_mudou.emit(e)
+		c4._process(0.26)
+	_ok(c4.alertas.is_empty() and c4.get("falha_vista") == "" and c4._espera_vista < 0.0,
+		"B-2: servidor fora do ar, 31 s: 0 alertas (nenhum «%s»), sem falha nem pedido à espera (%s)" % [Textos.ALERTA["vista_sem_pedido"] % 40, c4.alertas])
+	_ok(pedidos[0] == 1, "B-2: fora da mesa o pedido da vista não se repete (o 1.º, ao abrir; %d pedidos)" % pedidos[0])
+	await _quadros(1)
+	_ok(c4._ligacao.is_visible_in_tree() and c4._ligacao.text == Textos.LIGACAO["a_esperar"]
+		and c4._ligacao.get_visible_line_count() == c4._ligacao.get_line_count(),
+		"B-2: o que se vê é o rótulo da ligação, inteiro: «%s» (%d linhas de %d)" % [c4._ligacao.text, c4._ligacao.get_line_count(), c4._ligacao.max_lines_visible])
+	# A ligação chega à mesa: o pedido volta a ser armado, com a conta do zero. Na mesa, o tecto e o alerta (Ordem 49)
+	# ficam como estavam — e agora o texto cabe inteiro no rótulo.
+	_rede.estado_ligacao = _rede.Ligacao.NA_MESA
+	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	pedidos[0] = 0
+	for i in 200:
+		c4._process(0.26)
+	var texto_vista: String = Textos.ALERTA["vista_sem_pedido"] % 40
+	_ok(pedidos[0] == 40 and c4.alertas == [texto_vista],
+		"B-2: na mesa, com o pedido a não sair, o tecto da Ordem 49 continua: 40 pedidos e um alerta (%d, %s)" % [pedidos[0], c4.alertas])
+	await _quadros(1)
+	var al: Label = c4._alerta
+	_ok(al.text.ends_with("Toque em «Atualizar».") and al.get_line_count() <= al.max_lines_visible
+		and al.get_visible_line_count() == al.get_line_count() and al.is_visible_in_tree(),
+		"B-2: o texto do alerta da vista cabe inteiro, «Toque em «Atualizar».» incluído (%d linhas de %d)" % [al.get_line_count(), al.max_lines_visible])
+	var col1: Control = al.get_parent()
+	var enc: Control = c4._encolher
+	_ok(enc.is_visible_in_tree() and enc.position.y + enc.size.y <= col1.size.y + 0.5,
+		"B-2: com o alerta maior, o «◂» ainda cabe na coluna 1 (fundo %.0f de %.0f)" % [enc.position.y + enc.size.y, col1.size.y])
+	root.remove_child(c4)
+	c4.free()
+
+	_rede.motivo_parada = ""
+	_rede.texto_ultimo_erro = erro_antes
+	_rede._ja_esteve_na_mesa = esteve_antes
+	_rede.estado_ligacao = estado_antes
+	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	_ok(not rot.visible, "B: de volta ao estado do teste (desligada): o rótulo some")
+	await _quadros(1)
 
 ## Ordem 29 (V25): a ligação cai com um comando do Mestre em voo e o recibo perde-se. Antes, `_em_voo` só se esvaziava
 ## com o recibo: os botões do cartão ficavam em «A enviar…» e desligados até ao fim da sessão, e o esquema de colocação

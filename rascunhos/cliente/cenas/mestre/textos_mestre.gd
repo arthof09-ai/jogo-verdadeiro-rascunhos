@@ -222,6 +222,9 @@ const ALERTAS := "Alertas: %d"
 const LIGACAO := {
 	"a_ligar": "A ligar à mesa…",
 	"a_esperar": "A ligar à mesa… o servidor não responde; a tentar de novo.",
+	# ORDEM-D-AUD-16-SEGUIMENTO-B (B-1): a PARADA por versão (o servidor não aceita esta versão do jogo). Não se tenta
+	# de novo: o rótulo fica, com ou sem o Mestre já ter estado na mesa.
+	"versao": "Ligação parada: há uma versão nova do jogo. Atualize a página.",
 }
 ## Ordem 60: na folha (aba Figuras), a figura que o mapa não deixa pôr de pé (a recusa do pé, Ordem 58).
 const NAO_DE_PE := " · ✕ não está de pé: %s (o mapa bloqueia a casa)"
@@ -241,6 +244,8 @@ const ALERTA := {
 	"aviso_motor_qual": "Sala restaurada com outra versão do motor — %s. «Recomeçar» não vai funcionar.",
 	# Ordem 49 (A): o pedido da vista não saiu até ao tecto (mestre.gd, TENTATIVAS_VISTA_MAX).
 	"vista_sem_pedido": "A vista da mesa não se pediu (%d tentativas). Toque em «Atualizar».",
+	# ORDEM-D-AUD-16-SEGUIMENTO-B (B-1): o servidor não aceita esta versão (ERRO «versao»), como no lobby e no HUD.
+	"versao": "Há uma versão nova do jogo. Atualize a página.",
 }
 
 ## Ordem 34 (N27-2, sentença da bancada): cada nome de `quaisDiferem` em palavra simples (o hash nunca vai ao ecrã).
