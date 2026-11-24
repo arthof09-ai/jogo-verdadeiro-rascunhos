@@ -11,8 +11,9 @@ provas (`web/`).
 ## O que é preciso
 
 - O PC (o servidor) e o telemóvel do Mestre (Android) **na mesma rede Wi-Fi de casa**. O PC pode estar no cabo.
-- No PC: o repositório na ponta desta ordem e o export web em `build/web/`. Baixe o artefacto `export-web` do último
-  CI verde do workflow «Aparelhos (F2)», ou exporte com o Godot 4.7.2:
+- No PC: o repositório na ponta desta ordem e o export web em `build/web/`. Exporte a web com o Godot 4.7.2
+  (via principal até o workflow activar); quando houver um CI verde do workflow «Aparelhos (F2)», pode baixar
+  o artefacto `export-web` de lá:
   `Godot --headless --path rascunhos/cliente --export-release Web`.
 - Um cronómetro (o do telemóvel de outra pessoa, ou o relógio do PC).
 - Só as fichas fictícias de bancada: «Espadachim de Bancada» e «Arqueira de Bancada».
@@ -61,14 +62,17 @@ provas (`web/`).
 
 ## Porque é que já há confiança (sem a prova da casa)
 
-- O `rede-3-bots` (CI e PC): 25 s sem rede, a reentrada com o token e o `lastSeq`, os eventos que faltavam sem
-  snapshot, o hash lógico igual ao da corrida sem corte. Na corrida do PC de 24/11 a reentrada demorou **6,45 s** (A)
+- O `rede-3-bots` (PC): 25 s sem rede, a reentrada com o token e o `lastSeq`, os eventos que faltavam sem
+  snapshot, o hash lógico igual ao da corrida sem corte. Na corrida do PC de 24/11 a reentrada demorou **6,45
+  s** (A)
   e **3,21 s** (B) depois de a rede voltar (`../rede-3-bots/prova-3-bots-pc.log`).
 - O cliente Godot volta a tentar com a espera 1-2-4-8 s (tecto 8 s, era 30 s). Na web, o evento `online` do
   navegador faz tentar logo. O pior caso depois de a rede voltar fica abaixo de 10 s.
-- O export web recebe o `ROOM_SNAPSHOT` no Chromium (PC e CI). O `.exe` do Windows recebe-o no PC (`../windows/`) e no
-  runner Windows do CI. O APK x86_64 recebe-o no emulador do CI (job `android`). No PC não há emulador nem telemóvel
-  no `adb`, por isso o APK não correu aqui.
+- O export web recebe o `ROOM_SNAPSHOT` no Chromium no PC; o `.exe` do Windows recebe-o no PC (`../windows/`).
+  O APK x86_64 ainda não correu em lado nenhum. O que falta do CI fica para quando o workflow «Aparelhos (F2)»
+  for activado: o pronto no Chromium do CI, o `.exe` no runner Windows do CI, o APK no emulador do CI (job
+  `android`) e o `rede-3-bots` no CI. No PC não há emulador nem telemóvel no `adb`, por isso o APK não correu
+  aqui.
 - **A guarda do Android no telemóvel:** o link do QR é `http://192.168.x.y:8080/`, e o Chrome do Android abre-o como
   qualquer página. A guarda `ws://` só-rede-local vale para o APK, não para o navegador. O telemóvel do Mestre entra
   pela web e não instala nada.

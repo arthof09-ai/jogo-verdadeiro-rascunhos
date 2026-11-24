@@ -1,6 +1,9 @@
 # ESTADO-FINAL — ORDEM-PLANO-2-F2 (cada um no seu aparelho: JV2.1b, JV3.4, V1.0, JV3.4b)
 
-**Estado: FEITA COM 2 PENDENTES.**
+**Estado: FEITA, COM 2 BLOQUEADORES E 5 SUB-ITENS POR CUMPRIR.** Os 2 bloqueadores: (1) activar o workflow
+«Aparelhos (F2)» (falta o âmbito `workflow` na credencial do PC); (2) a JV3.4b (precisa do telemóvel do
+Mestre). Os 5 sub-itens por cumprir: o `ROOM_SNAPSHOT` no Android, o pronto no Chromium do CI, o
+`aparelhos_f2.gd` no CI, a V1.0 no telemóvel do Mestre e as fotos dos aparelhos reais.
 
 O Mestre arranca a mesa no PC, e o terminal e a página `/qr` mostram o QR. A jogadora lê o QR (ou abre o link no PC)
 e entra no lobby pelo navegador, sem instalar nada. O jogo web vem do mesmo servidor e da mesma origem do
@@ -67,12 +70,30 @@ telemóvel está pendente (§5.2).
 
 | Aceite da ordem | Resultado |
 |---|---|
-| O export web diz «pronto» no Chromium sem janela em ≤ 30 s (JV0.2) | **7,9 s** com a GPU, **4,5 s** com o SwiftShader (como no CI) |
-| A web, o Windows e o Android recebem o `ROOM_SNAPSHOT` (JV2.1b) | **Web: sim** (`seq=5 fase=combate plataforma=Web`). **Windows: sim**, o `.exe` exportado, 2,1 s depois de arrancar. **Android: não provado.** O APK constrói (manifesto e ABIs certos), mas não há onde o correr no PC. Fica para o job `android` do CI quando o workflow for activado |
-| 3 bots e 25 s sem rede: hash lógico igual e `seq` contínuo (JV3.4) | **PROVA OK**: hash `ea32c627…` igual nas duas corridas. Seq contínuo nos três (A 6…37, B 7…37, C 8…37; 0 buracos, 0 repetidos). A e B voltaram com o `lastSeq` 11 e receberam do 12 em diante, sem snapshot. Reentrada a **6,45 s** e **3,21 s** |
-| O QR | **15 de 15** lidos pelo OpenCV. A página `/qr` fotografada dá o link certo |
+| O export web diz «pronto» no Chromium sem janela em ≤ 30 s (JV0.2) | **7,9 s desde a navegação (8,6 s desde
+o arranque do harness)** com a GPU, **4,5 s** com o SwiftShader (simulação do CI) |
+| A web, o Windows e o Android recebem o `ROOM_SNAPSHOT` (JV2.1b) | **Web: sim** (`seq=5 fase=combate
+plataforma=Web`). **Windows: sim**, o `.exe` exportado, 2,1 s depois de arrancar. **Android: não provado.** O
+APK constrói (manifesto e ABIs certos), mas não há onde o correr no PC. Fica para o job `android` do CI quando
+o workflow for activado. O APK é de depuração: `debuggable=true` e pede `android.permission.DUMP`, além das
+três permissões listadas. O log do export Android traz ainda `ERROR: No project icon specified` (o projecto
+não tem ícone) e `Could not find version of build tools that matches Target SDK, using 34.0.0` — cosmético: o
+APK saiu assinado. Nos logs só aparece a build-tools 34.0.0. |
+| 3 bots e 25 s sem rede: hash lógico igual e `seq` contínuo (JV3.4) | **PROVA OK**: hash `ea32c627…` igual
+nas duas corridas. Seq contínuo nos três (A 6…37, B 7…37, C 8…37; 0 buracos, 0 repetidos). A e B voltaram com
+o `lastSeq` 11 e receberam do 12 em diante, sem snapshot. Reentrada a **6,45 s** e **3,21 s**. Nota: o
+`hashEstadoCompleto` difere entre a corrida de controlo e a de queda — é esperado: cada JOIN gera um token
+novo e `epoch += 1` (`sala.js`), por isso duas corridas nunca dão o mesmo hash completo. A prova da igualdade
+do jogo é o `hashLogico` (igual) mais o `seq` contínuo. `eventosPerdidosNoCorte` é `seqNaVolta − seqNoCorte`
+para todos os bots: no C (que não caiu) é o número de eventos que o servidor emitiu durante o corte, não
+eventos perdidos por ele. O C não perdeu nenhum evento. |
+| O QR | Decodificação independente por OpenCV: **15/15 QR lidos certos** (máscaras 0, 2, 3, 6, 7; versões
+1–10) — **5 casos reais da mesa + 10 de capacidade** (enchimento sintético até à capacidade da versão). As
+máscaras 1, 4 e 5 não foram exercidas. A página `/qr` fotografada dá o link certo |
 | As duas jogadoras entram pelo QR sem instalar nada; reconexão ≤ 30 s (JV3.4b) | **PENDENTE**: precisa do telemóvel do Mestre |
-| O JSON da V1.0 traz todos os campos; repetir dá ±10 % | **No PC: sim.** 60,2 → 60,2 FPS mediana, 55,9 → 55,6 p5, 87 → 87 chamadas (RTX 4060, Chromium). **No telemóvel do Mestre: PENDENTE** (passo 6 da JV3.4b) |
+| O JSON da V1.0 traz todos os campos; repetir dá ±10 % | **No PC: sim.** 60,2 → 60,2 FPS mediana, 55,9 → 55,6
+p5, 87 → 87 chamadas (RTX 4060, Chromium). **No telemóvel do Mestre: PENDENTE** (passo 6 da JV3.4b).
+`viewport: 2184×1080` é o viewport do motor; a janela CSS era 1264×625 — o aceite pede só viewport + DPR. |
 | Relatório de 5 blocos, com fotos dos aparelhos e logs | Este ESTADO-FINAL e os logs. As fotos dos aparelhos reais ficam para a JV3.4b. Há capturas do Chromium |
 | Suites verdes e canário a 10/10 | Sim (§3) |
 
@@ -85,7 +106,8 @@ argumento vai agora entre aspas, na prova local e no job `windows` do workflow.
 
 | Suite | Resultado | Na D-AUD-01-CORRECCOES-2 |
 |---|---|---|
-| servidor (`testes/*.test.mjs`) | **435/435** (6 novos da F2) | 421 |
+| servidor (`testes/*.test.mjs`) | **435/435 no PC** (6 novos da F2); **425 executados + 10 saltos no CI** (os
+10 saltos são os testes de protocolo/disco, que correm no job `protocolo` do CI) | 421 |
 | motor real | 2/2 | 2/2 |
 | prova da caixa | PROVA OK | PROVA OK |
 | `aparelhos_f2` (novo) | **46 de 46** | — |
@@ -101,8 +123,9 @@ argumento vai agora entre aspas, na prova local e no job `windows` do workflow.
 
 Todas deram exit 0, com 0 `SCRIPT ERROR / Parse Error / Compile Error`.
 
-**Nota sobre o servidor.** Corri primeiro como o CI, com `--permission --allow-fs-read`. Deu 428/435: os 7 que
-falharam são testes antigos (V20 e ordem 30) que abrem uma porta. O Node deste PC é o 26, que já filtra a rede com
+**Nota sobre o servidor.** Corri primeiro como o CI, com `--permission --allow-fs-read`. Deu **418 pass, 7
+fail, 10 skipped (de 435)**: os 7 que falharam são testes antigos (V20 e ordem 30) que abrem uma porta. O Node
+deste PC é o 26, que já filtra a rede com
 `--permission` (`ERR_ACCESS_DENIED`, `--allow-net`); o Node 24 do CI não filtra. Os 6 testes da F2 passaram mesmo
 assim. O log fica em `suites/servidor-com-permission-node-local.log`. A corrida de referência é a sem `--permission`,
 como nas ordens anteriores.
@@ -110,7 +133,9 @@ como nas ordens anteriores.
 ## 4. Commits
 
 - `976f897`: o código (cliente, servidor, aparelhos e testes) e o workflow em `ci-pendente/`.
-- `525e314`: as listas da retoma sincronizadas (`actualizar-listas.py`: 15 novos, 0 tirados). Fecha também o
+- `525e314`: as listas da retoma sincronizadas (`actualizar-listas.py`: **16 novos, 0 tirados, 4 mudados**).
+  Nota: a mensagem do commit `525e314` diz «15 novos» por engano; o número certo é 16 (cabeçalho do
+  `depois.txt`: 418 → 434 ficheiros). Fecha também o
   `retoma-pc` vermelho da ponta `4052913` (run 45305120396: «CLONE DIFERENTE: rascunhos/cliente/testes/pecas_mestre.gd»).
   A errata A1-A3 mudou esse ficheiro sem passar o guião. O `project.godot` entra no `antes.txt`, porque o ramo passa a
   mudá-lo (o autoload `Medicao`).
