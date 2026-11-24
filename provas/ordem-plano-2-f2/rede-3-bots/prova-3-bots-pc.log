@@ -1,0 +1,29 @@
+[   0.1 s] CONTROLO: as 3 jogadoras na mesa
+[   0.1 s] CONTROLO: o Mestre colocou 2 criaturas
+[   0.5 s] CONTROLO: rodada 7, hash lógico ea32c6278dcfc60a…
+[   0.5 s] QUEDA: as 3 jogadoras na mesa
+[   0.5 s] QUEDA: Wi-Fi de A e B DESLIGADO (25 s), na vez de C (rodada 2)
+[   0.5 s] QUEDA: o Mestre colocou 2 criaturas
+[  25.5 s] QUEDA: Wi-Fi de A e B de volta
+[  32.5 s] QUEDA: rodada 7, hash lógico ea32c6278dcfc60a…
+  ok    hash lógico igual nas duas corridas (ea32c6278dcfc60a…)
+  ok    C jogou a vez dela durante o corte (2 envio(s) de «encerrar»; a revisão velha volta a tentar)
+  ok    A: seq contínuo (32 eventos, 6…37; buracos 0, repetidos 0)
+  ok    A: o último seq (37) é o do servidor (37)
+  ok    A: jogou 6 vezes (no controlo, 6), 0 recusadas
+  ok    A: caiu (1) e voltou a entrar (2 entradas)
+  ok    A: o servidor emitiu-lhe 4 eventos durante o corte
+  ok    A: voltou com lastSeq 11 e recebeu os que faltavam a partir do 12 (sem snapshot: true)
+  ok    A: entrou 6.45 s depois de a rede voltar (≤ 30 s)
+  ok    B: seq contínuo (31 eventos, 7…37; buracos 0, repetidos 0)
+  ok    B: o último seq (37) é o do servidor (37)
+  ok    B: jogou 6 vezes (no controlo, 6), 0 recusadas
+  ok    B: caiu (1) e voltou a entrar (2 entradas)
+  ok    B: o servidor emitiu-lhe 4 eventos durante o corte
+  ok    B: voltou com lastSeq 11 e recebeu os que faltavam a partir do 12 (sem snapshot: true)
+  ok    B: entrou 3.21 s depois de a rede voltar (≤ 30 s)
+  ok    C: seq contínuo (30 eventos, 8…37; buracos 0, repetidos 0)
+  ok    C: o último seq (37) é o do servidor (37)
+  ok    C: jogou 7 vezes (no controlo, 7), 0 recusadas
+  ok    C: não caiu
+PROVA OK: 3 bots, 25 s sem rede, hash lógico igual, seq contínuo

@@ -1,0 +1,237 @@
+{
+ "formato": "prova-web/1",
+ "origem": "http://127.0.0.1:62189",
+ "resultados": {
+  "prontoS": 7.869,
+  "snapshot": "rede: ROOM_SNAPSHOT seq=5 fase=combate plataforma=Web",
+  "medicoes": [
+   {
+    "json": {
+     "aquecimento_s": 5,
+     "carimbo": "2026-11-24T04:41:00Z",
+     "chamadas_max": 89,
+     "chamadas_mediana": 87,
+     "dpr": 1,
+     "formato": "medicao-v1.0/1",
+     "fps_mediana": 60.2,
+     "fps_p5": 55.9,
+     "gpu": "WebKit WebGL",
+     "gpu_api": "OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))",
+     "gpu_fabricante": "WebKit",
+     "gpu_webgl": "Google Inc. (NVIDIA) | ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+     "janela_px": [
+      1264,
+      625
+     ],
+     "janela_s": 55,
+     "motor": "4.7.2-stable (official)",
+     "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+     "plataforma": "Web",
+     "quadros": 3298,
+     "renderizador": "gl_compatibility",
+     "viewport": [
+      2184,
+      1080
+     ],
+     "viewport_css": "1264x625"
+    },
+    "envio": "medicao-v1.0 envio 204"
+   },
+   {
+    "json": {
+     "aquecimento_s": 5,
+     "carimbo": "2026-11-24T04:42:02Z",
+     "chamadas_max": 89,
+     "chamadas_mediana": 87,
+     "dpr": 1,
+     "formato": "medicao-v1.0/1",
+     "fps_mediana": 60.2,
+     "fps_p5": 55.6,
+     "gpu": "WebKit WebGL",
+     "gpu_api": "OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))",
+     "gpu_fabricante": "WebKit",
+     "gpu_webgl": "Google Inc. (NVIDIA) | ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+     "janela_px": [
+      1264,
+      625
+     ],
+     "janela_s": 55,
+     "motor": "4.7.2-stable (official)",
+     "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+     "plataforma": "Web",
+     "quadros": 3297,
+     "renderizador": "gl_compatibility",
+     "viewport": [
+      2184,
+      1080
+     ],
+     "viewport_css": "1264x625"
+    },
+    "envio": "medicao-v1.0 envio 204"
+   }
+  ],
+  "ficheirosNoServidor": [
+   {
+    "recebida": "2026-11-24T04:41:00.874Z",
+    "ip": "127.0.0.1",
+    "medicao": {
+     "aquecimento_s": 5,
+     "carimbo": "2026-11-24T04:41:00Z",
+     "chamadas_max": 89,
+     "chamadas_mediana": 87,
+     "dpr": 1,
+     "formato": "medicao-v1.0/1",
+     "fps_mediana": 60.2,
+     "fps_p5": 55.9,
+     "gpu": "WebKit WebGL",
+     "gpu_api": "OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))",
+     "gpu_fabricante": "WebKit",
+     "gpu_webgl": "Google Inc. (NVIDIA) | ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+     "janela_px": [
+      1264,
+      625
+     ],
+     "janela_s": 55,
+     "motor": "4.7.2-stable (official)",
+     "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+     "plataforma": "Web",
+     "quadros": 3298,
+     "renderizador": "gl_compatibility",
+     "viewport": [
+      2184,
+      1080
+     ],
+     "viewport_css": "1264x625"
+    }
+   },
+   {
+    "recebida": "2026-11-24T04:42:02.501Z",
+    "ip": "127.0.0.1",
+    "medicao": {
+     "aquecimento_s": 5,
+     "carimbo": "2026-11-24T04:42:02Z",
+     "chamadas_max": 89,
+     "chamadas_mediana": 87,
+     "dpr": 1,
+     "formato": "medicao-v1.0/1",
+     "fps_mediana": 60.2,
+     "fps_p5": 55.6,
+     "gpu": "WebKit WebGL",
+     "gpu_api": "OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))",
+     "gpu_fabricante": "WebKit",
+     "gpu_webgl": "Google Inc. (NVIDIA) | ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+     "janela_px": [
+      1264,
+      625
+     ],
+     "janela_s": 55,
+     "motor": "4.7.2-stable (official)",
+     "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+     "plataforma": "Web",
+     "quadros": 3297,
+     "renderizador": "gl_compatibility",
+     "viewport": [
+      2184,
+      1080
+     ],
+     "viewport_css": "1264x625"
+    }
+   }
+  ]
+ },
+ "consola": [
+  {
+   "s": 1.26,
+   "texto": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+  },
+  {
+   "s": 3.56,
+   "texto": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+  },
+  {
+   "s": 3.8,
+   "texto": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+  },
+  {
+   "s": 8.47,
+   "texto": "[floresta] pronta em 4184 ms | {\"ancestral_altura_m\":260.0,\"ancestral_cimo_medido_m\":259.8,\"ancestral_dist_m\":580.0,\"ancestral_largura_medida_m\":412.3,\"ancestral_outeiro_tri\":22820,\"ancestral_pagodes\":42,\"ancestral_pagodes_no_ar\":0,\"ancestral_partes\":{\"construcao\":15368,\"folha\":57720,\"luz\":2160,\"madeira\":17069},\"ancestral_tri\":92317,\"anel_arvores\":720,\"anel_longe_tri\":6912,\"anel_tri\":169596,\"arvores_arena\":24,\"arvores_orla\":244,\"arvores_tri\":225536,\"carga_ms\":4184,\"casas\":2500,\"casas_bloqueadas\":283,\"casas_livres\":2217,\"casas_livres_isoladas\":0,\"centro_livre\":true,\"erros\":0,\"estrato_arbustos\":96,\"estrato_fetos\":240,\"estrato_folhaslargas\":210,\"estrato_silvados\":44,\"estrato_tri\":162944,\"hastes_espiga\":1303,\"hastes_flor\":927,\"hastes_junco\":48,\"hastes_tri\":39998,\"lago_area_m2\":453.4,\"lago_estrato_tirado\":14,\"lago_funda_m2\":288.8,\"lago_fundura_max_m\":2.52,\"lago_nivel_m\":-1.522,\"lago_rasa_m2\":104.2,\"lago_tri\":6902,\"mapa_chao_cozeduras\":1,\"marcos_tri\":2116,\"relva_alto_malha\":[0.997865557670593,0.591062247753143],\"relva_blocos\":50,\"relva_tri\":771120,\"relva_tufos\":42840,\"rochas\":94,\"rochas_tri\":20160,\"sombra_lancadores\":2003,\"terreno_fino_tri\":25088,\"terreno_largo_tri\":12376,\"zona_tirados_arvores\":2,\"zona_tirados_estrato\":5,\"zona_tirados_rochas\":24,\"zona_tronco_tombado_m\":12.7}"
+  },
+  {
+   "s": 8.61,
+   "texto": "pronto"
+  },
+  {
+   "s": 8.65,
+   "texto": "pronto"
+  },
+  {
+   "s": 11.53,
+   "texto": "rede: ROOM_SNAPSHOT seq=5 fase=combate plataforma=Web"
+  },
+  {
+   "s": 11.55,
+   "texto": "[floresta] pronta em 72 ms | {\"ancestral_altura_m\":260.0,\"ancestral_cimo_medido_m\":259.8,\"ancestral_dist_m\":580.0,\"ancestral_largura_medida_m\":412.3,\"ancestral_outeiro_tri\":22820,\"ancestral_pagodes\":42,\"ancestral_pagodes_no_ar\":0,\"ancestral_partes\":{\"construcao\":15368,\"folha\":57720,\"luz\":2160,\"madeira\":17069},\"ancestral_tri\":92317,\"anel_arvores\":720,\"anel_longe_tri\":6912,\"anel_tri\":169596,\"arvores_arena\":24,\"arvores_orla\":244,\"arvores_tri\":225536,\"carga_ms\":72,\"casas\":2500,\"casas_bloqueadas\":283,\"casas_livres\":2217,\"casas_livres_isoladas\":0,\"centro_livre\":true,\"erros\":0,\"estrato_arbustos\":96,\"estrato_fetos\":240,\"estrato_folhaslargas\":210,\"estrato_silvados\":44,\"estrato_tri\":162944,\"hastes_espiga\":1303,\"hastes_flor\":927,\"hastes_junco\":48,\"hastes_tri\":39998,\"lago_area_m2\":453.4,\"lago_estrato_tirado\":14,\"lago_funda_m2\":288.8,\"lago_fundura_max_m\":2.52,\"lago_nivel_m\":-1.522,\"lago_rasa_m2\":104.2,\"lago_tri\":6902,\"mapa_chao_cozeduras\":1,\"marcos_tri\":2116,\"relva_alto_malha\":[0.997865557670593,0.591062247753143],\"relva_blocos\":50,\"relva_tri\":771120,\"relva_tufos\":42840,\"rochas\":94,\"rochas_tri\":20160,\"sombra_lancadores\":2003,\"terreno_fino_tri\":25088,\"terreno_largo_tri\":12376,\"zona_tirados_arvores\":2,\"zona_tirados_estrato\":5,\"zona_tirados_rochas\":24,\"zona_tronco_tombado_m\":12.7}"
+  },
+  {
+   "s": 11.68,
+   "texto": "pronto"
+  },
+  {
+   "s": 21.56,
+   "texto": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+  },
+  {
+   "s": 21.65,
+   "texto": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+  },
+  {
+   "s": 21.75,
+   "texto": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+  },
+  {
+   "s": 25.89,
+   "texto": "[floresta] pronta em 3782 ms | {\"ancestral_altura_m\":260.0,\"ancestral_cimo_medido_m\":259.8,\"ancestral_dist_m\":580.0,\"ancestral_largura_medida_m\":412.3,\"ancestral_outeiro_tri\":22820,\"ancestral_pagodes\":42,\"ancestral_pagodes_no_ar\":0,\"ancestral_partes\":{\"construcao\":15368,\"folha\":57720,\"luz\":2160,\"madeira\":17069},\"ancestral_tri\":92317,\"anel_arvores\":720,\"anel_longe_tri\":6912,\"anel_tri\":169596,\"arvores_arena\":24,\"arvores_orla\":244,\"arvores_tri\":225536,\"carga_ms\":3782,\"casas\":2500,\"casas_bloqueadas\":283,\"casas_livres\":2217,\"casas_livres_isoladas\":0,\"centro_livre\":true,\"erros\":0,\"estrato_arbustos\":96,\"estrato_fetos\":240,\"estrato_folhaslargas\":210,\"estrato_silvados\":44,\"estrato_tri\":162944,\"hastes_espiga\":1303,\"hastes_flor\":927,\"hastes_junco\":48,\"hastes_tri\":39998,\"lago_area_m2\":453.4,\"lago_estrato_tirado\":14,\"lago_funda_m2\":288.8,\"lago_fundura_max_m\":2.52,\"lago_nivel_m\":-1.522,\"lago_rasa_m2\":104.2,\"lago_tri\":6902,\"mapa_chao_cozeduras\":1,\"marcos_tri\":2116,\"relva_alto_malha\":[0.997865557670593,0.591062247753143],\"relva_blocos\":50,\"relva_tri\":771120,\"relva_tufos\":42840,\"rochas\":94,\"rochas_tri\":20160,\"sombra_lancadores\":2003,\"terreno_fino_tri\":25088,\"terreno_largo_tri\":12376,\"zona_tirados_arvores\":2,\"zona_tirados_estrato\":5,\"zona_tirados_rochas\":24,\"zona_tronco_tombado_m\":12.7}"
+  },
+  {
+   "s": 26.02,
+   "texto": "pronto"
+  },
+  {
+   "s": 82.1,
+   "texto": "medicao-v1.0 {\"aquecimento_s\":5.0,\"carimbo\":\"2026-11-24T04:41:00Z\",\"chamadas_max\":89,\"chamadas_mediana\":87,\"dpr\":1.0,\"formato\":\"medicao-v1.0/1\",\"fps_mediana\":60.2,\"fps_p5\":55.9,\"gpu\":\"WebKit WebGL\",\"gpu_api\":\"OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))\",\"gpu_fabricante\":\"WebKit\",\"gpu_webgl\":\"Google Inc. (NVIDIA) | ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"janela_px\":[1264,625],\"janela_s\":55.0,\"motor\":\"4.7.2-stable (official)\",\"navegador\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36\",\"plataforma\":\"Web\",\"quadros\":3298,\"renderizador\":\"gl_compatibility\",\"viewport\":[2184,1080],\"viewport_css\":\"1264x625\"}"
+  },
+  {
+   "s": 82.13,
+   "texto": "medicao-v1.0 envio 204"
+  },
+  {
+   "s": 83.15,
+   "texto": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+  },
+  {
+   "s": 83.25,
+   "texto": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+  },
+  {
+   "s": 83.34,
+   "texto": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+  },
+  {
+   "s": 87.77,
+   "texto": "[floresta] pronta em 4039 ms | {\"ancestral_altura_m\":260.0,\"ancestral_cimo_medido_m\":259.8,\"ancestral_dist_m\":580.0,\"ancestral_largura_medida_m\":412.3,\"ancestral_outeiro_tri\":22820,\"ancestral_pagodes\":42,\"ancestral_pagodes_no_ar\":0,\"ancestral_partes\":{\"construcao\":15368,\"folha\":57720,\"luz\":2160,\"madeira\":17069},\"ancestral_tri\":92317,\"anel_arvores\":720,\"anel_longe_tri\":6912,\"anel_tri\":169596,\"arvores_arena\":24,\"arvores_orla\":244,\"arvores_tri\":225536,\"carga_ms\":4039,\"casas\":2500,\"casas_bloqueadas\":283,\"casas_livres\":2217,\"casas_livres_isoladas\":0,\"centro_livre\":true,\"erros\":0,\"estrato_arbustos\":96,\"estrato_fetos\":240,\"estrato_folhaslargas\":210,\"estrato_silvados\":44,\"estrato_tri\":162944,\"hastes_espiga\":1303,\"hastes_flor\":927,\"hastes_junco\":48,\"hastes_tri\":39998,\"lago_area_m2\":453.4,\"lago_estrato_tirado\":14,\"lago_funda_m2\":288.8,\"lago_fundura_max_m\":2.52,\"lago_nivel_m\":-1.522,\"lago_rasa_m2\":104.2,\"lago_tri\":6902,\"mapa_chao_cozeduras\":1,\"marcos_tri\":2116,\"relva_alto_malha\":[0.997865557670593,0.591062247753143],\"relva_blocos\":50,\"relva_tri\":771120,\"relva_tufos\":42840,\"rochas\":94,\"rochas_tri\":20160,\"sombra_lancadores\":2003,\"terreno_fino_tri\":25088,\"terreno_largo_tri\":12376,\"zona_tirados_arvores\":2,\"zona_tirados_estrato\":5,\"zona_tirados_rochas\":24,\"zona_tronco_tombado_m\":12.7}"
+  },
+  {
+   "s": 87.91,
+   "texto": "pronto"
+  },
+  {
+   "s": 143.73,
+   "texto": "medicao-v1.0 {\"aquecimento_s\":5.0,\"carimbo\":\"2026-11-24T04:42:02Z\",\"chamadas_max\":89,\"chamadas_mediana\":87,\"dpr\":1.0,\"formato\":\"medicao-v1.0/1\",\"fps_mediana\":60.2,\"fps_p5\":55.6,\"gpu\":\"WebKit WebGL\",\"gpu_api\":\"OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))\",\"gpu_fabricante\":\"WebKit\",\"gpu_webgl\":\"Google Inc. (NVIDIA) | ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"janela_px\":[1264,625],\"janela_s\":55.0,\"motor\":\"4.7.2-stable (official)\",\"navegador\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36\",\"plataforma\":\"Web\",\"quadros\":3297,\"renderizador\":\"gl_compatibility\",\"viewport\":[2184,1080],\"viewport_css\":\"1264x625\"}"
+  },
+  {
+   "s": 143.75,
+   "texto": "medicao-v1.0 envio 204"
+  }
+ ],
+ "falhas": []
+}

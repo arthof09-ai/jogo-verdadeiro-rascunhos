@@ -1,0 +1,9 @@
+    A: package="org.assimilacao.mesa" (Raw: "org.assimilacao.mesa")
+        A: http://schemas.android.com/apk/res/android:debuggable(0x0101000f)=true
+            A: http://schemas.android.com/apk/res/android:permission(0x01010006)="android.permission.DUMP" (Raw: "android.permission.DUMP")
+      E: uses-permission (line=0)
+        A: http://schemas.android.com/apk/res/android:name(0x01010003)="android.permission.ACCESS_NETWORK_STATE" (Raw: "android.permission.ACCESS_NETWORK_STATE")
+      E: uses-permission (line=0)
+        A: http://schemas.android.com/apk/res/android:name(0x01010003)="android.permission.ACCESS_WIFI_STATE" (Raw: "android.permission.ACCESS_WIFI_STATE")
+      E: uses-permission (line=0)
+        A: http://schemas.android.com/apk/res/android:name(0x01010003)="android.permission.INTERNET" (Raw: "android.permission.INTERNET")

@@ -1,0 +1,201 @@
+{
+ "formato": "prova-3-bots/1",
+ "corteS": 25,
+ "rodadas": 6,
+ "controlo": {
+  "corrida": "CONTROLO",
+  "rodadaFinal": 7,
+  "hashLogico": "ea32c6278dcfc60a491fd88786194e72dd6badd13aead5d94fde812cdf13fd5d",
+  "hashEstadoCompleto": "e80f11e2f4b681051691ddb0a1b1161fe84da06dc34a80bccfa5a47fc84d6f32",
+  "corte": null,
+  "bots": [
+   {
+    "bot": "A",
+    "nome": "Espadachim de Bancada",
+    "entradas": 1,
+    "quedas": 0,
+    "tentativas": 1,
+    "eventos": 32,
+    "primeiroSeq": 6,
+    "ultimoSeq": 37,
+    "seqDoServidor": 37,
+    "buracos": [],
+    "repetidos": [],
+    "snapshots": 1,
+    "vezesJogadas": 6,
+    "recusas": 0,
+    "revisoesAntigas": 0,
+    "sincronizacoes": [
+     {
+      "lastSeqEnviado": null,
+      "primeiroSeq": 6,
+      "eventos": 32,
+      "snapshot": true
+     }
+    ],
+    "eventosPerdidosNoCorte": null,
+    "reconexaoS": null
+   },
+   {
+    "bot": "B",
+    "nome": "Arqueira de Bancada",
+    "entradas": 1,
+    "quedas": 0,
+    "tentativas": 1,
+    "eventos": 31,
+    "primeiroSeq": 7,
+    "ultimoSeq": 37,
+    "seqDoServidor": 37,
+    "buracos": [],
+    "repetidos": [],
+    "snapshots": 1,
+    "vezesJogadas": 6,
+    "recusas": 0,
+    "revisoesAntigas": 0,
+    "sincronizacoes": [
+     {
+      "lastSeqEnviado": null,
+      "primeiroSeq": 7,
+      "eventos": 31,
+      "snapshot": true
+     }
+    ],
+    "eventosPerdidosNoCorte": null,
+    "reconexaoS": null
+   },
+   {
+    "bot": "C",
+    "nome": "Batedora de Bancada",
+    "entradas": 1,
+    "quedas": 0,
+    "tentativas": 1,
+    "eventos": 30,
+    "primeiroSeq": 8,
+    "ultimoSeq": 37,
+    "seqDoServidor": 37,
+    "buracos": [],
+    "repetidos": [],
+    "snapshots": 1,
+    "vezesJogadas": 7,
+    "recusas": 0,
+    "revisoesAntigas": 1,
+    "sincronizacoes": [
+     {
+      "lastSeqEnviado": null,
+      "primeiroSeq": 8,
+      "eventos": 30,
+      "snapshot": true
+     }
+    ],
+    "eventosPerdidosNoCorte": null,
+    "reconexaoS": null
+   }
+  ]
+ },
+ "queda": {
+  "corrida": "QUEDA",
+  "rodadaFinal": 7,
+  "hashLogico": "ea32c6278dcfc60a491fd88786194e72dd6badd13aead5d94fde812cdf13fd5d",
+  "hashEstadoCompleto": "42d62c4d97636216423eb3b022f3b703c6f483e92423c29aedee31fc43ddb272",
+  "corte": {
+   "segundos": 25,
+   "jogadasDeCDuranteOCorte": 2
+  },
+  "bots": [
+   {
+    "bot": "A",
+    "nome": "Espadachim de Bancada",
+    "entradas": 2,
+    "quedas": 1,
+    "tentativas": 7,
+    "eventos": 32,
+    "primeiroSeq": 6,
+    "ultimoSeq": 37,
+    "seqDoServidor": 37,
+    "buracos": [],
+    "repetidos": [],
+    "snapshots": 1,
+    "vezesJogadas": 6,
+    "recusas": 0,
+    "revisoesAntigas": 0,
+    "sincronizacoes": [
+     {
+      "lastSeqEnviado": null,
+      "primeiroSeq": 6,
+      "eventos": 6,
+      "snapshot": true
+     },
+     {
+      "lastSeqEnviado": 11,
+      "primeiroSeq": 12,
+      "eventos": 26,
+      "snapshot": false
+     }
+    ],
+    "eventosPerdidosNoCorte": 4,
+    "reconexaoS": 6.45
+   },
+   {
+    "bot": "B",
+    "nome": "Arqueira de Bancada",
+    "entradas": 2,
+    "quedas": 1,
+    "tentativas": 7,
+    "eventos": 31,
+    "primeiroSeq": 7,
+    "ultimoSeq": 37,
+    "seqDoServidor": 37,
+    "buracos": [],
+    "repetidos": [],
+    "snapshots": 1,
+    "vezesJogadas": 6,
+    "recusas": 0,
+    "revisoesAntigas": 0,
+    "sincronizacoes": [
+     {
+      "lastSeqEnviado": null,
+      "primeiroSeq": 7,
+      "eventos": 5,
+      "snapshot": true
+     },
+     {
+      "lastSeqEnviado": 11,
+      "primeiroSeq": 12,
+      "eventos": 26,
+      "snapshot": false
+     }
+    ],
+    "eventosPerdidosNoCorte": 4,
+    "reconexaoS": 3.21
+   },
+   {
+    "bot": "C",
+    "nome": "Batedora de Bancada",
+    "entradas": 1,
+    "quedas": 0,
+    "tentativas": 1,
+    "eventos": 30,
+    "primeiroSeq": 8,
+    "ultimoSeq": 37,
+    "seqDoServidor": 37,
+    "buracos": [],
+    "repetidos": [],
+    "snapshots": 1,
+    "vezesJogadas": 7,
+    "recusas": 0,
+    "revisoesAntigas": 1,
+    "sincronizacoes": [
+     {
+      "lastSeqEnviado": null,
+      "primeiroSeq": 8,
+      "eventos": 30,
+      "snapshot": true
+     }
+    ],
+    "eventosPerdidosNoCorte": 4,
+    "reconexaoS": null
+   }
+  ]
+ },
+ "falhas": []
+}

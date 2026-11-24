@@ -1,0 +1,91 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+== a barra de baixo não muda ==
+  ok    a barra continua Ataque, Mover, Consumível e Encerrar ["BotaoAtaque", "BotaoMover", "BotaoConsumivel", "BotaoEncerrar"]
+  ok    sem modo, não há gaveta
+== modo Mover: «Sair c/ segurança» e «Correr» ==
+  ok    a gaveta do Mover tem «Sair c/ segurança» e «Correr» (e não a Transformação)
+  ok    «Sair c/ segurança» é uma declaração: liga sem mandar nada ao servidor
+  ok    e desliga outra vez
+  ok    «Correr» manda a intenção correr
+  ok    depois de correr: «A correr ✓», como no site
+  ok    e volta ao modo Mover com o orçamento novo
+== gaveta do Ataque: Transformação ==
+  ok    o Ataque abre mesmo sem alvos, quando há Transformação
+  ok    a gaveta do Ataque tem «Transformação · 12 PA» (o custo da ficha dela)
+  ok    a Transformação pede Confirmar primeiro (custa 12 PA dos 40 livres)
+  ok    Confirmar → transformar, e a gaveta fecha
+== a ficha: Declarar Defender ==
+  ok    o chip «FICHA ▸» está à vista; a ficha fechada
+  ok    na ficha: «Declarar Defender», na vez dela
+  ok    Declarar Defender → defender
+  ok    sem a reacção, a ficha diz porquê e não desenha botão morto
+== ordem 15: «Apagar o fogo» na gaveta do Mover ==
+  ok    sem a acção do servidor, não há «Apagar o fogo»
+  ok    o Mover abre mesmo sem casas, quando ela pode apagar o fogo
+  ok    a gaveta do Mover tem «Apagar o fogo»
+  ok    «Apagar o fogo» manda apagar_fogo e a gaveta fecha
+  ok    a barra continua com as quatro
+== fora da vez dela ==
+  ok    fora da vez dela, nenhuma gaveta
+== ordem 33: «Correr» recusado não fica pendurado ==
+  ok    «Correr» manda a intenção correr
+  ok    o recibo da acção seguinte não marca «A correr ✓» depois do Correr recusado
+  ok    e não diz «Você corre…»
+== ordem 33: o movimento do «Sair c/ segurança» só segue o recibo DO Desvincular ==
+[floresta] pronta em 1744 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":1744,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+pronto
+  ok    servidor WebSocket local ligado à Rede
+  ok    controlo: sai primeiro o Desvincular [{ "acao": { "tipo": "desvincular" }, "intentId": "8424bd70-3ea5-4463-9c2c-5bb6d955aa0a", "revision": 20.0, "type": "ROOM_INTENT", "v": 2.0 }]
+  ok    controlo: aceite o Desvincular, segue o movimento com a revisão nova [{ "acao": { "destino": { "x": 2.0, "y": 3.0 }, "tipo": "mover" }, "intentId": "9772e2c9-f599-499b-aa7c-564e6c1e3327", "revision": 21.0, "type": "ROOM_INTENT", "v": 2.0 }]
+  ok    sai o Desvincular [{ "acao": { "tipo": "desvincular" }, "intentId": "139a8e8c-08d7-4594-ba20-d58fc088df83", "revision": 22.0, "type": "ROOM_INTENT", "v": 2.0 }]
+  ok    recusado o Desvincular, nada mais sai []
+  ok    a acção seguinte sai sozinha [{ "acao": { "tipo": "defender" }, "intentId": "92685886-a926-4f7f-859a-42a0954befd3", "revision": 23.0, "type": "ROOM_INTENT", "v": 2.0 }]
+  ok    o recibo do Defender não solta o movimento do Desvincular recusado []
+== ordem 49: a grelha refeita da arena do jogador guarda os nomes (Linhas, Fogo, Destaques, Cursor) ==
+[floresta] pronta em 55 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":55,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+pronto
+  ok    a grelha de arranque tem os quatro nós [Linhas:<MeshInstance3D#85748352999>, Fogo:<MeshInstance3D#85781907433>, Destaques:<MeshInstance3D#85815461867>, Cursor:<MeshInstance3D#85849016301>]
+[floresta] pronta em 3691 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":3691,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+  ok    o snapshot refez a grelha em 24 × 22 (24 × 22)
+  ok    no mesmo quadro, «Grelha/Linhas» já é o nó novo, não o velho à espera de sair
+  ok    depois da fila de libertação, «Grelha/Linhas» continua lá e é o mesmo nó
+  ok    a Grelha refeita tem os mesmos nomes de antes ["AbrigosDoMapa", "Cursor", "Destaques", "Fogo", "Linhas"], e nenhum nome inventado a mais (1 → 1)
+  ok    uma só malha de linhas na Grelha (1)
+  ok    «Grelha/Fogo» é a camada nova que a arena usa
+  ok    «Grelha/Destaques» é a camada nova que a arena usa
+  ok    «Grelha/Cursor» é a camada nova que a arena usa
+  ok    as linhas desse nó cobrem a grelha nova: (-18.00, -16.50)–(18.00, 16.50), esperado (-18.00, -16.50)–(18.00, 16.50)
+== ordem 58: a figura numa casa que o mapa bloqueia não se põe de pé (arena do jogador) ==
+[floresta] pronta em 72 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":72,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+[floresta] pronta em 3682 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":3682,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+WARNING: figura pA não se põe de pé: FLORESTA-E08-CASA-BLOQUEADA: (27,24) escarpa
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] anotar_recusa (res://cenas/arena/campo_da_mesa.gd:128)
+       [1] _sincronizar_figuras (res://cenas/arena/arena.gd:603)
+       [2] _ao_snapshot (res://cenas/arena/arena.gd:736)
+       [3] _ready (res://cenas/arena/arena.gd:161)
+       [4] _teste_pe_em_casa_bloqueada (res://testes/hud_acoes.gd:327)
+       [5] _correr (res://testes/hud_acoes.gd:182)
+       [6] _teste_grelha_refeita_guarda_os_nomes (res://testes/hud_acoes.gd:310)
+       [7] _quadros (res://testes/hud_acoes.gd:39)
+pronto
+  ok    na escarpa (27,24) a figura não se põe de pé: recusa com nome «FLORESTA-E08-CASA-BLOQUEADA: (27,24) escarpa»
+  ok    a da casa livre (29,24) está de pé no pé da casa
+  ok    a recusada não tem posição na tela (os números de dano caem no sítio de sempre)
+  ok    Ordem 60: a recusada não some — fica marcada na casa dela («✕ A / não fica de pé: escarpa»)
+  ok    Ordem 60: o Aviso do HUD diz quem não fica de pé e porquê, sem nada técnico (««A» não fica de pé nesta casa: escarpa — o mapa bloqueia a casa. Fica marcada no mapa.»)
+  ok    Ordem 60: a mesma recusa outra vez não avisa de novo; a marca fica
+WARNING: figura pB não se põe de pé: FLORESTA-E08-CASA-BLOQUEADA: (27,24) escarpa
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] anotar_recusa (res://cenas/arena/campo_da_mesa.gd:128)
+       [1] _sincronizar_figuras (res://cenas/arena/arena.gd:603)
+       [2] _ao_evento (res://cenas/arena/arena.gd:743)
+       [3] _teste_pe_em_casa_bloqueada (res://testes/hud_acoes.gd:352)
+       [4] _quadros (res://testes/hud_acoes.gd:39)
+  ok    Ordem 60: trocadas — a marca e o aviso seguem quem entra na escarpa (««B» não fica de pé nesta casa: escarpa — o mapa bloqueia a casa. Fica marcada no mapa.»)
+  ok    trocadas: A sai da escarpa e põe-se de pé; B entra nela e fica recusada
+
+50 de 50 verificações passaram.

@@ -1,0 +1,42 @@
+[   0.0 s] [servidor] servidor de mesa pronto (WebSocket em /ws)
+[   0.0 s] mesa de prova em http://127.0.0.1:62189 (estática: o export web; ws na mesma origem)
+[   0.0 s] combate aberto pelo Mestre-bot
+[   1.3 s] [consola] Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+[   3.6 s] [consola] OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL
+[   3.8 s] [consola] Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.
+[   8.5 s] [consola] [floresta] pronta em 4184 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"mad
+[   8.6 s] [consola] pronto
+  ok    o export web disse «pronto» em 7.9 s (≤ 30 s)
+[   8.7 s] [consola] pronto
+[  11.5 s] [consola] rede: ROOM_SNAPSHOT seq=5 fase=combate plataforma=Web
+[  11.5 s] [consola] [floresta] pronta em 72 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madei
+  ok    a web recebeu o ROOM_SNAPSHOT do combate («rede: ROOM_SNAPSHOT seq=5 fase=combate plataforma=Web»)
+[  11.7 s] [consola] pronto
+  ok    0 erros de script na consola (0)
+[  21.6 s] [consola] Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+[  21.6 s] [consola] OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL
+[  21.7 s] [consola] Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.
+[  25.9 s] [consola] [floresta] pronta em 3782 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"mad
+[  26.0 s] [consola] pronto
+[  82.1 s] [consola] medicao-v1.0 {"aquecimento_s":5.0,"carimbo":"2026-11-24T04:41:00Z","chamadas_max":89,"chamadas_mediana":87,"dpr":1.0,"formato":"medicao-v1.0/1","fps_mediana":60.2,"fps_p5":55.9,"gpu":"WebKit WebGL","gpu_api":"OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))","gpu_fabricante":"WebKit","gpu_webgl":"
+[  82.1 s] [servidor] medição recebida: medicao-2026-11-24T04-41-00-874Z-001.json (FPS mediana 60.2, p5 55.9)
+[  82.1 s] [consola] medicao-v1.0 envio 204
+  ok    medição 1: o JSON traz fps_mediana, fps_p5, chamadas_mediana, chamadas_max, gpu, viewport, dpr, quadros
+  ok    medição 1: chegou ao servidor sozinha («medicao-v1.0 envio 204»)
+[  82.5 s] medição 1: FPS mediana 60.2, p5 55.9, chamadas 87, GPU Google Inc. (NVIDIA) | ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)
+[  83.2 s] [consola] Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+[  83.3 s] [consola] OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL
+[  83.3 s] [consola] Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.
+[  87.8 s] [consola] [floresta] pronta em 4039 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"mad
+[  87.9 s] [consola] pronto
+[ 143.7 s] [consola] medicao-v1.0 {"aquecimento_s":5.0,"carimbo":"2026-11-24T04:42:02Z","chamadas_max":89,"chamadas_mediana":87,"dpr":1.0,"formato":"medicao-v1.0/1","fps_mediana":60.2,"fps_p5":55.6,"gpu":"WebKit WebGL","gpu_api":"OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))","gpu_fabricante":"WebKit","gpu_webgl":"
+[ 143.7 s] [servidor] medição recebida: medicao-2026-11-24T04-42-02-501Z-002.json (FPS mediana 60.2, p5 55.6)
+[ 143.8 s] [consola] medicao-v1.0 envio 204
+  ok    medição 2: o JSON traz fps_mediana, fps_p5, chamadas_mediana, chamadas_max, gpu, viewport, dpr, quadros
+  ok    medição 2: chegou ao servidor sozinha («medicao-v1.0 envio 204»)
+[ 144.1 s] medição 2: FPS mediana 60.2, p5 55.6, chamadas 87, GPU Google Inc. (NVIDIA) | ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)
+  ok    o servidor gravou 2 medição(ões) em medicoes-servidor/
+  ok    repetir dá o mesmo ±10 %: fps_mediana 60.2 → 60.2
+  ok    repetir dá o mesmo ±10 %: fps_p5 55.9 → 55.6
+  ok    repetir dá o mesmo ±10 %: chamadas_mediana 87 → 87
+PROVA WEB OK

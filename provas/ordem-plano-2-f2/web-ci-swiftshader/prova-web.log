@@ -1,0 +1,28 @@
+[   0.0 s] [servidor] servidor de mesa pronto (WebSocket em /ws)
+[   0.0 s] mesa de prova em http://127.0.0.1:59143 (estática: o export web; ws na mesma origem)
+[   0.0 s] combate aberto pelo Mestre-bot
+[   1.2 s] [consola] Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+[   1.4 s] [consola] OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL
+[   1.6 s] [consola] Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.
+[   4.8 s] [consola] [floresta] pronta em 2855 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"mad
+[   4.9 s] [consola] pronto
+  ok    o export web disse «pronto» em 4.5 s (≤ 30 s)
+[   5.0 s] [consola] pronto
+[   7.8 s] [consola] rede: ROOM_SNAPSHOT seq=5 fase=combate plataforma=Web
+  ok    a web recebeu o ROOM_SNAPSHOT do combate («rede: ROOM_SNAPSHOT seq=5 fase=combate plataforma=Web»)
+[   7.8 s] [consola] [floresta] pronta em 51 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madei
+[   8.0 s] [consola] pronto
+  ok    0 erros de script na consola (0)
+[  16.7 s] [consola] Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+[  16.7 s] [consola] OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL
+[  16.8 s] [consola] Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.
+[  20.9 s] [consola] [floresta] pronta em 3711 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"mad
+[  21.1 s] [consola] pronto
+[  78.0 s] [consola] medicao-v1.0 {"aquecimento_s":5.0,"carimbo":"2026-11-24T04:39:23Z","chamadas_max":89,"chamadas_mediana":88,"dpr":1.0,"formato":"medicao-v1.0/1","fps_mediana":1.5,"fps_p5":1.5,"gpu":"WebKit WebGL","gpu_api":"OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))","gpu_fabricante":"WebKit","gpu_webgl":"Go
+[  78.0 s] [servidor] medição recebida: medicao-2026-11-24T04-39-23-696Z-001.json (FPS mediana 1.5, p5 1.5)
+[  78.0 s] [consola] medicao-v1.0 envio 204
+  ok    medição 1: o JSON traz fps_mediana, fps_p5, chamadas_mediana, chamadas_max, gpu, viewport, dpr, quadros
+  ok    medição 1: chegou ao servidor sozinha («medicao-v1.0 envio 204»)
+[  82.3 s] medição 1: FPS mediana 1.5, p5 1.5, chamadas 88, GPU Google Inc. (Google) | ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)
+  ok    o servidor gravou 1 medição(ões) em medicoes-servidor/
+PROVA WEB OK

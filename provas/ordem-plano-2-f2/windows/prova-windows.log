@@ -1,0 +1,17 @@
+﻿--- mesa.log
+[servidor] servidor de mesa pronto (WebSocket em /ws)
+[mesa-prova] a ouvir em 127.0.0.1:8090 (motor falso; sala de TESTE)
+[mesa-prova] jogadoras: Espadachim de Bancada / prova-espadachim; Arqueira de Bancada / prova-arqueira; Batedora de Bancada / prova-batedora
+[ligaÃ§Ãµes] 04:37:56.081 ENTROU Mestre da prova (senha/PIN; ip 127.0.0.1)
+[mesa-prova] Mestre-bot na mesa
+[mesa-prova] combate aberto pelo Mestre-bot
+pronto-mesa-prova 8090
+[ligaÃ§Ãµes] 04:37:58.384 ENTROU Espadachim de Bancada (senha/PIN; ip 127.0.0.1)
+[ligaÃ§Ãµes] 04:37:58.544 SAIU Espadachim de Bancada
+--- windows.log (filtrado)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+pronto
+rede: ROOM_SNAPSHOT seq=5 fase=combate plataforma=Windows
+segundos ate ao snapshot: 2,1
+erros de script: 0
+PROVA WINDOWS OK

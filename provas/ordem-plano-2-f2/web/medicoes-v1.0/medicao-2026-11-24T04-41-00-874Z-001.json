@@ -1,0 +1,33 @@
+{
+ "recebida": "2026-11-24T04:41:00.874Z",
+ "ip": "127.0.0.1",
+ "medicao": {
+  "aquecimento_s": 5,
+  "carimbo": "2026-11-24T04:41:00Z",
+  "chamadas_max": 89,
+  "chamadas_mediana": 87,
+  "dpr": 1,
+  "formato": "medicao-v1.0/1",
+  "fps_mediana": 60.2,
+  "fps_p5": 55.9,
+  "gpu": "WebKit WebGL",
+  "gpu_api": "OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))",
+  "gpu_fabricante": "WebKit",
+  "gpu_webgl": "Google Inc. (NVIDIA) | ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "janela_px": [
+   1264,
+   625
+  ],
+  "janela_s": 55,
+  "motor": "4.7.2-stable (official)",
+  "navegador": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+  "plataforma": "Web",
+  "quadros": 3298,
+  "renderizador": "gl_compatibility",
+  "viewport": [
+   2184,
+   1080
+  ],
+  "viewport_css": "1264x625"
+ }
+}

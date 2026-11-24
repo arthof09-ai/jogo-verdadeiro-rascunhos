@@ -1,0 +1,26 @@
+ 
+ 
+145328437 assimilacao.apk
+1156531 assimilacao.apk.idsig
+ 
+ 
+ 
+11944 index.apple-touch-icon.png
+2973 index.audio.position.worklet.js
+7298 index.audio.worklet.js
+5445 index.html
+5700 index.icon.png
+279815 index.js
+88450836 index.pck
+21443 index.png
+39514754 index.wasm
+ 
+ 
+ 
+188928 Assimilacao.console.exe
+197719328 Assimilacao.exe
+GODOT_THREADS_ENABLED = false
+fa523b1a1ebfdd630d56e4ba54b6b9a04ee6b8ed799985f89c040a79ab942a31 *android/assimilacao.apk
+e2e5b900d42622cd49f75e96486e1f363659070adbca64564ea0f13614a47473 *windows/Assimilacao.exe
+fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0 *web/index.wasm
+099aa55e8597b51e918a0cbf679158dcf56a9266325010e3a75abb19a34c8477 *web/index.pck

@@ -1,0 +1,36 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Could not find version of build tools that matches Target SDK, using 34.0.0
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialização do Projeto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando estrutura de arquivos...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Carregando nomes de classe globais...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Criando scripts autoload...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneamento de arquivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+Could not find version of build tools that matches Target SDK, using 34.0.0
+[   0% ] [90m[1mexport[22m | Started Exportando para Android (105 steps)[39m[0m
+ERROR: No project icon specified. Please specify one in the Project Settings under Application -> Config -> Icon
+   at: load_icon_refs (platform/android/export/export_plugin.cpp:1941)
+0 param: --xr_mode_regular
+1 param: --xr-mode
+2 param: off
+3 param: --fullscreen
+4 param: --background_color
+5 param: #000000
+[   0% ] [90m[1mexport[22m | Criando APK...[39m[0m
+Adding application metadata org.godotengine.rendering.method
+Adding application metadata org.godotengine.editor.version
+Adding permission android.permission.ACCESS_NETWORK_STATE
+Adding permission android.permission.ACCESS_WIFI_STATE
+Adding permission android.permission.INTERNET
+[  97% ] [90m[1mexport[22m | Alinhando APK...[39m[0m
+[  98% ] [90m[1mexport[22m | Assinando APK de depuração...[39m[0m
+Could not find version of build tools that matches Target SDK, using 34.0.0
+Signing binary using: 
+<casa>\AppData\Local/Android/Sdk/build-tools/34.0.0/apksigner.bat sign --verbose --ks <REDACTED> --ks-pass pass:<REDACTED> --ks-key-alias <REDACTED> <sede>/repo/build/android/assimilacao.apk
+Signed
+[  99% ] [90m[1mexport[22m | Verificando APK...[39m[0m
+[92m[ DONE ][39m [1mexport[22m
+[0m

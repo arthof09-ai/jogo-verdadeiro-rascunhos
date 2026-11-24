@@ -1,0 +1,20 @@
+15 QR gerados (vers√µes 2, 3, 1, 4, 5, 6, 7, 8, 9, 10; m√°scaras 0, 2, 3, 6, 7)
+  ok    v2 m7 qr-00-v2-m7.pgm: lido 'http://192.168.1.20:8080/'
+  ok    v3 m2 qr-01-v3-m2.pgm: lido 'http://192.168.1.20:8080/?medir=1'
+  ok    v2 m3 qr-02-v2-m3.pgm: lido 'http://10.0.0.5:8080/'
+  ok    v3 m2 qr-03-v3-m2.pgm: lido 'http://192.168.100.200:65535/?medir=1'
+  ok    v2 m6 qr-04-v2-m6.pgm: lido 'Mesa fictÌcia ó Á„o'
+  ok    v1 m2 qr-05-v1-m2.pgm: lido 'http://mesa.lo'
+  ok    v2 m0 qr-06-v2-m0.pgm: lido 'http://mesa.local/xxxxxxxx'
+  ok    v3 m0 qr-07-v3-m0.pgm: lido 'http://mesa.local/xxxxxxxxxxxxxxxxxxxxxxxx'
+  ok    v4 m0 qr-08-v4-m0.pgm: lido 'http://mesa.local/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+  ok    v5 m0 qr-09-v5-m0.pgm: lido 'http://mesa.local/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+  ok    v6 m0 qr-10-v6-m0.pgm: lido 'http://mesa.local/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+  ok    v7 m0 qr-11-v7-m0.pgm: lido 'http://mesa.local/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+  ok    v8 m2 qr-12-v8-m2.pgm: lido 'http://mesa.local/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+  ok    v9 m0 qr-13-v9-m0.pgm: lido 'http://mesa.local/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+  ok    v10 m0 qr-14-v10-m0.pgm: lido 'http://mesa.local/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+== 15 de 15 QR lidos certos ==
+qr-pagina.png escrito (link do QR grande: http://192.168.1.20:8080/)
+QR lidos na foto: ['http://192.168.1.20:8080/']
+ok: o QR da p·gina d· http://192.168.1.20:8080/
