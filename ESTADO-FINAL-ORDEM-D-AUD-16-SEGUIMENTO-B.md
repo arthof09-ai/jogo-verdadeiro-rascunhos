@@ -52,9 +52,13 @@ durante a corrida** (`logs/b-versao-temporaria.diff`). Assim o servidor responde
 - A corrida foi feita duas vezes. A 1.ª, às 08:44:17, deu as mesmas imagens, mas o log não tinha a linha da
   rejeição. Por isso juntei o `print` e repeti; ficam as provas da 2.ª (README das provas, §1).
 
-**Não fiz bancada** do caminho `DESLIGADA` → lobby: no PC não há maneira de o provocar sem mexer no código, porque a
-guarda é só do Android. Esse caminho está coberto pela verificação pura do `abre_sem_saida` (§4, item 8). A troca de
-cena usa o mesmo `get_tree().current_scene == self` → `change_scene_to_file.call_deferred(CENA_LOBBY)` do `recusar()`.
+**Não fiz bancada** do caminho `DESLIGADA` → lobby: esse caminho está coberto só pela verificação pura do
+`abre_sem_saida` (§4, item 8). A troca de cena usa o mesmo `get_tree().current_scene == self` →
+`change_scene_to_file.call_deferred(CENA_LOBBY)` do `recusar()`. Fica uma corrida viva por fazer (sentença
+desta ordem, secção B, B-1): arranque directo com um `lugar.cfg` de papel mestre sem token, com captura do
+lobby e do motivo. (Correcção: a frase anterior dizia que no PC não há maneira de o provocar sem mexer no
+código — há: esse arranque deixa a Rede `DESLIGADA` com o papel certo e o ramo dispara; a corrida ficou por
+fazer.)
 
 ## 2. B-2: o alerta da vista sem rede, e o limite de linhas
 
