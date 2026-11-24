@@ -47,7 +47,7 @@ semântica e a preclusão literal da opção (b) do Plano 2) fica em aberto, e a
 | Corrida do `pecas_mestre` | Resultado |
 |---|---|
 | ANTES (testes novos, código da ponta `2385651`) | **293 de 294**: FALHA só o duplo armar (`0 MASTER_PLACE []`) |
-| Só o ponto 1 | **283 de 294**: FALHA o teste da vez (1 `MASTER_PLACE` da ficha velha), mais 9 em cascata desse comando sem recibo |
+| Só o ponto 1 | **283 de 294**: FALHA o teste da vez (1 `MASTER_PLACE` da ficha velha), mais 10 em cascata desse comando sem recibo |
 | Correcção inteira (`72e1103`) | **294 de 294** |
 
 ## 3. Suites (com a correcção, neste PC, Godot 4.7.2 `--headless`)

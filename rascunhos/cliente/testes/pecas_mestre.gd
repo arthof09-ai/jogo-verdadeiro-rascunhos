@@ -216,8 +216,7 @@ func _correr() -> void:
 		"D-AUD-01-CORRECCOES: com o «Mover» armado, escolher outra ficha no «Colocar» → o toque põe a ficha nova (%d MASTER_PLACE %s, 0 da velha)" % [places_5.size(), places_5])
 	if not places_5.is_empty():
 		_responder(c, _ultimo())
-	# D-AUD-01-CORRECCOES-2 (conferência D-AUD-01-CORRECCOES): armar o «Mover» duas vezes (duplo clique, ou o botão
-	# refeito pelo atualizar()) guardava "" por cima da ficha — o «Cancelar» já não repunha o «Colocar».
+	# D-AUD-01-CORRECCOES-2 (conferência D-AUD-01-CORRECCOES): armar o «Mover» duas vezes (duplo clique — no mesmo botão ou no botão refeito pelo `atualizar()`, que só o volta a ligar a `iniciar_mover()`) guardava "" por cima da ficha — o «Cancelar» já não repunha o «Colocar».
 	c._aba_mesa.escolher_colocar("orc-teste")
 	c._aba_agir.iniciar_mover()
 	c._aba_agir.iniciar_mover()
