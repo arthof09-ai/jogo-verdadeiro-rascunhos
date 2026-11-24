@@ -162,3 +162,6 @@ Só se usaram as fichas fictícias de bancada.
     erros-de-script=0`, e **`REPETE-SE — números 461/461, bits 73/73`**.
   - `1 m: figuras` deu desvio (−0.25, 0.25) e `2 m: figuras` deu desvio (0, 0).
 - **«Sonda de privacidade», run 45349563091: verde.**
+
+Errata da conferência (commit `04d29e6`, A-E1, A-E2, A-E4–A-E14 — redacção dos caminhos do PC + reescrita do §5.1 e do §4):
+**«Testes dos rascunhos», run 45358663787: success** · **«Sonda de privacidade», run 45358663882: success**.
