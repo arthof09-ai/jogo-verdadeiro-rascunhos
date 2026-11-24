@@ -3,6 +3,8 @@
 Nenhum ficheiro desta pasta traz o caminho do PC escrito. As formas são montadas em tempo de execução. A própria
 Sonda nova corre sobre esta pasta e dá 0 ocorrências novas.
 
+**A rede cobre as três formas pedidas pela ordem; não cobre todos os caminhos reais do PC.**
+
 | ficheiro | o que é |
 |---|---|
 | `remendo-privacidade.yml.patch` | os dois passos novos do `privacidade.yml`. **Está por aplicar:** o token do PC não tem o âmbito `workflow` (ver o ESTADO-FINAL §3) |

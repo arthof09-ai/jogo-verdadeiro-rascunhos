@@ -70,6 +70,8 @@ passo.
 `privacidade.yml` com o remendo, pela ordem: e-mails, depois caminhos. A ponta é a `35e7123` (o mesmo commit que é hoje o `ae20ea2`; mudou de hash quando o reassentei sobre o `aacaef6`, uma nota da F4 que não toca no `.github`), com o `.github` igual ao
 commit.
 
+A ponta `35e7123` é um hash local, anterior ao rebase; a cadeia `35e7123` → `ae20ea2` assenta na minha palavra e na identidade dos blobs do `.github/` entre as duas pontas.
+
 | prova | ficheiro de teste | saída da Sonda |
 |---|---|---|
 | p0 | nenhum | **0**: e-mails limpos; 348 ocorrências, 348 na base, 0 novas |
@@ -87,14 +89,20 @@ Os 11 casos do auto-teste:
 - 3 casos de batota com a base são apanhados.
 
 O auto-teste também mostra o que **não** se apanha: `C:/Programas`, `/c/Programas`, a unidade `D:` com `Users`,
-`Users/` sem unidade e `<sede>/repo`.
+`Users/` sem unidade, `<sede>/repo`, a mistura de barras (`C:/Users\…` e `C:\Users/…`), `/c//Users/`, `C:Users`
+sem barra, a linha que termina na pasta do utilizador sem barra a seguir a `Users`, os caminhos de rede UNC
+(`\\servidor\Users\…`) e os ficheiros em UTF-16 ou com byte NUL cedo, que o guião salta inteiros como binários.
+**A rede cobre as três formas pedidas pela ordem; não cobre todos os caminhos reais do PC.** Alargar a rede a estas
+formas é outra ordem.
 
-**Achado durante a prova:** na primeira corrida, o auto-teste imprimia o caminho inteiro da base temporária. A pasta
-temporária do Windows fica debaixo da pasta do utilizador, e a rede nova **apanhou-o no meu próprio registo**. Agora
-o guião imprime só o nome do ficheiro. É o tipo de fuga que a rede foi feita para travar. Mais uma: o `--import` do
-Godot escreve o caminho do PC em `rascunhos/cliente/.godot/editor/project_metadata.cfg`. Esse ficheiro é ignorado
-pelo git e nunca sobe, mas a Sonda local apanha-o se ele existir. Apaguei a cache (`git clean -fdX
-rascunhos/cliente`) antes da conferência final.
+**Relato da prova (não medido):** na primeira corrida, o auto-teste imprimia o caminho inteiro da base temporária — a
+pasta temporária do Windows fica debaixo da pasta do utilizador, e a rede nova apanhou-o no meu próprio registo. Não
+há log dessa primeira corrida na entrega; a correcção (o guião imprime só o nome do ficheiro) está verificada no
+código e no p5. Mais um relato: o `--import` do Godot escreve o caminho do PC em
+`rascunhos/cliente/.godot/editor/project_metadata.cfg`; apaguei a cache (`git clean -fdX rascunhos/cliente`) antes da
+conferência final, mas sem registo da eliminação — e o `--import` do próprio `rodar.log` regenera essa cache, por
+isso não está provado que o ficheiro não existia durante as suites. Em qualquer caso o impacto no repositório é
+zero: esse ficheiro é ignorado pelo git e nunca sobe.
 
 ## 3. O CI
 
@@ -137,5 +145,5 @@ Os logs estão em `provas/ordem-sonda-caminhos-pc/suites/`. Cada um abre com `# 
 
 ## Nota do CI
 
-No `aa31e3a`: **Testes `45377701821` success** (os 11 jobs) + **Sonda `45377701648` success**. A Sonda que correu é
+No `aa31e3a`: **Testes `45377701821` success** (os 10 jobs) + **Sonda `45377701648` success**. A Sonda que correu é
 a **antiga** (só os e-mails): o remendo não está aplicado (§3, §6.1). A rede nova só foi provada no PC (§2).
