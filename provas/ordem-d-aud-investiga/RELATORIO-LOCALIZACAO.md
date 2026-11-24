@@ -20,15 +20,15 @@ Nomes que aparecem: só os fictícios das fichas da bancada («Heroína Teste»,
 ## D-AUD-05 — a câmara não segue a figura · **LOCALIZADO**
 
 ### Reprodução
-- `l15-jog-antes-de-comecar` → `l17-jog-comecou` (e o vídeo `d05`): ao «Começar», a heroína nasce no canto superior direito, pequena e meio por baixo da caixa da ordem (`l17z`, recorte 3×). A câmara fica onde estava no lobby: **no centro da grelha**.
-- `l19-jog-cursor` → `l20-jog-andou`: a heroína anda (um clique) e **o enquadramento não muda nem um píxel**.
-- **Contraprova (A/B):** `i00-jog-inicio-bancada-preparada` é desta mesma sede, às 17:21, com a bancada **preparada pelo porteiro** (a batalha começa antes de o cliente abrir). Aí a câmara **está** na heroína. O código da câmara e da arena não mudou entre essa ponta (`cdc08be`) e `96baf99` (`git log e91fb95..96baf99` não toca em `arena.gd` nem em `camera/`).
+- `l15-jog-antes-de-comecar` → `l17-jog-comecou` (e o vídeo `d05`): ao «Começar», a heroína nasce no canto superior direito, pequena, ao lado da caixa da ordem, com água e grelha entre as duas (`l17z`, recorte 3×; figura em x 899–907, caixa a partir de x ≈ 967). A câmara fica onde estava no lobby: **no centro da grelha**.
+- `l19-jog-cursor` → `l20-jog-andou`: a heroína anda (um clique) e **o enquadramento não se move** (o fundo e o terreno ficam no mesmo lugar; os píxeis diferem pelo ruído da água e dos vaga-lumes).
+- **Contraprova (A/B):** `i00-jog-inicio-bancada-preparada` é desta mesma sede, às 17:21, com a bancada **preparada pelo porteiro** (a batalha começa antes de o cliente abrir). A hora «17:21» e a bancada preparada são palavra do executor: as PNGs não trazem metadados de hora. O conteúdo condiz (a câmara está na heroína) e a cadeia do D-AUD-05 não depende desta contraprova — o código prova o mecanismo sozinho. Aí a câmara **está** na heroína. O código da câmara e da arena não mudou entre essa ponta (`cdc08be`) e `96baf99` (`git log e91fb95..96baf99` não toca em `arena.gd` nem em `camera/`).
 
 ### Causa (ficheiro/linha)
 1. **A câmara só foca uma vez, e só num snapshot.** `rascunhos/cliente/cenas/arena/arena.gd:730-734`: dentro de `_ao_snapshot()`, `if not _focou and Estado.minha_figura_id != ""` → `camera.focar(centro_casa(minha))` → `_focou = true`. O handler dos eventos, `arena.gd:738-741` (`_ao_evento`), **não tenta focar**.
    - Quando a batalha começa com a jogadora já na arena (o caso normal: ela espera no lobby da arena), o único snapshot chega na fase `lobby`, com a heroína por colocar (`casa_de` dá `(-1,-1)`, `dentro()` falso). A colocação (`colocacao` no MASTER_START) chega depois como **evento**, e esse caminho não foca. `_focou` fica `false` para sempre. A câmara fica no foco que `configurar_arena` lhe deu: `rascunhos/cliente/camera/camera_mesa.gd:86-87` (`if foco == Vector3.ZERO: foco = centro`), chamado em `arena.gd:206` com o centro da grelha.
    - No caso A/B (porteiro), o snapshot do JOIN já traz a heroína colocada, por isso foca. É por isso que as bancadas preparadas não mostravam o defeito.
-2. **Não existe «seguir».** Não há nenhum outro chamador de `camera.focar` no cliente (`grep`: só `arena.gd:733`). `camera_mesa.gd:93-95` (`focar`) só é chamado essa vez; o movimento da própria figura (`_atualizar_figura`, tween da posição) não mexe na câmara.
+2. **Não existe «seguir».** Não há nenhum outro chamador de `camera.focar` no código do jogo (`grep`: só `arena.gd:733`; há 9 chamadas em `cliente/testes/` — `pecas_mestre.gd:936`, `foto_mestre.gd:107,122,127`, `foto_sem_caixa.gd:69`, `video_clima.gd:172,374,594`, `video_ordem.gd:145,205` — que não contam). `camera_mesa.gd:93-95` (`focar`) só é chamado essa vez; o movimento da própria figura (`_atualizar_figura`, tween da posição) não mexe na câmara.
 
 ### Correcção proposta (âmbito)
 - **Onde:** só `rascunhos/cliente/cenas/arena/arena.gd` (`_ao_snapshot` e `_ao_evento`, ~10–20 linhas). `camera_mesa.gd` não precisa de mudar (`focar` já suaviza com `suavidade`).
@@ -42,14 +42,14 @@ Nomes que aparecem: só os fictícios das fichas da bancada («Heroína Teste»,
 ## D-AUD-06 — a caixa da ordem tapa a figura e o alcance; marcadores minúsculos · **LOCALIZADO** (lado da jogadora reproduzido; lado do Mestre só pelo código)
 
 ### Reprodução
-- `l17` / `l17z`: no arranque, a heroína está debaixo da caixa «Ordem de turnos».
-- `l18-jog-mover` / `l18z` (recorte 3×): com «Mover», as casas azuis ao alcance ficam metade **por baixo da caixa**.
+- `l17` / `l17z`: no arranque, a heroína está ao lado da caixa «Ordem de turnos», totalmente visível; o que a caixa tapa no arranque é o alcance, não a figura (ver `l18`).
+- `l18-jog-mover` / `l18z` (recorte 3×): com «Mover», as casas azuis ao alcance ficam cortadas **por baixo da caixa** (o corte é recto no bordo da caixa; a fracção escondida não foi medida — o que está atrás da caixa não se vê).
 - `l32-jog-ataque-alvos` / `l32z` (recorte 4×): com «Ataque», o marcador de um orc é um fragmento vermelho de **~20×12 px**, e o do orc que está dentro de água **não se vê** (só a cabeça do orc). Distância: a câmara está no centro da arena, e os alvos estão a ~30 m do foco.
 - Lado do Mestre (a caixa tapa o realce do Mover): **não reproduzido nesta corrida** (os orcs estavam em «Automático»). Fica a prova `r-18` da auditoria e a localização no código, abaixo.
 
 ### Causa (ficheiro/linha)
 1. **A caixa não sabe do mundo 3D.** Jogadora: `rascunhos/cliente/hud/hud.gd:1016-1036` (`_posicionar_caixa`). A caixa encosta ao canto superior direito (`:1031`, `_caixa.position = Vector2(area.x - _caixa.size.x, 0)`) e só se desvia da ⚙ e da faixa de texto (`:1019-1025`). Não conhece a posição da figura nem a das casas destacadas. Mestre: `rascunhos/cliente/cenas/mestre/mestre.gd:1415-1424` (canto superior esquerdo do tabuleiro, só se desvia dos controlos da câmara livre).
-2. **Por que a figura e o alcance calham debaixo dela:** é o D-AUD-05. Com a câmara no centro da grelha, a heroína (casa ~38,4 numa 50×50) projecta-se no canto superior direito, exactamente onde a caixa está. Com a câmara na figura, a figura fica no centro do ecrã e a caixa deixa de a tapar no arranque.
+2. **Por que a figura e o alcance calham debaixo dela:** é o D-AUD-05. Com a câmara no centro da grelha, a heroína (casa ~38,4 numa 50×50) projecta-se no canto superior direito, junto à caixa, sem ficar por baixo dela (`l17`: ~60–70 px de vazio entre a figura e a caixa). Com a câmara na figura, a figura fica no centro do ecrã e a caixa deixa de a tapar no arranque.
 3. **Os marcadores de alvo** são a mesma malha dos destaques do Mover: um quadrado plano de 0,9 casa colado ao relevo (`rascunhos/cliente/cenas/arena/arena.gd:538-543`, `_malha_casas(lista, 0.9, LEVANTA_M + 0.01)`, com `campo_da_mesa.gd:325-354`). Não há anel à volta da figura, nem um tamanho mínimo no ecrã. Por isso o tamanho deles depende só da distância da câmara: a ~30 m do foco (D-AUD-05) ficam com ~10–20 px.
 4. **Dentro de água desaparecem:** o shader dos destaques é `sobre_relevo.gdshader:11` (`depth_draw_never`) e o quadrado fica no **fundo** do lago (relevo + 0,04 m; o lago tem até 2,52 m de fundo, `godot.log` `lago_fundura_max_m`). Só é puxado 0,45 m para a câmara (`:14`, `puxar`). A superfície da água fica por cima. É o mesmo mecanismo do D-AUD-02 (figura afundada), que a auditoria marcou como provável.
 
@@ -64,7 +64,7 @@ Nomes que aparecem: só os fictícios das fichas da bancada («Heroína Teste»,
 
 ### Reprodução
 - `l30-mestre-registo3` (aba Registo do Mestre, ponto actual 29), lido de baixo para cima:
-  - «Rodada 1 · vez de Heroína Teste · colocação, vez nova» = o MASTER_START (a vez a seguir já é a da heroína).
+  - «Rodada 1 · vez de Heroína Teste · colocação, vez…» (a linha está cortada pelo bordo inferior da imagem; o «nova» não se vê) = o MASTER_START, por inferência do padrão das linhas (a vez a seguir já é a da heroína).
   - «Rodada 1 · vez de Orc Verdadeiro Teste (Orc) · vez nova» = **o encerrar da heroína**, rotulado com a vez do orc que vem a seguir.
   - «**Rodada 2 · vez de Heroína Teste · Ação do monstro, vez nova**» = o encerrar da IA do **2.º orc, que foi na rodada 1**, rotulado com a rodada e a vez que vêm a seguir. É a mesma linha que a auditoria viu (`r-40`).
 - Repare-se que a linha da heroína a encerrar também está errada (diz «vez de Orc»). O defeito não é só do evento `ia`: é de **todas** as linhas que fecham uma vez.
@@ -78,7 +78,7 @@ Nomes que aparecem: só os fictícios das fichas da bancada («Heroína Teste»,
 ### Correcção proposta (âmbito)
 - **Servidor** (`sala.js:1228-1239`): guardar também a vez e a rodada de **antes** da transacção. O `antes` já existe em `transacao()` (`sala.js:1108`, `const antes = journal.estado`): passá-lo a `guardarCheckpoint`, por exemplo como `autorId: antes.vez?.figuraId` e `rodadaAutor: antes.rodada`. O `vezId` fica como está (é o estado do «voltar»). O campo novo é **aditivo** em `MASTER_VIEW.pontos`, por isso os clientes antigos não partem.
 - **Cliente** (`modelo_mestre.gd:276-287`, `textos_mestre.gd:171`): a linha passa a ser «Rodada R · **vez de AUTOR** · tipos», e se a vez mudou, «… → vez de SEGUINTE». O texto exacto é palavra do Mestre. Sem o campo novo (sala de antes), fica a linha de hoje.
-- **Risco:** baixo a médio. Mexe na projecção da MASTER_VIEW, que é só do Mestre e nunca vai à Party, por isso a privacidade não muda. Testes afectados: `servidor/testes/mestre-vista.test.mjs`, `ordem32-varredura.test.mjs`, `ordem25-n24-1.test.mjs` (que lêem `pontos`) e `cliente/testes/pecas_mestre.gd:98-100` (`linha_ponto`). O «voltar» continua a usar o `journalSeq`; o rótulo não entra na restauração.
+- **Risco:** baixo a médio. Mexe na projecção da MASTER_VIEW, que é só do Mestre e nunca vai à Party, por isso a privacidade não muda. Testes afectados: `servidor/testes/mestre-vista.test.mjs` (o único que lê `pontos`, ll. 115–155) e `cliente/testes/pecas_mestre.gd:98-100` (`linha_ponto`). `ordem32-varredura.test.mjs` e `ordem25-n24-1.test.mjs` não lêem `pontos` (a palavra só aparece em comentários e nomes de teste). O «voltar» continua a usar o `journalSeq`; o rótulo não entra na restauração.
 - **Alternativa sem mexer no servidor (pior):** o cliente deduzir o autor pela linha anterior. É frágil, porque a lista vem cortada a `MAX_PONTOS_VISTA` e o «voltar» apaga pontos. Não recomendo.
 
 ---
@@ -99,10 +99,10 @@ Nomes que aparecem: só os fictícios das fichas da bancada («Heroína Teste»,
 - **O cliente mostra-o tal e qual:** Mestre, `rascunhos/cliente/cenas/mestre/modelo_mestre.gd:31-38` (`nome_mestre` = «nome (público)»), usado nas Figuras (`:55`), nos rótulos do tabuleiro (`arena_mestre.gd:262,274`), no Agir (`aba_agir.gd:75`), na caixa (`mestre.gd:996,1469`) e no Registo (`modelo_mestre.gd:285`). Jogadora, `rascunhos/cliente/estado/estado.gd:355-359` (`nome_de` = `nomePublico`), na caixa (`hud.gd:994`), e o rótulo 3D em `arena.gd:709-710`.
 
 ### Correcção proposta (âmbito)
-- **Recomendado: no servidor, uma vez.** Ao colocar (`sala.js:2630-2640`), se já existe outra figura da mesma ficha, a figura nova recebe um **ordinal** (2, 3, …) guardado nela (por exemplo, `f.ordinal`). O `nomePublico` e o `nome` projectados passam a ter o sufixo, por exemplo «Orc 2» (o formato é palavra do Mestre). Tocar em `projecao.js` (onde o nome é composto, `:85-90` e `:149-155`) e em todos os eventos que levam `nomePublico` (`colocacao`, `entrada`: `sala.js:2609`, `:2639`, `:3464`).
+- **Recomendado: no servidor, uma vez.** Ao colocar (`sala.js:2630-2640`), se já existe outra figura da mesma ficha, a figura nova recebe um **ordinal** (2, 3, …) guardado nela (por exemplo, `f.ordinal`). O `nomePublico` e o `nome` projectados passam a ter o sufixo, por exemplo «Orc 2» (o formato é palavra do Mestre). Tocar em `projecao.js` (onde o nome é composto, `:85-90` e `:149-155`) **e em `figuraPublica` (`projecao.js:133-143`), que compõe o `nomePublico` do snapshot da Party a partir da ficha** — sem isto, um snapshot novo (reentrada, resync, recomeço) devolve «Orc»/«Orc» na jogadora, que é a reprodução `l28`. `nomePublicoDe(ficha)` nem sequer recebe a figura: o sufixo só nasce ali com mudança de assinatura, ou compõe-se em `figuraPublica`/`figuraDoMestre`. Se o ordinal for campo separado nos eventos, entra primeiro em `CAMPOS_PERMITIDOS` (`projecao.js:18-19`). E em todos os eventos que levam `nomePublico` (`colocacao`, `entrada`: `sala.js:2609`, `:2639`, `:3464`).
   - Vantagem: Mestre, Party, caixa, rótulos, Registo e exportação ficam todos coerentes, sem mudar o cliente.
   - **Privacidade:** o sufixo é só um número, e a Party já sabe que há duas criaturas (vê as duas figuras). Não revela nada novo. Mesmo assim, o canário de privacidade tem de correr.
-  - Risco médio: o estado da sala ganha um campo (`conferir-estado.js` tem de o aceitar); salas e journals antigos não o têm (sem sufixo, como hoje). O «Recomeçar» (`casaColocacao`) e o «voltar» restauram o campo com o resto da figura.
+  - Risco médio: o estado da sala ganha um campo (`conferir-estado.js` **não** precisa de mudar — «Chaves a mais não são erro», `:15-16` — um `f.ordinal` novo passa sem tocar no ficheiro); salas e journals antigos não o têm (sem sufixo, como hoje). O «Recomeçar» (`casaColocacao`) e o «voltar» restauram o campo com o resto da figura.
 - **Alternativa só no cliente:** numerar pela ordem do `id`, na apresentação (`nome_mestre`, `nome_de`). É mais rápida, mas o número pode mudar entre aparelhos se as listas vierem por ordem diferente, e a exportação/registo do servidor continua sem número. Não recomendo.
 
 ---
