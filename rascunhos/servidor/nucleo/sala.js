@@ -14,7 +14,7 @@ import { jsonCanonico, clonarJson, hex8, iguaisTempoConstante } from './util.js'
 import { sha256Hex } from './sha256.js';
 import { criarJournal, restaurarJournal, ErroJournal } from './journal.js';
 import { conferirEstadoProfundo, conferirRegistoProfundo } from './conferir-estado.js';
-import { projetarEvento, projetarSnapshot, efeitoAmbiente, nomePublicoDe, visivelDe } from './projecao.js';
+import { projetarEvento, projetarSnapshot, efeitoAmbiente, nomePublicoDe, nomePublicoDaFigura, visivelDe } from './projecao.js';
 import * as Amb from './ambiente.js';
 import { criarFilaAlertas } from './fila-alertas.js';
 import { prepararTerreno } from './terreno.js';
@@ -2606,7 +2606,7 @@ export function criarSala({
           f.colocada = true;
           f.casaColocacao = { x: casa.x, y: casa.y, orientacao: f.orientacao, ordem: proximaOrdemColocacao(m) }; // «Recomeçar» (N4, D-1)
           tx.emitir('colocacao', {
-            figuraId: f.id, nomePublico: nomePublicoDe(fichaDe(f)), lado: f.lado, x: f.x, y: f.y, orientacao: f.orientacao, visivel: visivelDe(f),
+            figuraId: f.id, nomePublico: nomePublicoDaFigura(f, fichaDe(f)), lado: f.lado, x: f.x, y: f.y, orientacao: f.orientacao, visivel: visivelDe(f),
           }, { fichaId: f.fichaId });
         }
         m.fase = 'combate';
@@ -2634,9 +2634,10 @@ export function criarSala({
         f.orientacao = msg.orientacao ?? 'S';
         f.colocada = true; // só AGORA existe para as jogadoras
         f.casaColocacao = { x: f.x, y: f.y, orientacao: f.orientacao, ordem: proximaOrdemColocacao(m) }; // «Recomeçar» (N4, D-1)
+        f.ordinal = proximoOrdinal(m, ficha); // D-AUD-12: «Orc 1», «Orc 2», …
         m.figuras[id] = f;
         tx.emitir('colocacao', {
-          figuraId: id, nomePublico: nomePublicoDe(ficha), lado: f.lado, x: f.x, y: f.y, orientacao: f.orientacao, visivel: visivelDe(f),
+          figuraId: id, nomePublico: nomePublicoDaFigura(f, ficha), lado: f.lado, x: f.x, y: f.y, orientacao: f.orientacao, visivel: visivelDe(f),
         }, { fichaId: ficha.id, modo: f.modo });
         if (m.fase === 'combate') inserirNaOrdem(m, id);
         return 'APLICADA';
@@ -2903,6 +2904,7 @@ export function criarSala({
       const novo = novaFigura(f.id, fichas[f.fichaId], null);
       const c = casaColocacaoDe(f);
       const d = destinos.get(f.id);
+      // D-AUD-12: o `ordinal` fica com a figura (o `novo` não o tem, e o assign não apaga o que lá está).
       Object.assign(f, novo, {
         colocada: true, x: d.x, y: d.y, orientacao: c.orientacao ?? 'S', casaInicial: f.casaInicial,
         casaColocacao: f.casaColocacao ?? c, modo: f.modo,
@@ -2929,6 +2931,22 @@ export function criarSala({
     for (const f of Object.values(m.figuras)) {
       const o = f.casaColocacao?.ordem;
       if (Number.isInteger(o) && o > maior) maior = o;
+    }
+    return maior + 1;
+  }
+  /**
+   * D-AUD-12: o número da figura que o Mestre coloca — 1 + o maior número já dado às figuras com o MESMO nome público
+   * (vivas ou mortas; um número nunca se repete na batalha). Conta-se pelo nome público, e não pela ficha, para a Party
+   * não ficar a saber mais do que vê: duas fichas diferentes sem `nomePublico` aparecem ambas como «Criatura», e um
+   * número por ficha dava «Criatura 1» e «Criatura 1» (repetido, e a dizer que são fichas diferentes). Com o nome
+   * público próprio de cada ficha («Orc»), é o mesmo que contar pela ficha.
+   */
+  function proximoOrdinal(m, ficha) {
+    const chave = nomePublicoDe(ficha);
+    let maior = 0;
+    for (const f of Object.values(m.figuras)) {
+      if (!Number.isInteger(f.ordinal) || nomePublicoDe(fichas[f.fichaId]) !== chave) continue;
+      if (f.ordinal > maior) maior = f.ordinal;
     }
     return maior + 1;
   }
@@ -3461,7 +3479,7 @@ export function criarSala({
       if (fimDaEspera) for (const l of Object.values(tx.estado.lugares)) if (l.papel !== 'mestre') l.seqEspera = l.seq;
       if (s.epoch === 1 && s.papel === 'jogadora') {
         const f = tx.estado.figuras[s.figuraId];
-        tx.emitir('entrada', { figuraId: f.id, nomePublico: nomePublicoDe(fichaDe(f)), lado: f.lado }, null);
+        tx.emitir('entrada', { figuraId: f.id, nomePublico: nomePublicoDaFigura(f, fichaDe(f)), lado: f.lado }, null);
       }
     });
     const outros = saidas.filter((x) => x.seatId !== seat.seatId); // a própria recebe o snapshot

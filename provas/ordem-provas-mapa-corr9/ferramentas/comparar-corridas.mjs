@@ -95,13 +95,20 @@ function bancada(jog, mes) {
   n['Mestre: recibos'] = m.recibos.map((r) => `${r.type}${r.campos?.op ? `(${r.campos.op} ${r.campos.casaM})` : ''}=${r.estado}`).join(' ');
   n['Mestre: escalas'] = m.escalas.map((s) => {
     const o = s.evento.soMestre;
-    return `${o.casaMAntes}→${o.casaM} m, ${o.grelhaAntes.largura}→${o.grelha.largura}, reserva ${o.vez.reservaM} paga ${o.vez.casasQuePaga}; ${s.depois.figuras.map((f) => `${f.nome} (${f.x},${f.y})`).join(' ')}`;
+    return `${o.casaMAntes}→${o.casaM} m, ${o.grelhaAntes.largura}→${o.grelha.largura}, reserva ${o.vez.reservaM} paga ${o.vez.casasQuePaga}; ${s.depois.figuras.map((f) => `${semOrdinal(f.nome)} (${f.x},${f.y})`).join(' ')}`;
   }).join(' | ');
   n['Mestre: movimentos'] = m.movimentos.map((x) => `(${x.de.x},${x.de.y})→(${x.para.x},${x.para.y}) ${x.custoM} m, fica ${x.reservaM}`).join(' | ');
   n['espectador'] = `${e.mensagens} mensagens, ${e.achados.length} achados, eventos escala ${JSON.stringify(e.eventosEscala)}`;
   n['Mestre: falhas'] = mes.falhas.length;
   const b = { 'jogadora: nós desenhados': sha(jog.fases.map((f) => Object.values(f.figuras).map((x) => [x.quem, x.noXZ, x.antesXZ ?? null]).sort(cmpStr))) };
   return { n, b };
+}
+
+// ORDEM-PLANO-2-F1 (D-AUD-12): as criaturas colocadas pelo Mestre passaram a ter número no nome («Orc 1»). A primeira
+// corrida (provas/ordem-mapa-jogavel/provas-bancada) é de antes e diz «Orc»; o que se compara aqui são as casas depois de
+// cada escala, por isso o número sai do nome antes de comparar. Os outros campos não levam nomes.
+function semOrdinal(nome) {
+  return typeof nome === 'string' ? nome.replace(/ \d+$/, '') : nome;
 }
 
 function resumo(pasta) {

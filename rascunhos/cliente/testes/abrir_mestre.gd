@@ -116,8 +116,9 @@ func _correr() -> void:
 	for l in c._lista_figuras.get_children():
 		linhas.append(l.text)
 	_ok(linhas.size() == vista["mestre"]["figuras"].size(), "uma linha por figura do Mestre (%d)" % linhas.size())
-	var com_orc := linhas.filter(func(t): return t.contains("Orc Verdadeiro Teste (Orc)") and t.contains("vida 7777/7777") and t.contains("PA 313/313"))
-	_ok(com_orc.size() == 1, "o orc com nome verdadeiro, vida a/b e PA a/b (L1)")
+	# ORDEM-PLANO-2-F1 (D-AUD-12): a criatura colocada tem número no nome verdadeiro e no público (a fixture do servidor).
+	var com_orc := linhas.filter(func(t): return t.contains("Orc Verdadeiro Teste 1 (Orc 1)") and t.contains("vida 7777/7777") and t.contains("PA 313/313"))
+	_ok(com_orc.size() == 1, "o orc com nome verdadeiro e número, vida a/b e PA a/b (L1, D-AUD-12)")
 	var com_her := linhas.filter(func(t): return t.contains("Heroína Teste") and t.contains("/5150"))
 	_ok(com_her.size() == 1, "a heroína com a vida total")
 	var amb: Array = []

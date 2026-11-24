@@ -87,6 +87,8 @@ function conferirFigura(f, id, fichas) {
   if (ehObj(f.casaColocacao)) conferirCasa(f.casaColocacao, p + '.casaColocacao', true);
   // Ordem 34 (D-1): a ordem de colocação (journals de antes não a têm); presente, inteiro >= 1.
   if (ehObj(f.casaColocacao)) seHouver(f.casaColocacao, 'ordem', p + '.casaColocacao', (v) => Number.isInteger(v) && v >= 1, 'não é inteiro >= 1');
+  // D-AUD-12: o número da figura («Orc 2»; journals de antes não o têm); presente, inteiro >= 1.
+  seHouver(f, 'ordinal', p, (v) => Number.isInteger(v) && v >= 1, 'não é inteiro >= 1');
 }
 
 function conferirLugar(s, id, e, fluxos) {

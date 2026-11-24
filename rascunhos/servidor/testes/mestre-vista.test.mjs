@@ -41,8 +41,8 @@ test('L1: em combate, cada figura do Mestre tem vidaActual/vidaTotal e PA gasto/
     assert.ok(Number.isInteger(f.vidaActual) && Number.isInteger(f.paGasto));
   }
   const orc = v.mestre.figuras.find((f) => f.fichaId === 'orc-teste');
-  assert.equal(orc.nome, 'Orc Verdadeiro Teste', 'o nome verdadeiro só vive aqui');
-  assert.equal(orc.nomePublico, 'Orc');
+  assert.equal(orc.nome, 'Orc Verdadeiro Teste 1', 'o nome verdadeiro só vive aqui (D-AUD-12: com o número da figura)');
+  assert.equal(orc.nomePublico, 'Orc 1');
   assert.equal(orc.vidaTotal, 7777, 'controlo positivo do canário 7777');
 });
 

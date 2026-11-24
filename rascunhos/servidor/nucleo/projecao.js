@@ -89,6 +89,21 @@ export function nomePublicoDe(ficha) {
   return ficha.papel === 'npc' ? 'Personagem' : 'Criatura';
 }
 
+/**
+ * D-AUD-12 (Plano 2, F1 item 5): o número da figura no nome — «Orc 1», «Orc 2», … O `ordinal` é guardado na figura
+ * quando o Mestre a coloca (sala.js MASTER_PLACE); jogadoras e figuras de salas e journals antigos não o têm, e o nome
+ * fica como antes, sem sufixo.
+ */
+export function comOrdinal(texto, fig) {
+  if (typeof texto !== 'string' || !Number.isInteger(fig?.ordinal) || fig.ordinal < 1) return texto;
+  return `${texto} ${fig.ordinal}`;
+}
+
+/** O nome público DESTA figura: o da ficha, com o número dela (D-AUD-12). */
+export function nomePublicoDaFigura(fig, ficha) {
+  return comOrdinal(nomePublicoDe(ficha), fig);
+}
+
 /** Estado visível de uma figura: de_pe, caida, morta ou transformada. */
 export function visivelDe(fig) {
   if (!fig.vivo) return 'morta';
@@ -133,7 +148,7 @@ export function projetarEvento(evento, dest) {
 export function figuraPublica(fig, fichas) {
   return {
     id: fig.id,
-    nomePublico: nomePublicoDe(fichas[fig.fichaId]),
+    nomePublico: nomePublicoDaFigura(fig, fichas[fig.fichaId]),
     lado: fig.lado,
     x: fig.x,
     y: fig.y,
@@ -150,8 +165,8 @@ export function figuraDoMestre(fig, fichas) {
   const ficha = fichas[fig.fichaId];
   return {
     ...clonarJson(fig),
-    nome: ficha?.nome ?? null,
-    nomePublico: nomePublicoDe(ficha),
+    nome: comOrdinal(ficha?.nome ?? null, fig),
+    nomePublico: nomePublicoDaFigura(fig, ficha),
     vidaTotal: ficha?.vidaTotal ?? null,
     paTotal: ficha?.paTotal ?? null,
     // Plano B: o desenho da figura na arena do Mestre (marcador do site; sem ficha visual, o cliente usa o padrão).

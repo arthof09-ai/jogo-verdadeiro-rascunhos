@@ -138,12 +138,17 @@ export class Cliente {
   eventos(tipo) {
     return this.msgs.filter((m) => m.type === 'ROOM_EVENT' && (!tipo || m.tipo === tipo));
   }
-  /** Id opaco de uma figura pelo nome público (a partir do que este cliente viu). */
+  /**
+   * Id opaco de uma figura pelo nome público (a partir do que este cliente viu). D-AUD-12: as criaturas colocadas pelo
+   * Mestre têm número («Orc 1»); «Orc» encontra a primeira «Orc N» vista, e «Orc 2» só a figura com esse número.
+   */
   idPorNome(nomePublico) {
+    const bate = (n) => n === nomePublico
+      || (typeof n === 'string' && n.startsWith(nomePublico + ' ') && /^\d+$/.test(n.slice(nomePublico.length + 1)));
     for (const m of this.msgs) {
-      if (m.type === 'ROOM_EVENT' && m.tipo === 'colocacao' && m.dados.nomePublico === nomePublico) return m.dados.figuraId;
+      if (m.type === 'ROOM_EVENT' && m.tipo === 'colocacao' && bate(m.dados.nomePublico)) return m.dados.figuraId;
       if (m.type === 'ROOM_SNAPSHOT') {
-        const f = m.figuras.find((x) => x.nomePublico === nomePublico);
+        const f = m.figuras.find((x) => bate(x.nomePublico));
         if (f) return f.id;
       }
     }

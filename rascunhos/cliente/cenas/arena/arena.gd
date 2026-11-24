@@ -70,6 +70,14 @@ const RAIO_RECORTE_M := 5.0
 const NomesSemSobrepor := preload("res://cenas/comum/nomes_sem_sobrepor.gd")
 ## Ordem 40: o clima (chuva e neve) é um módulo de apresentação; a arena só o liga. Nunca calcula regra.
 const Clima := preload("res://arte/clima/clima.gd")
+## D-AUD-05 (ORDEM-PLANO-2-F1): a câmara segue a figura dela. A primeira vez que a figura existe dentro da grelha (pelo
+## snapshot OU pelo evento da colocação) a câmara vai lá; depois, quando ela anda ou é colocada, a câmara só recentra se
+## a figura ficaria FORA do terço central da imagem — dentro dele, a câmara fica onde a jogadora a pôs (o arrasto dela
+## conserva-se). Decisão do coordenador, reversível com uma palavra do Mestre: SEGUIR_SEMPRE = true recentra a cada passo.
+const SEGUIR_SEMPRE := false
+## Até onde a figura pode ir, a partir do centro da imagem, sem puxar a câmara (fracção da largura e da altura, de cada
+## lado): 1/6 de cada lado é o terço central.
+const MEIA_JANELA_SEGUIR := 1.0 / 6.0
 
 @onready var camera: CameraMesa = $Camera
 @onready var hud = $HUD  # hud.gd (sem tipo para não criar preload circular)
@@ -727,18 +735,60 @@ func _ao_snapshot() -> void:
 		_construir_grelha(w, h, casa)
 	_sincronizar_figuras()
 	mostrar_fogo()
-	if not _focou and Estado.minha_figura_id != "":
-		var minha: Vector2i = Estado.casa_de(Estado.figuras.get(Estado.minha_figura_id))
-		if dentro(minha):
-			camera.focar(centro_casa(minha))
-			_focou = true
+	_focar_primeira_vez()
 	_ao_opcoes()
 
 
-func _ao_evento(_evento: Dictionary) -> void:
+func _ao_evento(evento: Dictionary) -> void:
 	_sincronizar_figuras()
 	_mostrar_destaques()
 	mostrar_fogo()
+	# D-AUD-05: a batalha que começa com ela já na arena traz a colocação dela num EVENTO (o snapshot era o do lobby).
+	if _focar_primeira_vez():
+		return
+	var tipo = evento.get("tipo")
+	var dados = evento.get("dados")
+	if (tipo == "movimento" or tipo == "colocacao") and dados is Dictionary 			and Estado.minha_figura_id != "" and str(dados.get("figuraId", "")) == Estado.minha_figura_id:
+		_seguir_minha()
+
+
+## D-AUD-05: a primeira vez que a figura dela existe dentro da grelha, a câmara vai lá. Chamado pelo snapshot e pelo
+## evento. Devolve true se focou agora.
+func _focar_primeira_vez() -> bool:
+	if _focou or Estado.minha_figura_id == "":
+		return false
+	var minha: Vector2i = Estado.casa_de(Estado.figuras.get(Estado.minha_figura_id))
+	if not dentro(minha):
+		return false
+	camera.focar(centro_casa(minha))
+	_focou = true
+	return true
+
+
+## D-AUD-05: ela andou (ou foi colocada outra vez): a câmara vai à casa nova se a figura sair do terço central.
+func _seguir_minha() -> void:
+	var minha: Vector2i = Estado.casa_de(Estado.figuras.get(Estado.minha_figura_id))
+	if not dentro(minha):
+		return
+	var p := centro_casa(minha)
+	if SEGUIR_SEMPRE or fora_do_centro(p):
+		camera.focar(p)
+
+
+## D-AUD-05: true se o ponto, visto da câmara quando ela acabar de deslizar para o foco que já tem, cai fora do terço
+## central da imagem. O Panorama mostra a arena toda e não usa o foco (camera_mesa.gd `_foco_alvo`): nunca puxa.
+func fora_do_centro(p: Vector3) -> bool:
+	if camera.modo == CameraMesa.Modo.PANORAMA:
+		return false
+	# A câmara desliza até `foco` sem rodar: quando lá chegar, o ponto p vê-se onde hoje se vê p + (foco_atual − foco).
+	var visto := p + camera.foco_atual() - camera.foco
+	if camera.is_position_behind(visto):
+		return true
+	var tam := camera.get_viewport().get_visible_rect().size
+	if tam.x <= 0.0 or tam.y <= 0.0:
+		return true
+	var e := camera.unproject_position(visto)
+	return absf(e.x / tam.x - 0.5) > MEIA_JANELA_SEGUIR or absf(e.y / tam.y - 0.5) > MEIA_JANELA_SEGUIR
 
 
 ## As opções mudaram (ou deixaram de valer): refaz o destaque, sem enviar nada.

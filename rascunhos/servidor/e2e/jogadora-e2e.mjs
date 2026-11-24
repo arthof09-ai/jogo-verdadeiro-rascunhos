@@ -16,6 +16,8 @@ import { randomUUID } from 'node:crypto';
 import { SENHAS } from '../testes/ajudantes.mjs';
 
 const porta = Number(process.argv[2] ?? 8765);
+// ORDEM-PLANO-2-F1 (D-AUD-12): a criatura colocada tem número («Orc 1»); as salas de antes, «Orc».
+const eOrc = (n) => typeof n === 'string' && /^Orc( \d+)?$/.test(n);
 const CANARIOS = ['Orc Verdadeiro', '7777', 'CANARIO-DESGRACA', 'CANARIO-FANTASMA', '9137'];
 const marcos = [];
 const marcar = (t) => {
@@ -93,11 +95,11 @@ function ligar() {
     if (m.type === 'ROOM_SNAPSHOT') {
       if (m.propria) minha = m.propria.figuraId;
       vez = m.vezId;
-      const o = (m.figuras ?? []).find((f) => f.nomePublico === 'Orc');
+      const o = (m.figuras ?? []).find((f) => eOrc(f.nomePublico));
       if (o) orc = o.id;
     }
     if (m.type === 'ROOM_EVENT') {
-      if (m.tipo === 'colocacao' && m.dados?.nomePublico === 'Orc') orc = m.dados.figuraId;
+      if (m.tipo === 'colocacao' && eOrc(m.dados?.nomePublico)) orc = m.dados.figuraId;
       if (m.tipo === 'turno' && m.dados?.figuraId) vez = m.dados.figuraId;
       if (m.tipo === 'revertido') marcar('voltar visto');
       if (m.tipo === 'fim' && fase === 'fim') marcar('fim visto');
