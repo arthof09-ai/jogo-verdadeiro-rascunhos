@@ -700,6 +700,30 @@ func _mudar_estado(novo: int) -> void:
 
 # ---------------------------------------------------------------- disco
 
+## ORDEM-D-AUD-16: o papel do lugar guardado (user://lugar.cfg), lido ANTES de ligar, para a cena principal saber
+## para onde vai o arranque (o cliente do Mestre abre directo no ecrã dele). "" quando não há lugar válido (sem
+## ficheiro, de outro servidor, sem token), quando a Rede já arrancou (veio do lobby), sem disco ou no link de medição.
+## Só lê: não muda nada na Rede.
+func papel_do_arranque() -> String:
+	if _ativo or modo_medicao or not persistir:
+		return ""
+	var cfg := ConfigFile.new()
+	if cfg.load(ARQ_LUGAR) != OK:
+		return ""
+	return papel_do_lugar(cfg, url_servidor())
+
+
+## ORDEM-D-AUD-16: o papel de um lugar guardado, com as mesmas regras do _carregar_lugar (o mesmo servidor) e com
+## token (sem token a Rede pede a entrada: o arranque fica o de sempre). "" se não serve.
+static func papel_do_lugar(cfg: ConfigFile, servidor: String) -> String:
+	if _texto(cfg.get_value("lugar", "servidor", "")) != servidor:
+		return ""
+	if _texto(cfg.get_value("lugar", "seatToken", "")) == "":
+		return ""
+	var p := _texto(cfg.get_value("lugar", "papel", ""))
+	return p if p == "jogadora" or p == "mestre" else ""
+
+
 ## O lugar só vale para o mesmo servidor (o roomId é dado pelo servidor no WELCOME).
 func _carregar_lugar() -> void:
 	if not persistir:

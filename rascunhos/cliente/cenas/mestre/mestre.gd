@@ -653,7 +653,9 @@ func _ao_retomada() -> void:
 
 func _ao_ligacao(_e: int) -> void:
 	if not Rede.na_mesa():
-		_juntar_alerta(Textos.ALERTA["ligacao"])
+		# ORDEM-D-AUD-16: no arranque directo o ecrã abre com a ligação ainda a abrir; isso não é uma queda.
+		if Rede.ja_esteve_na_mesa():
+			_juntar_alerta(Textos.ALERTA["ligacao"])
 	else:
 		_consultar_em_voo()
 		_recomecar_conta_vista()  # Ordem 49 (A): de volta à mesa, a conta do tecto recomeça

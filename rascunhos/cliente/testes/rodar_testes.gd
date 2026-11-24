@@ -65,6 +65,7 @@ func _initialize() -> void:
 	_teste_frases_no_estado()
 	_teste_ambiente_na_party()
 	_teste_reentrada_servidor_restaurado()
+	_teste_arranque_do_mestre()
 	_teste_sala_de_espera()
 	_teste_aguardando_mestre_desconhecida()
 	_teste_validacao_da_entrada()
@@ -475,6 +476,40 @@ func _teste_ambiente_na_party() -> void:
 ## seq e a revisão DESTE lugar mais baixos do que o aparelho viu. Ao ROOM_JOIN com lastSeq acima do seq dele, o servidor
 ## responde com um ROOM_SNAPSHOT (sala.js mensagensDeSincronizacao). Antes o cliente deitava-o fora (mais velho do que
 ## o que tinha) e ficava preso: os eventos novos pareciam repetidos e as opções nunca valiam (revisão só a subir).
+## ORDEM-D-AUD-16: o cliente cujo lugar guardado é o do Mestre abre directo no ecrã dele; o resto fica como era.
+func _lugar_de_prova(servidor: String, token: String, papel: String) -> ConfigFile:
+	var c := ConfigFile.new()
+	c.set_value("lugar", "servidor", servidor)
+	c.set_value("lugar", "seatToken", token)
+	c.set_value("lugar", "papel", papel)
+	return c
+
+
+func _teste_arranque_do_mestre() -> void:
+	print("Arranque do cliente pelo lugar guardado (ORDEM-D-AUD-16):")
+	var srv := "ws://127.0.0.1:8790/ws"
+	_ok(RedeScript.papel_do_lugar(_lugar_de_prova(srv, "tok-m", "mestre"), srv) == "mestre", "lugar do Mestre com token → «mestre»")
+	_ok(RedeScript.papel_do_lugar(_lugar_de_prova(srv, "tok-j", "jogadora"), srv) == "jogadora", "lugar da jogadora → «jogadora» (a arena fica)")
+	_ok(RedeScript.papel_do_lugar(_lugar_de_prova("ws://10.0.0.9:8790/ws", "tok-m", "mestre"), srv) == "", "lugar de outro servidor → vazio (não serve)")
+	_ok(RedeScript.papel_do_lugar(_lugar_de_prova(srv, "", "mestre"), srv) == "", "lugar do Mestre sem token → vazio (a Rede pede a entrada, como antes)")
+	_ok(RedeScript.papel_do_lugar(_lugar_de_prova(srv, "tok", "outro"), srv) == "", "papel desconhecido → vazio")
+	_ok(RedeScript.papel_do_lugar(ConfigFile.new(), srv) == "", "sem lugar → vazio")
+	var rede = RedeScript.new()
+	rede.persistir = false
+	_ok(rede.papel_do_arranque() == "", "sem disco (testes) → vazio")
+	rede.persistir = true
+	rede.modo_medicao = true
+	_ok(rede.papel_do_arranque() == "", "no link de medição → vazio")
+	rede.modo_medicao = false
+	rede._ativo = true
+	_ok(rede.papel_do_arranque() == "", "a Rede já arrancou (veio do lobby) → vazio")
+	rede.free()
+	var fonte := FileAccess.get_file_as_string("res://cenas/arena/arena.gd")
+	_ok(fonte.contains('const CENA_ARRANQUE_MESTRE := "res://cenas/mestre/mestre.tscn"'), "predefinição: o Mestre abre directo em mestre.tscn (C-7, reversível)")
+	_ok(fonte.contains('get_tree().current_scene == self and Rede.papel_do_arranque() == "mestre"'), "o desvio só vale no arranque (cena principal)")
+	_ok(ResourceLoader.exists("res://cenas/mestre/mestre.tscn"), "mestre.tscn existe")
+
+
 func _teste_reentrada_servidor_restaurado() -> void:
 	print("Reentrada num servidor restaurado (ordem 19, V12):")
 	var est = EstadoScript.new()

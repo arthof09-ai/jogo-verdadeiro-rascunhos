@@ -502,6 +502,7 @@ func _correr() -> void:
 	await _figuras_bloqueadas(c)
 	await _fila_alertas(c)
 	await _recibo_perdido(c, fx["mestre"]["cartoes"]["ia"])
+	await _arranque_sem_queda(c)
 	await _nomes_juntos(c, fx["mestre"]["vista"])
 	await _camara_livre(c)
 	await _clima(c)
@@ -1282,6 +1283,28 @@ func _fila_alertas(c) -> void:
 	_rede.papel = "mestre"
 	_rede.mestre_recebido.disconnect(ouvir)
 	_ok(not vistos.has("MASTER_ALERTAS"), "N32-1: fora do lugar do Mestre o bloco não passa da Rede")
+
+
+## ORDEM-D-AUD-16: o cliente do Mestre abre directo no ecrã dele, com a ligação ainda a abrir. Isso não é uma queda:
+## sem ter estado na mesa, «A ligação caiu» não aparece; depois de ter estado, aparece como antes.
+func _arranque_sem_queda(c) -> void:
+	print("== ORDEM-D-AUD-16: a ligação a abrir no arranque não é «A ligação caiu» ==")
+	var estado_antes: int = _rede.estado_ligacao
+	var esteve_antes: bool = _rede._ja_esteve_na_mesa
+	var n: int = c.alertas.size()
+	_rede._ja_esteve_na_mesa = false
+	_rede.estado_ligacao = _rede.Ligacao.A_LIGAR
+	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	_ok(c.alertas.size() == n, "arranque (nunca esteve na mesa), a ligar: nenhum alerta (%d → %d)" % [n, c.alertas.size()])
+	_rede._ja_esteve_na_mesa = true
+	_rede.estado_ligacao = _rede.Ligacao.A_ESPERAR
+	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	_ok(c.alertas.size() == n + 1 and c.alertas[-1] == Textos.ALERTA["ligacao"],
+		"depois de ter estado na mesa, a queda dá «%s»" % Textos.ALERTA["ligacao"])
+	_rede._ja_esteve_na_mesa = esteve_antes
+	_rede.estado_ligacao = estado_antes
+	_rede.ligacao_mudou.emit(_rede.estado_ligacao)
+	await _quadros(1)
 
 
 ## Ordem 29 (V25): a ligação cai com um comando do Mestre em voo e o recibo perde-se. Antes, `_em_voo` só se esvaziava

@@ -17,6 +17,10 @@ extends Node3D
 enum Modo { NENHUM, MOVER, ATAQUE, CONSUMIVEL }
 
 const CENA_LOBBY := "res://cenas/lobby/lobby.tscn"
+## ORDEM-D-AUD-16: para onde vai o arranque quando o lugar guardado é o do Mestre. PREDEFINIÇÃO REVERSÍVEL do
+## coordenador (a pergunta C-7, «directo ou pelo lobby?», é do Mestre): directo no ecrã dele. Para passar pelo lobby,
+## esta linha passa a "res://cenas/lobby/lobby.tscn" (o lobby, com a Rede já a ligar, manda o Mestre para o ecrã dele).
+const CENA_ARRANQUE_MESTRE := "res://cenas/mestre/mestre.tscn"
 ## `orientacao` do servidor é uma letra (sala.js: 'S' por omissão; MASTER_PLACE aceita até 8 letras).
 ## Rumo em graus à volta do Y; a frente do Node3D é -Z e a casa y cresce para +Z (sul).
 ## PROVISÓRIO: o conjunto exato de letras não está na especificação; aceitam-se N/S/L/O e E/W.
@@ -134,6 +138,11 @@ func _process(_delta: float) -> void:
 
 
 func _ready() -> void:
+	# ORDEM-D-AUD-16: a arena é a cena principal; o cliente cujo lugar guardado é o do Mestre não fica aqui (era o
+	# D-AUD-16: o Mestre aterrava no ecrã da jogadora). Só no arranque: cena principal e Rede ainda por ligar.
+	if get_tree().current_scene == self and Rede.papel_do_arranque() == "mestre":
+		_abrir_no_mestre()
+		return
 	# Ordem 42: o Sol já não se roda aqui — a direcção é a da luz pintada do mapa (paleta).
 	camera.altura_em = altura_chao
 	clima = CampoDaMesa.criar_clima()
@@ -160,6 +169,18 @@ func _ready() -> void:
 	if Estado.tem_snapshot:
 		_ao_snapshot()
 	print("pronto")  # o CI (JV0.2) espera esta linha no console
+
+
+## ORDEM-D-AUD-16: liga com o lugar do Mestre e muda já para o ecrã dele (nada da arena chega a montar).
+func _abrir_no_mestre() -> void:
+	_saindo = true
+	# Até a troca de cena (no fim do quadro), a arena não corre nem se mostra: nem um quadro da HUD da jogadora.
+	process_mode = Node.PROCESS_MODE_DISABLED
+	visible = false
+	hud.visible = false
+	print("arranque: lugar do Mestre -> %s (ORDEM-D-AUD-16)" % CENA_ARRANQUE_MESTRE)
+	Rede.iniciar()
+	get_tree().change_scene_to_file.call_deferred(CENA_ARRANQUE_MESTRE)
 
 
 func _ao_precisa_entrar(_motivo: String) -> void:
