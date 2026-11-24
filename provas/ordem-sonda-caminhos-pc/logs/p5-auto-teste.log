@@ -1,0 +1,63 @@
+# comando: bash provas/ordem-sonda-caminhos-pc/ferramentas/prova-sonda.sh <python> provas/ordem-sonda-caminhos-pc/logs   (na raiz do repositório)
+# hora: 2026-11-24 07:41:46 -0300
+# ponta: 35e7123 (.github igual ao commit)
+## p5: o auto-teste (o passo «A rede morde» do CI)
+--- árvore limpa (sem nenhuma das formas) (esperado: saída 0)
+caminhos do PC: 0 ocorrências no total; 0 na linha de base (0 entradas), 0 novas; 0 entradas da base já não existem.
+Sonda limpa: nenhum caminho do PC novo.
+=== árvore limpa (sem nenhuma das formas): saída 0 -> OK
+--- apanha forma 1 (esperado: saída 1)
+caminhos do PC: 1 ocorrências no total; 0 na linha de base (0 entradas), 1 novas; 0 entradas da base já não existem.
+::error file=b/novo.log,line=2::Caminho real do PC (forma 1) — este repositório não admite caminhos do PC.
+  NOVO b/novo.log:2 forma 1
+=== apanha forma 1: saída 1 -> OK
+--- apanha forma 1 com barra dobrada (esperado: saída 1)
+caminhos do PC: 1 ocorrências no total; 0 na linha de base (0 entradas), 1 novas; 0 entradas da base já não existem.
+::error file=b/novo.log,line=2::Caminho real do PC (forma 1) — este repositório não admite caminhos do PC.
+  NOVO b/novo.log:2 forma 1
+=== apanha forma 1 com barra dobrada: saída 1 -> OK
+--- apanha forma 2 (esperado: saída 1)
+caminhos do PC: 1 ocorrências no total; 0 na linha de base (0 entradas), 1 novas; 0 entradas da base já não existem.
+::error file=b/novo.log,line=2::Caminho real do PC (forma 2) — este repositório não admite caminhos do PC.
+  NOVO b/novo.log:2 forma 2
+=== apanha forma 2: saída 1 -> OK
+--- apanha forma 2 escapada em JSON (esperado: saída 1)
+caminhos do PC: 1 ocorrências no total; 0 na linha de base (0 entradas), 1 novas; 0 entradas da base já não existem.
+::error file=b/novo.log,line=2::Caminho real do PC (forma 2) — este repositório não admite caminhos do PC.
+  NOVO b/novo.log:2 forma 2
+=== apanha forma 2 escapada em JSON: saída 1 -> OK
+--- apanha forma 3 (esperado: saída 1)
+caminhos do PC: 1 ocorrências no total; 0 na linha de base (0 entradas), 1 novas; 0 entradas da base já não existem.
+::error file=b/novo.log,line=2::Caminho real do PC (forma 3) — este repositório não admite caminhos do PC.
+  NOVO b/novo.log:2 forma 3
+=== apanha forma 3: saída 1 -> OK
+--- apanha forma 1 em minúsculas (esperado: saída 1)
+caminhos do PC: 1 ocorrências no total; 0 na linha de base (0 entradas), 1 novas; 0 entradas da base já não existem.
+::error file=b/novo.log,line=2::Caminho real do PC (forma 1) — este repositório não admite caminhos do PC.
+  NOVO b/novo.log:2 forma 1
+=== apanha forma 1 em minúsculas: saída 1 -> OK
+base gerada: 1 ocorrências em 1 ficheiros -> .base
+--- linha de base: a ocorrência conhecida passa (esperado: saída 0)
+caminhos do PC: 1 ocorrências no total; 1 na linha de base (1 entradas), 0 novas; 0 entradas da base já não existem.
+Sonda limpa: nenhum caminho do PC novo.
+=== linha de base: a ocorrência conhecida passa: saída 0 -> OK
+base gerada: 1 ocorrências em 1 ficheiros -> .base
+--- linha de base: uma linha nova no mesmo ficheiro é apanhada (esperado: saída 1)
+caminhos do PC: 2 ocorrências no total; 1 na linha de base (1 entradas), 1 novas; 0 entradas da base já não existem.
+::error file=v.log,line=2::Caminho real do PC (forma 3) — este repositório não admite caminhos do PC.
+  NOVO v.log:2 forma 3
+=== linha de base: uma linha nova no mesmo ficheiro é apanhada: saída 1 -> OK
+base gerada: 1 ocorrências em 1 ficheiros -> .base
+--- linha de base: a mesma linha copiada para outro ficheiro é apanhada (esperado: saída 1)
+caminhos do PC: 2 ocorrências no total; 1 na linha de base (1 entradas), 1 novas; 0 entradas da base já não existem.
+::error file=outro.log,line=1::Caminho real do PC (forma 1) — este repositório não admite caminhos do PC.
+  NOVO outro.log:1 forma 1
+=== linha de base: a mesma linha copiada para outro ficheiro é apanhada: saída 1 -> OK
+base gerada: 1 ocorrências em 1 ficheiros -> .base
+--- linha de base: a mesma linha repetida no mesmo ficheiro é apanhada (esperado: saída 1)
+caminhos do PC: 2 ocorrências no total; 1 na linha de base (1 entradas), 1 novas; 0 entradas da base já não existem.
+::error file=v.log,line=2::Caminho real do PC (forma 1) — este repositório não admite caminhos do PC.
+  NOVO v.log:2 forma 1
+=== linha de base: a mesma linha repetida no mesmo ficheiro é apanhada: saída 1 -> OK
+AUTO-TESTE: 0 falha(s)
+saída: 0

@@ -1,0 +1,44 @@
+# comando: (cd rascunhos/validador-glb && node --test "testes/*.test.mjs")
+# hora: 2026-11-24 07:42:14 -0300 (fim)
+# ponta: 35e7123
+✔ GLB correto mínimo é APROVADO, sem falhas (17.9048ms)
+✔ o relatório tem a forma do §7 e medidas coerentes (2.8559ms)
+✔ V18: o SHA-256 do relatório é o do arquivo, e o resultado é determinístico (7.3089ms)
+✔ isca-escala-x100 (malha em centímetros (×100)) é REPROVADO por V04 (2.5938ms)
+✔ isca-escala-x100 reprova SÓ em V04 (a isca isola um defeito) (2.8601ms)
+✔ isca-pivo-umbigo (origem no umbigo, a 1 m do chão) é REPROVADO por V05 (1.9635ms)
+✔ isca-pivo-umbigo reprova SÓ em V05 (a isca isola um defeito) (2.1963ms)
+✔ isca-sem-head (falta o osso Head) é REPROVADO por V11 (2.1882ms)
+✔ isca-sem-head reprova SÓ em V11 (a isca isola um defeito) (2.4535ms)
+✔ isca-mixamorig (ossos mixamorig:*) é REPROVADO por V11 (1.9488ms)
+✔ isca-mixamorig reprova SÓ em V11 (a isca isola um defeito) (1.9145ms)
+✔ isca-clip-idle (um clip chamado "Idle") é REPROVADO por V15 (1.7395ms)
+✔ isca-clip-idle reprova SÓ em V15 (a isca isola um defeito) (2.9493ms)
+✔ isca-cinco-influencias (5 influências num vértice) é REPROVADO por V13 (2.1853ms)
+✔ isca-cinco-influencias reprova SÓ em V13 (a isca isola um defeito) (1.8845ms)
+✔ isca-textura-1000 (textura 1000×1000) é REPROVADO por V09 (11.9638ms)
+✔ isca-textura-1000 reprova SÓ em V09 (a isca isola um defeito) (2.2339ms)
+✔ isca-arma-fundida (espada na mesma primitiva do corpo) é REPROVADO por V16 (2.7659ms)
+✔ isca-arma-fundida reprova SÓ em V16 (a isca isola um defeito) (1.9145ms)
+✔ isca sem Head dá o aviso da V06 pedido pelo §7 (1.8309ms)
+✔ V01: lixo e GLB truncado reprovam na leitura (1.5922ms)
+✔ V02: Draco em extensionsRequired reprova (2.6378ms)
+✔ V03: sem asset.extras.contrato reprova (1.9599ms)
+✔ V07: rotação no nó da malha reprova (1.9402ms)
+✔ V14: faltar "morrer" reprova (1.725ms)
+✔ V15: "parado" sem o sufixo _loop reprova (2.3637ms)
+✔ V06: modelo virado para −Z reprova (1.9066ms)
+✔ V16: extras.anexo com valor inválido reprova (1.7241ms)
+✔ V09: dimensões do PNG lidas do IHDR (0.2174ms)
+✔ V09: dimensões do JPEG lidas do marcador SOF0 (0.1283ms)
+✔ ossos-ual1.json: 65 ossos, todos os obrigatórios incluídos, sem repetição (0.0815ms)
+﹣ UAL1 real: a lista extraída confere com ossos-ual1.json (0.0557ms) # defina UAL1_GLB com o caminho do UAL1_Standard.glb
+﹣ UAL1 derivado (clips renomeados): esqueleto e pesos passam; só falta cair/levantar (V14) (0.0274ms) # defina UAL1_GLB com o caminho do UAL1_Standard.glb
+ℹ tests 33
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 2
+ℹ todo 0
+ℹ duration_ms 181.3033

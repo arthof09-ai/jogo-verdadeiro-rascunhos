@@ -1,0 +1,9 @@
+# comando: bash provas/ordem-sonda-caminhos-pc/ferramentas/prova-sonda.sh <python> provas/ordem-sonda-caminhos-pc/logs   (na raiz do repositório)
+# hora: 2026-11-24 07:41:35 -0300
+# ponta: 35e7123 (.github igual ao commit)
+## p2: um ficheiro de teste (sonda-teste-caminho.txt) com a forma 2 na linha 2
+e-mails: Sonda limpa: nenhum e-mail pessoal encontrado.
+caminhos do PC: 349 ocorrências no total; 348 na linha de base (348 entradas), 1 novas; 0 entradas da base já não existem.
+::error file=sonda-teste-caminho.txt,line=2::Caminho real do PC (forma 2) — este repositório não admite caminhos do PC.
+  NOVO sonda-teste-caminho.txt:2 forma 2
+saída da Sonda: 1
