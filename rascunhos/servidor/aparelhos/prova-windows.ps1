@@ -5,12 +5,15 @@
 #
 # O que faz, por esta ordem (cada passo com a hora no procedimento.log):
 #   1. importa o projecto e exporta o Windows (preset «Windows»: build/windows/Assimilacao.exe + .console.exe);
+#      um exit ≠ 0 do import OU do export falha a prova (A2 da ORDEM-PLANO-2-F2-PROVA-WINDOWS-ENDURECER);
 #      -SemExport salta este passo e usa o build/windows que lá estiver (o SHA-256 do .exe fica registado na mesma);
-#   2. arranca a mesa de prova (mesa-prova.mjs, Mestre-bot, combate aberto) e espera «pronto-mesa-prova»;
+#   2. arranca a mesa de prova (mesa-prova.mjs, Mestre-bot) e espera «pronto-mesa-prova»; o combate aberto só se
+#      afirma depois de ler no log da mesa a linha «[mesa-prova] combate aberto pelo Mestre-bot» (falha sem ela);
 #   3. arranca o Assimilacao.console.exe exportado, com os argumentos ENTRE ASPAS (o defeito da corrida de 24/11: o
 #      Start-Process -ArgumentList junta os argumentos sem aspas e «--entrar-nome=Espadachim de Bancada» chegava
 #      partido em três; o cliente mostrava «pronto» e nunca entrava). A linha de comando que o Windows de facto
-#      recebeu é lida do Win32_Process e fica no log;
+#      recebeu é lida do Win32_Process e fica no log; o processo do jogo (filho do invólucro de consola) tem de
+#      aparecer em 10 s — sem ele a prova falha (não há «0 de 0»);
 #   4. espera a linha «rede: ROOM_SNAPSHOT … plataforma=Windows» do cliente;
 #   5. deixa o cliente na mesa SegundosNaMesa (30 s por omissão), a conferir de 5 em 5 s que o processo está vivo e
 #      que a mesa não registou SAIU;
@@ -19,7 +22,8 @@
 #   7. espera o SAIU na mesa, pára a mesa e confere: ENTROU e SAIU com horas, SAIU − ENTROU ≥ SegundosNaMesa,
 #      SAIU depois da morte, 0 erros de script;
 #   8. normaliza todos os logs para UTF-8 (sem BOM; o que não for UTF-8 válido é lido como CP1252, a página da
-#      consola do Windows), troca o caminho da máquina por <sede>/<casa> e escreve-os INTEIROS em -Saida.
+#      consola do Windows), troca o caminho da máquina por <sede>/<casa> e escreve-os INTEIROS em -Saida; cada
+#      processo arrancado deixa um .log e um .err, e qualquer um deles em falta falha a prova.
 #
 # O exit code do guião é 0 se a prova passa e 1 se falha; a última linha do procedimento.log diz qual.
 # Não muda o cliente nem o servidor: só os arranca. Só fichas fictícias de bancada.
@@ -43,6 +47,7 @@ $Utf8Estrito = New-Object System.Text.UTF8Encoding($false, $true)
 $Cp1252 = [System.Text.Encoding]::GetEncoding(1252)
 $Proc = Join-Path $Tmp 'procedimento.log'
 $falhas = New-Object System.Collections.ArrayList
+$esperados = New-Object System.Collections.ArrayList  # os logs que cada processo arrancado tem de deixar
 
 function Get-Utc { [DateTime]::UtcNow.ToString('HH:mm:ss.fff') }
 function Get-Local { (Get-Date).ToString('yyyy-MM-ddTHH:mm:ss.fffzzz') }
@@ -80,6 +85,7 @@ function Normalizar-Para([string]$origem, [string]$destino) {
 }
 function Iniciar([string]$exe, [string[]]$argumentos, [string]$pasta, [string]$nome) {
   $o = Join-Path $Tmp ($nome + '.log'); $e = Join-Path $Tmp ($nome + '.err')
+  [void]$esperados.Add($nome + '.log'); [void]$esperados.Add($nome + '.err')
   $p = Start-Process -FilePath $exe -ArgumentList $argumentos -WorkingDirectory $pasta -NoNewWindow `
     -RedirectStandardOutput $o -RedirectStandardError $e -PassThru
   $null = $p.Handle  # sem isto o Windows PowerShell 5.1 perde o ExitCode
@@ -112,7 +118,7 @@ try {
       if (-not $g.WaitForExit($passo[2] * 1000)) { Stop-Process -Id $g.Id -Force; Falhar "$($passo[0]): passou de $($passo[2]) s" }
       $g.WaitForExit()
       Escrever-Passo "$($passo[0]): exit $($g.ExitCode)"
-      if ($passo[0] -ne 'import' -and $g.ExitCode -ne 0) { Falhar "$($passo[0]) com exit $($g.ExitCode)" }
+      if ($g.ExitCode -ne 0) { Falhar "$($passo[0]) com exit $($g.ExitCode)" }
     }
     $e = Ler-Partilhado (Join-Path $Tmp 'export-Windows.log')
     if ($e -match 'SCRIPT ERROR|Parse Error') { Falhar 'erros de script no export' }
@@ -137,7 +143,10 @@ try {
     Start-Sleep -Milliseconds 100
   }
   if ((Ler-Partilhado $mesaLog) -notmatch 'pronto-mesa-prova') { throw 'a mesa não ficou pronta em 30 s' }
-  Escrever-Passo "mesa pronta (pid $($mesa.Id)), combate aberto pelo Mestre-bot"
+  Escrever-Passo "mesa pronta (pid $($mesa.Id))"
+  $linhaCombate = '[mesa-prova] combate aberto pelo Mestre-bot'
+  if (-not (Ler-Partilhado $mesaLog).Contains($linhaCombate)) { throw "a mesa ficou pronta sem a linha «$linhaCombate» no log: o combate não está aberto" }
+  Escrever-Passo "combate aberto: a linha «$linhaCombate» está no log da mesa"
 
   # ---- 3. o cliente Windows, com os argumentos entre aspas ----
   $argsCli = @('--headless', '--', "--servidor=127.0.0.1:$Porta", '"--entrar-nome=Espadachim de Bancada"', '--entrar-senha=prova-espadachim')
@@ -146,7 +155,13 @@ try {
   $tCli = [Diagnostics.Stopwatch]::StartNew()
   Start-Sleep -Milliseconds 300
   Escrever-Passo ("cliente arrancou: pid $($cli.Id); linha de comando recebida: " + (Linha-De-Comando $cli.Id))
-  $filhos = @(Get-CimInstance Win32_Process -Filter "ParentProcessId=$($cli.Id)" -ErrorAction SilentlyContinue | Where-Object { $_.Name -like 'Assimilacao*' })
+  $tFilhos = [Diagnostics.Stopwatch]::StartNew()
+  do {
+    $filhos = @(Get-CimInstance Win32_Process -Filter "ParentProcessId=$($cli.Id)" -ErrorAction SilentlyContinue | Where-Object { $_.Name -like 'Assimilacao*' })
+    if ($filhos.Count -gt 0 -or $cli.HasExited) { break }
+    Start-Sleep -Milliseconds 200
+  } while ($tFilhos.Elapsed.TotalSeconds -lt 10)
+  if ($filhos.Count -eq 0) { throw ('o invólucro de consola (pid {0}) não tem processo do jogo Assimilacao* ao fim de {1:N1} s: sem ele não há «vivos» a conferir nem jogo a matar' -f $cli.Id, $tFilhos.Elapsed.TotalSeconds) }
   foreach ($f in $filhos) { Escrever-Passo ("processo do jogo (filho do invólucro de consola): pid $($f.ProcessId) $($f.Name); linha de comando: " + $f.CommandLine) }
 
   # ---- 4. o ROOM_SNAPSHOT ----
@@ -215,15 +230,24 @@ try {
 }
 catch { Falhar ($_.Exception.Message) }
 finally {
-  if ($cli -and -not $cli.HasExited) { Stop-Process -Id $cli.Id -Force -ErrorAction SilentlyContinue }
+  if ($cli -and -not $cli.HasExited) {
+    # Numa prova que falhou a meio: primeiro os filhos do invólucro (seja qual for o nome), depois o invólucro.
+    foreach ($w in @(Get-CimInstance Win32_Process -Filter "ParentProcessId=$($cli.Id)" -ErrorAction SilentlyContinue)) {
+      Stop-Process -Id $w.ProcessId -Force -ErrorAction SilentlyContinue
+      Escrever-Passo "limpeza: filho do invólucro parado (Stop-Process -Force, pid $($w.ProcessId) $($w.Name))"
+    }
+    Stop-Process -Id $cli.Id -Force -ErrorAction SilentlyContinue
+    Escrever-Passo "limpeza: invólucro parado (Stop-Process -Force, pid $($cli.Id))"
+  }
   if ($mesa -and -not $mesa.HasExited) {
     Stop-Process -Id $mesa.Id -Force -ErrorAction SilentlyContinue; $mesa.WaitForExit(5000) | Out-Null
     Escrever-Passo "mesa parada pelo harness (Stop-Process -Force, pid $($mesa.Id)): exit $($mesa.ExitCode)"
   }
   # ---- 8. os logs, inteiros e em UTF-8 ----
-  foreach ($n in @('import.log', 'import.err', 'export-Windows.log', 'export-Windows.err', 'mesa.log', 'mesa.err', 'windows.log', 'windows.err')) {
+  foreach ($n in $esperados) {
     $o = Join-Path $Tmp $n
     if (Test-Path $o) { Escrever-Passo ("log $n -> " + (Normalizar-Para $o (Join-Path $Saida $n))) }
+    else { Falhar "log $n em falta (o processo foi arrancado e o log não está em $Tmp)" }
   }
   if ($falhas.Count -eq 0) { Escrever-Passo 'PROVA WINDOWS OK; exit 0'; $codigo = 0 }
   else { Escrever-Passo ("PROVA WINDOWS FALHOU ($($falhas.Count) falhas); exit 1"); $codigo = 1 }
