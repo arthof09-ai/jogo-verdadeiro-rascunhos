@@ -59,8 +59,8 @@ Tudo em `provas/ordem-plano-2-f1/dados/recontar/`, ao lado dos JSONs (o `README.
 | Mas a primeira vez fica feita: `camera.foco` = a casa dela e `_focou = true` | ok |
 | De volta à Fixa, **sem mais eventos**, ela está no terço central | ok, (0,500; 0,500) |
 
-- **`camera_segue`: 22 de 22**, exit 0, 0 erros de script, sobre `d5ceb8a` (o caso 11 é o `529b126`; corri-o antes de o
-  cometer, sobre `1e7f803`, e o `arena.gd` não mudou).
+- **`camera_segue`: 22 de 22**, exit 0, 0 erros de script, sobre `1e7f803` + o caso 11. O caso 11 é o `529b126`: corri-o
+  antes de o cometer, e o `arena.gd` não mudou desde então. O canário (10/10) correu sobre o `d5ceb8a`.
 - **Mutações, as duas repostas:**
   - SEM-FOCO-NO-EVENTO (`if _focar_primeira_vez():` → `if false and …`) dá **19 de 22**. Falham o caso 10 e as duas
     verificações do foco no caso 11.
@@ -94,12 +94,35 @@ Privacidade: só nomes fictícios; os caminhos do PC não aparecem nas provas no
 | `1e7f803` | F5: o README e a saída da recontagem, a leitura das linhas 788-801 e o §2 |
 | `529b126` | F6: o caso 11 do `camera_segue`, as mutações e o patch do CI a «22 de 22» |
 | `d5ceb8a` | listas da retoma sincronizadas |
-| (este) | os logs das suites do fecho e este ESTADO-FINAL completo |
-| (o seguinte) | a nota do CI |
+| `cc37853` | os logs das suites do fecho e este ESTADO-FINAL completo |
+| (este) | a nota do CI |
 
 ## 6. Nota do CI
 
-(no commit seguinte)
+**No `cc37853`** (as provas e este ESTADO-FINAL, a ponta desta ordem antes da nota): **Testes dos rascunhos 45882576873
+success**, **Sonda de privacidade 45882576859 success**, **Aparelhos (F2) 45882576835 success**. Os 10 jobs dos Testes
+passaram, `retoma-pc` incluído. O CI ainda não corre o `camera_segue` (o patch está por aplicar, §3).
+
+Nos commits intermédios:
+
+| Commit | Testes | Sonda | Aparelhos | Leitura |
+|---|---|---|---|---|
+| `2f7b6f6` | 45881799829 success | success | success | — |
+| `1e7f803` | 45881952069 success | success | success | — |
+| `529b126` | 45882261938 **failure** (só o `retoma-pc`) | success | success | Esperado: o `camera_segue.gd` mudou e as listas só foram sincronizadas no commit seguinte («CLONE DIFERENTE: rascunhos/cliente/testes/camera_segue.gd»). |
+| `d5ceb8a` | 45882378520: 1.ª tentativa **failure** (`ponta-a-ponta`); 2.ª tentativa (só o job falhado, sem mudar nada) **success** | success | success | Ver abaixo. |
+
+**A falha do `ponta-a-ponta` no `d5ceb8a`, 1.ª tentativa.** A jogadora (`servidor/e2e/jogadora-e2e.mjs`) acusou «canários
+do Mestre no fio dela (fase jogo, ROOM_EVENT colocacao): 9137», na passagem com o motor falso. O Mestre ficou à espera do
+cartão («tempo esgotado»). A passagem com o VLAB real, no mesmo job, deu 23 mensagens limpas. O commit só mudou o
+`MANIFESTO-SHA256.txt` e o `retoma-i0004/depois.txt`; o mesmo job passou no `cc37853`, a seguir, e na 2.ª tentativa do
+próprio `d5ceb8a`.
+**Explicação provável, não provada:** o detector procura o canário como substring do texto cru
+(`CANARIOS.filter((c) => texto.includes(c))`), e os ids de figura e de lugar são 16 hexadecimais aleatórios
+(`sala.js:504-511`). Um id que contenha «9137» por acaso dispara o alarme, com cerca de 2 × 10⁻⁴ por id. O log não guarda
+a mensagem, por isso não consigo mostrar o id. **Não mexi no detector**, porque está fora do âmbito desta ordem. Fica para
+a conferência: um número para «o canário numérico casa dentro de ids hexadecimais» (por exemplo, procurar o canário só
+como número inteiro, `9137`, ou fora dos campos `*Id`), e o log do e2e a guardar a mensagem que acusou.
 
 ## 7. O que continua aberto na F1 (fora desta ordem)
 
