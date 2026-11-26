@@ -178,6 +178,30 @@ jobs:
           set -o pipefail
           timeout 120 "$GODOT" --headless --path . -s res://testes/caixa_jogadora.gd 2>&1 | tee "$RUNNER_TEMP/caixa_jogadora.gd.log"
           ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/caixa_jogadora.gd.log"
+      # ORDEM-PLANO-2-F1 (D-AUD-05): a câmara da jogadora mostra e segue a figura dela (a arena a sério, sem servidor).
+      # O log fica no artefacto «camera-segue». A guarda é N de N: o total sai da linha final do próprio teste
+      # («%d de %d verificações passaram.»), sem número cravado a actualizar quando a suite crescer.
+      - name: A câmara segue a figura dela (ORDEM-PLANO-2-F1, D-AUD-05)
+        if: always()
+        run: |
+          set -o pipefail
+          mkdir -p "$RUNNER_TEMP/camera-segue"
+          L="$RUNNER_TEMP/camera-segue/camera_segue.gd.log"
+          timeout 120 "$GODOT" --headless --path . -s res://testes/camera_segue.gd 2>&1 | tee "$L"
+          ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$L"
+          # N de N: exactamente uma linha final, os dois N iguais e maiores que zero (o tr normaliza o CRLF).
+          FINAL=$(tr -d '\r' < "$L" | grep -E "^[0-9]+ de [0-9]+ verificações passaram\.$" || true)
+          echo "linha final: ${FINAL:-(nenhuma)}"
+          N_LINHAS=$(printf '%s\n' "$FINAL" | grep -c . || true)
+          [ "$N_LINHAS" = 1 ] || { echo "::error::camera_segue: esperava 1 linha final «N de N», há $N_LINHAS"; exit 1; }
+          read -r PASSOU _ TOTAL _ <<< "$FINAL"
+          if [ "$TOTAL" -gt 0 ] && [ "$PASSOU" = "$TOTAL" ]; then echo "camera_segue: $PASSOU de $TOTAL (N de N)"; else echo "::error::camera_segue: $PASSOU de $TOTAL (tem de ser N de N)"; exit 1; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: camera-segue
+          path: ${{ runner.temp }}/camera-segue/
+          if-no-files-found: warn
       # Ordem CAIXA-JANELA-CI (F5 da conferência da CAIXA-PADRAO-CORRECOES): a suite caixa_janela corre aqui, com o
       # mesmo arranque que a casa usa no PC (--headless, sem ecrã, sem servidor). O log e a prova de disparo ficam no
       # artefacto «caixa-janela». Aplicado pelo coordenador (F1 da sentença da CAIXA-JANELA-CI, 22/11/2026).
