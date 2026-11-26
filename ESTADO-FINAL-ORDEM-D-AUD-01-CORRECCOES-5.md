@@ -186,7 +186,8 @@ Há três pormenores, descritos no README das provas:
 | `39bb0fb` | passos 1, 2 e 5: `aba_agir.gd` e `pecas_mestre.gd` |
 | `4ca3d8f` | listas da retoma sincronizadas depois do `39bb0fb` |
 | `fa82f20` | passo 3: o `suites.sh` com as duas mutações |
-| (este) | README das provas, logs e este ESTADO-FINAL |
+| `0a53953` | README das provas, logs e este ESTADO-FINAL |
+| (este) | a nota do CI |
 
 O `actualizar-listas.py` correu com o `python` 3.12, porque neste PC o `python3` é o atalho da Microsoft Store. Nas
 duas passagens deu 0 novos e 0 tirados, e só mudaram os SHA no `depois.txt` e no `MANIFESTO-SHA256.txt`. Os commits
@@ -212,4 +213,15 @@ persistente do B2, que foi decidido pelo coordenador.
 
 ## Nota do CI
 
-(a preencher no commit seguinte, com os runs do commit deste ESTADO-FINAL)
+- **`0a53953`** (todo o trabalho, as provas e o ESTADO-FINAL):
+  - **Testes dos rascunhos `45820067479`: success.** Os 10 jobs deram verde: servidor, validador-glb, motor-real,
+    protocolo, cliente, godot-cliente, foto-mestre, provas-mapa, ponta-a-ponta e retoma-pc. No log do CI o
+    `pecas_mestre` dá 336 de 336, e as duas verificações da CORRECCOES-5 estão «ok».
+  - **Sonda de privacidade `45820067531`: success.**
+- **`fa82f20`** (código final e guião): Testes `45819546192` success, Sonda `45819546270` success.
+- **`4ca3d8f`** e **`ab3c66c`**: Testes, Sonda e Aparelhos (F2), todos success.
+- **`97900c7`**: o `retoma-pc` falhou nos Testes (run `45819107762`) porque as listas ainda não estavam
+  sincronizadas. Está explicado no §7.
+
+O workflow «Aparelhos (F2)» de `0a53953` (run `45820067614`) ainda estava a correr quando escrevi esta nota. Fica
+fora do critério desta ordem, que é Testes + Sonda.
