@@ -1,0 +1,4 @@
+A-j04z-jog-alvo-Orc-1-x3-antes.png | vivo 0 px | avermelhado 988 px | vermelhidão máx 0.31
+A-j04z-jog-alvo-Orc-1-x3-depois.png | vivo 847 px | avermelhado 1177 px | vermelhidão máx 0.70
+A-m04z-mestre-alvo-x3-antes.png | vivo 0 px | avermelhado 48 px | vermelhidão máx 0.18
+A-m04z-mestre-alvo-x3-depois.png | vivo 257 px | avermelhado 366 px | vermelhidão máx 0.70

@@ -1,0 +1,43 @@
+{
+  "papel": "jogadora",
+  "rotulo": "antes",
+  "janela": [
+    1280,
+    720
+  ],
+  "capturas": {},
+  "caixa_inicio": {
+    "x": 986,
+    "y": 16,
+    "largura": 278,
+    "altura": 71
+  },
+  "grelha_debaixo_da_caixa_inicio": {
+    "casas": 0,
+    "x": [],
+    "y": []
+  },
+  "mover": {
+    "caixa": {
+      "x": 986,
+      "y": 16,
+      "largura": 278,
+      "altura": 71
+    },
+    "casas_realce": 70,
+    "casas_no_ecra": 70,
+    "grelha_debaixo_da_caixa": {
+      "casas": 0,
+      "x": [],
+      "y": []
+    },
+    "casas_debaixo_da_caixa": 0,
+    "quais": [],
+    "figura_pe_px": [
+      640,
+      360
+    ],
+    "figura_debaixo_da_caixa": false
+  },
+  "falhas": 0
+}

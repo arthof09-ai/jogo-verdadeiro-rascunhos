@@ -1,0 +1,70 @@
+{
+  "papel": "jogadora",
+  "rotulo": "depois",
+  "janela": [
+    1280,
+    720
+  ],
+  "capturas": {},
+  "caixa_inicio": {
+    "x": 986,
+    "y": 16,
+    "largura": 278,
+    "altura": 71
+  },
+  "grelha_debaixo_da_caixa_inicio": {
+    "casas": 0,
+    "x": [],
+    "y": []
+  },
+  "mover": {
+    "caixa": {
+      "x": 986,
+      "y": 16,
+      "largura": 278,
+      "altura": 71
+    },
+    "casas_realce": 70,
+    "casas_no_ecra": 70,
+    "grelha_debaixo_da_caixa": {
+      "casas": 0,
+      "x": [],
+      "y": []
+    },
+    "casas_debaixo_da_caixa": 0,
+    "quais": [],
+    "figura_pe_px": [
+      640,
+      360
+    ],
+    "figura_debaixo_da_caixa": false
+  },
+  "andou": {
+    "casa": [
+      38,
+      10
+    ],
+    "fundura_agua_m": 2.47
+  },
+  "ataque": {
+    "alvos": {
+      "ff2fc9cacd997cdbb": {
+        "nome": "Orc 1",
+        "casa": [
+          38,
+          14
+        ],
+        "fundura_agua_m": 2.52,
+        "pe_y_m": -4.03,
+        "nivel_agua_m": -1.522,
+        "marcador": "anel+seta",
+        "marcador_px": [
+          59,
+          69
+        ],
+        "pixeis_cor_de_alvo_no_recorte": 847
+      }
+    }
+  },
+  "falhas": 0
+}

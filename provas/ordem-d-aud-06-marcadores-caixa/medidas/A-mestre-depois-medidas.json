@@ -1,0 +1,63 @@
+{
+  "papel": "mestre",
+  "rotulo": "depois",
+  "janela": [
+    1600,
+    900
+  ],
+  "capturas": {},
+  "tabuleiro": {
+    "x": 0,
+    "y": 0,
+    "largura": 864,
+    "altura": 900
+  },
+  "mover": {
+    "caixa": {
+      "x": 18,
+      "y": 67,
+      "largura": 468,
+      "altura": 179
+    },
+    "casas_realce": 39,
+    "casas_no_tabuleiro": 26,
+    "grelha_debaixo_da_caixa": {
+      "casas": 138,
+      "x": [
+        13,
+        26
+      ],
+      "y": [
+        6,
+        17
+      ]
+    },
+    "casas_debaixo_da_caixa": 0,
+    "quais": [],
+    "figura_da_vez": "ff2fc9cacd997cdbb",
+    "figura_pe_px": [
+      824,
+      244
+    ],
+    "figura_debaixo_da_caixa": false
+  },
+  "alvos": {
+    "fbab7ea97d320575b": {
+      "fundura_agua_m": 2.47,
+      "pe_y_m": -3.99,
+      "marcador": "anel+seta",
+      "marcador_px": [
+        52,
+        65
+      ],
+      "pixeis_cor_de_alvo_no_recorte": 257,
+      "caixa": {
+        "x": 18,
+        "y": 67,
+        "largura": 468,
+        "altura": 179
+      }
+    }
+  },
+  "falhas": 0
+}

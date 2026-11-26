@@ -1,0 +1,122 @@
+{
+  "papel": "mestre",
+  "rotulo": "antes",
+  "janela": [
+    1600,
+    900
+  ],
+  "capturas": {},
+  "tabuleiro": {
+    "x": 0,
+    "y": 0,
+    "largura": 864,
+    "altura": 900
+  },
+  "mover": {
+    "caixa": {
+      "x": 18,
+      "y": 67,
+      "largura": 468,
+      "altura": 67
+    },
+    "casas_realce": 40,
+    "casas_no_tabuleiro": 40,
+    "grelha_debaixo_da_caixa": {
+      "casas": 70,
+      "x": [
+        13,
+        26
+      ],
+      "y": [
+        6,
+        14
+      ]
+    },
+    "casas_debaixo_da_caixa": 19,
+    "quais": [
+      [
+        20,
+        11
+      ],
+      [
+        20,
+        10
+      ],
+      [
+        19,
+        11
+      ],
+      [
+        21,
+        11
+      ],
+      [
+        20,
+        9
+      ],
+      [
+        19,
+        10
+      ],
+      [
+        21,
+        10
+      ],
+      [
+        18,
+        11
+      ],
+      [
+        22,
+        11
+      ],
+      [
+        17,
+        12
+      ],
+      [
+        20,
+        8
+      ],
+      [
+        19,
+        9
+      ],
+      [
+        21,
+        9
+      ],
+      [
+        18,
+        10
+      ],
+      [
+        22,
+        10
+      ],
+      [
+        17,
+        11
+      ],
+      [
+        23,
+        11
+      ],
+      [
+        16,
+        12
+      ],
+      [
+        17,
+        13
+      ]
+    ],
+    "figura_da_vez": "ffc7206362512ef20",
+    "figura_pe_px": [
+      296,
+      144
+    ],
+    "figura_debaixo_da_caixa": true
+  },
+  "falhas": 0
+}

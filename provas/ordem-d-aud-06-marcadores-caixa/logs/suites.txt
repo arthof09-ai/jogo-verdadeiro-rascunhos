@@ -1,0 +1,15 @@
+# Suites locais (Godot 4.7.2 win64, --headless; Node v26.13.1), 25/11/2026, sobre o cac02a1
+abrir_scripts rc=0 | 0 FALHA | 0 SCRIPT ERROR | 113 scripts, 0 falhas
+rodar_testes rc=0 | 0 FALHA | 0 SCRIPT ERROR | 333 de 333 verificações passaram.
+abrir_clareira rc=0 | 0 FALHA | 0 SCRIPT ERROR | 22 de 22 verificações passaram.
+medir_painel_config rc=0 | 0 FALHA | 0 SCRIPT ERROR | painel ⚙: 0 falha(s), 0 sem medida
+abrir_mestre rc=0 | 0 FALHA | 0 SCRIPT ERROR | 67 de 67 verificações passaram.
+pecas_mestre rc=0 | 0 FALHA | 0 SCRIPT ERROR | 332 de 332 verificações passaram.
+medir_mestre rc=0 | 0 FALHA | 0 SCRIPT ERROR | ecrã do Mestre: 0 falha(s), 0 sem medida
+hud_acoes rc=0 | 0 FALHA | 0 SCRIPT ERROR | 70 de 70 verificações passaram.
+caixa_jogadora rc=0 | 0 FALHA | 0 SCRIPT ERROR | 70 de 70 verificações passaram.
+caixa_janela rc=0 | 0 FALHA | 0 SCRIPT ERROR | 123 de 123 verificações passaram.
+canario_privacidade rc=0 | 0 FALHA | 0 SCRIPT ERROR | 10 de 10 verificações passaram.
+camera_segue rc=0 | 0 FALHA | 0 SCRIPT ERROR | 17 de 17 verificações passaram.
+servidor (node --test servidor/testes/*.test.mjs): 446/446 com rascunhos/servidor/dados-exemplo/mesa-mestre.json em LF; 445/446 no checkout CRLF do Windows (core.autocrlf=true): falha só «fixture do ecrã do Mestre», comparação byte a byte CRLF vs LF, sem relação com esta ordem (o ficheiro não foi alterado)
+validador-glb (node --test testes/*.test.mjs): 33 testes, 31 pass, 0 fail
