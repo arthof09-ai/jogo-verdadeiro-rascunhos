@@ -180,3 +180,6 @@ que já estava empurrado.
 No `1dea722` (o commit deste ESTADO-FINAL, das provas e do remendo), os dois workflows deram **success**: **Testes dos
 rascunhos** `45744054964` e **Sonda de privacidade** `45744054932`. O passo da mutação ainda não corre, porque vai no
 commit seguinte a esta nota, por publicar (§5).
+
+
+Na ponta `83792f8e` (notas N1+N2 da sentença 975, aplicadas pelo coordenador): **Testes dos rascunhos** `45800759752`: success; **Sonda de privacidade** `45800759667`: success. O workflow `Aparelhos (F2)` dá `failure` — falha pré-existente do job android (shader), como em todas as pontas anteriores, fora do perímetro.
