@@ -70,6 +70,10 @@ barra das abas que manda, nunca os 45 %. Sem ela, mudar a fracção não fazia o
 0.60 dava 0 falhas antes desta janela (`logs/b2/mutacao-fracao-antes-da-janela-larga.log`, a versão intermédia do teste). Nenhuma das verificações novas depende do mínimo da barra em cache. Por isso,
 sem a correcção, continuam a passar, e a mutação do B1 dá as mesmas 4 falhas de antes.
 
+A mutação intermédia foi FRACAO_TABULEIRO 0.55 → 0.60 no mestre.gd; o log mutacao-fracao-antes-da-janela-larga.log correu sob essa mutação e deu 0 falhas, 0 sem medida (saída 0).
+
+As medidas `MEDIDA MESTRE-*` fora do bloco D-AUD-14 variam ±1 px entre PC e CI (tabuleiro 866 vs 867 px a 780×360); as linhas do bloco são byte-idênticas.
+
 ## Logs
 
 - `logs/b1/mutacao-largura.resumo.txt` e `mutacao-largura.log` — o guião no PC, na cópia CRLF: **MUTACAO APANHADA**,
