@@ -1,0 +1,13 @@
+[14:39:52.244 UTC | 2026-11-26T11:39:52.248-03:00] início da prova do Windows; repositório em <sede>\repo; HEAD 678577cdf56ffcb6765433940376d2fbba32966d
+[14:39:52.262 UTC | 2026-11-26T11:39:52.262-03:00] comando: powershell -NoProfile -ExecutionPolicy Bypass -File rascunhos/servidor/aparelhos/prova-windows.ps1 -Godot Godot_v4.7.2-stable_win64_console.exe -SemExport -Porta 8090 -SegundosNaMesa 5
+[14:39:52.318 UTC | 2026-11-26T11:39:52.319-03:00] Godot: 4.7.2.stable.official.ed1daf0bf; node: v26.13.1; Microsoft Windows NT 10.0.26300.0
+[14:39:52.321 UTC | 2026-11-26T11:39:52.321-03:00] export saltado (-SemExport): usa o build/windows que já lá está
+[14:39:52.548 UTC | 2026-11-26T11:39:52.548-03:00] Assimilacao.exe: 197730728 bytes, SHA-256 7619461e229abaa5d43df7cc395d19d0e996da61da17c93f900b2bfd9cbd97f6, escrito 2026-11-26T11:38:13
+[14:39:52.551 UTC | 2026-11-26T11:39:52.551-03:00] Assimilacao.console.exe: 188928 bytes, SHA-256 52bdcae9068e8d23b840e5c63b0c1798ffe2cb66144e5c4bc7af11fb8c8600df, escrito 2026-11-26T11:38:12
+[14:39:52.552 UTC | 2026-11-26T11:39:52.552-03:00] comando: cd rascunhos/servidor && node aparelhos/mesa-prova.mjs --porta=8090 --host=127.0.0.1 --pin=11223344
+[14:39:52.683 UTC | 2026-11-26T11:39:52.683-03:00] mesa pronta (pid 36976)
+[14:39:52.690 UTC | 2026-11-26T11:39:52.690-03:00] FALHA: a mesa ficou pronta sem a linha «[mesa-prova] combate aberto pelo Mestre-bot» no log: o combate não está aberto
+[14:39:52.705 UTC | 2026-11-26T11:39:52.705-03:00] mesa parada pelo harness (Stop-Process -Force, pid 36976): exit -1
+[14:39:52.717 UTC | 2026-11-26T11:39:52.717-03:00] log mesa.log -> UTF-8 (286 bytes na origem)
+[14:39:52.719 UTC | 2026-11-26T11:39:52.719-03:00] log mesa.err -> UTF-8 (0 bytes na origem)
+[14:39:52.721 UTC | 2026-11-26T11:39:52.721-03:00] PROVA WINDOWS FALHOU (1 falhas); exit 1

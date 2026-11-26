@@ -1,0 +1,21 @@
+[14:43:39.690 UTC | 2026-11-26T11:43:39.694-03:00] início da prova do Windows; repositório em <sede>\repo; HEAD e02929b19eccc3af38fc40f299e0b0bf07d439dc
+[14:43:39.709 UTC | 2026-11-26T11:43:39.709-03:00] comando: powershell -NoProfile -ExecutionPolicy Bypass -File rascunhos/servidor/aparelhos/prova-windows.ps1 -Godot Godot_v4.7.2-stable_win64_console.exe -SemExport -Porta 8090 -SegundosNaMesa 5
+[14:43:39.764 UTC | 2026-11-26T11:43:39.764-03:00] Godot: 4.7.2.stable.official.ed1daf0bf; node: v26.13.1; Microsoft Windows NT 10.0.26300.0
+[14:43:39.767 UTC | 2026-11-26T11:43:39.767-03:00] export saltado (-SemExport): usa o build/windows que já lá está
+[14:43:39.987 UTC | 2026-11-26T11:43:39.987-03:00] Assimilacao.exe: 197730728 bytes, SHA-256 7619461e229abaa5d43df7cc395d19d0e996da61da17c93f900b2bfd9cbd97f6, escrito 2026-11-26T11:43:30
+[14:43:39.990 UTC | 2026-11-26T11:43:39.990-03:00] Assimilacao.console.exe: 188928 bytes, SHA-256 52bdcae9068e8d23b840e5c63b0c1798ffe2cb66144e5c4bc7af11fb8c8600df, escrito 2026-11-26T11:43:29
+[14:43:39.991 UTC | 2026-11-26T11:43:39.991-03:00] comando: cd rascunhos/servidor && node aparelhos/mesa-prova.mjs --porta=8090 --host=127.0.0.1 --pin=11223344 --mestre-auto
+[14:43:40.122 UTC | 2026-11-26T11:43:40.122-03:00] mesa pronta (pid 5980)
+[14:43:40.125 UTC | 2026-11-26T11:43:40.125-03:00] combate aberto: a linha «[mesa-prova] combate aberto pelo Mestre-bot» está no log da mesa
+[14:43:40.129 UTC | 2026-11-26T11:43:40.129-03:00] user:// do cliente isolado: APPDATA=<sede>\tmp\prova-windows\appdata-cliente (vazio; sem lugar.cfg de corridas anteriores)
+[14:43:40.131 UTC | 2026-11-26T11:43:40.131-03:00] comando: Start-Process build/windows/Assimilacao.console.exe -ArgumentList '--headless','--','--servidor=127.0.0.1:8090','"--entrar-nome=Espadachim de Bancada"','--entrar-senha=prova-espadachim'
+[14:43:40.625 UTC | 2026-11-26T11:43:40.625-03:00] cliente arrancou: pid 18284; linha de comando recebida: "<sede>\repo\build\windows\Assimilacao.console.exe" --headless -- --servidor=127.0.0.1:8090 "--entrar-nome=Espadachim de Bancada" --entrar-senha=prova-espadachim 
+[14:43:50.945 UTC | 2026-11-26T11:43:50.946-03:00] FALHA: o invólucro de consola (pid 18284) não tem processo do jogo Assimilacao* ao fim de 10,3 s: sem ele não há «vivos» a conferir nem jogo a matar
+[14:43:51.094 UTC | 2026-11-26T11:43:51.095-03:00] limpeza: filho do invólucro parado (Stop-Process -Force, pid 32360 Assimilacao.exe)
+[14:43:51.102 UTC | 2026-11-26T11:43:51.103-03:00] limpeza: invólucro parado (Stop-Process -Force, pid 18284)
+[14:43:51.121 UTC | 2026-11-26T11:43:51.121-03:00] mesa parada pelo harness (Stop-Process -Force, pid 5980): exit -1
+[14:43:51.137 UTC | 2026-11-26T11:43:51.138-03:00] log mesa.log -> UTF-8 (571 bytes na origem)
+[14:43:51.141 UTC | 2026-11-26T11:43:51.141-03:00] log mesa.err -> UTF-8 (0 bytes na origem)
+[14:43:51.146 UTC | 2026-11-26T11:43:51.146-03:00] log windows.log -> UTF-8 (1433 bytes na origem)
+[14:43:51.150 UTC | 2026-11-26T11:43:51.150-03:00] log windows.err -> UTF-8 (0 bytes na origem)
+[14:43:51.153 UTC | 2026-11-26T11:43:51.153-03:00] PROVA WINDOWS FALHOU (1 falhas); exit 1

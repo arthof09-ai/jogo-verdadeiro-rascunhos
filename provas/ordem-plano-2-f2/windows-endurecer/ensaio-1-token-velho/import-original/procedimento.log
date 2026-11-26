@@ -1,0 +1,34 @@
+[14:38:10.675 UTC | 2026-11-26T11:38:10.679-03:00] início da prova do Windows; repositório em <sede>\repo; HEAD 678577cdf56ffcb6765433940376d2fbba32966d
+[14:38:10.694 UTC | 2026-11-26T11:38:10.694-03:00] comando: powershell -NoProfile -ExecutionPolicy Bypass -File rascunhos/servidor/aparelhos/prova-windows.ps1 -Godot Godot_v4.7.2-stable_win64_console.exe -Porta 8090 -SegundosNaMesa 5
+[14:38:10.750 UTC | 2026-11-26T11:38:10.750-03:00] Godot: 4.7.2.stable.official.ed1daf0bf; node: v26.13.1; Microsoft Windows NT 10.0.26300.0
+[14:38:10.752 UTC | 2026-11-26T11:38:10.752-03:00] comando: cd rascunhos/cliente && Godot_v4.7.2-stable_win64_console.exe --headless --path pasta-que-nao-existe --import
+[14:38:10.802 UTC | 2026-11-26T11:38:10.803-03:00] import: exit 1
+[14:38:10.804 UTC | 2026-11-26T11:38:10.804-03:00] comando: cd rascunhos/cliente && Godot_v4.7.2-stable_win64_console.exe --headless --path . --export-release Windows
+[14:38:14.462 UTC | 2026-11-26T11:38:14.462-03:00] export-Windows: exit 0
+[14:38:14.849 UTC | 2026-11-26T11:38:14.849-03:00] Assimilacao.exe: 197730728 bytes, SHA-256 7619461e229abaa5d43df7cc395d19d0e996da61da17c93f900b2bfd9cbd97f6, escrito 2026-11-26T11:38:13
+[14:38:14.854 UTC | 2026-11-26T11:38:14.854-03:00] Assimilacao.console.exe: 188928 bytes, SHA-256 52bdcae9068e8d23b840e5c63b0c1798ffe2cb66144e5c4bc7af11fb8c8600df, escrito 2026-11-26T11:38:12
+[14:38:14.856 UTC | 2026-11-26T11:38:14.856-03:00] comando: cd rascunhos/servidor && node aparelhos/mesa-prova.mjs --porta=8090 --host=127.0.0.1 --pin=11223344 --mestre-auto
+[14:38:14.989 UTC | 2026-11-26T11:38:14.989-03:00] mesa pronta (pid 44728), combate aberto pelo Mestre-bot
+[14:38:14.993 UTC | 2026-11-26T11:38:14.993-03:00] comando: Start-Process build/windows/Assimilacao.console.exe -ArgumentList '--headless','--','--servidor=127.0.0.1:8090','"--entrar-nome=Espadachim de Bancada"','--entrar-senha=prova-espadachim'
+[14:38:15.551 UTC | 2026-11-26T11:38:15.551-03:00] cliente arrancou: pid 15000; linha de comando recebida: "<sede>\repo\build\windows\Assimilacao.console.exe" --headless -- --servidor=127.0.0.1:8090 "--entrar-nome=Espadachim de Bancada" --entrar-senha=prova-espadachim 
+[14:38:15.700 UTC | 2026-11-26T11:38:15.700-03:00] processo do jogo (filho do invólucro de consola): pid 42392 Assimilacao.exe; linha de comando: <sede>\repo\build\windows\Assimilacao.exe --headless -- --servidor=127.0.0.1:8090 "--entrar-nome=Espadachim de Bancada" --entrar-senha=prova-espadachim 
+[14:38:17.678 UTC | 2026-11-26T11:38:17.678-03:00] ROOM_SNAPSHOT recebido: «rede: ROOM_SNAPSHOT seq=5 fase=combate plataforma=Windows», 2,7 s depois de arrancar o cliente
+[14:38:17.680 UTC | 2026-11-26T11:38:17.680-03:00] o cliente fica 5 s na mesa (conferido de 5 em 5 s)
+[14:38:22.717 UTC | 2026-11-26T11:38:22.717-03:00] +5 s: invólucro vivo (pid 15000), processos do jogo vivos: 1 de 1; a mesa sem SAIU
+[14:38:22.732 UTC | 2026-11-26T11:38:22.732-03:00] MORTE: o harness mata o cliente por comando (Stop-Process -Force), pids 42392, 15000; 5,050 s depois do snapshot; instante UTC 14:38:22.731
+[14:38:22.747 UTC | 2026-11-26T11:38:22.747-03:00] Stop-Process -Id 42392 -Force feito
+[14:38:22.760 UTC | 2026-11-26T11:38:22.760-03:00] Stop-Process -Id 15000 -Force feito
+[14:38:22.764 UTC | 2026-11-26T11:38:22.765-03:00] o invólucro de consola saiu: exit -1 (0xFFFFFFFF)
+[14:38:22.779 UTC | 2026-11-26T11:38:22.780-03:00] na mesa (relógio da mesa, UTC): ENTROU 14:38:17.642 -> SAIU 14:38:22.748 = 5,106 s; snapshot visto 14:38:17.676; morte 14:38:22.731
+[14:38:22.783 UTC | 2026-11-26T11:38:22.783-03:00] SAIU 0,017 s depois da morte
+[14:38:22.789 UTC | 2026-11-26T11:38:22.789-03:00] erros de script no cliente: 0
+[14:38:22.806 UTC | 2026-11-26T11:38:22.806-03:00] mesa parada pelo harness (Stop-Process -Force, pid 44728): exit -1
+[14:38:22.823 UTC | 2026-11-26T11:38:22.823-03:00] log import.log -> UTF-8 (67 bytes na origem)
+[14:38:22.827 UTC | 2026-11-26T11:38:22.827-03:00] log import.err -> UTF-8 (0 bytes na origem)
+[14:38:22.831 UTC | 2026-11-26T11:38:22.831-03:00] log export-Windows.log -> UTF-8 (47242 bytes na origem)
+[14:38:22.835 UTC | 2026-11-26T11:38:22.835-03:00] log export-Windows.err -> UTF-8 (0 bytes na origem)
+[14:38:22.839 UTC | 2026-11-26T11:38:22.839-03:00] log mesa.log -> UTF-8 (571 bytes na origem)
+[14:38:22.842 UTC | 2026-11-26T11:38:22.842-03:00] log mesa.err -> UTF-8 (0 bytes na origem)
+[14:38:22.847 UTC | 2026-11-26T11:38:22.853-03:00] log windows.log -> UTF-8 (1433 bytes na origem)
+[14:38:22.856 UTC | 2026-11-26T11:38:22.857-03:00] log windows.err -> UTF-8 (0 bytes na origem)
+[14:38:22.861 UTC | 2026-11-26T11:38:22.861-03:00] PROVA WINDOWS OK; exit 0

@@ -1,0 +1,11 @@
+# comando: python rascunhos/protocolo/ferramentas/validar-mensagens.py <sede>/tmp/suites/comandos-abrir_mestre.jsonl
+  ok    linha 1 MASTER_APPROVE editar
+  ok    linha 2 MASTER_APPROVE aprovar
+  ok    linha 3 MASTER_APPROVE recusar
+  ok    linha 4 MASTER_CONFIRM_DICE 
+  ok    linha 5 MASTER_APPROVE aprovar
+  ok    linha 6 MASTER_APPROVE editar
+  ok    linha 7 MASTER_APPROVE editar
+  ok    linha 8 MASTER_APPROVE recusar
+  ok    linha 9 MASTER_SUPERVISOR escala
+9 mensagens, 0 falhas

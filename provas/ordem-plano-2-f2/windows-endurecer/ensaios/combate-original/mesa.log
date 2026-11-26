@@ -1,0 +1,6 @@
+[servidor] servidor de mesa pronto (WebSocket em /ws)
+[mesa-prova] a ouvir em 127.0.0.1:8090 (motor falso; sala de TESTE)
+[mesa-prova] jogadoras: Espadachim de Bancada / prova-espadachim; Arqueira de Bancada / prova-arqueira; Batedora de Bancada / prova-batedora
+pronto-mesa-prova 8090
+[ligações] 14:44:17.907 ENTROU Espadachim de Bancada (senha/PIN; ip 127.0.0.1)
+[ligações] 14:45:16.283 SAIU Espadachim de Bancada

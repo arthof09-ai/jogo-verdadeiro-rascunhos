@@ -1,0 +1,17 @@
+﻿ensaio dos endurecimentos; HEAD 678577cdf56ffcb6765433940376d2fbba32966d; -SegundosNaMesa 5; 2026-11-26T11:37:03-03:00
+[import / endurecido] exit 1; PROVA WINDOWS FALHOU (2 falhas); exit 1; restos: nenhum; MORDE (a FALHA esperada está lá)
+    FALHA: import com exit 1
+    FALHA: o cliente Windows não recebeu o ROOM_SNAPSHOT em 60 s
+[import / original] exit 0; PROVA WINDOWS OK; exit 0; restos: nenhum
+[filhos / endurecido] exit 1; PROVA WINDOWS FALHOU (1 falhas); exit 1; restos: nenhum; MORDE (a FALHA esperada está lá)
+    FALHA: o invólucro de consola (pid 44112) não tem processo do jogo Assimilacao* ao fim de 10,3 s: sem ele não há «vivos» a conferir nem jogo a matar
+[filhos / original] exit 0; PROVA WINDOWS OK; exit 0; restos: nenhum
+[log / endurecido] exit 1; PROVA WINDOWS FALHOU (2 falhas); exit 1; restos: nenhum; MORDE (a FALHA esperada está lá)
+    FALHA: o cliente Windows não recebeu o ROOM_SNAPSHOT em 60 s
+    FALHA: log windows.err em falta (o processo foi arrancado e o log não está em <sede>\tmp\prova-windows)
+[log / original] exit 0; PROVA WINDOWS OK; exit 0; restos: nenhum
+[combate / endurecido] exit 1; PROVA WINDOWS FALHOU (1 falhas); exit 1; restos: nenhum; MORDE (a FALHA esperada está lá)
+    FALHA: a mesa ficou pronta sem a linha «[mesa-prova] combate aberto pelo Mestre-bot» no log: o combate não está aberto
+[combate / original] exit 1; PROVA WINDOWS FALHOU (1 falhas); exit 1; restos: nenhum
+    FALHA: o cliente Windows não recebeu o ROOM_SNAPSHOT em 60 s
+ENSAIO OK: as quatro condições fazem o guião endurecido falhar; exit 0

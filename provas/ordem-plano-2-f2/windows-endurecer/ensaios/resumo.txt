@@ -1,0 +1,15 @@
+﻿ensaio dos endurecimentos; HEAD e02929b19eccc3af38fc40f299e0b0bf07d439dc; -SegundosNaMesa 5; 2026-11-26T11:43:13-03:00
+[import / endurecido] exit 1; PROVA WINDOWS FALHOU (1 falhas); exit 1; a Espadachim entrou na mesa; restos: nenhum; MORDE (a FALHA esperada está lá)
+    FALHA: import com exit 1
+[import / original] exit 0; PROVA WINDOWS OK; exit 0; a Espadachim entrou na mesa; restos: nenhum
+[filhos / endurecido] exit 1; PROVA WINDOWS FALHOU (1 falhas); exit 1; a Espadachim entrou na mesa; restos: nenhum; MORDE (a FALHA esperada está lá)
+    FALHA: o invólucro de consola (pid 18284) não tem processo do jogo Assimilacao* ao fim de 10,3 s: sem ele não há «vivos» a conferir nem jogo a matar
+[filhos / original] exit 0; PROVA WINDOWS OK; exit 0; a Espadachim entrou na mesa; restos: nenhum
+[log / endurecido] exit 1; PROVA WINDOWS FALHOU (1 falhas); exit 1; a Espadachim entrou na mesa; restos: nenhum; MORDE (a FALHA esperada está lá)
+    FALHA: log windows.err em falta (o processo foi arrancado e o log não está em <sede>\tmp\prova-windows)
+[log / original] exit 0; PROVA WINDOWS OK; exit 0; a Espadachim entrou na mesa; restos: nenhum
+[combate / endurecido] exit 1; PROVA WINDOWS FALHOU (1 falhas); exit 1; a Espadachim não entrou na mesa; restos: nenhum; MORDE (a FALHA esperada está lá)
+    FALHA: a mesa ficou pronta sem a linha «[mesa-prova] combate aberto pelo Mestre-bot» no log: o combate não está aberto
+[combate / original] exit 1; PROVA WINDOWS FALHOU (1 falhas); exit 1; a Espadachim entrou na mesa; restos: nenhum
+    FALHA: o cliente Windows não recebeu o ROOM_SNAPSHOT em 60 s
+ENSAIO OK: as quatro condições fazem o guião endurecido falhar; exit 0

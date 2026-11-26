@@ -1,0 +1,38 @@
+[14:43:13.961 UTC | 2026-11-26T11:43:13.966-03:00] início da prova do Windows; repositório em <sede>\repo; HEAD e02929b19eccc3af38fc40f299e0b0bf07d439dc
+[14:43:13.980 UTC | 2026-11-26T11:43:13.980-03:00] comando: powershell -NoProfile -ExecutionPolicy Bypass -File rascunhos/servidor/aparelhos/prova-windows.ps1 -Godot Godot_v4.7.2-stable_win64_console.exe -Porta 8090 -SegundosNaMesa 5
+[14:43:14.273 UTC | 2026-11-26T11:43:14.273-03:00] Godot: 4.7.2.stable.official.ed1daf0bf; node: v26.13.1; Microsoft Windows NT 10.0.26300.0
+[14:43:14.275 UTC | 2026-11-26T11:43:14.275-03:00] comando: cd rascunhos/cliente && Godot_v4.7.2-stable_win64_console.exe --headless --path pasta-que-nao-existe --import
+[14:43:14.325 UTC | 2026-11-26T11:43:14.326-03:00] import: exit 1
+[14:43:14.328 UTC | 2026-11-26T11:43:14.328-03:00] FALHA: import com exit 1
+[14:43:14.330 UTC | 2026-11-26T11:43:14.330-03:00] comando: cd rascunhos/cliente && Godot_v4.7.2-stable_win64_console.exe --headless --path . --export-release Windows
+[14:43:17.984 UTC | 2026-11-26T11:43:17.985-03:00] export-Windows: exit 0
+[14:43:18.390 UTC | 2026-11-26T11:43:18.390-03:00] Assimilacao.exe: 197730728 bytes, SHA-256 7619461e229abaa5d43df7cc395d19d0e996da61da17c93f900b2bfd9cbd97f6, escrito 2026-11-26T11:43:17
+[14:43:18.399 UTC | 2026-11-26T11:43:18.399-03:00] Assimilacao.console.exe: 188928 bytes, SHA-256 52bdcae9068e8d23b840e5c63b0c1798ffe2cb66144e5c4bc7af11fb8c8600df, escrito 2026-11-26T11:43:16
+[14:43:18.401 UTC | 2026-11-26T11:43:18.402-03:00] comando: cd rascunhos/servidor && node aparelhos/mesa-prova.mjs --porta=8090 --host=127.0.0.1 --pin=11223344 --mestre-auto
+[14:43:18.531 UTC | 2026-11-26T11:43:18.531-03:00] mesa pronta (pid 19752)
+[14:43:18.535 UTC | 2026-11-26T11:43:18.535-03:00] combate aberto: a linha «[mesa-prova] combate aberto pelo Mestre-bot» está no log da mesa
+[14:43:18.539 UTC | 2026-11-26T11:43:18.539-03:00] user:// do cliente isolado: APPDATA=<sede>\tmp\prova-windows\appdata-cliente (vazio; sem lugar.cfg de corridas anteriores)
+[14:43:18.543 UTC | 2026-11-26T11:43:18.543-03:00] comando: Start-Process build/windows/Assimilacao.console.exe -ArgumentList '--headless','--','--servidor=127.0.0.1:8090','"--entrar-nome=Espadachim de Bancada"','--entrar-senha=prova-espadachim'
+[14:43:19.117 UTC | 2026-11-26T11:43:19.118-03:00] cliente arrancou: pid 4756; linha de comando recebida: "<sede>\repo\build\windows\Assimilacao.console.exe" --headless -- --servidor=127.0.0.1:8090 "--entrar-nome=Espadachim de Bancada" --entrar-senha=prova-espadachim 
+[14:43:19.281 UTC | 2026-11-26T11:43:19.281-03:00] processo do jogo (filho do invólucro de consola): pid 42872 Assimilacao.exe; linha de comando: <sede>\repo\build\windows\Assimilacao.exe --headless -- --servidor=127.0.0.1:8090 "--entrar-nome=Espadachim de Bancada" --entrar-senha=prova-espadachim 
+[14:43:21.413 UTC | 2026-11-26T11:43:21.413-03:00] ROOM_SNAPSHOT recebido: «rede: ROOM_SNAPSHOT seq=5 fase=combate plataforma=Windows», 2,9 s depois de arrancar o cliente
+[14:43:21.414 UTC | 2026-11-26T11:43:21.415-03:00] o cliente fica 5 s na mesa (conferido de 5 em 5 s)
+[14:43:26.488 UTC | 2026-11-26T11:43:26.488-03:00] +5 s: invólucro vivo (pid 4756), processos do jogo vivos: 1 de 1; a mesa sem SAIU
+[14:43:26.494 UTC | 2026-11-26T11:43:26.494-03:00] MORTE: o harness mata o cliente por comando (Stop-Process -Force), pids 42872, 4756; 5,077 s depois do snapshot; instante UTC 14:43:26.494
+[14:43:26.510 UTC | 2026-11-26T11:43:26.510-03:00] Stop-Process -Id 42872 -Force feito
+[14:43:26.523 UTC | 2026-11-26T11:43:26.523-03:00] Stop-Process -Id 4756 -Force feito
+[14:43:26.526 UTC | 2026-11-26T11:43:26.526-03:00] o invólucro de consola saiu: exit -1 (0xFFFFFFFF)
+[14:43:26.540 UTC | 2026-11-26T11:43:26.540-03:00] na mesa (relógio da mesa, UTC): ENTROU 14:43:21.295 -> SAIU 14:43:26.511 = 5,216 s; snapshot visto 14:43:21.411; morte 14:43:26.494
+[14:43:26.543 UTC | 2026-11-26T11:43:26.544-03:00] SAIU 0,017 s depois da morte
+[14:43:26.550 UTC | 2026-11-26T11:43:26.550-03:00] erros de script no cliente: 0
+[14:43:26.555 UTC | 2026-11-26T11:43:26.556-03:00] user:// isolado: o cliente escreveu o lugar.cfg em <sede>\tmp\prova-windows\appdata-cliente\Godot\app_userdata\Assimilação\lugar.cfg
+[14:43:26.572 UTC | 2026-11-26T11:43:26.572-03:00] mesa parada pelo harness (Stop-Process -Force, pid 19752): exit -1
+[14:43:26.590 UTC | 2026-11-26T11:43:26.590-03:00] log import.log -> UTF-8 (67 bytes na origem)
+[14:43:26.594 UTC | 2026-11-26T11:43:26.594-03:00] log import.err -> UTF-8 (0 bytes na origem)
+[14:43:26.597 UTC | 2026-11-26T11:43:26.598-03:00] log export-Windows.log -> UTF-8 (47242 bytes na origem)
+[14:43:26.604 UTC | 2026-11-26T11:43:26.605-03:00] log export-Windows.err -> UTF-8 (0 bytes na origem)
+[14:43:26.609 UTC | 2026-11-26T11:43:26.609-03:00] log mesa.log -> UTF-8 (571 bytes na origem)
+[14:43:26.612 UTC | 2026-11-26T11:43:26.612-03:00] log mesa.err -> UTF-8 (0 bytes na origem)
+[14:43:26.617 UTC | 2026-11-26T11:43:26.617-03:00] log windows.log -> UTF-8 (1433 bytes na origem)
+[14:43:26.620 UTC | 2026-11-26T11:43:26.621-03:00] log windows.err -> UTF-8 (0 bytes na origem)
+[14:43:26.624 UTC | 2026-11-26T11:43:26.624-03:00] PROVA WINDOWS FALHOU (1 falhas); exit 1
