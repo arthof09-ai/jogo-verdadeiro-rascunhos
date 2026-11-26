@@ -164,3 +164,12 @@ Autor dos commits: `Claude Pierre C2 <claude-pierre@local>`, a mesma identidade 
 - **Fora desta ordem:** o job `windows` do workflow «Aparelhos (F2)» continua a matar o `.exe` logo a seguir ao
   snapshot. O guião local é que fixa o método. Levar os 30 s para o CI muda o workflow e fica como sugestão.
   Também não decidi nada da secção C da sentença 595.
+
+## Nota do CI
+
+- `34d6f0c` (os três commits desta ordem): **Testes dos rascunhos 45804679330: success**, com os 10 jobs verdes
+  (motor-real, protocolo, godot-cliente, cliente, ponta-a-ponta, foto-mestre, provas-mapa, servidor, validador-glb e
+  retoma-pc). O `retoma-pc` verde confirma as listas do `c27f164`. **Sonda de privacidade 45804679558: success.**
+- «Aparelhos (F2)» 45804679276: `failure`, só por causa do job `android`. É a falha anterior a esta ordem (o F1 da
+  sentença 595; a ponta `e2d784a` também tinha falhado, no run 45802964273). `exportar`, `windows`, `web-chromium`,
+  `rede-3-bots` e `qr` deram success. Esta ordem não mexe no workflow nem no Android.
