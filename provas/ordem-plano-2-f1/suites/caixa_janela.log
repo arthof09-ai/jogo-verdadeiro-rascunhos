@@ -1,0 +1,163 @@
+# comando: cd rascunhos/cliente && MESTRE_COMANDOS=<sede>/tmp/suites-f1/comandos-caixa_janela.jsonl timeout 300 Godot_v4.7.2-stable_win64.exe --headless --path . -s res://testes/caixa_janela.gd
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+== B1. eventos aplicados ANTES de o HUD abrir (a batalha anda enquanto a arena abre) ==
+rede: ROOM_SNAPSHOT seq=1 fase=combate plataforma=Windows
+  ok    o Estado guardou os 2 eventos de depois do snapshot
+  ok    ao abrir, a caixa já tem os eventos de antes do HUD (["f2", "f1", "f3", "f4"], vez f4), sem esperar pelo snapshot seguinte
+  ok    depois de abrir, os eventos seguem pelo sinal, sem repetir os de antes (vez f2)
+  ok    cada evento contou uma só vez (repetidos no _ready: 2; pelo sinal: 1) — vezes 3
+  ok    um snapshot novo é o ponto de partida: a lista de depois dele recomeça vazia
+  ok    sem eventos depois do snapshot, a caixa é a do snapshot (["f1"])
+== B3. 8, 12 e 16 figuras na ordem, em ecrãs baixos ==
+  MEDIDA 8 figuras · 1280x720 (unidades 1920x1080, escala 0.667): caixa 437x212 u = 291x141 px reais (23% da largura, 20% da altura) · retrato 75 u = 50 px · nome 17 u = 11.3 px · letra 22 u = 14.7 px · 4 por linha · faixa livre 976 u (precisa 437 u) = 650 px reais
+  ok    8 figuras 1280x720: a caixa mostra as 8 (8)
+  ok    8 figuras 1280x720: a caixa [P: (1459.0, 24.0), S: (437.0, 212.0)] cabe no ecrã [P: (0.0, 0.0), S: (1920.0, 1080.0)]
+  ok    8 figuras 1280x720: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    8 figuras 1280x720: a caixa não passa de metade da altura (212 de 1080 u)
+  ok    8 figuras 1280x720: a faixa tem 976 u livres para a frase mais comprida (437 u), numa linha, sem passar por baixo da caixa (faixa [P: (472.0, 24.0), S: (976.0, 31.0)])
+  ok    8 figuras 1280x720: a fila segue a letra de agora (retrato 75 u = 3.4 × 22)
+  ok    8 figuras 1280x720: a letra da faixa tem 14.7 px reais (≥ 13)
+  ok    8 figuras 1280x720: os 4 slots renderizam com a largura da célula (os próximos, sem a vez; ["75.0"] u = 50.0 px reais por slot; moldura quadrada) []
+  MEDIDA EXPANDIDA 8 figuras · 1280x720: caixa 437x504 u = 291x336 px reais (compacta 437x212 u) · 8 linhas de 54 u (retrato 53 u) · à vista sem rolar 8 · rola NÃO · nomes cortados {  } · fundo 528 u (topo da barra 994 u)
+  ok    8 figuras 1280x720: [expandida] o rato por cima abre a ordem inteira, a vez primeiro (8 linhas)
+  ok    8 figuras 1280x720: [expandida] todos os nomes completos à vista, sem corte {  }
+  ok    8 figuras 1280x720: [expandida] cresce para baixo, encostada à direita, cabe no ecrã acima da barra e não tapa a faixa nem a ⚙ ([P: (1459.0, 24.0), S: (437.0, 504.0)]; barra em y 994)
+  MEDIDA RODA 8 figuras · 1280x720: rola NÃO · posição antes 0 u · depois de 1 passo para baixo 0 u · no fim 0 u (máximo 0 u, 2 passos; última linha à vista SIM) · de volta ao topo 0 u
+  ok    8 figuras 1280x720: [expandida] a roda do rato rola a lista por dentro quando a ordem não cabe (rola false: 0 → 0 → 0 de 0 u, e volta a 0), e a faixa não se mexe
+  ok    8 figuras 1280x720: [expandida] tirar o rato volta à compacta ([P: (1459.0, 24.0), S: (437.0, 212.0)])
+  MEDIDA 8 figuras · 844x390 (unidades 2337x1080, escala 0.361): caixa 689x323 u = 248x116 px reais (29% da largura, 30% da altura) · retrato 122 u = 44 px · nome 27 u = 9.8 px · letra 36 u = 13.0 px · 4 por linha · faixa livre 875 u (precisa 713 u) = 315 px reais
+  ok    8 figuras 844x390: a caixa mostra as 8 (8)
+  ok    8 figuras 844x390: a caixa [P: (1624.0, 24.0), S: (689.0, 323.0)] cabe no ecrã [P: (0.0, 0.0), S: (2337.0, 1080.0)]
+  ok    8 figuras 844x390: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    8 figuras 844x390: a caixa não passa de metade da altura (323 de 1080 u)
+  ok    8 figuras 844x390: a faixa tem 875 u livres para a frase mais comprida (713 u), numa linha, sem passar por baixo da caixa (faixa [P: (731.0, 24.0), S: (875.0, 50.0)])
+  ok    8 figuras 844x390: a fila segue a letra de agora (retrato 122 u = 3.4 × 36)
+  ok    8 figuras 844x390: a letra da faixa tem 13.0 px reais (≥ 13)
+  ok    8 figuras 844x390: os 4 slots renderizam com a largura da célula (os próximos, sem a vez; ["122.0"] u = 44.1 px reais por slot; moldura quadrada) []
+  MEDIDA EXPANDIDA 8 figuras · 844x390: caixa 689x786 u = 248x283 px reais (compacta 689x323 u) · 8 linhas de 86 u (retrato 86 u) · à vista sem rolar 8 · rola NÃO · nomes cortados {  } · fundo 810 u (topo da barra 955 u)
+  ok    8 figuras 844x390: [expandida] o rato por cima abre a ordem inteira, a vez primeiro (8 linhas)
+  ok    8 figuras 844x390: [expandida] todos os nomes completos à vista, sem corte {  }
+  ok    8 figuras 844x390: [expandida] cresce para baixo, encostada à direita, cabe no ecrã acima da barra e não tapa a faixa nem a ⚙ ([P: (1624.0, 24.0), S: (689.0, 786.0)]; barra em y 955)
+  MEDIDA RODA 8 figuras · 844x390: rola NÃO · posição antes 0 u · depois de 1 passo para baixo 0 u · no fim 0 u (máximo 0 u, 2 passos; última linha à vista SIM) · de volta ao topo 0 u
+  ok    8 figuras 844x390: [expandida] a roda do rato rola a lista por dentro quando a ordem não cabe (rola false: 0 → 0 → 0 de 0 u, e volta a 0), e a faixa não se mexe
+  ok    8 figuras 844x390: [expandida] tirar o rato volta à compacta ([P: (1624.0, 24.0), S: (689.0, 323.0)])
+  MEDIDA 8 figuras · 780x360 (unidades 2340x1080, escala 0.333): caixa 744x349 u = 248x116 px reais (32% da largura, 32% da altura) · retrato 133 u = 44 px · nome 29 u = 9.7 px · letra 39 u = 13.0 px · 4 por linha · faixa livre 788 u (precisa 772 u) = 262 px reais
+  ok    8 figuras 780x360: a caixa mostra as 8 (8)
+  ok    8 figuras 780x360: a caixa [P: (1572.0, 24.0), S: (744.0, 349.0)] cabe no ecrã [P: (0.0, 0.0), S: (2340.0, 1080.0)]
+  ok    8 figuras 780x360: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    8 figuras 780x360: a caixa não passa de metade da altura (349 de 1080 u)
+  ok    8 figuras 780x360: a faixa tem 788 u livres para a frase mais comprida (772 u), numa linha, sem passar por baixo da caixa (faixa [P: (764.5, 24.0), S: (788.0, 54.0)])
+  ok    8 figuras 780x360: a fila segue a letra de agora (retrato 133 u = 3.4 × 39)
+  ok    8 figuras 780x360: a letra da faixa tem 13.0 px reais (≥ 13)
+  ok    8 figuras 780x360: os 4 slots renderizam com a largura da célula (os próximos, sem a vez; ["133.0"] u = 44.3 px reais por slot; moldura quadrada) []
+  MEDIDA EXPANDIDA 8 figuras · 780x360: caixa 744x854 u = 248x284 px reais (compacta 744x349 u) · 8 linhas de 94 u (retrato 94 u) · à vista sem rolar 8 · rola NÃO · nomes cortados {  } · fundo 878 u (topo da barra 946 u)
+  ok    8 figuras 780x360: [expandida] o rato por cima abre a ordem inteira, a vez primeiro (8 linhas)
+  ok    8 figuras 780x360: [expandida] todos os nomes completos à vista, sem corte {  }
+  ok    8 figuras 780x360: [expandida] cresce para baixo, encostada à direita, cabe no ecrã acima da barra e não tapa a faixa nem a ⚙ ([P: (1572.0, 24.0), S: (744.0, 854.0)]; barra em y 946)
+  MEDIDA RODA 8 figuras · 780x360: rola NÃO · posição antes 0 u · depois de 1 passo para baixo 0 u · no fim 0 u (máximo 0 u, 2 passos; última linha à vista SIM) · de volta ao topo 0 u
+  ok    8 figuras 780x360: [expandida] a roda do rato rola a lista por dentro quando a ordem não cabe (rola false: 0 → 0 → 0 de 0 u, e volta a 0), e a faixa não se mexe
+  ok    8 figuras 780x360: [expandida] tirar o rato volta à compacta ([P: (1572.0, 24.0), S: (744.0, 349.0)])
+  MEDIDA 12 figuras · 1280x720 (unidades 1920x1080, escala 0.667): caixa 437x212 u = 291x141 px reais (23% da largura, 20% da altura) · retrato 75 u = 50 px · nome 17 u = 11.3 px · letra 22 u = 14.7 px · 4 por linha · faixa livre 976 u (precisa 437 u) = 650 px reais
+  ok    12 figuras 1280x720: a caixa mostra as 12 (12)
+  ok    12 figuras 1280x720: a caixa [P: (1459.0, 24.0), S: (437.0, 212.0)] cabe no ecrã [P: (0.0, 0.0), S: (1920.0, 1080.0)]
+  ok    12 figuras 1280x720: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    12 figuras 1280x720: a caixa não passa de metade da altura (212 de 1080 u)
+  ok    12 figuras 1280x720: a faixa tem 976 u livres para a frase mais comprida (437 u), numa linha, sem passar por baixo da caixa (faixa [P: (472.0, 24.0), S: (976.0, 31.0)])
+  ok    12 figuras 1280x720: a fila segue a letra de agora (retrato 75 u = 3.4 × 22)
+  ok    12 figuras 1280x720: a letra da faixa tem 14.7 px reais (≥ 13)
+  ok    12 figuras 1280x720: os 4 slots renderizam com a largura da célula (os próximos, sem a vez; ["75.0"] u = 50.0 px reais por slot; moldura quadrada) []
+  MEDIDA EXPANDIDA 12 figuras · 1280x720: caixa 437x732 u = 291x488 px reais (compacta 437x212 u) · 12 linhas de 54 u (retrato 53 u) · à vista sem rolar 12 · rola NÃO · nomes cortados {  } · fundo 756 u (topo da barra 994 u)
+  ok    12 figuras 1280x720: [expandida] o rato por cima abre a ordem inteira, a vez primeiro (12 linhas)
+  ok    12 figuras 1280x720: [expandida] todos os nomes completos à vista, sem corte {  }
+  ok    12 figuras 1280x720: [expandida] cresce para baixo, encostada à direita, cabe no ecrã acima da barra e não tapa a faixa nem a ⚙ ([P: (1459.0, 24.0), S: (437.0, 732.0)]; barra em y 994)
+  MEDIDA RODA 12 figuras · 1280x720: rola NÃO · posição antes 0 u · depois de 1 passo para baixo 0 u · no fim 0 u (máximo 0 u, 2 passos; última linha à vista SIM) · de volta ao topo 0 u
+  ok    12 figuras 1280x720: [expandida] a roda do rato rola a lista por dentro quando a ordem não cabe (rola false: 0 → 0 → 0 de 0 u, e volta a 0), e a faixa não se mexe
+  ok    12 figuras 1280x720: [expandida] tirar o rato volta à compacta ([P: (1459.0, 24.0), S: (437.0, 212.0)])
+  MEDIDA 12 figuras · 844x390 (unidades 2337x1080, escala 0.361): caixa 689x323 u = 248x116 px reais (29% da largura, 30% da altura) · retrato 122 u = 44 px · nome 27 u = 9.8 px · letra 36 u = 13.0 px · 4 por linha · faixa livre 875 u (precisa 713 u) = 315 px reais
+  ok    12 figuras 844x390: a caixa mostra as 12 (12)
+  ok    12 figuras 844x390: a caixa [P: (1624.0, 24.0), S: (689.0, 323.0)] cabe no ecrã [P: (0.0, 0.0), S: (2337.0, 1080.0)]
+  ok    12 figuras 844x390: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    12 figuras 844x390: a caixa não passa de metade da altura (323 de 1080 u)
+  ok    12 figuras 844x390: a faixa tem 875 u livres para a frase mais comprida (713 u), numa linha, sem passar por baixo da caixa (faixa [P: (731.0, 24.0), S: (875.0, 50.0)])
+  ok    12 figuras 844x390: a fila segue a letra de agora (retrato 122 u = 3.4 × 36)
+  ok    12 figuras 844x390: a letra da faixa tem 13.0 px reais (≥ 13)
+  ok    12 figuras 844x390: os 4 slots renderizam com a largura da célula (os próximos, sem a vez; ["122.0"] u = 44.1 px reais por slot; moldura quadrada) []
+  MEDIDA EXPANDIDA 12 figuras · 844x390: caixa 689x913 u = 248x329 px reais (compacta 689x323 u) · 12 linhas de 86 u (retrato 86 u) · à vista sem rolar 9 · rola SIM · nomes cortados {  } · fundo 937 u (topo da barra 955 u)
+  ok    12 figuras 844x390: [expandida] o rato por cima abre a ordem inteira, a vez primeiro (12 linhas)
+  ok    12 figuras 844x390: [expandida] todos os nomes completos à vista, sem corte {  }
+  ok    12 figuras 844x390: [expandida] cresce para baixo, encostada à direita, cabe no ecrã acima da barra e não tapa a faixa nem a ⚙ ([P: (1624.0, 24.0), S: (689.0, 913.0)]; barra em y 955)
+  MEDIDA RODA 12 figuras · 844x390: rola SIM · posição antes 0 u · depois de 1 passo para baixo 105 u · no fim 233 u (máximo 233 u, 4 passos; última linha à vista SIM) · de volta ao topo 0 u
+  ok    12 figuras 844x390: [expandida] a roda do rato rola a lista por dentro quando a ordem não cabe (rola true: 0 → 105 → 233 de 233 u, e volta a 0), e a faixa não se mexe
+  REGISTO ARRASTAR 12 figuras · 844x390: ecrã de toque NÃO · arrastar com o rato 0 → 0 u · arrastar com o dedo 0 → 0 u (não conta: é o que a plataforma faz)
+  ok    12 figuras 844x390: [expandida] tirar o rato volta à compacta ([P: (1624.0, 24.0), S: (689.0, 323.0)])
+  MEDIDA 12 figuras · 780x360 (unidades 2340x1080, escala 0.333): caixa 744x349 u = 248x116 px reais (32% da largura, 32% da altura) · retrato 133 u = 44 px · nome 29 u = 9.7 px · letra 39 u = 13.0 px · 4 por linha · faixa livre 788 u (precisa 772 u) = 262 px reais
+  ok    12 figuras 780x360: a caixa mostra as 12 (12)
+  ok    12 figuras 780x360: a caixa [P: (1572.0, 24.0), S: (744.0, 349.0)] cabe no ecrã [P: (0.0, 0.0), S: (2340.0, 1080.0)]
+  ok    12 figuras 780x360: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    12 figuras 780x360: a caixa não passa de metade da altura (349 de 1080 u)
+  ok    12 figuras 780x360: a faixa tem 788 u livres para a frase mais comprida (772 u), numa linha, sem passar por baixo da caixa (faixa [P: (764.5, 24.0), S: (788.0, 54.0)])
+  ok    12 figuras 780x360: a fila segue a letra de agora (retrato 133 u = 3.4 × 39)
+  ok    12 figuras 780x360: a letra da faixa tem 13.0 px reais (≥ 13)
+  ok    12 figuras 780x360: os 4 slots renderizam com a largura da célula (os próximos, sem a vez; ["133.0"] u = 44.3 px reais por slot; moldura quadrada) []
+  MEDIDA EXPANDIDA 12 figuras · 780x360: caixa 744x903 u = 248x301 px reais (compacta 744x349 u) · 12 linhas de 94 u (retrato 94 u) · à vista sem rolar 8 · rola SIM · nomes cortados {  } · fundo 927 u (topo da barra 946 u)
+  ok    12 figuras 780x360: [expandida] o rato por cima abre a ordem inteira, a vez primeiro (12 linhas)
+  ok    12 figuras 780x360: [expandida] todos os nomes completos à vista, sem corte {  }
+  ok    12 figuras 780x360: [expandida] cresce para baixo, encostada à direita, cabe no ecrã acima da barra e não tapa a faixa nem a ⚙ ([P: (1572.0, 24.0), S: (744.0, 903.0)]; barra em y 946)
+  MEDIDA RODA 12 figuras · 780x360: rola SIM · posição antes 0 u · depois de 1 passo para baixo 103 u · no fim 343 u (máximo 343 u, 5 passos; última linha à vista SIM) · de volta ao topo 0 u
+  ok    12 figuras 780x360: [expandida] a roda do rato rola a lista por dentro quando a ordem não cabe (rola true: 0 → 103 → 343 de 343 u, e volta a 0), e a faixa não se mexe
+  REGISTO ARRASTAR 12 figuras · 780x360: ecrã de toque NÃO · arrastar com o rato 0 → 0 u · arrastar com o dedo 0 → 0 u (não conta: é o que a plataforma faz)
+  ok    12 figuras 780x360: [expandida] tirar o rato volta à compacta ([P: (1572.0, 24.0), S: (744.0, 349.0)])
+  MEDIDA 16 figuras · 1280x720 (unidades 1920x1080, escala 0.667): caixa 437x212 u = 291x141 px reais (23% da largura, 20% da altura) · retrato 75 u = 50 px · nome 17 u = 11.3 px · letra 22 u = 14.7 px · 4 por linha · faixa livre 976 u (precisa 437 u) = 650 px reais
+  ok    16 figuras 1280x720: a caixa mostra as 16 (16)
+  ok    16 figuras 1280x720: a caixa [P: (1459.0, 24.0), S: (437.0, 212.0)] cabe no ecrã [P: (0.0, 0.0), S: (1920.0, 1080.0)]
+  ok    16 figuras 1280x720: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    16 figuras 1280x720: a caixa não passa de metade da altura (212 de 1080 u)
+  ok    16 figuras 1280x720: a faixa tem 976 u livres para a frase mais comprida (437 u), numa linha, sem passar por baixo da caixa (faixa [P: (472.0, 24.0), S: (976.0, 31.0)])
+  ok    16 figuras 1280x720: a fila segue a letra de agora (retrato 75 u = 3.4 × 22)
+  ok    16 figuras 1280x720: a letra da faixa tem 14.7 px reais (≥ 13)
+  ok    16 figuras 1280x720: os 4 slots renderizam com a largura da célula (os próximos, sem a vez; ["75.0"] u = 50.0 px reais por slot; moldura quadrada) []
+  MEDIDA EXPANDIDA 16 figuras · 1280x720: caixa 437x959 u = 291x639 px reais (compacta 437x212 u) · 16 linhas de 54 u (retrato 53 u) · à vista sem rolar 15 · rola SIM · nomes cortados {  } · fundo 983 u (topo da barra 994 u)
+  ok    16 figuras 1280x720: [expandida] o rato por cima abre a ordem inteira, a vez primeiro (16 linhas)
+  ok    16 figuras 1280x720: [expandida] todos os nomes completos à vista, sem corte {  }
+  ok    16 figuras 1280x720: [expandida] cresce para baixo, encostada à direita, cabe no ecrã acima da barra e não tapa a faixa nem a ⚙ ([P: (1459.0, 24.0), S: (437.0, 959.0)]; barra em y 994)
+  MEDIDA RODA 16 figuras · 1280x720: rola SIM · posição antes 0 u · depois de 1 passo para baixo 1 u · no fim 1 u (máximo 1 u, 2 passos; última linha à vista SIM) · de volta ao topo 0 u
+  ok    16 figuras 1280x720: [expandida] a roda do rato rola a lista por dentro quando a ordem não cabe (rola true: 0 → 1 → 1 de 1 u, e volta a 0), e a faixa não se mexe
+  REGISTO ARRASTAR 16 figuras · 1280x720: ecrã de toque NÃO · arrastar com o rato 0 → 0 u · arrastar com o dedo 0 → 0 u (não conta: é o que a plataforma faz)
+  ok    16 figuras 1280x720: [expandida] tirar o rato volta à compacta ([P: (1459.0, 24.0), S: (437.0, 212.0)])
+  MEDIDA 16 figuras · 844x390 (unidades 2337x1080, escala 0.361): caixa 689x323 u = 248x116 px reais (29% da largura, 30% da altura) · retrato 122 u = 44 px · nome 27 u = 9.8 px · letra 36 u = 13.0 px · 4 por linha · faixa livre 875 u (precisa 713 u) = 315 px reais
+  ok    16 figuras 844x390: a caixa mostra as 16 (16)
+  ok    16 figuras 844x390: a caixa [P: (1624.0, 24.0), S: (689.0, 323.0)] cabe no ecrã [P: (0.0, 0.0), S: (2337.0, 1080.0)]
+  ok    16 figuras 844x390: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    16 figuras 844x390: a caixa não passa de metade da altura (323 de 1080 u)
+  ok    16 figuras 844x390: a faixa tem 875 u livres para a frase mais comprida (713 u), numa linha, sem passar por baixo da caixa (faixa [P: (731.0, 24.0), S: (875.0, 50.0)])
+  ok    16 figuras 844x390: a fila segue a letra de agora (retrato 122 u = 3.4 × 36)
+  ok    16 figuras 844x390: a letra da faixa tem 13.0 px reais (≥ 13)
+  ok    16 figuras 844x390: os 4 slots renderizam com a largura da célula (os próximos, sem a vez; ["122.0"] u = 44.1 px reais por slot; moldura quadrada) []
+  MEDIDA EXPANDIDA 16 figuras · 844x390: caixa 689x913 u = 248x329 px reais (compacta 689x323 u) · 16 linhas de 86 u (retrato 86 u) · à vista sem rolar 9 · rola SIM · nomes cortados {  } · fundo 937 u (topo da barra 955 u)
+  ok    16 figuras 844x390: [expandida] o rato por cima abre a ordem inteira, a vez primeiro (16 linhas)
+  ok    16 figuras 844x390: [expandida] todos os nomes completos à vista, sem corte {  }
+  ok    16 figuras 844x390: [expandida] cresce para baixo, encostada à direita, cabe no ecrã acima da barra e não tapa a faixa nem a ⚙ ([P: (1624.0, 24.0), S: (689.0, 913.0)]; barra em y 955)
+  MEDIDA RODA 16 figuras · 844x390: rola SIM · posição antes 0 u · depois de 1 passo para baixo 105 u · no fim 593 u (máximo 593 u, 7 passos; última linha à vista SIM) · de volta ao topo 0 u
+  ok    16 figuras 844x390: [expandida] a roda do rato rola a lista por dentro quando a ordem não cabe (rola true: 0 → 105 → 593 de 593 u, e volta a 0), e a faixa não se mexe
+  REGISTO ARRASTAR 16 figuras · 844x390: ecrã de toque NÃO · arrastar com o rato 0 → 0 u · arrastar com o dedo 0 → 0 u (não conta: é o que a plataforma faz)
+  ok    16 figuras 844x390: [expandida] tirar o rato volta à compacta ([P: (1624.0, 24.0), S: (689.0, 323.0)])
+  MEDIDA 16 figuras · 780x360 (unidades 2340x1080, escala 0.333): caixa 744x349 u = 248x116 px reais (32% da largura, 32% da altura) · retrato 133 u = 44 px · nome 29 u = 9.7 px · letra 39 u = 13.0 px · 4 por linha · faixa livre 788 u (precisa 772 u) = 262 px reais
+  ok    16 figuras 780x360: a caixa mostra as 16 (16)
+  ok    16 figuras 780x360: a caixa [P: (1572.0, 24.0), S: (744.0, 349.0)] cabe no ecrã [P: (0.0, 0.0), S: (2340.0, 1080.0)]
+  ok    16 figuras 780x360: a caixa não tapa a ⚙/ficha nem a barra []
+  ok    16 figuras 780x360: a caixa não passa de metade da altura (349 de 1080 u)
+  ok    16 figuras 780x360: a faixa tem 788 u livres para a frase mais comprida (772 u), numa linha, sem passar por baixo da caixa (faixa [P: (764.5, 24.0), S: (788.0, 54.0)])
+  ok    16 figuras 780x360: a fila segue a letra de agora (retrato 133 u = 3.4 × 39)
+  ok    16 figuras 780x360: a letra da faixa tem 13.0 px reais (≥ 13)
+  ok    16 figuras 780x360: os 4 slots renderizam com a largura da célula (os próximos, sem a vez; ["133.0"] u = 44.3 px reais por slot; moldura quadrada) []
+  MEDIDA EXPANDIDA 16 figuras · 780x360: caixa 744x903 u = 248x301 px reais (compacta 744x349 u) · 16 linhas de 94 u (retrato 94 u) · à vista sem rolar 8 · rola SIM · nomes cortados {  } · fundo 927 u (topo da barra 946 u)
+  ok    16 figuras 780x360: [expandida] o rato por cima abre a ordem inteira, a vez primeiro (16 linhas)
+  ok    16 figuras 780x360: [expandida] todos os nomes completos à vista, sem corte {  }
+  ok    16 figuras 780x360: [expandida] cresce para baixo, encostada à direita, cabe no ecrã acima da barra e não tapa a faixa nem a ⚙ ([P: (1572.0, 24.0), S: (744.0, 903.0)]; barra em y 946)
+  MEDIDA RODA 16 figuras · 780x360: rola SIM · posição antes 0 u · depois de 1 passo para baixo 103 u · no fim 735 u (máximo 735 u, 9 passos; última linha à vista SIM) · de volta ao topo 0 u
+  ok    16 figuras 780x360: [expandida] a roda do rato rola a lista por dentro quando a ordem não cabe (rola true: 0 → 103 → 735 de 735 u, e volta a 0), e a faixa não se mexe
+  REGISTO ARRASTAR 16 figuras · 780x360: ecrã de toque NÃO · arrastar com o rato 0 → 0 u · arrastar com o dedo 0 → 0 u (não conta: é o que a plataforma faz)
+  ok    16 figuras 780x360: [expandida] tirar o rato volta à compacta ([P: (1572.0, 24.0), S: (744.0, 349.0)])
+
+123 de 123 verificações passaram.

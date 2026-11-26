@@ -1,0 +1,140 @@
+# comando: (mutação: em rascunhos/servidor/nucleo/projecao.js, «return `${texto} ${fig.ordinal}`;» → «return texto; // MUTACAO (PLANO-2-F1): sem o número»; reposta com git checkout)
+# comando: d12
+# diff: -  return `${texto} ${fig.ordinal}`;
+# diff: +  return texto; // MUTACAO (PLANO-2-F1): sem o número
+✖ D-AUD-12: dois orcs da mesma ficha — «Orc 1» e «Orc 2» na colocação e no snapshot da Party; o lobo é «Lobo 1» (24.1752ms)
+✖ D-AUD-12: o Mestre vê o nome verdadeiro e o público com o número; o estado guarda o ordinal na figura (8.964ms)
+✖ D-AUD-12: duas fichas diferentes com o mesmo nome público contam juntas («Criatura 1», «Criatura 2») — a Party não fica a saber que são fichas diferentes (5.1493ms)
+✖ D-AUD-12: o «Recomeçar» e o «voltar» ficam com o número da figura (8.8458ms)
+✔ D-AUD-12: o journal com o ordinal reabre igual (a conferência aceita o campo) (10.7569ms)
+✔ D-AUD-12: um journal de antes (sem ordinal) abre e as figuras ficam sem sufixo, como hoje (8.9211ms)
+✔ D-AUD-12: um ordinal que não é inteiro >= 1 não abre (ErroJournal com o caminho do campo) (34.6327ms)
+✖ D-AUD-12: a projecção — sem ordinal, nada; com ordinal, « N» no público e no verdadeiro (0.4107ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 3
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 256.4173
+
+✖ failing tests:
+
+test at testes\d-aud-12-ordinal.test.mjs:28:1
+✖ D-AUD-12: dois orcs da mesma ficha — «Orc 1» e «Orc 2» na colocação e no snapshot da Party; o lobo é «Lobo 1» (24.1752ms)
+  AssertionError [ERR_ASSERTION]: heroina: os nomes das colocações
+  + actual - expected
+  
+    [
+      'Heroína Teste',
+  +   'Orc',
+  +   'Orc',
+  +   'Lobo'
+  -   'Orc 1',
+  -   'Orc 2',
+  -   'Lobo 1'
+    ]
+  
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-ordinal.test.mjs:32:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'Heroína Teste', 'Orc', 'Orc', 'Lobo' ],
+    expected: [ 'Heroína Teste', 'Orc 1', 'Orc 2', 'Lobo 1' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at testes\d-aud-12-ordinal.test.mjs:45:1
+✖ D-AUD-12: o Mestre vê o nome verdadeiro e o público com o número; o estado guarda o ordinal na figura (8.964ms)
+  TypeError [Error]: Cannot read properties of undefined (reading 'nome')
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-ordinal.test.mjs:49:33)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at testes\d-aud-12-ordinal.test.mjs:62:1
+✖ D-AUD-12: duas fichas diferentes com o mesmo nome público contam juntas («Criatura 1», «Criatura 2») — a Party não fica a saber que são fichas diferentes (5.1493ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'Heroína Teste',
+  +   'Criatura',
+  +   'Criatura'
+  -   'Criatura 1',
+  -   'Criatura 2'
+    ]
+  
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-ordinal.test.mjs:74:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'Heroína Teste', 'Criatura', 'Criatura' ],
+    expected: [ 'Heroína Teste', 'Criatura 1', 'Criatura 2' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at testes\d-aud-12-ordinal.test.mjs:77:1
+✖ D-AUD-12: o «Recomeçar» e o «voltar» ficam com o número da figura (8.8458ms)
+  AssertionError [ERR_ASSERTION]: o snapshot do recomeço
+  + actual - expected
+  
+    [
+      'Heroína Teste',
+  +   'Lobo',
+  +   'Orc',
+  +   'Orc'
+  -   'Lobo 1',
+  -   'Orc 1',
+  -   'Orc 2'
+    ]
+  
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-ordinal.test.mjs:83:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'Heroína Teste', 'Lobo', 'Orc', 'Orc' ],
+    expected: [ 'Heroína Teste', 'Lobo 1', 'Orc 1', 'Orc 2' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at testes\d-aud-12-ordinal.test.mjs:138:1
+✖ D-AUD-12: a projecção — sem ordinal, nada; com ordinal, « N» no público e no verdadeiro (0.4107ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'Orc' !== 'Orc 4'
+  
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-ordinal.test.mjs:143:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Orc',
+    expected: 'Orc 4',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,53 @@
+{
+  "fonte": "journal da auditoria (registo-MESTRE-ONLY-bancada-rede.json, vlabSha a91c021c…), eventos `ataque` da heroína, soMestre; tirados pela dados-justos.mjs --journal em 2026-11-24T00:53Z",
+  "registados": [
+    {
+      "seq": 30,
+      "semente": 2599056525,
+      "faces": [
+        10
+      ],
+      "recibo": "1d20+4 → [10] = 14 vs CA 9137 → ERRA"
+    },
+    {
+      "seq": 45,
+      "semente": 1430019558,
+      "faces": [
+        18
+      ],
+      "recibo": "1d20+4 → [18] = 22 vs CA 9137 → ERRA"
+    },
+    {
+      "seq": 56,
+      "semente": 1985287769,
+      "faces": [
+        18
+      ],
+      "recibo": "1d20+4 → [18] = 22 vs CA 9137 → ERRA"
+    },
+    {
+      "seq": 67,
+      "semente": 1655933658,
+      "faces": [
+        18
+      ],
+      "recibo": "1d20+4 → [18] = 22 vs CA 9137 → ERRA"
+    },
+    {
+      "seq": 78,
+      "semente": 2212477532,
+      "faces": [
+        18
+      ],
+      "recibo": "1d20+4 → [18] = 22 vs CA 9137 → ERRA"
+    },
+    {
+      "seq": 89,
+      "semente": 3445070651,
+      "faces": [
+        19
+      ],
+      "recibo": "1d20+4 → [19] = 23 vs CA 9137 → ERRA"
+    }
+  ]
+}

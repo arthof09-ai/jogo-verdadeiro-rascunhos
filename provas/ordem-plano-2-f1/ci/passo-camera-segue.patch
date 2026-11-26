@@ -1,0 +1,19 @@
+diff --git a/.github/workflows/testes.yml b/.github/workflows/testes.yml
+index e76ff2b..28d5ea9 100644
+--- a/.github/workflows/testes.yml
++++ b/.github/workflows/testes.yml
+@@ -154,6 +154,14 @@ jobs:
+           set -o pipefail
+           timeout 120 "$GODOT" --headless --path . -s res://testes/caixa_jogadora.gd 2>&1 | tee "$RUNNER_TEMP/caixa_jogadora.gd.log"
+           ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/caixa_jogadora.gd.log"
++      # ORDEM-PLANO-2-F1 (D-AUD-05): a câmara da jogadora mostra e segue a figura dela (a arena a sério, sem servidor).
++      - name: A câmara segue a figura dela (ORDEM-PLANO-2-F1, D-AUD-05)
++        if: always()
++        run: |
++          set -o pipefail
++          timeout 120 "$GODOT" --headless --path . -s res://testes/camera_segue.gd 2>&1 | tee "$RUNNER_TEMP/camera_segue.gd.log"
++          ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/camera_segue.gd.log"
++          tr -d '\r' < "$RUNNER_TEMP/camera_segue.gd.log" | grep -E "^19 de 19 verificações passaram\.$"
+       # Ordem CAIXA-JANELA-CI (F5 da conferência da CAIXA-PADRAO-CORRECOES): a suite caixa_janela corre aqui, com o
+       # mesmo arranque que a casa usa no PC (--headless, sem ecrã, sem servidor). O log e a prova de disparo ficam no
+       # artefacto «caixa-janela». Aplicado pelo coordenador (F1 da sentença da CAIXA-JANELA-CI, 22/11/2026).
