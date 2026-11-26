@@ -1,0 +1,24 @@
+# commit: 4fd5c6c055906c5f1e09b35ea541e0c3ecc3fdce
+d-aud-12-snapshot-SEM-SUFIXO-NA-FIGURA-PUBLICA exit=1 falhas=15 fim=«ℹ pass 0 ℹ fail 7 » reposto=sim
+servidor exit=0 ℹ tests 453 ℹ pass 453 ℹ fail 0 ℹ skipped 0 
+prova-caixa exit=0 PROVA OK
+motor-real exit=0 ℹ pass 6 ℹ fail 0 
+abrir_scripts exit=1 scriptErrors=26 
+rodar_testes exit=0 scriptErrors=11 292 de 292 verificações passaram.
+abrir_clareira exit=1 scriptErrors=6 0 de 1 verificações passaram.
+medir_painel_config exit=0 scriptErrors=11 
+abrir_mestre exit=124 scriptErrors=3 
+pecas_mestre exit=1 scriptErrors=1 
+medir_mestre exit=0 scriptErrors=7 
+hud_acoes exit=124 scriptErrors=10 
+caixa_jogadora exit=0 scriptErrors=13 58 de 58 verificações passaram.
+camera_segue exit=124 scriptErrors=10 
+aparelhos_f2 exit=0 scriptErrors=0 
+caixa_janela exit=0 scriptErrors=13 123 de 123 verificações passaram.
+canario_privacidade exit=0 scriptErrors=9 10 de 10 verificações passaram.
+teste_relato_caixa exit=0 scriptErrors=0 teste do relato da caixa: 31 de 31 verificações passaram.
+teste_nomes_relato exit=0 scriptErrors=0 teste dos nomes do relato da caixa-janela: 26 de 26 verificações passaram.
+validar-pecas_mestre exit=1
+validar-abrir_mestre exit=1
+sonda-caminhos exit=0
+FIM

@@ -1,0 +1,13 @@
+diff --git a/rascunhos/servidor/nucleo/projecao.js b/rascunhos/servidor/nucleo/projecao.js
+index 34732f5..97ceb86 100644
+--- a/rascunhos/servidor/nucleo/projecao.js
++++ b/rascunhos/servidor/nucleo/projecao.js
+@@ -148,7 +148,7 @@ export function projetarEvento(evento, dest) {
+ export function figuraPublica(fig, fichas) {
+   return {
+     id: fig.id,
+-    nomePublico: nomePublicoDaFigura(fig, fichas[fig.fichaId]),
++    nomePublico: nomePublicoDe(fichas[fig.fichaId]),
+     lado: fig.lado,
+     x: fig.x,
+     y: fig.y,

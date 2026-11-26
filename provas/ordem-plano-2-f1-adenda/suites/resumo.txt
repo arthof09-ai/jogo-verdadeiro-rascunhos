@@ -1,0 +1,25 @@
+# commit: 4fd5c6c055906c5f1e09b35ea541e0c3ecc3fdce
+d-aud-12-snapshot-SEM-SUFIXO-NA-FIGURA-PUBLICA exit=1 falhas=15 fim=«ℹ pass 0 ℹ fail 7 » reposto=sim
+servidor exit=0 ℹ tests 453 ℹ pass 453 ℹ fail 0 ℹ skipped 0 
+prova-caixa exit=0 PROVA OK
+motor-real exit=0 ℹ pass 6 ℹ fail 0 
+abrir_scripts exit=0 scriptErrors=0 
+rodar_testes exit=0 scriptErrors=0 333 de 333 verificações passaram.
+abrir_clareira exit=0 scriptErrors=0 22 de 22 verificações passaram.
+medir_painel_config exit=0 scriptErrors=0 
+abrir_mestre exit=0 scriptErrors=0 67 de 67 verificações passaram.
+pecas_mestre exit=0 scriptErrors=0 336 de 336 verificações passaram.
+medir_mestre exit=0 scriptErrors=0 
+hud_acoes exit=0 scriptErrors=0 70 de 70 verificações passaram.
+caixa_jogadora exit=0 scriptErrors=0 70 de 70 verificações passaram.
+camera_segue exit=0 scriptErrors=0 19 de 19 verificações passaram.
+aparelhos_f2 exit=0 scriptErrors=0 
+caixa_janela exit=0 scriptErrors=0 123 de 123 verificações passaram.
+canario_privacidade exit=0 scriptErrors=0 10 de 10 verificações passaram.
+teste_relato_caixa exit=0 scriptErrors=0 teste do relato da caixa: 31 de 31 verificações passaram.
+teste_nomes_relato exit=0 scriptErrors=0 teste dos nomes do relato da caixa-janela: 26 de 26 verificações passaram.
+validar-pecas_mestre exit=0
+validar-abrir_mestre exit=0
+sonda-caminhos exit=1
+FIM
+sonda-caminhos-copia-limpa exit=0 (a sonda-caminhos exit=1 de cima é só .godot/editor/project_metadata.cfg, que o git ignora, criado pelo --import)

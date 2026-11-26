@@ -1,0 +1,236 @@
+# comando: (mutação: em rascunhos/servidor/nucleo/projecao.js, «nomePublico: nomePublicoDaFigura(fig, fichas[fig.fichaId]),» → «nomePublico: nomePublicoDe(fichas[fig.fichaId]), // MUTACAO (PLANO-2-F1-ADENDA): o snapshot sem o número»; reposta com git checkout)
+# comando: snap
+# diff: -    nomePublico: nomePublicoDaFigura(fig, fichas[fig.fichaId]),
+# diff: +    nomePublico: nomePublicoDe(fichas[fig.fichaId]), // MUTACAO (PLANO-2-F1-ADENDA): o snapshot sem o número
+PROVA entrada-tardia-espectador: ["Heroína Teste","Lobo","Orc","Orc"]
+PROVA reentrada-heroina: ["Heroína Teste","Lobo","Orc","Orc"]
+PROVA resync-heroina: ["Heroína Teste","Lobo","Orc","Orc"]
+PROVA resync-pos-recomeco-heroina: ["Heroína Teste","Lobo","Orc","Orc"]
+PROVA recomeco-heroina: ["Heroína Teste","Lobo","Orc","Orc"]
+PROVA sala-reaberta-heroina: ["Heroína Teste","Lobo","Orc","Orc"]
+PROVA sala-reaberta-fim-da-espera-heroina: ["Heroína Teste","Lobo","Orc","Orc"]
+✖ D-AUD-12 adenda: quem entra a meio da batalha recebe o snapshot já com «Orc 1»/«Orc 2» (16.5764ms)
+✖ D-AUD-12 adenda: REENTRADA — a jogadora sai e volta; o snapshot novo mantém «Orc 1»/«Orc 2» (7.6842ms)
+✖ D-AUD-12 adenda: RESYNC — um lastSeq que o servidor não consegue servir dá snapshot, com «Orc 1»/«Orc 2» (4.6394ms)
+✖ D-AUD-12 adenda: RESYNC depois do recomeço (lastSeq antes do corte) — o snapshot mantém «Orc 1»/«Orc 2» (5.7631ms)
+✖ D-AUD-12 adenda: RECOMEÇO — o snapshot que vai a todos mantém «Orc 1»/«Orc 2» (5.185ms)
+✖ D-AUD-12 adenda: a sala REABERTA do journal, o Mestre já dentro — a jogadora entra e vê «Orc 1»/«Orc 2» (7.2862ms)
+✖ D-AUD-12 adenda: a sala REABERTA do journal, a jogadora à espera — o snapshot da batalha, quando o Mestre volta, traz «Orc 1»/«Orc 2» (7.4722ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 0
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 120.5267
+
+✖ failing tests:
+
+test at testes\d-aud-12-snapshot-novo.test.mjs:30:1
+✖ D-AUD-12 adenda: quem entra a meio da batalha recebe o snapshot já com «Orc 1»/«Orc 2» (16.5764ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'Heroína Teste',
+  +   'Lobo',
+  +   'Orc',
+  +   'Orc'
+  -   'Lobo 1',
+  -   'Orc 1',
+  -   'Orc 2'
+    ]
+  
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:41:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'Heroína Teste', 'Lobo', 'Orc', 'Orc' ],
+    expected: [ 'Heroína Teste', 'Lobo 1', 'Orc 1', 'Orc 2' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at testes\d-aud-12-snapshot-novo.test.mjs:44:1
+✖ D-AUD-12 adenda: REENTRADA — a jogadora sai e volta; o snapshot novo mantém «Orc 1»/«Orc 2» (7.6842ms)
+  AssertionError [ERR_ASSERTION]: heroina: os nomes no snapshot da reentrada
+  + actual - expected
+  
+    [
+      'Heroína Teste',
+  +   'Lobo',
+  +   'Orc',
+  +   'Orc'
+  -   'Lobo 1',
+  -   'Orc 1',
+  -   'Orc 2'
+    ]
+  
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:56:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'Heroína Teste', 'Lobo', 'Orc', 'Orc' ],
+    expected: [ 'Heroína Teste', 'Lobo 1', 'Orc 1', 'Orc 2' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at testes\d-aud-12-snapshot-novo.test.mjs:60:1
+✖ D-AUD-12 adenda: RESYNC — um lastSeq que o servidor não consegue servir dá snapshot, com «Orc 1»/«Orc 2» (4.6394ms)
+  AssertionError [ERR_ASSERTION]: heroina: os nomes no snapshot do resync
+  + actual - expected
+  
+    [
+      'Heroína Teste',
+  +   'Lobo',
+  +   'Orc',
+  +   'Orc'
+  -   'Lobo 1',
+  -   'Orc 1',
+  -   'Orc 2'
+    ]
+  
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:68:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'Heroína Teste', 'Lobo', 'Orc', 'Orc' ],
+    expected: [ 'Heroína Teste', 'Lobo 1', 'Orc 1', 'Orc 2' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at testes\d-aud-12-snapshot-novo.test.mjs:72:1
+✖ D-AUD-12 adenda: RESYNC depois do recomeço (lastSeq antes do corte) — o snapshot mantém «Orc 1»/«Orc 2» (5.7631ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'Heroína Teste',
+  +   'Lobo',
+  +   'Orc',
+  +   'Orc'
+  -   'Lobo 1',
+  -   'Orc 1',
+  -   'Orc 2'
+    ]
+  
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:81:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'Heroína Teste', 'Lobo', 'Orc', 'Orc' ],
+    expected: [ 'Heroína Teste', 'Lobo 1', 'Orc 1', 'Orc 2' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at testes\d-aud-12-snapshot-novo.test.mjs:84:1
+✖ D-AUD-12 adenda: RECOMEÇO — o snapshot que vai a todos mantém «Orc 1»/«Orc 2» (5.185ms)
+  AssertionError [ERR_ASSERTION]: heroina: os nomes no snapshot do recomeço
+  + actual - expected
+  
+    [
+      'Heroína Teste',
+  +   'Lobo',
+  +   'Orc',
+  +   'Orc'
+  -   'Lobo 1',
+  -   'Orc 1',
+  -   'Orc 2'
+    ]
+  
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:90:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'Heroína Teste', 'Lobo', 'Orc', 'Orc' ],
+    expected: [ 'Heroína Teste', 'Lobo 1', 'Orc 1', 'Orc 2' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at testes\d-aud-12-snapshot-novo.test.mjs:121:1
+✖ D-AUD-12 adenda: a sala REABERTA do journal, o Mestre já dentro — a jogadora entra e vê «Orc 1»/«Orc 2» (7.2862ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'Heroína Teste',
+  +   'Lobo',
+  +   'Orc',
+  +   'Orc'
+  -   'Lobo 1',
+  -   'Orc 1',
+  -   'Orc 2'
+    ]
+  
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:128:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'Heroína Teste', 'Lobo', 'Orc', 'Orc' ],
+    expected: [ 'Heroína Teste', 'Lobo 1', 'Orc 1', 'Orc 2' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at testes\d-aud-12-snapshot-novo.test.mjs:131:1
+✖ D-AUD-12 adenda: a sala REABERTA do journal, a jogadora à espera — o snapshot da batalha, quando o Mestre volta, traz «Orc 1»/«Orc 2» (7.4722ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'Heroína Teste',
+  +   'Lobo',
+  +   'Orc',
+  +   'Orc'
+  -   'Lobo 1',
+  -   'Orc 1',
+  -   'Orc 2'
+    ]
+  
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:141:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'Heroína Teste', 'Lobo', 'Orc', 'Orc' ],
+    expected: [ 'Heroína Teste', 'Lobo 1', 'Orc 1', 'Orc 2' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

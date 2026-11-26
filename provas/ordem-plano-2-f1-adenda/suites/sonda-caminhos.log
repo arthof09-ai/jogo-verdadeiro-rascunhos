@@ -1,0 +1,5 @@
+# comando: python3 .github/sonda/caminhos_pc.py --raiz . --base .github/sonda/caminhos-pc-base.txt
+caminhos do PC: 348 ocorrências no total; 347 na linha de base (348 entradas), 1 novas; 1 entradas da base já não existem.
+  (a base pode encolher: correr com --gerar depois da redacção)
+::error file=rascunhos/cliente/.godot/editor/project_metadata.cfg,line=7::Caminho real do PC (forma 1) — este repositório não admite caminhos do PC.
+  NOVO rascunhos/cliente/.godot/editor/project_metadata.cfg:7 forma 1

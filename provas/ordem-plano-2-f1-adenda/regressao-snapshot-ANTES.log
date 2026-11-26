@@ -1,0 +1,41 @@
+# ANTES — mutação: figuraPublica sem o sufixo (o estado da reprodução l28 da INVESTIGA)
+# ponta: 4fd5c6c; node v26.13.0
+diff --git a/rascunhos/servidor/nucleo/projecao.js b/rascunhos/servidor/nucleo/projecao.js
+index 34732f5..97ceb86 100644
+--- a/rascunhos/servidor/nucleo/projecao.js
++++ b/rascunhos/servidor/nucleo/projecao.js
+@@ -148,7 +148,7 @@ export function projetarEvento(evento, dest) {
+ export function figuraPublica(fig, fichas) {
+   return {
+     id: fig.id,
+-    nomePublico: nomePublicoDaFigura(fig, fichas[fig.fichaId]),
++    nomePublico: nomePublicoDe(fichas[fig.fichaId]),
+     lado: fig.lado,
+     x: fig.x,
+     y: fig.y,
+
+PROVA entrada-tardia-espectador: ["Heroína Teste","Lobo","Orc","Orc"]
+PROVA reentrada-heroina: ["Heroína Teste","Lobo","Orc","Orc"]
+PROVA resync-heroina: ["Heroína Teste","Lobo","Orc","Orc"]
+PROVA resync-pos-recomeco-heroina: ["Heroína Teste","Lobo","Orc","Orc"]
+PROVA recomeco-heroina: ["Heroína Teste","Lobo","Orc","Orc"]
+PROVA sala-reaberta-heroina: ["Heroína Teste","Lobo","Orc","Orc"]
+PROVA sala-reaberta-fim-da-espera-heroina: ["Heroína Teste","Lobo","Orc","Orc"]
+✖ D-AUD-12 adenda: quem entra a meio da batalha recebe o snapshot já com «Orc 1»/«Orc 2» (17.2091ms)
+✖ D-AUD-12 adenda: REENTRADA — a jogadora sai e volta; o snapshot novo mantém «Orc 1»/«Orc 2» (7.6137ms)
+✖ D-AUD-12 adenda: RESYNC — um lastSeq que o servidor não consegue servir dá snapshot, com «Orc 1»/«Orc 2» (4.9798ms)
+✖ D-AUD-12 adenda: RESYNC depois do recomeço (lastSeq antes do corte) — o snapshot mantém «Orc 1»/«Orc 2» (6.0648ms)
+✖ D-AUD-12 adenda: RECOMEÇO — o snapshot que vai a todos mantém «Orc 1»/«Orc 2» (5.0891ms)
+✖ D-AUD-12 adenda: a sala REABERTA do journal, o Mestre já dentro — a jogadora entra e vê «Orc 1»/«Orc 2» (8.9245ms)
+✖ D-AUD-12 adenda: a sala REABERTA do journal, a jogadora à espera — o snapshot da batalha, quando o Mestre volta, traz «Orc 1»/«Orc 2» (6.7846ms)
+ℹ tests 7
+ℹ pass 0
+ℹ fail 7
+✖ failing tests:
+✖ D-AUD-12 adenda: quem entra a meio da batalha recebe o snapshot já com «Orc 1»/«Orc 2» (17.2091ms)
+✖ D-AUD-12 adenda: REENTRADA — a jogadora sai e volta; o snapshot novo mantém «Orc 1»/«Orc 2» (7.6137ms)
+✖ D-AUD-12 adenda: RESYNC — um lastSeq que o servidor não consegue servir dá snapshot, com «Orc 1»/«Orc 2» (4.9798ms)
+✖ D-AUD-12 adenda: RESYNC depois do recomeço (lastSeq antes do corte) — o snapshot mantém «Orc 1»/«Orc 2» (6.0648ms)
+✖ D-AUD-12 adenda: RECOMEÇO — o snapshot que vai a todos mantém «Orc 1»/«Orc 2» (5.0891ms)
+✖ D-AUD-12 adenda: a sala REABERTA do journal, o Mestre já dentro — a jogadora entra e vê «Orc 1»/«Orc 2» (8.9245ms)
+✖ D-AUD-12 adenda: a sala REABERTA do journal, a jogadora à espera — o snapshot da batalha, quando o Mestre volta, traz «Orc 1»/«Orc 2» (6.7846ms)
