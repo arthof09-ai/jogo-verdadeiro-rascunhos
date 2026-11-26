@@ -60,6 +60,7 @@ func montar(m) -> void:
 func atualizar(_vista: Dictionary = {}) -> void:
 	var vista: Dictionary = mestre.vista
 	var vez := str(vista.get("vezId", "")) if vista.get("vezId") is String else ""
+	# Rede de segurança: as opções chegam normalmente primeiro e a guarda morre no parar_mover() de «sem opções».
 	if vez != _vez:
 		parar_mover()
 	_vez = vez
@@ -89,7 +90,14 @@ func atualizar(_vista: Dictionary = {}) -> void:
 	var m = vista.get("mestre")
 	if m is Dictionary and m.get("marchaLivreRodada") != null and int(m.get("marchaLivreRodada")) == int(vista.get("rodada", -1)):
 		_info.text = (_info.text + "\n" if _info.text != "" else "") + Textos.AGIR_MARCHA_LIVRE
-	if op.get("mover") is Array and not op["mover"].is_empty():
+	var tem_mover: bool = op.get("mover") is Array and not op["mover"].is_empty()
+	if a_mover and not tem_mover:
+		# D-AUD-01-CORRECCOES-4 (B1): opções novas da MESMA vez sem «Mover» — as casas armadas já não valem (cada
+		# toque seria um MASTER_ACT recusado). Desarma (casas, destaque, «Cancelar» e a ficha guardada do «Colocar»)
+		# e diz ao Mestre porque o destaque saiu.
+		parar_mover()
+		_info.text = (_info.text + "\n" if _info.text != "" else "") + Textos.MOVER_SEM_CASAS
+	if tem_mover:
 		_botao(Textos.MOVER, iniciar_mover)
 	# ORDEM-D-AUD-06: os alvos dos ataques ficam marcados na arena (o mesmo marcador da jogadora).
 	var alvos: Array = []

@@ -354,6 +354,56 @@ func _correr() -> void:
 		_responder(c, _ultimo())  # para uma falha aqui não derrubar as verificações seguintes
 	_estado.opcoes = op_orig
 	c.aplicar_vista(vista)
+	# D-AUD-01-CORRECCOES-4 (sentença 930, B1): chegam opções novas da MESMA vez sem `mover`, mas com ataques e
+	# acções. O «Mover» armado ficava com as casas velhas, o destaque velho, o «Cancelar» e a ficha guardada; cada
+	# toque numa casa velha mandava um MASTER_ACT que o servidor recusa. As opções chegam pela Rede (ROOM_OPTIONS na
+	# mesma revisão → opcoes_mudaram → atualizar()), com a vista igual: o ramo da vez e o de «sem opções» não correm.
+	var op_sem: Dictionary = op_orig.duplicate(true)
+	op_sem["mover"] = []
+	var casa_velha := Vector2i(int(opcoes["mover"][0]["x"]), int(opcoes["mover"][0]["y"]))
+	# (a) sem «Colocar»: o «Mover» desarma e o toque numa casa velha não manda nada.
+	c._aba_agir.iniciar_mover()
+	var armado_a: bool = c._aba_agir.a_mover and not c._arena.casas_destacadas().is_empty()
+	_rede._ao_receber(JSON.stringify(op_sem))
+	var rot_a: Array = []
+	for b in c._aba_agir.botoes_de_accao():
+		rot_a.append(b.text)
+	var desarmado_a: bool = not c._aba_agir.a_mover and c._aba_agir._casas.is_empty() \
+		and c._arena.casas_destacadas().is_empty() and not c._aba_agir._cancelar.visible
+	var aviso_a: bool = c._aba_agir._info.text.contains(Textos.MOVER_SEM_CASAS)
+	var antes_a := _comandos.size()
+	c.casa_tocada(casa_velha)
+	var acts_a: Array = []
+	for cmd in _comandos.slice(antes_a):
+		acts_a.append(str(cmd.get("type", "")))
+	_ok(armado_a and desarmado_a and aviso_a and not rot_a.has(Textos.MOVER) and rot_a.size() > 0 and acts_a.is_empty(),
+		"D-AUD-01-CORRECCOES-4: «Mover» armado → opções da mesma vez sem `mover` → desarma (casas, destaque e «Cancelar» fora: %s; aviso: %s; botões %s) e o toque numa casa velha não manda nada (%s)"
+		% [desarmado_a, aviso_a, rot_a, acts_a])
+	if not acts_a.is_empty():
+		_responder(c, _ultimo())  # para uma falha aqui não derrubar as verificações seguintes
+	# (b) com o «Colocar» guardado pelo «Mover»: a guarda morre e o «Cancelar» não repõe.
+	_rede._ao_receber(JSON.stringify(op_orig))
+	c._aba_mesa.escolher_colocar("orc-teste")
+	c._aba_agir.iniciar_mover()
+	var guarda_viva_b: bool = c._aba_agir.a_mover and c._colocar_guardado == "orc-teste" and c._aba_mesa.a_colocar == ""
+	_rede._ao_receber(JSON.stringify(op_sem))
+	var guarda_depois_b: String = c._colocar_guardado
+	c._aba_agir._cancelar.pressed.emit()
+	var antes_b := _comandos.size()
+	c.casa_tocada(Vector2i(19, 19))
+	c.casa_tocada(casa_velha)
+	var cmds_b: Array = []
+	for cmd in _comandos.slice(antes_b):
+		cmds_b.append(str(cmd.get("type", "")))
+	_ok(guarda_viva_b and guarda_depois_b == "" and not c._aba_agir.a_mover and c._aba_mesa.a_colocar == "" and cmds_b.is_empty(),
+		"D-AUD-01-CORRECCOES-4: «Colocar» → «Mover» armado (guarda viva: %s) → opções da mesma vez sem `mover` → «Cancelar» não repõe (guarda depois «%s», a_colocar «%s») e os toques não mandam nada (%s: 0 MASTER_ACT, 0 MASTER_PLACE)"
+		% [guarda_viva_b, guarda_depois_b, c._aba_mesa.a_colocar, cmds_b])
+	if not cmds_b.is_empty():
+		c._aba_mesa.parar()
+		for i in cmds_b.size():
+			_responder(c, _comandos[antes_b + i])
+	_rede._ao_receber(JSON.stringify(op_orig))
+	c.aplicar_vista(vista)
 	if not opcoes["ataques"].is_empty():
 		var a: Dictionary = opcoes["ataques"][0]
 		c._aba_agir.agir({"tipo": "atacar", "alvoId": a["alvoId"], "arma": a["arma"]})

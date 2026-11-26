@@ -122,6 +122,8 @@ const AGIR_MARCHA_LIVRE := "Marchas puras livres nesta rodada («Continuar a rod
 const AGIR_SEM_OPCOES := "As opções chegam do servidor quando a criatura está «À mão» (ou depois de «Jogo eu»)."
 const MOVER := "Mover"
 const MOVER_ESCOLHER := "Mover: escolher a casa no tabuleiro (%d casas)."
+## D-AUD-01-CORRECCOES-4 (B1): as opções novas da mesma vez já não trazem «Mover» — o «Mover» armado desarmou.
+const MOVER_SEM_CASAS := "Mover: o servidor já não dá casas para mover nesta vez."
 const ATACAR := "Atacar %s (%s)"
 const CANCELAR := "Cancelar"
 const NOME_ACAO := {
