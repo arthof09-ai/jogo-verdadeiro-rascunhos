@@ -1,8 +1,8 @@
 # ESTADO-FINAL — ORDEM-PLANO-2-F2-ANDROID-SHADER (o Android no emulador não recebia o ROOM_SNAPSHOT)
 
 **Estado: FEITA.** O job `android` do «Aparelhos (F2)» está **verde no CI**, e o APK **recebe o `ROOM_SNAPSHOT`** da
-mesa de prova: `rede: ROOM_SNAPSHOT seq=5 fase=combate plataforma=Android`, com `ENTROU Arqueira de Bancada` na mesa. Isto
-aconteceu em três corridas seguidas: #45810074425, #45811149778 e #45812668899. O F1 da sentença 595 fica provado no CI.
+mesa de prova: `rede: ROOM_SNAPSHOT seq=5 fase=combate plataforma=Android`, com `ENTROU Arqueira de Bancada` na mesa.
+Isto aconteceu em cinco corridas seguidas: #45810074425, #45811149778, #45812668899, #45813289262 e #45813928709. O F1 da sentença 595 fica provado no CI.
 
 **A causa NÃO eram os shaders.** O APK arrancava **sem argumentos**. O Godot 4.7.2 tira o `command_line_params` de
 qualquer intent dirigida a uma activity exportada, e o guião lançava o `GodotAppLauncher`, que é exportado. Sem
@@ -192,5 +192,7 @@ real. A Sonda de privacidade do CI deu success.
 ## Nota do CI (ponta `2eeb987`, com este ESTADO-FINAL e as provas)
 
 **Testes dos rascunhos 45813928771 success**, **Sonda de privacidade 45813928703 success** e **Aparelhos (F2)
-45813928709 success**, com os 6 jobs verdes (exportar, web-chromium, windows, **android**, rede-3-bots e qr). É a quarta
-corrida seguida com o `android` verde.
+45813928709 success**, com os 6 jobs verdes (exportar, web-chromium, windows, **android**, rede-3-bots e qr). 
+É a **quinta** corrida seguida com o `android` verde.
+
+_Nota de registo (errata E1, sentença 862):_ seis, se contada a corrida sobre a própria ponta `5751cce` (#45814828108).
