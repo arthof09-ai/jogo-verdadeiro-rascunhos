@@ -174,3 +174,9 @@ blob: `git apply` na ponta.
 O commit `993402d` saiu com o autor `arthof09-ai <…noreply…>`, o do `7c65fb8`, porque o clone não tinha identidade.
 Os restantes saíram com `Claude Pierre C2`, a identidade das ordens anteriores desta máquina. Não reescrevi o `993402d`,
 que já estava empurrado.
+
+## Nota do CI
+
+No `1dea722` (o commit deste ESTADO-FINAL, das provas e do remendo), os dois workflows deram **success**: **Testes dos
+rascunhos** `45744054964` e **Sonda de privacidade** `45744054932`. O passo da mutação ainda não corre, porque vai no
+commit seguinte a esta nota, por publicar (§5).
