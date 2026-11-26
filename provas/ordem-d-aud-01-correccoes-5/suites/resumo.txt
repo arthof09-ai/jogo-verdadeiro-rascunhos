@@ -1,0 +1,18 @@
+# commit: fa82f2050179a3635d3b96284373296b7d639436
+pecas_mestre-SEM-REFRESCO exit=1 falhas=1 falhas-correccoes-5=1 falhas-correccoes-5-B2=0 falhas-correccoes-4=0 scriptErrors=0 fim=«335 de 336 verificações passaram.» reposto=sim
+pecas_mestre-SEM-B1 exit=1 falhas=3 falhas-correccoes-5=0 falhas-correccoes-5-B2=1 falhas-correccoes-4=2 scriptErrors=0 fim=«333 de 336 verificações passaram.» reposto=sim
+servidor exit=0
+prova-caixa exit=0
+motor-real exit=0
+abrir_scripts exit=0 scriptErrors=0
+rodar_testes exit=0 scriptErrors=0
+abrir_mestre exit=0 scriptErrors=0
+pecas_mestre exit=0 scriptErrors=0
+medir_mestre exit=0 scriptErrors=0
+hud_acoes exit=0 scriptErrors=0
+caixa_jogadora exit=0 scriptErrors=0
+caixa_janela exit=0 scriptErrors=0
+canario_privacidade exit=0 scriptErrors=0
+validar-pecas_mestre exit=0
+validar-abrir_mestre exit=0
+FIM
