@@ -1,0 +1,4 @@
+# commit: 685924ea03eadd07b78c6f607dbb6171439c4003 · árvore testada: c3a93e637d069196b1cdc543951cead44050e3fb (NÃO é a do commit, 9b24f567b021658bdedc37f881cbdeb3a894e0dd: o HEAD mais o que está por cometer, abaixo; diff em arvore-por-cometer.diff)
+# por cometer:  M provas/ordem-plano-2-f1-adenda/suites.sh
+d-aud-12-snapshot-SEM-SUFIXO-NA-FIGURA-PUBLICA exit=1 falhas=7 fim=«ℹ pass 0 ℹ fail 7 » reposto=sim
+FIM (SO_MUTACAO=1: só o passo da mutação)

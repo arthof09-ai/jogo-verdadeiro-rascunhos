@@ -1,5 +1,6 @@
-# commit: 4fd5c6c055906c5f1e09b35ea541e0c3ecc3fdce
-d-aud-12-snapshot-SEM-SUFIXO-NA-FIGURA-PUBLICA exit=1 falhas=15 fim=«ℹ pass 0 ℹ fail 7 » reposto=sim
+# commit: 4fd5c6c055906c5f1e09b35ea541e0c3ecc3fdce · árvore testada: não medida nesta corrida (o guião ainda não a registava); pelo ESTADO-FINAL da adenda, §3, é 4fd5c6c mais o teste d-aud-12-snapshot-novo.test.mjs ainda por cometer, que entrou no 15bc45e (filho directo do 4fd5c6c, só esse ficheiro)
+# J-F1 (PLANO-2-F1-ADENDA-J-F1-J-F6, 26/11): regenerado sem re-correr. A linha d-aud-12 dizia falhas=15 (o contador velho contava as linhas «✖»: 7 testes + o cabeçalho «✖ failing tests:» + os 7 repetidos); o contador novo (função falhas do suites.sh: o «ℹ fail N» do node) dá 7, do log cometido suites/d-aud-12-snapshot-SEM-SUFIXO-NA-FIGURA-PUBLICA.log. J-F2: o fim da primeira linha foi acrescentado à mão, não medido.
+d-aud-12-snapshot-SEM-SUFIXO-NA-FIGURA-PUBLICA exit=1 falhas=7 fim=«ℹ pass 0 ℹ fail 7 » reposto=sim
 servidor exit=0 ℹ tests 453 ℹ pass 453 ℹ fail 0 ℹ skipped 0 
 prova-caixa exit=0 PROVA OK
 motor-real exit=0 ℹ pass 6 ℹ fail 0 
