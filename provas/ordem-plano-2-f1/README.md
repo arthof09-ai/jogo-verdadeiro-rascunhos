@@ -15,6 +15,7 @@ ecrãs na ponta actual**: precisa da janela do PC, e a janela estava fechada na 
 | `dados/dados-justos.md`, `.json` | D-AUD-15: reprodução 6/6 da sequência registada e a distribuição das faces em N = 2 000 000 × 2 séries. | `279f0d7` + o caso 10 (26/11) |
 | `dados/dados-26-11.log` | A saída inteira da corrida de 26/11, com a linha `# comando:`. | `279f0d7` + o caso 10 (26/11) |
 | `dados/24-11/` | A mesma corrida em 24/11, sobre o journal da auditoria. As contagens da série 1..N são idênticas às de 26/11; os ficheiros diferem (ms, série CSPRNG, corrida4em6). | `4739849` |
+| `dados/recontar/` | F5 do fecho: a tabela 20×20 dos pares seguidos da série 1..N, as 20 contagens, a corrida4em6 exacta (29/80000) e um Monte Carlo com semente publicada. Tem o recontador sem a ferramenta nem o motor e a verificação por leitura de `vlab-completo.js:788-801`. Ver o `README.md` da pasta. | — |
 | `dados/registados-auditoria.json` | Os 6 ataques (seq, semente, faces e recibo) tirados do journal da auditoria em 24/11. O journal privado saiu do disco nas limpezas; a ferramenta lê-os com `--registados`. | — |
 | `ferramentas/dados-justos.mjs` | A ferramenta do D-AUD-15 (o caminho real do ataque: `criarSala` → `ROOM_INTENT atacar` → `Vlab.resolverAtaque`). | — |
 | `ci/passo-camera-segue.patch` | O passo do `camera_segue` para o `testes.yml` (agora 19 de 19). Fica por aplicar: o token deste PC não tem `workflow`. | — |

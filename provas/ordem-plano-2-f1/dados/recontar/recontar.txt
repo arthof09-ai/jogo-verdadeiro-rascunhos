@@ -1,0 +1,8 @@
+# comando: python -I provas/ordem-plano-2-f1/dados/recontar/recontar.py   (depois de: node provas/ordem-plano-2-f1/dados/recontar/gerar-pares.mjs --n=2000000)
+# 2026-11-26T16:11:55-03:00 · Python 3.12.10 · node v26.13.0
+série 1..N: N = 2000000; faces de 99317 a 100652; maior desvio 0.0342 pp
+  χ² das faces = 31.9714 (19 g.l.), p = 0.0315
+  pares seguidos: 1999999 pares (= N-1: True); χ² = 455.2544 (399 g.l.), p = 0.0269
+  somas das linhas = contagens das faces (menos a última semente): True
+corrida4em6 exacta = 29/80000 = 0.03625 %
+corrida4em6 Monte Carlo (random.Random(20261126), M = 2000000): 703 → 0.03515 %
