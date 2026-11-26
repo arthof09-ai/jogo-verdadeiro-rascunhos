@@ -1,0 +1,5 @@
+# commit: 3b6bf7be8ffeaa42432d4a3813bf63e30b082f0a
+pecas_mestre exit=0 ok=334 falhas=0 falhas-correccoes-4=0 scriptErrors=0 fim=«334 de 334 verificações passaram.»
+pecas_mestre-SEM-B1 exit=1 ok=332 falhas=2 falhas-correccoes-4=2 scriptErrors=0 fim=«332 de 334 verificações passaram.»
+reposto=sim
+FIM
