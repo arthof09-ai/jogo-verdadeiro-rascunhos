@@ -125,7 +125,7 @@ ordem, o passo (d) tem de ser revisto. Os passos (a), (b), (c) e (e) assentam s�
 
 ## 4. Provas (`provas/ordem-d-aud-01-correccoes-4/`, mapa no README)
 
-Correram com Godot 4.7.2 `--headless` e Node v26.13.1, sobre `a158c31`.
+Correram com Godot 4.7.2 `--headless` e Node v26.13.1, sobre `a158c31`, que é o `deb0fd4` antes do rebase (ver §5).
 
 | Suite | Resultado | Na D-AUD-01-CORRECCOES-3 |
 |---|---|---|
@@ -161,13 +161,18 @@ Há três registos a fazer. Os pormenores estão no README das provas.
 
 ## 5. Commits
 
-- `07ea9ff`: B1 e B2. Inclui o `aba_agir.gd`, o `textos_mestre.gd` (`MOVER_SEM_CASAS`) e o `pecas_mestre.gd` (os
+- `bc94aad` (antes do rebase, `07ea9ff`): B1 e B2. Inclui o `aba_agir.gd`, o `textos_mestre.gd` (`MOVER_SEM_CASAS`) e o `pecas_mestre.gd` (os
   dois testes).
-- `a158c31`: listas da retoma sincronizadas com `retoma-i0004/actualizar-listas.py` (0 novos, 0 tirados; mudam os
+- `deb0fd4` (antes do rebase, `a158c31`): listas da retoma sincronizadas com `retoma-i0004/actualizar-listas.py` (0 novos, 0 tirados; mudam os
   SHA dos três ficheiros no `depois.txt` e no `MANIFESTO-SHA256.txt`). Corri o guião com o `python` (3.12), porque
   neste PC o `python3` é o atalho da Microsoft Store.
-- O commit das provas e deste ESTADO-FINAL não mexe em `rascunhos/`, por isso as listas não precisam de nova
+- `ea71055`: as provas e este ESTADO-FINAL. Não mexe em `rascunhos/`, por isso as listas não precisam de nova
   passagem.
+- **O rebase.** Antes do push, a ponta remota tinha andado de `08beeda` para `27b70e5`
+  (D-AUD-14-SEGUIMENTO-MUTACAO, que só mexe no `.github/workflows/testes.yml`). Fiz rebase dos três commits
+  sobre ela. O `git diff a158c31 deb0fd4` em `rascunhos/`, `provas/`, `retoma-i0004/` e `MANIFESTO-SHA256.txt` é
+  vazio. Corri outra vez o `actualizar-listas.py` sobre a ponta nova: 0 novos, 0 tirados, e o índice ficou igual.
+  As suites locais correram sobre o `a158c31`, o mesmo código de `rascunhos/`; o CI correu sobre o `ea71055`.
 
 ## 6. Perímetro e privacidade
 
@@ -180,3 +185,10 @@ Há três registos a fazer. Os pormenores estão no README das provas.
 Fica com o Mestre, como na sentença 930, secção C: a **terceira semântica** e a **preclusão literal da opção (b)
 do Plano 2**. Esta ordem não as decide nem lhes toca. A semântica do B1 (desarmar e avisar) é só a do «Mover»
 armado perante opções sem `mover`, e não decide nenhuma das duas.
+
+## Nota do CI
+
+- `ea71055` (B1 + B2 + listas + provas + ESTADO-FINAL, sobre `27b70e5`): **Testes dos rascunhos 45798063771:
+  success**, com os 10 jobs verdes (servidor, validador-glb, motor-real, protocolo, cliente, godot-cliente,
+  foto-mestre, provas-mapa, ponta-a-ponta, retoma-pc). **Sonda de privacidade 45798063580: success.** No log do CI,
+  o `pecas_mestre` dá 334 de 334, com as duas verificações da D-AUD-01-CORRECCOES-4 «ok».

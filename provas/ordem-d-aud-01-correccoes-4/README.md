@@ -31,7 +31,7 @@ capturas.
 ## A mutação (`suites/pecas_mestre-SEM-B1.log`)
 
 A mutação troca `if a_mover and not tem_mover:` por `if false and a_mover and not tem_mover:` em
-`rascunhos/cliente/cenas/mestre/aba_agir.gd` (a linha 94 de `07ea9ff`). O desarme e o aviso deixam de correr.
+`rascunhos/cliente/cenas/mestre/aba_agir.gd` (a linha 94 de `07ea9ff`, hoje `bc94aad` depois do rebase). O desarme e o aviso deixam de correr.
 
 Resultado: **exit 1, 332 de 334**. As **duas** FALHA são as duas verificações novas da D-AUD-01-CORRECCOES-4.
 Nenhuma outra falhou, e houve 0 erros de script. A linha do `resumo.txt` é esta:
@@ -49,7 +49,8 @@ O que cada FALHA mostra sem a correcção:
 ## Suites (`suites/`, resumo em `suites/resumo.txt`)
 
 Correram com Godot 4.7.2 `--headless` e Node v26.13.1, sobre `a158c31`. O `a158c31` é o `07ea9ff` com as listas
-da retoma sincronizadas.
+da retoma sincronizadas. Depois do rebase sobre `27b70e5` estes commits passaram a `deb0fd4` e `bc94aad`, com o
+mesmo conteúdo em `rascunhos/` (ESTADO-FINAL, §5).
 
 | Suite | Resultado | Na D-AUD-01-CORRECCOES-3 |
 |---|---|---|
