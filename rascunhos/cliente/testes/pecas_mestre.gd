@@ -407,6 +407,53 @@ func _correr() -> void:
 		c._aba_mesa.parar()
 		for i in cmds_b.size():
 			_responder(c, _comandos[antes_b + i])
+	# D-AUD-01-CORRECCOES-5 (B2, decisão do coordenador): o aviso fica enquanto as opções desta vez não trouxerem
+	# `mover`. Um 2.º atualizar() com as MESMAS opções (ainda sem `mover`, mesma vez, pela Rede) não o apaga; as
+	# opções com `mover` apagam-no.
+	_rede._ao_receber(JSON.stringify(op_sem))
+	var aviso_fica: bool = c._aba_agir._info.text.contains(Textos.MOVER_SEM_CASAS)
+	_rede._ao_receber(JSON.stringify(op_orig))
+	var aviso_some: bool = not c._aba_agir._info.text.contains(Textos.MOVER_SEM_CASAS)
+	_ok(aviso_fica and aviso_some,
+		"D-AUD-01-CORRECCOES-5 (B2): o aviso «sem casas» fica num 2.º atualizar() com as mesmas opções sem `mover` (%s) e sai quando as opções trazem `mover` (%s)"
+		% [aviso_fica, aviso_some])
+	# D-AUD-01-CORRECCOES-5 (caso vizinho (a) da sentença 785): chegam opções novas da MESMA vez COM `mover`, mas com
+	# outras casas (é o que acontece, p.ex., depois de aprovar um cartão de IA com proposta de movimento: o servidor
+	# manda outro ROOM_OPTIONS). Pela Rede, na mesma revisão, com a vista igual. Sem o refresco, o «Mover» armado
+	# ficava com as `_casas` velhas: a casa que saiu mandava um MASTER_ACT que o servidor recusa e a que entrou era
+	# engolida em silêncio.
+	var casa_saiu := Vector2i(int(opcoes["mover"][0]["x"]), int(opcoes["mover"][0]["y"]))
+	var casa_entrou := Vector2i(7, 3)  # fora do orçamento da fixture (6 m): não está no `mover` velho
+	var op_dif: Dictionary = op_orig.duplicate(true)
+	op_dif["mover"] = (op_orig["mover"] as Array).slice(1)
+	op_dif["mover"].append({"x": casa_entrou.x, "y": casa_entrou.y, "custoM": 7.5})
+	var novas: Array[Vector2i] = []
+	for m in op_dif["mover"]:
+		novas.append(Vector2i(int(m["x"]), int(m["y"])))
+	c._aba_agir.iniciar_mover()
+	var armado_c: bool = c._aba_agir.a_mover and c._aba_agir._casas.has(casa_saiu) and not c._aba_agir._casas.has(casa_entrou)
+	_rede._ao_receber(JSON.stringify(op_dif))
+	var refrescado: bool = c._aba_agir.a_mover and c._aba_agir._casas == novas and c._arena.casas_destacadas() == novas \
+		and c._aba_agir._cancelar.visible and c._aba_agir._info.text == Textos.MOVER_ESCOLHER % novas.size()
+	var antes_c := _comandos.size()
+	c.casa_tocada(casa_saiu)
+	var cmds_saiu: Array = []
+	for cmd in _comandos.slice(antes_c):
+		cmds_saiu.append(str(cmd.get("type", "")))
+	if not cmds_saiu.is_empty():
+		_responder(c, _ultimo())  # para uma falha aqui não derrubar as verificações seguintes
+		c._aba_agir.iniciar_mover()
+	var antes_e := _comandos.size()
+	c.casa_tocada(casa_entrou)
+	var cmds_entrou: Array = _comandos.slice(antes_e)
+	var entrou_ok: bool = cmds_entrou.size() == 1 and cmds_entrou[0].get("type") == "MASTER_ACT" \
+		and cmds_entrou[0].get("acao", {}).get("tipo") == "mover" \
+		and int(cmds_entrou[0]["acao"]["destino"]["x"]) == casa_entrou.x and int(cmds_entrou[0]["acao"]["destino"]["y"]) == casa_entrou.y
+	_ok(armado_c and refrescado and cmds_saiu.is_empty() and entrou_ok,
+		"D-AUD-01-CORRECCOES-5: «Mover» armado → opções da mesma vez com OUTRO `mover` → as casas armadas passam a ser as novas (casas, destaque, «Cancelar» e contagem: %s), a casa que saiu não manda nada (%s) e a que entrou manda MASTER_ACT mover (%s)"
+		% [refrescado, cmds_saiu, cmds_entrou.map(func(x): return str(x.get("type", "")))])
+	for cmd in cmds_entrou:
+		_responder(c, cmd)
 	_rede._ao_receber(JSON.stringify(op_orig))
 	c.aplicar_vista(vista)
 	if not opcoes["ataques"].is_empty():

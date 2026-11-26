@@ -26,6 +26,9 @@ var _info: Label
 var _botoes: VBoxContainer
 var _cancelar: Button
 var _casas: Array[Vector2i] = []
+## D-AUD-01-CORRECCOES-5 (B2): o «Mover» desarmou por falta de casas nesta vez — o aviso fica no `Info` enquanto as
+## opções desta vez não trouxerem `mover` (apaga-se quando trouxerem, ou quando a vez muda).
+var _aviso_sem_casas := false
 
 
 func montar(m) -> void:
@@ -63,6 +66,7 @@ func atualizar(_vista: Dictionary = {}) -> void:
 	# Rede de segurança: as opções chegam normalmente primeiro e a guarda morre no parar_mover() de «sem opções».
 	if vez != _vez:
 		parar_mover()
+		_aviso_sem_casas = false
 	_vez = vez
 	for n in _botoes.get_children():
 		n.queue_free()
@@ -96,7 +100,20 @@ func atualizar(_vista: Dictionary = {}) -> void:
 		# toque seria um MASTER_ACT recusado). Desarma (casas, destaque, «Cancelar» e a ficha guardada do «Colocar»)
 		# e diz ao Mestre porque o destaque saiu.
 		parar_mover()
+		_aviso_sem_casas = true
+	if tem_mover:
+		_aviso_sem_casas = false
+	if _aviso_sem_casas:
 		_info.text = (_info.text + "\n" if _info.text != "" else "") + Textos.MOVER_SEM_CASAS
+	if a_mover and tem_mover:
+		# D-AUD-01-CORRECCOES-5 (caso vizinho (a)): opções novas da MESMA vez com `mover`, mas com outras casas (p.ex.
+		# depois de aprovar um cartão de IA). As casas armadas passam a ser as novas: uma casa que saiu deixa de mandar
+		# um MASTER_ACT que o servidor recusa e uma que entrou deixa de ser engolida. Fica armado (e a ficha guardada
+		# do «Colocar» também); o `Info` mostra a contagem nova (fim desta função).
+		var novas := _casas_de(op)
+		if novas != _casas:
+			_casas = novas
+			mestre.destacar(_casas)
 	if tem_mover:
 		_botao(Textos.MOVER, iniciar_mover)
 	# ORDEM-D-AUD-06: os alvos dos ataques ficam marcados na arena (o mesmo marcador da jogadora).
@@ -131,17 +148,22 @@ func escolher_modo(modo: String) -> void:
 
 
 func iniciar_mover() -> void:
-	var op := _opcoes()
-	_casas.clear()
-	for c in op.get("mover", []):
-		if c is Dictionary:
-			_casas.append(Vector2i(int(c.get("x", -1)), int(c.get("y", -1))))
+	_casas = _casas_de(_opcoes())
 	a_mover = not _casas.is_empty()
 	if a_mover:
 		mestre.armou_mover()  # D-AUD-01: o toque no tabuleiro passa a ser do «Mover»; o «Colocar» da Mesa desarma
 	mestre.destacar(_casas)
 	_cancelar.visible = a_mover
 	_info.text = Textos.MOVER_ESCOLHER % _casas.size()
+
+
+## As casas do `mover` das opções (vazio se não houver).
+func _casas_de(op: Dictionary) -> Array[Vector2i]:
+	var casas: Array[Vector2i] = []
+	for c in op.get("mover", []):
+		if c is Dictionary:
+			casas.append(Vector2i(int(c.get("x", -1)), int(c.get("y", -1))))
+	return casas
 
 
 ## Casa tocada no tabuleiro. Devolve true se a aba a usou (estava a mover).
