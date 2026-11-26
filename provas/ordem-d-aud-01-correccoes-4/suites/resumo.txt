@@ -1,0 +1,16 @@
+pecas_mestre-SEM-B1 exit=1 falhas=2 falhas-correccoes-4=2 scriptErrors=0 reposto=sim
+servidor exit=1
+prova-caixa exit=0
+motor-real exit=1
+abrir_scripts exit=0 scriptErrors=0
+rodar_testes exit=0 scriptErrors=0
+abrir_mestre exit=0 scriptErrors=0
+pecas_mestre exit=0 scriptErrors=0
+medir_mestre exit=0 scriptErrors=0
+hud_acoes exit=0 scriptErrors=0
+caixa_jogadora exit=0 scriptErrors=0
+caixa_janela exit=0 scriptErrors=0
+canario_privacidade exit=0 scriptErrors=0
+validar-pecas_mestre exit=0
+validar-abrir_mestre exit=0
+FIM

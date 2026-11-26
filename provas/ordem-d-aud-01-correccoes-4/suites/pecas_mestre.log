@@ -1,0 +1,418 @@
+# comando: cd rascunhos/cliente && MESTRE_COMANDOS=<sede>/tmp/suites/comandos-pecas_mestre.jsonl timeout 300 Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://testes/pecas_mestre.gd
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Unicode parsing error, some characters were replaced with � (U+FFFD): Unexpected NUL character
+  ok    a fixture do servidor tem os cenários «agir» e «lobby»
+[floresta] pronta em 1526 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":1526,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+== nomes dos tipos de evento no «voltar» (ordem 27, N25-2) ==
+  ok    o tipo «cura» chama-se «Cura» (está «Cura»)
+  ok    o tipo «acao» chama-se «Ação» (está «Ação»)
+  ok    o tipo «ia» chama-se «Ação do monstro» (está «Ação do monstro»)
+  ok    o tipo «erro_motor» chama-se «Erro do motor» (está «Erro do motor»)
+  ok    o tipo «escala» chama-se «Escalada» (está «Escalada»)
+  ok    o tipo «recomeco» chama-se «Recomeço» (está «Recomeço»)
+  ok    «Ação» com ç U+00E7 e ã U+00E3
+  ok    a linha do ponto usa os nomes: «Rodada 2 · vez de — · Cura, Ação, Ação do monstro, Erro do motor, Escalada, Recomeço»
+  ok    tipo desconhecido continua cru, os outros como antes: «Rodada 1 · vez de — · tipo_que_nao_existe, ataque»
+== rótulo do Registo: quem fez a jogada (ORDEM-D-AUD-07-REGISTO) ==
+  ok    D-AUD-07: o encerrar da IA do orc diz o orc e a rodada 1 (não a heroína da rodada 2): «Rodada 1 · vez de Orc Verdadeiro Teste (Orc) · Ação do monstro, vez nova»
+  ok    D-AUD-07: o encerrar da heroína diz a heroína (não o orc que vem a seguir): «Rodada 1 · vez de Heroína Teste · vez nova»
+  ok    D-AUD-07: o START (sem vez antes) não tem autor: «Rodada 0 · vez de — · colocação, vez nova»
+  ok    D-AUD-07: ponto de uma sala de antes (sem autorId/rodadaAutor) fica como antes: «Rodada 2 · vez de Heroína Teste · Ação do monstro, vez nova»
+== arena 3D ==
+  ok    uma figura 3D por figura colocada (2)
+  ok    o centro de uma casa volta à mesma casa
+  ok    a grelha tem o tamanho do mapa
+== marcadores do site (Plano B; cena.js) ==
+[floresta] pronta em 25 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":25,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+  ok    o orc e o lobo estão na arena
+  ok    a altura do orc vem da ficha (3,6 m, como no site)
+  ok    corpo «marcador»: cilindro 0,22/0,38, 0,68 × altura, 8 lados
+  ok    cabeça a 0,86 × altura
+  ok    o lobo usa o «marcador-lobo» (icosaedro 0,3 × 0,5·altura × 0,7)
+  ok    anéis com a paleta do site pela ordem de entrada ["87b4b0", "e5bb74", "b98b9d", "b5c3ce"]
+  ok    sombra de contacto de 0,5 m
+  ok    morta: deitada e assente no chão com 0,03 m de folga
+  ok    viva: de pé outra vez
+== Ordem 58: o pé numa casa que o mapa bloqueia ==
+[floresta] pronta em 2389 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":2389,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+WARNING: figura f1a88a9eef918a8b4 não se põe de pé: FLORESTA-E08-CASA-BLOQUEADA: (27,24) escarpa
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] anotar_recusa (res://cenas/arena/campo_da_mesa.gd:128)
+       [1] aplicar_vista (res://cenas/mestre/arena_mestre.gd:273)
+       [2] _pes_bloqueados (res://testes/pecas_mestre.gd:2026)
+       [3] _correr (res://testes/pecas_mestre.gd:176)
+       [4] _quadros (res://testes/pecas_mestre.gd:48)
+  ok    na escarpa (27,24) a figura não se põe de pé: recusa com nome «FLORESTA-E08-CASA-BLOQUEADA: (27,24) escarpa»
+  ok    a da casa livre (29,24) fica de pé no pé da casa; a vez na recusada não tem anel
+  ok    Ordem 60: a recusada não some — fica marcada na casa dela (remendo e «✕ Heroína Teste» com o motivo)
+  ok    Ordem 60: um aviso ao ecrã do Mestre, com o nome, a casa e o motivo ["«Heroína Teste» não fica de pé em (27,24): escarpa — o mapa bloqueia a casa. Fica marcada no mapa."]
+  ok    Ordem 60: a mesma vista outra vez não avisa de novo; a marca fica
+WARNING: figura f0c1870b843e1465f não se põe de pé: FLORESTA-E08-CASA-BLOQUEADA: (27,24) escarpa
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] anotar_recusa (res://cenas/arena/campo_da_mesa.gd:128)
+       [1] aplicar_vista (res://cenas/mestre/arena_mestre.gd:273)
+       [2] _pes_bloqueados (res://testes/pecas_mestre.gd:2046)
+       [3] _quadros (res://testes/pecas_mestre.gd:48)
+  ok    Ordem 60: trocadas — a marca e o aviso seguem quem entra na escarpa; quem sai fica sem marca
+  ok    trocadas: A sai da escarpa e põe-se de pé, com o anel da vez; B entra nela e fica recusada
+== «Voltar até aqui» (L8) ==
+  ok    um botão por ponto (5)
+  ok    escolher o ponto só pergunta («Voltar até aqui?»)
+  ok    «Voltar até aqui» → MASTER_SUPERVISOR voltar ateSeq 4
+== aba Agir ==
+  ok    um botão por opção do servidor (4)
+  ok    D-AUD-06: um marcador de alvo por alvo dos ataques da criatura da vez (["fba2529d0fcfbedbf"] → ["fba2529d0fcfbedbf"])
+  ok    D-AUD-06: no Mestre o marcador está em cada alvo, à altura da figura (anel no corpo, seta acima), sem teste de profundidade
+  ok    D-AUD-06: a aba Agir marcou os alvos que o servidor mandou (["fba2529d0fcfbedbf"])
+  ok    modo → MASTER_MODE
+  ok    D-AUD-01: «Mover» armado (pré-condição)
+  ok    D-AUD-01: escolher «Colocar» desarma o «Mover» e apaga-lhe o destaque
+  ok    D-AUD-01-CORRECCOES: cancelar o «Mover» repõe o «Colocar» e o toque seguinte coloca (1 MASTER_PLACE ["orc-teste"])
+  ok    D-AUD-01-CORRECCOES: com o «Mover» armado, escolher outra ficha no «Colocar» → o toque põe a ficha nova (1 MASTER_PLACE ["lobo-teste"], 0 da velha)
+  ok    D-AUD-01-CORRECCOES-2: «Colocar» → armar «Mover» duas vezes → «Cancelar» repõe o «Colocar» e o toque seguinte coloca (1 MASTER_PLACE ["orc-teste"])
+  ok    D-AUD-01: armar «Mover» desarma o «Colocar» da Mesa
+  ok    «Mover» destaca as 33 casas do servidor
+  ok    uma casa fora das opções não manda nada
+  ok    tocar numa casa → MASTER_ACT mover
+  ok    depois de mover os destaques saem
+  ok    D-AUD-01: com o «Colocar» escolhido antes, o toque do «Mover» não coloca cópia nenhuma (0 MASTER_PLACE)
+  ok    D-AUD-01-CORRECCOES-2: mover usado → a vez muda → «Mover» → «Cancelar» não repõe a ficha velha (a_colocar depois do mover «», 0 MASTER_PLACE)
+  ok    D-AUD-01-CORRECCOES-3: «Colocar» → «Mover» armado (guarda viva: true) → a vez muda para outra criatura com opções (true) → «Cancelar» não repõe (guarda depois «», a_colocar «», 0 MASTER_PLACE [])
+  ok    D-AUD-01-CORRECCOES-4: «Mover» armado → opções da mesma vez sem `mover` → desarma (casas, destaque e «Cancelar» fora: true; aviso: true; botões ["Atacar Heroína Teste (machado teste)", "Encerrar a vez", "Correr"]) e o toque numa casa velha não manda nada ([])
+  ok    D-AUD-01-CORRECCOES-4: «Colocar» → «Mover» armado (guarda viva: true) → opções da mesma vez sem `mover` → «Cancelar» não repõe (guarda depois «», a_colocar «») e os toques não mandam nada ([]: 0 MASTER_ACT, 0 MASTER_PLACE)
+  ok    ataque → MASTER_ACT atacar
+  ok    «Encerrar a vez» → MASTER_ACT encerrar
+  ok    rótulos com as palavras da casa ["Mover", "Atacar Heroína Teste (machado teste)", "Encerrar a vez", "Correr"]
+== L10: «Escolher outra» no cartão de IA ==
+  ok    proposta de ataque: o primeiro botão é «Confirmar» (não é marcha pura)
+  ok    «Escolher outra» abre a aba Agir em modo de troca
+  ok    a acção escolhida → MASTER_APPROVE editar {acao}
+  ok    depois de escolher, a aba sai do modo de troca
+== L6: «Continuar a rodada» ==
+  ok    marcha pura → «Continuar a rodada»
+  ok    → MASTER_APPROVE aprovar {rodada: true}
+== L9: selo TESTE e estatísticas ==
+  ok    o selo TESTE aparece no ecrã do Mestre
+  ok    as estatísticas por figura e por decisão ["Orc Verdadeiro Teste 1 (Orc 1): 2 ataque(s) · dano causado 1176 · sofrido 0", "Cartões: confirmados 1, desfeitos pelo voltar 1"]
+== N4: «Terminar batalha» e «Recomeçar» (palavra do Mestre, como no site) ==
+  ok    «Terminar batalha» pede «Sim, terminar»
+  ok    «Sim, terminar» → MASTER_SUPERVISOR terminar
+  ok    «Recomeçar» pede «Sim, recomeçar»
+  ok    «Sim, recomeçar» → MASTER_SUPERVISOR recomecar
+== «Jogo eu» leva à aba Agir ==
+  ok    depois de «Jogo eu» a aba Agir fica à frente
+== aba Mesa ==
+  ok    no lobby, «Terminar batalha» e «Recomeçar» estão desligados
+  ok    N26-1: «Procurar» com o campo vazio não manda pesquisa
+  ok    N26-1: só espaços também não manda
+  ok    N26-1: o campo de pesquisa aceita 64 caracteres no máximo
+  ok    N26-1: o contador está à vista, ao lado do campo
+  ok    N26-1: o contador conta o que está escrito (veio «3/64»)
+  ok    N26-1: a escrita pára aos 64 (ficou com 64)
+  ok    N26-1: o contador mostra 64/64 (veio «64/64»)
+  ok    N26-1: os 64 que ficaram no campo saem inteiros
+  ok    N26-1: contam-se caracteres, não bytes (64 acentuados cabem)
+  ok    a pesquisa curta sai igual, sem os espaços
+  ok    cada «Procurar» com texto pede uma pesquisa
+  ok    uma linha por resultado (3)
+  ok    as fichas já na mesa vêm marcadas (3)
+  ok    o Mestre vê o nome verdadeiro e o público
+  ok    «Guardar a mesa» → MASTER_LOBBY_SET com o que está marcado
+  ok    «Começar a batalha» pede o segundo toque
+  ok    segundo toque → MASTER_START
+  ok    sem ficha escolhida, tocar no tabuleiro não coloca nada
+  ok    o «Colocar» avisa que a figura aparece à Party
+  ok    casa no tabuleiro → MASTER_PLACE
+== L5: esquema de colocação em série ==
+  ok    com o esquema ligado, as casas juntam-se sem mandar nada
+  ok    as casas do esquema ficam destacadas na arena
+  ok    «Colocar o esquema» manda só a primeira
+  ok    o recibo da primeira manda a segunda
+  ok    o esquema acabou
+  ok    uma recusa pára o esquema e o resto fica na lista
+  ok    «Parar de colocar»
+== caída atingida: narração ao Mestre (ordem 12) ==
+  ok    a fixture tem a heroína e o orc
+  ok    o ecrã guarda o estadoMorte da vista
+  ok    narra uma vez a caída atingida
+  ok    o verbo do golpe vem da ficha do monstro: «Orc Verdadeiro Teste 1 desferiu o machado a Heroína Teste caída — ela piora visivelmente.»
+  ok    a frase do site chega ao Mestre: «Orc Verdadeiro Teste 1 desferiu o machado a Heroína Teste caída — ela piora visivelmente.»
+  ok    o núcleo do site: «piora visivelmente.»
+  ok    fica no registo com os contadores ["Orc Verdadeiro Teste 1 desferiu o machado a Heroína Teste caída — ela piora visivelmente.\nFalha de morte por golpe: Heroína Teste, por Orc Verdadeiro Teste 1 — sucessos 1, falhas 1."]
+  ok    o espelho sobe para 1 falha (não há `estado` a seguir)
+  ok    evento repetido não narra outra vez
+  ok    golpe de oportunidade: «Orc Verdadeiro Teste 1 golpeia a Heroína Teste de oportunidade — ela, caída, piora visivelmente.»
+  ok    o mais novo fica no topo do registo
+  ok    o golpe que a mata não narra «piora»
+  ok    a queda nova não é narrada como «piora»
+  ok    o `estado` actualiza o espelho e não narra
+  ok    monstro atingido ou ataque sem soMestre: silêncio
+== verbo do golpe por monstro (ordem 13, parte C) ==
+  ok    cada monstro com o seu verbo (orc: «desferiu o machado»; lobo: «deu uma patada»)
+  ok    a frase da caída usa o verbo do lobo: «Lobo Teste 1 deu uma patada a Heroína Teste caída — ela piora visivelmente.»
+  ok    sem verbos na ficha: «acerta»
+  ok    o golpe de oportunidade guarda a frase própria do site
+== ambiente: raio e fogo (ordem 13) ==
+  ok    o painel diz a chuva e os raios ["Hora: 03:33", "Clima: tempestade", "Chuva: forte", "Raios: ligados", "Casas a arder: (2,2) mais 4, (2,3) mais 1", "A arder: Heroína Teste", "A seguir: —", "A Party vê: noite, nevoeiro"]
+  ok    o combustível de cada casa, só no ecrã do Mestre
+  ok    quem arde, com o nome verdadeiro
+  ok    a arena do Mestre pinta as 2 casas a arder
+  ok    ordem 45: a tempestade chove forte na arena do Mestre
+  ok    «⚡ Raio agora» aceso; o botão dos raios diz «Desligar»
+  ok    «⚡ Raio agora» → MASTER_AMBIENTE {raioAgora: true}
+  ok    a frase do site ao pedir: «A tempestade junta-se — o raio cai no começo da rodada seguinte.»
+  ok    «Desligar os raios» → MASTER_AMBIENTE {raios: false}
+  ok    clima → MASTER_AMBIENTE {clima}
+  ok    +1 h: 03:33 → 04:33
+  ok    a hora dá a volta às 24
+  ok    com um raio à espera, «⚡ Raio agora» apagado e nada sai
+  ok    o painel diz que há um raio à espera
+  ok    sem chuva não há «⚡ Raio agora»
+  ok    o raio narrado com a frase do site: «Um raio atinge a Heroína Teste em cheio — ela fica a arder.»
+  ok    a linha do registo leva a origem, o dano sem RD e o combustível: Um raio atinge a Heroína Teste em cheio — ela fica a arder.
+Raio (pedido pelo Mestre) na casa (2,2): a casa arde por 4 rodadas e a cruz acende 4 vizinhas. Heroína Teste leva 15 (raio, fixo, sem RD).
+  ok    o mesmo evento repetido não narra outra vez
+  ok    o dano do raio não se narra duas vezes (já veio com o raio)
+  ok    o tick: «Orc Verdadeiro Teste 1 está a arder — o fogo morde.»
+  ok    a linha do tick com o dado
+  ok    sair para a chuva: «A Heroína Teste sai da casa em chamas — a chuva apaga o fogo dela.»
+  ok    a casa que se apaga entra só no registo
+  ok    o raio que não atinge ninguém
+  ok    tudo fica na narração do registo (o mais novo no topo)
+== falha do monstro com o verbo da ficha (ordem 14) ==
+  ok    a fixture tem a heroína, o orc e o lobo
+  ok    cada monstro com o seu verbo de falha (orc: «tentou desferir o machado»; lobo: «tentou dar uma patada»)
+  ok    sem verbos na ficha: «tentou atacar» (o do site)
+  ok    golpe falhado do orc: «Orc Verdadeiro Teste 1 tentou desferir o machado a Heroína Teste e falhou.»
+  ok    fica no registo com a linha do ataque Orc Verdadeiro Teste 1 tentou desferir o machado a Heroína Teste e falhou.
+Ataque falhado: Orc Verdadeiro Teste 1 contra Heroína Teste.
+  ok    o mesmo evento repetido não narra outra vez
+  ok    o lobo com o verbo dele: «Lobo Teste 1 tentou dar uma patada a Heroína Teste e falhou.»
+  ok    sem verbos: «Lobo Teste 1 tentou atacar a Heroína Teste e falhou.»
+  ok    oportunidade: «Lobo Teste 1 tenta golpeá-la de oportunidade e falha.»
+  ok    o registo marca o golpe de oportunidade
+  ok    a falha crítica espera pelo evento seguinte
+  ok    falha crítica + desgraça numa frase: «Orc Verdadeiro Teste 1 tentou desferir o machado a Heroína Teste e falhou. A arma (machado teste) caiu-lhe da mão.»
+  ok    o registo diz a desgraça aplicada
+  ok    sem desgraça: «Orc Verdadeiro Teste 1 tentou desferir o machado a Heroína Teste e falhou. O golpe correu mal.»
+  ok    o registo diz que não houve desgraça
+  ok    a desgraça de outro não é a desta falha
+  ok    nem a do mesmo, longe no journal
+  ok    a vista fecha a falha pendente: «Lobo Teste 1 tenta golpeá-la de oportunidade e falha. O golpe correu mal.»
+  ok    a falha dela, o acerto e uma figura desconhecida não narram falha de monstro
+  ok    cartão do orc: «Orc Verdadeiro Teste 1 tentou desferir o machado a Heroína Teste e falhou.»
+  ok    cartão do golpe de oportunidade: «Lobo Teste 1 tentou golpeá-la de oportunidade ao sair e falhou.»
+  ok    o cartão da heroína não ganha frase de falha (o site não a enquadra)
+  ok    título do cartão de oportunidade: «Ataque de oportunidade · falha crítica»
+  ok    o cartão da vez do orc mantém o título
+  ok    o cartão da heroína mantém o título
+  ok    o ecrã do Mestre mostra «Ataque de oportunidade · falha crítica» no título
+  ok    o título cabe nas linhas medidas do cartão
+  ok    o ecrã mostra-o no cartão, com a frase da Party por baixo
+== «Exportar registo» com a narração (ordem 13, parte D) ==
+  ok    o registo do servidor vai intacto (é texto assinado)
+  ok    a narração vai inteira (14 entradas)
+  ok    o ficheiro tem o registo, byte a byte
+  ok    o ficheiro leva a narração: a caída (ordem 12), o raio (ordem 13) e a falha do monstro (ordem 14)
+== ROOM_JOIN sem roomId na primeira entrada (ordem 21, N19-2) ==
+  ok    a Rede monta o ROOM_JOIN numa função à parte (montar_join)
+  ok    o primeiro JOIN do Mestre leva o PIN e não leva roomId
+  ok    o primeiro JOIN da jogadora também não
+  ok    depois do WELCOME, a reentrada leva o roomId e o token
+== Aviso do motor de outra versão ao restaurar (ordem 21, N18-2) ==
+  ok    o aviso vai aos alertas do Mestre: «Sala restaurada com outra versão do motor: «Recomeçar» não vai funcionar.»
+  ok    o mesmo evento repetido no fio não repete o alerta
+  ok    o registo tem nome para o aviso_motor
+  ok    Mestre de fresco: o avisoMotor da vista vai aos alertas
+  ok    a vista seguinte com o mesmo aviso não o repete
+  ok    o evento do mesmo aviso (pelo fluxo) também não o repete
+  ok    avisoMotor null: nada
+  ok    N27-2: só o dmgVersao diferente — um alerta
+  ok    N27-2: o alerta diz «a versão de dano mudou» (veio «Sala restaurada com outra versão do motor — a versão de dano mudou. «Recomeçar» não vai funcionar.»)
+  ok    N27-2: nem o hash nem o nome do campo no ecrã
+  ok    N27-2: dois diferentes — um alerta só (não um por campo)
+  ok    N27-2: os dois de uma vez (veio «Sala restaurada com outra versão do motor — o motor (VLAB) mudou e a versão de subida de nível mudou. «Recomeçar» não vai funcionar.»)
+  ok    N27-2: o hash cru não vai ao ecrã
+  ok    N27-2: os três de uma vez (veio «Sala restaurada com outra versão do motor — o motor (VLAB) mudou, a versão de dano mudou e a versão de subida de nível mudou. «Recomeçar» não vai funcionar.»)
+== Recusa da escala com figuras em casas bloqueadas (ordem 62) ==
+  ok    Ordem 62: a vista tem figuras para nomear
+  ok    Ordem 62: a escala recusada vai aos alertas (veio «A escala não mudou — o mapa bloqueia, na escala nova, a casa de: «Heroína Teste» (6,4) menir; «f-sem-vista» (22,4) água funda. Primeiro, tire do caminho quem lá está.»)
+  ok    Ordem 62: o alerta nomeia cada figura, a casa e o motivo
+  ok    Ordem 62: nada técnico no alerta
+  ok    Ordem 62: o alerta vê-se no rótulo dos alertas
+  ok    Ordem 62: o mesmo evento repetido no fio não repete o alerta
+  ok    Ordem 62: uma recusa sem figuras não dá este alerta
+  ok    Ordem 62: o «Recomeçar» recusado diz quem e onde (veio ««Recomeçar» não se fez — nesta escala o mapa bloqueia a casa de colocação de: «Heroína Teste» (6,4) menir.»)
+== Fila de avisos do Mestre (ordem 34, N32-1) ==
+  ok    N32-1: o bloco de avisos aparece
+  ok    N32-1: o bloco abre com «perdidos por limite: 3» (veio «perdidos por limite: 3
+2 avisos enquanto estavas fora:
+18:05 — Muitas entradas erradas (ip).
+18:07 — Heroína Teste abriu outra ligação.»)
+  ok    N32-1: «2 avisos enquanto estavas fora:» (veio «perdidos por limite: 3
+2 avisos enquanto estavas fora:
+18:05 — Muitas entradas erradas (ip).
+18:07 — Heroína Teste abriu outra ligação.»)
+  ok    N32-1: cada aviso com a hora
+  ok    N32-1: os dois avisos no mesmo bloco, por ordem
+  ok    N32-1: confirma ao servidor os dois ids e os perdidos (veio [[["al-1", "al-2"], 3]])
+  ok    N32-1: o duplicado (os mesmos ids) não repete os avisos
+  ok    N32-1: o duplicado também se confirma
+  ok    N32-1: um toque fecha o bloco
+  ok    N32-1: o alerta ao vivo aparece e confirma-se pelo id
+  ok    N32-1: o mesmo alerta ao vivo repetido não aparece duas vezes
+  ok    N32-1: o alerta ao vivo não abre o bloco
+  ok    N32-1: só perdidos também se mostra (veio «perdidos por limite: 2»)
+  ok    N32-1: o alerta ao vivo repetido confirma-se outra vez, e o bloco só de perdidos confirma os perdidos (veio [[["al-1", "al-2"], 3], [["al-1", "al-2"], 3], [["al-9"], 0], [["al-9"], 0], [[], 2]])
+  ok    N32-1: bloco vazio não abre nada
+  ok    N32-1: fora do lugar do Mestre o bloco não passa da Rede
+== V25: recibo do Mestre perdido na queda da ligação ==
+  ok    o ecrã do Mestre tem por onde consultar recibos (consultar_fn)
+  ok    com o comando em voo, os botões do cartão ficam desligados
+  ok    ao voltar à mesa, pergunta pelo recibo do comando em voo ([["cmd-pecas-24"]])
+  ok    DESCONHECIDA (o servidor não o tem): os botões do cartão voltam
+  ok    DESCONHECIDA não é recusa: nenhum alerta
+  ok    esquema: pergunta pelo recibo da colocação em voo
+  ok    o recibo da consulta manda a colocação seguinte
+  ok    DESCONHECIDA pára o esquema e a colocação não feita fica na lista (como numa recusa)
+  ok    sem nada em voo, não pergunta por nada (3 consultas)
+== ORDEM-D-AUD-16: a ligação a abrir no arranque não é «A ligação caiu» ==
+  ok    arranque (nunca esteve na mesa), a ligar: nenhum alerta (23 → 23)
+  ok    depois de ter estado na mesa, a queda dá «A ligação caiu; a tentar de novo.»
+== ORDEM-D-AUD-16-SEGUIMENTO: A_ESPERAR sem nunca ter estado na mesa mostra «a ligar…» ==
+  ok    o rótulo da ligação existe e, desligada (testes de ecrã), não se vê
+  ok    a ligar, sem nunca ter estado na mesa: «A ligar à mesa…» (está «A ligar à mesa…»)
+  ok    A_ESPERAR sem nunca ter estado na mesa: «A ligar à mesa… o servidor não responde; a tentar de novo.» (está «A ligar à mesa… o servidor não responde; a tentar de novo.»)
+  ok    A_ESPERAR sem nunca ter estado na mesa: nenhum alerta falso (24 → 24)
+  ok    B-3: A_ENTRAR sem nunca ter estado na mesa: «A ligar à mesa…» (está «A ligar à mesa…»)
+  ok    B-3: A_ENTRAR sem nunca ter estado na mesa: nenhum alerta falso (24 → 24)
+  ok    3 voltas A_LIGAR/A_ESPERAR: o estado vê-se em todas e 0 alertas (24 → 24)
+  ok    o rótulo está no ecrã, logo abaixo do Alerta (visível na árvore, altura > 0)
+[floresta] pronta em 39 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":39,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+  ok    o ecrã que abre com a Rede já em A_ESPERAR mostra logo «A ligar à mesa… o servidor não responde; a tentar de novo.» e 0 alertas (está «A ligar à mesa… o servidor não responde; a tentar de novo.», 0)
+[floresta] pronta em 25 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":25,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+  ok    B-3: o ecrã que abre com a Rede já em A_ENTRAR mostra logo «A ligar à mesa…» e 0 alertas (está «A ligar à mesa…», 0)
+  ok    na mesa (depois do WELCOME): o estado da ligação some
+  ok    depois de ter estado na mesa, A_ESPERAR dá «A ligação caiu; a tentar de novo.» e não o estado «a ligar…»
+  ok    de volta ao estado do teste (desligada): o rótulo some
+== ORDEM-D-AUD-16-SEGUIMENTO-B: a PARADA por versão e o alerta da vista sem rede ==
+ecrã do Mestre: o servidor não aceita esta versão do jogo (ligação PARADA)
+  ok    B-1: o ERRO «versao» antes do WELCOME põe a Rede PARADA, com motivo «versao» (5, «versao»)
+  ok    B-1: o ecrã do Mestre mostra «Ligação parada: há uma versão nova do jogo. Atualize a página.» (está «Ligação parada: há uma versão nova do jogo. Atualize a página.»)
+  ok    B-1: e um alerta «Há uma versão nova do jogo. Atualize a página.» (["Há uma versão nova do jogo. Atualize a página."])
+  ok    B-1: o alerta e o rótulo cabem inteiros (3/6 e 3/4 linhas)
+ecrã do Mestre: o servidor não aceita esta versão do jogo (ligação PARADA)
+  ok    B-1: o ERRO «versao» outra vez não repete o alerta (1)
+  ok    B-1: os outros ERRO não aparecem no ecrã (nada técnico)
+ecrã do Mestre: o servidor não aceita esta versão do jogo (ligação PARADA)
+  ok    B-1: já tendo estado na mesa, a PARADA por versão mostra «Ligação parada: há uma versão nova do jogo. Atualize a página.» e não «A ligação caiu; a tentar de novo.» ([])
+  ok    B-1: abrir desligada ou parada por outro aparelho vai ao lobby; a ligar, na mesa ou parada por versão, fica
+[floresta] pronta em 25 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":25,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+  ok    B-2: servidor fora do ar, 31 s: 0 alertas (nenhum «A vista da mesa não se pediu (40 tentativas). Toque em «Atualizar».»), sem falha nem pedido à espera ([])
+  ok    B-2: fora da mesa o pedido da vista não se repete (o 1.º, ao abrir; 1 pedidos)
+  ok    B-2: o que se vê é o rótulo da ligação, inteiro: «A ligar à mesa… o servidor não responde; a tentar de novo.» (3 linhas de 4)
+WARNING: MASTER_VIEW: vista_sem_pedido — o pedido não saiu 40 vezes seguidas (10 s); parei
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _tentar_vista (res://cenas/mestre/mestre.gd:291)
+       [1] _process (res://cenas/mestre/mestre.gd:244)
+       [2] _seguimento_b (res://testes/pecas_mestre.gd:1558)
+       [3] _quadros (res://testes/pecas_mestre.gd:48)
+  ok    B-2: na mesa, com o pedido a não sair, o tecto da Ordem 49 continua: 40 pedidos e um alerta (40, ["A vista da mesa não se pediu (40 tentativas). Toque em «Atualizar»."])
+  ok    B-2: o texto do alerta da vista cabe inteiro, «Toque em «Atualizar».» incluído (4 linhas de 6)
+  ok    B-2: com o alerta maior, o «◂» ainda cabe na coluna 1 (fundo 7676 de 7676)
+  ok    B: de volta ao estado do teste (desligada): o rótulo some
+== nomes das figuras juntas (ordem 15, parte F) ==
+  ok    4 nomes no ecrã, 0 pares sobrepostos
+  ok    subiu o nome de 1 figura(s); as figuras ficam na casa
+== câmara livre do Mestre (decisão 10; site REF_29) ==
+  ok    a câmara livre e os controlos existem no ecrã do Mestre
+  ok    «Entrar na câmera livre» à vista, com o texto do site
+  ok    fora da livre, o manípulo e o «Voltar» não aparecem
+  ok    entrar: a câmara livre passa a ser a câmara da arena
+  ok    dentro: manípulo, ▲▼, 1×/2×/4× e «Voltar à câmera do jogo»
+  ok    entra com os olhos a 1,6 do chão (site; o chão é o relevo do mapa, ordem 45)
+  ok    entra à beira sul da arena
+  ok    entra a olhar para o centro
+  ok    manípulo: 4,2 u/s com o dt preso a 0,08 (andou 3.36)
+  ok    anda para onde olha
+  ok    WASD: D com Shift (×2,2) a 2× (andou 0.924)
+  ok    D anda de lado
+  ok    ▲ sobe 3,0 u/s
+  ok    o tecto é 12 acima do chão
+  ok    o chão empurra: nunca abaixo de 0,4 do relevo
+  ok    presa às bordas da arena + 3
+  ok    arrastar 100 px gira 0,45 rad
+  ok    o pitch fica preso a 1,45
+  ok    o manípulo do ecrã dá joy (0, −1) na ponta de cima
+  ok    largar o manípulo pára
+  ok    a tecla W chega ao andar com a livre activa
+  ok    largar W
+  ok    a câmara do jogo ficou congelada e intacta
+  ok    sair: volta à câmara do jogo
+  ok    fora outra vez: só o «Entrar»
+  ok    fora da livre, o W não é do andar
+  ok    a vista da Party nem constrói a câmara livre
+== clima (ordem 40) ==
+  ok    a arena do Mestre tem o módulo do clima, desligado e a dormir
+  ok    o chão do mapa (2) e as figuras (4) estão nos grupos do clima
+  ok    a caixa do clima cobre o campo inteiro (30×30 m)
+  ok    neve forte: liga sem reiniciar a cena
+  ok    o chão ganha a camada do clima (material_overlay)
+  ok    os corpos das figuras também (23 malhas); anéis e sombras de contacto ficam de fora
+  ok    a neve cai (123 flocos) e começa a pousar
+  ok    troca para chuva fraca sem reiniciar
+  ok    a chuva cai (91 gotas) e o chão começa a molhar
+  ok    ordem 64 + neve: a chuva e a neve da arena do Mestre seguem o vento do mundo do mapa
+  ok    ordem 64 + neve: o vento da chuva e da neve seguem o mundo neste quadro (9.29 m/s)
+  ok    o clima não manda comando nenhum nem mexe em casas, destaques ou figuras (só apresentação)
+  ok    ordem 41: com neve aglomerada por derreter, o módulo não dorme
+  ok    desligado e seco: a camada sai do chão e das figuras e o módulo dorme
+== perfil gráfico (ordem 52) ==
+  ok    as duas arenas ligam o perfil pelo mesmo código (campo_da_mesa.gd ligar_perfil)
+  ok    o ecrã do Mestre não tem números de perfil próprios
+  ok    a ⚙ da jogadora e a do Mestre montam o mesmo seletor «Gráficos» da mesma lista
+  ok    sem escolha: nenhum perfil aplicado, relva a 1.00, clima «medio» (como antes)
+  ok    sem escolha: a chuva forte pede as 5000 gotas do Médio (5000)
+  ok    a aba Sala tem a linha «Gráficos», 3 perfis, nenhum marcado
+  ok    os nomes da ⚙ da jogadora: ["Baixo", "Médio", "Alto"]
+  ok    sem ficheiro: sem escolha
+  ok    ficheiro sem a chave do perfil: sem escolha
+  ok    guardar «Baixo» e lê-lo como «baixo»
+  ok    guardar escreve [pref] perfil e deixa as outras preferências
+  ok    um nome que não é perfil não é escolha
+  ok    «Baixo» na linha «Gráficos» aplica o perfil baixo
+  ok    baixo: relva a 0.50, 15711 tufos desenhados (sem escolha: 31408)
+  ok    baixo: as contagens do clima descem às do Baixo { "chuva-fraca": [900, 0, 0, 0], "chuva-forte": [2800, 0, 0, 0], "neve-fraca": [0, 1000, 0, 0], "neve-forte": [0, 3000, 0, 0] }
+  ok    sem disco (Rede.persistir falso) a escolha não se escreve no ficheiro verdadeiro
+[floresta] pronta em 2990 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":2990,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+  ok    o mapa refeito para outra grelha fica com a relva do perfil escolhido
+[floresta] pronta em 52 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":52,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+  ok    «Alto»: relva a 1,0 e clima no Alto
+  ok    um nome que não é perfil não muda nada
+  ok    nenhum texto visível com «prime» ou «carregar» []
+comandos escritos em <sede>/tmp/suites/comandos-pecas_mestre.jsonl: 29
+== o mapa reutilizado é o mesmo mapa (ordem 54) ==
+  ok    o mapa sozinho (filmes, medições) constrói-se sempre: reutilizar_molde nasce desligado
+  ok    as duas arenas pedem o molde pelo módulo partilhado (campo_da_mesa.montar_mapa)
+[floresta] pronta em 3017 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":3017,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+[floresta] pronta em 2993 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":2993,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+  ok    a 1.ª construção da zona guarda o molde
+  ok    guardar o molde não muda o mapa que o guardou (220 linhas do retrato)
+[floresta] pronta em 26 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":26,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+  ok    o mapa seguinte da mesma zona veste-se do molde (não se constrói outra vez)
+  ok    o mapa vestido é IGUAL ao construído de raiz: 220 linhas do retrato, nós, malhas, materiais, MultiMesh, grelha, estado, céu
+  ok    o vestido não partilha nada que mude com o outro mapa vivo (95 objectos seus: materiais, MultiMesh, grelha, lotes, acaso)
+  ok    o que o jogo mexeu no outro mapa não chegou ao vestido (grelha livre, relva a 1,0, sem camada, medidas limpas)
+  ok    o mapa vestido tem o seu relógio, o seu vento, o seu forno das sombras e a sua lua (nada partilhado com o construído)
+  ok    o céu do vestido é o dele, e a relva dele lê as sombras do forno dele
+  ok    os dois nascem à mesma hora do mundo (16.25 h), com a mesma lua (cheia) e na mesma estação (primavera)
+  ok    com a hora, a lua e o ano a mudar (4 momentos), o vestido e o construído pintam o mesmo céu, a mesma luz e a mesma névoa (0 diferenças)
+  ok    vestir é muito mais rápido do que construir (26 ms contra 3017 ms)
+[floresta] pronta em 25 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":25,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+  ok    mexer num mapa vestido também não chega ao molde: o seguinte continua igual ao construído
+
+334 de 334 verificações passaram.

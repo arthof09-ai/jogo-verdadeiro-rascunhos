@@ -1,0 +1,111 @@
+# comando: cd rascunhos/cliente && MESTRE_COMANDOS=<sede>/tmp/suites/comandos-caixa_jogadora.jsonl timeout 300 Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://testes/caixa_jogadora.gd
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+== 1. o snapshot chega ANTES de o HUD abrir (a jogadora entra pelo lobby) ==
+rede: ROOM_SNAPSHOT seq=1 fase=combate plataforma=Windows
+  ok    a caixa aparece ligada, no modo dinâmico, com o snapshot de antes do HUD
+  ok    a ordem e a vez são as do servidor (["j2", "j1"], vez j1)
+== 2. os eventos que ela recebe adiantam a caixa (as mesmas regras do servidor) ==
+  ok    quem age pela 1.ª vez entra no fim e fica na vez (["j2", "j1", "m1"])
+  ok    o ataque de oportunidade não é «ir»
+  ok    quem volta a agir fecha a volta (vez j2)
+== 3. o Mestre escolhe o modo iniciativa ==
+  ok    a caixa mostra a ordem de iniciativa e a vez do servidor (["m1", "j1", "j2"], vez m1)
+  ok    no modo iniciativa a vez segue o `turno` do servidor
+== 4. o Mestre desliga a caixa; sem o campo; fora do combate ==
+  ok    desligada pelo Mestre: a caixa não aparece
+  ok    religada: volta a aparecer
+  ok    snapshot sem `caixa` (sala de espera, servidor de antes): não aparece
+  ok    no lobby a caixa não aparece (só em combate e em pausa)
+== 5. uma MASTER_VIEW a chegar ao aparelho dela não mexe na caixa ==
+  ok    a caixa continua a do snapshot dela
+== 6. o sítio: não tapa a ⚙, a ficha, a barra nem a faixa ==
+  ok    1920x1080 (fonte 22): a caixa [P: (1479.0, 24.0), S: (417.0, 212.0)] cabe no ecrã [P: (0.0, 0.0), S: (1920.0, 1080.0)] e não tapa nada []
+  ok    1280x720 (fonte 22): a caixa [P: (1479.0, 24.0), S: (417.0, 212.0)] cabe no ecrã [P: (0.0, 0.0), S: (1920.0, 1080.0)] e não tapa nada []
+  ok    844x390 (fonte 36): a caixa [P: (1649.0, 24.0), S: (664.0, 323.0)] cabe no ecrã [P: (0.0, 0.0), S: (2337.0, 1080.0)] e não tapa nada []
+  ok    780x360 (fonte 39): a caixa [P: (1604.0, 24.0), S: (712.0, 349.0)] cabe no ecrã [P: (0.0, 0.0), S: (2340.0, 1080.0)] e não tapa nada []
+== 7. Ordem CAIXA-JANELA: eventos ANTES de o HUD abrir (a batalha anda entre o snapshot e o _ready) ==
+  ok    os eventos de antes do HUD estão na caixa ao abrir (["j1", "m1", "j2"], vez j2), sem esperar pelo snapshot seguinte
+  ok    e os de depois seguem pelo sinal: a Heroína volta a agir e a volta fecha (vez j1)
+== 8. Ordem CAIXA-HUD-JOGADORA-MEDICAO-8-FIGURAS: 8 figuras, ecrãs baixos e o controlo ==
+  MEDIDA 8 figuras · 844x390 (tela 2337x1080 u, escala 0.361, fonte 36): caixa 689x323 u = 249x117 px reais (altura 30% do ecrã) · 4 por linha · faixa livre 875 u (precisa 729 u), margens esq 707 / dir 707 u, desvio do centro 0.0 u (pela regra antiga, com esta caixa: 0.0 u) · sobreposição NÃO (ficha false, barra false, faixa false) · centrada SIM · cortado NÃO
+  ok    8 figuras 844x390: a caixa tem as 8 (8) — na compacta, a vez no cartão grande e os 4 próximos ["j2", "m1", "m2", "m3"]
+  ok    8 figuras 844x390: não tapa a ⚙/ficha
+  ok    8 figuras 844x390: não tapa a barra inferior (barra visível true)
+  ok    8 figuras 844x390: não tapa a faixa de cima (faixa [P: (731.0, 24.0), S: (875.0, 50.0)], caixa [P: (1624.0, 24.0), S: (689.0, 323.0)])
+  REGISTO (não conta) 8 figuras 844x390: a faixa centrada no ecrã? SIM (margens 707 / 707 u, desvio 0.0 u)
+  ok    8 figuras 844x390: o desvio do centro da faixa não piora (0.0 u ≤ tecto 0.0 u; não pior que a caixa compacta recentrada)
+  ok    8 figuras 844x390: nada cortado (caixa no ecrã true, quadradinhos fora [], faixa 875 ≥ 729 u)
+  MEDIDA 8 figuras · 780x360 (tela 2340x1080 u, escala 0.333, fonte 39): caixa 744x349 u = 248x116 px reais (altura 32% do ecrã) · 4 por linha · faixa livre 788 u (precisa 788 u), margens esq 740 / dir 763 u, desvio do centro 11.5 u (pela regra antiga, com esta caixa: 313.5 u) · sobreposição NÃO (ficha false, barra false, faixa false) · centrada NÃO · cortado NÃO
+  ok    8 figuras 780x360: a caixa tem as 8 (8) — na compacta, a vez no cartão grande e os 4 próximos ["j2", "m1", "m2", "m3"]
+  ok    8 figuras 780x360: não tapa a ⚙/ficha
+  ok    8 figuras 780x360: não tapa a barra inferior (barra visível true)
+  ok    8 figuras 780x360: não tapa a faixa de cima (faixa [P: (764.5, 24.0), S: (788.0, 54.0)], caixa [P: (1572.0, 24.0), S: (744.0, 349.0)])
+  REGISTO (não conta) 8 figuras 780x360: a faixa centrada no ecrã? NÃO (margens 740 / 763 u, desvio 11.5 u)
+  ok    8 figuras 780x360: o desvio do centro da faixa não piora (11.5 u ≤ tecto 11.5 u; não pior que a caixa compacta recentrada)
+  ok    8 figuras 780x360: nada cortado (caixa no ecrã true, quadradinhos fora [], faixa 788 ≥ 788 u)
+  MEDIDA 8 figuras · 1920x1080 (tela 1920x1080 u, escala 1.000, fonte 22): caixa 437x212 u = 437x212 px reais (altura 20% do ecrã) · 4 por linha · faixa livre 976 u (precisa 453 u), margens esq 448 / dir 448 u, desvio do centro 0.0 u (pela regra antiga, com esta caixa: 0.0 u) · sobreposição NÃO (ficha false, barra false, faixa false) · centrada SIM · cortado NÃO
+  ok    8 figuras 1920x1080: a caixa tem as 8 (8) — na compacta, a vez no cartão grande e os 4 próximos ["j2", "m1", "m2", "m3"]
+  ok    8 figuras 1920x1080: não tapa a ⚙/ficha
+  ok    8 figuras 1920x1080: não tapa a barra inferior (barra visível true)
+  ok    8 figuras 1920x1080: não tapa a faixa de cima (faixa [P: (472.0, 24.0), S: (976.0, 31.0)], caixa [P: (1459.0, 24.0), S: (437.0, 212.0)])
+  REGISTO (não conta) 8 figuras 1920x1080: a faixa centrada no ecrã? SIM (margens 448 / 448 u, desvio 0.0 u)
+  ok    8 figuras 1920x1080: o desvio do centro da faixa não piora (0.0 u ≤ tecto 0.0 u; não pior que a caixa compacta recentrada)
+  ok    8 figuras 1920x1080: nada cortado (caixa no ecrã true, quadradinhos fora [], faixa 976 ≥ 453 u)
+== 9. Ordem CAIXA-EXPANDE: a recentragem da faixa (F4) e o toque na caixa ==
+  ok    F4: se a faixa larga centrada cabe, as margens são iguais (desvio 0) (300.0, 300.0)
+  ok    F4: se não cabe centrada, fica com a largura que precisa, encostada à caixa, o mais perto do centro (desvio 100 u; a regra antiga dava 150 u) (200.0, 400.0)
+  ok    F4: se nem a largura que precisa cabe, ocupa o espaço livre todo (a regra antiga) (100.0, 400.0)
+  ok    toque: um toque na caixa abre a ordem inteira (8), encostada à direita ([P: (1624.0, 24.0), S: (689.0, 786.0)]), e a faixa não se mexe
+  ok    toque: outro toque na caixa fecha-a (volta a [P: (1624.0, 24.0), S: (689.0, 323.0)])
+  ok    toque: com a caixa aberta, um toque fora dela fecha-a
+== 10. Ordem CAIXA-EXPANDE-INTERACAO: o tabuleiro por baixo da caixa (toque fora, roda nos fins) ==
+  MEDIDA D1 §10 12 figuras 844x390: abriu por toque true · toque fora em (934.8, 594.0) u: fechou true, «toque» do tabuleiro 0 vez(es), toque armado false · controlo (caixa fechada): «toque» 1 vez(es)
+  ok    §10 12 figuras 844x390: [D1] com a expandida aberta, um toque fora fecha-a e o tabuleiro fica quieto (o «toque» da câmara não dispara: 0; não fica armado)
+  ok    §10 12 figuras 844x390: [D1] de controlo, o toque seguinte (caixa fechada) chega ao tabuleiro (o «toque» dispara 1 vez)
+  MEDIDA D3 §10 12 figuras 844x390: rola true · zoom antes 1.500 · abriu na posição 0 u, 1 passos para cima até ao topo: lista 0 u, zoom 1.500 · roda para cima no topo: lista 0 → 0 u, zoom 1.500 · 4 passos para baixo até ao fim: lista 233 u, zoom 1.500 · roda para baixo no fim: lista 233 → 233 u, zoom 1.500 · controlo (roda fora da caixa): zoom 1.650
+  ok    §10 12 figuras 844x390: [D3] a roda no topo e no fim da lista não dá zoom ao tabuleiro (zoom 1.500 → 1.500 no topo, 1.500 no fim; a lista rolou 0 → 233 u)
+  ok    §10 12 figuras 844x390: [D3] de controlo, a roda fora da caixa dá zoom ao tabuleiro (1.500 → 1.650)
+  MEDIDA D1 §10 12 figuras 780x360: abriu por toque true · toque fora em (936.0, 594.0) u: fechou true, «toque» do tabuleiro 0 vez(es), toque armado false · controlo (caixa fechada): «toque» 1 vez(es)
+  ok    §10 12 figuras 780x360: [D1] com a expandida aberta, um toque fora fecha-a e o tabuleiro fica quieto (o «toque» da câmara não dispara: 0; não fica armado)
+  ok    §10 12 figuras 780x360: [D1] de controlo, o toque seguinte (caixa fechada) chega ao tabuleiro (o «toque» dispara 1 vez)
+  MEDIDA D3 §10 12 figuras 780x360: rola true · zoom antes 1.500 · abriu na posição 233 u, 4 passos para cima até ao topo: lista 0 u, zoom 1.500 · roda para cima no topo: lista 0 → 0 u, zoom 1.500 · 5 passos para baixo até ao fim: lista 344 u, zoom 1.500 · roda para baixo no fim: lista 344 → 344 u, zoom 1.500 · controlo (roda fora da caixa): zoom 1.650
+  ok    §10 12 figuras 780x360: [D3] a roda no topo e no fim da lista não dá zoom ao tabuleiro (zoom 1.500 → 1.500 no topo, 1.500 no fim; a lista rolou 0 → 344 u)
+  ok    §10 12 figuras 780x360: [D3] de controlo, a roda fora da caixa dá zoom ao tabuleiro (1.500 → 1.650)
+  MEDIDA D1 §10 16 figuras 844x390: abriu por toque true · toque fora em (934.8, 594.0) u: fechou true, «toque» do tabuleiro 0 vez(es), toque armado false · controlo (caixa fechada): «toque» 1 vez(es)
+  ok    §10 16 figuras 844x390: [D1] com a expandida aberta, um toque fora fecha-a e o tabuleiro fica quieto (o «toque» da câmara não dispara: 0; não fica armado)
+  ok    §10 16 figuras 844x390: [D1] de controlo, o toque seguinte (caixa fechada) chega ao tabuleiro (o «toque» dispara 1 vez)
+  MEDIDA D3 §10 16 figuras 844x390: rola true · zoom antes 1.500 · abriu na posição 344 u, 5 passos para cima até ao topo: lista 0 u, zoom 1.500 · roda para cima no topo: lista 0 → 0 u, zoom 1.500 · 7 passos para baixo até ao fim: lista 593 u, zoom 1.500 · roda para baixo no fim: lista 593 → 593 u, zoom 1.500 · controlo (roda fora da caixa): zoom 1.650
+  ok    §10 16 figuras 844x390: [D3] a roda no topo e no fim da lista não dá zoom ao tabuleiro (zoom 1.500 → 1.500 no topo, 1.500 no fim; a lista rolou 0 → 593 u)
+  ok    §10 16 figuras 844x390: [D3] de controlo, a roda fora da caixa dá zoom ao tabuleiro (1.500 → 1.650)
+  MEDIDA D1 §10 16 figuras 780x360: abriu por toque true · toque fora em (936.0, 594.0) u: fechou true, «toque» do tabuleiro 0 vez(es), toque armado false · controlo (caixa fechada): «toque» 1 vez(es)
+  ok    §10 16 figuras 780x360: [D1] com a expandida aberta, um toque fora fecha-a e o tabuleiro fica quieto (o «toque» da câmara não dispara: 0; não fica armado)
+  ok    §10 16 figuras 780x360: [D1] de controlo, o toque seguinte (caixa fechada) chega ao tabuleiro (o «toque» dispara 1 vez)
+  MEDIDA D3 §10 16 figuras 780x360: rola true · zoom antes 1.500 · abriu na posição 593 u, 7 passos para cima até ao topo: lista 0 u, zoom 1.500 · roda para cima no topo: lista 0 → 0 u, zoom 1.500 · 9 passos para baixo até ao fim: lista 736 u, zoom 1.500 · roda para baixo no fim: lista 736 → 736 u, zoom 1.500 · controlo (roda fora da caixa): zoom 1.650
+  ok    §10 16 figuras 780x360: [D3] a roda no topo e no fim da lista não dá zoom ao tabuleiro (zoom 1.500 → 1.500 no topo, 1.500 no fim; a lista rolou 0 → 736 u)
+  ok    §10 16 figuras 780x360: [D3] de controlo, a roda fora da caixa dá zoom ao tabuleiro (1.500 → 1.650)
+== 11. Ordem F27: o D1 com o Mover aberto — a arena a sério, a jogadora na vez, o toque fora numa casa de destino ==
+[floresta] pronta em 2299 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":2299,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"relva_blocos":50,"relva_tri":771120,"relva_tufos":42840,"rochas":94,"rochas_tri":20160,"sombra_lancadores":2003,"terreno_fino_tri":25088,"terreno_largo_tri":12376,"zona_tirados_arvores":2,"zona_tirados_estrato":5,"zona_tirados_rochas":24,"zona_tronco_tombado_m":12.7}
+pronto
+  ok    §11 12 figuras 844x390: a jogadora na vez (true), o Mover aberto pelo botão (modo 1, 48 casas de destino), a expandida aberta por toque (true) e um sítio fora dela que cai numa casa de destino [(7, 11), (984.4285, 590.1432)]
+  MEDIDA D1-MOVER §11 12 figuras 844x390: a dela em (10, 10) · toque fora em (984.4285, 590.1432) u, sobre a casa de destino (7, 11) · antes: nó 0.75,-0.08,0.75, casa 10.0,10.0, modo 1, fila 0, cursor (10, 10) · depois: fechou true, «toque» 0, nó 0.75,-0.08,0.75, casa 10.0,10.0, modo 1, fila 0, cursor (10, 10), última intenção igual true
+  ok    §11 12 figuras 844x390: [D1 com o Mover aberto] o toque fora sobre a casa (7, 11) fecha a expandida e a figura fica no sítio (nó e casa do Estado iguais, o Mover ainda aberto, nenhuma intenção: fila 0)
+  MEDIDA CONTROLO-MOVER §11 12 figuras 844x390: caixa fechada · o mesmo toque em (984.4285, 590.1432) u: «toque» 1 · intenções novas 1 {"destino":{"x":7.0,"y":11.0},"tipo":"mover"} · modo 1 → 0
+  ok    §11 12 figuras 844x390: [D1 controlo] com a caixa fechada o mesmo toque chega ao tabuleiro e escolhe a casa (7, 11) (sai «mover» para ela: {"destino":{"x":7.0,"y":11.0},"tipo":"mover"})
+  ok    §11 12 figuras 780x360: a jogadora na vez (true), o Mover aberto pelo botão (modo 1, 48 casas de destino), a expandida aberta por toque (true) e um sítio fora dela que cai numa casa de destino [(7, 11), (984.7064, 588.9069)]
+  MEDIDA D1-MOVER §11 12 figuras 780x360: a dela em (10, 10) · toque fora em (984.7064, 588.9069) u, sobre a casa de destino (7, 11) · antes: nó 0.75,-0.08,0.75, casa 10.0,10.0, modo 1, fila 0, cursor (10, 10) · depois: fechou true, «toque» 0, nó 0.75,-0.08,0.75, casa 10.0,10.0, modo 1, fila 0, cursor (10, 10), última intenção igual true
+  ok    §11 12 figuras 780x360: [D1 com o Mover aberto] o toque fora sobre a casa (7, 11) fecha a expandida e a figura fica no sítio (nó e casa do Estado iguais, o Mover ainda aberto, nenhuma intenção: fila 0)
+  MEDIDA CONTROLO-MOVER §11 12 figuras 780x360: caixa fechada · o mesmo toque em (984.7064, 588.9069) u: «toque» 1 · intenções novas 1 {"destino":{"x":7.0,"y":11.0},"tipo":"mover"} · modo 1 → 0
+  ok    §11 12 figuras 780x360: [D1 controlo] com a caixa fechada o mesmo toque chega ao tabuleiro e escolhe a casa (7, 11) (sai «mover» para ela: {"destino":{"x":7.0,"y":11.0},"tipo":"mover"})
+  ok    §11 16 figuras 844x390: a jogadora na vez (true), o Mover aberto pelo botão (modo 1, 48 casas de destino), a expandida aberta por toque (true) e um sítio fora dela que cai numa casa de destino [(7, 11), (983.0263, 588.7247)]
+  MEDIDA D1-MOVER §11 16 figuras 844x390: a dela em (10, 10) · toque fora em (983.0263, 588.7247) u, sobre a casa de destino (7, 11) · antes: nó 0.75,-0.08,0.75, casa 10.0,10.0, modo 1, fila 0, cursor (10, 10) · depois: fechou true, «toque» 0, nó 0.75,-0.08,0.75, casa 10.0,10.0, modo 1, fila 0, cursor (10, 10), última intenção igual true
+  ok    §11 16 figuras 844x390: [D1 com o Mover aberto] o toque fora sobre a casa (7, 11) fecha a expandida e a figura fica no sítio (nó e casa do Estado iguais, o Mover ainda aberto, nenhuma intenção: fila 0)
+  MEDIDA CONTROLO-MOVER §11 16 figuras 844x390: caixa fechada · o mesmo toque em (983.0263, 588.7247) u: «toque» 1 · intenções novas 1 {"destino":{"x":7.0,"y":11.0},"tipo":"mover"} · modo 1 → 0
+  ok    §11 16 figuras 844x390: [D1 controlo] com a caixa fechada o mesmo toque chega ao tabuleiro e escolhe a casa (7, 11) (sai «mover» para ela: {"destino":{"x":7.0,"y":11.0},"tipo":"mover"})
+  ok    §11 16 figuras 780x360: a jogadora na vez (true), o Mover aberto pelo botão (modo 1, 48 casas de destino), a expandida aberta por toque (true) e um sítio fora dela que cai numa casa de destino [(7, 11), (984.505, 588.7032)]
+  MEDIDA D1-MOVER §11 16 figuras 780x360: a dela em (10, 10) · toque fora em (984.505, 588.7032) u, sobre a casa de destino (7, 11) · antes: nó 0.75,-0.08,0.75, casa 10.0,10.0, modo 1, fila 0, cursor (10, 10) · depois: fechou true, «toque» 0, nó 0.75,-0.08,0.75, casa 10.0,10.0, modo 1, fila 0, cursor (10, 10), última intenção igual true
+  ok    §11 16 figuras 780x360: [D1 com o Mover aberto] o toque fora sobre a casa (7, 11) fecha a expandida e a figura fica no sítio (nó e casa do Estado iguais, o Mover ainda aberto, nenhuma intenção: fila 0)
+  MEDIDA CONTROLO-MOVER §11 16 figuras 780x360: caixa fechada · o mesmo toque em (984.505, 588.7032) u: «toque» 1 · intenções novas 1 {"destino":{"x":7.0,"y":11.0},"tipo":"mover"} · modo 1 → 0
+  ok    §11 16 figuras 780x360: [D1 controlo] com a caixa fechada o mesmo toque chega ao tabuleiro e escolhe a casa (7, 11) (sai «mover» para ela: {"destino":{"x":7.0,"y":11.0},"tipo":"mover"})
+
+70 de 70 verificações passaram.

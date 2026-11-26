@@ -1,0 +1,5 @@
+# comando: python rascunhos/protocolo/ferramentas/validar-mensagens.py <sede>/tmp/suites/comandos-pecas_mestre.jsonl
+Traceback (most recent call last):
+  File "<sede>\repo\rascunhos\protocolo\ferramentas\validar-mensagens.py", line 16, in <module>
+    from jsonschema import Draft202012Validator
+ModuleNotFoundError: No module named 'jsonschema'

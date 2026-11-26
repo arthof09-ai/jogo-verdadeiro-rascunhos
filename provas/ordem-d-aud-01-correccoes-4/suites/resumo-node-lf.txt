@@ -1,0 +1,4 @@
+# worktree LF em a158c31: i/lf    w/lf    
+servidor-LF exit=0
+motor-real-LF exit=0
+worktree removido
