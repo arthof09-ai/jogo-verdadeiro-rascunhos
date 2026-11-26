@@ -1,48 +1,61 @@
 #!/usr/bin/env bash
 # ORDEM-PLANO-2-F2-ANDROID-SHADER: a medição de CONTROLO dos shaders no emulador.
 #
-#   bash aparelhos/controlo-gles.sh <controlo-gles.apk> <pasta-de-saída> [android-godot.log do jogo]
+#   bash aparelhos/controlo-gles.sh <controlo-gles.pck> <pasta-de-saída> [android-godot.log do jogo]
 #
-# Instala o projecto de controlo (aparelhos/controlo-gles/: um Godot 4.7.2 vazio, nenhum shader do jogo), espera o
-# «controlo-gles pronto» e conta, no log do Godot, os «Program linking failed» por shader do motor e o tecto que o
-# driver declara na mensagem. Se for dado o log do jogo, põe as duas contagens lado a lado. É uma MEDIÇÃO: só falha
-# se o controlo não chegar a correr (sem «pronto» em 60 s), não por haver erros de link.
+# Corre o projecto de controlo (aparelhos/controlo-gles/: um Godot 4.7.2 vazio — um cubo com o material padrão e um
+# texto, NENHUM shader nem recurso do jogo) com o MESMO motor do APK do jogo (o libgodot_android.so já instalado pela
+# prova): lança a activity não exportada com «--main-pack <pck>», que troca o projecto e deixa o motor. Espera o
+# «controlo-gles pronto», guarda o log e a captura, e conta os «Program linking failed» por shader do motor e o tecto que
+# o driver declara. Se for dado o log do jogo, põe as duas contagens lado a lado.
+# É uma MEDIÇÃO: só falha se o controlo não chegar a correr (sem «pronto» em 60 s), nunca por haver erros de link.
+# Precisa do adb como root (o prova-android.sh já o deixou assim) e do APK do jogo instalado.
+# O .pck refaz-se com: godot --headless --path aparelhos/controlo-gles --export-pack Android aparelhos/controlo-gles.pck
 set -u
-APK="$1"
+PCK="$1"
 SAIDA="$2"
 JOGO="${3:-}"
-PACOTE=org.assimilacao.controlo
+PACOTE=org.assimilacao.mesa
+DESTINO=/data/data/$PACOTE/files/controlo-gles.pck
 mkdir -p "$SAIDA"
 adb wait-for-device
-adb install -r "$APK" || exit 1
+adb shell am force-stop "$PACOTE"
+adb push "$PCK" /data/local/tmp/controlo-gles.pck >/dev/null || exit 1
+UID_APP=$(adb shell stat -c %u /data/data/$PACOTE | tr -d '\r')
+adb shell "mkdir -p /data/data/$PACOTE/files && cp /data/local/tmp/controlo-gles.pck $DESTINO && chown $UID_APP:$UID_APP $DESTINO && chmod 600 $DESTINO && echo copiado" | grep -q copiado || { echo "FALHA: não consegui pôr o pck em $DESTINO"; exit 1; }
+adb shell restorecon "$DESTINO" || true  # o contexto SELinux da pasta da app (o cp de root traz o do /data/local/tmp)
+adb shell ls -lZ "$DESTINO"
 adb logcat -c
-adb shell "am start -W -n $PACOTE/com.godot.game.GodotAppLauncher"
+adb shell "am start -W -n $PACOTE/com.godot.game.GodotApp --esa command_line_params '--main-pack,$DESTINO'"
 ok=1
 for i in $(seq 1 60); do
   if adb logcat -d -s godot:* 2>/dev/null | grep -q "controlo-gles pronto"; then ok=0; break; fi
   sleep 1
 done
+sleep 2
 adb exec-out screencap -p > "$SAIDA/controlo-gles.png" || true
 adb logcat -d > "$SAIDA/controlo-gles-logcat.log" 2>&1 || true
 adb logcat -d -s godot:* > "$SAIDA/controlo-gles-godot.log" 2>&1 || true
 adb shell am force-stop "$PACOTE" || true
 
-contar() {  # <log> -> linhas «<Shader> <n>» e o tecto declarado
+contar() {  # <log> -> os «Program linking failed» por shader do motor, o tecto declarado e o driver
   local log="$1"
   for s in SceneShaderGLES3 CanvasShaderGLES3 SkyShaderGLES3 ParticlesShaderGLES3 CopyShaderGLES3; do
-    printf '  %-22s link falhado: %s\n' "$s" "$(grep -c "ERROR: $s: Program linking failed" "$log")"
+    printf '  %-28s %s\n' "$s link falhado:" "$(grep -c "ERROR: $s: Program linking failed" "$log")"
   done
-  printf '  %-22s %s\n' "tecto declarado:" "$(grep -oE 'GL_MAX_FRAGMENT_UNIFORM_VECTORS \([0-9]+\)' "$log" | sort -u | tr '\n' ' ')"
-  printf '  %-22s %s\n' "driver:" "$(grep -oE 'OpenGL API .*' "$log" | head -1)"
+  printf '  %-28s %s\n' "antes do banner (init):" "$(awk '/OpenGL API/{exit} /Program linking failed/{n++} END{print n+0}' "$log")"
+  printf '  %-28s %s\n' "tecto declarado:" "$(grep -oE 'GL_MAX_FRAGMENT_UNIFORM_VECTORS \([0-9]+\)' "$log" | sort -u | tr '\n' ' ')"
+  printf '  %-28s %s\n' "driver:" "$(grep -oE 'OpenGL API .*' "$log" | head -1)"
 }
 {
-  echo "== CONTROLO (Godot 4.7.2 vazio, nenhum shader do jogo): $(basename "$APK")"
+  echo "== CONTROLO (Godot 4.7.2 vazio no motor do APK, nenhum shader do jogo): $(basename "$PCK")"
+  grep -E "GodotActivity: Launch intent" "$SAIDA/controlo-gles-logcat.log" | sed 's/^/  /'
   contar "$SAIDA/controlo-gles-godot.log"
   grep -E "controlo-gles" "$SAIDA/controlo-gles-godot.log" | sed 's/^/  /'
   if [ -n "$JOGO" ] && [ -s "$JOGO" ]; then
-    echo "== JOGO: $JOGO"
+    echo "== JOGO: $(basename "$JOGO")"
     contar "$JOGO"
   fi
-} | tee "$SAIDA/controlo-gles-medida.txt"
+} | tee "$SAIDA/controlo-gles-medida.log"
 if [ $ok -ne 0 ]; then echo "FALHA: o controlo não disse «pronto» em 60 s"; exit 1; fi
 echo "CONTROLO GLES MEDIDO"

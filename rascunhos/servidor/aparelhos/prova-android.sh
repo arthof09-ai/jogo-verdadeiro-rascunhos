@@ -42,10 +42,19 @@ adb logcat -d -s godot:* > "$SAIDA/android-godot.log" 2>&1 || true
 # Os argumentos que o Godot de facto recebeu (a linha da GodotActivity): têm de lá estar o servidor, o nome e a senha.
 grep -E "GodotActivity: (Project command line|Launch intent)" "$SAIDA/android-logcat.log" | tee "$SAIDA/android-argumentos.log"
 tail -40 "$SAIDA/android-godot.log"
+r=0
 if ! grep -q "Launch intent .* with parameters \[--, --servidor=$SERVIDOR" "$SAIDA/android-argumentos.log"; then
-  echo "FALHA: o Godot não recebeu os argumentos da linha de comando"; exit 1
+  echo "FALHA: o Godot não recebeu os argumentos da linha de comando"; r=1
+elif grep -qE "SCRIPT ERROR|Parse Error" "$SAIDA/android-godot.log"; then echo "FALHA: erros de script no Android"; r=1
+elif [ $ok -ne 0 ]; then echo "FALHA: o Android não recebeu o ROOM_SNAPSHOT em 120 s"; r=1
+else
+  grep -E "rede: ROOM_SNAPSHOT" "$SAIDA/android-godot.log" | head -1
+  echo "PROVA ANDROID OK"
 fi
-if grep -qE "SCRIPT ERROR|Parse Error" "$SAIDA/android-godot.log"; then echo "FALHA: erros de script no Android"; exit 1; fi
-if [ $ok -ne 0 ]; then echo "FALHA: o Android não recebeu o ROOM_SNAPSHOT em 120 s"; exit 1; fi
-grep -E "rede: ROOM_SNAPSHOT" "$SAIDA/android-godot.log" | head -1
-echo "PROVA ANDROID OK"
+# ORDEM-PLANO-2-F2-ANDROID-SHADER: a seguir, no MESMO emulador e com o MESMO motor, o controlo dos shaders (um Godot
+# vazio, ver controlo-gles.sh). É uma medição: o exit deste guião continua a ser o da prova.
+PCK_CONTROLO="$(dirname "$0")/controlo-gles.pck"
+if [ -s "$PCK_CONTROLO" ]; then
+  bash "$(dirname "$0")/controlo-gles.sh" "$PCK_CONTROLO" "$SAIDA" "$SAIDA/android-godot.log" || echo "(o controlo GLES não correu até ao fim; a prova não depende dele)"
+fi
+exit $r
