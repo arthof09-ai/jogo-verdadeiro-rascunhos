@@ -1,0 +1,3 @@
+# commit: 58f36e335fb629edfb59d49e8be6c521787a3740 · árvore testada: 08c9c64e57591f1dbadc128f0e3f2a9f47da0bc6 (limpa: a árvore do commit)
+d-aud-12-snapshot-SEM-SUFIXO-NA-FIGURA-PUBLICA exit=1 falhas=7 fim=«ℹ pass 0 ℹ fail 7 » reposto=sim
+FIM (SO_MUTACAO=1: só o passo da mutação)
