@@ -1,4 +1,4 @@
-# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 452 ficheiros mudados ou novos em rascunhos/.
+# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 453 ficheiros mudados ou novos em rascunhos/.
 93c8f082052020ffc4a3a95831f74a5a16a295f366e54842045791c071fc83e4  rascunhos/cliente/README.md
 2a9bda1fa4349cfa9ece76842797ac96adc27ef919c525b3843a6f1cd01e58d5  rascunhos/cliente/arte/README.md
 2bc9bbf8ab270183116aa4eca383ce5b521fe7a466e9db9a065d96cca0da28fa  rascunhos/cliente/arte/ambiente/color_script.gd
@@ -352,6 +352,7 @@ a50f979cbf0d7a89b37486e775ffeeb40689465df4c03bce0f2971ce599355d6  rascunhos/serv
 b01e5dd433de7194070b7c59731b1ecbe2603e69157726c6affe1ef08e011ddb  rascunhos/servidor/aparelhos/prova-3-bots.mjs
 155d1affd2dafd9fa9c6a5bd413a12a8bd73d35acebdbdf22854c905f37cebcd  rascunhos/servidor/aparelhos/prova-android.sh
 76e7694f3eda7ac5bd6ae2bfe8d5e180ea74de454a43b8345c87d921c7967752  rascunhos/servidor/aparelhos/prova-web.mjs
+12e25222043cdc95af7c2ba0e48d04c819b923a889be1070516f0c6aa5d15991  rascunhos/servidor/aparelhos/prova-windows.ps1
 7037229e559e49bf27f7cb1cdf219758c0a9ab10bd2c84af93d36c75d9718995  rascunhos/servidor/autojogo/cenario-bancada.json
 3c498137411950a2d765d81ecdc3bf663ba1f1c568075b180a4b52dd57e0b501  rascunhos/servidor/autojogo/fichas-bancada.json
 71deb86718e6918b2daf6455077613f28d411aeba96f216406fb08dce3240d7d  rascunhos/servidor/autojogo/resumir-autojogo.mjs
