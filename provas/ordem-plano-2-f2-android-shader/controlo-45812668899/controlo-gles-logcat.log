@@ -1,0 +1,713 @@
+--------- beginning of main
+11-26 11:44:43.226  1184  1538 I BeaconBle: Client requested scan, settings=BleSettings [scanMode=LOW_LATENCY, callbackType=ALL_MATCHES, reportDelayMillis=0, 5 filters, 1 clients, callingClientName=Nearby] [CONTEXT service_id=111 ]
+11-26 11:44:43.227  1184  1538 I BeaconBle: 'L' hardware scan: 5 filters, scanMode=2, reportdelay=0, callback type=1, #clients=1, workSource=WorkSource{10122 com.google.android.gms} [CONTEXT service_id=111 ]
+11-26 11:44:43.228  1184  1538 I BeaconBle: Starting scan on OS scanner. BT state: 12 [CONTEXT service_id=111 ]
+11-26 11:44:43.228  1184  1538 D BluetoothAdapter: isLeEnabled(): ON
+11-26 11:44:43.234   691  1192 I bt_stack: [INFO:gatt_api.cc(947)] GATT_Register 1c02d99e-3dc4-9720-e95c-fee23e3285f0
+11-26 11:44:43.235   691  1192 I bt_stack: [INFO:gatt_api.cc(967)] allocated gatt_if=5
+11-26 11:44:43.243  1184  1483 D BluetoothLeScanner: onScannerRegistered() - status=0 scannerId=5 mScannerId=0
+11-26 11:44:43.365  5569  5569 W dex2oat32: Unexpected CPU variant for X86 using defaults: x86_64
+11-26 11:44:43.373  5569  5569 I dex2oat32: /apex/com.android.art/bin/dex2oat32 --input-vdex-fd=-1 --output-vdex-fd=9 --updatable-bcp-packages-file=/system/etc/updatable-bcp-packages.txt --resolve-startup-const-strings=true --max-image-block-size=524288 --compiler-filter=verify --classpath-dir=/apex/com.android.os.statsd/javalib --class-loader-context=PCL[];PCL[/system/framework/com.android.location.provider.jar:/system/framework/services.jar:/system/framework/ethernet-service.jar:/apex/com.android.permission/javalib/service-permission.jar:/apex/com.android.wifi/javalib/service-wifi.jar:/apex/com.android.ipsec/javalib/android.net.ipsec.ike.jar] --generate-mini-debug-info --compact-dex-level=none --compilation-reason=boot
+--------- beginning of system
+11-26 11:44:43.379   493  1670 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+11-26 11:44:43.379   493  1670 D PackageManager: Clear ephemeral installer activity
+11-26 11:44:43.389   493  1670 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+11-26 11:44:43.389   493  1670 D PackageManager: Clear ephemeral installer activity
+11-26 11:44:43.427  5569  5569 I dex2oat32: setting boot class path to /apex/com.android.art/javalib/core-oj.jar:/apex/com.android.art/javalib/core-libart.jar:/apex/com.android.art/javalib/core-icu4j.jar:/apex/com.android.art/javalib/okhttp.jar:/apex/com.android.art/javalib/bouncycastle.jar:/apex/com.android.art/javalib/apache-xml.jar:/system/framework/framework.jar:/system/framework/ext.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/framework-atb-backward-compatibility.jar
+11-26 11:44:43.450   493  1670 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+11-26 11:44:43.450   493  1670 D PackageManager: Clear ephemeral installer activity
+11-26 11:44:43.491  4678  5065 W YouTube : Could not register for notifications with InnerTube: 
+11-26 11:44:43.491  4678  5065 W YouTube : abwi: java.util.concurrent.ExecutionException: aacl: Precondition check failed.
+11-26 11:44:43.491  4678  5065 W YouTube : 	at abwa.b(PG:18)
+11-26 11:44:43.491  4678  5065 W YouTube : 	at aicr.f(PG:65)
+11-26 11:44:43.491  4678  5065 W YouTube : 	at aicr.g(PG:133)
+11-26 11:44:43.491  4678  5065 W YouTube : 	at aicr.b(PG:99)
+11-26 11:44:43.491  4678  5065 W YouTube : 	at ahyh.run(Unknown Source:1)
+11-26 11:44:43.491  4678  5065 W YouTube : 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:462)
+11-26 11:44:43.491  4678  5065 W YouTube : 	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+11-26 11:44:43.491  4678  5065 W YouTube : 	at aosv.run(Unknown Source:1)
+11-26 11:44:43.491  4678  5065 W YouTube : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+11-26 11:44:43.491  4678  5065 W YouTube : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+11-26 11:44:43.491  4678  5065 W YouTube : 	at zdm.run(PG:13)
+11-26 11:44:43.491  4678  5065 W YouTube : 	at java.lang.Thread.run(Thread.java:923)
+11-26 11:44:43.491  4678  5065 W YouTube : Caused by: java.util.concurrent.ExecutionException: aacl: Precondition check failed.
+11-26 11:44:43.491  4678  5065 W YouTube : 	at apmr.a(PG:135)
+11-26 11:44:43.491  4678  5065 W YouTube : 	at apmr.get(PG:89)
+11-26 11:44:43.491  4678  5065 W YouTube : 	at abwa.b(PG:17)
+11-26 11:44:43.491  4678  5065 W YouTube : 	... 11 more
+11-26 11:44:43.491  4678  5065 W YouTube : Caused by: aacl: Precondition check failed.
+11-26 11:44:43.491  4678  5065 W YouTube : 	at abuo.c(PG:106)
+11-26 11:44:43.491  4678  5065 W YouTube : 	at znq.a(PG:62)
+11-26 11:44:43.491  4678  5065 W YouTube : 	at zmp.run(Unknown Source:18)
+11-26 11:44:43.491  4678  5065 W YouTube : 	... 4 more
+11-26 11:44:43.491  4678  5065 W YouTube : Caused by: btc
+11-26 11:44:43.491  4678  5065 W YouTube : 	at zmp.run(Unknown Source:6)
+11-26 11:44:43.491  4678  5065 W YouTube : 	... 4 more
+11-26 11:44:43.769   493   811 I ActivityManager: Force stopping org.assimilacao.mesa appid=10167 user=0: from pid 5589
+11-26 11:44:43.770   493   811 I ActivityManager: Killing 3713:org.assimilacao.mesa/u0a167 (adj 0): stop org.assimilacao.mesa due to from pid 5589
+11-26 11:44:43.774   493   811 W ActivityTaskManager: Force removing ActivityRecord{ef9f963 u0 org.assimilacao.mesa/com.godot.game.GodotApp t9 f}}: app died, no saved state
+11-26 11:44:43.790   288   288 I Zygote  : Process 3713 exited due to signal 9 (Killed)
+--------- beginning of kernel
+11-26 11:44:44.011     0     0 I binder_alloc: 3713: binder_alloc_buf, no vma
+11-26 11:44:44.013     0     0 I binder  : 493:811 transaction failed 29189/-3, size 64-0 line 3226
+11-26 11:44:43.795   493   587 W InputDispatcher: channel '881afd2 org.assimilacao.mesa/com.godot.game.GodotApp (server)' ~ Consumer closed input channel or an error occurred.  events=0x9
+11-26 11:44:43.795   493   587 E InputDispatcher: channel '881afd2 org.assimilacao.mesa/com.godot.game.GodotApp (server)' ~ Channel is unrecoverably broken and will be disposed!
+11-26 11:44:43.807   307   383 W EmuHWC2 : No layers, exit, buffer 0x0
+11-26 11:44:43.815   493   811 W InputDispatcher: Attempted to unregister already unregistered input channel '881afd2 org.assimilacao.mesa/com.godot.game.GodotApp (server)'
+11-26 11:44:43.815   493   536 I libprocessgroup: Successfully killed process cgroup uid 10167 pid 3713 in 45ms
+11-26 11:44:43.834   307   383 W EmuHWC2 : No layers, exit, buffer 0x0
+11-26 11:44:43.854   493  2270 W WindowManager: Failed looking up window session=Session{b2aee5f 3713:u0a10167} callers=com.android.server.wm.WindowManagerService.windowForClientLocked:5425 com.android.server.wm.WindowState$DeathRecipient.binderDied:2810 android.os.IBinder$DeathRecipient.binderDied:305 
+11-26 11:44:43.854   493  2270 I WindowManager: WIN DEATH: null
+11-26 11:44:43.850   307   383 W EmuHWC2 : No layers, exit, buffer 0x0
+11-26 11:44:43.862  1046  1046 D CarrierSvcBindHelper: No carrier app for: 0
+11-26 11:44:43.866   307   383 W EmuHWC2 : No layers, exit, buffer 0x0
+11-26 11:44:43.869  5589  5591 I cmd     : oneway function results will be dropped but finished with status OK and parcel size 4
+11-26 11:44:43.874   493   528 W ActivityManager: setHasOverlayUi called on unknown pid: 3713
+11-26 11:44:43.883   307   383 W EmuHWC2 : No layers, exit, buffer 0x0
+11-26 11:44:43.895  1446  2824 I Icing   : Indexing com.google.android.gms-apps from com.google.android.gms [CONTEXT service_id=21 ]
+11-26 11:44:43.900   307   383 W EmuHWC2 : No layers, exit, buffer 0x0
+11-26 11:44:43.912   493  1094 I system_server: oneway function results will be dropped but finished with status OK and parcel size 4
+11-26 11:44:43.916   307   383 W EmuHWC2 : No layers, exit, buffer 0x0
+11-26 11:44:43.931  1446  2824 I Icing   : Indexing done com.google.android.gms-apps [CONTEXT service_id=21 ]
+11-26 11:44:43.933   307   383 W EmuHWC2 : No layers, exit, buffer 0x0
+11-26 11:44:43.941   373   448 W APM::AudioPolicyEngine: getDevicesForStrategy() unknown strategy: -1
+11-26 11:44:43.941   373   448 W APM::AudioPolicyEngine: getDevicesForStrategy() unknown strategy: -1
+11-26 11:44:43.950   307   383 W EmuHWC2 : No layers, exit, buffer 0x0
+11-26 11:44:43.990   493   529 V WindowManager: Orientation start waiting for draw, mDrawState=DRAW_PENDING in Window{6e3ec36 u0 com.android.systemui.ImageWallpaper}, surfaceController Surface(name=com.android.systemui.ImageWallpaper)/@0x9217f0e
+11-26 11:44:43.966   307   383 I chatty  : uid=1000(system) HwBinder:307_2 identical 1 line
+11-26 11:44:43.983   307   383 W EmuHWC2 : No layers, exit, buffer 0x0
+11-26 11:44:43.997   702   849 D EglHelper: createEglContext start
+11-26 11:44:44.003   702   849 D EGL_emulation: eglCreateContext: 0x7a6815bbc4c0: maj 3 min 0 rcv 3
+11-26 11:44:44.003   702   849 D EglHelper: createEglContext done
+11-26 11:44:44.003   702   849 D EglHelper: createEglSurface start
+11-26 11:44:44.019   702   849 D EglHelper: createEglSurface done
+11-26 11:44:44.033  5569  5569 I dex2oat32: dex2oat took 677.687ms (60.071ms cpu) (threads: 2) arena alloc=0B (0B) java alloc=33KB (34600B) native alloc=1006KB (1030320B) free=1501KB (1537088B)
+11-26 11:44:44.038   493   528 W ActivityTaskManager: Current config: {1.0 310mcc260mnc [en_US] ldltr sw320dp w640dp h296dp 160dpi nrml long land finger qwerty/v/v -nav/h winConfig={ mBounds=Rect(0, 0 - 640, 320) mAppBounds=Rect(0, 0 - 640, 320) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90} s.29} unchanged for IME proc com.google.android.inputmethod.latin
+11-26 11:44:44.039   493   528 I ActivityTaskManager: Config changes=20000480 {1.0 310mcc260mnc [en_US] ldltr sw320dp w320dp h616dp 160dpi nrml long port finger qwerty/v/v -nav/h winConfig={ mBounds=Rect(0, 0 - 320, 640) mAppBounds=Rect(0, 0 - 320, 640) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.77}
+11-26 11:44:44.055   493   528 W ActivityTaskManager: Current config: {1.0 310mcc260mnc [en_US] ldltr sw320dp w640dp h296dp 160dpi nrml long land finger qwerty/v/v -nav/h winConfig={ mBounds=Rect(0, 0 - 640, 320) mAppBounds=Rect(0, 0 - 640, 320) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90} s.29} unchanged for IME proc com.google.android.inputmethod.latin
+11-26 11:44:44.055   493   528 I WindowManager: Override config changes=20000480 {1.0 310mcc260mnc [en_US] ldltr sw320dp w320dp h616dp 160dpi nrml long port finger qwerty/v/v -nav/h winConfig={ mBounds=Rect(0, 0 - 320, 640) mAppBounds=Rect(0, 0 - 320, 640) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.77} for displayId=0
+11-26 11:44:44.061   493   528 V ActivityTaskManager: Sending to IME proc com.google.android.inputmethod.latin new config {1.0 310mcc260mnc [en_US] ldltr sw320dp w320dp h616dp 160dpi nrml long port finger qwerty/v/v -nav/h winConfig={ mBounds=Rect(0, 0 - 320, 640) mAppBounds=Rect(0, 0 - 320, 640) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.77}
+11-26 11:44:44.061   493   528 W ActivityTaskManager: Current config: {1.0 310mcc260mnc [en_US] ldltr sw320dp w320dp h616dp 160dpi nrml long port finger qwerty/v/v -nav/h winConfig={ mBounds=Rect(0, 0 - 320, 640) mAppBounds=Rect(0, 0 - 320, 640) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.77} unchanged for IME proc com.google.android.inputmethod.latin
+11-26 11:44:44.074   702   702 D StatusBar: disable<e i a s b h r c s > disable2<q i n >
+11-26 11:44:44.113   493   528 I InputManager-JNI: Viewport [0] to add: local:8141241408256768, isActive: true
+11-26 11:44:44.113   493   588 I InputReader: Reconfiguring input devices, changes=DISPLAY_INFO | 
+11-26 11:44:44.113   493   588 I InputReader: Touch device 'virtio_input_multi_touch_10' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:44.113   493   588 I InputReader: Touch device 'virtio_input_multi_touch_7' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:44.113   493   588 I InputReader: Touch device 'virtio_input_multi_touch_11' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:44.113   493   588 I InputReader: Touch device 'virtio_input_multi_touch_5' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:44.113   493   588 I InputReader: Touch device 'virtio_input_multi_touch_2' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:44.113   493   588 I InputReader: Touch device 'virtio_input_multi_touch_6' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:44.113   493   588 I InputReader: Touch device 'virtio_input_multi_touch_3' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:44.113   493   588 I InputReader: Device reconfigured: id=4, name='virtio_input_multi_touch_1', size 320x640, orientation 0, mode 1, display id 0
+11-26 11:44:44.121   493   588 I InputReader: Touch device 'virtio_input_multi_touch_8' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:44.121   493   588 I InputReader: Touch device 'virtio_input_multi_touch_9' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:44.121   493   588 I InputReader: Touch device 'virtio_input_multi_touch_4' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:44.130  1363  1363 W GoogleInputMethodService: GoogleInputMethodService.onConfigurationChanged():1401 onConfigurationChanged() : NewConfig = {1.0 310mcc260mnc [en_US] ldltr sw320dp w320dp h616dp 160dpi nrml long port finger qwerty/v/v -nav/h winConfig={ mBounds=Rect(0, 0 - 320, 640) mAppBounds=Rect(0, 0 - 320, 640) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.102}
+11-26 11:44:44.131  1363  1363 W KeyboardModeManager: KeyboardModeManager.reloadOrientationAwareData():457 reloadOrientationAwareData() : orientation = 1
+11-26 11:44:44.145  1363  1363 W KeyboardModeManager: KeyboardModeManager.setInputView():302 setInputView() : inputView = null
+11-26 11:44:44.155  1363  1363 I GoogleInputMethodService: GoogleInputMethodService.initializeKeyboardTheme():1171 Apply keyboard theme: theme_border_stylesheet_googleblue_materiallight_assets:theme_package_metadata_google_blue_light.binarypb_port
+11-26 11:44:44.157  1363  1363 I Environment: Environment.getDeviceMode():694 Get device mode by ui mode:1 and smallestScreenWidthDp:320
+11-26 11:44:44.158  1363  1363 I chatty  : uid=10132(com.google.android.inputmethod.latin) identical 4 lines
+11-26 11:44:44.158  1363  1363 I Environment: Environment.getDeviceMode():694 Get device mode by ui mode:1 and smallestScreenWidthDp:320
+11-26 11:44:44.177  1363  1363 I KeyboardViewUtil: KeyboardViewUtil.getKeyboardHeightRatio():128 systemKeyboardHeightRatio:1.000000; userKeyboardHeightRatio:1.000000.
+11-26 11:44:44.186  1363  1363 W SessionManager: SessionManager.beginSession():53 Try to begin an already begun session [INPUT_SESSION], end it first
+11-26 11:44:44.186  1363  1363 I Environment: Environment.getDeviceMode():694 Get device mode by ui mode:1 and smallestScreenWidthDp:320
+11-26 11:44:44.186  1363  1363 I Environment: Environment.getDeviceMode():694 Get device mode by ui mode:1 and smallestScreenWidthDp:320
+11-26 11:44:44.192   423   563 V installd: DexInv: --- END '/apex/com.android.os.statsd/javalib/service-statsd.jar' (success) ---
+11-26 11:44:44.391   493  5566 I system_server: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.407   493   493 D CompatibilityChangeReporter: Compat change id reported: 135634846; UID 10116; state: DISABLED
+11-26 11:44:44.408   493   535 D CompatibilityChangeReporter: Compat change id reported: 143937733; UID 10116; state: ENABLED
+11-26 11:44:44.393   493  5566 I chatty  : uid=1000(system) Binder:493_3 identical 1 line
+11-26 11:44:44.427   493  5566 I system_server: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.431   288   288 D Zygote  : Forked child process 5601
+11-26 11:44:44.432   493   535 I ActivityManager: Start proc 5601:com.google.android.setupwizard/u0a116 for service {com.google.android.setupwizard/com.google.android.setupwizard.logging.ClearcutLogsUploaderService}
+11-26 11:44:44.443   493   551 W system_server: Long monitor contention with owner BackgroundDexOptService_PostBootUpdate (5566) at int com.android.server.pm.PackageManagerService.performDexOptInternal(com.android.server.pm.dex.DexoptOptions)(PackageManagerService.java:10026) waiters=0 in int com.android.server.pm.PackageManagerService.deletePackageX(java.lang.String, long, int, int) for 457ms
+11-26 11:44:44.446  5601  5601 W oid.setupwizar: Unexpected CPU variant for X86 using defaults: x86_64
+11-26 11:44:44.447   493   534 I ActivityManager: Force stopping org.assimilacao.mesa appid=10167 user=-1: deletePackageX
+11-26 11:44:44.459  2530  2577 I adbd    : jdwp connection from 5601
+11-26 11:44:44.472  5601  5601 I oid.setupwizar: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.475  5601  5601 I oid.setupwizar: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.475  5601  5601 D nativeloader: classloader namespace configured for unbundled product apk. library_path=/product/priv-app/SetupWizardPrebuilt/lib/x86_64:/product/priv-app/SetupWizardPrebuilt/SetupWizardPrebuilt.apk!/lib/x86_64:/product/lib64:/system/product/lib64
+11-26 11:44:44.484  1910  2272 W ThreadPoolDumper: Queue length for executor EventBus is now 11. Perhaps some tasks are too long, or the pool is too small.
+11-26 11:44:44.515  1910  2106 W LocationOracle: No location history returned by ContextManager
+11-26 11:44:44.592  5601  5601 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+11-26 11:44:44.593   425   425 I keystore: clear_uid 10167
+11-26 11:44:44.593  5601  5601 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+11-26 11:44:44.594  1184  2176 I NearbyDiscovery: Show notifications: 0 total, no changes since last shown, no-op. [CONTEXT service_id=49 ]
+11-26 11:44:44.597   493   551 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+11-26 11:44:44.597   493   551 D PackageManager: Clear ephemeral installer activity
+11-26 11:44:44.601   493  5566 I system_server: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.614   493  5566 I chatty  : uid=1000(system) Binder:493_3 identical 3 lines
+11-26 11:44:44.621   493  5566 I system_server: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.622  5601  5601 I SetupWizard: [bea] Start loading FRP status
+11-26 11:44:44.624   493  5566 I system_server: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.627   493  5566 I chatty  : uid=1000(system) Binder:493_3 identical 1 line
+11-26 11:44:44.629   493  5566 I system_server: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.630   493   551 E PermissionMonitor: unknown permission type: -1for uid: 10167
+11-26 11:44:44.660   493  5566 I system_server: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.668   493  5566 I system_server: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.672  1910  2126 E MDD     : DownloadProgressMonitor: Can't find file group for uri: android://com.google.android.googlequicksearchbox/files/sharedminusonemodule/shared/SharedMinusOneData.pb.tmp
+11-26 11:44:44.689   493  5566 I system_server: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.704   493  5566 I chatty  : uid=1000(system) Binder:493_3 identical 4 lines
+11-26 11:44:44.706   493  5566 I system_server: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.709  5601  5601 I SetupWizard: [bea] frpStatus=supported=false challengeRequired=false duration=84ms
+11-26 11:44:44.710   493  5566 I system_server: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.754   493  5566 I chatty  : uid=1000(system) Binder:493_3 identical 15 lines
+11-26 11:44:44.756   493  5566 I system_server: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.757  5601  5625 I SetupWizard: [ClearcutLogsUploaderService] User did not optin for usage reporting.
+11-26 11:44:44.757  5601  5625 I SetupWizard: [ary] Deleting metrics of sessionType = 0
+11-26 11:44:44.758   493  5566 I system_server: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.762   493  5566 I chatty  : uid=1000(system) Binder:493_3 identical 3 lines
+11-26 11:44:44.765   493  5566 I system_server: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.765  1910  1910 I BgTaskExecutorImpl: Starting EXCLUSIVE background task TNG_MINUS_ONE_SYNC.
+11-26 11:44:44.767  1910  2272 I TngMinusOneSync: Syncing TNG:-1
+11-26 11:44:44.769   493  5566 I system_server: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.859   493  5566 I chatty  : uid=1000(system) Binder:493_3 identical 51 lines
+11-26 11:44:44.860   493  5566 I system_server: The ClassLoaderContext is a special shared library.
+11-26 11:44:44.860   493  5566 I BackgroundDexOptService: Pinning optimized code {android}
+11-26 11:44:44.860   493  5566 D IorapForwardingService: onPackagesUpdated: android
+11-26 11:44:44.885   493   551 I system_server: Explicit concurrent copying GC freed 277551(18MB) AllocSpace objects, 34(1064KB) LOS objects, 49% free, 15MB/30MB, paused 42us total 236.535ms
+11-26 11:44:44.909  5595  5597 I cmd     : oneway function results will be dropped but finished with status OK and parcel size 4
+11-26 11:44:44.911   493   551 I ActivityManager: Force stopping org.assimilacao.mesa appid=10167 user=0: pkg removed
+11-26 11:44:44.916  2658  2658 I abb     : StartCommandInProcess(73657474696e67730067657400676c6f settings.get.glo [truncated])
+11-26 11:44:44.923   493   595 V StorageManagerService: Package org.assimilacao.mesa does not have legacy storage
+11-26 11:44:44.924   493   581 I RollbackManager: broadcast=ACTION_PACKAGE_FULLY_REMOVED pkg=org.assimilacao.mesa
+11-26 11:44:44.924   493   534 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:org.assimilacao.mesa flg=0x4000010 (has extras) } to com.android.musicfx/.Compatibility$Receiver
+11-26 11:44:44.924   493   534 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:org.assimilacao.mesa flg=0x4000010 (has extras) } to com.google.android.apps.maps/com.google.android.libraries.social.peoplekit.thirdparty.viewcontrollers.ThirdPartyReceiver
+11-26 11:44:44.924   493   534 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:org.assimilacao.mesa flg=0x4000010 (has extras) } to com.google.android.apps.photos/com.google.android.libraries.social.peoplekit.thirdparty.viewcontrollers.ThirdPartyReceiver
+11-26 11:44:44.924   493   534 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:org.assimilacao.mesa flg=0x4000010 (has extras) } to com.google.android.gms/.games.chimera.GamesSystemBroadcastReceiverProxy
+11-26 11:44:44.924   493   534 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:org.assimilacao.mesa flg=0x4000010 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+11-26 11:44:44.924   493   534 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:org.assimilacao.mesa flg=0x4000010 (has extras) } to com.google.android.googlequicksearchbox/com.google.android.apps.gsa.googlequicksearchbox.GelStubAppWatcher
+11-26 11:44:44.926  1523  1523 I MediaProvider: Invalidating LocalCallingIdentity cache for package org.assimilacao.mesa. Reason: package android.intent.action.PACKAGE_REMOVED
+11-26 11:44:44.929  1540  1540 I GsaVoiceInteractionSrv: O received Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:org.assimilacao.mesa flg=0x4000010 (has extras) }
+11-26 11:44:44.931  2658  2663 I abb     : oneway function results will be dropped but finished with status OK and parcel size 4
+11-26 11:44:44.934  2658  2658 I abb     : StartCommandInProcess(7061636b61676500696e7374616c6c2d package.install- [truncated])
+11-26 11:44:44.938   493   534 D CompatibilityChangeReporter: Compat change id reported: 135634846; UID 10131; state: DISABLED
+11-26 11:44:44.938   493   535 D CompatibilityChangeReporter: Compat change id reported: 143937733; UID 10131; state: ENABLED
+11-26 11:44:44.941  2325  2325 E CarrierServices: [2] ecr.a: Invalid signature found for com.android.contacts: E39B7BFBE0A67D78292F6CC62E06CA27A2EBF255
+11-26 11:44:44.942   493   525 I RoleManagerService: Granting default roles...
+11-26 11:44:44.947   691   691 V AvrcpMediaPlayerList: mPackageChangedBroadcastReceiver: action: android.intent.action.PACKAGE_REMOVED
+11-26 11:44:44.948  2325  2325 E CarrierServices: [2] ecr.a: Invalid signature found for com.android.contacts: E39B7BFBE0A67D78292F6CC62E06CA27A2EBF255
+11-26 11:44:44.949   493   588 I InputReader: Reconfiguring input devices, changes=KEYBOARD_LAYOUTS | 
+11-26 11:44:44.949   493   588 I InputReader: Reconfiguring input devices, changes=KEYBOARD_LAYOUTS | 
+11-26 11:44:44.950  1046  1046 D CarrierSvcBindHelper: No carrier app for: 0
+11-26 11:44:44.954   691   691 V AvrcpMediaPlayerList: mPackageChangedBroadcastReceiver: action: android.intent.action.PACKAGE_CHANGED
+11-26 11:44:44.954   691   691 D AvrcpMediaPlayerList: Name of package changed: com.google.android.gm
+11-26 11:44:44.958  1184  1184 I GeofencerStateMachine: removeGeofences: removeRequest=RemoveGeofencingRequest[REMOVE_ALL packageName=org.assimilacao.mesa]
+11-26 11:44:44.962   493   493 D CompatibilityChangeReporter: Compat change id reported: 135634846; UID 1000; state: DISABLED
+11-26 11:44:44.970  1184  5515 I Fitness : FitCleanupIntentOperation received Intent android.intent.action.PACKAGE_REMOVED [CONTEXT service_id=17 ]
+11-26 11:44:44.984  1184  5516 I Fitness : OnPackageChangedOperation got intent: Intent { act=android.intent.action.PACKAGE_CHANGED dat=package:com.google.android.gm flg=0x45000010 cmp=com.google.android.gms/.chimera.PersistentIntentOperationService (has extras) } [CONTEXT service_id=17 ]
+11-26 11:44:44.986   493  1711 D CompatibilityChangeReporter: Compat change id reported: 135634846; UID 10122; state: DISABLED
+11-26 11:44:44.988   493   493 W WifiService: Couldn't get PackageInfo for package:org.assimilacao.mesa
+11-26 11:44:44.988   493   493 D WifiService: Remove settings for package:org.assimilacao.mesa
+11-26 11:44:44.988   493   641 D WifiConfigManager: Remove all networks for app ApplicationInfo{ebaec46 org.assimilacao.mesa}
+11-26 11:44:44.994  1046  1046 D CarrierSvcBindHelper: No carrier app for: 0
+11-26 11:44:44.998   493   641 D WifiConfigStore: Writing to stores completed in 5 ms.
+11-26 11:44:44.998   493   641 I PasspointManager: No app ops listener found for org.assimilacao.mesa
+11-26 11:44:44.999   289   289 D Zygote  : Forked child process 5634
+11-26 11:44:45.000   493   535 W ActivityManager: Slow operation: 62ms so far, now at startProcess: returned from zygote!
+11-26 11:44:45.000   493   535 W ActivityManager: Slow operation: 62ms so far, now at startProcess: done updating battery stats
+11-26 11:44:45.000   493   535 W ActivityManager: Slow operation: 62ms so far, now at startProcess: building log message
+11-26 11:44:45.000   493   535 I ActivityManager: Start proc 5634:com.android.chrome/u0a131 for broadcast {com.android.chrome/org.chromium.chrome.browser.browserservices.ClientAppBroadcastReceiver}
+11-26 11:44:45.000   493   535 W ActivityManager: Slow operation: 62ms so far, now at startProcess: starting to update pids map
+11-26 11:44:45.000   493   535 W ActivityManager: Slow operation: 62ms so far, now at startProcess: done updating pids map
+11-26 11:44:45.014  1446  2556 D ActivityThread: Loading provider com.google.android.gms.appstate: com.google.android.gms.appstate.provider.AppStateContentProvider
+11-26 11:44:45.014   288   288 D Zygote  : Forked child process 5641
+11-26 11:44:45.015   493   535 W ActivityManager: Slow operation: 53ms so far, now at startProcess: returned from zygote!
+11-26 11:44:45.015   493   535 W ActivityManager: Slow operation: 53ms so far, now at startProcess: done updating battery stats
+11-26 11:44:45.015   493   535 W ActivityManager: Slow operation: 53ms so far, now at startProcess: building log message
+11-26 11:44:45.015   493   535 I ActivityManager: Start proc 5641:com.android.keychain/1000 for service {com.android.keychain/com.android.keychain.KeyChainService}
+11-26 11:44:45.015   493   535 W ActivityManager: Slow operation: 53ms so far, now at startProcess: starting to update pids map
+11-26 11:44:45.015   493   535 W ActivityManager: Slow operation: 53ms so far, now at startProcess: done updating pids map
+11-26 11:44:45.015   493   535 D CompatibilityChangeReporter: Compat change id reported: 143937733; UID 10122; state: ENABLED
+11-26 11:44:45.031   493   493 W WifiService: Couldn't get PackageInfo for package:org.assimilacao.mesa
+11-26 11:44:45.031   493   493 D WifiService: Remove settings for package:org.assimilacao.mesa
+11-26 11:44:45.031   493   641 D WifiConfigManager: Remove all networks for app ApplicationInfo{eae712c org.assimilacao.mesa}
+11-26 11:44:45.034   493   641 D WifiConfigStore: Writing to stores completed in 3 ms.
+11-26 11:44:45.034   493   641 I PasspointManager: No app ops listener found for org.assimilacao.mesa
+11-26 11:44:45.035  1446  2189 I Icing   : doRemovePackageData org.assimilacao.mesa [CONTEXT service_id=21 ]
+11-26 11:44:45.036  1184  5515 I Fitness : FitCleanupIntentOperation received Intent android.intent.action.PACKAGE_CHANGED [CONTEXT service_id=17 ]
+11-26 11:44:45.037  5641  5641 W ndroid.keychai: Unexpected CPU variant for X86 using defaults: x86_64
+11-26 11:44:45.042  2530  2577 I adbd    : jdwp connection from 5641
+11-26 11:44:45.045   493   645 D ConnectivityService: NetReassign [no changes]
+11-26 11:44:45.050   493   493 I Telecom : DefaultDialerCache: Refreshing default dialer for user 0: now com.android.dialer: DDC.oR@AJU
+11-26 11:44:45.066   493   493 I ConditionProviders: Disallowing condition provider org.assimilacao.mesa
+11-26 11:44:45.070   288   288 D Zygote  : Forked child process 5662
+11-26 11:44:45.072   730  3265 I PermissionControllerServiceImpl: Updating user sensitive for uid 10134
+11-26 11:44:45.073   493   562 I IncrementalService: createStorage: /data/app/vmdl1312757949.tmp | 5
+11-26 11:44:45.080  5662  5662 W .android.gms.u: Unexpected CPU variant for X86 using defaults: x86_64
+11-26 11:44:45.081   493   562 I incfs-mounts: [incfs] Loaded incremental-fs mount info: 1 instances, 1 mount points
+11-26 11:44:45.090  1446  1459 I gle.android.gm: Background young concurrent copying GC freed 45404(2369KB) AllocSpace objects, 5(228KB) LOS objects, 12% free, 9866KB/11MB, paused 18.017ms total 109.266ms
+11-26 11:44:45.090  5641  5641 I ndroid.keychai: The ClassLoaderContext is a special shared library.
+11-26 11:44:45.095   493   535 W ActivityManager: Slow operation: 109ms so far, now at startProcess: returned from zygote!
+11-26 11:44:45.095   493   535 W ActivityManager: Slow operation: 110ms so far, now at startProcess: done updating battery stats
+11-26 11:44:45.095   493   535 W ActivityManager: Slow operation: 110ms so far, now at startProcess: building log message
+11-26 11:44:45.095   493   535 I ActivityManager: Start proc 5662:com.google.android.gms.ui/u0a122 for service {com.google.android.gms/com.google.android.gms.chimera.UiIntentOperationService}
+11-26 11:44:45.095   493   535 W ActivityManager: Slow operation: 110ms so far, now at startProcess: starting to update pids map
+11-26 11:44:45.095   493   535 W ActivityManager: Slow operation: 110ms so far, now at startProcess: done updating pids map
+11-26 11:44:45.104  2530  2577 I adbd    : jdwp connection from 5662
+11-26 11:44:45.107  1446  5484 W DriveInitializer: Awaiting to be initialized
+11-26 11:44:45.113  5662  5662 I .android.gms.u: The ClassLoaderContext is a special shared library.
+11-26 11:44:45.114  5662  5662 I chatty  : uid=10122 com.google.android.gms.ui identical 1 line
+11-26 11:44:45.118  5662  5662 I .android.gms.u: The ClassLoaderContext is a special shared library.
+11-26 11:44:45.118  5662  5662 D nativeloader: classloader namespace configured for unbundled product apk. library_path=/product/priv-app/PrebuiltGmsCore/lib/x86_64:/product/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!/lib/x86_64:/product/lib64:/system/product/lib64
+11-26 11:44:45.120   493   562 W incfs   : [incfs] couldn't change file mode to 0777: Invalid argument
+11-26 11:44:45.124   172   174 I incfs-mounts: [incfs] Loaded incremental-fs mount info: 1 instances, 1 mount points
+11-26 11:44:45.125   493   562 I incfs-mounts: [incfs] Loaded incremental-fs mount info: 1 instances, 2 mount points
+11-26 11:44:45.125  5641  5641 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+11-26 11:44:45.125  5641  5641 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+11-26 11:44:45.127   493   562 I IncrementalService: created storage 1
+11-26 11:44:45.128  5662  5662 D NetworkSecurityConfig: Using Network Security Config from resource network_security_config debugBuild: false
+11-26 11:44:45.128  5662  5662 D NetworkSecurityConfig: Using Network Security Config from resource network_security_config debugBuild: false
+11-26 11:44:45.142   493   493 I incfs-dataloaderconnector: DataLoader::create1 cmd: 355|/data/incremental/MT_data_app_vmdl131/mount/.pending_reads (deleted)
+11-26 11:44:45.142   493   493 I incfs-dataloaderconnector: DataLoader::create1 pendingReads: 361|/data/incremental/MT_data_app_vmdl131/mount/.pending_reads (deleted)
+11-26 11:44:45.142   493   493 I incfs-dataloaderconnector: DataLoader::create1 log: 362|/data/incremental/MT_data_app_vmdl131/mount/.log (deleted)
+11-26 11:44:45.142   493   493 I incfs-dataloaderconnector: DataLoader::create2: 2|android|com.android.server.pm.PackageManagerShellCommandDataLoader|shellCommandId=1934005755
+11-26 11:44:45.149   493   493 E PackageManagerShellCommandDataLoader-jni: onPrepareImage: start.
+11-26 11:44:45.149   493   493 E PackageManagerShellCommandDataLoader-jni: onPrepareImage: done, proceeding to streaming.
+11-26 11:44:45.149   493   493 I PackageManagerShellCommandDataLoader-jni: Started streaming...
+11-26 11:44:45.149   493   493 I incfs-dataloaderconnector: Reported status back to IncrementalService. DataLoaderId=1, status=5
+11-26 11:44:45.149   493   493 I incfs-dataloaderconnector: Reported status back to IncrementalService. DataLoaderId=1, status=3
+11-26 11:44:45.149   493   493 I incfs-dataloaderconnector: Reported status back to IncrementalService. DataLoaderId=1, status=2
+11-26 11:44:45.151   493   493 I ActivityManager: Killing 1806:android.process.acore/u0a79 (adj 985): empty #17
+11-26 11:44:45.155   493  1711 D CountryDetector: No listener is left
+11-26 11:44:45.155   288   288 I Zygote  : Process 1806 exited due to signal 9 (Killed)
+11-26 11:44:45.162  5641  5682 W KeyChain: Creating new DB.
+11-26 11:44:45.168   493  1837 I ActivityManager: Killing 5142:com.google.android.apps.youtube.music/u0a139 (adj 945): empty #17
+11-26 11:44:45.175  1446  4962 W SQLiteLog: (28) double-quoted string literal: "org.assimilacao.mesa"
+11-26 11:44:45.197   493   536 I libprocessgroup: Successfully killed process cgroup uid 10079 pid 1806 in 44ms
+11-26 11:44:45.249  1446  2556 I PinnedContentDownloader: Finished downloading pinned content.
+11-26 11:44:45.251  5662  5662 W DynamiteModule: Local module descriptor class for providerinstaller not found.
+11-26 11:44:45.263  5662  5662 W ProviderHelper: Unknown dynamite feature providerinstaller
+11-26 11:44:45.269  5662  5662 I DynamiteModule: Considering local module providerinstaller:0 and remote module providerinstaller:0
+11-26 11:44:45.269  5662  5662 W ProviderInstaller: Failed to load providerinstaller module: No acceptable module found. Local version is 0 and remote version is 0.
+11-26 11:44:45.276  5662  5662 V NativeCrypto: Registering com/google/android/gms/org/conscrypt/NativeCrypto's 286 native methods...
+11-26 11:44:45.289  5634  5634 W .android.chrom: Unexpected CPU variant for X86 using defaults: x86_64
+11-26 11:44:45.294   928   928 D Launcher.Model: package removed received org.assimilacao.mesa
+11-26 11:44:45.295   493   634 D ConnectivityService: ConnectivityService NetworkRequestInfo binderDied(NetworkRequest [ LISTEN id=38, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&FOREGROUND Uid: 10139 AdministratorUids: [] RequestorUid: 10139 RequestorPackageName: com.google.android.apps.youtube.music] ], android.os.BinderProxy@8e76506)
+11-26 11:44:45.295   493  1837 D ConnectivityService: ConnectivityService NetworkRequestInfo binderDied(NetworkRequest [ TRACK_DEFAULT id=37, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10139 AdministratorUids: [] RequestorUid: 10139 RequestorPackageName: com.google.android.apps.youtube.music] ], android.os.BinderProxy@3f207c7)
+11-26 11:44:45.295   928   958 D PackageUpdatedTask: Removing app iconorg.assimilacao.mesa
+11-26 11:44:45.297   493   645 D ConnectivityService: releasing NetworkRequest [ TRACK_DEFAULT id=37, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10139 AdministratorUids: [] RequestorUid: 10139 RequestorPackageName: com.google.android.apps.youtube.music] ] (release request)
+11-26 11:44:45.298   288   288 I Zygote  : Process 5142 exited due to signal 9 (Killed)
+11-26 11:44:45.299   493   533 E system_server: No package ID 7f found for ID 0x7f080205.
+11-26 11:44:45.299   493   533 E system_server: No package ID 7f found for ID 0x7f130252.
+11-26 11:44:45.300  5662  5662 I ProviderInstaller: Installed default security provider GmsCore_OpenSSL
+11-26 11:44:45.304   928   958 D ModelWriter: removing items from db 
+11-26 11:44:45.304   928   958 D ModelWriter: java.lang.Exception
+11-26 11:44:45.304   928   958 D ModelWriter: 	at com.android.launcher3.model.ModelWriter.deleteItemsFromDatabase(SourceFile:4)
+11-26 11:44:45.304   928   958 D ModelWriter: 	at com.android.launcher3.model.BaseModelUpdateTask.deleteAndBindComponentsRemoved(SourceFile:2)
+11-26 11:44:45.304   928   958 D ModelWriter: 	at com.android.launcher3.model.PackageUpdatedTask.execute(SourceFile:158)
+11-26 11:44:45.304   928   958 D ModelWriter: 	at com.android.launcher3.model.BaseModelUpdateTask.run(SourceFile:2)
+11-26 11:44:45.304   928   958 D ModelWriter: 	at android.os.Handler.handleCallback(Handler.java:938)
+11-26 11:44:45.304   928   958 D ModelWriter: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+11-26 11:44:45.304   928   958 D ModelWriter: 	at android.os.Looper.loop(Looper.java:223)
+11-26 11:44:45.304   928   958 D ModelWriter: 	at android.os.HandlerThread.run(HandlerThread.java:67)
+11-26 11:44:45.305  5662  5662 I Safeboot: Checking safeboot...
+11-26 11:44:45.305  5662  5662 I Safeboot: Not entering safeboot; wrong process.
+11-26 11:44:45.311   702   702 V KeyguardUpdateMonitor: onSubscriptionInfoChanged()
+11-26 11:44:45.311  1046  1046 D Telephony: isEmergencyPreferredAccount: subId=1, activeData=1
+11-26 11:44:45.311  1046  1046 D Telephony: isEmergencyPreferredAccount: Device does not require preference.
+11-26 11:44:45.311   702   702 V KeyguardUpdateMonitor: SubInfo:{id=1 iccId=89014103211118510720 simSlotIndex=0 carrierId=1 displayName=T-Mobile carrierName=T-Mobile nameSource=3 iconTint=-16746133 number=+15555215554 dataRoaming=0 iconBitmap=android.graphics.Bitmap@48d0026 mcc=310 mnc=260 countryIso=us isEmbedded=false nativeAccessRules=null cardString=89014103211118510720 cardId=-1 isOpportunistic=false groupUUID=null isGroupDisabled=false profileClass=-1 ehplmns=null hplmns=null subscriptionType=0 groupOwner=null carrierConfigAccessRules=null areUiccApplicationsEnabled=true}
+11-26 11:44:45.317  1446  2865 I ContentMaintenance: Internal cache bytes used: 0; limit: 100000000; download size: 0
+11-26 11:44:45.325  2530  2577 I adbd    : jdwp connection from 5634
+11-26 11:44:45.333   493   536 I libprocessgroup: Successfully killed process cgroup uid 10139 pid 5142 in 136ms
+11-26 11:44:45.345   493   539 E libprocessgroup: AddTidToCgroup failed to write '5711'; fd=67: Invalid argument
+11-26 11:44:45.345   493   539 E libprocessgroup: Failed to add task into cgroup
+11-26 11:44:45.345   493   539 W libprocessgroup: ExecuteForTask failed for aggregate profile: Invalid argument
+11-26 11:44:45.355  5634  5634 I .android.chrom: The ClassLoaderContext is a special shared library.
+11-26 11:44:45.356  5634  5634 D nativeloader: classloader namespace configured for unbundled product apk. library_path=/product/app/Chrome/lib/x86:/product/app/Chrome/Chrome.apk!/lib/x86:/product/app/TrichromeLibrary/TrichromeLibrary.apk!/lib/x86:/product/lib:/system/product/lib
+11-26 11:44:45.357  5634  5634 I .android.chrom: The ClassLoaderContext is a special shared library.
+11-26 11:44:45.361  5634  5634 D nativeloader: classloader namespace configured for unbundled product apk. library_path=/product/app/Chrome/lib/x86:/product/app/Chrome/Chrome.apk!/lib/x86:/product/app/TrichromeLibrary/TrichromeLibrary.apk!/lib/x86:/product/lib:/system/product/lib
+11-26 11:44:45.364   493   594 W RuleEvaluation: Integrity rule files are not available.
+11-26 11:44:45.366   493   551 I PackageManager: Integrity check passed for file:///data/app/vmdl1312757949.tmp
+11-26 11:44:45.372  5634  5634 I LoadedApk: No resource references to update in package com.android.chrome.autofill_assistant
+11-26 11:44:45.372  5634  5634 I LoadedApk: No resource references to update in package com.android.chrome.chime
+11-26 11:44:45.373  5634  5634 I LoadedApk: No resource references to update in package com.android.chrome.test_dummy
+11-26 11:44:45.373  5634  5634 D NetworkSecurityConfig: Using Network Security Config from resource network_security_config debugBuild: false
+11-26 11:44:45.381  5634  5634 D NetworkSecurityConfig: Using Network Security Config from resource network_security_config debugBuild: false
+11-26 11:44:45.385  5662  5662 W bdhq    : Primes not initialized, returning default (no-op) Primes instance which will ignore all calls. Please call Primes.initialize(...) before using any Primes API.
+11-26 11:44:45.402  1446  2865 I RealtimeCacheCleanup: Beginning Realtime garbage collection.
+11-26 11:44:45.420  1446  2865 I RealtimeCacheCleanup: Finished Realtime garbage collection.
+11-26 11:44:45.422  1446  1459 I gle.android.gm: Background concurrent copying GC freed 44703(2733KB) AllocSpace objects, 14(536KB) LOS objects, 49% free, 8629KB/16MB, paused 394us total 289.331ms
+11-26 11:44:45.439   493  5688 I PackageManagerShellCommandDataLoader-jni: Stop signal received. Sending exit command (remaining bytes: 0).
+11-26 11:44:45.480   172   174 I incfs-mounts: [incfs] Loaded incremental-fs mount info: 1 instances, 2 mount points
+11-26 11:44:45.491   493  1667 I ActivityManager: Killing 4611:com.google.android.videos/u0a140 (adj 985): empty #17
+11-26 11:44:45.499   289   289 I Zygote  : Process 4611 exited due to signal 9 (Killed)
+11-26 11:44:45.515   691   691 V AvrcpMediaPlayerList: onActiveSessionsChanged: number of controllers: 0
+11-26 11:44:45.541   493   536 I libprocessgroup: Successfully killed process cgroup uid 10140 pid 4611 in 48ms
+11-26 11:44:45.616   493   503 I system_server: NativeAlloc concurrent copying GC freed 123303(6876KB) AllocSpace objects, 40(2508KB) LOS objects, 49% free, 14MB/29MB, paused 57us total 303.076ms
+11-26 11:44:45.622   493   551 I incfs-mounts: [incfs] Loaded incremental-fs mount info: 1 instances, 3 mount points
+11-26 11:44:45.624   493   551 I IncrementalService: Removing bind point /data/app/vmdl1312757949.tmp for storage 1
+11-26 11:44:45.624   172   174 W incfs   : IncFs_Unmount: umount(force) failed, detaching '/data/app/vmdl1312757949.tmp': Device or resource busy
+11-26 11:44:45.634   493   551 W PackageManager: Skipping provider name org.assimilacao.mesa.fileprovider (in package org.assimilacao.mesa): name already used by org.assimilacao.mesa
+11-26 11:44:45.634   493   551 D CompatibilityChangeReporter: Compat change id reported: 135549675; UID 10168; state: ENABLED
+11-26 11:44:45.655   493   551 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+11-26 11:44:45.655   493   551 D PackageManager: Clear ephemeral installer activity
+11-26 11:44:45.822   493  1667 W PackageManager: Cannot suspend the platform package: android
+11-26 11:44:45.823   493  1667 W PackageManager: Cannot suspend package "com.google.android.permissioncontroller": required for permissions management
+11-26 11:44:45.824   493  1667 W PackageManager: Cannot suspend package "com.android.dialer": is the default dialer
+11-26 11:44:45.825   493  1667 W PackageManager: Cannot suspend package "com.google.android.packageinstaller": required for package installation
+11-26 11:44:45.825   493  1667 W PackageManager: Cannot suspend package "com.google.android.apps.nexuslauncher": contains the active launcher
+11-26 11:44:45.925   493   525 I RoleManagerService: Granting default roles...
+11-26 11:44:45.971   493   545 I incfs-mounts: [incfs] Loaded incremental-fs mount info: 1 instances, 2 mount points
+11-26 11:44:46.076   493   551 I IncrementalService: Removing bind point /data/app/vmdl1312757949.tmp for storage 1
+11-26 11:44:46.090  2658  2927 I abb     : oneway function results will be dropped but finished with status OK and parcel size 4
+11-26 11:44:46.101  1523  1523 I MediaProvider: Invalidating LocalCallingIdentity cache for package org.assimilacao.mesa. Reason: package android.intent.action.PACKAGE_ADDED
+11-26 11:44:46.103  1540  1540 I GsaVoiceInteractionSrv: O received Intent { act=android.intent.action.PACKAGE_ADDED dat=package:org.assimilacao.mesa flg=0x4000010 (has extras) }
+11-26 11:44:46.105   493   588 I InputReader: Reconfiguring input devices, changes=KEYBOARD_LAYOUTS | 
+11-26 11:44:46.107   691   691 V AvrcpMediaPlayerList: mPackageChangedBroadcastReceiver: action: android.intent.action.PACKAGE_ADDED
+11-26 11:44:46.107   691   691 D AvrcpMediaPlayerList: Name of package changed: org.assimilacao.mesa
+11-26 11:44:46.110   730  2924 I PermissionControllerServiceImpl: Updating user sensitive for uid 10168
+11-26 11:44:46.118   493   493 I Telecom : DefaultDialerCache: Refreshing default dialer for user 0: now com.android.dialer: DDC.oR@AJc
+11-26 11:44:46.124  1184  5516 W GCM     : Unexpected forwarded intent: Intent { act=android.intent.action.PACKAGE_ADDED dat=package:org.assimilacao.mesa flg=0x4000010 cmp=com.google.android.gms/.chimera.PersistentIntentOperationService (has extras) }
+11-26 11:44:46.124  1184  5517 W GCM     : Unexpected forwarded intent: Intent { act=android.intent.action.PACKAGE_ADDED dat=package:org.assimilacao.mesa flg=0x4000010 cmp=com.google.android.gms/.chimera.PersistentIntentOperationService (has extras) }
+11-26 11:44:46.128  1446  5545 I Auth    : [SupervisedAccountIntentOperation] onHandleIntent(): android.intent.action.PACKAGE_ADDED
+11-26 11:44:46.130  1446  5484 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=android.intent.action.PACKAGE_ADDED dat=package:org.assimilacao.mesa flg=0x4000010 cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+11-26 11:44:46.131   493   586 W ActivityManager: Unable to start service Intent { act=com.google.android.gms.auth.key.retrieval.service.START pkg=com.google.android.gms } U=0: not found
+11-26 11:44:46.132  1046  1046 D CarrierSvcBindHelper: No carrier app for: 0
+11-26 11:44:46.132  1446  5545 I Auth    : [SupervisedAccountIntentOperation] This operation is disabled
+11-26 11:44:46.152   493  1667 W ActivityManager: Unbind failed: could not find connection for android.os.BinderProxy@b460479
+11-26 11:44:46.153  1446  2045 E GmsClient: unable to connect to service: com.google.android.gms.auth.key.retrieval.service.START on com.google.android.gms
+11-26 11:44:46.154  1046  1046 D CarrierConfigLoader: mHandler: 9 phoneId: 0
+11-26 11:44:46.160  1446  5484 I ChromeSync: [Persistence,AffiliationManager] One of affiliation or grouping data for android://1V5Qm0vgE63GWSBi-BZnjtpOEkT20BeXdg6uZqN_WMeGAju0ksEp5_YkHOWLeuQgA02nqGwVoQrKpdQ7GBVu-Q==@org.assimilacao.mesa/ was not found. Marking affiliation data as stale...
+11-26 11:44:46.178  1446  5647 I Icing   : Indexing com.google.android.gms-apps from com.google.android.gms [CONTEXT service_id=21 ]
+11-26 11:44:46.265   493   503 I system_server: Background concurrent copying GC freed 137951(6387KB) AllocSpace objects, 20(1596KB) LOS objects, 49% free, 15MB/31MB, paused 23us total 188.617ms
+11-26 11:44:46.278   493  1701 I ActivityTaskManager: START u0 {flg=0x10000000 cmp=org.assimilacao.mesa/com.godot.game.GodotAppLauncher} from uid 0
+11-26 11:44:46.278   493   528 D EventSequenceValidator: Transition from ACTIVITY_FINISHED to INTENT_STARTED
+11-26 11:44:46.283   493   528 D CompatibilityChangeReporter: Compat change id reported: 135634846; UID 10168; state: DISABLED
+11-26 11:44:46.289   493   535 D CompatibilityChangeReporter: Compat change id reported: 143937733; UID 10168; state: ENABLED
+11-26 11:44:46.292   493   528 D EventSequenceValidator: Transition from INTENT_STARTED to ACTIVITY_LAUNCHED
+11-26 11:44:46.304   288   288 D Zygote  : Forked child process 5744
+11-26 11:44:46.304   493   535 I ActivityManager: Start proc 5744:org.assimilacao.mesa/u0a168 for pre-top-activity {org.assimilacao.mesa/com.godot.game.GodotAppLauncher}
+11-26 11:44:46.315   416   416 I perfetto: ing_service_impl.cc:758 Configured tracing session 6, #sources:1, duration:5000 ms, #buffers:1, total buffer size:4096 KB, total sessions:1, uid:1071 session name: ""
+11-26 11:44:46.323  1446  5647 I Icing   : Indexing done com.google.android.gms-apps [CONTEXT service_id=21 ]
+11-26 11:44:46.323  1446  5647 I Icing   : Indexing com.google.android.gms-internal.3p:MobileApplication from com.google.android.gms [CONTEXT service_id=21 ]
+11-26 11:44:46.327  1446  5647 I Icing   : Indexing done com.google.android.gms-internal.3p:MobileApplication [CONTEXT service_id=21 ]
+11-26 11:44:46.331  5744  5744 I ssimilacao.mes: Late-enabling -Xcheck:jni
+11-26 11:44:46.332   415   415 I perfetto: probes_producer.cc:230  Ftrace setup (target_buf=6)
+11-26 11:44:46.346  5744  5744 I ssimilacao.mes: Unquickening 12 vdex files!
+11-26 11:44:46.348  5744  5744 W ssimilacao.mes: Unexpected CPU variant for X86 using defaults: x86_64
+11-26 11:44:46.354   415   415 I perfetto: ftrace_procfs.cc:176    enabled ftrace
+11-26 11:44:46.571     0     0 W perfetto: enabled ftrace
+11-26 11:44:46.356  2530  2577 I adbd    : jdwp connection from 5744
+11-26 11:44:46.358  1523  3414 I MediaProvider: Scanned internal due to REASON_MOUNTED, found 232 items in 17563ms, 0 inserts 226 updates 0 deletes
+11-26 11:44:46.393   493   528 W ActivityTaskManager: Current config: {1.0 310mcc260mnc [en_US] ldltr sw320dp w320dp h616dp 160dpi nrml long port finger qwerty/v/v -nav/h winConfig={ mBounds=Rect(0, 0 - 320, 640) mAppBounds=Rect(0, 0 - 320, 640) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.77} unchanged for IME proc com.google.android.inputmethod.latin
+11-26 11:44:46.394   493   528 I ActivityTaskManager: Config changes=20000480 {1.0 310mcc260mnc [en_US] ldltr sw320dp w640dp h296dp 160dpi nrml long land finger qwerty/v/v -nav/h winConfig={ mBounds=Rect(0, 0 - 640, 320) mAppBounds=Rect(0, 0 - 640, 320) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90} s.119}
+11-26 11:44:46.396   493   528 W ActivityTaskManager: Current config: {1.0 310mcc260mnc [en_US] ldltr sw320dp w320dp h616dp 160dpi nrml long port finger qwerty/v/v -nav/h winConfig={ mBounds=Rect(0, 0 - 320, 640) mAppBounds=Rect(0, 0 - 320, 640) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.77} unchanged for IME proc com.google.android.inputmethod.latin
+11-26 11:44:46.396   493   528 I WindowManager: Override config changes=20000480 {1.0 310mcc260mnc [en_US] ldltr sw320dp w640dp h296dp 160dpi nrml long land finger qwerty/v/v -nav/h winConfig={ mBounds=Rect(0, 0 - 640, 320) mAppBounds=Rect(0, 0 - 640, 320) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90} s.119} for displayId=0
+11-26 11:44:46.396   493   528 V ActivityTaskManager: Sending to IME proc com.google.android.inputmethod.latin new config {1.0 310mcc260mnc [en_US] ldltr sw320dp w640dp h296dp 160dpi nrml long land finger qwerty/v/v -nav/h winConfig={ mBounds=Rect(0, 0 - 640, 320) mAppBounds=Rect(0, 0 - 640, 320) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90} s.119}
+11-26 11:44:46.396   493   528 W ActivityTaskManager: Current config: {1.0 310mcc260mnc [en_US] ldltr sw320dp w640dp h296dp 160dpi nrml long land finger qwerty/v/v -nav/h winConfig={ mBounds=Rect(0, 0 - 640, 320) mAppBounds=Rect(0, 0 - 640, 320) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90} s.119} unchanged for IME proc com.google.android.inputmethod.latin
+11-26 11:44:46.413   702   702 D StatusBar: disable<e i a s b h r c s > disable2<q i n >
+11-26 11:44:46.414  1363  1363 W GoogleInputMethodService: GoogleInputMethodService.onConfigurationChanged():1401 onConfigurationChanged() : NewConfig = {1.0 310mcc260mnc [en_US] ldltr sw320dp w640dp h296dp 160dpi nrml long land finger qwerty/v/v -nav/h winConfig={ mBounds=Rect(0, 0 - 640, 320) mAppBounds=Rect(0, 0 - 640, 320) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90} s.145}
+11-26 11:44:46.415  1363  1363 W KeyboardModeManager: KeyboardModeManager.reloadOrientationAwareData():457 reloadOrientationAwareData() : orientation = 2
+11-26 11:44:46.426   493   528 I InputManager-JNI: Viewport [0] to add: local:8141241408256768, isActive: true
+11-26 11:44:46.427   493   588 I InputReader: Reconfiguring input devices, changes=DISPLAY_INFO | 
+11-26 11:44:46.427   493   588 I InputReader: Touch device 'virtio_input_multi_touch_10' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:46.427   493   588 I InputReader: Touch device 'virtio_input_multi_touch_7' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:46.427   493   588 I InputReader: Touch device 'virtio_input_multi_touch_11' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:46.427   493   588 I InputReader: Touch device 'virtio_input_multi_touch_5' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:46.427   493   588 I InputReader: Touch device 'virtio_input_multi_touch_2' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:46.427   493   588 I InputReader: Touch device 'virtio_input_multi_touch_6' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:46.427   493   588 I InputReader: Touch device 'virtio_input_multi_touch_3' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:46.427   493   588 I InputReader: Device reconfigured: id=4, name='virtio_input_multi_touch_1', size 320x640, orientation 1, mode 1, display id 0
+11-26 11:44:46.427   493   588 I InputReader: Touch device 'virtio_input_multi_touch_8' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:46.427   493   588 I InputReader: Touch device 'virtio_input_multi_touch_9' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:46.427   493   588 I InputReader: Touch device 'virtio_input_multi_touch_4' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+11-26 11:44:46.437  1363  1363 W KeyboardModeManager: KeyboardModeManager.setInputView():302 setInputView() : inputView = null
+11-26 11:44:46.438  1363  1363 I GoogleInputMethodService: GoogleInputMethodService.initializeKeyboardTheme():1171 Apply keyboard theme: theme_border_stylesheet_googleblue_materiallight_assets:theme_package_metadata_google_blue_light.binarypb_land
+11-26 11:44:46.446  1363  1363 I Environment: Environment.getDeviceMode():694 Get device mode by ui mode:1 and smallestScreenWidthDp:320
+11-26 11:44:46.446  1363  1363 I chatty  : uid=10132(com.google.android.inputmethod.latin) identical 4 lines
+11-26 11:44:46.446  1363  1363 I Environment: Environment.getDeviceMode():694 Get device mode by ui mode:1 and smallestScreenWidthDp:320
+11-26 11:44:46.448  1363  1363 I KeyboardViewUtil: KeyboardViewUtil.getKeyboardHeightRatio():128 systemKeyboardHeightRatio:1.000000; userKeyboardHeightRatio:1.000000.
+11-26 11:44:46.454   702   849 D EglHelper: createEglContext start
+11-26 11:44:46.456   702   849 D EGL_emulation: eglCreateContext: 0x7a6815bbd3e0: maj 3 min 0 rcv 3
+11-26 11:44:46.456   702   849 D EglHelper: createEglContext done
+11-26 11:44:46.456   702   849 D EglHelper: createEglSurface start
+11-26 11:44:46.458   702   849 D EglHelper: createEglSurface done
+11-26 11:44:46.472  1363  1363 W SessionManager: SessionManager.beginSession():53 Try to begin an already begun session [INPUT_SESSION], end it first
+11-26 11:44:46.473  1363  1363 I Environment: Environment.getDeviceMode():694 Get device mode by ui mode:1 and smallestScreenWidthDp:320
+11-26 11:44:46.473  1363  1363 I Environment: Environment.getDeviceMode():694 Get device mode by ui mode:1 and smallestScreenWidthDp:320
+11-26 11:44:46.520  5744  5744 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+11-26 11:44:46.523   493  1670 D CompatibilityChangeReporter: Compat change id reported: 135634846; UID 10092; state: DISABLED
+11-26 11:44:46.523   493   535 D CompatibilityChangeReporter: Compat change id reported: 143937733; UID 10092; state: ENABLED
+11-26 11:44:46.521  5744  5744 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+11-26 11:44:46.528   288   288 D Zygote  : Forked child process 5768
+11-26 11:44:46.528   493   535 I ActivityManager: Start proc 5768:com.google.android.documentsui/u0a92 for broadcast {com.google.android.documentsui/com.android.documentsui.PackageReceiver}
+11-26 11:44:46.553  5768  5768 W oid.documentsu: Unexpected CPU variant for X86 using defaults: x86_64
+11-26 11:44:46.573  5744  5744 D GodotActivity: Project command line parameters: [--xr_mode_regular, --xr-mode, off, --fullscreen, --background_color, #000000]
+11-26 11:44:46.573  5744  5744 D GodotActivity: Launch intent Intent { flg=0x10000000 cmp=org.assimilacao.mesa/com.godot.game.GodotAppLauncher } with parameters []
+11-26 11:44:46.574  5744  5779 D libEGL  : loaded /vendor/lib64/egl/libEGL_emulation.so
+11-26 11:44:46.574   493  1667 W PackageManager: Cannot suspend the platform package: android
+11-26 11:44:46.577  5744  5779 D libEGL  : loaded /vendor/lib64/egl/libGLESv1_CM_emulation.so
+11-26 11:44:46.582  2530  2577 I adbd    : jdwp connection from 5768
+11-26 11:44:46.589   493   539 E libprocessgroup: AddTidToCgroup failed to write '5788'; fd=67: Invalid argument
+11-26 11:44:46.589   493   539 E libprocessgroup: Failed to add task into cgroup
+11-26 11:44:46.589   493   539 W libprocessgroup: ExecuteForTask failed for aggregate profile: Invalid argument
+11-26 11:44:46.591  5744  5744 V GodotActivity: Creating new Godot fragment instance.
+11-26 11:44:46.592  5768  5768 I oid.documentsu: The ClassLoaderContext is a special shared library.
+11-26 11:44:46.593   493  1667 W PackageManager: Cannot suspend package "com.google.android.permissioncontroller": required for permissions management
+11-26 11:44:46.594   493  1667 W PackageManager: Cannot suspend package "com.android.dialer": is the default dialer
+11-26 11:44:46.595   493  1667 W PackageManager: Cannot suspend package "com.google.android.packageinstaller": required for package installation
+11-26 11:44:46.595   493  1667 W PackageManager: Cannot suspend package "com.google.android.apps.nexuslauncher": contains the active launcher
+11-26 11:44:46.598  5744  5779 D libEGL  : loaded /vendor/lib64/egl/libGLESv2_emulation.so
+11-26 11:44:46.622  5744  5744 V Godot   : Initializing Godot plugin registry
+11-26 11:44:46.656  1046  1073 I m.android.phon: Background young concurrent copying GC freed 31297(1726KB) AllocSpace objects, 0(0B) LOS objects, 22% free, 4312KB/5548KB, paused 31us total 134.647ms
+11-26 11:44:46.668  5744  5744 I GodotPluginRegistry: Registering runtime plugin AndroidRuntime
+11-26 11:44:46.668  5744  5744 V Godot   : InitEngine with params: [--xr_mode_regular, --xr-mode, off, --fullscreen, --background_color, #000000]
+11-26 11:44:46.684  5744  5744 V Godot   : Godot native layer initialization completed: true
+11-26 11:44:46.684  5744  5744 V Godot   : Setting up native layer with params: [--xr-mode, off, --fullscreen]
+11-26 11:44:46.711  1523  3414 I MediaProvider: Scanned external_primary due to REASON_MOUNTED, found 14 items in 157ms, 0 inserts 0 updates 0 deletes
+11-26 11:44:46.712  1523  3414 I MediaProvider: End Intent { act=android.intent.action.MEDIA_MOUNTED dat=file:///storage/emulated/0 flg=0x5000010 cmp=com.google.android.providers.media.module/com.android.providers.media.MediaService (has extras) }
+11-26 11:44:46.865   493  2415 I system_server: oneway function results will be dropped but finished with status OK and parcel size 4
+11-26 11:44:46.866  5768  5768 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+11-26 11:44:46.866  5768  5768 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+11-26 11:44:46.872  5744  5744 V Godot   : Godot native layer setup completed
+11-26 11:44:46.872  5744  5744 V Godot   : OnInitRenderView: GodotFragment{c532c05} (e7467405-99a8-47be-8e54-e64a2abe0941 id=0x7f07002c)
+11-26 11:44:46.898  5744  5744 D Godot   : Render view should be transparent: false
+11-26 11:44:46.898  5744  5744 D Godot   : renderingDevice: opengl3 (ProjectSettings)
+11-26 11:44:46.898  5744  5744 D Godot   : 			renderer: gl_compatibility (ProjectSettings)
+11-26 11:44:46.923  5744  5744 V Godot   : OnStart: GodotFragment{c532c05} (e7467405-99a8-47be-8e54-e64a2abe0941 id=0x7f07002c)
+11-26 11:44:46.931  5744  5744 V Godot   : OnResume: GodotFragment{c532c05} (e7467405-99a8-47be-8e54-e64a2abe0941 id=0x7f07002c)
+11-26 11:44:46.958  5768  5768 D DocumentsApplication: OverlayManager.setEnabled() result: true
+11-26 11:44:46.975  5744  5774 D HostConnection: HostConnection::get() New Host Connection established 0x7a6825b127d0, tid 5774
+11-26 11:44:46.978  5744  5774 D HostConnection: HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_has_shared_slots_host_memory_allocator ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_read_color_buffer_dma ANDROID_EMU_hwc_color_transform ANDROID_EMU_hwc_display_power_mode GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_0 
+11-26 11:44:46.980   352   380 W ServiceManager: Permission failure: android.permission.ACCESS_SURFACE_FLINGER from uid=10168 pid=5744
+11-26 11:44:46.980   352   380 D PermissionCache: checking android.permission.ACCESS_SURFACE_FLINGER for uid=10168 => denied (254 us)
+11-26 11:44:46.989  5768  5795 I ProvidersCache: Provider returned no roots. Possibly naughty: com.google.android.apps.docs.storage
+11-26 11:44:46.995   163   163 I hwservicemanager: getTransport: Cannot find entry android.hardware.configstore@1.0::ISurfaceFlingerConfigs/default in either framework or device manifest.
+11-26 11:44:46.997  5744  5774 D EGL_emulation: eglCreateContext: 0x7a6815b278a0: maj 3 min 0 rcv 3
+11-26 11:44:46.998  5744  5774 D EGL_emulation: eglMakeCurrent: 0x7a6815b278a0: ver 3 0 (tinfo 0x7a67b5b768a0) (first time)
+11-26 11:44:47.003  5744  5797 D HostConnection: HostConnection::get() New Host Connection established 0x7a6825b22790, tid 5797
+11-26 11:44:47.023  1523  3414 I MediaProvider: Begin Intent { act=android.intent.action.PACKAGE_FULLY_REMOVED dat=package:org.assimilacao.mesa flg=0x5000010 cmp=com.google.android.providers.media.module/com.android.providers.media.MediaService (has extras) }
+11-26 11:44:47.024  1523  3414 I MediaProvider: End Intent { act=android.intent.action.PACKAGE_FULLY_REMOVED dat=package:org.assimilacao.mesa flg=0x5000010 cmp=com.google.android.providers.media.module/com.android.providers.media.MediaService (has extras) }
+11-26 11:44:47.030   493   586 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:org.assimilacao.mesa flg=0x4000010 (has extras) } to com.google.android.packageinstaller/com.android.packageinstaller.PackageInstalledReceiver
+11-26 11:44:47.031   493   534 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:org.assimilacao.mesa flg=0x4000010 (has extras) } to com.google.android.gms/.games.chimera.GamesSystemBroadcastReceiverProxy
+11-26 11:44:47.031   493   534 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:org.assimilacao.mesa flg=0x4000010 (has extras) } to com.google.android.gms/.gass.chimera.PackageChangeBroadcastReceiver
+11-26 11:44:47.031   493   534 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:org.assimilacao.mesa flg=0x4000010 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+11-26 11:44:47.031   493   534 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:org.assimilacao.mesa flg=0x4000010 (has extras) } to com.google.android.googlequicksearchbox/com.google.android.apps.gsa.googlequicksearchbox.GelStubAppWatcher
+11-26 11:44:47.031   493   534 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:org.assimilacao.mesa flg=0x4000010 (has extras) } to com.google.android.ims/.receivers.RcsAutoStartReceiver
+11-26 11:44:47.031   493   534 D CompatibilityChangeReporter: Compat change id reported: 135634846; UID 10088; state: DISABLED
+11-26 11:44:47.031   493   535 D CompatibilityChangeReporter: Compat change id reported: 143937733; UID 10088; state: ENABLED
+11-26 11:44:47.041   163   163 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device manifest.
+11-26 11:44:47.042  5744  5774 I Gralloc4: mapper 4.x is not supported
+11-26 11:44:47.042  5744  5797 D HostConnection: HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_has_shared_slots_host_memory_allocator ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_read_color_buffer_dma ANDROID_EMU_hwc_color_transform ANDROID_EMU_hwc_display_power_mode GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_0 
+11-26 11:44:47.043  5744  5797 W RegularContextFactory: creating OpenGL ES 3.0 context :
+11-26 11:44:47.045  5744  5797 D EGL_emulation: eglCreateContext: 0x7a6815bb2d80: maj 3 min 0 rcv 3
+11-26 11:44:47.045  5744  5774 D HostConnection: createUnique: call
+11-26 11:44:47.045   288   288 D Zygote  : Forked child process 5802
+11-26 11:44:47.045  5744  5774 D HostConnection: HostConnection::get() New Host Connection established 0x7a6825b148d0, tid 5774
+11-26 11:44:47.048   493   535 I ActivityManager: Start proc 5802:com.google.android.packageinstaller/u0a88 for broadcast {com.google.android.packageinstaller/com.android.packageinstaller.PackageInstalledReceiver}
+11-26 11:44:47.053  5744  5774 D HostConnection: HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_has_shared_slots_host_memory_allocator ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_read_color_buffer_dma ANDROID_EMU_hwc_color_transform ANDROID_EMU_hwc_display_power_mode GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_0 
+11-26 11:44:47.058  5744  5797 D EGL_emulation: eglMakeCurrent: 0x7a6815bb2d80: ver 3 0 (tinfo 0x7a67b5b77320) (first time)
+11-26 11:44:47.061  5802  5802 W ackageinstalle: Unexpected CPU variant for X86 using defaults: x86_64
+11-26 11:44:47.077  5744  5797 I godot   : Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+11-26 11:44:47.157  2530  2577 I adbd    : jdwp connection from 5802
+11-26 11:44:47.195  1910  2897 I PBSessionCacheImpl: Deleted sessionId[8402064529637997] from persistence.
+11-26 11:44:47.195  5802  5802 I ackageinstalle: The ClassLoaderContext is a special shared library.
+11-26 11:44:47.213  5802  5802 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+11-26 11:44:47.213  5802  5802 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+11-26 11:44:47.215  1910  2272 W SearchServiceCore: Abort, client detached.
+11-26 11:44:47.221   493  1667 I ActivityManager: Killing 4678:com.google.android.youtube/u0a147 (adj 985): empty #17
+11-26 11:44:47.229  1446  5484 I Vision  : Requesting optional module download of ocr.
+11-26 11:44:47.229  1446  5484 I Vision  : Checking for download completion for 95696 -- ocr
+11-26 11:44:47.283   493   586 D ConnectivityService: ConnectivityService NetworkRequestInfo binderDied(NetworkRequest [ TRACK_DEFAULT id=34, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10147 AdministratorUids: [] RequestorUid: 10147 RequestorPackageName: com.google.android.youtube] ], android.os.BinderProxy@8743d15)
+11-26 11:44:47.283   493   645 D ConnectivityService: releasing NetworkRequest [ TRACK_DEFAULT id=34, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10147 AdministratorUids: [] RequestorUid: 10147 RequestorPackageName: com.google.android.youtube] ] (release request)
+11-26 11:44:47.283   493  1667 D ConnectivityService: ConnectivityService NetworkRequestInfo binderDied(NetworkRequest [ LISTEN id=35, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&FOREGROUND Uid: 10147 AdministratorUids: [] RequestorUid: 10147 RequestorPackageName: com.google.android.youtube] ], android.os.BinderProxy@758982a)
+11-26 11:44:47.287   702   702 V KeyguardUpdateMonitor: onSubscriptionInfoChanged()
+11-26 11:44:47.288  1046  1046 D Telephony: isEmergencyPreferredAccount: subId=1, activeData=1
+11-26 11:44:47.288  1046  1046 D Telephony: isEmergencyPreferredAccount: Device does not require preference.
+11-26 11:44:47.288   702   702 V KeyguardUpdateMonitor: SubInfo:{id=1 iccId=89014103211118510720 simSlotIndex=0 carrierId=1 displayName=T-Mobile carrierName=T-Mobile nameSource=3 iconTint=-16746133 number=+15555215554 dataRoaming=0 iconBitmap=android.graphics.Bitmap@5345003 mcc=310 mnc=260 countryIso=us isEmbedded=false nativeAccessRules=null cardString=89014103211118510720 cardId=-1 isOpportunistic=false groupUUID=null isGroupDisabled=false profileClass=-1 ehplmns=null hplmns=null subscriptionType=0 groupOwner=null carrierConfigAccessRules=null areUiccApplicationsEnabled=true}
+11-26 11:44:47.290   288   288 I Zygote  : Process 4678 exited due to signal 9 (Killed)
+11-26 11:44:47.309   493   536 I libprocessgroup: Successfully killed process cgroup uid 10147 pid 4678 in 86ms
+11-26 11:44:47.320  1446  2556 I Icing   : Indexing com.google.android.gms-apps from com.google.android.gms [CONTEXT service_id=21 ]
+11-26 11:44:47.331  1446  2556 I Icing   : Indexing done com.google.android.gms-apps [CONTEXT service_id=21 ]
+11-26 11:44:47.332  1446  5647 I Icing   : Indexing com.google.android.gms-internal.3p:MobileApplication from com.google.android.gms [CONTEXT service_id=21 ]
+11-26 11:44:47.341  1446  5647 I Icing   : Indexing done com.google.android.gms-internal.3p:MobileApplication [CONTEXT service_id=21 ]
+11-26 11:44:47.415  5744  5797 I godot   : 1: 
+11-26 11:44:47.415  5744  5797 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:47.415  5744  5797 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:47.415  5744  5797 E godot   : 
+11-26 11:44:47.415  5744  5797 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:47.415  5744  5797 E godot   : ERROR: Method/function failed.
+11-26 11:44:47.415  5744  5797 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:47.460  5744  5797 I godot   : 1: 
+11-26 11:44:47.460  5744  5797 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:47.460  5744  5797 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:47.460  5744  5797 E godot   : 
+11-26 11:44:47.460  5744  5797 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:47.460  5744  5797 E godot   : ERROR: Method/function failed.
+11-26 11:44:47.460  5744  5797 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:47.471  5744  5797 I godot   : 1: 
+11-26 11:44:47.471  5744  5797 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:47.471  5744  5797 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:47.471  5744  5797 E godot   : 
+11-26 11:44:47.471  5744  5797 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:47.471  5744  5797 E godot   : ERROR: Method/function failed.
+11-26 11:44:47.471  5744  5797 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:47.481  5744  5797 I godot   : 1: 
+11-26 11:44:47.481  5744  5797 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:47.481  5744  5797 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:47.481  5744  5797 E godot   : 
+11-26 11:44:47.481  5744  5797 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:47.481  5744  5797 E godot   : ERROR: Method/function failed.
+11-26 11:44:47.481  5744  5797 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:47.482  5744  5797 E godot   : WARNING: shader failed to compile, unable to bind shader.
+11-26 11:44:47.482  5744  5797 E godot   :    at: _version_bind_shader (./drivers/gles3/shader_gles3.h:215)
+11-26 11:44:47.486  5744  5797 I godot   : OpenGL API OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1) - Compatibility - Using Device: Google (Google Inc.) - Android Emulator OpenGL ES Translator (Google SwiftShader)
+11-26 11:44:47.489   493  1667 I system_server: oneway function results will be dropped but finished with status OK and parcel size 4
+11-26 11:44:47.489   493  1667 I chatty  : uid=1000(system) Binder:493_E identical 2 lines
+11-26 11:44:47.489   493  1667 I system_server: oneway function results will be dropped but finished with status OK and parcel size 4
+11-26 11:44:47.490  5744  5797 D ssimilacao.mes: PlayerBase::PlayerBase()
+11-26 11:44:47.490  5744  5797 D ssimilacao.mes: TrackPlayerBase::TrackPlayerBase()
+11-26 11:44:47.490  5744  5797 I libOpenSLES: Emulating old channel mask behavior (ignoring positional mask 0x3, using default mask 0x3 based on channel count of 2)
+11-26 11:44:47.492   373   453 W AudioFlinger: createTrack_l(): mismatch between requested flags (00000104) and output flags (00000002)
+11-26 11:44:47.492   373   453 D AudioFlinger: Client defaulted notificationFrames to 882 for frameCount 1956
+11-26 11:44:47.492   373   453 D AF::TrackHandle: OpPlayAudio: track:56 usage:1 not muted
+11-26 11:44:47.493  5744  5797 D AudioTrack: createTrack_l(104): AUDIO_OUTPUT_FLAG_FAST denied by server; frameCount 0 -> 1956
+11-26 11:44:47.495   373   453 W APM::AudioPolicyEngine: getDevicesForStrategy() unknown strategy: -1
+11-26 11:44:47.495   373   453 W APM::AudioPolicyEngine: getDevicesForStrategy() unknown strategy: -1
+11-26 11:44:47.495  5744  5797 I godot   : 
+11-26 11:44:47.496   493  2415 I system_server: oneway function results will be dropped but finished with status OK and parcel size 4
+11-26 11:44:47.585   373   455 D AudioFlinger: mixer(0x7e99646ef040) throttle end: throttle time(34)
+11-26 11:44:47.597  5740  5742 I cmd     : oneway function results will be dropped but finished with status OK and parcel size 4
+11-26 11:44:47.598   493   528 D EventSequenceValidator: Transition from ACTIVITY_LAUNCHED to ACTIVITY_FINISHED
+11-26 11:44:47.601   493   533 D ArtManagerInternalImpl: /data/misc/iorapd/org.assimilacao.mesa/1/com.godot.game.GodotAppLauncher/compiled_traces/compiled_trace.pb doesn't exist
+11-26 11:44:47.705   493   533 I ActivityTaskManager: Displayed org.assimilacao.mesa/com.godot.game.GodotAppLauncher: +1s316ms
+11-26 11:44:47.963     0     0 D logd    : logdr: UID=0 GID=0 PID=5827 n tail=0 logMask=99 pid=0 start=0ns timeout=0ns
+11-26 11:44:47.800   373   455 D AudioFlinger: mixer(0x7e99646ef040) throttle end: throttle time(39)
+11-26 11:44:47.890   373   455 D AudioFlinger: mixer(0x7e99646ef040) throttle end: throttle time(34)
+11-26 11:44:47.920   493  1836 I ActivityManager: Killing 5330:com.google.android.apps.pixelmigrate/u0a112 (adj 975): empty #17
+11-26 11:44:47.924   288   288 I Zygote  : Process 5330 exited due to signal 9 (Killed)
+11-26 11:44:47.965   493   536 I libprocessgroup: Successfully killed process cgroup uid 10112 pid 5330 in 41ms
+11-26 11:44:48.077  5744  5797 V Godot   : OnGodotSetupCompleted
+11-26 11:44:48.089  5744  5797 V Godot   : OnGodotMainLoopStarted
+11-26 11:44:48.152  5744  5797 I godot   : 1: 
+11-26 11:44:48.152  5744  5797 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:48.152  5744  5797 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:48.152  5744  5797 E godot   : 
+11-26 11:44:48.152  5744  5797 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:48.152  5744  5797 E godot   : ERROR: Method/function failed.
+11-26 11:44:48.152  5744  5797 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:48.205  5744  5797 I godot   : 1: 
+11-26 11:44:48.205  5744  5797 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:48.205  5744  5797 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:48.205  5744  5797 E godot   : 
+11-26 11:44:48.205  5744  5797 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:48.205  5744  5797 E godot   : ERROR: Method/function failed.
+11-26 11:44:48.205  5744  5797 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:48.214  5744  5797 I godot   : 1: 
+11-26 11:44:48.214  5744  5797 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:48.214  5744  5797 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:48.214  5744  5797 E godot   : 
+11-26 11:44:48.214  5744  5797 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:48.214  5744  5797 E godot   : ERROR: Method/function failed.
+11-26 11:44:48.214  5744  5797 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:48.224  5744  5797 I godot   : 1: 
+11-26 11:44:48.224  5744  5797 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:48.224  5744  5797 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:48.224  5744  5797 E godot   : 
+11-26 11:44:48.224  5744  5797 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:48.224  5744  5797 E godot   : ERROR: Method/function failed.
+11-26 11:44:48.224  5744  5797 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:48.233  5744  5797 I godot   : 1: 
+11-26 11:44:48.233  5744  5797 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:48.233  5744  5797 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:48.233  5744  5797 E godot   : 
+11-26 11:44:48.233  5744  5797 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:48.233  5744  5797 E godot   : ERROR: Method/function failed.
+11-26 11:44:48.233  5744  5797 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:48.247  5744  5797 I godot   : 1: 
+11-26 11:44:48.247  5744  5797 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:48.247  5744  5797 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:48.247  5744  5797 E godot   : 
+11-26 11:44:48.247  5744  5797 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:48.247  5744  5797 E godot   : ERROR: Method/function failed.
+11-26 11:44:48.247  5744  5797 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:48.255  5744  5797 I godot   : 1: 
+11-26 11:44:48.255  5744  5797 E godot   : ERROR: CanvasShaderGLES3: Program linking failed:
+11-26 11:44:48.255  5744  5797 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:48.255  5744  5797 E godot   : 
+11-26 11:44:48.255  5744  5797 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:48.255  5744  5797 E godot   : ERROR: Method/function failed.
+11-26 11:44:48.255  5744  5797 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:49.066     0     0 D logd    : logdr: UID=0 GID=0 PID=5830 n tail=0 logMask=99 pid=0 start=0ns timeout=0ns
+11-26 11:44:49.086  1363  1413 I PeriodicStatsRunner: PeriodicStatsRunner.call():180 call()
+11-26 11:44:49.086  1363  1413 I PeriodicStatsRunner: PeriodicStatsRunner.call():184 No submit PeriodicStats since input started.
+11-26 11:44:49.109  5430  5522 D CompatibilityChangeReporter: Compat change id reported: 150939131; UID 10145; state: DISABLED
+11-26 11:44:49.198   493   590 E ReportEncoder: No watchlist hash
+11-26 11:44:49.199   493   590 I WatchlistLoggingHandler: Milliseconds spent on tryAggregateRecords(): 68082
+11-26 11:44:49.206   493   527 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+11-26 11:44:49.232  1184  1538 I BeaconBle: Client requested scan, settings=BleSettings [scanMode=ZERO_POWER, callbackType=ALL_MATCHES, reportDelayMillis=0, 5 filters, 1 clients, callingClientName=Nearby] [CONTEXT service_id=111 ]
+11-26 11:44:49.239  1184  1538 I BeaconBle: Stopping scan on delegate scanner. BT state: 12 [CONTEXT service_id=111 ]
+11-26 11:44:49.239  1184  1538 D BluetoothAdapter: isLeEnabled(): ON
+11-26 11:44:49.241  1184  1538 I BeaconBle: Resetting - new scanner available: true [CONTEXT service_id=111 ]
+11-26 11:44:49.241  1184  1538 I BeaconBle: ZERO_POWER is disabled. [CONTEXT service_id=111 ]
+11-26 11:44:49.241  1184  1538 I BeaconBle: 'L' hardware scan: scan stopped, no powered clients [CONTEXT service_id=111 ]
+11-26 11:44:49.252  5744  5797 I godot   : controlo-gles: OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1) | Android Emulator OpenGL ES Translator (Google SwiftShader) | Google (Google Inc.)
+11-26 11:44:49.253  5744  5797 I godot   : controlo-gles pronto
+11-26 11:44:49.213   493   527 I chatty  : uid=1000(system) android.io identical 8 lines
+11-26 11:44:49.213   493   527 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+11-26 11:44:49.792   493   634 E AppOps  : Operation not started: uid=10122 pkg=com.google.android.gms(null) op=WAKE_LOCK
+11-26 11:44:50.094     0     0 D logd    : logdr: UID=0 GID=0 PID=5834 n tail=0 logMask=99 pid=0 start=0ns timeout=0ns
+11-26 11:44:50.148   493   634 I ActivityManager: Killing 5370:com.google.android.apps.restore/u0a121 (adj 985): empty #17
+11-26 11:44:50.156   288   288 I Zygote  : Process 5370 exited due to signal 9 (Killed)
+11-26 11:44:50.192   493   536 I libprocessgroup: Successfully killed process cgroup uid 10121 pid 5370 in 43ms
+11-26 11:44:50.491   493   634 I system_server: oneway function results will be dropped but finished with status OK and parcel size 4
+11-26 11:44:51.210   493   534 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.stats.service.DropBoxEntryAddedReceiver
+11-26 11:44:51.210   493   534 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+11-26 11:44:51.316   415   415 I perfetto: probes_producer.cc:329  Producer stop (id=6)
+11-26 11:44:51.316   416   416 E libc    : The property "ro.build.fingerprint" has a value with length 92 that is too large for __system_property_get()/__system_property_read(); use __system_property_read_callback() instead.
+11-26 11:44:51.318   415   415 I perfetto: ftrace_procfs.cc:183    disabled ftrace
+11-26 11:44:51.320   416   416 I perfetto: ng_service_impl.cc:1948 Tracing session 6 ended, total sessions:0
+11-26 11:44:51.538     0     0 W perfetto: disabled ftrace
+11-26 11:44:51.388   424  5750 I iorapd  : Perfetto TraceBuffer saved to file: /data/misc/iorapd/org.assimilacao.mesa/1/com.godot.game.GodotAppLauncher/raw_traces/1795693491383610011.perfetto_trace.pb
+11-26 11:44:51.635   493  1094 I ActivityManager: Killing 4478:com.google.android.projection.gearhead:shared/u0a117 (adj 985): empty #17
+11-26 11:44:51.645   288   288 I Zygote  : Process 4478 exited due to signal 9 (Killed)
+11-26 11:44:51.646  4522  4522 I GH.CAR  : onDestroy
+11-26 11:44:51.646  4522  4522 I GH.CAR  : tearDown()
+11-26 11:44:51.646  4522  4522 I GH.DelegateMngCarSvc: tearDown()
+11-26 11:44:51.646  4522  5451 I GH.DelegateICarSupplier: Calling release callback on delegate com.google.android.gms.car.DelegatingCarServiceBinder@ff4f099
+11-26 11:44:51.646  4522  5451 I GH.DelegateICarSupplier: Releasing delegate ICar.
+11-26 11:44:51.647  4522  4522 E ActivityThread: Service com.google.android.apps.auto.carservice.service.impl.GearheadCarStartupService has leaked ServiceConnection bdx@564344f that was originally bound here
+11-26 11:44:51.647  4522  4522 E ActivityThread: android.app.ServiceConnectionLeaked: Service com.google.android.apps.auto.carservice.service.impl.GearheadCarStartupService has leaked ServiceConnection bdx@564344f that was originally bound here
+11-26 11:44:51.647  4522  4522 E ActivityThread: 	at android.app.LoadedApk$ServiceDispatcher.<init>(LoadedApk.java:1811)
+11-26 11:44:51.647  4522  4522 E ActivityThread: 	at android.app.LoadedApk.getServiceDispatcherCommon(LoadedApk.java:1683)
+11-26 11:44:51.647  4522  4522 E ActivityThread: 	at android.app.LoadedApk.getServiceDispatcher(LoadedApk.java:1662)
+11-26 11:44:51.647  4522  4522 E ActivityThread: 	at android.app.ContextImpl.bindServiceCommon(ContextImpl.java:1819)
+11-26 11:44:51.647  4522  4522 E ActivityThread: 	at android.app.ContextImpl.bindService(ContextImpl.java:1749)
+11-26 11:44:51.647  4522  4522 E ActivityThread: 	at android.content.ContextWrapper.bindService(ContextWrapper.java:756)
+11-26 11:44:51.647  4522  4522 E ActivityThread: 	at bdu.run(Unknown Source:1)
+11-26 11:44:51.647  4522  4522 E ActivityThread: 	at android.os.Handler.handleCallback(Handler.java:938)
+11-26 11:44:51.647  4522  4522 E ActivityThread: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+11-26 11:44:51.647  4522  4522 E ActivityThread: 	at android.os.Looper.loop(Looper.java:223)
+11-26 11:44:51.647  4522  4522 E ActivityThread: 	at android.os.HandlerThread.run(HandlerThread.java:67)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: ICar release task failed.
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: java.lang.IllegalArgumentException: Service not registered: bdx@564344f
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at android.app.LoadedApk.forgetServiceDispatcher(LoadedApk.java:1757)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at android.app.ContextImpl.unbindService(ContextImpl.java:1874)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at android.content.ContextWrapper.unbindService(ContextWrapper.java:792)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at bdv.a(Unknown Source:1)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at kwk.a(SourceFile:3)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at kwl.run(SourceFile:23)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at kwz.execute(SourceFile:3)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at kwh.b(SourceFile:77)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at kwh.a(SourceFile:29)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at kxd.a(SourceFile:3)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at kwl.a(SourceFile:7)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at bdt.a(Unknown Source:3)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at beg.a(SourceFile:29)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at bea.a(Unknown Source:4)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at khf.a(SourceFile:3)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at bed.a(SourceFile:8)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at kxh.run(SourceFile:8)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+11-26 11:44:51.649  4522  5451 W GH.DelegateICarSupplier: 	at java.lang.Thread.run(Thread.java:923)
+11-26 11:44:51.649  4522  5451 I GH.DelegateICarSupplier: Logging successful delegate lifespan (23114 ms). Acquisition (123 ms). [Generation: 1]
+11-26 11:44:51.675   493   536 I libprocessgroup: Successfully killed process cgroup uid 10117 pid 4478 in 39ms
+11-26 11:44:52.044   163   163 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device manifest.
+11-26 11:44:52.044  5840  5840 I Gralloc4: mapper 4.x is not supported
+11-26 11:44:52.061  5840  5840 D HostConnection: createUnique: call
+11-26 11:44:52.061  5840  5840 D HostConnection: HostConnection::get() New Host Connection established 0x7d3f94eefd90, tid 5840
+11-26 11:44:52.075  5840  5840 D HostConnection: HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_has_shared_slots_host_memory_allocator ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_read_color_buffer_dma ANDROID_EMU_hwc_color_transform ANDROID_EMU_hwc_display_power_mode GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_0 
+11-26 11:44:52.334     0     0 D logd    : logdr: UID=0 GID=0 PID=5842 n tail=0 logMask=99 pid=0 start=0ns timeout=0ns

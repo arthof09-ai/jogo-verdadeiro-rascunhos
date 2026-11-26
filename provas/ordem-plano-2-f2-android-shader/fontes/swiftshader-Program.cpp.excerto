@@ -1,0 +1,23 @@
+		else UNREACHABLE(shader);
+
+		if(uniform->blockInfo.index < 0)
+		{
+			if(shader == GL_VERTEX_SHADER)
+			{
+				if(glslUniform.registerIndex + uniform->registerCount() > MAX_VERTEX_UNIFORM_VECTORS)
+				{
+					appendToInfoLog("Vertex shader active uniforms exceed GL_MAX_VERTEX_UNIFORM_VECTORS (%d)", MAX_VERTEX_UNIFORM_VECTORS);
+					return false;
+				}
+			}
+			else if(shader == GL_FRAGMENT_SHADER)
+			{
+				if(glslUniform.registerIndex + uniform->registerCount() > MAX_FRAGMENT_UNIFORM_VECTORS)
+				{
+					appendToInfoLog("Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (%d)", MAX_FRAGMENT_UNIFORM_VECTORS);
+					return false;
+				}
+			}
+			else UNREACHABLE(shader);
+		}
+

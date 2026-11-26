@@ -1,0 +1,19 @@
+== CONTROLO (Godot 4.7.2 vazio no motor do APK, nenhum shader do jogo): controlo-gles.pck
+  11-26 11:35:24.964  5489  5489 D GodotActivity: Launch intent Intent { flg=0x10000000 cmp=org.assimilacao.mesa/com.godot.game.GodotApp (has extras) } with parameters [--main-pack, /data/data/org.assimilacao.mesa/files/controlo-gles.pck]
+  SceneShaderGLES3 link falhado: 0
+  CanvasShaderGLES3 link falhado: 0
+  SkyShaderGLES3 link falhado: 0
+  ParticlesShaderGLES3 link falhado: 0
+  CopyShaderGLES3 link falhado: 0
+  antes do banner (init):      0
+  tecto declarado:             
+  driver:                      
+== JOGO: android-godot.log
+  SceneShaderGLES3 link falhado: 85
+  CanvasShaderGLES3 link falhado: 2
+  SkyShaderGLES3 link falhado: 3
+  ParticlesShaderGLES3 link falhado: 0
+  CopyShaderGLES3 link falhado: 0
+  antes do banner (init):      4
+  tecto declarado:             GL_MAX_FRAGMENT_UNIFORM_VECTORS (261) 
+  driver:                      OpenGL API OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1) - Compatibility - Using Device: Google (Google Inc.) - Android Emulator OpenGL ES Translator (Google SwiftShader)

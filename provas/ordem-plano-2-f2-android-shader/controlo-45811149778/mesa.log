@@ -1,0 +1,9 @@
+[servidor] servidor de mesa pronto (WebSocket em /ws)
+[mesa-prova] a ouvir em 127.0.0.1:8080 (motor falso; sala de TESTE)
+[mesa-prova] jogadoras: Espadachim de Bancada / prova-espadachim; Arqueira de Bancada / prova-arqueira; Batedora de Bancada / prova-batedora
+[ligações] 11:33:16.657 ENTROU Mestre da prova (senha/PIN; ip 127.0.0.1)
+[mesa-prova] Mestre-bot na mesa
+[mesa-prova] combate aberto pelo Mestre-bot
+pronto-mesa-prova 8080
+[ligações] 11:35:18.754 ENTROU Arqueira de Bancada (senha/PIN; ip 127.0.0.1)
+[ligações] 11:35:24.347 SAIU Arqueira de Bancada

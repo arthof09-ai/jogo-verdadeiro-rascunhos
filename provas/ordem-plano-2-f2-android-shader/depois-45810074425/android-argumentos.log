@@ -1,0 +1,2 @@
+11-26 11:26:52.717  3783  3783 D GodotActivity: Project command line parameters: [--xr_mode_regular, --xr-mode, off, --fullscreen, --background_color, #000000]
+11-26 11:26:52.718  3783  3783 D GodotActivity: Launch intent Intent { flg=0x10000000 cmp=org.assimilacao.mesa/com.godot.game.GodotApp (has extras) } with parameters [--, --servidor=10.0.2.2:8080, --entrar-nome=Arqueira de Bancada, --entrar-senha=prova-arqueira]

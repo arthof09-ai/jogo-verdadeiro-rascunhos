@@ -1,0 +1,7 @@
+--------- beginning of main
+--------- beginning of system
+--------- beginning of kernel
+11-26 11:35:25.098  5489  5489 E godot   : ERROR: --main-pack is attempting to load from outside of the executable, but this Godot binary was compiled without support for path overrides. Aborting.
+11-26 11:35:25.098  5489  5489 E godot   : To be able to use it, use the `disable_path_overrides=no` SCons option when compiling Godot.
+11-26 11:35:25.098  5489  5489 E godot   : 
+11-26 11:35:25.098  5489  5489 E godot   :    at: setup (main/main.cpp:1879)

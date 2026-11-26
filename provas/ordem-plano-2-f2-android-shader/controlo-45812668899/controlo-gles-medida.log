@@ -1,0 +1,22 @@
+== CONTROLO (Godot 4.7.2 vazio, o MESMO motor do APK do jogo, nenhum shader do jogo)
+  lib/x86_64/libgodot_android.so jogo=7a103707ecbf1d24 controlo=7a103707ecbf1d24 IGUAL
+  classes.dex jogo=4a3b10789d65d1e2 controlo=4a3b10789d65d1e2 IGUAL
+  SceneShaderGLES3 link falhado: 10
+  CanvasShaderGLES3 link falhado: 1
+  SkyShaderGLES3 link falhado: 0
+  ParticlesShaderGLES3 link falhado: 0
+  CopyShaderGLES3 link falhado: 0
+  antes do banner (init):      4
+  tecto declarado:             GL_MAX_FRAGMENT_UNIFORM_VECTORS (261) 
+  driver:                      OpenGL API OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1) - Compatibility - Using Device: Google (Google Inc.) - Android Emulator OpenGL ES Translator (Google SwiftShader)
+  11-26 11:44:49.252  5744  5797 I godot   : controlo-gles: OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1) | Android Emulator OpenGL ES Translator (Google SwiftShader) | Google (Google Inc.)
+  11-26 11:44:49.253  5744  5797 I godot   : controlo-gles pronto
+== JOGO: android-godot.log
+  SceneShaderGLES3 link falhado: 85
+  CanvasShaderGLES3 link falhado: 2
+  SkyShaderGLES3 link falhado: 3
+  ParticlesShaderGLES3 link falhado: 0
+  CopyShaderGLES3 link falhado: 0
+  antes do banner (init):      4
+  tecto declarado:             GL_MAX_FRAGMENT_UNIFORM_VECTORS (261) 
+  driver:                      OpenGL API OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1) - Compatibility - Using Device: Google (Google Inc.) - Android Emulator OpenGL ES Translator (Google SwiftShader)

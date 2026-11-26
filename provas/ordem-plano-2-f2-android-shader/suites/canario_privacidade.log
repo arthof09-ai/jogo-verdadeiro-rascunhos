@@ -1,0 +1,20 @@
+# comando: cd rascunhos/cliente && MESTRE_COMANDOS=<sede>/tmp/suites/comandos-canario_privacidade.jsonl timeout 300 Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://testes/canario_privacidade.gd
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Unicode parsing error, some characters were replaced with � (U+FFFD): Unexpected NUL character
+  ok    a fixture do servidor lê-se
+== 1. o tráfego real da jogadora ==
+rede: ROOM_SNAPSHOT seq=1 fase=lobby plataforma=Windows
+  ok    o lugar continua a ser o da jogadora
+  ok    nenhum canário no ecrã da jogadora []
+  ok    a jogadora vê as figuras públicas (4)
+== 2. mensagens do Mestre a chegar ao aparelho da jogadora ==
+  ok    a MASTER_VIEW não se guarda fora do lugar do Mestre
+  ok    o MASTER_CARD não se guarda fora do lugar do Mestre
+  ok    o bloco `mestre` do snapshot não se guarda fora do lugar do Mestre
+  ok    nenhum canário no ecrã da jogadora depois das mensagens do Mestre []
+  ok    nenhum canário nas figuras que o estado guarda
+== 3. quem lê o que é do Mestre ==
+  ok    nenhum script fora de cenas/mestre/ lê o que é do Mestre []
+
+10 de 10 verificações passaram.

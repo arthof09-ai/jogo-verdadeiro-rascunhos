@@ -1,0 +1,53 @@
+--------- beginning of main
+--------- beginning of system
+--------- beginning of kernel
+11-24 18:17:53.117  3490  3598 I godot   : Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+11-24 18:17:53.870  3490  3598 I godot   : 1: 
+11-24 18:17:53.870  3490  3598 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-24 18:17:53.870  3490  3598 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-24 18:17:53.870  3490  3598 E godot   : 
+11-24 18:17:53.870  3490  3598 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-24 18:17:53.870  3490  3598 E godot   : ERROR: Method/function failed.
+11-24 18:17:53.870  3490  3598 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-24 18:17:53.911  3490  3598 I godot   : 1: 
+11-24 18:17:53.911  3490  3598 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-24 18:17:53.911  3490  3598 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-24 18:17:53.911  3490  3598 E godot   : 
+11-24 18:17:53.911  3490  3598 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-24 18:17:53.911  3490  3598 E godot   : ERROR: Method/function failed.
+11-24 18:17:53.911  3490  3598 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-24 18:17:53.926  3490  3598 I godot   : 1: 
+11-24 18:17:53.926  3490  3598 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-24 18:17:53.926  3490  3598 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-24 18:17:53.926  3490  3598 E godot   : 
+11-24 18:17:53.926  3490  3598 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-24 18:17:53.926  3490  3598 E godot   : ERROR: Method/function failed.
+11-24 18:17:53.926  3490  3598 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-24 18:17:53.974  3490  3598 I godot   : 1: 
+11-24 18:17:53.974  3490  3598 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-24 18:17:53.974  3490  3598 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-24 18:17:53.974  3490  3598 E godot   : 
+11-24 18:17:53.974  3490  3598 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-24 18:17:53.974  3490  3598 E godot   : ERROR: Method/function failed.
+11-24 18:17:53.974  3490  3598 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-24 18:17:53.976  3490  3598 E godot   : WARNING: shader failed to compile, unable to bind shader.
+11-24 18:17:53.976  3490  3598 E godot   :    at: _version_bind_shader (./drivers/gles3/shader_gles3.h:215)
+11-24 18:17:54.004  3490  3598 I godot   : OpenGL API OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1) - Compatibility - Using Device: Google (Google Inc.) - Android Emulator OpenGL ES Translator (Google SwiftShader)
+11-24 18:17:54.077  3490  3598 I godot   : 
+11-24 18:18:04.410  3490  3598 I godot   : [floresta] pronta em 6363 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":6363,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"r
+11-24 18:18:04.544  3490  3598 I godot   : pronto
+11-24 18:18:04.639  3490  3598 I godot   : pronto
+11-24 18:18:04.676  3490  3598 I godot   : 1: 
+11-24 18:18:04.676  3490  3598 E godot   : ERROR: CanvasShaderGLES3: Program linking failed:
+11-24 18:18:04.676  3490  3598 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-24 18:18:04.676  3490  3598 E godot   : 
+11-24 18:18:04.676  3490  3598 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-24 18:18:04.676  3490  3598 E godot   : ERROR: Method/function failed.
+11-24 18:18:04.676  3490  3598 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-24 18:18:04.684  3490  3598 I godot   : 1: 
+11-24 18:18:04.684  3490  3598 E godot   : ERROR: CanvasShaderGLES3: Program linking failed:
+11-24 18:18:04.684  3490  3598 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-24 18:18:04.684  3490  3598 E godot   : 
+11-24 18:18:04.684  3490  3598 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-24 18:18:04.684  3490  3598 E godot   : ERROR: Method/function failed.
+11-24 18:18:04.684  3490  3598 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)

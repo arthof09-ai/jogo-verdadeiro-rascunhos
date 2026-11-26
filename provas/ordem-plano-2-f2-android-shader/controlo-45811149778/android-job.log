@@ -1,0 +1,855 @@
+android	Set up job	﻿2026-11-26T11:32:08.9466506Z Current runner version: '2.338.2'
+android	Set up job	2026-11-26T11:32:08.9489148Z ##[group]Runner Image Provisioner
+android	Set up job	2026-11-26T11:32:08.9489893Z Hosted Compute Agent
+android	Set up job	2026-11-26T11:32:08.9490449Z Version: 20261111.635
+android	Set up job	2026-11-26T11:32:08.9490983Z Commit: b8a594ea514ff44cadb5342986c68b1eac6e22ed
+android	Set up job	2026-11-26T11:32:08.9491614Z Build Date: 2026-11-11T01:49:01Z
+android	Set up job	2026-11-26T11:32:08.9492225Z Worker ID: {5fca4db5-fc1a-4a66-a1ed-bd97a2cb1c81}
+android	Set up job	2026-11-26T11:32:08.9492804Z Region: westus
+android	Set up job	2026-11-26T11:32:08.9493281Z Cloud: Azure
+android	Set up job	2026-11-26T11:32:08.9493770Z ##[endgroup]
+android	Set up job	2026-11-26T11:32:08.9495076Z ##[group]Operating System
+android	Set up job	2026-11-26T11:32:08.9495956Z Ubuntu
+android	Set up job	2026-11-26T11:32:08.9496395Z 26.04.1
+android	Set up job	2026-11-26T11:32:08.9496853Z LTS
+android	Set up job	2026-11-26T11:32:08.9497324Z ##[endgroup]
+android	Set up job	2026-11-26T11:32:08.9497785Z ##[group]Runner Image
+android	Set up job	2026-11-26T11:32:08.9498587Z Image: ubuntu-26.04
+android	Set up job	2026-11-26T11:32:08.9499116Z Version: 20261116.202.1
+android	Set up job	2026-11-26T11:32:08.9499968Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261116.202/images/ubuntu/Ubuntu2604-Readme.md
+android	Set up job	2026-11-26T11:32:08.9501498Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261116.202
+android	Set up job	2026-11-26T11:32:08.9502314Z ##[endgroup]
+android	Set up job	2026-11-26T11:32:08.9503229Z ##[group]GITHUB_TOKEN Permissions
+android	Set up job	2026-11-26T11:32:08.9505101Z Contents: read
+android	Set up job	2026-11-26T11:32:08.9505608Z Metadata: read
+android	Set up job	2026-11-26T11:32:08.9506150Z ##[endgroup]
+android	Set up job	2026-11-26T11:32:08.9507860Z Secret source: Actions
+android	Set up job	2026-11-26T11:32:08.9508834Z Cache mode: write
+android	Set up job	2026-11-26T11:32:08.9509705Z Prepare workflow directory
+android	Set up job	2026-11-26T11:32:08.9825986Z Prepare all required actions
+android	Set up job	2026-11-26T11:32:08.9866017Z Getting action download info
+android	Set up job	2026-11-26T11:32:09.3673805Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+android	Set up job	2026-11-26T11:32:09.4469788Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+android	Set up job	2026-11-26T11:32:09.5327816Z Download action repository 'actions/download-artifact@v4' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+android	Set up job	2026-11-26T11:32:09.8922443Z Download action repository 'reactivecircus/android-emulator-runner@v2' (SHA:a421e43855164a8197daf9d8d40fe71c6996bb0d)
+android	Set up job	2026-11-26T11:32:10.2555077Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+android	Set up job	2026-11-26T11:32:10.4737731Z Complete job name: android
+android	Run actions/checkout@v4	﻿2026-11-26T11:32:10.5483103Z ##[group]Run actions/checkout@v4
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5483830Z with:
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5484243Z   repository: arthof09-ai/jogo-verdadeiro-rascunhos
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5487440Z   token: ***
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5487800Z   ssh-strict: true
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5488160Z   ssh-user: git
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5488676Z   persist-credentials: true
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5489079Z   clean: true
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5489434Z   sparse-checkout-cone-mode: true
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5489853Z   fetch-depth: 1
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5490202Z   fetch-tags: false
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5490566Z   show-progress: true
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5490933Z   lfs: false
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5491326Z   submodules: false
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5491694Z   set-safe-directory: true
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5492098Z   allow-unsafe-pr-checkout: false
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5492673Z env:
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5493022Z   GODOT_VERSAO: 4.7.2-stable
+android	Run actions/checkout@v4	2026-11-26T11:32:10.5493413Z ##[endgroup]
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7512566Z Syncing repository: arthof09-ai/jogo-verdadeiro-rascunhos
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7515484Z ##[group]Getting Git version info
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7516714Z Working directory is '/home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos'
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7597514Z [command]/usr/bin/git version
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7602361Z git version 2.56.1
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7604741Z ##[endgroup]
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7611336Z Temporarily overriding HOME='/home/runner/work/_temp/0cd8755e-8061-4290-8dc7-47e0cac50edb' before making global git config changes
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7612995Z Adding repository directory to the temporary git global config as a safe directory
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7614626Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7625211Z Deleting the contents of '/home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos'
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7626880Z ##[group]Initializing the repository
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7628029Z [command]/usr/bin/git init /home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7972206Z hint: Using 'master' as the name for the initial branch. This default branch name
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7989484Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7990980Z hint: to use in all of your new repositories, which will suppress this warning,
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7992034Z hint: call:
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7992622Z hint:
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7993319Z hint: 	git config --global init.defaultBranch <name>
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7994146Z hint:
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7994928Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7996212Z hint: 'development'. The just-created branch can be renamed via this command:
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7997207Z hint:
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7997792Z hint: 	git branch -m <name>
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7998572Z hint:
+android	Run actions/checkout@v4	2026-11-26T11:32:10.7999410Z hint: Disable this message with "git config set advice.defaultBranchName false"
+android	Run actions/checkout@v4	2026-11-26T11:32:10.8000989Z Initialized empty Git repository in /home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos/.git/
+android	Run actions/checkout@v4	2026-11-26T11:32:10.8003681Z [command]/usr/bin/git remote add origin https://github.com/arthof09-ai/jogo-verdadeiro-rascunhos
+android	Run actions/checkout@v4	2026-11-26T11:32:10.8037108Z ##[endgroup]
+android	Run actions/checkout@v4	2026-11-26T11:32:10.8038159Z ##[group]Disabling automatic garbage collection
+android	Run actions/checkout@v4	2026-11-26T11:32:10.8041060Z [command]/usr/bin/git config --local gc.auto 0
+android	Run actions/checkout@v4	2026-11-26T11:32:10.8082670Z ##[endgroup]
+android	Run actions/checkout@v4	2026-11-26T11:32:10.8083730Z ##[group]Setting up auth
+android	Run actions/checkout@v4	2026-11-26T11:32:10.8087653Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+android	Run actions/checkout@v4	2026-11-26T11:32:10.8120835Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+android	Run actions/checkout@v4	2026-11-26T11:32:10.8469929Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+android	Run actions/checkout@v4	2026-11-26T11:32:10.8500177Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+android	Run actions/checkout@v4	2026-11-26T11:32:10.8742217Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+android	Run actions/checkout@v4	2026-11-26T11:32:10.8774809Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+android	Run actions/checkout@v4	2026-11-26T11:32:10.9012785Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+android	Run actions/checkout@v4	2026-11-26T11:32:10.9100970Z ##[endgroup]
+android	Run actions/checkout@v4	2026-11-26T11:32:10.9102097Z ##[group]Fetching the repository
+android	Run actions/checkout@v4	2026-11-26T11:32:10.9109964Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +6b59dca42075ddff531e2213b24df46ee68b1e70:refs/remotes/origin/fable/integracao-50
+android	Run actions/checkout@v4	2026-11-26T11:33:05.8422960Z From https://github.com/arthof09-ai/jogo-verdadeiro-rascunhos
+android	Run actions/checkout@v4	2026-11-26T11:33:05.8424105Z  * [new ref]         6b59dca42075ddff531e2213b24df46ee68b1e70 -> origin/fable/integracao-50
+android	Run actions/checkout@v4	2026-11-26T11:33:05.8426828Z ##[endgroup]
+android	Run actions/checkout@v4	2026-11-26T11:33:05.8427527Z ##[group]Determining the checkout info
+android	Run actions/checkout@v4	2026-11-26T11:33:05.8429485Z ##[endgroup]
+android	Run actions/checkout@v4	2026-11-26T11:33:05.8434386Z [command]/usr/bin/git sparse-checkout disable
+android	Run actions/checkout@v4	2026-11-26T11:33:05.8480936Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+android	Run actions/checkout@v4	2026-11-26T11:33:05.8509803Z ##[group]Checking out the ref
+android	Run actions/checkout@v4	2026-11-26T11:33:05.8512632Z [command]/usr/bin/git checkout --progress --force -B fable/integracao-50 refs/remotes/origin/fable/integracao-50
+android	Run actions/checkout@v4	2026-11-26T11:33:06.8655656Z Updating files:  48% (1382/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:06.8664580Z Updating files:  49% (1389/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:06.8698527Z Updating files:  50% (1417/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:06.8803731Z Updating files:  51% (1446/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:06.8817136Z Updating files:  52% (1474/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:06.8952847Z Updating files:  53% (1503/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:06.9043496Z Updating files:  54% (1531/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:06.9968100Z Updating files:  55% (1559/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.0088739Z Updating files:  56% (1588/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.0218548Z Updating files:  57% (1616/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.0409332Z Updating files:  58% (1644/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.0431845Z Updating files:  59% (1673/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.0457767Z Updating files:  60% (1701/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.0458370Z Updating files:  61% (1729/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.0464854Z Updating files:  62% (1758/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.0477776Z Updating files:  63% (1786/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.0491945Z Updating files:  64% (1814/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.0552547Z Updating files:  65% (1843/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.1341634Z Updating files:  66% (1871/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.1366193Z Updating files:  67% (1899/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.1490440Z Updating files:  68% (1928/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.1518822Z Updating files:  69% (1956/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.1560822Z Updating files:  70% (1984/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.1998669Z Updating files:  71% (2013/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.2006565Z Updating files:  72% (2041/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.2028933Z Updating files:  73% (2069/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.2064737Z Updating files:  74% (2098/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.2107065Z Updating files:  75% (2126/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.2203591Z Updating files:  76% (2154/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.2285138Z Updating files:  77% (2183/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.2331778Z Updating files:  78% (2211/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.2342763Z Updating files:  79% (2239/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.2355896Z Updating files:  80% (2268/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.2385892Z Updating files:  81% (2296/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.2407802Z Updating files:  82% (2324/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.2481181Z Updating files:  83% (2353/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.2644505Z Updating files:  84% (2381/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.2664505Z Updating files:  85% (2409/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.2687801Z Updating files:  86% (2438/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.2794929Z Updating files:  87% (2466/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3062970Z Updating files:  88% (2494/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3230187Z Updating files:  89% (2523/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3246872Z Updating files:  90% (2551/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3264697Z Updating files:  91% (2579/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3502355Z Updating files:  92% (2608/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3511979Z Updating files:  93% (2636/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3520099Z Updating files:  94% (2664/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3544358Z Updating files:  95% (2693/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3587179Z Updating files:  96% (2721/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3607023Z Updating files:  97% (2749/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3624013Z Updating files:  98% (2778/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3645263Z Updating files:  99% (2806/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3645597Z Updating files: 100% (2834/2834)
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3645917Z Updating files: 100% (2834/2834), done.
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3685453Z Switched to a new branch 'fable/integracao-50'
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3691131Z branch 'fable/integracao-50' set up to track 'origin/fable/integracao-50'.
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3857873Z ##[endgroup]
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3904822Z [command]/usr/bin/git log -1 --format=%H
+android	Run actions/checkout@v4	2026-11-26T11:33:07.3933182Z 6b59dca42075ddff531e2213b24df46ee68b1e70
+android	Run actions/setup-node@v4	﻿2026-11-26T11:33:07.4164473Z ##[group]Run actions/setup-node@v4
+android	Run actions/setup-node@v4	2026-11-26T11:33:07.4164707Z with:
+android	Run actions/setup-node@v4	2026-11-26T11:33:07.4164881Z   node-version: 24
+android	Run actions/setup-node@v4	2026-11-26T11:33:07.4165061Z   always-auth: false
+android	Run actions/setup-node@v4	2026-11-26T11:33:07.4165238Z   check-latest: false
+android	Run actions/setup-node@v4	2026-11-26T11:33:07.4167100Z   token: ***
+android	Run actions/setup-node@v4	2026-11-26T11:33:07.4167265Z env:
+android	Run actions/setup-node@v4	2026-11-26T11:33:07.4167590Z   GODOT_VERSAO: 4.7.2-stable
+android	Run actions/setup-node@v4	2026-11-26T11:33:07.4167785Z ##[endgroup]
+android	Run actions/setup-node@v4	2026-11-26T11:33:07.5626606Z (node:2221) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+android	Run actions/setup-node@v4	2026-11-26T11:33:07.5627200Z (Use `node --trace-deprecation ...` to show where the warning was created)
+android	Run actions/setup-node@v4	2026-11-26T11:33:07.5635489Z Found in cache @ /opt/hostedtoolcache/node/24.22.3/x64
+android	Run actions/setup-node@v4	2026-11-26T11:33:07.5636138Z ##[group]Environment details
+android	Run actions/setup-node@v4	2026-11-26T11:33:11.1985700Z node: v24.22.3
+android	Run actions/setup-node@v4	2026-11-26T11:33:11.1986076Z npm: 11.19.1
+android	Run actions/setup-node@v4	2026-11-26T11:33:11.1986349Z yarn: 1.22.22
+android	Run actions/setup-node@v4	2026-11-26T11:33:11.1987540Z ##[endgroup]
+android	Run actions/download-artifact@v4	﻿2026-11-26T11:33:11.2130657Z ##[group]Run actions/download-artifact@v4
+android	Run actions/download-artifact@v4	2026-11-26T11:33:11.2130909Z with:
+android	Run actions/download-artifact@v4	2026-11-26T11:33:11.2131082Z   name: export-android
+android	Run actions/download-artifact@v4	2026-11-26T11:33:11.2131279Z   path: build/android
+android	Run actions/download-artifact@v4	2026-11-26T11:33:11.2131466Z   merge-multiple: false
+android	Run actions/download-artifact@v4	2026-11-26T11:33:11.2131685Z   repository: arthof09-ai/jogo-verdadeiro-rascunhos
+android	Run actions/download-artifact@v4	2026-11-26T11:33:11.2131930Z   run-id: 45811149778
+android	Run actions/download-artifact@v4	2026-11-26T11:33:11.2132111Z env:
+android	Run actions/download-artifact@v4	2026-11-26T11:33:11.2132275Z   GODOT_VERSAO: 4.7.2-stable
+android	Run actions/download-artifact@v4	2026-11-26T11:33:11.2132464Z ##[endgroup]
+android	Run actions/download-artifact@v4	2026-11-26T11:33:11.3345727Z Downloading single artifact
+android	Run actions/download-artifact@v4	2026-11-26T11:33:11.3493711Z (node:2253) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+android	Run actions/download-artifact@v4	2026-11-26T11:33:11.3494404Z (Use `node --trace-deprecation ...` to show where the warning was created)
+android	Run actions/download-artifact@v4	2026-11-26T11:33:11.6066522Z Preparing to download the following artifacts:
+android	Run actions/download-artifact@v4	2026-11-26T11:33:11.6067690Z - export-android (ID: 15113661141, Size: 143553229, Expected Digest: sha256:75c8ee616957ca7ce68bc8e287cd1c029919a445755de07df663ce214235c339)
+android	Run actions/download-artifact@v4	2026-11-26T11:33:11.8612229Z Redirecting to blob download url: https://productionresultssa1.blob.core.windows.net/actions-results/ed22c34d-cc9c-84cb-b43e-c82dc1bfc6ae/workflow-job-run-8df9ba27-ac2a-5523-b9b4-3d95718732fd/artifacts/4cf129a441cfbb59b0b514d4a979fbdc98cae9cef2cbcc30c92b23c8ac823064.zip
+android	Run actions/download-artifact@v4	2026-11-26T11:33:11.8615217Z Starting download of artifact to: /home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos/build/android
+android	Run actions/download-artifact@v4	2026-11-26T11:33:12.3520270Z (node:2253) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+android	Run actions/download-artifact@v4	2026-11-26T11:33:16.2454560Z SHA256 digest of downloaded artifact is 75c8ee616957ca7ce68bc8e287cd1c029919a445755de07df663ce214235c339
+android	Run actions/download-artifact@v4	2026-11-26T11:33:16.2455125Z Artifact download completed successfully.
+android	Run actions/download-artifact@v4	2026-11-26T11:33:16.2455425Z Total of 1 artifact(s) downloaded
+android	Run actions/download-artifact@v4	2026-11-26T11:33:16.2461619Z Download artifact has finished successfully
+android	KVM para o emulador	﻿2026-11-26T11:33:16.2625116Z ##[group]Run echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+android	KVM para o emulador	2026-11-26T11:33:16.2625847Z ^[[36;1mecho 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules^[[0m
+android	KVM para o emulador	2026-11-26T11:33:16.2626413Z ^[[36;1msudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm^[[0m
+android	KVM para o emulador	2026-11-26T11:33:16.2707900Z shell: /usr/bin/bash -e {0}
+android	KVM para o emulador	2026-11-26T11:33:16.2708160Z env:
+android	KVM para o emulador	2026-11-26T11:33:16.2708470Z   GODOT_VERSAO: 4.7.2-stable
+android	KVM para o emulador	2026-11-26T11:33:16.2708689Z ##[endgroup]
+android	KVM para o emulador	2026-11-26T11:33:16.2854944Z KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"
+android	A mesa de prova (o emulador chega a ela por 10.0.2.2, a rede local do emulador)	﻿2026-11-26T11:33:16.3361231Z ##[group]Run nohup node aparelhos/mesa-prova.mjs --porta=8080 --host=127.0.0.1 --pin=55667788 --mestre-auto > "$RUNNER_TEMP/mesa.log" 2>&1 &
+android	A mesa de prova (o emulador chega a ela por 10.0.2.2, a rede local do emulador)	2026-11-26T11:33:16.3361986Z ^[[36;1mnohup node aparelhos/mesa-prova.mjs --porta=8080 --host=127.0.0.1 --pin=55667788 --mestre-auto > "$RUNNER_TEMP/mesa.log" 2>&1 &^[[0m
+android	A mesa de prova (o emulador chega a ela por 10.0.2.2, a rede local do emulador)	2026-11-26T11:33:16.3362567Z ^[[36;1mfor i in $(seq 1 60); do grep -q "combate aberto" "$RUNNER_TEMP/mesa.log" && break; sleep 0.5; done^[[0m
+android	A mesa de prova (o emulador chega a ela por 10.0.2.2, a rede local do emulador)	2026-11-26T11:33:16.3362926Z ^[[36;1mcat "$RUNNER_TEMP/mesa.log"^[[0m
+android	A mesa de prova (o emulador chega a ela por 10.0.2.2, a rede local do emulador)	2026-11-26T11:33:16.3393610Z shell: /usr/bin/bash -e {0}
+android	A mesa de prova (o emulador chega a ela por 10.0.2.2, a rede local do emulador)	2026-11-26T11:33:16.3393988Z env:
+android	A mesa de prova (o emulador chega a ela por 10.0.2.2, a rede local do emulador)	2026-11-26T11:33:16.3394174Z   GODOT_VERSAO: 4.7.2-stable
+android	A mesa de prova (o emulador chega a ela por 10.0.2.2, a rede local do emulador)	2026-11-26T11:33:16.3394382Z ##[endgroup]
+android	A mesa de prova (o emulador chega a ela por 10.0.2.2, a rede local do emulador)	2026-11-26T11:33:16.8553912Z [servidor] servidor de mesa pronto (WebSocket em /ws)
+android	A mesa de prova (o emulador chega a ela por 10.0.2.2, a rede local do emulador)	2026-11-26T11:33:16.8554677Z [mesa-prova] a ouvir em 127.0.0.1:8080 (motor falso; sala de TESTE)
+android	A mesa de prova (o emulador chega a ela por 10.0.2.2, a rede local do emulador)	2026-11-26T11:33:16.8555743Z [mesa-prova] jogadoras: Espadachim de Bancada / prova-espadachim; Arqueira de Bancada / prova-arqueira; Batedora de Bancada / prova-batedora
+android	A mesa de prova (o emulador chega a ela por 10.0.2.2, a rede local do emulador)	2026-11-26T11:33:16.8556799Z [ligações] 11:33:16.657 ENTROU Mestre da prova (senha/PIN; ip 127.0.0.1)
+android	A mesa de prova (o emulador chega a ela por 10.0.2.2, a rede local do emulador)	2026-11-26T11:33:16.8557151Z [mesa-prova] Mestre-bot na mesa
+android	A mesa de prova (o emulador chega a ela por 10.0.2.2, a rede local do emulador)	2026-11-26T11:33:16.8576254Z [mesa-prova] combate aberto pelo Mestre-bot
+android	A mesa de prova (o emulador chega a ela por 10.0.2.2, a rede local do emulador)	2026-11-26T11:33:16.8576826Z pronto-mesa-prova 8080
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	﻿2026-11-26T11:33:16.8645944Z ##[group]Run reactivecircus/android-emulator-runner@v2
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8646239Z with:
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8646414Z   api-level: 30
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8646592Z   arch: x86_64
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8646773Z   target: google_apis
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8647125Z   emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8647489Z   disable-animations: true
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8647870Z   script: bash rascunhos/servidor/aparelhos/prova-android.sh build/android/assimilacao.apk "$RUNNER_TEMP"
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8648462Z   cores: 2
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8648629Z   avd-name: test
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8648809Z   force-avd-creation: true
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8649010Z   emulator-boot-timeout: 600
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8649227Z   emulator-port: 5554
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8649423Z   disable-spellchecker: false
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8649640Z   disable-linux-hw-accel: auto
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8649847Z   enable-hw-keyboard: false
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8650051Z   channel: stable
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8650264Z env:
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8650443Z   GODOT_VERSAO: 4.7.2-stable
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.8650641Z ##[endgroup]
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9112285Z ##[group]Configure emulator
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9114172Z API level: 30
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9114543Z System image API level: 30
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9114846Z target: google_apis
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9115167Z CPU architecture: x86_64
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9115499Z Hardware profile: 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9118747Z Cores: 2
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9120429Z RAM size: 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9120713Z Heap size: 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9121013Z SD card path or size: 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9121299Z Disk size: 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9121558Z AVD name: test
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9121839Z force avd creation: true
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9122219Z Emulator boot timeout: 600
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9122539Z emulator port: 5554
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9123162Z emulator options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9123761Z disable animations: true
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9124108Z disable spellchecker: false
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9124498Z disable Linux hardware acceleration: false
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9124914Z enable hardware keyboard: false
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9125237Z Channel: 0 (stable)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9125506Z Script:
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9126137Z bash rascunhos/servidor/aparelhos/prova-android.sh build/android/assimilacao.apk "$RUNNER_TEMP"
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9126599Z Pre emulator launch script:
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9126979Z ##[endgroup]
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9127279Z ##[group]Install Android SDK
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:16.9387918Z [command]/usr/bin/sh -c \yes | sdkmanager --licenses > /dev/null
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:28.9420574Z Installing latest build tools, platform tools, and platform.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:28.9432241Z [command]/usr/bin/sh -c \sdkmanager --install 'build-tools;37.0.0' platform-tools 'platforms;android-30'> /dev/null
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:33.8013739Z Installing latest emulator.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:33.8022993Z [command]/usr/bin/sh -c \sdkmanager --install emulator --channel=0 > /dev/null
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:49.3033369Z Installing system images.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:33:49.3043626Z [command]/usr/bin/sh -c \sdkmanager --install 'system-images;android-30;google_apis;x86_64' --channel=0 > /dev/null
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:23.0892184Z ##[endgroup]
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:23.0895325Z ##[group]Create AVD
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:23.0895791Z Creating AVD.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:23.0910906Z [command]/usr/bin/sh -c \echo no | avdmanager create avd --force -n test --package 'system-images;android-30;google_apis;x86_64'
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:23.8670147Z Loading local repository...                                                     
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.0778473Z [=========                              ] 25% Loading local repository...       
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.0779058Z Auto-selecting single ABI x86_64
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1219191Z Do you wish to create a custom hardware profile? [no] [command]/usr/bin/sh -c \printf 'hw.cpu.ncore=2\n' >> /home/runner/.android/avd/test.avd/config.ini
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1237976Z ##[endgroup]
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1240023Z ##[group]Launch Emulator
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1240347Z Starting emulator.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1249336Z [command]/usr/bin/sh -c \/usr/local/lib/android/sdk/emulator/emulator -port 5554 -avd test -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim &
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1355473Z INFO         | Android emulator version 37.3.10.0 (build_id 16970787) (CL:N/A)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1356033Z INFO         | Graphics backend: gfxstream
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1356530Z INFO         | Found systemPath /usr/local/lib/android/sdk/system-images/android-30/google_apis/x86_64/
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1840493Z INFO         | Saving last run QEMU version for the AVD to 2
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1841555Z WARNING      | Please update the emulator to one that supports the feature(s): Vulkan
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1842653Z ##############################################################################
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1843381Z ##                        WARNING - ACTION REQUIRED                         ##
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1844119Z ##  Consider using the '-metrics-collection' flag to help improve the       ##
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1844865Z ##  emulator by sending anonymized usage data. Or use the '-no-metrics'     ##
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1845598Z ##  flag to bypass this warning and turn off the metrics collection.        ##
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1846325Z ##  In a future release this warning will turn into a one-time blocking     ##
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1846964Z ##  prompt to ask for explicit user input regarding metrics collection.     ##
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1847503Z ##                                                                          ##
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1848046Z ##  Please see '-help-metrics-collection' for more details. You can use     ##
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1848845Z ##  '-metrics-to-file' or '-metrics-to-console' flags to see what type of   ##
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1849727Z ##  data is being collected by emulator as part of usage statistics.        ##
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1850323Z ##############################################################################
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1850811Z INFO         | Guest GLES Driver: Auto (ext controls)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1851506Z INFO         | emuglConfig_init: vulkan_mode_selected:swiftshader gles_mode_selected:swiftshader
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1852115Z INFO         | Checking system compatibility:
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1852529Z INFO         |   Checking: hasSufficientDiskSpace
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1853069Z INFO         |      Ok: Disk space requirements to run avd: `test` are met
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1853616Z INFO         |   Checking: hasSufficientHwGpu
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1854161Z INFO         |      Ok: Hardware GPU compatibility checks are not required
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1854722Z INFO         |   Checking: hasSufficientSystem
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1855285Z INFO         |      Ok: System requirements to run avd: `test` are met
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.1856685Z WARNING      | Feature QuickbootFileBacked is disabled due to stability issues, if you really want that, the environment variable ANDROID_EMU_FORCE_QUICKBOOT_FILE_BACKED need to set to 1
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.3145405Z WARNING      | FeatureControl is requesting a non existing feature.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.3924979Z ERROR        | Unable to connect to adb daemon on port: 5037
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.3926362Z INFO         | Storing crashdata in: /tmp/android-runner/emu-crash-37.3.10.db, detection is enabled for process: 2726
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.3927412Z INFO         | Initializing gfxstream backend
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.3936385Z INFO         | startOpenglesRendererImpl: gpu info
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.3936779Z INFO         | 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.3939900Z INFO         | initIcdPaths: ICD set to 'swiftshader', using Swiftshader ICD
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.3940968Z INFO         | Setting ICD filenames for the loader = /usr/local/lib/android/sdk/emulator/lib64/vulkan/vk_swiftshader_icd.json
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.3942300Z INFO         | SharedLibrary::open for [/usr/local/lib/android/sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so]
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.3943783Z INFO         | SharedLibrary::open for [/usr/local/lib/android/sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1]
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.3944856Z INFO         | SharedLibrary::open for [/usr/local/lib/android/sdk/emulator/lib64/vulkan/libvulkan.so]
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.3945723Z INFO         | Added library: /usr/local/lib/android/sdk/emulator/lib64/vulkan/libvulkan.so
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4029179Z INFO         | Selecting Vulkan device: SwiftShader Device (Subzero), Version: 1.3.0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4029934Z INFO         | Using Vulkan externalMemoryMode: OpaqueFd for VkEmulation
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4384144Z INFO         | Format VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 does not support YCbCr sampler conversion
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4414433Z INFO         | SharedLibrary::open for [libX11]
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4415015Z WARNING      | Could not open libX11.so, try libX11.so.6
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4415585Z INFO         | SharedLibrary::open for [libX11.so.6]
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4416120Z INFO         | SharedLibrary::open for [libX11-xcb]
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4416632Z WARNING      | Could not open libX11-xcb.so, try libX11-xcb.so.1
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4416999Z INFO         | SharedLibrary::open for [libX11-xcb.so.1]
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4435102Z INFO         | queryConfigs: Host EGL config 0x10 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4435745Z INFO         | queryConfigs: Host EGL config 0x11 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4436316Z INFO         | queryConfigs: Host EGL config 0x12 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4436880Z INFO         | queryConfigs: Host EGL config 0x13 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4437437Z INFO         | queryConfigs: Host EGL config 0x14 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4437988Z INFO         | queryConfigs: Host EGL config 0x15 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4438677Z INFO         | queryConfigs: Host EGL config 0x17 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4439250Z INFO         | queryConfigs: Host EGL config 0x18 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4439804Z INFO         | queryConfigs: Host EGL config 0x19 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4440376Z INFO         | queryConfigs: Host EGL config 0x1a was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4441031Z INFO         | queryConfigs: Host EGL config 0x1b was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4441636Z INFO         | queryConfigs: Host EGL config 0x1c was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4442188Z INFO         | queryConfigs: Host EGL config 0x1d was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4442701Z INFO         | queryConfigs: Host EGL config 0x1e was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4443238Z INFO         | queryConfigs: Host EGL config 0x1f was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4443778Z INFO         | queryConfigs: Host EGL config 0x21 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4444353Z INFO         | queryConfigs: Host EGL config 0x22 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4444895Z INFO         | queryConfigs: Host EGL config 0x23 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4445436Z INFO         | queryConfigs: Host EGL config 0x24 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4445990Z INFO         | queryConfigs: Host EGL config 0x25 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4446581Z INFO         | queryConfigs: Host EGL config 0x26 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4447151Z INFO         | queryConfigs: Host EGL config 0x27 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4448044Z INFO         | queryConfigs: Host EGL config 0x28 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4448783Z INFO         | queryConfigs: Host EGL config 0x29 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4449350Z INFO         | queryConfigs: Host EGL config 0x2a was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4449996Z INFO         | queryConfigs: Host EGL config 0x2b was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4450529Z INFO         | queryConfigs: Host EGL config 0x2c was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4451072Z INFO         | queryConfigs: Host EGL config 0x2d was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4451605Z INFO         | queryConfigs: Host EGL config 0x2e was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4452136Z INFO         | queryConfigs: Host EGL config 0x2f was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4452677Z INFO         | queryConfigs: Host EGL config 0x30 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4453426Z INFO         | queryConfigs: Host EGL config 0x31 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4453963Z INFO         | queryConfigs: Host EGL config 0x32 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4454519Z INFO         | queryConfigs: Host EGL config 0x33 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4455075Z INFO         | queryConfigs: Host EGL config 0x35 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4455651Z INFO         | queryConfigs: Host EGL config 0x36 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4456230Z INFO         | queryConfigs: Host EGL config 0x37 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4456790Z INFO         | queryConfigs: Host EGL config 0x38 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4457330Z INFO         | queryConfigs: Host EGL config 0x39 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4457877Z INFO         | queryConfigs: Host EGL config 0x3a was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4458573Z INFO         | queryConfigs: Host EGL config 0x3b was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4459097Z INFO         | queryConfigs: Host EGL config 0x3c was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4459651Z INFO         | queryConfigs: Host EGL config 0x3d was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4460189Z INFO         | queryConfigs: Host EGL config 0x3f was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4460790Z INFO         | queryConfigs: Host EGL config 0x40 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4461376Z INFO         | queryConfigs: Host EGL config 0x41 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4461965Z INFO         | queryConfigs: Host EGL config 0x42 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4462538Z INFO         | queryConfigs: Host EGL config 0x43 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4463106Z INFO         | queryConfigs: Host EGL config 0x44 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4463671Z INFO         | queryConfigs: Host EGL config 0x45 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4464231Z INFO         | queryConfigs: Host EGL config 0x46 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4464762Z INFO         | queryConfigs: Host EGL config 0x47 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4465317Z INFO         | queryConfigs: Host EGL config 0x48 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4465869Z INFO         | queryConfigs: Host EGL config 0x49 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4466402Z INFO         | queryConfigs: Host EGL config 0x4a was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4466958Z INFO         | queryConfigs: Host EGL config 0x4b was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4467506Z INFO         | queryConfigs: Host EGL config 0x1 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4468049Z INFO         | queryConfigs: Host EGL config 0x2 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4468736Z INFO         | queryConfigs: Host EGL config 0x3 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4469274Z INFO         | queryConfigs: Host EGL config 0x5 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4469813Z INFO         | queryConfigs: Host EGL config 0x6 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4470357Z INFO         | queryConfigs: Host EGL config 0x7 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4470887Z INFO         | queryConfigs: Host EGL config 0x8 was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4471422Z INFO         | queryConfigs: Host EGL config 0xa was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4471967Z INFO         | queryConfigs: Host EGL config 0xb was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4472500Z INFO         | queryConfigs: Host EGL config 0xc was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4473294Z INFO         | queryConfigs: Host EGL config 0xd was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4473879Z INFO         | queryConfigs: Host EGL config 0xe was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4474402Z INFO         | queryConfigs: Host EGL config 0xf was not added
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4512894Z INFO         | Initializing VkEmulation features:
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4519029Z INFO         |     glInteropSupported: false
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4519488Z INFO         |     useDeferredCommands: true
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4519984Z INFO         |     createResourceWithRequirements: true
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4520474Z INFO         |     useVulkanComposition: false
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4520944Z INFO         |     useVulkanNativeSwapchain: false
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4521412Z INFO         |     enable guestRenderDoc: false
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4522114Z INFO         |     enable Ycbcr emulation: false
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4522506Z INFO         |     guestVulkanOnly: false
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4522800Z INFO         |     useDedicatedAllocations: false
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4523119Z INFO         |     guestVulkanMaxApiVersion: 1.3.0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4523450Z INFO         |     enableProtectedMemoryEmulation: false
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4524883Z INFO         |     VulkanDisableShaderFloatControls2: disabled ((vk_util::extensionSupported(mDeviceInfo.extensions, VK_KHR_SHADER_FLOAT_CONTROLS_2_EXTENSION_NAME) || mDeviceInfo.physdevProps.apiVersion >= VK_API_VERSION_1_4) && mDeviceInfo.physdevProps.vendorID == 0x1010)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4526600Z INFO         | Graphics Adapter Vendor Google (Google Inc.)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4527326Z INFO         | Graphics Adapter Android Emulator OpenGL ES Translator (Google SwiftShader)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4528141Z INFO         | Graphics API Version OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4531773Z INFO         | Graphics API Extensions GL_OES_EGL_sync GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_depth24 GL_OES_depth32 GL_OES_element_index_uint GL_OES_texture_float GL_OES_texture_float_linear GL_OES_compressed_paletted_texture GL_OES_compressed_ETC1_RGB8_texture GL_OES_depth_texture GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_OES_packed_depth_stencil GL_OES_vertex_half_float GL_OES_standard_derivatives GL_OES_texture_npot GL_OES_rgb8_rgba8 GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_texture_format_BGRA8888 GL_APPLE_texture_format_BGRA8888 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4534398Z INFO         | Graphics Device Extensions N/A
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4534888Z INFO         | Disabling sparse binding feature support
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4604389Z INFO         | Userspace boot properties:
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4605070Z INFO         |   android.bootanim=0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4605682Z INFO         |   android.qemud=1
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4606367Z INFO         |   androidboot.boot_devices=pci0000:00/0000:00:03.0 pci0000:00/0000:00:06.0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4606979Z INFO         |   androidboot.hardware=ranchu
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4607459Z INFO         |   androidboot.hardware.vulkan=ranchu
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4607977Z INFO         |   androidboot.serialno=EMULATOR37X3X10X0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4608929Z INFO         |   androidboot.vbmeta.digest=fe75c2a5d8acc56679b9ff248d9bbb4830bcd72c5bca68461d9e9de20914a4e1
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4609658Z INFO         |   androidboot.vbmeta.hash_alg=sha256
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4610133Z INFO         |   androidboot.vbmeta.size=6144
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4610508Z INFO         |   qemu=1
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4610782Z INFO         |   qemu.avd_name=test
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4611059Z INFO         |   qemu.camera_hq_edge_processing=0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4611348Z INFO         |   qemu.camera_protocol_ver=1
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4611646Z INFO         |   qemu.dalvik.vm.heapsize=512m
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4611910Z INFO         |   qemu.encrypt=1
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4612155Z INFO         |   qemu.gles=1
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4612399Z INFO         |   qemu.gltransport=pipe
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4612694Z INFO         |   qemu.gltransport.drawFlushInterval=800
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4613213Z INFO         |   qemu.hwcodec.avcdec=2
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4613468Z INFO         |   qemu.hwcodec.hevcdec=2
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4613719Z INFO         |   qemu.hwcodec.vpxdec=2
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4613989Z INFO         |   qemu.opengles.version=196608
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4614326Z INFO         |   qemu.settings.system.screen_off_timeout=2147483647
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4614626Z INFO         |   qemu.skin=320x640
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4614876Z INFO         |   qemu.uirenderer=skiagl
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4615121Z INFO         |   qemu.virtiowifi=1
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4615354Z INFO         |   qemu.vsync=60
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.4803169Z WARNING: cannnot unmap ptr 0x70d258401000 as it is in the protected range from 0x70d1d8400000 to 0x70d258600000
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:24.5022103Z INFO         | Monitoring duration of emulator setup.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:25.5751521Z INFO         | Successfully initialized netsim WiFi
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:25.5786865Z INFO         | Setting display: 0 configuration to: 320x640, dpi: 160x160 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:25.5787622Z INFO         | setDisplayActiveConfig: id:0, 320x640
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:25.5788081Z INFO         | emulatorSetupEnvironment: Environment scene is not required
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:25.5840275Z USER_INFO    | Emulator is performing a full startup. This may take upto two minutes, or more.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:25.5850980Z WARNING      | Failed to process .ini file /home/runner/.android/emu-update-last-check.ini for reading.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:25.7251195Z WARNING      | Failed to process .ini file /home/runner/.android/emu-update-last-check.ini for reading.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:34.1280899Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:34.1308866Z * daemon not running; starting now at tcp:5037
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:34.1334866Z * daemon started successfully
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:34.1342919Z The process '/usr/local/lib/android/sdk/platform-tools/adb' failed with exit code 1
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:34.1349029Z adb: device offline
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:36.1379951Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:36.1410347Z adb: device offline
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:36.1415818Z The process '/usr/local/lib/android/sdk/platform-tools/adb' failed with exit code 1
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:38.1427295Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:38.1459505Z adb: device offline
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:38.1464671Z The process '/usr/local/lib/android/sdk/platform-tools/adb' failed with exit code 1
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:40.1502358Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:40.1608089Z 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:42.1666595Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:42.1769656Z 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:44.1805448Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:44.1958519Z 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:46.1995113Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:46.2858753Z 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:48.2968981Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:48.3550566Z 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:50.3612271Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:50.4724024Z 1
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:50.4947475Z Emulator booted.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:50.4980354Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell input keyevent 82
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:51.1907190Z INFO         | Boot completed in 27024 ms
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:51.1911130Z INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:53.0476486Z Disabling animations.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:53.0500216Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell settings put global window_animation_scale 0.0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:53.3956487Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell settings put global transition_animation_scale 0.0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:53.5581300Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell settings put global animator_duration_scale 0.0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:53.7174778Z ##[endgroup]
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:53.7209835Z [command]/usr/bin/sh -c bash rascunhos/servidor/aparelhos/prova-android.sh build/android/assimilacao.apk "$RUNNER_TEMP"
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:54.4817861Z WARNING      | adb command '/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell am broadcast -a com.android.emulator.multidisplay.START -n com.android.emulator.multidisplay/.MultiDisplayServiceReceiver --user 0 ' failed: 'adb: device 'emulator-5554' not found'
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:55.4296168Z adb uid 0 (0 = root, preciso para lançar a activity não exportada)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:55.5390273Z Android 11
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:34:55.6105692Z ABI x86_64
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:04.1636466Z Performing Streamed Install
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:04.1638421Z Success
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:04.6804190Z Starting: Intent { cmp=org.assimilacao.mesa/com.godot.game.GodotApp (has extras) }
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:06.9638597Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:06.9640287Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:06.9642016Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:06.9643905Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:07.4527927Z Status: ok
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:07.4528593Z LaunchState: COLD
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:07.4529169Z Activity: org.assimilacao.mesa/com.godot.game.GodotApp
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:07.4529717Z TotalTime: 2682
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:07.4530020Z WaitTime: 2692
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:07.4530322Z Complete
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.3662649Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.3664303Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.3665865Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.3667416Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.3776244Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.3778453Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.3780156Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.3781705Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.3783147Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.4428760Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.4431211Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.4451031Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.4458829Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.4570776Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.4573312Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.4575636Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.4577913Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.4579995Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.4783260Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.4785399Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.5449310Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.5451358Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.5453245Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.5455202Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.5575311Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.5583585Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.5586727Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.5590029Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.5591734Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.6243228Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.6245710Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.6248784Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.6261369Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.6359417Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.6364262Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.6367285Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.6370770Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.6373185Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.7119211Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.7123093Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.7125194Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.7127311Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.7248128Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.7253049Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.7254860Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.7257520Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.7260216Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.7379272Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.7384883Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.7386936Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.7389648Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.7391668Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.7394178Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.8361933Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.8380548Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.8385883Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.8387900Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.8508743Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.8512079Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.8514176Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.8515833Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:16.8517814Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.2775275Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.2777356Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.2779199Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.2780764Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.3810300Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.3812627Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.3814227Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.3815776Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.3817367Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.5670944Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.5672672Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.5674160Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.5675844Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.6354531Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.6357318Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.6360434Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.6362968Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.6365003Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.7790678Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.7792807Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.7794527Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.7796154Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.7939940Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.7945055Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.7946957Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.7949765Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.7952643Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.8843552Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.8848010Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.8872829Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.8875319Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9015476Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9020601Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9022170Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9023877Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9025455Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9150752Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9154908Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9156571Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9158144Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9159921Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9163130Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9323466Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9325634Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9328618Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9330481Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9333534Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9336682Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9486949Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9489334Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9492009Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9493799Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9495664Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9497509Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9499322Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9661378Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9663492Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9665803Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9668436Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9671492Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9673500Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9676375Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:17.9678616Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0049623Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0052424Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0054716Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0056988Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0059215Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0060944Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0442808Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0460895Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0464509Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0466663Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0469224Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0470933Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0711256Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0713820Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0715667Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0717951Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0719754Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0721544Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0867984Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0873051Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0875856Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0878117Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0886544Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.0890192Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.1058376Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.1072407Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.1074750Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.1077067Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.1079354Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.1081829Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.1184219Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.1197332Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.1199730Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.2432821Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.2434914Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.2436864Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.2438832Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.2680969Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.2683010Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.2685044Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.2686871Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.2690511Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.3405001Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.3406991Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.3409138Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.3411286Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.3514657Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.3516272Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.3517917Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.3520790Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.3526777Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.7013337Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.7105809Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.7107387Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.9678059Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.9680018Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.9681897Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.9683549Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.9788460Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.9790350Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.9792225Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.9795814Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.9798569Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.9981118Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.9983516Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.9985722Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.9987653Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:18.9990430Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:19.0584460Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:19.2861036Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:19.2864457Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:19.2866314Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:19.2868522Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:19.3325023Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:19.3330064Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:19.3331937Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:19.3333631Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:19.3335491Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0856627Z 11-26 11:35:04.936  3782  3782 D GodotActivity: Project command line parameters: [--xr_mode_regular, --xr-mode, off, --fullscreen, --background_color, #000000]
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0859092Z 11-26 11:35:04.936  3782  3782 D GodotActivity: Launch intent Intent { flg=0x10000000 cmp=org.assimilacao.mesa/com.godot.game.GodotApp (has extras) } with parameters [--, --servidor=10.0.2.2:8080, --entrar-nome=Arqueira de Bancada, --entrar-senha=prova-arqueira]
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0901251Z 11-26 11:35:18.600  3782  3821 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0903260Z 11-26 11:35:18.600  3782  3821 E godot   : 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0909059Z 11-26 11:35:18.600  3782  3821 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0910333Z 11-26 11:35:18.600  3782  3821 E godot   : ERROR: Method/function failed.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0911683Z 11-26 11:35:18.600  3782  3821 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0912768Z 11-26 11:35:18.794  3782  3821 I godot   : 1: 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0913525Z 11-26 11:35:18.794  3782  3821 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0914629Z 11-26 11:35:18.794  3782  3821 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0915691Z 11-26 11:35:18.794  3782  3821 E godot   : 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0916495Z 11-26 11:35:18.794  3782  3821 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0917251Z 11-26 11:35:18.794  3782  3821 E godot   : ERROR: Method/function failed.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0918158Z 11-26 11:35:18.794  3782  3821 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0919120Z 11-26 11:35:18.848  3782  3821 I godot   : 1: 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0919750Z 11-26 11:35:18.849  3782  3821 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0920891Z 11-26 11:35:18.849  3782  3821 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0921631Z 11-26 11:35:18.849  3782  3821 E godot   : 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0922344Z 11-26 11:35:18.849  3782  3821 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0923109Z 11-26 11:35:18.849  3782  3821 E godot   : ERROR: Method/function failed.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0923940Z 11-26 11:35:18.849  3782  3821 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0939068Z 11-26 11:35:18.869  3782  3821 I godot   : 1: 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0971740Z 11-26 11:35:18.869  3782  3821 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0973241Z 11-26 11:35:18.869  3782  3821 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0974499Z 11-26 11:35:18.869  3782  3821 E godot   : 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0975597Z 11-26 11:35:18.869  3782  3821 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0976812Z 11-26 11:35:18.869  3782  3821 E godot   : ERROR: Method/function failed.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0978142Z 11-26 11:35:18.869  3782  3821 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0979329Z 11-26 11:35:18.888  3782  3821 I godot   : 1: 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0980031Z 11-26 11:35:18.888  3782  3821 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0984128Z 11-26 11:35:18.888  3782  3821 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0984898Z 11-26 11:35:18.888  3782  3821 E godot   : 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0985683Z 11-26 11:35:18.888  3782  3821 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0986462Z 11-26 11:35:18.888  3782  3821 E godot   : ERROR: Method/function failed.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0987382Z 11-26 11:35:18.888  3782  3821 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0988048Z 11-26 11:35:18.934  3782  3821 I godot   : 1: 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.0988937Z 11-26 11:35:18.934  3782  3821 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.1072889Z 11-26 11:35:18.934  3782  3821 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.1074794Z 11-26 11:35:18.934  3782  3821 E godot   : 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.1145387Z 11-26 11:35:18.934  3782  3821 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.1146984Z 11-26 11:35:18.934  3782  3821 E godot   : ERROR: Method/function failed.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.1158887Z 11-26 11:35:18.934  3782  3821 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.1160012Z 11-26 11:35:18.378  3782  3821 I godot   : rede: ROOM_SNAPSHOT seq=5 fase=combate plataforma=Android
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.1161242Z PROVA ANDROID OK
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.2979107Z rascunhos/servidor/aparelhos/controlo-gles.pck: 1 file pushed, 0 skipped. 31.1 MB/s (2952 bytes in 0.000s)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.9006630Z SELinux: Loaded file_contexts
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:24.9189345Z -rw------- 1 u0_a167 u0_a167 u:object_r:app_data_file:s0:c167,c256,c512,c768  2952 2026-11-26 11:35 /data/data/org.assimilacao.mesa/files/controlo-gles.pck
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:25.0163754Z Starting: Intent { cmp=org.assimilacao.mesa/com.godot.game.GodotApp (has extras) }
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:26.0310083Z Status: ok
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:26.0310537Z LaunchState: COLD
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:26.0311073Z Activity: org.assimilacao.mesa/com.godot.game.GodotApp
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:26.0311495Z TotalTime: 1029
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:26.0311754Z WaitTime: 1036
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:35:26.0312000Z Complete
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.8673321Z == CONTROLO (Godot 4.7.2 vazio no motor do APK, nenhum shader do jogo): controlo-gles.pck
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.8684461Z   11-26 11:35:24.964  5489  5489 D GodotActivity: Launch intent Intent { flg=0x10000000 cmp=org.assimilacao.mesa/com.godot.game.GodotApp (has extras) } with parameters [--main-pack, /data/data/org.assimilacao.mesa/files/controlo-gles.pck]
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.8708895Z   SceneShaderGLES3 link falhado: 0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.8725846Z   CanvasShaderGLES3 link falhado: 0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.8742546Z   SkyShaderGLES3 link falhado: 0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.8759256Z   ParticlesShaderGLES3 link falhado: 0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.8776211Z   CopyShaderGLES3 link falhado: 0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.8805298Z   antes do banner (init):      0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.8855713Z   tecto declarado:             
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.8899972Z   driver:                      
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.8959431Z == JOGO: android-godot.log
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.8970749Z   SceneShaderGLES3 link falhado: 85
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.8987355Z   CanvasShaderGLES3 link falhado: 2
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9005799Z   SkyShaderGLES3 link falhado: 3
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9021763Z   ParticlesShaderGLES3 link falhado: 0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9059042Z   CopyShaderGLES3 link falhado: 0
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9065471Z   antes do banner (init):      4
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9117459Z   tecto declarado:             GL_MAX_FRAGMENT_UNIFORM_VECTORS (261) 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9172520Z   driver:                      OpenGL API OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1) - Compatibility - Using Device: Google (Google Inc.) - Android Emulator OpenGL ES Translator (Google SwiftShader)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9182076Z FALHA: o controlo não disse «pronto» em 60 s
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9184634Z (o controlo GLES não correu até ao fim; a prova não depende dele)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9196387Z ##[group]Terminate Emulator
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9211816Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 emu kill
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9254153Z OK: killing emulator, bye bye
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9254693Z OK
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9261392Z INFO         | Wait for emulator (pid 2726) 20 seconds to shutdown gracefully before kill;you can set environment variable ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL(in seconds) to change the default value (20 seconds)
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9262325Z 
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9262745Z ##[endgroup]
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9450606Z USER_INFO    | Snapshots have been disabled by the user, save request is ignored.
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:29.9451652Z INFO         | Saving snapshot 'default_boot' took 0 ms
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:30.5248793Z WARNING      | Emulator client has not yet been configured.. Call configure me first!
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:30.5350806Z INFO         | removeAll
+android	O APK x86_64 no emulador recebe o ROOM_SNAPSHOT	2026-11-26T11:36:30.5641855Z WARNING      | Netsim Wifi dns:///localhost:35455 is gone due to Stream removed (CANCELLED)
+android	Run actions/upload-artifact@v4	﻿2026-11-26T11:36:30.6772016Z ##[group]Run actions/upload-artifact@v4
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.6772284Z with:
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.6772462Z   name: prova-android
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.6772730Z   path: /home/runner/work/_temp/*.log
+android	Run actions/upload-artifact@v4	/home/runner/work/_temp/*.png
+android	Run actions/upload-artifact@v4	
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.6773043Z   retention-days: 14
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.6773241Z   if-no-files-found: warn
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.6773439Z   compression-level: 6
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.6773628Z   overwrite: false
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.6773819Z   include-hidden-files: false
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.6774192Z env:
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.6774363Z   GODOT_VERSAO: 4.7.2-stable
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.6774583Z   ANDROID_AVD_HOME: /home/runner/.android/avd
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.6774826Z ##[endgroup]
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.8197127Z (node:3382) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.8197873Z (Use `node --trace-deprecation ...` to show where the warning was created)
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.8278553Z With the provided path, there will be 9 files uploaded
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.8283326Z Artifact name is valid!
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:30.8283959Z Root directory input is valid!
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:31.8749277Z Beginning upload of artifact content to blob storage
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:31.9173199Z (node:3382) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:32.3831403Z Uploaded bytes 211391
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:32.4603784Z Finished uploading artifact content to blob storage!
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:32.4604954Z SHA256 digest of uploaded artifact zip is 862ed05532457b03e3dc8c56c82438c48042df5674f5a3cecc9b516ee73f1d21
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:32.4605739Z Finalizing artifact upload
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:32.8623497Z Artifact prova-android.zip successfully finalized. Artifact ID 15112558255
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:32.8624550Z Artifact prova-android has been successfully uploaded! Final size is 211391 bytes. Artifact ID is 15112558255
+android	Run actions/upload-artifact@v4	2026-11-26T11:36:32.8629663Z Artifact download URL: https://github.com/arthof09-ai/jogo-verdadeiro-rascunhos/actions/runs/45811149778/artifacts/15112558255
+android	Post Run actions/setup-node@v4	﻿2026-11-26T11:36:32.8808026Z Post job cleanup.
+android	Post Run actions/setup-node@v4	2026-11-26T11:36:32.9848931Z (node:3394) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+android	Post Run actions/setup-node@v4	2026-11-26T11:36:32.9849609Z (Use `node --trace-deprecation ...` to show where the warning was created)
+android	Post Run actions/checkout@v4	﻿2026-11-26T11:36:33.0018070Z Post job cleanup.
+android	Post Run actions/checkout@v4	2026-11-26T11:36:33.0844542Z [command]/usr/bin/git version
+android	Post Run actions/checkout@v4	2026-11-26T11:36:33.0895826Z git version 2.56.1
+android	Post Run actions/checkout@v4	2026-11-26T11:36:33.0941080Z Temporarily overriding HOME='/home/runner/work/_temp/601a9e80-12ad-416d-a148-e074024d8ce0' before making global git config changes
+android	Post Run actions/checkout@v4	2026-11-26T11:36:33.0944421Z Adding repository directory to the temporary git global config as a safe directory
+android	Post Run actions/checkout@v4	2026-11-26T11:36:33.0947397Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos
+android	Post Run actions/checkout@v4	2026-11-26T11:36:33.1024573Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+android	Post Run actions/checkout@v4	2026-11-26T11:36:33.1079520Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+android	Post Run actions/checkout@v4	2026-11-26T11:36:33.1520967Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+android	Post Run actions/checkout@v4	2026-11-26T11:36:33.1561228Z http.https://github.com/.extraheader
+android	Post Run actions/checkout@v4	2026-11-26T11:36:33.1575578Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+android	Post Run actions/checkout@v4	2026-11-26T11:36:33.1620239Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+android	Post Run actions/checkout@v4	2026-11-26T11:36:33.2000806Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+android	Post Run actions/checkout@v4	2026-11-26T11:36:33.2037298Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+android	Complete job	﻿2026-11-26T11:36:33.2468997Z Cleaning up orphan processes
+android	Complete job	2026-11-26T11:36:33.2729167Z Terminate orphan process: pid (2279) (MainThread)
+android	Complete job	2026-11-26T11:36:33.2800486Z Terminate orphan process: pid (2814) (adb)
+android	Complete job	2026-11-26T11:36:33.2877208Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/download-artifact@v4, actions/setup-node@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

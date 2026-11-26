@@ -24,6 +24,8 @@ depois da entrada. Os `web-03-medicao-*.png` mostram o ecrã com o JSON da V1.0.
 **O que não está aqui:** as fotos dos aparelhos reais (telemóvel e PC lado a lado), o JSON da V1.0 do telemóvel do
 Mestre e a prova do APK num Android a correr. As duas primeiras dependem da JV3.4b (ver `rede-da-casa/`). A terceira
 depende do job `android` do workflow, que está em `ci-pendente/` (ver o ESTADO-FINAL).
+*(ORDEM-PLANO-2-F2-ANDROID-SHADER, 26/11: o job `android` ficou verde, e o APK recebe o ROOM_SNAPSHOT no emulador. As
+provas, e a medição que mostra que os erros de shader são do emulador, estão em `provas/ordem-plano-2-f2-android-shader/`.)*
 
 Nota de 24/11 (o método corrigiu-se na ORDEM-PLANO-2-F2-PROVA-WINDOWS: os logs da prova do Windows de 26/11 são inteiros e
 normalizados para UTF-8 pelo guião, e a origem do aviso do canário está em `windows/README.md`). Os logs `qr.log` e `prova-windows.log` saíram da consola do Windows em CP1252 e têm caracteres fora de UTF-8;

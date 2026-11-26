@@ -1,0 +1,203 @@
+# comando: cd rascunhos/servidor && MOTOR_MJS=<motor privado, fora do repo> node --test --test-reporter=spec "testes-motor-real/*.test.mjs"
+✔ motor real: a estabilizada curada pelo aplicarCura do site fica com 1 + cura, levanta-se e age na vez dela (25.5269ms)
+DIAGNOSTICO-MOTOR-REAL {
+ "sha": "a91c021cda11df675c78c63277e6f2679faa79c716c7ba104373198689993261",
+ "chamadas": 52,
+ "resultados": [
+  "acerta",
+  "erra",
+  "falhaCritica",
+  "critico"
+ ],
+ "desconhecidos": [],
+ "excecoes": [],
+ "erros": [],
+ "exemploSaida": {
+  "resultado": "acerta",
+  "danoAplicado": {
+   "parcelas": [
+    {
+     "tipo": "cortante",
+     "expressao": "1d6+2",
+     "faces": [
+      4
+     ],
+     "subtotal": 6
+    }
+   ],
+   "total": 6,
+   "dme": 5.5,
+   "recibo": "1d6+2 → [4] = 6 (cortante)",
+   "rdAplicada": null,
+   "erro": null
+  },
+  "erro": null,
+  "chavesRolagem": [
+   "ajusteVantagemDesvantagem",
+   "bonus",
+   "conjuntosDeFaces",
+   "escolhido",
+   "expressao",
+   "niveisLiquidos",
+   "resultados",
+   "total"
+  ],
+  "rolagemExemplo": {
+   "expressao": "1d20+4",
+   "conjuntosDeFaces": [
+    [
+     11
+    ]
+   ],
+   "bonus": 4,
+   "ajusteVantagemDesvantagem": 0,
+   "niveisLiquidos": 0,
+   "resultados": [
+    15
+   ],
+   "escolhido": 15,
+   "total": 15
+  },
+  "totalEfectivo": 6,
+  "chavesPublico": [
+   "recibo"
+  ],
+  "chavesFalhaCritica": null,
+  "desgracaPendente": null,
+  "chavesTopo": [
+   "contraAtaquePendente",
+   "danoAplicado",
+   "defesaUsada",
+   "desgracaPendente",
+   "erro",
+   "pa",
+   "publico",
+   "rdAplicada",
+   "reacaoConsumida",
+   "resultado",
+   "rolagem",
+   "soDoMestre",
+   "totalEfectivo"
+  ],
+  "chavesSoDoMestre": [
+   "alvoDepois",
+   "efeitosAtacante"
+  ],
+  "alvoDepois": [
+   "estadosNovos",
+   "estadosRemovidos",
+   "vidaActual"
+  ]
+ },
+ "exemploFalhaCritica": {
+  "resultado": "falhaCritica",
+  "danoAplicado": null,
+  "erro": null,
+  "chavesRolagem": [
+   "ajusteVantagemDesvantagem",
+   "bonus",
+   "conjuntosDeFaces",
+   "escolhido",
+   "expressao",
+   "niveisLiquidos",
+   "resultados",
+   "total"
+  ],
+  "rolagemExemplo": {
+   "expressao": "1d20+7",
+   "conjuntosDeFaces": [
+    [
+     5
+    ]
+   ],
+   "bonus": 7,
+   "ajusteVantagemDesvantagem": 0,
+   "niveisLiquidos": 0,
+   "resultados": [
+    12
+   ],
+   "escolhido": 12,
+   "total": 12
+  },
+  "totalEfectivo": 0,
+  "chavesPublico": [
+   "recibo"
+  ],
+  "chavesFalhaCritica": null,
+  "desgracaPendente": null,
+  "chavesTopo": [
+   "contraAtaquePendente",
+   "danoAplicado",
+   "defesaUsada",
+   "desgracaPendente",
+   "erro",
+   "pa",
+   "publico",
+   "rdAplicada",
+   "reacaoConsumida",
+   "resultado",
+   "rolagem",
+   "soDoMestre",
+   "totalEfectivo"
+  ],
+  "chavesSoDoMestre": [
+   "alvoDepois",
+   "efeitosAtacante",
+   "falhaCritica"
+  ],
+  "alvoDepois": [
+   "estadosNovos",
+   "estadosRemovidos",
+   "vidaActual"
+  ]
+ },
+ "voltas": 25,
+ "contagem": {
+  "ROOM_RECEIPT:APLICADA": 24,
+  "ROOM_RECEIPT:AGUARDANDO_MESTRE": 1
+ },
+ "recusas": [],
+ "desgracas": [
+  {
+   "tipo": "desgraca",
+   "proposta": {
+    "id": "acerta-se",
+    "nome": "Acerta-se a si próprio",
+    "gravidade": 4
+   },
+   "doMonstro": true,
+   "aprovacao": {
+    "type": "ROOM_RECEIPT",
+    "estado": "APLICADA"
+   }
+  },
+  {
+   "tipo": "desgraca",
+   "proposta": {
+    "id": "cai",
+    "nome": "Ele cai",
+    "gravidade": 1
+   },
+   "aprovacao": {
+    "type": "ROOM_RECEIPT",
+    "estado": "APLICADA"
+   }
+  }
+ ],
+ "eventosDanoHeroina": 9
+}
+✔ motor real: ataques da heroína ao orc resolvem sem erro de ponte, com dano, e sem vazar o motor (86.8125ms)
+VETORES-OURO {"passaram":517,"total":517,"percentagem":100,"porGrupo":{"01-ataque-normal":"96/96","02-ataque-critico":"44/44","03-falha-critica":"66/66","04-morte-3x3":"68/68","05-desvincular":"47/47","06-defender":"40/40","07-transformacao":"30/30","08-consumiveis":"24/24","09-acumulacao-dmg":"102/102"}}
+VETORES-OURO-BYTES {"01-ataque-normal":"ca7a50a7b2fe041cc7cb3d7af3f111db6d0355223818b3a07b6341f9b02e59b2","02-ataque-critico":"6d2de0cc5d30bf72d5f4308992de1edfe48c611a53e0173b601975ed34f24dbe","03-falha-critica":"3a585cddf83c1a0a579546ad1d99951afe2f47ca385fdf6ec1fb2c65a1aee324","04-morte-3x3":"731b6b8f622263843dc9a9e9109a9550505bba1f82843149a56305fd9870af27","05-desvincular":"a02e0a1710ee0c653a35f0319ba0378dab6778df9bde558386ba299bf46690e6","06-defender":"9159c96af3fc125be4d4f50221638d84fe7f90fce0865f8a191b63a8c1473e9b","07-transformacao":"db2b87aec69b79c7788139b83735b09f3e01f15c65cee1f1e875b9c01d87dd4c","08-consumiveis":"d04f4bf0a81ca6198ecda918202c4b51ac6d94fe27b53dcc17c019d442877503","09-acumulacao-dmg":"469486a27cc5dc9ca85892b94b48a07ad30ad85a7797a668e7e5f67aa0b1e2d5"}
+✔ vetores-ouro: o conjunto gravado tem 9 grupos, ≥ 20 casos por grupo e ≥ 500 no total (8.3617ms)
+✔ vetores-ouro: o motor do CI é o dos vetores (SHA-256) (2.3886ms)
+✔ vetores-ouro: 100 % dos casos reproduzem a saída gravada (217.4253ms)
+✔ vetores-ouro: duas corridas são byte-idênticas entre si e iguais aos ficheiros gravados (323.431ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 631.0276

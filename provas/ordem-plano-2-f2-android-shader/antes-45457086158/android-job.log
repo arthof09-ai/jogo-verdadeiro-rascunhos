@@ -1,0 +1,617 @@
+android	UNKNOWN STEP	﻿2026-11-24T18:15:13.2932589Z Current runner version: '2.338.2'
+android	UNKNOWN STEP	2026-11-24T18:15:13.2954203Z ##[group]Runner Image Provisioner
+android	UNKNOWN STEP	2026-11-24T18:15:13.2954919Z Hosted Compute Agent
+android	UNKNOWN STEP	2026-11-24T18:15:13.2955395Z Version: 20261111.635
+android	UNKNOWN STEP	2026-11-24T18:15:13.2955994Z Commit: b8a594ea514ff44cadb5342986c68b1eac6e22ed
+android	UNKNOWN STEP	2026-11-24T18:15:13.2956626Z Build Date: 2026-11-11T01:49:01Z
+android	UNKNOWN STEP	2026-11-24T18:15:13.2957209Z Worker ID: {c2f25d57-c4ac-4534-897f-27d094e13669}
+android	UNKNOWN STEP	2026-11-24T18:15:13.2957835Z Region: westus3
+android	UNKNOWN STEP	2026-11-24T18:15:13.2958272Z Cloud: Azure
+android	UNKNOWN STEP	2026-11-24T18:15:13.2958771Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:15:13.2959881Z ##[group]Operating System
+android	UNKNOWN STEP	2026-11-24T18:15:13.2960438Z Ubuntu
+android	UNKNOWN STEP	2026-11-24T18:15:13.2960881Z 26.04.1
+android	UNKNOWN STEP	2026-11-24T18:15:13.2961303Z LTS
+android	UNKNOWN STEP	2026-11-24T18:15:13.2962414Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:15:13.2962925Z ##[group]Runner Image
+android	UNKNOWN STEP	2026-11-24T18:15:13.2963429Z Image: ubuntu-26.04
+android	UNKNOWN STEP	2026-11-24T18:15:13.2963986Z Version: 20261116.202.1
+android	UNKNOWN STEP	2026-11-24T18:15:13.2965006Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261116.202/images/ubuntu/Ubuntu2604-Readme.md
+android	UNKNOWN STEP	2026-11-24T18:15:13.2966329Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261116.202
+android	UNKNOWN STEP	2026-11-24T18:15:13.2967177Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:15:13.2968083Z ##[group]GITHUB_TOKEN Permissions
+android	UNKNOWN STEP	2026-11-24T18:15:13.2969770Z Contents: read
+android	UNKNOWN STEP	2026-11-24T18:15:13.2970299Z Metadata: read
+android	UNKNOWN STEP	2026-11-24T18:15:13.2970762Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:15:13.2973076Z Secret source: Actions
+android	UNKNOWN STEP	2026-11-24T18:15:13.2973867Z Cache mode: write
+android	UNKNOWN STEP	2026-11-24T18:15:13.2974655Z Prepare workflow directory
+android	UNKNOWN STEP	2026-11-24T18:15:13.3300083Z Prepare all required actions
+android	UNKNOWN STEP	2026-11-24T18:15:13.3339928Z Getting action download info
+android	UNKNOWN STEP	2026-11-24T18:15:13.6233529Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+android	UNKNOWN STEP	2026-11-24T18:15:13.7184186Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+android	UNKNOWN STEP	2026-11-24T18:15:14.0510770Z Download action repository 'actions/download-artifact@v4' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+android	UNKNOWN STEP	2026-11-24T18:15:14.6245591Z Download action repository 'reactivecircus/android-emulator-runner@v2' (SHA:a421e43855164a8197daf9d8d40fe71c6996bb0d)
+android	UNKNOWN STEP	2026-11-24T18:15:15.1400700Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+android	UNKNOWN STEP	2026-11-24T18:15:15.3516218Z Complete job name: android
+android	UNKNOWN STEP	2026-11-24T18:15:15.4337571Z ##[group]Run actions/checkout@v4
+android	UNKNOWN STEP	2026-11-24T18:15:15.4338660Z with:
+android	UNKNOWN STEP	2026-11-24T18:15:15.4339454Z   repository: arthof09-ai/jogo-verdadeiro-rascunhos
+android	UNKNOWN STEP	2026-11-24T18:15:15.4348415Z   token: ***
+android	UNKNOWN STEP	2026-11-24T18:15:15.4349389Z   ssh-strict: true
+android	UNKNOWN STEP	2026-11-24T18:15:15.4350328Z   ssh-user: git
+android	UNKNOWN STEP	2026-11-24T18:15:15.4351261Z   persist-credentials: true
+android	UNKNOWN STEP	2026-11-24T18:15:15.4352401Z   clean: true
+android	UNKNOWN STEP	2026-11-24T18:15:15.4353105Z   sparse-checkout-cone-mode: true
+android	UNKNOWN STEP	2026-11-24T18:15:15.4354052Z   fetch-depth: 1
+android	UNKNOWN STEP	2026-11-24T18:15:15.4354799Z   fetch-tags: false
+android	UNKNOWN STEP	2026-11-24T18:15:15.4355516Z   show-progress: true
+android	UNKNOWN STEP	2026-11-24T18:15:15.4356326Z   lfs: false
+android	UNKNOWN STEP	2026-11-24T18:15:15.4357123Z   submodules: false
+android	UNKNOWN STEP	2026-11-24T18:15:15.4357833Z   set-safe-directory: true
+android	UNKNOWN STEP	2026-11-24T18:15:15.4358653Z   allow-unsafe-pr-checkout: false
+android	UNKNOWN STEP	2026-11-24T18:15:15.4359823Z env:
+android	UNKNOWN STEP	2026-11-24T18:15:15.4360473Z   GODOT_VERSAO: 4.7.2-stable
+android	UNKNOWN STEP	2026-11-24T18:15:15.4361230Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:15:17.2240202Z Syncing repository: arthof09-ai/jogo-verdadeiro-rascunhos
+android	UNKNOWN STEP	2026-11-24T18:15:17.2241445Z ##[group]Getting Git version info
+android	UNKNOWN STEP	2026-11-24T18:15:17.2242153Z Working directory is '/home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos'
+android	UNKNOWN STEP	2026-11-24T18:15:17.2242856Z [command]/usr/bin/git version
+android	UNKNOWN STEP	2026-11-24T18:15:17.2243081Z git version 2.56.1
+android	UNKNOWN STEP	2026-11-24T18:15:17.2243805Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:15:17.2246712Z Temporarily overriding HOME='/home/runner/work/_temp/a51ee907-bf87-4f00-8554-a9d6de013fea' before making global git config changes
+android	UNKNOWN STEP	2026-11-24T18:15:17.2247340Z Adding repository directory to the temporary git global config as a safe directory
+android	UNKNOWN STEP	2026-11-24T18:15:17.2247953Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos
+android	UNKNOWN STEP	2026-11-24T18:15:17.2270673Z Deleting the contents of '/home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos'
+android	UNKNOWN STEP	2026-11-24T18:15:17.2273777Z ##[group]Initializing the repository
+android	UNKNOWN STEP	2026-11-24T18:15:17.2278830Z [command]/usr/bin/git init /home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos
+android	UNKNOWN STEP	2026-11-24T18:15:17.2390339Z hint: Using 'master' as the name for the initial branch. This default branch name
+android	UNKNOWN STEP	2026-11-24T18:15:17.2391544Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+android	UNKNOWN STEP	2026-11-24T18:15:17.2392741Z hint: to use in all of your new repositories, which will suppress this warning,
+android	UNKNOWN STEP	2026-11-24T18:15:17.2393293Z hint: call:
+android	UNKNOWN STEP	2026-11-24T18:15:17.2393545Z hint:
+android	UNKNOWN STEP	2026-11-24T18:15:17.2393917Z hint: 	git config --global init.defaultBranch <name>
+android	UNKNOWN STEP	2026-11-24T18:15:17.2394368Z hint:
+android	UNKNOWN STEP	2026-11-24T18:15:17.2394764Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+android	UNKNOWN STEP	2026-11-24T18:15:17.2395444Z hint: 'development'. The just-created branch can be renamed via this command:
+android	UNKNOWN STEP	2026-11-24T18:15:17.2395931Z hint:
+android	UNKNOWN STEP	2026-11-24T18:15:17.2396220Z hint: 	git branch -m <name>
+android	UNKNOWN STEP	2026-11-24T18:15:17.2396529Z hint:
+android	UNKNOWN STEP	2026-11-24T18:15:17.2396959Z hint: Disable this message with "git config set advice.defaultBranchName false"
+android	UNKNOWN STEP	2026-11-24T18:15:17.4054013Z Initialized empty Git repository in /home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos/.git/
+android	UNKNOWN STEP	2026-11-24T18:15:17.4073304Z [command]/usr/bin/git remote add origin https://github.com/arthof09-ai/jogo-verdadeiro-rascunhos
+android	UNKNOWN STEP	2026-11-24T18:15:17.4165939Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:15:17.4166573Z ##[group]Disabling automatic garbage collection
+android	UNKNOWN STEP	2026-11-24T18:15:17.4167079Z [command]/usr/bin/git config --local gc.auto 0
+android	UNKNOWN STEP	2026-11-24T18:15:17.4215582Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:15:17.4216322Z ##[group]Setting up auth
+android	UNKNOWN STEP	2026-11-24T18:15:17.4217029Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+android	UNKNOWN STEP	2026-11-24T18:15:17.4249590Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+android	UNKNOWN STEP	2026-11-24T18:15:17.6323434Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+android	UNKNOWN STEP	2026-11-24T18:15:17.6352435Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+android	UNKNOWN STEP	2026-11-24T18:15:17.6602938Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+android	UNKNOWN STEP	2026-11-24T18:15:17.6623787Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+android	UNKNOWN STEP	2026-11-24T18:15:17.6867820Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+android	UNKNOWN STEP	2026-11-24T18:15:17.7193966Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:15:17.7194369Z ##[group]Fetching the repository
+android	UNKNOWN STEP	2026-11-24T18:15:17.7202088Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +1035436b5150bdfe792161481f597266961dd3f7:refs/remotes/origin/fable/integracao-50
+android	UNKNOWN STEP	2026-11-24T18:15:52.7844905Z From https://github.com/arthof09-ai/jogo-verdadeiro-rascunhos
+android	UNKNOWN STEP	2026-11-24T18:15:52.7855599Z  * [new ref]         1035436b5150bdfe792161481f597266961dd3f7 -> origin/fable/integracao-50
+android	UNKNOWN STEP	2026-11-24T18:15:52.7859182Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:15:52.7859738Z ##[group]Determining the checkout info
+android	UNKNOWN STEP	2026-11-24T18:15:52.7860260Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:15:52.7860579Z [command]/usr/bin/git sparse-checkout disable
+android	UNKNOWN STEP	2026-11-24T18:15:52.7909457Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+android	UNKNOWN STEP	2026-11-24T18:15:52.8081226Z ##[group]Checking out the ref
+android	UNKNOWN STEP	2026-11-24T18:15:52.8086000Z [command]/usr/bin/git checkout --progress --force -B fable/integracao-50 refs/remotes/origin/fable/integracao-50
+android	UNKNOWN STEP	2026-11-24T18:15:53.8167568Z Updating files:  48% (1307/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:53.8334434Z Updating files:  49% (1316/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:53.8348509Z Updating files:  50% (1342/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:53.8361188Z Updating files:  51% (1369/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:53.8502484Z Updating files:  52% (1396/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:53.8589264Z Updating files:  53% (1423/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:53.9623453Z Updating files:  54% (1450/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:53.9638208Z Updating files:  55% (1477/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:53.9768945Z Updating files:  56% (1504/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:53.9936352Z Updating files:  57% (1530/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.0007783Z Updating files:  58% (1557/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.0027754Z Updating files:  59% (1584/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.0039942Z Updating files:  60% (1611/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.0050309Z Updating files:  61% (1638/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.0063588Z Updating files:  62% (1665/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.0084130Z Updating files:  63% (1691/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.0140834Z Updating files:  64% (1718/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.0796295Z Updating files:  65% (1745/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.0996041Z Updating files:  66% (1772/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.1117917Z Updating files:  67% (1799/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.1141332Z Updating files:  68% (1826/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.1152431Z Updating files:  69% (1852/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.1336975Z Updating files:  70% (1879/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.1642376Z Updating files:  71% (1906/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.1651038Z Updating files:  72% (1933/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.1667236Z Updating files:  73% (1960/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.1700521Z Updating files:  74% (1987/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.1740308Z Updating files:  75% (2013/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.1792806Z Updating files:  76% (2040/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.1917782Z Updating files:  77% (2067/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.1971789Z Updating files:  78% (2094/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.1985339Z Updating files:  79% (2121/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.2013143Z Updating files:  80% (2148/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.2031363Z Updating files:  81% (2175/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.2048207Z Updating files:  82% (2201/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.2258554Z Updating files:  83% (2228/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.2283870Z Updating files:  84% (2255/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.2306611Z Updating files:  85% (2282/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.2338102Z Updating files:  86% (2309/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.2493977Z Updating files:  87% (2336/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.2757130Z Updating files:  88% (2362/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.2866572Z Updating files:  89% (2389/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.2879952Z Updating files:  90% (2416/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.3007382Z Updating files:  91% (2443/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.3138545Z Updating files:  92% (2470/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.3146715Z Updating files:  93% (2497/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.3154493Z Updating files:  94% (2523/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.3196029Z Updating files:  95% (2550/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.3226210Z Updating files:  96% (2577/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.3242627Z Updating files:  97% (2604/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.3259183Z Updating files:  98% (2631/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.3280180Z Updating files:  99% (2658/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.3280538Z Updating files: 100% (2684/2684)
+android	UNKNOWN STEP	2026-11-24T18:15:54.3280871Z Updating files: 100% (2684/2684), done.
+android	UNKNOWN STEP	2026-11-24T18:15:54.3317581Z Switched to a new branch 'fable/integracao-50'
+android	UNKNOWN STEP	2026-11-24T18:15:54.3320236Z branch 'fable/integracao-50' set up to track 'origin/fable/integracao-50'.
+android	UNKNOWN STEP	2026-11-24T18:15:54.3473520Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:15:54.3520262Z [command]/usr/bin/git log -1 --format=%H
+android	UNKNOWN STEP	2026-11-24T18:15:54.3546180Z 1035436b5150bdfe792161481f597266961dd3f7
+android	UNKNOWN STEP	2026-11-24T18:15:54.3807572Z ##[group]Run actions/setup-node@v4
+android	UNKNOWN STEP	2026-11-24T18:15:54.3807799Z with:
+android	UNKNOWN STEP	2026-11-24T18:15:54.3807979Z   node-version: 24
+android	UNKNOWN STEP	2026-11-24T18:15:54.3808157Z   always-auth: false
+android	UNKNOWN STEP	2026-11-24T18:15:54.3808337Z   check-latest: false
+android	UNKNOWN STEP	2026-11-24T18:15:54.3810388Z   token: ***
+android	UNKNOWN STEP	2026-11-24T18:15:54.3810557Z env:
+android	UNKNOWN STEP	2026-11-24T18:15:54.3810897Z   GODOT_VERSAO: 4.7.2-stable
+android	UNKNOWN STEP	2026-11-24T18:15:54.3811096Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:15:54.4996103Z (node:2221) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+android	UNKNOWN STEP	2026-11-24T18:15:54.4996992Z (Use `node --trace-deprecation ...` to show where the warning was created)
+android	UNKNOWN STEP	2026-11-24T18:15:54.4997954Z Found in cache @ /opt/hostedtoolcache/node/24.22.3/x64
+android	UNKNOWN STEP	2026-11-24T18:15:54.4998782Z ##[group]Environment details
+android	UNKNOWN STEP	2026-11-24T18:15:54.8783040Z node: v24.22.3
+android	UNKNOWN STEP	2026-11-24T18:15:54.8783389Z npm: 11.19.1
+android	UNKNOWN STEP	2026-11-24T18:15:54.8783644Z yarn: 1.22.22
+android	UNKNOWN STEP	2026-11-24T18:15:54.8784370Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:15:54.8920756Z ##[group]Run actions/download-artifact@v4
+android	UNKNOWN STEP	2026-11-24T18:15:54.8920999Z with:
+android	UNKNOWN STEP	2026-11-24T18:15:54.8921171Z   name: export-android
+android	UNKNOWN STEP	2026-11-24T18:15:54.8921352Z   path: build/android
+android	UNKNOWN STEP	2026-11-24T18:15:54.8921533Z   merge-multiple: false
+android	UNKNOWN STEP	2026-11-24T18:15:54.8922044Z   repository: arthof09-ai/jogo-verdadeiro-rascunhos
+android	UNKNOWN STEP	2026-11-24T18:15:54.8922299Z   run-id: 45457086158
+android	UNKNOWN STEP	2026-11-24T18:15:54.8922491Z env:
+android	UNKNOWN STEP	2026-11-24T18:15:54.8922656Z   GODOT_VERSAO: 4.7.2-stable
+android	UNKNOWN STEP	2026-11-24T18:15:54.8922845Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:15:55.0176357Z Downloading single artifact
+android	UNKNOWN STEP	2026-11-24T18:15:55.0384208Z (node:2252) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+android	UNKNOWN STEP	2026-11-24T18:15:55.0384884Z (Use `node --trace-deprecation ...` to show where the warning was created)
+android	UNKNOWN STEP	2026-11-24T18:15:55.2821007Z Preparing to download the following artifacts:
+android	UNKNOWN STEP	2026-11-24T18:15:55.2822413Z - export-android (ID: 14951197004, Size: 143544285, Expected Digest: sha256:bfbc6fac2f2aae5f80e0a7af66bdc511bd9865ff12a3b7907a342010757e7d40)
+android	UNKNOWN STEP	2026-11-24T18:15:55.4810452Z Redirecting to blob download url: https://productionresultssa3.blob.core.windows.net/actions-results/c2eba921-80f0-8c7a-bf03-ecef8a7a9db7/workflow-job-run-ec0bade5-1e7d-5c40-b270-2ac10caa66b0/artifacts/4cf129a441cfbb59b0b514d4a979fbdc98cae9cef2cbcc30c92b23c8ac823064.zip
+android	UNKNOWN STEP	2026-11-24T18:15:55.4812953Z Starting download of artifact to: /home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos/build/android
+android	UNKNOWN STEP	2026-11-24T18:15:55.7569722Z (node:2252) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+android	UNKNOWN STEP	2026-11-24T18:15:59.7029555Z SHA256 digest of downloaded artifact is bfbc6fac2f2aae5f80e0a7af66bdc511bd9865ff12a3b7907a342010757e7d40
+android	UNKNOWN STEP	2026-11-24T18:15:59.7030086Z Artifact download completed successfully.
+android	UNKNOWN STEP	2026-11-24T18:15:59.7030403Z Total of 1 artifact(s) downloaded
+android	UNKNOWN STEP	2026-11-24T18:15:59.7037684Z Download artifact has finished successfully
+android	UNKNOWN STEP	2026-11-24T18:15:59.7200503Z ##[group]Run echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+android	UNKNOWN STEP	2026-11-24T18:15:59.7201214Z ^[[36;1mecho 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules^[[0m
+android	UNKNOWN STEP	2026-11-24T18:15:59.7202063Z ^[[36;1msudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm^[[0m
+android	UNKNOWN STEP	2026-11-24T18:15:59.7240473Z shell: /usr/bin/bash -e {0}
+android	UNKNOWN STEP	2026-11-24T18:15:59.7240718Z env:
+android	UNKNOWN STEP	2026-11-24T18:15:59.7240904Z   GODOT_VERSAO: 4.7.2-stable
+android	UNKNOWN STEP	2026-11-24T18:15:59.7241126Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:15:59.7397846Z KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"
+android	UNKNOWN STEP	2026-11-24T18:15:59.7936868Z ##[group]Run nohup node aparelhos/mesa-prova.mjs --porta=8080 --host=127.0.0.1 --pin=55667788 --mestre-auto > "$RUNNER_TEMP/mesa.log" 2>&1 &
+android	UNKNOWN STEP	2026-11-24T18:15:59.7937612Z ^[[36;1mnohup node aparelhos/mesa-prova.mjs --porta=8080 --host=127.0.0.1 --pin=55667788 --mestre-auto > "$RUNNER_TEMP/mesa.log" 2>&1 &^[[0m
+android	UNKNOWN STEP	2026-11-24T18:15:59.7938198Z ^[[36;1mfor i in $(seq 1 60); do grep -q "combate aberto" "$RUNNER_TEMP/mesa.log" && break; sleep 0.5; done^[[0m
+android	UNKNOWN STEP	2026-11-24T18:15:59.7938566Z ^[[36;1mcat "$RUNNER_TEMP/mesa.log"^[[0m
+android	UNKNOWN STEP	2026-11-24T18:15:59.7968711Z shell: /usr/bin/bash -e {0}
+android	UNKNOWN STEP	2026-11-24T18:15:59.7969096Z env:
+android	UNKNOWN STEP	2026-11-24T18:15:59.7969283Z   GODOT_VERSAO: 4.7.2-stable
+android	UNKNOWN STEP	2026-11-24T18:15:59.7969497Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:16:00.3137014Z [servidor] servidor de mesa pronto (WebSocket em /ws)
+android	UNKNOWN STEP	2026-11-24T18:16:00.3137476Z [mesa-prova] a ouvir em 127.0.0.1:8080 (motor falso; sala de TESTE)
+android	UNKNOWN STEP	2026-11-24T18:16:00.3138235Z [mesa-prova] jogadoras: Espadachim de Bancada / prova-espadachim; Arqueira de Bancada / prova-arqueira; Batedora de Bancada / prova-batedora
+android	UNKNOWN STEP	2026-11-24T18:16:00.3139149Z [ligações] 18:16:00.147 ENTROU Mestre da prova (senha/PIN; ip 127.0.0.1)
+android	UNKNOWN STEP	2026-11-24T18:16:00.3139621Z [mesa-prova] Mestre-bot na mesa
+android	UNKNOWN STEP	2026-11-24T18:16:00.3140036Z [mesa-prova] combate aberto pelo Mestre-bot
+android	UNKNOWN STEP	2026-11-24T18:16:00.3140420Z pronto-mesa-prova 8080
+android	UNKNOWN STEP	2026-11-24T18:16:00.3220691Z ##[group]Run reactivecircus/android-emulator-runner@v2
+android	UNKNOWN STEP	2026-11-24T18:16:00.3220971Z with:
+android	UNKNOWN STEP	2026-11-24T18:16:00.3221158Z   api-level: 30
+android	UNKNOWN STEP	2026-11-24T18:16:00.3221344Z   arch: x86_64
+android	UNKNOWN STEP	2026-11-24T18:16:00.3221536Z   target: google_apis
+android	UNKNOWN STEP	2026-11-24T18:16:00.3222207Z   emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+android	UNKNOWN STEP	2026-11-24T18:16:00.3222585Z   disable-animations: true
+android	UNKNOWN STEP	2026-11-24T18:16:00.3222965Z   script: bash rascunhos/servidor/aparelhos/prova-android.sh build/android/assimilacao.apk "$RUNNER_TEMP"
+android	UNKNOWN STEP	2026-11-24T18:16:00.3223357Z   cores: 2
+android	UNKNOWN STEP	2026-11-24T18:16:00.3223523Z   avd-name: test
+android	UNKNOWN STEP	2026-11-24T18:16:00.3223714Z   force-avd-creation: true
+android	UNKNOWN STEP	2026-11-24T18:16:00.3223924Z   emulator-boot-timeout: 600
+android	UNKNOWN STEP	2026-11-24T18:16:00.3224131Z   emulator-port: 5554
+android	UNKNOWN STEP	2026-11-24T18:16:00.3224329Z   disable-spellchecker: false
+android	UNKNOWN STEP	2026-11-24T18:16:00.3224545Z   disable-linux-hw-accel: auto
+android	UNKNOWN STEP	2026-11-24T18:16:00.3224764Z   enable-hw-keyboard: false
+android	UNKNOWN STEP	2026-11-24T18:16:00.3225014Z   channel: stable
+android	UNKNOWN STEP	2026-11-24T18:16:00.3225189Z env:
+android	UNKNOWN STEP	2026-11-24T18:16:00.3225357Z   GODOT_VERSAO: 4.7.2-stable
+android	UNKNOWN STEP	2026-11-24T18:16:00.3225553Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:16:00.3703905Z ##[group]Configure emulator
+android	UNKNOWN STEP	2026-11-24T18:16:00.3706303Z API level: 30
+android	UNKNOWN STEP	2026-11-24T18:16:00.3706685Z System image API level: 30
+android	UNKNOWN STEP	2026-11-24T18:16:00.3707029Z target: google_apis
+android	UNKNOWN STEP	2026-11-24T18:16:00.3707337Z CPU architecture: x86_64
+android	UNKNOWN STEP	2026-11-24T18:16:00.3707662Z Hardware profile: 
+android	UNKNOWN STEP	2026-11-24T18:16:00.3708263Z Cores: 2
+android	UNKNOWN STEP	2026-11-24T18:16:00.3708539Z RAM size: 
+android	UNKNOWN STEP	2026-11-24T18:16:00.3708787Z Heap size: 
+android	UNKNOWN STEP	2026-11-24T18:16:00.3709222Z SD card path or size: 
+android	UNKNOWN STEP	2026-11-24T18:16:00.3710075Z Disk size: 
+android	UNKNOWN STEP	2026-11-24T18:16:00.3710771Z AVD name: test
+android	UNKNOWN STEP	2026-11-24T18:16:00.3711307Z force avd creation: true
+android	UNKNOWN STEP	2026-11-24T18:16:00.3711980Z Emulator boot timeout: 600
+android	UNKNOWN STEP	2026-11-24T18:16:00.3712357Z emulator port: 5554
+android	UNKNOWN STEP	2026-11-24T18:16:00.3712795Z emulator options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+android	UNKNOWN STEP	2026-11-24T18:16:00.3713286Z disable animations: true
+android	UNKNOWN STEP	2026-11-24T18:16:00.3713531Z disable spellchecker: false
+android	UNKNOWN STEP	2026-11-24T18:16:00.3713890Z disable Linux hardware acceleration: false
+android	UNKNOWN STEP	2026-11-24T18:16:00.3714211Z enable hardware keyboard: false
+android	UNKNOWN STEP	2026-11-24T18:16:00.3714453Z Channel: 0 (stable)
+android	UNKNOWN STEP	2026-11-24T18:16:00.3715517Z Script:
+android	UNKNOWN STEP	2026-11-24T18:16:00.3716308Z bash rascunhos/servidor/aparelhos/prova-android.sh build/android/assimilacao.apk "$RUNNER_TEMP"
+android	UNKNOWN STEP	2026-11-24T18:16:00.3716794Z Pre emulator launch script:
+android	UNKNOWN STEP	2026-11-24T18:16:00.3717201Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:16:00.3717767Z ##[group]Install Android SDK
+android	UNKNOWN STEP	2026-11-24T18:16:00.3768066Z [command]/usr/bin/sh -c \yes | sdkmanager --licenses > /dev/null
+android	UNKNOWN STEP	2026-11-24T18:16:07.1801116Z Installing latest build tools, platform tools, and platform.
+android	UNKNOWN STEP	2026-11-24T18:16:07.1812535Z [command]/usr/bin/sh -c \sdkmanager --install 'build-tools;37.0.0' platform-tools 'platforms;android-30'> /dev/null
+android	UNKNOWN STEP	2026-11-24T18:16:12.4382637Z Installing latest emulator.
+android	UNKNOWN STEP	2026-11-24T18:16:12.4392509Z [command]/usr/bin/sh -c \sdkmanager --install emulator --channel=0 > /dev/null
+android	UNKNOWN STEP	2026-11-24T18:16:22.1208556Z Installing system images.
+android	UNKNOWN STEP	2026-11-24T18:16:22.1218757Z [command]/usr/bin/sh -c \sdkmanager --install 'system-images;android-30;google_apis;x86_64' --channel=0 > /dev/null
+android	UNKNOWN STEP	2026-11-24T18:17:11.1608417Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:17:11.1609602Z ##[group]Create AVD
+android	UNKNOWN STEP	2026-11-24T18:17:11.1610261Z Creating AVD.
+android	UNKNOWN STEP	2026-11-24T18:17:11.1623144Z [command]/usr/bin/sh -c \echo no | avdmanager create avd --force -n test --package 'system-images;android-30;google_apis;x86_64'
+android	UNKNOWN STEP	2026-11-24T18:17:11.9638706Z Loading local repository...                                                     
+android	UNKNOWN STEP	2026-11-24T18:17:12.0407847Z [=========                              ] 25% Loading local repository...       
+android	UNKNOWN STEP	2026-11-24T18:17:12.0408398Z Auto-selecting single ABI x86_64
+android	UNKNOWN STEP	2026-11-24T18:17:12.1293467Z Do you wish to create a custom hardware profile? [no] [command]/usr/bin/sh -c \printf 'hw.cpu.ncore=2\n' >> /home/runner/.android/avd/test.avd/config.ini
+android	UNKNOWN STEP	2026-11-24T18:17:12.1315305Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:17:12.1316907Z ##[group]Launch Emulator
+android	UNKNOWN STEP	2026-11-24T18:17:12.1317187Z Starting emulator.
+android	UNKNOWN STEP	2026-11-24T18:17:12.1326998Z [command]/usr/bin/sh -c \/usr/local/lib/android/sdk/emulator/emulator -port 5554 -avd test -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim &
+android	UNKNOWN STEP	2026-11-24T18:17:12.1440771Z INFO         | Android emulator version 37.3.10.0 (build_id 16970787) (CL:N/A)
+android	UNKNOWN STEP	2026-11-24T18:17:12.1441309Z INFO         | Graphics backend: gfxstream
+android	UNKNOWN STEP	2026-11-24T18:17:12.1442025Z INFO         | Found systemPath /usr/local/lib/android/sdk/system-images/android-30/google_apis/x86_64/
+android	UNKNOWN STEP	2026-11-24T18:17:12.1962571Z INFO         | Saving last run QEMU version for the AVD to 2
+android	UNKNOWN STEP	2026-11-24T18:17:12.1963556Z WARNING      | Please update the emulator to one that supports the feature(s): Vulkan
+android	UNKNOWN STEP	2026-11-24T18:17:12.1964473Z ##############################################################################
+android	UNKNOWN STEP	2026-11-24T18:17:12.1965290Z ##                        WARNING - ACTION REQUIRED                         ##
+android	UNKNOWN STEP	2026-11-24T18:17:12.1966125Z ##  Consider using the '-metrics-collection' flag to help improve the       ##
+android	UNKNOWN STEP	2026-11-24T18:17:12.1967031Z ##  emulator by sending anonymized usage data. Or use the '-no-metrics'     ##
+android	UNKNOWN STEP	2026-11-24T18:17:12.1967934Z ##  flag to bypass this warning and turn off the metrics collection.        ##
+android	UNKNOWN STEP	2026-11-24T18:17:12.1968800Z ##  In a future release this warning will turn into a one-time blocking     ##
+android	UNKNOWN STEP	2026-11-24T18:17:12.1969672Z ##  prompt to ask for explicit user input regarding metrics collection.     ##
+android	UNKNOWN STEP	2026-11-24T18:17:12.1970444Z ##                                                                          ##
+android	UNKNOWN STEP	2026-11-24T18:17:12.1971220Z ##  Please see '-help-metrics-collection' for more details. You can use     ##
+android	UNKNOWN STEP	2026-11-24T18:17:12.1972261Z ##  '-metrics-to-file' or '-metrics-to-console' flags to see what type of   ##
+android	UNKNOWN STEP	2026-11-24T18:17:12.1973377Z ##  data is being collected by emulator as part of usage statistics.        ##
+android	UNKNOWN STEP	2026-11-24T18:17:12.1974166Z ##############################################################################
+android	UNKNOWN STEP	2026-11-24T18:17:12.1974820Z INFO         | Guest GLES Driver: Auto (ext controls)
+android	UNKNOWN STEP	2026-11-24T18:17:12.1975712Z INFO         | emuglConfig_init: vulkan_mode_selected:swiftshader gles_mode_selected:swiftshader
+android	UNKNOWN STEP	2026-11-24T18:17:12.1976526Z INFO         | Checking system compatibility:
+android	UNKNOWN STEP	2026-11-24T18:17:12.1977173Z INFO         |   Checking: hasSufficientDiskSpace
+android	UNKNOWN STEP	2026-11-24T18:17:12.1977941Z INFO         |      Ok: Disk space requirements to run avd: `test` are met
+android	UNKNOWN STEP	2026-11-24T18:17:12.1978608Z INFO         |   Checking: hasSufficientHwGpu
+android	UNKNOWN STEP	2026-11-24T18:17:12.1979275Z INFO         |      Ok: Hardware GPU compatibility checks are not required
+android	UNKNOWN STEP	2026-11-24T18:17:12.1979742Z INFO         |   Checking: hasSufficientSystem
+android	UNKNOWN STEP	2026-11-24T18:17:12.1980192Z INFO         |      Ok: System requirements to run avd: `test` are met
+android	UNKNOWN STEP	2026-11-24T18:17:12.1981098Z WARNING      | Feature QuickbootFileBacked is disabled due to stability issues, if you really want that, the environment variable ANDROID_EMU_FORCE_QUICKBOOT_FILE_BACKED need to set to 1
+android	UNKNOWN STEP	2026-11-24T18:17:12.3056871Z WARNING      | FeatureControl is requesting a non existing feature.
+android	UNKNOWN STEP	2026-11-24T18:17:12.4290344Z ERROR        | Unable to connect to adb daemon on port: 5037
+android	UNKNOWN STEP	2026-11-24T18:17:12.4292078Z INFO         | Storing crashdata in: /tmp/android-runner/emu-crash-37.3.10.db, detection is enabled for process: 2733
+android	UNKNOWN STEP	2026-11-24T18:17:12.4293447Z INFO         | Initializing gfxstream backend
+android	UNKNOWN STEP	2026-11-24T18:17:12.4302921Z INFO         | startOpenglesRendererImpl: gpu info
+android	UNKNOWN STEP	2026-11-24T18:17:12.4303314Z INFO         | 
+android	UNKNOWN STEP	2026-11-24T18:17:12.4305789Z INFO         | initIcdPaths: ICD set to 'swiftshader', using Swiftshader ICD
+android	UNKNOWN STEP	2026-11-24T18:17:12.4306770Z INFO         | Setting ICD filenames for the loader = /usr/local/lib/android/sdk/emulator/lib64/vulkan/vk_swiftshader_icd.json
+android	UNKNOWN STEP	2026-11-24T18:17:12.4308264Z INFO         | SharedLibrary::open for [/usr/local/lib/android/sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so]
+android	UNKNOWN STEP	2026-11-24T18:17:12.4309400Z INFO         | SharedLibrary::open for [/usr/local/lib/android/sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1]
+android	UNKNOWN STEP	2026-11-24T18:17:12.4310402Z INFO         | SharedLibrary::open for [/usr/local/lib/android/sdk/emulator/lib64/vulkan/libvulkan.so]
+android	UNKNOWN STEP	2026-11-24T18:17:12.4311289Z INFO         | Added library: /usr/local/lib/android/sdk/emulator/lib64/vulkan/libvulkan.so
+android	UNKNOWN STEP	2026-11-24T18:17:12.4356798Z INFO         | Selecting Vulkan device: SwiftShader Device (Subzero), Version: 1.3.0
+android	UNKNOWN STEP	2026-11-24T18:17:12.4357511Z INFO         | Using Vulkan externalMemoryMode: OpaqueFd for VkEmulation
+android	UNKNOWN STEP	2026-11-24T18:17:12.4734065Z INFO         | Format VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 does not support YCbCr sampler conversion
+android	UNKNOWN STEP	2026-11-24T18:17:12.4764537Z INFO         | SharedLibrary::open for [libX11]
+android	UNKNOWN STEP	2026-11-24T18:17:12.4765128Z WARNING      | Could not open libX11.so, try libX11.so.6
+android	UNKNOWN STEP	2026-11-24T18:17:12.4765760Z INFO         | SharedLibrary::open for [libX11.so.6]
+android	UNKNOWN STEP	2026-11-24T18:17:12.4766305Z INFO         | SharedLibrary::open for [libX11-xcb]
+android	UNKNOWN STEP	2026-11-24T18:17:12.4766880Z WARNING      | Could not open libX11-xcb.so, try libX11-xcb.so.1
+android	UNKNOWN STEP	2026-11-24T18:17:12.4767383Z INFO         | SharedLibrary::open for [libX11-xcb.so.1]
+android	UNKNOWN STEP	2026-11-24T18:17:12.4868074Z INFO         | queryConfigs: Host EGL config 0x10 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4868539Z INFO         | queryConfigs: Host EGL config 0x11 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4868955Z INFO         | queryConfigs: Host EGL config 0x12 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4869307Z INFO         | queryConfigs: Host EGL config 0x13 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4869887Z INFO         | queryConfigs: Host EGL config 0x14 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4870517Z INFO         | queryConfigs: Host EGL config 0x15 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4874213Z INFO         | queryConfigs: Host EGL config 0x17 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4875022Z INFO         | queryConfigs: Host EGL config 0x18 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4875799Z INFO         | queryConfigs: Host EGL config 0x19 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4876329Z INFO         | queryConfigs: Host EGL config 0x1a was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4876858Z INFO         | queryConfigs: Host EGL config 0x1b was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4877299Z INFO         | queryConfigs: Host EGL config 0x1c was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4877730Z INFO         | queryConfigs: Host EGL config 0x1d was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4878233Z INFO         | queryConfigs: Host EGL config 0x1e was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4878752Z INFO         | queryConfigs: Host EGL config 0x1f was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4879255Z INFO         | queryConfigs: Host EGL config 0x21 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4879803Z INFO         | queryConfigs: Host EGL config 0x22 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4880333Z INFO         | queryConfigs: Host EGL config 0x23 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4880913Z INFO         | queryConfigs: Host EGL config 0x24 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4881459Z INFO         | queryConfigs: Host EGL config 0x25 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4882130Z INFO         | queryConfigs: Host EGL config 0x26 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4882524Z INFO         | queryConfigs: Host EGL config 0x27 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4883201Z INFO         | queryConfigs: Host EGL config 0x28 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4883575Z INFO         | queryConfigs: Host EGL config 0x29 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4883918Z INFO         | queryConfigs: Host EGL config 0x2a was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4884264Z INFO         | queryConfigs: Host EGL config 0x2b was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4884595Z INFO         | queryConfigs: Host EGL config 0x2c was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4884943Z INFO         | queryConfigs: Host EGL config 0x2d was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4885299Z INFO         | queryConfigs: Host EGL config 0x2e was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4885635Z INFO         | queryConfigs: Host EGL config 0x2f was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4886086Z INFO         | queryConfigs: Host EGL config 0x30 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4886437Z INFO         | queryConfigs: Host EGL config 0x31 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4886768Z INFO         | queryConfigs: Host EGL config 0x32 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4887104Z INFO         | queryConfigs: Host EGL config 0x33 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4887444Z INFO         | queryConfigs: Host EGL config 0x35 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4887775Z INFO         | queryConfigs: Host EGL config 0x36 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4888126Z INFO         | queryConfigs: Host EGL config 0x37 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4888476Z INFO         | queryConfigs: Host EGL config 0x38 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4888814Z INFO         | queryConfigs: Host EGL config 0x39 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4889146Z INFO         | queryConfigs: Host EGL config 0x3a was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4889490Z INFO         | queryConfigs: Host EGL config 0x3b was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4889829Z INFO         | queryConfigs: Host EGL config 0x3c was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4890161Z INFO         | queryConfigs: Host EGL config 0x3d was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4890498Z INFO         | queryConfigs: Host EGL config 0x3f was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4890841Z INFO         | queryConfigs: Host EGL config 0x40 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4891204Z INFO         | queryConfigs: Host EGL config 0x41 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4891544Z INFO         | queryConfigs: Host EGL config 0x42 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4892174Z INFO         | queryConfigs: Host EGL config 0x43 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4892668Z INFO         | queryConfigs: Host EGL config 0x44 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4893163Z INFO         | queryConfigs: Host EGL config 0x45 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4893674Z INFO         | queryConfigs: Host EGL config 0x46 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4894175Z INFO         | queryConfigs: Host EGL config 0x47 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4894722Z INFO         | queryConfigs: Host EGL config 0x48 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4895274Z INFO         | queryConfigs: Host EGL config 0x49 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4895796Z INFO         | queryConfigs: Host EGL config 0x4a was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4896246Z INFO         | queryConfigs: Host EGL config 0x4b was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4896591Z INFO         | queryConfigs: Host EGL config 0x1 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4896934Z INFO         | queryConfigs: Host EGL config 0x2 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4897278Z INFO         | queryConfigs: Host EGL config 0x3 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4897615Z INFO         | queryConfigs: Host EGL config 0x5 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4897941Z INFO         | queryConfigs: Host EGL config 0x6 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4898279Z INFO         | queryConfigs: Host EGL config 0x7 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4898608Z INFO         | queryConfigs: Host EGL config 0x8 was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4898945Z INFO         | queryConfigs: Host EGL config 0xa was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4899284Z INFO         | queryConfigs: Host EGL config 0xb was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4899612Z INFO         | queryConfigs: Host EGL config 0xc was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4900155Z INFO         | queryConfigs: Host EGL config 0xd was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4900500Z INFO         | queryConfigs: Host EGL config 0xe was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4900828Z INFO         | queryConfigs: Host EGL config 0xf was not added
+android	UNKNOWN STEP	2026-11-24T18:17:12.4938655Z INFO         | Initializing VkEmulation features:
+android	UNKNOWN STEP	2026-11-24T18:17:12.4939151Z INFO         |     glInteropSupported: false
+android	UNKNOWN STEP	2026-11-24T18:17:12.4939513Z INFO         |     useDeferredCommands: true
+android	UNKNOWN STEP	2026-11-24T18:17:12.4939914Z INFO         |     createResourceWithRequirements: true
+android	UNKNOWN STEP	2026-11-24T18:17:12.4940277Z INFO         |     useVulkanComposition: false
+android	UNKNOWN STEP	2026-11-24T18:17:12.4940631Z INFO         |     useVulkanNativeSwapchain: false
+android	UNKNOWN STEP	2026-11-24T18:17:12.4941205Z INFO         |     enable guestRenderDoc: false
+android	UNKNOWN STEP	2026-11-24T18:17:12.4941559Z INFO         |     enable Ycbcr emulation: false
+android	UNKNOWN STEP	2026-11-24T18:17:12.4942163Z INFO         |     guestVulkanOnly: false
+android	UNKNOWN STEP	2026-11-24T18:17:12.4942604Z INFO         |     useDedicatedAllocations: false
+android	UNKNOWN STEP	2026-11-24T18:17:12.4943119Z INFO         |     guestVulkanMaxApiVersion: 1.3.0
+android	UNKNOWN STEP	2026-11-24T18:17:12.4943634Z INFO         |     enableProtectedMemoryEmulation: false
+android	UNKNOWN STEP	2026-11-24T18:17:12.4945449Z INFO         |     VulkanDisableShaderFloatControls2: disabled ((vk_util::extensionSupported(mDeviceInfo.extensions, VK_KHR_SHADER_FLOAT_CONTROLS_2_EXTENSION_NAME) || mDeviceInfo.physdevProps.apiVersion >= VK_API_VERSION_1_4) && mDeviceInfo.physdevProps.vendorID == 0x1010)
+android	UNKNOWN STEP	2026-11-24T18:17:12.4948824Z INFO         | Graphics Adapter Vendor Google (Google Inc.)
+android	UNKNOWN STEP	2026-11-24T18:17:12.4949568Z INFO         | Graphics Adapter Android Emulator OpenGL ES Translator (Google SwiftShader)
+android	UNKNOWN STEP	2026-11-24T18:17:12.4950333Z INFO         | Graphics API Version OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1)
+android	UNKNOWN STEP	2026-11-24T18:17:12.4952837Z INFO         | Graphics API Extensions GL_OES_EGL_sync GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_depth24 GL_OES_depth32 GL_OES_element_index_uint GL_OES_texture_float GL_OES_texture_float_linear GL_OES_compressed_paletted_texture GL_OES_compressed_ETC1_RGB8_texture GL_OES_depth_texture GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_OES_packed_depth_stencil GL_OES_vertex_half_float GL_OES_standard_derivatives GL_OES_texture_npot GL_OES_rgb8_rgba8 GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_texture_format_BGRA8888 GL_APPLE_texture_format_BGRA8888 
+android	UNKNOWN STEP	2026-11-24T18:17:12.4954451Z INFO         | Graphics Device Extensions N/A
+android	UNKNOWN STEP	2026-11-24T18:17:12.4954779Z INFO         | Disabling sparse binding feature support
+android	UNKNOWN STEP	2026-11-24T18:17:12.5025964Z INFO         | Userspace boot properties:
+android	UNKNOWN STEP	2026-11-24T18:17:12.5027138Z INFO         |   android.bootanim=0
+android	UNKNOWN STEP	2026-11-24T18:17:12.5027645Z INFO         |   android.qemud=1
+android	UNKNOWN STEP	2026-11-24T18:17:12.5028330Z INFO         |   androidboot.boot_devices=pci0000:00/0000:00:03.0 pci0000:00/0000:00:06.0
+android	UNKNOWN STEP	2026-11-24T18:17:12.5028949Z INFO         |   androidboot.hardware=ranchu
+android	UNKNOWN STEP	2026-11-24T18:17:12.5029453Z INFO         |   androidboot.hardware.vulkan=ranchu
+android	UNKNOWN STEP	2026-11-24T18:17:12.5029990Z INFO         |   androidboot.serialno=EMULATOR37X3X10X0
+android	UNKNOWN STEP	2026-11-24T18:17:12.5030754Z INFO         |   androidboot.vbmeta.digest=fe75c2a5d8acc56679b9ff248d9bbb4830bcd72c5bca68461d9e9de20914a4e1
+android	UNKNOWN STEP	2026-11-24T18:17:12.5031244Z INFO         |   androidboot.vbmeta.hash_alg=sha256
+android	UNKNOWN STEP	2026-11-24T18:17:12.5031548Z INFO         |   androidboot.vbmeta.size=6144
+android	UNKNOWN STEP	2026-11-24T18:17:12.5032008Z INFO         |   qemu=1
+android	UNKNOWN STEP	2026-11-24T18:17:12.5032240Z INFO         |   qemu.avd_name=test
+android	UNKNOWN STEP	2026-11-24T18:17:12.5032520Z INFO         |   qemu.camera_hq_edge_processing=0
+android	UNKNOWN STEP	2026-11-24T18:17:12.5032814Z INFO         |   qemu.camera_protocol_ver=1
+android	UNKNOWN STEP	2026-11-24T18:17:12.5033111Z INFO         |   qemu.dalvik.vm.heapsize=512m
+android	UNKNOWN STEP	2026-11-24T18:17:12.5033390Z INFO         |   qemu.encrypt=1
+android	UNKNOWN STEP	2026-11-24T18:17:12.5033625Z INFO         |   qemu.gles=1
+android	UNKNOWN STEP	2026-11-24T18:17:12.5033875Z INFO         |   qemu.gltransport=pipe
+android	UNKNOWN STEP	2026-11-24T18:17:12.5034191Z INFO         |   qemu.gltransport.drawFlushInterval=800
+android	UNKNOWN STEP	2026-11-24T18:17:12.5034845Z INFO         |   qemu.hwcodec.avcdec=2
+android	UNKNOWN STEP	2026-11-24T18:17:12.5035101Z INFO         |   qemu.hwcodec.hevcdec=2
+android	UNKNOWN STEP	2026-11-24T18:17:12.5035365Z INFO         |   qemu.hwcodec.vpxdec=2
+android	UNKNOWN STEP	2026-11-24T18:17:12.5035633Z INFO         |   qemu.opengles.version=196608
+android	UNKNOWN STEP	2026-11-24T18:17:12.5035968Z INFO         |   qemu.settings.system.screen_off_timeout=2147483647
+android	UNKNOWN STEP	2026-11-24T18:17:12.5036284Z INFO         |   qemu.skin=320x640
+android	UNKNOWN STEP	2026-11-24T18:17:12.5036542Z INFO         |   qemu.uirenderer=skiagl
+android	UNKNOWN STEP	2026-11-24T18:17:12.5036792Z INFO         |   qemu.virtiowifi=1
+android	UNKNOWN STEP	2026-11-24T18:17:12.5037031Z INFO         |   qemu.vsync=60
+android	UNKNOWN STEP	2026-11-24T18:17:12.5286183Z WARNING: cannnot unmap ptr 0x7ba881e01000 as it is in the protected range from 0x7ba801e00000 to 0x7ba882000000
+android	UNKNOWN STEP	2026-11-24T18:17:12.5493220Z INFO         | Monitoring duration of emulator setup.
+android	UNKNOWN STEP	2026-11-24T18:17:13.6264374Z INFO         | Successfully initialized netsim WiFi
+android	UNKNOWN STEP	2026-11-24T18:17:13.6297357Z INFO         | Setting display: 0 configuration to: 320x640, dpi: 160x160 
+android	UNKNOWN STEP	2026-11-24T18:17:13.6298053Z INFO         | setDisplayActiveConfig: id:0, 320x640
+android	UNKNOWN STEP	2026-11-24T18:17:13.6298471Z INFO         | emulatorSetupEnvironment: Environment scene is not required
+android	UNKNOWN STEP	2026-11-24T18:17:13.6353981Z USER_INFO    | Emulator is performing a full startup. This may take upto two minutes, or more.
+android	UNKNOWN STEP	2026-11-24T18:17:13.6357207Z WARNING      | Failed to process .ini file /home/runner/.android/emu-update-last-check.ini for reading.
+android	UNKNOWN STEP	2026-11-24T18:17:14.0494908Z WARNING      | Failed to process .ini file /home/runner/.android/emu-update-last-check.ini for reading.
+android	UNKNOWN STEP	2026-11-24T18:17:22.1367360Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	UNKNOWN STEP	2026-11-24T18:17:22.1396116Z * daemon not running; starting now at tcp:5037
+android	UNKNOWN STEP	2026-11-24T18:17:22.1425153Z * daemon started successfully
+android	UNKNOWN STEP	2026-11-24T18:17:22.1429819Z adb: device offline
+android	UNKNOWN STEP	2026-11-24T18:17:22.1434396Z The process '/usr/local/lib/android/sdk/platform-tools/adb' failed with exit code 1
+android	UNKNOWN STEP	2026-11-24T18:17:24.1470149Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	UNKNOWN STEP	2026-11-24T18:17:24.1499990Z adb: device offline
+android	UNKNOWN STEP	2026-11-24T18:17:24.1505813Z The process '/usr/local/lib/android/sdk/platform-tools/adb' failed with exit code 1
+android	UNKNOWN STEP	2026-11-24T18:17:26.1524027Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	UNKNOWN STEP	2026-11-24T18:17:26.1554829Z adb: device offline
+android	UNKNOWN STEP	2026-11-24T18:17:26.1560559Z The process '/usr/local/lib/android/sdk/platform-tools/adb' failed with exit code 1
+android	UNKNOWN STEP	2026-11-24T18:17:28.1605937Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	UNKNOWN STEP	2026-11-24T18:17:28.1835755Z 
+android	UNKNOWN STEP	2026-11-24T18:17:30.1868899Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	UNKNOWN STEP	2026-11-24T18:17:30.2105340Z 
+android	UNKNOWN STEP	2026-11-24T18:17:32.2148839Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	UNKNOWN STEP	2026-11-24T18:17:32.2291764Z 
+android	UNKNOWN STEP	2026-11-24T18:17:34.2347118Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	UNKNOWN STEP	2026-11-24T18:17:34.2520776Z 
+android	UNKNOWN STEP	2026-11-24T18:17:36.2560187Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	UNKNOWN STEP	2026-11-24T18:17:36.2871569Z 
+android	UNKNOWN STEP	2026-11-24T18:17:38.2898421Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+android	UNKNOWN STEP	2026-11-24T18:17:38.4289107Z 1
+android	UNKNOWN STEP	2026-11-24T18:17:38.4558889Z Emulator booted.
+android	UNKNOWN STEP	2026-11-24T18:17:38.4583075Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell input keyevent 82
+android	UNKNOWN STEP	2026-11-24T18:17:39.4572802Z INFO         | Boot completed in 27279 ms
+android	UNKNOWN STEP	2026-11-24T18:17:39.4575538Z INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+android	UNKNOWN STEP	2026-11-24T18:17:42.5223695Z Disabling animations.
+android	UNKNOWN STEP	2026-11-24T18:17:42.5245754Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell settings put global window_animation_scale 0.0
+android	UNKNOWN STEP	2026-11-24T18:17:42.7513718Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell settings put global transition_animation_scale 0.0
+android	UNKNOWN STEP	2026-11-24T18:17:43.0339144Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell settings put global animator_duration_scale 0.0
+android	UNKNOWN STEP	2026-11-24T18:17:43.4180813Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:17:43.4206307Z [command]/usr/bin/sh -c bash rascunhos/servidor/aparelhos/prova-android.sh build/android/assimilacao.apk "$RUNNER_TEMP"
+android	UNKNOWN STEP	2026-11-24T18:17:43.4790989Z Android 11
+android	UNKNOWN STEP	2026-11-24T18:17:43.5239351Z ABI x86_64
+android	UNKNOWN STEP	2026-11-24T18:17:51.7180195Z Performing Streamed Install
+android	UNKNOWN STEP	2026-11-24T18:17:51.7180943Z Success
+android	UNKNOWN STEP	2026-11-24T18:17:52.2267697Z Starting: Intent { cmp=org.assimilacao.mesa/com.godot.game.GodotAppLauncher (has extras) }
+android	UNKNOWN STEP	2026-11-24T18:17:54.5177098Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	UNKNOWN STEP	2026-11-24T18:17:54.5188315Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	UNKNOWN STEP	2026-11-24T18:17:54.5195016Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	UNKNOWN STEP	2026-11-24T18:17:54.5196559Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	UNKNOWN STEP	2026-11-24T18:17:55.0323655Z Status: ok
+android	UNKNOWN STEP	2026-11-24T18:17:55.0327691Z LaunchState: COLD
+android	UNKNOWN STEP	2026-11-24T18:17:55.0328492Z Activity: org.assimilacao.mesa/com.godot.game.GodotAppLauncher
+android	UNKNOWN STEP	2026-11-24T18:17:55.0329174Z TotalTime: 2797
+android	UNKNOWN STEP	2026-11-24T18:17:55.0329540Z WaitTime: 2806
+android	UNKNOWN STEP	2026-11-24T18:17:55.0329905Z Complete
+android	UNKNOWN STEP	2026-11-24T18:18:05.2205461Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	UNKNOWN STEP	2026-11-24T18:18:05.2277757Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	UNKNOWN STEP	2026-11-24T18:18:05.2279701Z /buildbot/src/googleplex-android/emu-37-3-release/hardware/google/gfxstream/host/gl/glestranslator/gles_v2/gles_v2_imp.cpp:glGetProgramiv:2808 error 0x501
+android	UNKNOWN STEP	2026-11-24T18:20:10.8743654Z 11-24 18:17:53.911  3490  3598 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8744451Z 11-24 18:17:53.911  3490  3598 E godot   : 
+android	UNKNOWN STEP	2026-11-24T18:20:10.8745231Z 11-24 18:17:53.911  3490  3598 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8745993Z 11-24 18:17:53.911  3490  3598 E godot   : ERROR: Method/function failed.
+android	UNKNOWN STEP	2026-11-24T18:20:10.8747068Z 11-24 18:17:53.911  3490  3598 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8747846Z 11-24 18:17:53.926  3490  3598 I godot   : 1: 
+android	UNKNOWN STEP	2026-11-24T18:20:10.8748459Z 11-24 18:17:53.926  3490  3598 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+android	UNKNOWN STEP	2026-11-24T18:20:10.8749058Z 11-24 18:17:53.926  3490  3598 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8749565Z 11-24 18:17:53.926  3490  3598 E godot   : 
+android	UNKNOWN STEP	2026-11-24T18:20:10.8750393Z 11-24 18:17:53.926  3490  3598 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8751248Z 11-24 18:17:53.926  3490  3598 E godot   : ERROR: Method/function failed.
+android	UNKNOWN STEP	2026-11-24T18:20:10.8752318Z 11-24 18:17:53.926  3490  3598 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8752811Z 11-24 18:17:53.974  3490  3598 I godot   : 1: 
+android	UNKNOWN STEP	2026-11-24T18:20:10.8753228Z 11-24 18:17:53.974  3490  3598 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+android	UNKNOWN STEP	2026-11-24T18:20:10.8753823Z 11-24 18:17:53.974  3490  3598 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8754616Z 11-24 18:17:53.974  3490  3598 E godot   : 
+android	UNKNOWN STEP	2026-11-24T18:20:10.8755093Z 11-24 18:17:53.974  3490  3598 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8755582Z 11-24 18:17:53.974  3490  3598 E godot   : ERROR: Method/function failed.
+android	UNKNOWN STEP	2026-11-24T18:20:10.8756083Z 11-24 18:17:53.974  3490  3598 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8756630Z 11-24 18:17:53.976  3490  3598 E godot   : WARNING: shader failed to compile, unable to bind shader.
+android	UNKNOWN STEP	2026-11-24T18:20:10.8757316Z 11-24 18:17:53.976  3490  3598 E godot   :    at: _version_bind_shader (./drivers/gles3/shader_gles3.h:215)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8758243Z 11-24 18:17:54.004  3490  3598 I godot   : OpenGL API OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1) - Compatibility - Using Device: Google (Google Inc.) - Android Emulator OpenGL ES Translator (Google SwiftShader)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8758891Z 11-24 18:17:54.077  3490  3598 I godot   : 
+android	UNKNOWN STEP	2026-11-24T18:20:10.8763123Z 11-24 18:18:04.410  3490  3598 I godot   : [floresta] pronta em 6363 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":6363,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"r
+android	UNKNOWN STEP	2026-11-24T18:20:10.8766824Z 11-24 18:18:04.544  3490  3598 I godot   : pronto
+android	UNKNOWN STEP	2026-11-24T18:20:10.8767272Z 11-24 18:18:04.639  3490  3598 I godot   : pronto
+android	UNKNOWN STEP	2026-11-24T18:20:10.8767680Z 11-24 18:18:04.676  3490  3598 I godot   : 1: 
+android	UNKNOWN STEP	2026-11-24T18:20:10.8768267Z 11-24 18:18:04.676  3490  3598 E godot   : ERROR: CanvasShaderGLES3: Program linking failed:
+android	UNKNOWN STEP	2026-11-24T18:20:10.8769108Z 11-24 18:18:04.676  3490  3598 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8769730Z 11-24 18:18:04.676  3490  3598 E godot   : 
+android	UNKNOWN STEP	2026-11-24T18:20:10.8770398Z 11-24 18:18:04.676  3490  3598 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8771115Z 11-24 18:18:04.676  3490  3598 E godot   : ERROR: Method/function failed.
+android	UNKNOWN STEP	2026-11-24T18:20:10.8772041Z 11-24 18:18:04.676  3490  3598 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8772679Z 11-24 18:18:04.684  3490  3598 I godot   : 1: 
+android	UNKNOWN STEP	2026-11-24T18:20:10.8773276Z 11-24 18:18:04.684  3490  3598 E godot   : ERROR: CanvasShaderGLES3: Program linking failed:
+android	UNKNOWN STEP	2026-11-24T18:20:10.8774125Z 11-24 18:18:04.684  3490  3598 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8774741Z 11-24 18:18:04.684  3490  3598 E godot   : 
+android	UNKNOWN STEP	2026-11-24T18:20:10.8775400Z 11-24 18:18:04.684  3490  3598 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8776095Z 11-24 18:18:04.684  3490  3598 E godot   : ERROR: Method/function failed.
+android	UNKNOWN STEP	2026-11-24T18:20:10.8776869Z 11-24 18:18:04.684  3490  3598 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8778039Z FALHA: o Android não recebeu o ROOM_SNAPSHOT em 120 s
+android	UNKNOWN STEP	2026-11-24T18:20:10.8803073Z ##[error]The process '/usr/bin/sh' failed with exit code 1
+android	UNKNOWN STEP	2026-11-24T18:20:10.8810885Z ##[group]Terminate Emulator
+android	UNKNOWN STEP	2026-11-24T18:20:10.8811529Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 emu kill
+android	UNKNOWN STEP	2026-11-24T18:20:10.8833076Z OK: killing emulator, bye bye
+android	UNKNOWN STEP	2026-11-24T18:20:10.8872312Z OK
+android	UNKNOWN STEP	2026-11-24T18:20:10.8873814Z INFO         | Wait for emulator (pid 2733) 20 seconds to shutdown gracefully before kill;you can set environment variable ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL(in seconds) to change the default value (20 seconds)
+android	UNKNOWN STEP	2026-11-24T18:20:10.8874877Z 
+android	UNKNOWN STEP	2026-11-24T18:20:10.8875315Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:20:10.9078206Z USER_INFO    | Snapshots have been disabled by the user, save request is ignored.
+android	UNKNOWN STEP	2026-11-24T18:20:10.9081216Z INFO         | Saving snapshot 'default_boot' took 0 ms
+android	UNKNOWN STEP	2026-11-24T18:20:11.5704858Z WARNING      | Emulator client has not yet been configured.. Call configure me first!
+android	UNKNOWN STEP	2026-11-24T18:20:11.5803281Z INFO         | removeAll
+android	UNKNOWN STEP	2026-11-24T18:20:11.6240268Z WARNING      | Netsim Wifi dns:///localhost:33713 is gone due to Stream removed (CANCELLED)
+android	UNKNOWN STEP	2026-11-24T18:20:11.7433307Z ##[group]Run actions/upload-artifact@v4
+android	UNKNOWN STEP	2026-11-24T18:20:11.7433570Z with:
+android	UNKNOWN STEP	2026-11-24T18:20:11.7433752Z   name: prova-android
+android	UNKNOWN STEP	2026-11-24T18:20:11.7434021Z   path: /home/runner/work/_temp/*.log
+android	UNKNOWN STEP	/home/runner/work/_temp/*.png
+android	UNKNOWN STEP	
+android	UNKNOWN STEP	2026-11-24T18:20:11.7434328Z   retention-days: 14
+android	UNKNOWN STEP	2026-11-24T18:20:11.7434527Z   if-no-files-found: warn
+android	UNKNOWN STEP	2026-11-24T18:20:11.7434734Z   compression-level: 6
+android	UNKNOWN STEP	2026-11-24T18:20:11.7434924Z   overwrite: false
+android	UNKNOWN STEP	2026-11-24T18:20:11.7435116Z   include-hidden-files: false
+android	UNKNOWN STEP	2026-11-24T18:20:11.7435316Z env:
+android	UNKNOWN STEP	2026-11-24T18:20:11.7435485Z   GODOT_VERSAO: 4.7.2-stable
+android	UNKNOWN STEP	2026-11-24T18:20:11.7435717Z   ANDROID_AVD_HOME: /home/runner/.android/avd
+android	UNKNOWN STEP	2026-11-24T18:20:11.7435953Z ##[endgroup]
+android	UNKNOWN STEP	2026-11-24T18:20:11.8819262Z (node:3478) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+android	UNKNOWN STEP	2026-11-24T18:20:11.8819959Z (Use `node --trace-deprecation ...` to show where the warning was created)
+android	UNKNOWN STEP	2026-11-24T18:20:11.8872436Z With the provided path, there will be 4 files uploaded
+android	UNKNOWN STEP	2026-11-24T18:20:11.8877119Z Artifact name is valid!
+android	UNKNOWN STEP	2026-11-24T18:20:11.8877491Z Root directory input is valid!
+android	UNKNOWN STEP	2026-11-24T18:20:12.2690804Z Beginning upload of artifact content to blob storage
+android	UNKNOWN STEP	2026-11-24T18:20:12.3097731Z (node:3478) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+android	UNKNOWN STEP	2026-11-24T18:20:12.7306995Z Uploaded bytes 234326
+android	UNKNOWN STEP	2026-11-24T18:20:12.7936093Z Finished uploading artifact content to blob storage!
+android	UNKNOWN STEP	2026-11-24T18:20:12.7937274Z SHA256 digest of uploaded artifact zip is c0c640ba96f241977e6e6cb45d62e9efcef6f983da84878052c1da01cd265ddd
+android	UNKNOWN STEP	2026-11-24T18:20:12.7937992Z Finalizing artifact upload
+android	UNKNOWN STEP	2026-11-24T18:20:13.1734430Z Artifact prova-android.zip successfully finalized. Artifact ID 14951696726
+android	UNKNOWN STEP	2026-11-24T18:20:13.1735516Z Artifact prova-android has been successfully uploaded! Final size is 234326 bytes. Artifact ID is 14951696726
+android	UNKNOWN STEP	2026-11-24T18:20:13.1741840Z Artifact download URL: https://github.com/arthof09-ai/jogo-verdadeiro-rascunhos/actions/runs/45457086158/artifacts/14951696726
+android	UNKNOWN STEP	2026-11-24T18:20:13.1924713Z Post job cleanup.
+android	UNKNOWN STEP	2026-11-24T18:20:13.2670248Z [command]/usr/bin/git version
+android	UNKNOWN STEP	2026-11-24T18:20:13.2707344Z git version 2.56.1
+android	UNKNOWN STEP	2026-11-24T18:20:13.2736675Z Temporarily overriding HOME='/home/runner/work/_temp/8d7dd9ff-cae9-4323-a9d2-280d1da73896' before making global git config changes
+android	UNKNOWN STEP	2026-11-24T18:20:13.2737786Z Adding repository directory to the temporary git global config as a safe directory
+android	UNKNOWN STEP	2026-11-24T18:20:13.2741573Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/jogo-verdadeiro-rascunhos/jogo-verdadeiro-rascunhos
+android	UNKNOWN STEP	2026-11-24T18:20:13.2780146Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+android	UNKNOWN STEP	2026-11-24T18:20:13.2810885Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+android	UNKNOWN STEP	2026-11-24T18:20:13.3139422Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+android	UNKNOWN STEP	2026-11-24T18:20:13.3169600Z http.https://github.com/.extraheader
+android	UNKNOWN STEP	2026-11-24T18:20:13.3179956Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+android	UNKNOWN STEP	2026-11-24T18:20:13.3237008Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+android	UNKNOWN STEP	2026-11-24T18:20:13.3632505Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+android	UNKNOWN STEP	2026-11-24T18:20:13.3664207Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+android	UNKNOWN STEP	2026-11-24T18:20:13.4071464Z Cleaning up orphan processes
+android	UNKNOWN STEP	2026-11-24T18:20:13.4352292Z Terminate orphan process: pid (2278) (MainThread)
+android	UNKNOWN STEP	2026-11-24T18:20:13.4459325Z Terminate orphan process: pid (2820) (adb)
+android	UNKNOWN STEP	2026-11-24T18:20:13.4542392Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/download-artifact@v4, actions/setup-node@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

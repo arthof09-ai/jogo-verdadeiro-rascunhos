@@ -1,0 +1,641 @@
+--------- beginning of main
+--------- beginning of system
+--------- beginning of kernel
+11-26 11:44:05.993  3713  3798 I godot   : Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+11-26 11:44:06.957  3713  3798 I godot   : 1: 
+11-26 11:44:06.957  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:06.957  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:06.957  3713  3798 E godot   : 
+11-26 11:44:06.957  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:06.957  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:06.957  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:07.056  3713  3798 I godot   : 1: 
+11-26 11:44:07.056  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:07.056  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:07.056  3713  3798 E godot   : 
+11-26 11:44:07.056  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:07.057  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:07.057  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:07.087  3713  3798 I godot   : 1: 
+11-26 11:44:07.087  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:07.087  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:07.087  3713  3798 E godot   : 
+11-26 11:44:07.087  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:07.087  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:07.087  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:07.106  3713  3798 I godot   : 1: 
+11-26 11:44:07.106  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:07.106  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:07.106  3713  3798 E godot   : 
+11-26 11:44:07.106  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:07.106  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:07.106  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:07.107  3713  3798 E godot   : WARNING: shader failed to compile, unable to bind shader.
+11-26 11:44:07.107  3713  3798 E godot   :    at: _version_bind_shader (./drivers/gles3/shader_gles3.h:215)
+11-26 11:44:07.119  3713  3798 I godot   : OpenGL API OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1) - Compatibility - Using Device: Google (Google Inc.) - Android Emulator OpenGL ES Translator (Google SwiftShader)
+11-26 11:44:07.197  3713  3798 I godot   : 
+11-26 11:44:19.781  3713  3798 I godot   : [floresta] pronta em 8976 ms | {"ancestral_altura_m":260.0,"ancestral_cimo_medido_m":259.8,"ancestral_dist_m":580.0,"ancestral_largura_medida_m":412.3,"ancestral_outeiro_tri":22820,"ancestral_pagodes":42,"ancestral_pagodes_no_ar":0,"ancestral_partes":{"construcao":15368,"folha":57720,"luz":2160,"madeira":17069},"ancestral_tri":92317,"anel_arvores":720,"anel_longe_tri":6912,"anel_tri":169596,"arvores_arena":24,"arvores_orla":244,"arvores_tri":225536,"carga_ms":8976,"casas":2500,"casas_bloqueadas":283,"casas_livres":2217,"casas_livres_isoladas":0,"centro_livre":true,"erros":0,"estrato_arbustos":96,"estrato_fetos":240,"estrato_folhaslargas":210,"estrato_silvados":44,"estrato_tri":162944,"hastes_espiga":1303,"hastes_flor":927,"hastes_junco":48,"hastes_tri":39998,"lago_area_m2":453.4,"lago_estrato_tirado":14,"lago_funda_m2":288.8,"lago_fundura_max_m":2.52,"lago_nivel_m":-1.522,"lago_rasa_m2":104.2,"lago_tri":6902,"mapa_chao_cozeduras":1,"marcos_tri":2116,"relva_alto_malha":[0.997865557670593,0.591062247753143],"r
+11-26 11:44:20.118  3713  3798 I godot   : pronto
+11-26 11:44:20.307  3713  3798 I godot   : 1: 
+11-26 11:44:20.311  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.311  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.311  3713  3798 E godot   : 
+11-26 11:44:20.311  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.311  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.311  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.336  3713  3798 I godot   : 1: 
+11-26 11:44:20.337  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.337  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.337  3713  3798 E godot   : 
+11-26 11:44:20.337  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.337  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.337  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.348  3713  3798 I godot   : 1: 
+11-26 11:44:20.348  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.348  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.348  3713  3798 E godot   : 
+11-26 11:44:20.348  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.348  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.348  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.361  3713  3798 I godot   : 1: 
+11-26 11:44:20.361  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.361  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.361  3713  3798 E godot   : 
+11-26 11:44:20.361  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.361  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.361  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.376  3713  3798 I godot   : 1: 
+11-26 11:44:20.376  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.376  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.376  3713  3798 E godot   : 
+11-26 11:44:20.376  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.376  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.376  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.405  3713  3798 I godot   : 1: 
+11-26 11:44:20.405  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.405  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.405  3713  3798 E godot   : 
+11-26 11:44:20.405  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.405  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.405  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.431  3713  3798 I godot   : 1: 
+11-26 11:44:20.431  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.431  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.431  3713  3798 E godot   : 
+11-26 11:44:20.431  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.431  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.431  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.444  3713  3798 I godot   : 1: 
+11-26 11:44:20.444  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.444  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.444  3713  3798 E godot   : 
+11-26 11:44:20.444  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.444  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.444  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.455  3713  3798 I godot   : 1: 
+11-26 11:44:20.455  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.455  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.455  3713  3798 E godot   : 
+11-26 11:44:20.455  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.455  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.455  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.471  3713  3798 I godot   : 1: 
+11-26 11:44:20.471  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.471  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.471  3713  3798 E godot   : 
+11-26 11:44:20.471  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.471  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.471  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.487  3713  3798 I godot   : 1: 
+11-26 11:44:20.487  3713  3798 E godot   : ERROR: SkyShaderGLES3: Program linking failed:
+11-26 11:44:20.487  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.487  3713  3798 E godot   : 
+11-26 11:44:20.487  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.487  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.487  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.498  3713  3798 I godot   : 1: 
+11-26 11:44:20.498  3713  3798 E godot   : ERROR: SkyShaderGLES3: Program linking failed:
+11-26 11:44:20.498  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.498  3713  3798 E godot   : 
+11-26 11:44:20.498  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.498  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.498  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.528  3713  3798 I godot   : 1: 
+11-26 11:44:20.528  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.528  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.528  3713  3798 E godot   : 
+11-26 11:44:20.528  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.528  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.528  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.557  3713  3798 I godot   : 1: 
+11-26 11:44:20.557  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.557  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.557  3713  3798 E godot   : 
+11-26 11:44:20.557  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.557  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.557  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.571  3713  3798 I godot   : 1: 
+11-26 11:44:20.571  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.571  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.571  3713  3798 E godot   : 
+11-26 11:44:20.571  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.571  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.571  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.585  3713  3798 I godot   : 1: 
+11-26 11:44:20.585  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.585  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.585  3713  3798 E godot   : 
+11-26 11:44:20.585  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.585  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.585  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.601  3713  3798 I godot   : 1: 
+11-26 11:44:20.601  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.601  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.601  3713  3798 E godot   : 
+11-26 11:44:20.601  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.601  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.601  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.639  3713  3798 I godot   : 1: 
+11-26 11:44:20.639  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.639  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.639  3713  3798 E godot   : 
+11-26 11:44:20.639  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.639  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.639  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.667  3713  3798 I godot   : 1: 
+11-26 11:44:20.667  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.667  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.667  3713  3798 E godot   : 
+11-26 11:44:20.667  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.667  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.667  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.682  3713  3798 I godot   : 1: 
+11-26 11:44:20.682  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.682  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.682  3713  3798 E godot   : 
+11-26 11:44:20.682  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.682  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.682  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.695  3713  3798 I godot   : 1: 
+11-26 11:44:20.695  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.695  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.695  3713  3798 E godot   : 
+11-26 11:44:20.695  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.695  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.695  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.711  3713  3798 I godot   : 1: 
+11-26 11:44:20.711  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.711  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.711  3713  3798 E godot   : 
+11-26 11:44:20.711  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.711  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.711  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.744  3713  3798 I godot   : 1: 
+11-26 11:44:20.745  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.745  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.745  3713  3798 E godot   : 
+11-26 11:44:20.745  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.745  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.745  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.776  3713  3798 I godot   : 1: 
+11-26 11:44:20.776  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.776  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.776  3713  3798 E godot   : 
+11-26 11:44:20.776  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.776  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.776  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.793  3713  3798 I godot   : 1: 
+11-26 11:44:20.794  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.794  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.794  3713  3798 E godot   : 
+11-26 11:44:20.794  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.794  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.794  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.810  3713  3798 I godot   : 1: 
+11-26 11:44:20.810  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.810  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.810  3713  3798 E godot   : 
+11-26 11:44:20.810  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.810  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.810  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.826  3713  3798 I godot   : 1: 
+11-26 11:44:20.826  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.826  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.826  3713  3798 E godot   : 
+11-26 11:44:20.826  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.826  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.826  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.863  3713  3798 I godot   : 1: 
+11-26 11:44:20.863  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.863  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.863  3713  3798 E godot   : 
+11-26 11:44:20.863  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.863  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.863  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.895  3713  3798 I godot   : 1: 
+11-26 11:44:20.895  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.895  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.895  3713  3798 E godot   : 
+11-26 11:44:20.895  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.895  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.895  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.925  3713  3798 I godot   : 1: 
+11-26 11:44:20.925  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.925  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.925  3713  3798 E godot   : 
+11-26 11:44:20.925  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.925  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.925  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.944  3713  3798 I godot   : 1: 
+11-26 11:44:20.944  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.944  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.944  3713  3798 E godot   : 
+11-26 11:44:20.944  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.944  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.944  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.959  3713  3798 I godot   : 1: 
+11-26 11:44:20.959  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.959  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.959  3713  3798 E godot   : 
+11-26 11:44:20.959  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.959  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.959  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:20.976  3713  3798 I godot   : 1: 
+11-26 11:44:20.976  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:20.976  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:20.976  3713  3798 E godot   : 
+11-26 11:44:20.976  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:20.976  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:20.976  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.042  3713  3798 I godot   : 1: 
+11-26 11:44:21.042  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.042  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.042  3713  3798 E godot   : 
+11-26 11:44:21.042  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.042  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.042  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.101  3713  3798 I godot   : 1: 
+11-26 11:44:21.101  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.101  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.101  3713  3798 E godot   : 
+11-26 11:44:21.101  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.101  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.101  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.137  3713  3798 I godot   : 1: 
+11-26 11:44:21.137  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.137  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.137  3713  3798 E godot   : 
+11-26 11:44:21.137  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.137  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.137  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.179  3713  3798 I godot   : 1: 
+11-26 11:44:21.179  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.179  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.179  3713  3798 E godot   : 
+11-26 11:44:21.179  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.179  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.179  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.215  3713  3798 I godot   : 1: 
+11-26 11:44:21.215  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.215  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.215  3713  3798 E godot   : 
+11-26 11:44:21.215  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.215  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.215  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.255  3713  3798 I godot   : 1: 
+11-26 11:44:21.255  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.255  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.255  3713  3798 E godot   : 
+11-26 11:44:21.255  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.255  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.255  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.288  3713  3798 I godot   : 1: 
+11-26 11:44:21.288  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.288  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.288  3713  3798 E godot   : 
+11-26 11:44:21.288  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.288  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.288  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.309  3713  3798 I godot   : 1: 
+11-26 11:44:21.309  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.309  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.309  3713  3798 E godot   : 
+11-26 11:44:21.309  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.309  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.309  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.321  3713  3798 I godot   : 1: 
+11-26 11:44:21.321  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.321  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.321  3713  3798 E godot   : 
+11-26 11:44:21.321  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.321  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.321  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.337  3713  3798 I godot   : 1: 
+11-26 11:44:21.337  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.337  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.337  3713  3798 E godot   : 
+11-26 11:44:21.337  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.337  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.337  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.358  3713  3798 I godot   : 1: 
+11-26 11:44:21.358  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.358  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.358  3713  3798 E godot   : 
+11-26 11:44:21.358  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.358  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.358  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.380  3713  3798 I godot   : 1: 
+11-26 11:44:21.380  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.380  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.380  3713  3798 E godot   : 
+11-26 11:44:21.380  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.380  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.380  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.392  3713  3798 I godot   : 1: 
+11-26 11:44:21.392  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.392  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.392  3713  3798 E godot   : 
+11-26 11:44:21.392  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.392  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.392  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.403  3713  3798 I godot   : 1: 
+11-26 11:44:21.404  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.404  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.404  3713  3798 E godot   : 
+11-26 11:44:21.404  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.404  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.404  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.421  3713  3798 I godot   : 1: 
+11-26 11:44:21.421  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.421  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.421  3713  3798 E godot   : 
+11-26 11:44:21.421  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.421  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.421  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.450  3713  3798 I godot   : 1: 
+11-26 11:44:21.450  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.450  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.450  3713  3798 E godot   : 
+11-26 11:44:21.450  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.450  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.450  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.476  3713  3798 I godot   : 1: 
+11-26 11:44:21.476  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.476  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.476  3713  3798 E godot   : 
+11-26 11:44:21.476  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.477  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.477  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.489  3713  3798 I godot   : 1: 
+11-26 11:44:21.489  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.489  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.489  3713  3798 E godot   : 
+11-26 11:44:21.489  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.489  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.489  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.501  3713  3798 I godot   : 1: 
+11-26 11:44:21.501  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.501  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.501  3713  3798 E godot   : 
+11-26 11:44:21.501  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.501  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.501  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.513  3713  3798 I godot   : 1: 
+11-26 11:44:21.513  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.513  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.513  3713  3798 E godot   : 
+11-26 11:44:21.513  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.513  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.513  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.531  3713  3798 I godot   : 1: 
+11-26 11:44:21.531  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.531  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.531  3713  3798 E godot   : 
+11-26 11:44:21.531  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.531  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.531  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.554  3713  3798 I godot   : 1: 
+11-26 11:44:21.554  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.554  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.554  3713  3798 E godot   : 
+11-26 11:44:21.554  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.554  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.554  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.581  3713  3798 I godot   : 1: 
+11-26 11:44:21.581  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.581  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.581  3713  3798 E godot   : 
+11-26 11:44:21.581  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.581  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.581  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.616  3713  3798 I godot   : 1: 
+11-26 11:44:21.616  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.616  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.616  3713  3798 E godot   : 
+11-26 11:44:21.616  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.616  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.616  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.640  3713  3798 I godot   : 1: 
+11-26 11:44:21.640  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.640  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.640  3713  3798 E godot   : 
+11-26 11:44:21.640  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.640  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.640  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.686  3713  3798 I godot   : 1: 
+11-26 11:44:21.687  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.687  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.687  3713  3798 E godot   : 
+11-26 11:44:21.687  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.687  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.687  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.711  3713  3798 I godot   : 1: 
+11-26 11:44:21.711  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.711  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.711  3713  3798 E godot   : 
+11-26 11:44:21.711  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.711  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.711  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.731  3713  3798 I godot   : 1: 
+11-26 11:44:21.731  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.731  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.731  3713  3798 E godot   : 
+11-26 11:44:21.731  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.731  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.731  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.747  3713  3798 I godot   : 1: 
+11-26 11:44:21.747  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.747  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.747  3713  3798 E godot   : 
+11-26 11:44:21.747  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.747  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.747  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.762  3713  3798 I godot   : 1: 
+11-26 11:44:21.762  3713  3798 E godot   : ERROR: SkyShaderGLES3: Program linking failed:
+11-26 11:44:21.762  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.762  3713  3798 E godot   : 
+11-26 11:44:21.762  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.762  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.762  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.806  3713  3798 I godot   : 1: 
+11-26 11:44:21.806  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.806  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.806  3713  3798 E godot   : 
+11-26 11:44:21.806  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.806  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.806  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.855  3713  3798 I godot   : 1: 
+11-26 11:44:21.855  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.855  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.855  3713  3798 E godot   : 
+11-26 11:44:21.855  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.855  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.855  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.930  3713  3798 I godot   : 1: 
+11-26 11:44:21.930  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.930  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.930  3713  3798 E godot   : 
+11-26 11:44:21.930  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.931  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.931  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:21.961  3713  3798 I godot   : 1: 
+11-26 11:44:21.961  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:21.961  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:21.961  3713  3798 E godot   : 
+11-26 11:44:21.961  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:21.961  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:21.961  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.027  3713  3798 I godot   : 1: 
+11-26 11:44:22.027  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:22.027  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.027  3713  3798 E godot   : 
+11-26 11:44:22.027  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.027  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.027  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.058  3713  3798 I godot   : 1: 
+11-26 11:44:22.058  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:22.058  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.058  3713  3798 E godot   : 
+11-26 11:44:22.058  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.058  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.058  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.085  3713  3798 I godot   : 1: 
+11-26 11:44:22.085  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:22.085  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.085  3713  3798 E godot   : 
+11-26 11:44:22.085  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.085  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.085  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.098  3713  3798 I godot   : 1: 
+11-26 11:44:22.098  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:22.098  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.098  3713  3798 E godot   : 
+11-26 11:44:22.098  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.098  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.098  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.110  3713  3798 I godot   : 1: 
+11-26 11:44:22.110  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:22.110  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.110  3713  3798 E godot   : 
+11-26 11:44:22.110  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.110  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.110  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.124  3713  3798 I godot   : 1: 
+11-26 11:44:22.124  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:22.124  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.124  3713  3798 E godot   : 
+11-26 11:44:22.124  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.124  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.124  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.568  3713  3798 I godot   : 1: 
+11-26 11:44:22.568  3713  3798 E godot   : ERROR: CanvasShaderGLES3: Program linking failed:
+11-26 11:44:22.568  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.568  3713  3798 E godot   : 
+11-26 11:44:22.568  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.568  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.568  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.580  3713  3798 I godot   : 1: 
+11-26 11:44:22.580  3713  3798 E godot   : ERROR: CanvasShaderGLES3: Program linking failed:
+11-26 11:44:22.580  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.580  3713  3798 E godot   : 
+11-26 11:44:22.580  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.580  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.580  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.654  3713  3798 I godot   : rede: ROOM_SNAPSHOT seq=5 fase=combate plataforma=Android
+11-26 11:44:22.784  3713  3798 I godot   : 1: 
+11-26 11:44:22.784  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:22.784  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.784  3713  3798 E godot   : 
+11-26 11:44:22.784  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.784  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.784  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.841  3713  3798 I godot   : 1: 
+11-26 11:44:22.841  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:22.841  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.841  3713  3798 E godot   : 
+11-26 11:44:22.841  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.841  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.841  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.855  3713  3798 I godot   : 1: 
+11-26 11:44:22.855  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:22.855  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.855  3713  3798 E godot   : 
+11-26 11:44:22.855  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.855  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.855  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.875  3713  3798 I godot   : 1: 
+11-26 11:44:22.875  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:22.875  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.875  3713  3798 E godot   : 
+11-26 11:44:22.875  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.875  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.875  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.888  3713  3798 I godot   : 1: 
+11-26 11:44:22.888  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:22.888  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.888  3713  3798 E godot   : 
+11-26 11:44:22.888  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.888  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.888  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.909  3713  3798 I godot   : 1: 
+11-26 11:44:22.909  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:22.909  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.909  3713  3798 E godot   : 
+11-26 11:44:22.909  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.909  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.909  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.937  3713  3798 I godot   : 1: 
+11-26 11:44:22.937  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:22.937  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.937  3713  3798 E godot   : 
+11-26 11:44:22.937  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.937  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.937  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.971  3713  3798 I godot   : 1: 
+11-26 11:44:22.971  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:22.971  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.971  3713  3798 E godot   : 
+11-26 11:44:22.971  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.971  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.971  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.986  3713  3798 I godot   : 1: 
+11-26 11:44:22.986  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:22.986  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:22.986  3713  3798 E godot   : 
+11-26 11:44:22.986  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:22.986  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:22.986  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:22.999  3713  3798 I godot   : 1: 
+11-26 11:44:23.001  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:23.001  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:23.001  3713  3798 E godot   : 
+11-26 11:44:23.001  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:23.001  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:23.001  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-26 11:44:23.018  3713  3798 I godot   : 1: 
+11-26 11:44:23.018  3713  3798 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-26 11:44:23.018  3713  3798 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-26 11:44:23.018  3713  3798 E godot   : 
+11-26 11:44:23.018  3713  3798 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-26 11:44:23.018  3713  3798 E godot   : ERROR: Method/function failed.
+11-26 11:44:23.018  3713  3798 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)

@@ -1,0 +1,32 @@
+void RasterizerGLES3::initialize() {
+	Engine::get_singleton()->print_header(vformat("OpenGL API %s - Compatibility - Using Device: %s - %s", RS::get_singleton()->get_video_adapter_api_version(), RS::get_singleton()->get_video_adapter_vendor(), RS::get_singleton()->get_video_adapter_name()));
+	if (Engine::get_singleton()->get_gpu_index() >= 0) {
+		WARN_PRINT("The Compatibility renderer does not support overriding the GPU with the --gpu-index command line argument. Falling back to the default GPU for OpenGL applications.");
+	}
+}
+...
+	}
+
+	// OpenGL needs to be initialized before initializing the Rasterizers
+	config = memnew(GLES3::Config);
+	utilities = memnew(GLES3::Utilities);
+	texture_storage = memnew(GLES3::TextureStorage);
+	material_storage = memnew(GLES3::MaterialStorage);
+	mesh_storage = memnew(GLES3::MeshStorage);
+	particles_storage = memnew(GLES3::ParticlesStorage);
+	light_storage = memnew(GLES3::LightStorage);
+	copy_effects = memnew(GLES3::CopyEffects);
+	cubemap_filter = memnew(GLES3::CubemapFilter);
+	glow = memnew(GLES3::Glow);
+	post_effects = memnew(GLES3::PostEffects);
+	feed_effects = memnew(GLES3::FeedEffects);
+	gi = memnew(GLES3::GI);
+	fog = memnew(GLES3::Fog);
+	canvas = memnew(RasterizerCanvasGLES3());
+	scene = memnew(RasterizerSceneGLES3());
+	// Has to be a separate call due to TextureStorage & MaterialStorage needing to interact for TexBlit Shaders
+	texture_storage->_tex_blit_shader_initialize();
+
+	// Disable OpenGL linear to sRGB conversion, because Godot will always do this conversion itself.
+	if (config->srgb_framebuffer_supported) {
+		glDisable(GL_FRAMEBUFFER_SRGB);
