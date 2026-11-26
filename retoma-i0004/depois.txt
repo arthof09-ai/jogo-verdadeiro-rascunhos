@@ -1,4 +1,4 @@
-# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 458 ficheiros mudados ou novos em rascunhos/.
+# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 459 ficheiros mudados ou novos em rascunhos/.
 93c8f082052020ffc4a3a95831f74a5a16a295f366e54842045791c071fc83e4  rascunhos/cliente/README.md
 2a9bda1fa4349cfa9ece76842797ac96adc27ef919c525b3843a6f1cd01e58d5  rascunhos/cliente/arte/README.md
 2bc9bbf8ab270183116aa4eca383ce5b521fe7a466e9db9a065d96cca0da28fa  rascunhos/cliente/arte/ambiente/color_script.gd
@@ -344,7 +344,8 @@ cd400023a288bf3f6a97e2ba67893c127d544983edf368c60bd9e4273b8bad45  rascunhos/serv
 7487ff21ffdd2d4c7986a5f2ca4f902a7671fc9dedec2e665702acf2d0d377b0  rascunhos/servidor/adaptadores/node/servidor-ws.js
 152d793be0716f2e5f93fd5dc503cda8e5077bc21d543188ac49aaf535a7ddf3  rascunhos/servidor/aparelhos/bots.mjs
 9578b130cbf912e4aa2e1deee145e06229419527f29fc170063f1e8ea98bf615  rascunhos/servidor/aparelhos/conferir-qr.py
-ae5e888e754c7218c4b903fbb7acbaa11639bb9b1e6c6185b2689a6854afe2b5  rascunhos/servidor/aparelhos/controlo-gles.sh
+4cdd2e51e9a55336d14a37d57d85db58e011e1d015ac371771a93e1282d8b67e  rascunhos/servidor/aparelhos/controlo-gles.pck
+ddde6e3c6af7ab9a58df40911f549bba819495ebc09d3ec72115f69f581cf651  rascunhos/servidor/aparelhos/controlo-gles.sh
 342fd6b346f9b0092c7be36cc14dead87f4e450befac2230865fef88920af827  rascunhos/servidor/aparelhos/controlo-gles/controlo.gd
 5da7f2306ca44a176615aa41ca69720dc3ec9edbde9d01ff7df06b786eb7c078  rascunhos/servidor/aparelhos/controlo-gles/controlo.tscn
 d6d73d8c8a941d72b1e75a16b69a3d945d9f79bd812fbcba942749bfebef748b  rascunhos/servidor/aparelhos/controlo-gles/export_presets.cfg
@@ -355,7 +356,7 @@ a50f979cbf0d7a89b37486e775ffeeb40689465df4c03bce0f2971ce599355d6  rascunhos/serv
 97afd74e4e738b0c5d7062551b75de88e83308fdb0c20b829a73e97ad81b35e1  rascunhos/servidor/aparelhos/mesa-prova.mjs
 5573f5fee573afed25096118a017a7995e3600e005b83eb5236a098bc1ef79fc  rascunhos/servidor/aparelhos/navegador.mjs
 b01e5dd433de7194070b7c59731b1ecbe2603e69157726c6affe1ef08e011ddb  rascunhos/servidor/aparelhos/prova-3-bots.mjs
-3830dd8b4cd820eaa97259fec1eebb1767b116a6c4075de93fca2988817b93d9  rascunhos/servidor/aparelhos/prova-android.sh
+8862b09e5092279d12ee83c07850dabb526aac1428d3401ab301770d2c50644a  rascunhos/servidor/aparelhos/prova-android.sh
 76e7694f3eda7ac5bd6ae2bfe8d5e180ea74de454a43b8345c87d921c7967752  rascunhos/servidor/aparelhos/prova-web.mjs
 12e25222043cdc95af7c2ba0e48d04c819b923a889be1070516f0c6aa5d15991  rascunhos/servidor/aparelhos/prova-windows.ps1
 7037229e559e49bf27f7cb1cdf219758c0a9ab10bd2c84af93d36c75d9718995  rascunhos/servidor/autojogo/cenario-bancada.json
