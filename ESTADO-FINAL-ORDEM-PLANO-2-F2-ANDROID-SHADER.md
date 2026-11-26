@@ -24,11 +24,11 @@ Reli o log do run #45457086158 por API (job 138670701384) e os artefactos `prova
 |---|---|
 | 2036 | `GodotActivity: Project command line parameters: [--xr_mode_regular, --xr-mode, off, --fullscreen, --background_color, #000000]`: o APK arranca |
 | **2038** | **`GodotActivity: Launch intent Intent { flg=0x10000000 cmp=org.assimilacao.mesa/com.godot.game.GodotAppLauncher } with parameters []`**. O `am start` tinha enviado o extra (`ActivityTaskManager: START … (has extras)`), mas o Godot entregou-o **vazio** |
-| 2377, 2388, 2396, 2450 | 4× `SceneShaderGLES3: Program linking failed: Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)` |
+| **2376, 2387, 2395, 2449** | 4× `ERROR: SceneShaderGLES3: Program linking failed:` (detalhe na linha seguinte: `Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)`) |
 | 2470 | `OpenGL API OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1) - Compatibility …`: o banner do motor. Os 4 erros vêm **antes** dele |
 | 6184 | `[floresta] pronta em 6363 ms` |
 | 6220, 6232 | `pronto` ×2 (a arena e o lobby) |
-| 6238, 6245 | 2× `CanvasShaderGLES3: Program linking failed … (261)` |
+| **6237, 6244** | 2× `ERROR: CanvasShaderGLES3: Program linking failed:` (detalhe na linha seguinte, idem) |
 | — | **Nenhuma linha `rede:`.** O `mesa.log` só tem o Mestre-bot. A Arqueira nunca tentou entrar |
 
 O `rede.gd` (`iniciar()` → `entrada_da_linha_de_comando()`) só entra sozinho se houver `--entrar-nome=` e
