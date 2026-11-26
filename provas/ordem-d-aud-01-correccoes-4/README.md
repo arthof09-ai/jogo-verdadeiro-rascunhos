@@ -81,10 +81,10 @@ No `resumo.txt` estes dois têm `exit=1`: `servidor` dá 445 de 446 e `motor-rea
 - `fixture-mestre.test.mjs`: «mesa-mestre.json desactualizado»;
 - `vetores-ouro.test.mjs`: «01-ataque-normal.json: a corrida difere do ficheiro gravado».
 
-O clone deste PC tem `core.autocrlf=true`. O índice está em LF e a cópia de trabalho em CRLF (`git ls-files
+O ficheiro lido do disco vinha em CRLF (ver o diff no `servidor.log`), compatível com `core.autocrlf=true` no clone do PC (valor afirmado, sem output de `git config` cometida). O índice está em LF e a cópia de trabalho em CRLF (`git ls-files
 --eol`: `i/lf w/crlf`). Por isso o ficheiro lido do disco nunca é igual ao que o teste gera.
 
-O `suites-node-lf.sh` faz um worktree destacado no mesmo `a158c31` com `core.autocrlf=false` (`i/lf w/lf`), corre
+O `suites-node-lf.sh` faz um worktree destacado no mesmo código (o `a158c31` pré-rebase já não é endereçável; ver §5) com `core.autocrlf=false` (`i/lf w/lf`), corre
 as duas suites lá e tira o worktree. Deu **446/446** e **6/6**, ambos com exit 0 (`resumo-node-lf.txt`,
 `servidor-LF.log`, `motor-real-LF.log`). O servidor não foi tocado por esta ordem. O CI corre em LF.
 
@@ -92,9 +92,11 @@ as duas suites lá e tira o worktree. Deu **446/446** e **6/6**, ambos com exit 
 
 O guião correu duas vezes. Na 1.ª vez o `python` do PC não tinha o `jsonschema`, e os dois `validar-mensagens`
 deram exit 1 com `ModuleNotFoundError`. O resto deu igual à 2.ª corrida, incluindo a mutação. Instalei o
-`jsonschema` (4.26.0) num venv fora do repo (`<sede>/tmp/venv`), juntei ao guião a variável `PYTHON` (por omissão
+`jsonschema` (versão afirmada, sem output de versão cometida) num venv fora do repo (`<sede>/tmp/venv`), juntei ao guião a variável `PYTHON` (por omissão
 continua `python`) e corri o guião todo outra vez. Os logs em `suites/` são da 2.ª corrida. Da 1.ª ficaram o
 `resumo.txt` e os dois logs do validador.
+
+Os logs completos das outras suites da 1.ª corrida não ficaram guardados; a igualdade com a 2.ª corrida verifica-se só pelos exits do `resumo.txt` da 1.ª.
 
 ## Privacidade
 

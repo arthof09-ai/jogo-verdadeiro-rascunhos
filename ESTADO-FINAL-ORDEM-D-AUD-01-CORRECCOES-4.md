@@ -33,6 +33,8 @@ if tem_mover:
 	_botao(Textos.MOVER, iniciar_mover)
 ```
 
+(citação abreviada: o código traz ainda três linhas de comentário entre o `if` e o `parar_mover()`.)
+
 O `parar_mover()` faz quatro coisas:
 
 - limpa `_casas`;
@@ -151,8 +153,10 @@ Há três registos a fazer. Os pormenores estão no README das provas.
 
 - **Fim de linha.** No `resumo.txt` do guião, `servidor` (445/446) e `motor-real` (5/6) têm `exit=1`. Nos dois a
   única falha é uma comparação byte a byte com um ficheiro guardado (`mesa-mestre.json`, `01-ataque-normal.json`),
-  porque o clone do PC tem `core.autocrlf=true` (`i/lf w/crlf`). No worktree LF do mesmo commit
+  porque o ficheiro lido do disco vinha em CRLF (ver o diff no `servidor.log`: `actual` com `\r\n` contra `expected` com `\n`), compatível com `core.autocrlf=true` no clone do PC (valor afirmado, sem output de `git config` cometida). No worktree LF do mesmo commit
   (`suites-node-lf.sh`) deram **446/446 e 6/6, exit 0**. O servidor não foi tocado. O CI corre em LF.
+
+No `motor-real.log` a falha mostra só o nome do ficheiro (`01-ataque-normal.json: a corrida difere do ficheiro gravado`); os bytes que diferem não aparecem nesse log — a conclusão (só fim de linha) apoia-se no 6/6 do worktree LF e no hash `ca7a50a7…` da linha `VETORES-OURO-BYTES` do `motor-real-LF.log`.
 - **Duas corridas do guião.** Na 1.ª, o `python` do PC não tinha o `jsonschema`, e os dois validadores deram
   `ModuleNotFoundError`. Instalei-o num venv fora do repo, juntei `PYTHON` ao guião e corri tudo outra vez. Os
   resultados acima são da 2.ª corrida. O `resumo.txt` da 1.ª está em `suites/corrida-1/`, e a mutação deu igual nas
@@ -170,8 +174,7 @@ Há três registos a fazer. Os pormenores estão no README das provas.
   passagem.
 - **O rebase.** Antes do push, a ponta remota tinha andado de `08beeda` para `27b70e5`
   (D-AUD-14-SEGUIMENTO-MUTACAO, que só mexe no `.github/workflows/testes.yml`). Fiz rebase dos três commits
-  sobre ela. O `git diff a158c31 deb0fd4` em `rascunhos/`, `provas/`, `retoma-i0004/` e `MANIFESTO-SHA256.txt` é
-  vazio. Corri outra vez o `actualizar-listas.py` sobre a ponta nova: 0 novos, 0 tirados, e o índice ficou igual.
+  sobre ela. O `a158c31` (o `deb0fd4` antes do rebase) foi reescrito pelo rebase e já não é endereçável no GitHub, por isso o diff directo já não se pode repetir. A preservação prova-se pelos blobs: os três ficheiros têm os mesmos SHA-256 em `bc94aad`, `deb0fd4` e na ponta (`aba_agir.gd` `3f24c5f2…aa287`, `textos_mestre.gd` `aa626aec…23311`, `pecas_mestre.gd` `d4589022…ff65`), e o CI correu verde sobre `ea71055` e sobre a ponta. Corri outra vez o `actualizar-listas.py` sobre a ponta nova: 0 novos, 0 tirados, e o índice ficou igual (o output da passagem não ficou cometido; o resultado sustenta-se nos ficheiros de listas idênticos).
   As suites locais correram sobre o `a158c31`, o mesmo código de `rascunhos/`; o CI correu sobre o `ea71055`.
 
 ## 6. Perímetro e privacidade
@@ -192,3 +195,5 @@ armado perante opções sem `mover`, e não decide nenhuma das duas.
   success**, com os 10 jobs verdes (servidor, validador-glb, motor-real, protocolo, cliente, godot-cliente,
   foto-mestre, provas-mapa, ponta-a-ponta, retoma-pc). **Sonda de privacidade 45798063580: success.** No log do CI,
   o `pecas_mestre` dá 334 de 334, com as duas verificações da D-AUD-01-CORRECCOES-4 «ok».
+
+O workflow `Aparelhos (F2)` dá `failure` em `ea71055` (run `45798063851`), como já dava na base `27b70e5` e em `08beeda` — falha pré-existente, fora do perímetro desta ordem (Testes + Sonda).
