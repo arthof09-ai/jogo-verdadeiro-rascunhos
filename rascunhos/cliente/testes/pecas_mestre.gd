@@ -388,6 +388,11 @@ func _correr() -> void:
 	var guarda_viva_b: bool = c._aba_agir.a_mover and c._colocar_guardado == "orc-teste" and c._aba_mesa.a_colocar == ""
 	_rede._ao_receber(JSON.stringify(op_sem))
 	var guarda_depois_b: String = c._colocar_guardado
+	var desarmado_b: bool = c._aba_agir._casas.is_empty() and c._arena.casas_destacadas().is_empty() and not c._aba_agir._cancelar.visible
+	var aviso_b: bool = c._aba_agir._info.text.contains(Textos.MOVER_SEM_CASAS)
+	var rot_b: Array = []
+	for b in c._aba_agir.botoes_de_accao():
+		rot_b.append(b.text)
 	c._aba_agir._cancelar.pressed.emit()
 	var antes_b := _comandos.size()
 	c.casa_tocada(Vector2i(19, 19))
@@ -395,7 +400,7 @@ func _correr() -> void:
 	var cmds_b: Array = []
 	for cmd in _comandos.slice(antes_b):
 		cmds_b.append(str(cmd.get("type", "")))
-	_ok(guarda_viva_b and guarda_depois_b == "" and not c._aba_agir.a_mover and c._aba_mesa.a_colocar == "" and cmds_b.is_empty(),
+	_ok(guarda_viva_b and desarmado_b and aviso_b and not rot_b.has(Textos.MOVER) and rot_b.size() > 0 and guarda_depois_b == "" and not c._aba_agir.a_mover and c._aba_mesa.a_colocar == "" and cmds_b.is_empty(),
 		"D-AUD-01-CORRECCOES-4: «Colocar» → «Mover» armado (guarda viva: %s) → opções da mesma vez sem `mover` → «Cancelar» não repõe (guarda depois «%s», a_colocar «%s») e os toques não mandam nada (%s: 0 MASTER_ACT, 0 MASTER_PLACE)"
 		% [guarda_viva_b, guarda_depois_b, c._aba_mesa.a_colocar, cmds_b])
 	if not cmds_b.is_empty():
