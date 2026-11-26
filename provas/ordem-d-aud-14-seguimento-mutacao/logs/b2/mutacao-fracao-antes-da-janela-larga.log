@@ -1,0 +1,269 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Unicode parsing error, some characters were replaced with � (U+FFFD): Unexpected NUL character
+(844, 390): área 2337 × 1080 unidades; letra 36 (= 13.0 px reais)
+  ok    (844, 390) letra ≥ 13 px reais
+  ok    (844, 390) dois botões no cartão de desgraça (Confirmar, Escolher outra)
+  ok    (844, 390) botão «Confirmar» inteiro à vista (fundo em 502 de 1080)
+  ok    (844, 390) botão «Escolher outra» inteiro à vista (fundo em 586 de 1080)
+  ok    (844, 390) barra das abas inteira à vista
+  ok    (844, 390) contador da fila visível («+3 por decidir»)
+  ok    (844, 390) «Entrar na câmera livre» dentro do tabuleiro
+  ok    (844, 390) caixa da ordem à vista e sem tapar o «Entrar na câmera livre»
+  ok    (844, 390) caixa da ordem com 8 figuras (8)
+  MEDIDA MESTRE-EXPANDIDA (844, 390) figuras=8 compacta=(36,179 686×323) aberta=(36,179 787×786) tabuleiro=(0,0 968×1080) folha=(968,0 1369×1080) linhas inteiras à vista=8 de 8 rola=false nomes cortados com «…»=0
+  ok    (844, 390) 8 figuras: vista expandida aberta pelo rato
+  ok    (844, 390) 8 figuras, vista aberta: 8 linhas inteiras à vista sem rolar (esperadas 8)
+  ok    (844, 390) 8 figuras, vista aberta: a lista não rola
+  ok    (844, 390) 8 figuras, vista aberta: 0 nomes cortados com «…» (esperados 0, só os de ensaio)
+  ok    (844, 390) 8 figuras, vista aberta: a caixa não passa para a folha (direita 823 ≤ 968, início da folha 968)
+  ok    (844, 390) 8 figuras, vista aberta: a caixa não passa do fundo do ecrã (965 ≤ 1080)
+  ok    (844, 390) 8 figuras, vista aberta: a caixa nunca é mais estreita que a compacta (823 ≥ 722)
+  MEDIDA MESTRE-FOLHA (844, 390) ponto=(986,572) por baixo do rato=Botao1 cliques recebidos=1 caixa aberta depois do rato=false depois do clique=false
+  ok    (844, 390) 8 figuras, vista aberta: a folha à altura da caixa recebe o rato e o clique (Botao1, 1 clique)
+  ok    (844, 390) 8 figuras: fecho pelo rato — com o rato na folha a caixa volta à compacta
+  ok    (844, 390) 8 figuras: depois do clique do rato na folha a caixa continua compacta
+  MEDIDA MESTRE-FECHO-CLIQUE (844, 390) ponto=(986,572) aberta antes=true depois do clique=false no fim do toque=false cliques na folha=0
+  ok    (844, 390) 8 figuras: vista expandida aberta pelo toque (sem o rato a mexer)
+  ok    (844, 390) 8 figuras: fecho pelo clique — o clique na folha fecha a caixa
+  ok    (844, 390) 8 figuras: o gesto que fecha fica na caixa — não reabre nem chega à folha (0 clique)
+  ok    (844, 390) caixa da ordem com 12 figuras (12)
+  MEDIDA MESTRE-EXPANDIDA (844, 390) figuras=12 compacta=(36,179 686×323) aberta=(36,179 787×884) tabuleiro=(0,0 968×1080) folha=(968,0 1369×1080) linhas inteiras à vista=9 de 12 rola=true nomes cortados com «…»=0
+  ok    (844, 390) 12 figuras: vista expandida aberta pelo rato
+  ok    (844, 390) 12 figuras, vista aberta: 9 linhas inteiras à vista sem rolar (esperadas 9)
+  ok    (844, 390) 12 figuras, vista aberta: a lista rola
+  ok    (844, 390) 12 figuras, vista aberta: 0 nomes cortados com «…» (esperados 0, só os de ensaio)
+  ok    (844, 390) 12 figuras, vista aberta: a caixa não passa para a folha (direita 823 ≤ 968, início da folha 968)
+  ok    (844, 390) 12 figuras, vista aberta: a caixa não passa do fundo do ecrã (1063 ≤ 1080)
+  ok    (844, 390) 12 figuras, vista aberta: a caixa nunca é mais estreita que a compacta (823 ≥ 722)
+  MEDIDA MESTRE-FOLHA (844, 390) ponto=(986,621) por baixo do rato=Coluna1 cliques recebidos=1 caixa aberta depois do rato=false depois do clique=false
+  ok    (844, 390) 12 figuras, vista aberta: a folha à altura da caixa recebe o rato e o clique (Coluna1, 1 clique)
+  ok    (844, 390) 12 figuras: fecho pelo rato — com o rato na folha a caixa volta à compacta
+  ok    (844, 390) 12 figuras: depois do clique do rato na folha a caixa continua compacta
+  MEDIDA MESTRE-FECHO-CLIQUE (844, 390) ponto=(986,621) aberta antes=true depois do clique=false no fim do toque=false cliques na folha=0
+  ok    (844, 390) 12 figuras: vista expandida aberta pelo toque (sem o rato a mexer)
+  ok    (844, 390) 12 figuras: fecho pelo clique — o clique na folha fecha a caixa
+  ok    (844, 390) 12 figuras: o gesto que fecha fica na caixa — não reabre nem chega à folha (0 clique)
+  ok    (844, 390) caixa da ordem com 16 figuras (16)
+  MEDIDA MESTRE-EXPANDIDA (844, 390) figuras=16 compacta=(36,179 686×323) aberta=(36,179 821×883) tabuleiro=(0,0 968×1080) folha=(968,0 1369×1080) linhas inteiras à vista=9 de 16 rola=true nomes cortados com «…»=0
+  ok    (844, 390) 16 figuras: vista expandida aberta pelo rato
+  ok    (844, 390) 16 figuras, vista aberta: 9 linhas inteiras à vista sem rolar (esperadas 9)
+  ok    (844, 390) 16 figuras, vista aberta: a lista rola
+  ok    (844, 390) 16 figuras, vista aberta: 0 nomes cortados com «…» (esperados 0, só os de ensaio)
+  ok    (844, 390) 16 figuras, vista aberta: a caixa não passa para a folha (direita 857 ≤ 968, início da folha 968)
+  ok    (844, 390) 16 figuras, vista aberta: a caixa não passa do fundo do ecrã (1062 ≤ 1080)
+  ok    (844, 390) 16 figuras, vista aberta: a caixa nunca é mais estreita que a compacta (857 ≥ 722)
+  MEDIDA MESTRE-FOLHA (844, 390) ponto=(986,620) por baixo do rato=Coluna1 cliques recebidos=1 caixa aberta depois do rato=false depois do clique=false
+  ok    (844, 390) 16 figuras, vista aberta: a folha à altura da caixa recebe o rato e o clique (Coluna1, 1 clique)
+  ok    (844, 390) 16 figuras: fecho pelo rato — com o rato na folha a caixa volta à compacta
+  ok    (844, 390) 16 figuras: depois do clique do rato na folha a caixa continua compacta
+  MEDIDA MESTRE-FECHO-CLIQUE (844, 390) ponto=(986,620) aberta antes=true depois do clique=false no fim do toque=false cliques na folha=0
+  ok    (844, 390) 16 figuras: vista expandida aberta pelo toque (sem o rato a mexer)
+  ok    (844, 390) 16 figuras: fecho pelo clique — o clique na folha fecha a caixa
+  ok    (844, 390) 16 figuras: o gesto que fecha fica na caixa — não reabre nem chega à folha (0 clique)
+  ok    (844, 390) câmara livre: «Manipulo» dentro do tabuleiro
+  ok    (844, 390) câmara livre: «Subir» dentro do tabuleiro
+  ok    (844, 390) câmara livre: «Descer» dentro do tabuleiro
+  ok    (844, 390) câmara livre: «Sair» dentro do tabuleiro
+  ok    (844, 390) câmara livre: «Velocidade» dentro do tabuleiro
+  ok    (844, 390) câmara livre: «Dica» dentro do tabuleiro
+  ok    (844, 390) câmara livre: «Manipulo» com 132 px reais (≥ 44)
+  ok    (844, 390) câmara livre: «Subir» com 68 px reais (≥ 44)
+  ok    (844, 390) câmara livre: «Descer» com 68 px reais (≥ 44)
+  ok    (844, 390) câmara livre: «Sair» com 44 px reais (≥ 44)
+  ok    (844, 390) câmara livre: nenhum controlo tapa outro
+  ok    (844, 390) câmara livre: a caixa da ordem não tapa o «Voltar», a dica nem os controlos de andar (sem lugar: sai de cena) [&"Subir"]
+  ok    (844, 390) câmara livre: a caixa da ordem sai de cena (sem lugar)
+  MEDIDA MESTRE-LIVRE (844, 390) à vista=false compacta=(36,321 686×323) tocava em [&"Subir"]
+  ok    (844, 390) câmara livre, sem lugar: a compacta no sítio dela tocava num controlo de andar [&"Subir"] (por isso sai de cena)
+  ok    (844, 390) fora da câmara livre: a caixa da ordem volta, sem tapar o «Entrar»
+  ok    (844, 390) com o texto mais longo os botões não mexem
+  ok    (844, 390) (texto longo) botão «Continuar a rodada» à vista
+  ok    (844, 390) (texto longo) botão «Escolher outra» à vista
+  ok    (844, 390) (texto longo) botão «Jogo eu» à vista
+  ok    (844, 390) (folha encolhida) botão «Continuar a rodada» à vista
+  ok    (844, 390) (folha encolhida) botão «Escolher outra» à vista
+  ok    (844, 390) (folha encolhida) botão «Jogo eu» à vista
+  ok    (844, 390) (folha encolhida) título do cartão à vista
+(780, 360): área 2340 × 1080 unidades; letra 39 (= 13.0 px reais)
+  ok    (780, 360) letra ≥ 13 px reais
+  ok    (780, 360) dois botões no cartão de desgraça (Confirmar, Escolher outra)
+  ok    (780, 360) botão «Confirmar» inteiro à vista (fundo em 542 de 1080)
+  ok    (780, 360) botão «Escolher outra» inteiro à vista (fundo em 632 de 1080)
+  ok    (780, 360) barra das abas inteira à vista
+  ok    (780, 360) contador da fila visível («+3 por decidir»)
+  ok    (780, 360) «Entrar na câmera livre» dentro do tabuleiro
+  ok    (780, 360) caixa da ordem à vista e sem tapar o «Entrar na câmera livre»
+  ok    (780, 360) caixa da ordem com 8 figuras (8)
+  MEDIDA MESTRE-EXPANDIDA (780, 360) figuras=8 compacta=(39,194 744×349) aberta=(39,194 808×854) tabuleiro=(0,0 867×1080) folha=(867,0 1474×1080) linhas inteiras à vista=8 de 8 rola=false nomes cortados com «…»=4
+  ok    (780, 360) 8 figuras: vista expandida aberta pelo rato
+  ok    (780, 360) 8 figuras, vista aberta: 8 linhas inteiras à vista sem rolar (esperadas 8)
+  ok    (780, 360) 8 figuras, vista aberta: a lista não rola
+  ok    (780, 360) 8 figuras, vista aberta: 4 nomes cortados com «…» (esperados 4, só os de ensaio)
+  ok    (780, 360) 8 figuras, vista aberta: a caixa não passa para a folha (direita 847 ≤ 867, início da folha 867)
+  ok    (780, 360) 8 figuras, vista aberta: a caixa não passa do fundo do ecrã (1048 ≤ 1080)
+  ok    (780, 360) 8 figuras, vista aberta: a caixa nunca é mais estreita que a compacta (847 ≥ 783)
+  MEDIDA MESTRE-FOLHA (780, 360) ponto=(886,621) por baixo do rato=Botao1 cliques recebidos=1 caixa aberta depois do rato=false depois do clique=false
+  ok    (780, 360) 8 figuras, vista aberta: a folha à altura da caixa recebe o rato e o clique (Botao1, 1 clique)
+  ok    (780, 360) 8 figuras: fecho pelo rato — com o rato na folha a caixa volta à compacta
+  ok    (780, 360) 8 figuras: depois do clique do rato na folha a caixa continua compacta
+  MEDIDA MESTRE-FECHO-CLIQUE (780, 360) ponto=(886,621) aberta antes=true depois do clique=false no fim do toque=false cliques na folha=0
+  ok    (780, 360) 8 figuras: vista expandida aberta pelo toque (sem o rato a mexer)
+  ok    (780, 360) 8 figuras: fecho pelo clique — o clique na folha fecha a caixa
+  ok    (780, 360) 8 figuras: o gesto que fecha fica na caixa — não reabre nem chega à folha (0 clique)
+  ok    (780, 360) caixa da ordem com 12 figuras (12)
+  MEDIDA MESTRE-EXPANDIDA (780, 360) figuras=12 compacta=(39,194 744×349) aberta=(39,194 808×867) tabuleiro=(0,0 867×1080) folha=(867,0 1474×1080) linhas inteiras à vista=8 de 12 rola=true nomes cortados com «…»=8
+  ok    (780, 360) 12 figuras: vista expandida aberta pelo rato
+  ok    (780, 360) 12 figuras, vista aberta: 8 linhas inteiras à vista sem rolar (esperadas 8)
+  ok    (780, 360) 12 figuras, vista aberta: a lista rola
+  ok    (780, 360) 12 figuras, vista aberta: 8 nomes cortados com «…» (esperados 8, só os de ensaio)
+  ok    (780, 360) 12 figuras, vista aberta: a caixa não passa para a folha (direita 847 ≤ 867, início da folha 867)
+  ok    (780, 360) 12 figuras, vista aberta: a caixa não passa do fundo do ecrã (1061 ≤ 1080)
+  ok    (780, 360) 12 figuras, vista aberta: a caixa nunca é mais estreita que a compacta (847 ≥ 783)
+  MEDIDA MESTRE-FOLHA (780, 360) ponto=(886,627) por baixo do rato=Botao1 cliques recebidos=1 caixa aberta depois do rato=false depois do clique=false
+  ok    (780, 360) 12 figuras, vista aberta: a folha à altura da caixa recebe o rato e o clique (Botao1, 1 clique)
+  ok    (780, 360) 12 figuras: fecho pelo rato — com o rato na folha a caixa volta à compacta
+  ok    (780, 360) 12 figuras: depois do clique do rato na folha a caixa continua compacta
+  MEDIDA MESTRE-FECHO-CLIQUE (780, 360) ponto=(886,627) aberta antes=true depois do clique=false no fim do toque=false cliques na folha=0
+  ok    (780, 360) 12 figuras: vista expandida aberta pelo toque (sem o rato a mexer)
+  ok    (780, 360) 12 figuras: fecho pelo clique — o clique na folha fecha a caixa
+  ok    (780, 360) 12 figuras: o gesto que fecha fica na caixa — não reabre nem chega à folha (0 clique)
+  ok    (780, 360) caixa da ordem com 16 figuras (16)
+  MEDIDA MESTRE-EXPANDIDA (780, 360) figuras=16 compacta=(39,194 744×349) aberta=(39,194 808×867) tabuleiro=(0,0 867×1080) folha=(867,0 1474×1080) linhas inteiras à vista=8 de 16 rola=true nomes cortados com «…»=12
+  ok    (780, 360) 16 figuras: vista expandida aberta pelo rato
+  ok    (780, 360) 16 figuras, vista aberta: 8 linhas inteiras à vista sem rolar (esperadas 8)
+  ok    (780, 360) 16 figuras, vista aberta: a lista rola
+  ok    (780, 360) 16 figuras, vista aberta: 12 nomes cortados com «…» (esperados 12, só os de ensaio)
+  ok    (780, 360) 16 figuras, vista aberta: a caixa não passa para a folha (direita 847 ≤ 867, início da folha 867)
+  ok    (780, 360) 16 figuras, vista aberta: a caixa não passa do fundo do ecrã (1061 ≤ 1080)
+  ok    (780, 360) 16 figuras, vista aberta: a caixa nunca é mais estreita que a compacta (847 ≥ 783)
+  MEDIDA MESTRE-FOLHA (780, 360) ponto=(886,627) por baixo do rato=Botao1 cliques recebidos=1 caixa aberta depois do rato=false depois do clique=false
+  ok    (780, 360) 16 figuras, vista aberta: a folha à altura da caixa recebe o rato e o clique (Botao1, 1 clique)
+  ok    (780, 360) 16 figuras: fecho pelo rato — com o rato na folha a caixa volta à compacta
+  ok    (780, 360) 16 figuras: depois do clique do rato na folha a caixa continua compacta
+  MEDIDA MESTRE-FECHO-CLIQUE (780, 360) ponto=(886,627) aberta antes=true depois do clique=false no fim do toque=false cliques na folha=0
+  ok    (780, 360) 16 figuras: vista expandida aberta pelo toque (sem o rato a mexer)
+  ok    (780, 360) 16 figuras: fecho pelo clique — o clique na folha fecha a caixa
+  ok    (780, 360) 16 figuras: o gesto que fecha fica na caixa — não reabre nem chega à folha (0 clique)
+  ok    (780, 360) câmara livre: «Manipulo» dentro do tabuleiro
+  ok    (780, 360) câmara livre: «Subir» dentro do tabuleiro
+  ok    (780, 360) câmara livre: «Descer» dentro do tabuleiro
+  ok    (780, 360) câmara livre: «Sair» dentro do tabuleiro
+  ok    (780, 360) câmara livre: «Velocidade» dentro do tabuleiro
+  ok    (780, 360) câmara livre: «Dica» dentro do tabuleiro
+  ok    (780, 360) câmara livre: «Manipulo» com 116 px reais (≥ 44)
+  ok    (780, 360) câmara livre: «Subir» com 60 px reais (≥ 44)
+  ok    (780, 360) câmara livre: «Descer» com 60 px reais (≥ 44)
+  ok    (780, 360) câmara livre: «Sair» com 44 px reais (≥ 44)
+  ok    (780, 360) câmara livre: nenhum controlo tapa outro
+  ok    (780, 360) câmara livre: a caixa da ordem não tapa o «Voltar», a dica nem os controlos de andar (sem lugar: sai de cena) [&"Manipulo", &"Subir", &"Velocidade"]
+  ok    (780, 360) câmara livre: a caixa da ordem sai de cena (sem lugar)
+  MEDIDA MESTRE-LIVRE (780, 360) à vista=false compacta=(39,405 744×349) tocava em [&"Manipulo", &"Subir", &"Velocidade"]
+  ok    (780, 360) câmara livre, sem lugar: a compacta no sítio dela tocava num controlo de andar [&"Manipulo", &"Subir", &"Velocidade"] (por isso sai de cena)
+  ok    (780, 360) fora da câmara livre: a caixa da ordem volta, sem tapar o «Entrar»
+  ok    (780, 360) com o texto mais longo os botões não mexem
+  ok    (780, 360) (texto longo) botão «Continuar a rodada» à vista
+  ok    (780, 360) (texto longo) botão «Escolher outra» à vista
+  ok    (780, 360) (texto longo) botão «Jogo eu» à vista
+  ok    (780, 360) (folha encolhida) botão «Continuar a rodada» à vista
+  ok    (780, 360) (folha encolhida) botão «Escolher outra» à vista
+  ok    (780, 360) (folha encolhida) botão «Jogo eu» à vista
+  ok    (780, 360) (folha encolhida) título do cartão à vista
+(1920, 1080): área 1920 × 1080 unidades; letra 22 (= 22.0 px reais)
+  ok    (1920, 1080) letra ≥ 13 px reais
+  ok    (1920, 1080) dois botões no cartão de desgraça (Confirmar, Escolher outra)
+  ok    (1920, 1080) botão «Confirmar» inteiro à vista (fundo em 312 de 1080)
+  ok    (1920, 1080) botão «Escolher outra» inteiro à vista (fundo em 365 de 1080)
+  ok    (1920, 1080) barra das abas inteira à vista
+  ok    (1920, 1080) contador da fila visível («+3 por decidir»)
+  ok    (1920, 1080) «Entrar na câmera livre» dentro do tabuleiro
+  ok    (1920, 1080) caixa da ordem à vista e sem tapar o «Entrar na câmera livre»
+  ok    (1920, 1080) caixa da ordem com 8 figuras (8)
+  MEDIDA MESTRE-EXPANDIDA (1920, 1080) figuras=8 compacta=(22,69 435×215) aberta=(22,69 501×507) tabuleiro=(0,0 1037×1080) folha=(1037,0 883×1080) linhas inteiras à vista=8 de 8 rola=false nomes cortados com «…»=0
+  ok    (1920, 1080) 8 figuras: vista expandida aberta pelo rato
+  ok    (1920, 1080) 8 figuras, vista aberta: 8 linhas inteiras à vista sem rolar (esperadas 8)
+  ok    (1920, 1080) 8 figuras, vista aberta: a lista não rola
+  ok    (1920, 1080) 8 figuras, vista aberta: 0 nomes cortados com «…» (esperados 0, só os de ensaio)
+  ok    (1920, 1080) 8 figuras, vista aberta: a caixa não passa para a folha (direita 523 ≤ 1037, início da folha 1037)
+  ok    (1920, 1080) 8 figuras, vista aberta: a caixa não passa do fundo do ecrã (576 ≤ 1080)
+  ok    (1920, 1080) 8 figuras, vista aberta: a caixa nunca é mais estreita que a compacta (523 ≥ 457)
+  MEDIDA MESTRE-FOLHA (1920, 1080) ponto=(1048,323) por baixo do rato=Botao1 cliques recebidos=1 caixa aberta depois do rato=false depois do clique=false
+  ok    (1920, 1080) 8 figuras, vista aberta: a folha à altura da caixa recebe o rato e o clique (Botao1, 1 clique)
+  ok    (1920, 1080) 8 figuras: fecho pelo rato — com o rato na folha a caixa volta à compacta
+  ok    (1920, 1080) 8 figuras: depois do clique do rato na folha a caixa continua compacta
+  MEDIDA MESTRE-FECHO-CLIQUE (1920, 1080) ponto=(1048,323) aberta antes=true depois do clique=false no fim do toque=false cliques na folha=0
+  ok    (1920, 1080) 8 figuras: vista expandida aberta pelo toque (sem o rato a mexer)
+  ok    (1920, 1080) 8 figuras: fecho pelo clique — o clique na folha fecha a caixa
+  ok    (1920, 1080) 8 figuras: o gesto que fecha fica na caixa — não reabre nem chega à folha (0 clique)
+  ok    (1920, 1080) caixa da ordem com 12 figuras (12)
+  MEDIDA MESTRE-EXPANDIDA (1920, 1080) figuras=12 compacta=(22,69 435×215) aberta=(22,69 501×735) tabuleiro=(0,0 1037×1080) folha=(1037,0 883×1080) linhas inteiras à vista=12 de 12 rola=false nomes cortados com «…»=0
+  ok    (1920, 1080) 12 figuras: vista expandida aberta pelo rato
+  ok    (1920, 1080) 12 figuras, vista aberta: 12 linhas inteiras à vista sem rolar (esperadas 12)
+  ok    (1920, 1080) 12 figuras, vista aberta: a lista não rola
+  ok    (1920, 1080) 12 figuras, vista aberta: 0 nomes cortados com «…» (esperados 0, só os de ensaio)
+  ok    (1920, 1080) 12 figuras, vista aberta: a caixa não passa para a folha (direita 523 ≤ 1037, início da folha 1037)
+  ok    (1920, 1080) 12 figuras, vista aberta: a caixa não passa do fundo do ecrã (804 ≤ 1080)
+  ok    (1920, 1080) 12 figuras, vista aberta: a caixa nunca é mais estreita que a compacta (523 ≥ 457)
+  MEDIDA MESTRE-FOLHA (1920, 1080) ponto=(1048,437) por baixo do rato=Coluna1 cliques recebidos=1 caixa aberta depois do rato=false depois do clique=false
+  ok    (1920, 1080) 12 figuras, vista aberta: a folha à altura da caixa recebe o rato e o clique (Coluna1, 1 clique)
+  ok    (1920, 1080) 12 figuras: fecho pelo rato — com o rato na folha a caixa volta à compacta
+  ok    (1920, 1080) 12 figuras: depois do clique do rato na folha a caixa continua compacta
+  MEDIDA MESTRE-FECHO-CLIQUE (1920, 1080) ponto=(1048,437) aberta antes=true depois do clique=false no fim do toque=false cliques na folha=0
+  ok    (1920, 1080) 12 figuras: vista expandida aberta pelo toque (sem o rato a mexer)
+  ok    (1920, 1080) 12 figuras: fecho pelo clique — o clique na folha fecha a caixa
+  ok    (1920, 1080) 12 figuras: o gesto que fecha fica na caixa — não reabre nem chega à folha (0 clique)
+  ok    (1920, 1080) caixa da ordem com 16 figuras (16)
+  MEDIDA MESTRE-EXPANDIDA (1920, 1080) figuras=16 compacta=(22,69 435×215) aberta=(22,69 521×963) tabuleiro=(0,0 1037×1080) folha=(1037,0 883×1080) linhas inteiras à vista=16 de 16 rola=false nomes cortados com «…»=0
+  ok    (1920, 1080) 16 figuras: vista expandida aberta pelo rato
+  ok    (1920, 1080) 16 figuras, vista aberta: 16 linhas inteiras à vista sem rolar (esperadas 16)
+  ok    (1920, 1080) 16 figuras, vista aberta: a lista não rola
+  ok    (1920, 1080) 16 figuras, vista aberta: 0 nomes cortados com «…» (esperados 0, só os de ensaio)
+  ok    (1920, 1080) 16 figuras, vista aberta: a caixa não passa para a folha (direita 543 ≤ 1037, início da folha 1037)
+  ok    (1920, 1080) 16 figuras, vista aberta: a caixa não passa do fundo do ecrã (1032 ≤ 1080)
+  ok    (1920, 1080) 16 figuras, vista aberta: a caixa nunca é mais estreita que a compacta (543 ≥ 457)
+  MEDIDA MESTRE-FOLHA (1920, 1080) ponto=(1048,551) por baixo do rato=Coluna1 cliques recebidos=1 caixa aberta depois do rato=false depois do clique=false
+  ok    (1920, 1080) 16 figuras, vista aberta: a folha à altura da caixa recebe o rato e o clique (Coluna1, 1 clique)
+  ok    (1920, 1080) 16 figuras: fecho pelo rato — com o rato na folha a caixa volta à compacta
+  ok    (1920, 1080) 16 figuras: depois do clique do rato na folha a caixa continua compacta
+  MEDIDA MESTRE-FECHO-CLIQUE (1920, 1080) ponto=(1048,551) aberta antes=true depois do clique=false no fim do toque=false cliques na folha=0
+  ok    (1920, 1080) 16 figuras: vista expandida aberta pelo toque (sem o rato a mexer)
+  ok    (1920, 1080) 16 figuras: fecho pelo clique — o clique na folha fecha a caixa
+  ok    (1920, 1080) 16 figuras: o gesto que fecha fica na caixa — não reabre nem chega à folha (0 clique)
+  ok    (1920, 1080) câmara livre: «Manipulo» dentro do tabuleiro
+  ok    (1920, 1080) câmara livre: «Subir» dentro do tabuleiro
+  ok    (1920, 1080) câmara livre: «Descer» dentro do tabuleiro
+  ok    (1920, 1080) câmara livre: «Sair» dentro do tabuleiro
+  ok    (1920, 1080) câmara livre: «Velocidade» dentro do tabuleiro
+  ok    (1920, 1080) câmara livre: «Dica» dentro do tabuleiro
+  ok    (1920, 1080) câmara livre: «Manipulo» com 132 px reais (≥ 44)
+  ok    (1920, 1080) câmara livre: «Subir» com 68 px reais (≥ 44)
+  ok    (1920, 1080) câmara livre: «Descer» com 68 px reais (≥ 44)
+  ok    (1920, 1080) câmara livre: «Sair» com 44 px reais (≥ 44)
+  ok    (1920, 1080) câmara livre: nenhum controlo tapa outro
+  ok    (1920, 1080) câmara livre: a caixa da ordem não tapa o «Voltar», a dica nem os controlos de andar (à vista) []
+  ok    (1920, 1080) câmara livre: a caixa da ordem à vista (há lugar)
+  MEDIDA MESTRE-LIVRE (1920, 1080) aberta=true caixa=(22,122 521×793) à vista=true
+  ok    (1920, 1080) câmara livre: vista expandida aberta pelo rato
+  ok    (1920, 1080) câmara livre, vista aberta (à vista): a caixa da ordem não tapa o «Voltar», a dica nem os controlos de andar []
+  ok    (1920, 1080) fora da câmara livre: a caixa da ordem volta, sem tapar o «Entrar»
+  ok    (1920, 1080) com o texto mais longo os botões não mexem
+  ok    (1920, 1080) (texto longo) botão «Continuar a rodada» à vista
+  ok    (1920, 1080) (texto longo) botão «Escolher outra» à vista
+  ok    (1920, 1080) (texto longo) botão «Jogo eu» à vista
+  ok    (1920, 1080) (folha encolhida) botão «Continuar a rodada» à vista
+  ok    (1920, 1080) (folha encolhida) botão «Escolher outra» à vista
+  ok    (1920, 1080) (folha encolhida) botão «Jogo eu» à vista
+  ok    (1920, 1080) (folha encolhida) título do cartão à vista
+  ok    (1600, 900): a letra é a congelada no teste (22 = 22)
+  ok    (1600, 900) directo: a folha é a da letra actual (883 = 883 unidades)
+  ok    (1600, 900) encolhida: a folha é a coluna 1 + 2 margens (330 = 330 unidades)
+  ok    (800, 450): a letra é a congelada no teste (32 = 32)
+  ok    (800, 450): a folha é a da letra actual (1231 = 1231 unidades)
+  MEDIDA MESTRE-LARGURA (1600, 900) directo=864 px depois de (800, 450)=864 px
+  ok    (1600, 900): a letra é a congelada no teste (22 = 22)
+  ok    (800, 450) → (1600, 900): a folha é a da letra actual (883 = 883 unidades)
+  ok    (1600, 900): o tabuleiro tem a mesma largura aberto directo (864 px) e depois de (800, 450) (864 px)
+  ok    (220, 220): a letra é a congelada no teste (114 = 114)
+  ok    (220, 220): o piso final liga (coluna 1 + 2 margens 1710 > tecto 1632 unidades)
+  ok    (220, 220): a folha fica no piso final (1710 = 1710 unidades)
+ecrã do Mestre: 0 falha(s), 0 sem medida

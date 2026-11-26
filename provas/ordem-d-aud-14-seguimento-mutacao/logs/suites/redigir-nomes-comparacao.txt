@@ -1,0 +1,3 @@
+redigir-nomes --auto-teste: 31 de 31 verificações passaram.
+teste_nomes_relato.log (sem a linha «# saída» acrescentada) → redigido --ignorar-cr --comparar=provas/ordem-caixa-janela/cobertura-correcoes-6/teste-nomes-relato.log:
+igual byte a byte ao redigido (3437 bytes, sem os CR)
