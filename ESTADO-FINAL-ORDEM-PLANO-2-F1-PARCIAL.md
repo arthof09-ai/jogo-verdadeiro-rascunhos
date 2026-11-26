@@ -127,7 +127,8 @@ como `<sede>`.
 | `db9564b` | (23/11) listas da retoma (2 novos, 0 tirados) |
 | `4caa2f1` | (26/11) `camera_segue` com o caso 10 |
 | `6c46c22` | (26/11) listas da retoma (0 novos, 0 tirados) |
-| (este) | provas e este ESTADO-FINAL |
+| `5227011` | provas e este ESTADO-FINAL |
+| (este) | a nota do CI |
 
 ## 5. O que falta (para a retoma com a janela aberta)
 
@@ -142,4 +143,6 @@ só por PostMessage), `c.sh`, `journal.sh`, `ffmpeg.exe`. O agente ficou parado 
 
 ## 6. Nota do CI
 
-(por preencher depois do push)
+No `5227011`: **Testes dos rascunhos 45869295421 success**, **Sonda de privacidade 45869295432 success**, **Aparelhos (F2)
+45869295437 success**. O job `retoma-pc` está verde: as listas do `6c46c22` batem. O CI ainda não corre o `camera_segue`
+(o patch está por aplicar, §2.1).
