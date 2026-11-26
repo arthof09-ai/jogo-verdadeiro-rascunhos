@@ -143,7 +143,7 @@ nunca mais se confunde com outro. Num telemóvel de loja não há root, e aí a 
   do `.tpz` oficial já em cache (o mesmo da ordem anterior). Usei um SDK de fachada só para passar a validação do editor,
   com `package/signed=false`: o export não chama o SDK. A assinatura real é a do `apksigner` do runner. O motor do APK
   exportado aqui é **igual** ao do jogo exportado no CI (SHA-256 acima). Para os refazer: um export Android de
-  `controlo-gles/` e os `assets/*` do APK num zip.
+  `controlo-gles/` com o Godot 4.7.2 e os templates oficiais, com `package/signed=false` e um SDK de fachada só para passar a validação do editor; depois os `assets/*` do APK num zip.
 - **As listas da retoma** foram sincronizadas (`actualizar-listas.py`) depois de cada commit em `rascunhos/`.
 
 ## 5. Suites (verde) — `provas/ordem-plano-2-f2-android-shader/suites/`
