@@ -188,3 +188,9 @@ real. A Sonda de privacidade do CI deu success.
 - `784d28c` + `6b59dca` (listas): o controlo por `--main-pack` (abortou, §4). Sai o `ci-pendente/`.
 - `74fecdc` + `56d3f91` (listas): o controlo num APK montado a partir do APK do jogo. É a medição que fica.
 - O commit deste ESTADO-FINAL, das provas e da linha no `provas/ordem-plano-2-f2/README.md`.
+
+## Nota do CI (ponta `2eeb987`, com este ESTADO-FINAL e as provas)
+
+**Testes dos rascunhos 45813928771 success**, **Sonda de privacidade 45813928703 success** e **Aparelhos (F2)
+45813928709 success**, com os 6 jobs verdes (exportar, web-chromium, windows, **android**, rede-3-bots e qr). É a quarta
+corrida seguida com o `android` verde.
