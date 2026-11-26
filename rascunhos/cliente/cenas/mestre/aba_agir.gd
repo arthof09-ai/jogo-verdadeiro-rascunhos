@@ -71,6 +71,7 @@ func atualizar(_vista: Dictionary = {}) -> void:
 		_linha_modos.visible = false
 		_info.text = ""
 		parar_mover()
+		_marcar_alvos([])
 		return
 	_titulo.text = Textos.AGIR_VEZ % Modelo.nome_mestre(f)
 	_linha_modos.visible = true
@@ -80,6 +81,7 @@ func atualizar(_vista: Dictionary = {}) -> void:
 	if op.is_empty():
 		_info.text = Textos.AGIR_SEM_OPCOES
 		parar_mover()
+		_marcar_alvos([])
 		return
 	_info.text = ""
 	if editar_cartao != "":
@@ -89,6 +91,12 @@ func atualizar(_vista: Dictionary = {}) -> void:
 		_info.text = (_info.text + "\n" if _info.text != "" else "") + Textos.AGIR_MARCHA_LIVRE
 	if op.get("mover") is Array and not op["mover"].is_empty():
 		_botao(Textos.MOVER, iniciar_mover)
+	# ORDEM-D-AUD-06: os alvos dos ataques ficam marcados na arena (o mesmo marcador da jogadora).
+	var alvos: Array = []
+	for a in op.get("ataques", []):
+		if a is Dictionary and str(a.get("alvoId", "")) != "" and not alvos.has(str(a.get("alvoId", ""))):
+			alvos.append(str(a.get("alvoId", "")))
+	_marcar_alvos(alvos)
 	for a in op.get("ataques", []):
 		if a is Dictionary:
 			var alvo := Modelo.nome_mestre(Modelo.figura(vista, str(a.get("alvoId", ""))))
@@ -175,6 +183,16 @@ func parar_mover() -> void:
 		mestre.desarmou_mover()  # D-AUD-01-CORRECCOES-2: a ficha guardada pelo «Mover» deixa de valer
 	if _cancelar != null:
 		_cancelar.visible = false
+
+
+## ORDEM-D-AUD-06: os alvos que esta aba marcou na arena (os `alvoId` dos ataques da criatura da vez).
+var alvos_marcados: Array = []
+
+
+func _marcar_alvos(ids: Array) -> void:
+	alvos_marcados = ids.duplicate()
+	if mestre != null and mestre.has_method("marcar_alvos"):
+		mestre.marcar_alvos(ids)
 
 
 func botoes_de_accao() -> Array:

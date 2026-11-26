@@ -180,6 +180,7 @@ func _correr() -> void:
 	await _teste_seguranca_na_arena()
 	await _teste_grelha_refeita_guarda_os_nomes()
 	await _teste_pe_em_casa_bloqueada()
+	await _teste_marcador_alvo_na_agua()
 	print("")
 	print("%d de %d verificações passaram." % [_total - _falhas, _total])
 	quit(1 if _falhas > 0 else 0)
@@ -428,5 +429,116 @@ func _teste_seguranca_na_arena() -> void:
 	_rede._ws = null
 	_par.close()
 	_srv.stop()
+	arena.queue_free()
+	await _quadros(2)
+
+
+# ---------------------------------------------------------------- ORDEM-D-AUD-06: o marcador de alvo
+## O alvo do Ataque já não é a malha plana do Mover (o quadrado de 0,9 casa no relevo, que no lago ficava no fundo,
+## debaixo da água): é o marcador de alvo (cenas/comum/marcador_alvo.gd), um anel + seta À ALTURA DA FIGURA, sem
+## teste de profundidade. Grelha-mapa 50×50 @ 1,5 m; um alvo na casa MAIS FUNDA do lago e outro em seco.
+func _teste_marcador_alvo_na_agua() -> void:
+	print("== ORDEM-D-AUD-06: o marcador de alvo fica à altura da figura e vê-se dentro de água ==")
+	const MarcadorAlvo := preload("res://cenas/comum/marcador_alvo.gd")
+	const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
+	const Apresentacao := preload("res://dados/apresentacao.gd")
+	_rede._ativo = true  # como acima: sem ir ao lobby
+	var mapa_antes: Dictionary = _estado.mapa.duplicate()
+	var figuras_antes: Dictionary = _estado.figuras.duplicate(true)
+	var minha_antes: String = _estado.minha_figura_id
+	_estado.mapa = {"largura": 50, "altura": 50, "casaM": 1.5}
+	var arena = (load("res://cenas/arena/arena.tscn") as PackedScene).instantiate()
+	root.add_child(arena)
+	await _quadros(2)
+	arena._ao_snapshot()  # a grelha 50×50
+	# A casa mais funda do lago (a fundura no centro da casa).
+	var funda := Vector2i(-1, -1)
+	var f_max := 0.0
+	for y in 50:
+		for x in 50:
+			var p: Vector3 = arena.centro_casa(Vector2i(x, y))
+			var f := Relevo.lago_fundura(p.x, p.z)
+			if f > f_max:
+				f_max = f
+				funda = Vector2i(x, y)
+	_ok(f_max >= 2.4, "a casa mais funda do lago %s tem %.2f m de água (o lago vai até 2,52 m)" % [funda, f_max])
+	_estado.figuras = {
+		"mH": {"id": "mH", "nomePublico": "Heroína", "x": 38, "y": 4, "lado": "jogadora", "visivel": "de_pe"},
+		"mO": {"id": "mO", "nomePublico": "Orc", "x": funda.x, "y": funda.y, "lado": "criatura", "visivel": "de_pe"},
+		"mL": {"id": "mL", "nomePublico": "Lobo", "x": 36, "y": 3, "lado": "criatura", "visivel": "de_pe"},
+	}
+	_estado.minha_figura_id = "mH"
+	arena._ao_snapshot()
+	await _quadros(1)
+	_estado.receber_opcoes({"v": 2, "type": "ROOM_OPTIONS", "revision": _estado.revisao, "vezId": "mH", "orcamentoM": 9.0,
+		"mover": [{"x": 38, "y": 5, "custoM": 1.5}, {"x": 37, "y": 4, "custoM": 1.5}],
+		"ataques": [{"alvoId": "mO", "arma": "arco"}, {"alvoId": "mL", "arma": "arco"}],
+		"consumiveis": [], "acoes": ["encerrar"], "reacoes": []})
+	await _quadros(1)
+	# Mover: as casas alcançáveis continuam a ser a malha plana; nenhum marcador de alvo.
+	arena.definir_modo(Modo.MOVER)
+	await _quadros(1)
+	var dm: Mesh = arena._destaques.mesh
+	_ok(dm != null and dm.get_surface_count() > 0 and arena.marcadores_alvo().is_empty(),
+		"Mover: as casas alcançáveis são a malha plana do relevo, sem marcador de alvo")
+	# Ataque: os alvos levam o marcador; a malha plana fica vazia.
+	arena.definir_modo(Modo.ATAQUE)
+	await _quadros(2)
+	var marcas: Dictionary = arena.marcadores_alvo()
+	dm = arena._destaques.mesh
+	_ok(marcas.size() == 2 and marcas.has("mO") and marcas.has("mL"), "Ataque: um marcador por alvo (%s)" % [marcas.keys()])
+	_ok(dm == null or dm.get_surface_count() == 0 or (dm.surface_get_arrays(0)[Mesh.ARRAY_VERTEX] as PackedVector3Array).is_empty(),
+		"Ataque: os alvos já não são a malha plana dos destaques do Mover (a malha está vazia)")
+	var grelha: Node = arena.get_node("Grelha")
+	_ok(marcas.values().all(func(m): return not grelha.is_ancestor_of(m)), "o marcador não vive na Grelha (não é uma camada colada ao relevo)")
+	for id in ["mO", "mL"]:
+		var m: Node3D = marcas.get(id)
+		var no: Node3D = arena._nos.get(id)
+		if m == null or no == null:
+			_ok(false, "%s: marcador e figura em cena" % id)
+			continue
+		var anel: Node3D = m.get_node("Anel")
+		var seta: Node3D = m.get_node("Seta")
+		var pe := no.global_position
+		var cimo := MarcadorAlvo.topo_de(no)
+		var chao: float = arena.altura_chao(pe.x, pe.z)
+		_ok(Vector2(m.global_position.x, m.global_position.z).distance_to(Vector2(pe.x, pe.z)) < 0.01,
+			"%s: o marcador está na figura (no mesmo x, z)" % id)
+		_ok(anel.global_position.y > chao + 0.5 and anel.global_position.y > pe.y + 0.5 and anel.global_position.y < cimo,
+			"%s: o anel fica à altura do corpo (%.2f m acima do pé, %.2f m acima do relevo), não no chão" % [id, anel.global_position.y - pe.y, anel.global_position.y - chao])
+		_ok(seta.global_position.y > cimo, "%s: a seta fica por cima da cabeça (%.2f m acima do cimo)" % [id, seta.global_position.y - cimo])
+		var mats: Array = []
+		for parte in [m.get_node("Anel"), m.get_node("AnelContorno"), m.get_node("Seta/Ponta"), m.get_node("Seta/Haste")]:
+			mats.append((parte as MeshInstance3D).material_override)
+		_ok(mats.all(func(x): return x is StandardMaterial3D and x.no_depth_test and x.shading_mode == BaseMaterial3D.SHADING_MODE_UNSHADED),
+			"%s: sem teste de profundidade e sem luz (a água, o relevo e a relva não o tapam)" % id)
+		var cor: Color = ((m.get_node("Anel") as MeshInstance3D).material_override as StandardMaterial3D).albedo_color
+		_ok(not cor.is_equal_approx(Apresentacao.COR_MESA_MOVER) and absf(cor.r - Apresentacao.COR_MESA_MOVER.r) > 0.3,
+			"%s: a cor distingue-o do destaque do Mover (%s vs %s)" % [id, cor.to_html(), Apresentacao.COR_MESA_MOVER.to_html()])
+	var mo: Node3D = marcas.get("mO")
+	var no_o: Node3D = arena._nos.get("mO")
+	if mo != null and no_o != null:
+		var nivel := Relevo.nivel_lago()
+		var leito: float = arena.altura_chao(no_o.global_position.x, no_o.global_position.z)
+		_ok(leito < nivel - 2.4, "o orc está no lago, com %.2f m de água por cima do leito" % (nivel - leito))
+		_ok((mo.get_node("Seta") as Node3D).global_position.y > nivel,
+			"dentro de água a seta sai acima da superfície (%.2f m acima)" % ((mo.get_node("Seta") as Node3D).global_position.y - nivel))
+		_ok((mo.get_node("Anel") as Node3D).global_position.y > leito + 0.5,
+			"dentro de água o anel não fica no fundo (%.2f m acima do leito)" % ((mo.get_node("Anel") as Node3D).global_position.y - leito))
+	# O alvo anda: o marcador segue-o.
+	_estado.figuras["mL"]["x"] = 35
+	arena._ao_evento({})
+	await create_timer(0.4).timeout
+	var ml: Node3D = arena.marcadores_alvo().get("mL")
+	var no_l: Node3D = arena._nos.get("mL")
+	_ok(ml != null and no_l != null and Vector2(ml.global_position.x, ml.global_position.z).distance_to(Vector2(no_l.global_position.x, no_l.global_position.z)) < 0.01
+		and no_l.global_position.distance_to(arena.pe_figura(Vector2i(35, 3))) < 0.01, "o alvo que anda leva o marcador com ele")
+	# Sair do Ataque tira os marcadores.
+	arena.definir_modo(Modo.NENHUM)
+	await _quadros(2)
+	_ok(arena.marcadores_alvo().is_empty(), "fora do Ataque não há marcadores de alvo")
+	_estado.mapa = mapa_antes
+	_estado.figuras = figuras_antes
+	_estado.minha_figura_id = minha_antes
 	arena.queue_free()
 	await _quadros(2)

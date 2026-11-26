@@ -62,6 +62,8 @@ const SH_SOBRE := preload("res://cenas/arena/sobre_relevo.gdshader")
 const BaciasRelevo := preload("res://cenas/arena/bacias_do_relevo.gd")
 ## Ordem 45: o que esta arena e a do Mestre fazem igual sobre o mapa (montar, clima, remendos, linhas, toque).
 const CampoDaMesa := preload("res://cenas/arena/campo_da_mesa.gd")
+## ORDEM-D-AUD-06: o marcador de alvo (anel + seta à altura da figura, visível dentro de água), o mesmo do Mestre.
+const MarcadorAlvo := preload("res://cenas/comum/marcador_alvo.gd")
 ## Quantos dos obstáculos reais do mapa (os mais perto da zona) dão abrigo à neve (o módulo aceita até 8).
 const ABRIGOS_DO_MAPA := CampoDaMesa.ABRIGOS_DO_MAPA
 ## Quantos metros acima do chão vai o que se cola ao relevo (o resto resolve-o o shader).
@@ -107,6 +109,8 @@ var _cursor := Vector2i(-1, -1)
 var _destaques: MeshInstance3D
 var _fogo: MeshInstance3D
 var _marcador: MeshInstance3D
+## ORDEM-D-AUD-06: os marcadores de alvo (um por figura alvo; filhos de «Alvos», fora da Grelha).
+var _marcas_alvo: Node3D
 var _mat_destaque: ShaderMaterial
 var _relva_com_clima := false
 var _rotulo_custo: Label3D
@@ -135,6 +139,10 @@ func _process(_delta: float) -> void:
 		if is_instance_valid(no) and (no as Node).has_node("Nome"):
 			rotulos.append((no as Node).get_node("Nome"))
 	NomesSemSobrepor.arrumar(rotulos, camera)
+	# ORDEM-D-AUD-06: o marcador de alvo segue a figura (que anda por tween e bóia na água).
+	if _marcas_alvo != null and _marcas_alvo.get_child_count() > 0:
+		for m in _marcas_alvo.get_children():
+			MarcadorAlvo.seguir(m, _nos.get(str(m.get_meta("alvo_id", ""))))
 
 
 func _ready() -> void:
@@ -564,12 +572,35 @@ func _mostrar_destaques() -> void:
 		for c in _casas:
 			if dentro(c):
 				lista.append([c, COR_MOVER])
-	elif modo == Modo.ATAQUE or modo == Modo.CONSUMIVEL:
-		for fid in _alvos:
-			var c: Vector2i = Estado.casa_de(Estado.figuras.get(fid))
-			if dentro(c):
-				lista.append([c, COR_ALVO])
 	_destaques.mesh = _malha_casas(lista, 0.9, LEVANTA_M + 0.01)
+	mostrar_alvos()
+
+
+## ORDEM-D-AUD-06: os alvos (do Ataque e do Consumível) já não são a malha plana do Mover: cada figura alvo leva o
+## marcador de alvo (cenas/comum/marcador_alvo.gd), à altura dela e visível dentro de água. Devolve quantos há.
+func mostrar_alvos() -> int:
+	var ids: Array = []
+	if modo == Modo.ATAQUE or modo == Modo.CONSUMIVEL:
+		for fid in _alvos:
+			if dentro(Estado.casa_de(Estado.figuras.get(fid))):
+				ids.append(str(fid))
+	if _marcas_alvo == null or not is_instance_valid(_marcas_alvo):
+		if ids.is_empty():
+			return 0
+		_marcas_alvo = Node3D.new()
+		_marcas_alvo.name = "Alvos"
+		add_child(_marcas_alvo)
+	return MarcadorAlvo.sincronizar(_marcas_alvo, ids, func(id): return _nos.get(id))
+
+
+## ORDEM-D-AUD-06: os marcadores de alvo em cena, por id da figura (para os testes e as provas).
+func marcadores_alvo() -> Dictionary:
+	var saida := {}
+	if _marcas_alvo != null and is_instance_valid(_marcas_alvo):
+		for m in _marcas_alvo.get_children():
+			if not m.is_queued_for_deletion():
+				saida[str(m.get_meta("alvo_id", ""))] = m
+	return saida
 
 
 ## Ordem 13: desenha as casas a arder que o servidor mandou (Estado.fogo.casas). Devolve quantas desenhou.

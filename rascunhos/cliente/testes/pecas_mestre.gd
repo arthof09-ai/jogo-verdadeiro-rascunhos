@@ -199,6 +199,24 @@ func _correr() -> void:
 	var botoes: Array = c._aba_agir.botoes_de_accao()
 	var esperados: int = 1 + opcoes["ataques"].size() + opcoes["acoes"].size()  # Mover + ataques + acções
 	_ok(botoes.size() == esperados, "um botão por opção do servidor (%d)" % esperados)
+	# ORDEM-D-AUD-06: os alvos dos ataques da criatura da vez ficam marcados na arena do Mestre com o MESMO marcador
+	# de alvo da jogadora (cenas/comum/marcador_alvo.gd: anel + seta à altura da figura, sem teste de profundidade).
+	var ids_alvo: Array = []
+	for a in opcoes["ataques"]:
+		if not ids_alvo.has(str(a["alvoId"])):
+			ids_alvo.append(str(a["alvoId"]))
+	var marcas_m: Dictionary = c._arena.marcadores_alvo()
+	_ok(not ids_alvo.is_empty() and marcas_m.size() == ids_alvo.size() and ids_alvo.all(func(i): return marcas_m.has(i)),
+		"D-AUD-06: um marcador de alvo por alvo dos ataques da criatura da vez (%s → %s)" % [ids_alvo, marcas_m.keys()])
+	var marca_ok := not marcas_m.is_empty()
+	for id in marcas_m:
+		var mk: Node3D = marcas_m[id]
+		var fig: Node3D = c._arena._nos.get(id)
+		var mat_anel = (mk.get_node("Anel") as MeshInstance3D).material_override
+		var cimo_f: float = preload("res://cenas/comum/marcador_alvo.gd").topo_de(fig) if fig != null else 0.0
+		marca_ok = marca_ok and fig != null and mat_anel is StandardMaterial3D and mat_anel.no_depth_test 			and Vector2(mk.global_position.x, mk.global_position.z).distance_to(Vector2(fig.global_position.x, fig.global_position.z)) < 0.01 			and (mk.get_node("Anel") as Node3D).global_position.y > fig.global_position.y + 0.3 			and (mk.get_node("Seta") as Node3D).global_position.y > cimo_f
+	_ok(marca_ok, "D-AUD-06: no Mestre o marcador está em cada alvo, à altura da figura (anel no corpo, seta acima), sem teste de profundidade")
+	_ok(c._aba_agir.alvos_marcados == ids_alvo, "D-AUD-06: a aba Agir marcou os alvos que o servidor mandou (%s)" % [c._aba_agir.alvos_marcados])
 	c._aba_agir.escolher_modo("semi")
 	u = _ultimo()
 	_ok(u.get("type") == "MASTER_MODE" and u.get("modo") == "semi" and u.get("figuraId") == vista["vezId"], "modo → MASTER_MODE")

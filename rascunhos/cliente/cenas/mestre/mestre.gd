@@ -775,6 +775,12 @@ func destacar(casas: Array[Vector2i]) -> void:
 	_arena.destacar(casas)
 
 
+## ORDEM-D-AUD-06: marca na arena as figuras alvo (os `alvoId` dos ataques que o servidor mandou à criatura da vez),
+## com o mesmo marcador de alvo da jogadora. Lista vazia tira-os.
+func marcar_alvos(ids: Array) -> void:
+	_arena.marcar_alvos(ids)
+
+
 ## Casa tocada na arena: vai para o modo que estiver armado — o «Colocar» da aba Mesa ou o «Mover» da aba Agir.
 ## D-AUD-01: os dois nunca estão armados ao mesmo tempo (armou_colocar / armou_mover), por isso a ordem daqui não
 ## escolhe nada. Antes, o «Colocar» ficava armado depois de colocar e roubava o toque do «Mover»: o clique de mover

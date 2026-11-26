@@ -40,6 +40,8 @@ const CampoDaMesa := preload("res://cenas/arena/campo_da_mesa.gd")
 const Assentamento := preload("res://cenas/arena/assentamento.gd")
 const Relevo := preload("res://mapa/floresta/relevo_floresta.gd")
 const SH_SOBRE := preload("res://cenas/arena/sobre_relevo.gdshader")
+## ORDEM-D-AUD-06: o marcador de alvo, o mesmo da arena da jogadora (anel + seta à altura da figura).
+const MarcadorAlvo := preload("res://cenas/comum/marcador_alvo.gd")
 
 # Do site (cena.js): grelha c9c2a7, casas do «mover» cab577 a 50% com contorno f5d59b, anel de destino ffd28b
 # (raio 0,65). O fundo, o céu e o sol já não são os do site: são os do mapa (Ordem 45, um só céu).
@@ -86,6 +88,9 @@ var _sol: DirectionalLight3D
 var _grelha: Node3D
 var _figuras: Node3D
 var _destaques: MeshInstance3D
+## ORDEM-D-AUD-06: os marcadores dos alvos dos ataques da criatura da vez (aba Agir); filhos de «Alvos».
+var _marcas_alvo: Node3D
+var _ids_alvo: Array = []
 var _fogo: MeshInstance3D
 var _casas_fogo: Array[Vector2i] = []
 var _contornos: MeshInstance3D
@@ -169,6 +174,10 @@ func _process(_delta: float) -> void:
 		mapa.definir_recorte_vista(camera.foco_atual() + Vector3(0.0, 1.0, 0.0), raio)
 		_relva_com_clima = CampoDaMesa.relva_segue_clima(clima, mapa, _relva_com_clima)
 	arrumar_nomes()
+	# ORDEM-D-AUD-06: o marcador de alvo segue a figura.
+	if _marcas_alvo != null and _marcas_alvo.get_child_count() > 0:
+		for m in _marcas_alvo.get_children():
+			MarcadorAlvo.seguir(m, _nos.get(str(m.get_meta("alvo_id", ""))))
 
 
 ## Arruma os nomes das figuras no ecrã (sobe os de trás que tocavam noutro). Devolve as caixas no ecrã.
@@ -298,6 +307,9 @@ func aplicar_vista(vista: Dictionary) -> void:
 		var cv := casa_de_ponto((_nos[vez] as Node3D).position)
 		var pg := pegada_figura(cv)
 		_anel.transform = Transform3D(_inclinacao(pg), (_nos[vez] as Node3D).position + (pg["normal"] as Vector3) * 0.045)
+	# ORDEM-D-AUD-06: os marcadores de alvo acompanham as figuras refeitas (uma figura que saiu leva o seu).
+	if not _ids_alvo.is_empty():
+		marcar_alvos(_ids_alvo)
 	_seguir_clima_do_ambiente(vista)
 
 
@@ -475,6 +487,32 @@ func destacar(casas: Array) -> void:
 
 func casas_destacadas() -> Array[Vector2i]:
 	return _casas_destacadas
+
+
+## ORDEM-D-AUD-06: marca as figuras `ids` (os alvos que o servidor mandou nas opções da criatura da vez) com o
+## marcador de alvo da jogadora (cenas/comum/marcador_alvo.gd). Lista vazia tira-os. Devolve quantos ficaram.
+func marcar_alvos(ids: Array) -> int:
+	_ids_alvo = []
+	for id in ids:
+		if not _ids_alvo.has(str(id)):
+			_ids_alvo.append(str(id))
+	if _marcas_alvo == null or not is_instance_valid(_marcas_alvo):
+		if _ids_alvo.is_empty():
+			return 0
+		_marcas_alvo = Node3D.new()
+		_marcas_alvo.name = "Alvos"
+		add_child(_marcas_alvo)
+	return MarcadorAlvo.sincronizar(_marcas_alvo, _ids_alvo, func(id): return _nos.get(id))
+
+
+## ORDEM-D-AUD-06: os marcadores de alvo em cena, por id da figura.
+func marcadores_alvo() -> Dictionary:
+	var saida := {}
+	if _marcas_alvo != null and is_instance_valid(_marcas_alvo):
+		for m in _marcas_alvo.get_children():
+			if not m.is_queued_for_deletion():
+				saida[str(m.get_meta("alvo_id", ""))] = m
+	return saida
 
 
 ## Ordem 13: as casas a arder da vista (o combustível de cada uma está na aba Ambiente).
