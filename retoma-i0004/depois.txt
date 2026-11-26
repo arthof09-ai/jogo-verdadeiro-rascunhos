@@ -1,4 +1,4 @@
-# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 459 ficheiros mudados ou novos em rascunhos/.
+# SHA-256 no ramo i0004/ci4-protocolo (depois) dos 460 ficheiros mudados ou novos em rascunhos/.
 93c8f082052020ffc4a3a95831f74a5a16a295f366e54842045791c071fc83e4  rascunhos/cliente/README.md
 2a9bda1fa4349cfa9ece76842797ac96adc27ef919c525b3843a6f1cd01e58d5  rascunhos/cliente/arte/README.md
 2bc9bbf8ab270183116aa4eca383ce5b521fe7a466e9db9a065d96cca0da28fa  rascunhos/cliente/arte/ambiente/color_script.gd
@@ -406,6 +406,7 @@ e14511a90bcc17de22e2daf6c4634b9c2a7a3dc1390e5fc883f521a4ffd5006e  rascunhos/serv
 d8e8e5b5319d3df004810523c3ba47de3c5f46fd0dab1d1224c469fae7af38cc  rascunhos/servidor/testes/cura.test.mjs
 896c7c3f8bd169bc6c70522e6bf7d1277799deb450cfc5fea3233feae5aef2bd  rascunhos/servidor/testes/d-aud-07-registo.test.mjs
 f189327ea35a04e976dd036aefc19774ca422dd07f665d1e7c7c658bafb1674c  rascunhos/servidor/testes/d-aud-12-ordinal.test.mjs
+90267348306e63f8ef5fc9768e8baafdac262206bfe1e2e63f274e7be08c81e8  rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs
 06e32ec607028243530e2ba8ab5d84903bde6031698f57d4d3b53353f5ffffe0  rascunhos/servidor/testes/dados-fisicos.test.mjs
 fa1a0c32fc929ce55db46b744caaebaa9468143f14007c3c3131a5a22fae65b1  rascunhos/servidor/testes/fixture-mestre.test.mjs
 ff4b82b520c40525253723d1c2f1562f8cad03e2495660e4eb27386097f7c0ff  rascunhos/servidor/testes/mestre-vista.test.mjs
