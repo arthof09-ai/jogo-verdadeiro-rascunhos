@@ -142,6 +142,30 @@ jobs:
           timeout 120 "$GODOT" --headless --path . -s res://testes/medir_mestre.gd 2>&1 | tee "$RUNNER_TEMP/medir_mestre.gd.log"
           # Um script que não compila não pode passar calado (o rodar_testes perdeu 27 testes assim no 3b0da14).
           ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/medir_mestre.gd.log"
+          # ORDEM-D-AUD-14-SEGUIMENTO-MUTACAO (B1): com a correcção, 0 falhas e o tabuleiro com 864 px nos dois percursos
+          # até 1600×900 (como no 93853dd). O «tr» normaliza o CRLF antes dos grep (F3 da CAIXA-JANELA-CI).
+          tr -d '\r' < "$RUNNER_TEMP/medir_mestre.gd.log" | grep -xF "ecrã do Mestre: 0 falha(s), 0 sem medida"
+          tr -d '\r' < "$RUNNER_TEMP/medir_mestre.gd.log" | grep -xF "  MEDIDA MESTRE-LARGURA (1600, 900) directo=864 px depois de (800, 450)=864 px"
+      # ORDEM-D-AUD-14-SEGUIMENTO-MUTACAO (B1, sentença 805, achado 1): a prova de que o teste da largura dispara deixa de
+      # ser só da cópia de trabalho do PC. Como a mutação das células da caixa_janela: tira-se a correcção do 7c65fb8 na
+      # cópia de trabalho (sem commit), o medir_mestre.gd tem de dar as 4 falhas do bloco da D-AUD-14, e o ficheiro volta.
+      - name: O teste da largura do Mestre dispara — sem a correcção, na cópia de trabalho, sem commit (tem de dar as 4 falhas da D-AUD-14)
+        if: always()
+        working-directory: ${{ github.workspace }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/largura-mestre"
+          # Sem pipefail, o tee não deixa o -e parar aqui; o código do guião lê-se do PIPESTATUS.
+          bash provas/ordem-d-aud-14-seguimento-mutacao/ferramentas/mutacao-largura.sh "$GODOT" "$RUNNER_TEMP/largura-mestre/mutacao-largura.log" 2>&1 | tee "$RUNNER_TEMP/largura-mestre/mutacao-largura.resumo.txt"
+          R=${PIPESTATUS[0]}
+          # O ficheiro mutado tem de ter ficado reposto (a cópia de trabalho igual ao commit).
+          git diff --exit-code -- rascunhos/cliente/cenas/mestre/mestre.gd
+          exit $R
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: largura-mestre
+          path: ${{ runner.temp }}/largura-mestre/
+          if-no-files-found: warn
       - name: Acções da jogadora onde o site as tem (gavetas do Mover e do Ataque; Defender na ficha)
         if: always()
         run: |
