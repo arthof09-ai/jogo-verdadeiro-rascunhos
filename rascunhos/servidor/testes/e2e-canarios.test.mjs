@@ -13,6 +13,10 @@ import { fileURLToPath } from 'node:url';
 import { CANARIOS, canariosEm, acusacao } from '../e2e/canarios.mjs';
 
 const ARNES = fileURLToPath(new URL('../e2e/jogadora-e2e.mjs', import.meta.url));
+// O passo «só leitura, sem rede, sem escrita» do job servidor corre com --permission e não deixa lançar processos; aí
+// os dois testes do arnês saltam e correm no job protocolo do CI (o mesmo padrão do ordem16-journal-disco).
+const PODE_LANCAR = !process.permission || process.permission.has('child');
+const SEM_FILHOS = PODE_LANCAR ? false : 'sem processos filhos (passo só de leitura): os testes do arnês correm no job protocolo do CI';
 
 // Ids hexadecimais com «9137» lá dentro, nos sítios em que os ids aparecem no fio dela.
 const UUID_9137 = '3f2a9c10-9137-4b2e-8d1f-0a9137cde5f1';
@@ -109,7 +113,7 @@ function correrArnes(porta, limiteMs = 20000) {
 }
 
 test('(a)+(b) pelo arnês: os ids hexadecimais passam; a mensagem com o canário fica inteira no log e o arnês sai com 1',
-  async () => {
+  { skip: SEM_FILHOS }, async () => {
     const suja = JSON.stringify({
       v: 2, type: 'ROOM_EVENT', tipo: 'ataque', dados: { figuraId: HEX_9137, campoNovoDoMotor: 9137, nota: 'sintética F8' },
     });
@@ -127,7 +131,7 @@ test('(a)+(b) pelo arnês: os ids hexadecimais passam; a mensagem com o canário
   });
 
 test('(b) pelo arnês: só ids hexadecimais com «9137» — nenhuma acusação de canário (sai pelo tempo, não pelo alarme)',
-  async () => {
+  { skip: SEM_FILHOS }, async () => {
     // O arnês só sai com 0 no fim do guião todo; aqui basta ver que, com as mensagens dadas, não acusa nada.
     const s = await servidorSintetico([SNAPSHOT_HEX, RECIBO_HEX, EVENTO_HEX]);
     try {
