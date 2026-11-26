@@ -20,3 +20,11 @@
   antes do banner (init):      4
   tecto declarado:             GL_MAX_FRAGMENT_UNIFORM_VECTORS (261) 
   driver:                      OpenGL API OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1) - Compatibility - Using Device: Google (Google Inc.) - Android Emulator OpenGL ES Translator (Google SwiftShader)
+== REGISTO POSTERIOR (errata E5 da sentença 862, 26/11/2026, no PC): os SHA-256 COMPLETOS
+  Recalculados do APK do jogo DESTA corrida: artefacto export-android da #45812668899, assimilacao.apk,
+  145340894 B, SHA-256 065ae82c7470fe9923e9347fa391090801cf73f7b5e39a3588f62bfa926a530e.
+  lib/x86_64/libgodot_android.so jogo=7a103707ecbf1d24a053f59b90ddcd9945f4524e9ebbe87d513e0d60eff80443
+  classes.dex jogo=4a3b10789d65d1e2fecddf47e0bc981bb4f4ca12b4f6506696bb47817056db9e
+  Os dois começam pelos prefixos de 16 hex medidos acima.
+  controlo: NÃO registado. O controlo-gles.apk foi montado e assinado na pasta temporária do runner e não ficou
+  como artefacto; não está ao alcance. Do lado do controlo fica só o prefixo de 16 hex medido no CI (acima).

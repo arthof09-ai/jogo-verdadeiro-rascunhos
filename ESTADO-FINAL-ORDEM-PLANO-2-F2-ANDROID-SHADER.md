@@ -76,8 +76,8 @@ Corrida #45812668899 (`56d3f91`), `controlo-45812668899/controlo-gles-medida.log
 
 | | Controlo (Godot vazio) | Jogo |
 |---|---|---|
-| `libgodot_android.so` (SHA-256) | `7a103707ecbf1d24…` | `7a103707ecbf1d24…` (**IGUAL**) |
-| `classes.dex` | `4a3b10789d65d1e2…` | `4a3b10789d65d1e2…` (**IGUAL**) |
+| `libgodot_android.so` (prefixo SHA-256, 16 hex) | `7a103707ecbf1d24…` | `7a103707ecbf1d24…` (**IGUAL**) |
+| `classes.dex` (prefixo SHA-256, 16 hex) | `4a3b10789d65d1e2…` | `4a3b10789d65d1e2…` (**IGUAL**) |
 | Links falhados antes do banner (init do motor) | **4** | **4** |
 | `SceneShaderGLES3` link falhado (total) | **10** | 85 |
 | `CanvasShaderGLES3` | **1** | 2 |
