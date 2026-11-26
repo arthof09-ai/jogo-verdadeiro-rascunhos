@@ -17,6 +17,13 @@
 # da condição) e, como controlo, sobre o guião original da ORDEM-PLANO-2-F2-PROVA-WINDOWS (a3d0cbc), para ver o que
 # ele fazia com a mesma condição. Saídas em ensaios/<condição>-<guião>/ e o resumo em ensaios/resumo.txt.
 # Exit 0 se as quatro condições fazem o guião endurecido falhar com a FALHA esperada; 1 se alguma não morde.
+#
+# user:// limpo em todas as corridas: cada guião corre com APPDATA=<sede>/tmp/appdata-ensaio, onde só há uma cópia
+# dos modelos de export do Godot 4.7.2 (o export precisa deles) e de onde o app_userdata é apagado antes de cada
+# corrida. Sem isto, o lugar.cfg que uma corrida que entra deixa no APPDATA faz a seguinte tentar o seatToken velho
+# (recusado pela mesa nova) em vez do --entrar-nome — o 1.º ensaio, de 26/11 11:37, deu assim um «não recebeu o
+# ROOM_SNAPSHOT» a mais nas corridas endurecido, alternadas com as do original que entravam. O guião endurecido
+# isola ainda o user:// do cliente por si (APPDATA próprio só para o .exe); o original não, daí este APPDATA do ensaio.
 param(
   [Parameter(Mandatory = $true)][string]$Godot,
   [int]$SegundosNaMesa = 5
@@ -31,6 +38,13 @@ $Ensaios = Join-Path $PSScriptRoot 'ensaios'
 $Utf8 = New-Object System.Text.UTF8Encoding($true)  # o guião tem BOM (o PowerShell 5.1 precisa dele para ler o UTF-8)
 New-Item -ItemType Directory -Force $Ensaios, (Split-Path $Original) | Out-Null
 $Resumo = Join-Path $Ensaios 'resumo.txt'
+$AppEnsaio = Join-Path $Sede 'tmp\appdata-ensaio'
+$Modelos = Join-Path $env:APPDATA 'Godot\export_templates\4.7.2.stable'
+$ModelosEnsaio = Join-Path $AppEnsaio 'Godot\export_templates\4.7.2.stable'
+if (-not (Test-Path (Join-Path $ModelosEnsaio 'version.txt'))) {
+  New-Item -ItemType Directory -Force $ModelosEnsaio | Out-Null
+  Copy-Item (Join-Path $Modelos '*') $ModelosEnsaio -Force
+}
 [IO.File]::WriteAllText($Resumo, '', $Utf8)
 function Resumir([string]$t) { [IO.File]::AppendAllText($Resumo, $t + "`r`n", (New-Object System.Text.UTF8Encoding($false))); Write-Host $t }
 
@@ -76,14 +90,20 @@ foreach ($c in $condicoes.Keys) {
     if (Test-Path $saida) { Remove-Item -Recurse -Force $saida }
     $argumentos = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $Copia, '-Godot', $Godot, '-Saida', $saida, '-SegundosNaMesa', $SegundosNaMesa)
     if ($semExport) { $argumentos += '-SemExport' }
-    & powershell @argumentos *> $null
+    $ud = Join-Path $AppEnsaio 'Godot\app_userdata'
+    if (Test-Path $ud) { Remove-Item -Recurse -Force $ud }
+    $appdataAntes = $env:APPDATA
+    $env:APPDATA = $AppEnsaio
+    try { & powershell @argumentos *> $null } finally { $env:APPDATA = $appdataAntes }
     $exit = $LASTEXITCODE
     Remove-Item -Force $Copia
     $restos = Limpar-Restos
     $proc = Get-Content -Encoding UTF8 (Join-Path $saida 'procedimento.log')
     $falhasVistas = @($proc | Where-Object { $_ -match 'FALHA: ' } | ForEach-Object { $_ -replace '^\[[^\]]*\] ', '' })
     $veredito = ($proc | Select-Object -Last 1) -replace '^\[[^\]]*\] ', ''
-    $linha = "[$c / $g] exit $exit; $veredito; $restos"
+    $ml = Join-Path $saida 'mesa.log'
+    $entrou = $(if ((Test-Path $ml) -and ((Get-Content -Raw -Encoding UTF8 $ml) -match 'ENTROU Espadachim')) { 'a Espadachim entrou na mesa' } else { 'a Espadachim não entrou na mesa' })
+    $linha = "[$c / $g] exit $exit; $veredito; $entrou; $restos"
     if ($g -eq 'endurecido') {
       $mordeu = ($exit -eq 1) -and (@($falhasVistas | Where-Object { $_ -match $esperada }).Count -ge 1)
       if (-not $mordeu) { $naoMordeu++ }

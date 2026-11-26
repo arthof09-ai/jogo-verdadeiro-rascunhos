@@ -13,7 +13,8 @@
 #      Start-Process -ArgumentList junta os argumentos sem aspas e «--entrar-nome=Espadachim de Bancada» chegava
 #      partido em três; o cliente mostrava «pronto» e nunca entrava). A linha de comando que o Windows de facto
 #      recebeu é lida do Win32_Process e fica no log; o processo do jogo (filho do invólucro de consola) tem de
-#      aparecer em 10 s — sem ele a prova falha (não há «0 de 0»);
+#      aparecer em 10 s — sem ele a prova falha (não há «0 de 0»); o cliente corre com um APPDATA próprio e vazio
+#      em <sede>/tmp (user:// isolado: sem o seatToken de uma corrida anterior, que a mesa nova recusa);
 #   4. espera a linha «rede: ROOM_SNAPSHOT … plataforma=Windows» do cliente;
 #   5. deixa o cliente na mesa SegundosNaMesa (30 s por omissão), a conferir de 5 em 5 s que o processo está vivo e
 #      que a mesa não registou SAIU;
@@ -150,8 +151,18 @@ try {
 
   # ---- 3. o cliente Windows, com os argumentos entre aspas ----
   $argsCli = @('--headless', '--', "--servidor=127.0.0.1:$Porta", '"--entrar-nome=Espadachim de Bancada"', '--entrar-senha=prova-espadachim')
+  # O user:// do cliente num APPDATA próprio e vazio: com o APPDATA de sempre, o lugar.cfg da corrida anterior traz
+  # um seatToken que a mesa nova recusa («credenciais»); o cliente esquece-o e volta ao lobby SEM usar o
+  # --entrar-nome, e a prova falha uma vez sim, outra não. Só o processo do cliente vê este APPDATA (o Godot do
+  # export continua a achar os modelos no de sempre).
+  $appdataCli = Join-Path $Tmp 'appdata-cliente'
+  if (Test-Path $appdataCli) { Remove-Item -Recurse -Force $appdataCli }
+  New-Item -ItemType Directory -Force $appdataCli | Out-Null
+  Escrever-Passo "user:// do cliente isolado: APPDATA=$appdataCli (vazio; sem lugar.cfg de corridas anteriores)"
   Escrever-Passo ('comando: Start-Process build/windows/Assimilacao.console.exe -ArgumentList ' + (($argsCli | ForEach-Object { "'" + $_ + "'" }) -join ','))
-  $cli = Iniciar $exe $argsCli $exeDir 'windows'
+  $appdataAntes = $env:APPDATA
+  $env:APPDATA = $appdataCli
+  try { $cli = Iniciar $exe $argsCli $exeDir 'windows' } finally { $env:APPDATA = $appdataAntes }
   $tCli = [Diagnostics.Stopwatch]::StartNew()
   Start-Sleep -Milliseconds 300
   Escrever-Passo ("cliente arrancou: pid $($cli.Id); linha de comando recebida: " + (Linha-De-Comando $cli.Id))
@@ -226,6 +237,8 @@ try {
   $cl = Ler-Partilhado $cliLog
   $erros = ([regex]::Matches($cl + (Ler-Partilhado (Join-Path $Tmp 'windows.err')), 'SCRIPT ERROR|Parse Error|Compile Error')).Count
   Escrever-Passo "erros de script no cliente: $erros"
+  $lugarCli = @(Get-ChildItem $appdataCli -Recurse -File -Filter 'lugar.cfg' -ErrorAction SilentlyContinue)
+  Escrever-Passo ('user:// isolado: ' + $(if ($lugarCli.Count) { 'o cliente escreveu o lugar.cfg em ' + $lugarCli[0].FullName } else { 'sem lugar.cfg' }))
   if ($erros -gt 0) { Falhar "$erros erros de script no cliente" }
 }
 catch { Falhar ($_.Exception.Message) }
