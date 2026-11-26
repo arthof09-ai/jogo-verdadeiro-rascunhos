@@ -234,13 +234,38 @@ func _montar_mestre(janela: Vector2i):
 	return m
 
 
-## A folha que a regra do _ao_redimensionar pede com a letra de AGORA (unidades): 45 % da área, alargada até caber a
-## coluna 1 + a barra das abas + uma letra + 3 margens, com o tecto de 85 %.
-func _folha_pedida(m) -> float:
-	var f := float(m._fonte)
+## ORDEM-D-AUD-14-SEGUIMENTO-MUTACAO (B2): a regra fica congelada em literais, não lida do objecto. A folha é 45 % da
+## área (o tabuleiro 55 %), e a letra de cada janela é a que o _ao_redimensionar dá hoje, max(22, ceil(13 / escala)).
+## Se o mestre.gd mudar a fracção ou a letra, o teste dá por isso em vez de a seguir.
+const FRACAO_FOLHA := 0.45
+const FONTE_JANELA := {Vector2i(1600, 900): 22, Vector2i(800, 450): 32, Vector2i(220, 220): 114, Vector2i(2400, 900): 22}
+## A janela onde o piso final liga: letra 114, coluna 1 + 2 margens = 1710 unidades, acima do tecto de 85 % (1632).
+const JANELA_PISO := Vector2i(220, 220)
+## Uma janela larga onde mandam os 45 % (2880 unidades de área → 1296 de folha, acima das 883 que a barra das abas
+## pede). Nas outras janelas manda a barra das abas, e a fracção congelada não se via.
+const JANELA_FRACAO := Vector2i(2400, 900)
+
+
+## A folha que a regra do _ao_redimensionar pede na `janela`, com a letra congelada e a barra das abas de AGORA
+## (unidades): 45 % da área, alargada até caber a coluna 1 + a barra das abas + uma letra + 3 margens, com o tecto de
+## 85 %; encolhida, só a coluna 1 + 2 margens; no fim, o piso (nunca menos do que a coluna 1 + 2 margens).
+func _folha_pedida(m, janela: Vector2i, encolhida := false) -> float:
+	var f := float(FONTE_JANELA[janela])
 	var area: float = m.get_viewport_rect().size.x
-	var abas: float = m._abas.get_tab_bar().get_minimum_size().x
-	return minf(maxf(area * (1.0 - m.FRACAO_TABULEIRO), f * 14.0 + abas + f + f * 0.5 * 3.0), area * 0.85)
+	var col1 := f * 14.0
+	var margem := f * 0.5
+	var folha := area * FRACAO_FOLHA
+	if encolhida:
+		folha = col1 + margem * 2.0
+	else:
+		var abas: float = m._abas.get_tab_bar().get_minimum_size().x
+		folha = minf(maxf(folha, col1 + abas + f + margem * 3.0), area * 0.85)
+	return maxf(folha, col1 + margem * 2.0)
+
+
+func _verificar_fonte(m, janela: Vector2i) -> void:
+	_verificar(m._fonte == FONTE_JANELA[janela], "%s: a letra é a congelada no teste (%d = %d)"
+		% [janela, m._fonte, FONTE_JANELA[janela]])
 
 
 ## D-AUD-14: a largura do tabuleiro do Mestre não depende do caminho até à janela. Aberto directo a 1600×900, ou aberto
@@ -250,22 +275,56 @@ func _medir_historia() -> void:
 	var escala := minf(float(JANELA_HISTORIA.x) / 1920.0, float(JANELA_HISTORIA.y) / 1080.0)
 	var m = await _montar_mestre(JANELA_HISTORIA)
 	var directo: float = m._tabuleiro.size.x * escala
-	_verificar(absf(m._folha.size.x - _folha_pedida(m)) <= 0.5, "%s directo: a folha é a da letra actual (%.0f = %.0f unidades)"
-		% [JANELA_HISTORIA, m._folha.size.x, _folha_pedida(m)])
+	_verificar_fonte(m, JANELA_HISTORIA)
+	_verificar(absf(m._folha.size.x - _folha_pedida(m, JANELA_HISTORIA)) <= 0.5, "%s directo: a folha é a da letra actual (%.0f = %.0f unidades)"
+		% [JANELA_HISTORIA, m._folha.size.x, _folha_pedida(m, JANELA_HISTORIA)])
+	# B2: o ramo _encolhida — a folha fica só com a coluna 1 + 2 margens (330 unidades a 1600×900).
+	m._alternar_folha()
+	for i in 2:
+		await process_frame
+	_verificar(m._encolhida and absf(m._folha.size.x - _folha_pedida(m, JANELA_HISTORIA, true)) <= 0.5,
+		"%s encolhida: a folha é a coluna 1 + 2 margens (%.0f = %.0f unidades)"
+		% [JANELA_HISTORIA, m._folha.size.x, _folha_pedida(m, JANELA_HISTORIA, true)])
 	m.queue_free()
 	await process_frame
 	m = await _montar_mestre(JANELA_PEQUENA)
-	_verificar(absf(m._folha.size.x - _folha_pedida(m)) <= 0.5, "%s: a folha é a da letra actual (%.0f = %.0f unidades)"
-		% [JANELA_PEQUENA, m._folha.size.x, _folha_pedida(m)])
+	_verificar_fonte(m, JANELA_PEQUENA)
+	_verificar(absf(m._folha.size.x - _folha_pedida(m, JANELA_PEQUENA)) <= 0.5, "%s: a folha é a da letra actual (%.0f = %.0f unidades)"
+		% [JANELA_PEQUENA, m._folha.size.x, _folha_pedida(m, JANELA_PEQUENA)])
 	root.size = JANELA_HISTORIA
 	for i in 4:
 		await process_frame
 	var depois: float = m._tabuleiro.size.x * escala
 	print("  MEDIDA MESTRE-LARGURA %s directo=%.0f px depois de %s=%.0f px" % [JANELA_HISTORIA, directo, JANELA_PEQUENA, depois])
-	_verificar(absf(m._folha.size.x - _folha_pedida(m)) <= 0.5, "%s → %s: a folha é a da letra actual (%.0f = %.0f unidades)"
-		% [JANELA_PEQUENA, JANELA_HISTORIA, m._folha.size.x, _folha_pedida(m)])
+	_verificar_fonte(m, JANELA_HISTORIA)
+	_verificar(absf(m._folha.size.x - _folha_pedida(m, JANELA_HISTORIA)) <= 0.5, "%s → %s: a folha é a da letra actual (%.0f = %.0f unidades)"
+		% [JANELA_PEQUENA, JANELA_HISTORIA, m._folha.size.x, _folha_pedida(m, JANELA_HISTORIA)])
 	_verificar(absf(directo - depois) <= 1.0, "%s: o tabuleiro tem a mesma largura aberto directo (%.0f px) e depois de %s (%.0f px)"
 		% [JANELA_HISTORIA, directo, JANELA_PEQUENA, depois])
+	m.queue_free()
+	await process_frame
+	# B2: o piso final — numa janela onde a letra é tão grande que a coluna 1 + 2 margens passa o tecto de 85 %, a folha
+	# fica no piso. A primeira verificação garante que esta janela liga mesmo o piso (senão o teste deixava de o cobrir).
+	m = await _montar_mestre(JANELA_PISO)
+	_verificar_fonte(m, JANELA_PISO)
+	var area_piso: float = m.get_viewport_rect().size.x
+	var f_piso := float(FONTE_JANELA[JANELA_PISO])
+	_verificar(f_piso * 15.0 > area_piso * 0.85 + 0.5, "%s: o piso final liga (coluna 1 + 2 margens %.0f > tecto %.0f unidades)"
+		% [JANELA_PISO, f_piso * 15.0, area_piso * 0.85])
+	_verificar(absf(m._folha.size.x - _folha_pedida(m, JANELA_PISO)) <= 0.5, "%s: a folha fica no piso final (%.0f = %.0f unidades)"
+		% [JANELA_PISO, m._folha.size.x, _folha_pedida(m, JANELA_PISO)])
+	m.queue_free()
+	await process_frame
+	# B2: a fracção congelada — numa janela larga a folha é os 45 % da área (a guarda confirma que são eles que mandam).
+	m = await _montar_mestre(JANELA_FRACAO)
+	_verificar_fonte(m, JANELA_FRACAO)
+	var area_fracao: float = m.get_viewport_rect().size.x
+	var f_fracao := float(FONTE_JANELA[JANELA_FRACAO])
+	var pela_barra: float = f_fracao * 14.0 + m._abas.get_tab_bar().get_minimum_size().x + f_fracao + f_fracao * 0.5 * 3.0
+	_verificar(area_fracao * FRACAO_FOLHA > pela_barra + 0.5, "%s: mandam os 45 %% (%.0f > %.0f unidades pela barra das abas)"
+		% [JANELA_FRACAO, area_fracao * FRACAO_FOLHA, pela_barra])
+	_verificar(absf(m._folha.size.x - _folha_pedida(m, JANELA_FRACAO)) <= 0.5, "%s: a folha é os 45 %% da área (%.0f = %.0f unidades)"
+		% [JANELA_FRACAO, m._folha.size.x, _folha_pedida(m, JANELA_FRACAO)])
 	m.queue_free()
 	await process_frame
 
