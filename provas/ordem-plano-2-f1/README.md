@@ -1,8 +1,9 @@
 # Provas da ORDEM-PLANO-2-F1 — a batalha que se vê (D-AUD-05, D-AUD-12, D-AUD-15)
 
 > **Corrigido no fecho (ORDEM-PLANO-2-F1-FECHO, F4, 26/11):** as cinco correcções da sentença da retoma estão no texto
-> abaixo e em `ESTADO-FINAL-ORDEM-PLANO-2-F1-FECHO.md`. O `dados/dados-justos.md` e o `dados/dados-26-11.log` são a saída
-> da ferramenta e ficam como saíram. A linha «Veredicto: suspeita AFASTADA» deles vale como se dissesse o texto da secção
+> abaixo e em `ESTADO-FINAL-ORDEM-PLANO-2-F1-FECHO.md`. Três ficheiros são saída da ferramenta e ficam como saíram:
+> `dados/dados-justos.md` (linha 63), `dados/dados-26-11.log` (linha 65) e `dados/24-11/dados-justos.md` (linha 63).
+> A linha «Veredicto: suspeita AFASTADA» de cada um dos três vale como se dissesse o texto da secção
 > «D-AUD-15: a leitura que vale», abaixo. A recontagem sem a ferramenta (F5) está em `dados/recontar/`.
 
 Estado: **PARCIAL** (ver `ESTADO-FINAL-ORDEM-PLANO-2-F1-PARCIAL.md` na raiz). Falta a batalha de bancada **com vídeo dos dois
@@ -59,3 +60,46 @@ rodada 2: banner «A sua vez», caixa «Bruto 1 na vez», e o Mestre a dizer «v
 - A reprodução da sequência registada é 6/6 (10, 18, 18, 18, 18, 19).
 - Na série 1..N, as contagens de 24/11 e de 26/11 são idênticas. Os ficheiros diferem (ms, série CSPRNG, corrida4em6).
 - A corrida foi sobre `279f0d7` + o caso 10. O servidor e o motor são os da ponta; o caso 10 ainda não estava cometido.
+- **Os três ficheiros com a linha «Veredicto: suspeita AFASTADA»** lêem-se com o texto desta secção, e não com a palavra
+  «AFASTADA»: `dados/dados-justos.md` (linha 63), `dados/dados-26-11.log` (linha 65) e `dados/24-11/dados-justos.md`
+  (linha 63). Os três são saída da ferramenta e ficam como saíram (ORDEM-PLANO-2-F1-F7).
+
+### O Monte Carlo da corrida4em6 com semente publicada: o protocolo
+
+O `dados/recontar/recontar.py` faz esta conta, mas não é preciso lê-lo. Este é o protocolo, para quem o quiser replicar
+noutra máquina:
+
+1. **A pergunta.** Em 6 lançamentos de um d20 justo, qual é a probabilidade de aparecer uma corrida de 4 ou mais faces
+   iguais seguidas? Por exemplo, 7, 12, 12, 12, 12, 3. Seis faces iguais também contam.
+2. **O gerador.** É o `random.Random` de Python (Mersenne Twister), criado **uma só vez** com a semente **`20261126`**
+   (a data de 26/11/2026). As M tentativas tiram todas desse mesmo gerador, uma a seguir à outra. Não se volta a semear
+   a cada tentativa.
+3. **A face.** Cada face é `r.randrange(20)`, um inteiro de 0 a 19. A face do dado é esse número + 1, mas somar 1 não
+   altera as corridas. `r.randint(1, 20)` gasta o gerador da mesma maneira e dá o mesmo resultado.
+   `1 + int(r.random() * 20)` **não serve**: gasta o gerador de outra maneira e dá outro número (717).
+4. **A tentativa.** São sempre **6 faces por tentativa, sem corte**. Tiram-se as 6 mesmo que a corrida de 4 já tenha
+   aparecido à 4.ª ou à 5.ª face. Isto importa porque o número de faces tiradas muda o que o gerador dá nas tentativas
+   seguintes: parar ao atingir a corrida dá 735, não 703. A tentativa conta como «com corrida» se a maior sequência de
+   faces iguais seguidas das 6 tiver 4 ou mais.
+5. **O tamanho.** São **M = 2 000 000** tentativas, ou seja, 12 000 000 faces tiradas.
+6. **O resultado.** Há **703** tentativas com corrida, e 703 / 2 000 000 = **0,03515 %**. O valor exacto é
+   29/80000 = 0,03625 %. A diferença é de 0,0011 pp, menos de 1 σ (σ ≈ 0,0013 pp com este M).
+
+Em Python, o protocolo inteiro cabe nisto:
+
+```python
+import random
+r = random.Random(20261126); com = 0
+for _ in range(2_000_000):
+    t = [r.randrange(20) for _ in range(6)]          # 6 faces, sem corte
+    corr = maior = 1
+    for i in range(1, 6):
+        corr = corr + 1 if t[i] == t[i - 1] else 1
+        maior = max(maior, corr)
+    com += maior >= 4
+print(com, 100 * com / 2_000_000)                    # 703 0.03515
+```
+
+Fiz uma réplica a partir só desta prosa, sem abrir o `recontar.py`, em Python 3.12.10, a 26/11, e deu 703 → 0,03515 %.
+Também corri as variantes dos pontos 3 e 4: `randint(1, 20)` dá 703, `random() * 20` dá 717 e o corte dá 735.
+O `randrange` de Python usa o mesmo algoritmo, `_randbelow` sobre `getrandbits`, desde a versão 3.2.
