@@ -11,8 +11,17 @@ import { criarSala } from '../nucleo/sala.js';
 import { montarMesa, exigirAplicada, rngDeterministico, relogio, fichasDeTeste, INICIATIVA, PIN, SENHAS } from './ajudantes.mjs';
 import { criarMotorFalso } from './motor-falso.mjs';
 
-const ESPERADO = ['Heroína Teste', 'Lobo 1', 'Orc 1', 'Orc 2'];
-const nomes = (snap) => snap.figuras.map((f) => f.nomePublico).sort();
+// J-F4 (PLANO-2-F1-ADENDA-J-F1-J-F6): sem `.sort()`. Cada nome confere-se na casa da figura que o deve ter — o orc posto
+// primeiro (2,6) é «Orc 1», o segundo (5,6) é «Orc 2» —, para uma troca dos números entre as duas figuras não passar
+// despercebida; e o snapshot tem de ter as 4 figuras. (A ordem da lista não é contrato: a sala reaberta do journal dá
+// Heroína, Lobo, Orc, Orc; os outros caminhos dão Heroína, Orc, Orc, Lobo. Por isso não se compara a lista por posição.)
+const ESPERADO = { '2,2': 'Heroína Teste', '2,6': 'Orc 1', '5,6': 'Orc 2', '9,9': 'Lobo 1' };
+const nomes = (snap) => snap.figuras.map((f) => `${f.nomePublico}@${f.x},${f.y}`);
+const porCasa = (snap) => Object.fromEntries(snap.figuras.map((f) => [`${f.x},${f.y}`, f.nomePublico]));
+function conferir(snap, msg) {
+  assert.equal(snap.figuras.length, 4, `${msg ?? 'snapshot'}: 4 figuras`);
+  assert.deepEqual(porCasa(snap), ESPERADO, msg);
+}
 const snapshotsEm = (msgs) => msgs.filter((x) => x.type === 'ROOM_SNAPSHOT');
 
 /** Se PROVA_SNAPSHOT estiver definido, escreve o snapshot (só os nomes) para o log das provas. */
@@ -38,7 +47,7 @@ test('D-AUD-12 adenda: quem entra a meio da batalha recebe o snapshot já com «
   const snap = snapshotsEm(r.r.mensagens).at(-1);
   assert.ok(snap, 'a entrada leva um snapshot');
   registar('entrada-tardia-espectador', snap);
-  assert.deepEqual(nomes(snap), ESPERADO);
+  conferir(snap);
 });
 
 test('D-AUD-12 adenda: REENTRADA — a jogadora sai e volta; o snapshot novo mantém «Orc 1»/«Orc 2»', () => {
@@ -53,7 +62,7 @@ test('D-AUD-12 adenda: REENTRADA — a jogadora sai e volta; o snapshot novo man
     const snap = snapshotsEm(r.r.mensagens).at(-1);
     assert.ok(snap, `${chave}: a reentrada leva um snapshot`);
     registar(`reentrada-${chave}`, snap);
-    assert.deepEqual(nomes(snap), ESPERADO, `${chave}: os nomes no snapshot da reentrada`);
+    conferir(snap, `${chave}: os nomes no snapshot da reentrada`);
   }
 });
 
@@ -65,20 +74,22 @@ test('D-AUD-12 adenda: RESYNC — um lastSeq que o servidor não consegue servir
     const snap = snapshotsEm(resp).at(-1);
     assert.ok(snap, `${chave}: o resync deu snapshot`);
     registar(`resync-${chave}`, snap);
-    assert.deepEqual(nomes(snap), ESPERADO, `${chave}: os nomes no snapshot do resync`);
+    conferir(snap, `${chave}: os nomes no snapshot do resync`);
   }
 });
 
 test('D-AUD-12 adenda: RESYNC depois do recomeço (lastSeq antes do corte) — o snapshot mantém «Orc 1»/«Orc 2»', () => {
+  // J-F4: a jogadora e o espectador, como os outros casos de caminho.
   const m = doisOrcsEUmLobo();
-  const h = m.clientes.heroina;
-  const antes = h.ultimoSeq;
+  const antes = { heroina: m.clientes.heroina.ultimoSeq, espectador: m.clientes.espectador.ultimoSeq };
   exigirAplicada(m.mestre('MASTER_SUPERVISOR', { op: 'recomecar' }), 'recomeçar');
-  const resp = m.enviar('heroina', { type: 'ROOM_RESYNC', lastSeq: antes });
-  const snap = snapshotsEm(resp).at(-1);
-  assert.ok(snap, 'o resync com o lastSeq de antes do recomeço dá o snapshot');
-  registar('resync-pos-recomeco-heroina', snap);
-  assert.deepEqual(nomes(snap), ESPERADO);
+  for (const chave of ['heroina', 'espectador']) {
+    const resp = m.enviar(chave, { type: 'ROOM_RESYNC', lastSeq: antes[chave] });
+    const snap = snapshotsEm(resp).at(-1);
+    assert.ok(snap, `${chave}: o resync com o lastSeq de antes do recomeço dá o snapshot`);
+    registar(`resync-pos-recomeco-${chave}`, snap);
+    conferir(snap, `${chave}: os nomes no snapshot do resync depois do recomeço`);
+  }
 });
 
 test('D-AUD-12 adenda: RECOMEÇO — o snapshot que vai a todos mantém «Orc 1»/«Orc 2»', () => {
@@ -87,7 +98,7 @@ test('D-AUD-12 adenda: RECOMEÇO — o snapshot que vai a todos mantém «Orc 1�
   for (const chave of ['heroina', 'espectador']) {
     const snap = m.clientes[chave].ultimo('ROOM_SNAPSHOT');
     registar(`recomeco-${chave}`, snap);
-    assert.deepEqual(nomes(snap), ESPERADO, `${chave}: os nomes no snapshot do recomeço`);
+    conferir(snap, `${chave}: os nomes no snapshot do recomeço`);
   }
 });
 
@@ -125,7 +136,7 @@ test('D-AUD-12 adenda: a sala REABERTA do journal, o Mestre já dentro — a jog
   assert.ok(snap, 'a entrada na sala reaberta leva um snapshot');
   registar('sala-reaberta-heroina', snap);
   assert.equal(snap.fase, 'combate');
-  assert.deepEqual(nomes(snap), ESPERADO);
+  conferir(snap);
 });
 
 test('D-AUD-12 adenda: a sala REABERTA do journal, a jogadora à espera — o snapshot da batalha, quando o Mestre volta, traz «Orc 1»/«Orc 2»', () => {
@@ -138,5 +149,5 @@ test('D-AUD-12 adenda: a sala REABERTA do journal, a jogadora à espera — o sn
   assert.ok(snap, 'o Mestre entra: a jogadora recebe o snapshot da batalha');
   registar('sala-reaberta-fim-da-espera-heroina', snap);
   assert.equal(snap.fase, 'combate');
-  assert.deepEqual(nomes(snap), ESPERADO);
+  conferir(snap);
 });

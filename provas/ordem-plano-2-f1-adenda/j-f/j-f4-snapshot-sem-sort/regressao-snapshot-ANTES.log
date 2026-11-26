@@ -1,0 +1,199 @@
+# ANTES (J-F4) — a mutação da adenda (o snapshot sem o número), sobre 935a61a + o teste por cometer; reposta com git checkout
+# comando: cd rascunhos/servidor && PROVA_SNAPSHOT=1 node --test --test-reporter=spec testes/d-aud-12-snapshot-novo.test.mjs
+# node v26.13.0
+# diff: -    nomePublico: nomePublicoDaFigura(fig, fichas[fig.fichaId]),
+# diff: +    nomePublico: nomePublicoDe(fichas[fig.fichaId]), // MUTACAO (PLANO-2-F1-ADENDA): o snapshot sem o número
+PROVA entrada-tardia-espectador: ["Heroína Teste@2,2","Orc@2,6","Orc@5,6","Lobo@9,9"]
+PROVA reentrada-heroina: ["Heroína Teste@2,2","Orc@2,6","Orc@5,6","Lobo@9,9"]
+PROVA resync-heroina: ["Heroína Teste@2,2","Orc@2,6","Orc@5,6","Lobo@9,9"]
+PROVA resync-pos-recomeco-heroina: ["Heroína Teste@2,2","Orc@2,6","Orc@5,6","Lobo@9,9"]
+PROVA recomeco-heroina: ["Heroína Teste@2,2","Orc@2,6","Orc@5,6","Lobo@9,9"]
+PROVA sala-reaberta-heroina: ["Heroína Teste@2,2","Lobo@9,9","Orc@2,6","Orc@5,6"]
+PROVA sala-reaberta-fim-da-espera-heroina: ["Heroína Teste@2,2","Lobo@9,9","Orc@2,6","Orc@5,6"]
+✖ D-AUD-12 adenda: quem entra a meio da batalha recebe o snapshot já com «Orc 1»/«Orc 2» (15.1792ms)
+✖ D-AUD-12 adenda: REENTRADA — a jogadora sai e volta; o snapshot novo mantém «Orc 1»/«Orc 2» (8.1949ms)
+✖ D-AUD-12 adenda: RESYNC — um lastSeq que o servidor não consegue servir dá snapshot, com «Orc 1»/«Orc 2» (4.6495ms)
+✖ D-AUD-12 adenda: RESYNC depois do recomeço (lastSeq antes do corte) — o snapshot mantém «Orc 1»/«Orc 2» (5.9591ms)
+✖ D-AUD-12 adenda: RECOMEÇO — o snapshot que vai a todos mantém «Orc 1»/«Orc 2» (4.9872ms)
+✖ D-AUD-12 adenda: a sala REABERTA do journal, o Mestre já dentro — a jogadora entra e vê «Orc 1»/«Orc 2» (7.932ms)
+✖ D-AUD-12 adenda: a sala REABERTA do journal, a jogadora à espera — o snapshot da batalha, quando o Mestre volta, traz «Orc 1»/«Orc 2» (6.6086ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 0
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 118.2777
+
+✖ failing tests:
+
+test at testes\d-aud-12-snapshot-novo.test.mjs:39:1
+✖ D-AUD-12 adenda: quem entra a meio da batalha recebe o snapshot já com «Orc 1»/«Orc 2» (15.1792ms)
+  TypeError [ERR_INVALID_ARG_TYPE]: The "message" argument must be one of type string or function. Received undefined
+      at innerFail (node:internal/assert/utils:135:11)
+      at strict.deepStrictEqual (node:assert:311:5)
+      at conferir (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:23:10)
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:50:3)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    code: 'ERR_INVALID_ARG_TYPE'
+  }
+
+test at testes\d-aud-12-snapshot-novo.test.mjs:53:1
+✖ D-AUD-12 adenda: REENTRADA — a jogadora sai e volta; o snapshot novo mantém «Orc 1»/«Orc 2» (8.1949ms)
+  AssertionError [ERR_ASSERTION]: heroina: os nomes no snapshot da reentrada
+  + actual - expected
+  
+    {
+      '2,2': 'Heroína Teste',
+  +   '2,6': 'Orc',
+  +   '5,6': 'Orc',
+  +   '9,9': 'Lobo'
+  -   '2,6': 'Orc 1',
+  -   '5,6': 'Orc 2',
+  -   '9,9': 'Lobo 1'
+    }
+  
+      at conferir (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:23:10)
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:65:5)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: { '2,2': 'Heroína Teste', '2,6': 'Orc', '5,6': 'Orc', '9,9': 'Lobo' },
+    expected: { '2,2': 'Heroína Teste', '2,6': 'Orc 1', '5,6': 'Orc 2', '9,9': 'Lobo 1' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at testes\d-aud-12-snapshot-novo.test.mjs:69:1
+✖ D-AUD-12 adenda: RESYNC — um lastSeq que o servidor não consegue servir dá snapshot, com «Orc 1»/«Orc 2» (4.6495ms)
+  AssertionError [ERR_ASSERTION]: heroina: os nomes no snapshot do resync
+  + actual - expected
+  
+    {
+      '2,2': 'Heroína Teste',
+  +   '2,6': 'Orc',
+  +   '5,6': 'Orc',
+  +   '9,9': 'Lobo'
+  -   '2,6': 'Orc 1',
+  -   '5,6': 'Orc 2',
+  -   '9,9': 'Lobo 1'
+    }
+  
+      at conferir (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:23:10)
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:77:5)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: { '2,2': 'Heroína Teste', '2,6': 'Orc', '5,6': 'Orc', '9,9': 'Lobo' },
+    expected: { '2,2': 'Heroína Teste', '2,6': 'Orc 1', '5,6': 'Orc 2', '9,9': 'Lobo 1' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at testes\d-aud-12-snapshot-novo.test.mjs:81:1
+✖ D-AUD-12 adenda: RESYNC depois do recomeço (lastSeq antes do corte) — o snapshot mantém «Orc 1»/«Orc 2» (5.9591ms)
+  AssertionError [ERR_ASSERTION]: heroina: os nomes no snapshot do resync depois do recomeço
+  + actual - expected
+  
+    {
+      '2,2': 'Heroína Teste',
+  +   '2,6': 'Orc',
+  +   '5,6': 'Orc',
+  +   '9,9': 'Lobo'
+  -   '2,6': 'Orc 1',
+  -   '5,6': 'Orc 2',
+  -   '9,9': 'Lobo 1'
+    }
+  
+      at conferir (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:23:10)
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:91:5)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: { '2,2': 'Heroína Teste', '2,6': 'Orc', '5,6': 'Orc', '9,9': 'Lobo' },
+    expected: { '2,2': 'Heroína Teste', '2,6': 'Orc 1', '5,6': 'Orc 2', '9,9': 'Lobo 1' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at testes\d-aud-12-snapshot-novo.test.mjs:95:1
+✖ D-AUD-12 adenda: RECOMEÇO — o snapshot que vai a todos mantém «Orc 1»/«Orc 2» (4.9872ms)
+  AssertionError [ERR_ASSERTION]: heroina: os nomes no snapshot do recomeço
+  + actual - expected
+  
+    {
+      '2,2': 'Heroína Teste',
+  +   '2,6': 'Orc',
+  +   '5,6': 'Orc',
+  +   '9,9': 'Lobo'
+  -   '2,6': 'Orc 1',
+  -   '5,6': 'Orc 2',
+  -   '9,9': 'Lobo 1'
+    }
+  
+      at conferir (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:23:10)
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:101:5)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: { '2,2': 'Heroína Teste', '2,6': 'Orc', '5,6': 'Orc', '9,9': 'Lobo' },
+    expected: { '2,2': 'Heroína Teste', '2,6': 'Orc 1', '5,6': 'Orc 2', '9,9': 'Lobo 1' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at testes\d-aud-12-snapshot-novo.test.mjs:132:1
+✖ D-AUD-12 adenda: a sala REABERTA do journal, o Mestre já dentro — a jogadora entra e vê «Orc 1»/«Orc 2» (7.932ms)
+  TypeError [ERR_INVALID_ARG_TYPE]: The "message" argument must be one of type string or function. Received undefined
+      at innerFail (node:internal/assert/utils:135:11)
+      at strict.deepStrictEqual (node:assert:311:5)
+      at conferir (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:23:10)
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:139:3)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    code: 'ERR_INVALID_ARG_TYPE'
+  }
+
+test at testes\d-aud-12-snapshot-novo.test.mjs:142:1
+✖ D-AUD-12 adenda: a sala REABERTA do journal, a jogadora à espera — o snapshot da batalha, quando o Mestre volta, traz «Orc 1»/«Orc 2» (6.6086ms)
+  TypeError [ERR_INVALID_ARG_TYPE]: The "message" argument must be one of type string or function. Received undefined
+      at innerFail (node:internal/assert/utils:135:11)
+      at strict.deepStrictEqual (node:assert:311:5)
+      at conferir (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:23:10)
+      at TestContext.<anonymous> (file:///<sede>/repo/rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs:152:3)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    code: 'ERR_INVALID_ARG_TYPE'
+  }

@@ -1,0 +1,25 @@
+PROVA entrada-tardia-espectador: ["Heroína Teste","Lobo 1","Orc 1","Orc 2"]
+PROVA reentrada-heroina: ["Heroína Teste","Lobo 1","Orc 1","Orc 2"]
+PROVA reentrada-espectador: ["Heroína Teste","Lobo 1","Orc 1","Orc 2"]
+PROVA resync-heroina: ["Heroína Teste","Lobo 1","Orc 1","Orc 2"]
+PROVA resync-espectador: ["Heroína Teste","Lobo 1","Orc 1","Orc 2"]
+PROVA resync-pos-recomeco-heroina: ["Heroína Teste","Lobo 1","Orc 1","Orc 2"]
+PROVA recomeco-heroina: ["Heroína Teste","Lobo 1","Orc 1","Orc 2"]
+PROVA recomeco-espectador: ["Heroína Teste","Lobo 1","Orc 1","Orc 2"]
+PROVA sala-reaberta-heroina: ["Heroína Teste","Lobo 1","Orc 1","Orc 2"]
+PROVA sala-reaberta-fim-da-espera-heroina: ["Heroína Teste","Lobo 1","Orc 1","Orc 2"]
+✔ D-AUD-12 adenda: quem entra a meio da batalha recebe o snapshot já com «Orc 1»/«Orc 2» (13.9553ms)
+✔ D-AUD-12 adenda: REENTRADA — a jogadora sai e volta; o snapshot novo mantém «Orc 1»/«Orc 2» (7.498ms)
+✔ D-AUD-12 adenda: RESYNC — um lastSeq que o servidor não consegue servir dá snapshot, com «Orc 1»/«Orc 2» (4.3478ms)
+✔ D-AUD-12 adenda: RESYNC depois do recomeço (lastSeq antes do corte) — o snapshot mantém «Orc 1»/«Orc 2» (6.911ms)
+✔ D-AUD-12 adenda: RECOMEÇO — o snapshot que vai a todos mantém «Orc 1»/«Orc 2» (4.4077ms)
+✔ D-AUD-12 adenda: a sala REABERTA do journal, o Mestre já dentro — a jogadora entra e vê «Orc 1»/«Orc 2» (7.9447ms)
+✔ D-AUD-12 adenda: a sala REABERTA do journal, a jogadora à espera — o snapshot da batalha, quando o Mestre volta, traz «Orc 1»/«Orc 2» (6.5433ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 113.1097

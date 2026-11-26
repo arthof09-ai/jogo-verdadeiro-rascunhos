@@ -1,0 +1,19 @@
+J-F4 (PLANO-2-F1-ADENDA-J-F1-J-F6, 26/11/2026) — d-aud-12-snapshot-novo.test.mjs sem .sort() e o resync pós-recomeço também
+para o espectador.
+
+O que mudou no teste:
+- os nomes conferem-se sem ordenar: cada figura pela sua casa (2,2 Heroína Teste · 2,6 Orc 1 · 5,6 Orc 2 · 9,9 Lobo 1), e o
+  snapshot tem de ter 4 figuras. Não comparo a lista pela ordem: a ordem não é contrato (a sala reaberta do journal dá
+  Heroína, Lobo, Orc, Orc; os outros caminhos dão Heroína, Orc, Orc, Lobo — ver as linhas PROVA do DEPOIS);
+- o caso «RESYNC depois do recomeço» corre para a jogadora e para o espectador (resync-pos-recomeco-espectador);
+- a linha PROVA passa a dizer «nome@x,y» pela ordem do snapshot.
+
+Logs (node v26.13.0):
+- regressao-snapshot-DEPOIS.log    7 de 7, 11 linhas PROVA (eram 10: + resync-pos-recomeco-espectador)
+- regressao-snapshot-ANTES.log     a mutação da adenda (o snapshot sem o número): 0 de 7
+- servidor.log                     testes/*.test.mjs: 453 de 453 (o caso novo está dentro de um teste que já existia)
+- troca-teste-novo.log / troca-teste-velho.log — o que o .sort() deixava passar. Mutação ad hoc, reposta com git checkout:
+    -  return `${texto} ${fig.ordinal}`;
+    +  return `${texto} ${texto.startsWith("Orc") ? 3 - fig.ordinal : fig.ordinal}`; // MUTACAO (J-F4): troca «Orc 1»/«Orc 2» entre os dois orcs
+  teste velho (6622b3e, com .sort()): 7 de 7 VERDE — a troca passava despercebida;
+  teste novo: 0 de 7 (PROVA «Orc 2@2,6», «Orc 1@5,6»).
