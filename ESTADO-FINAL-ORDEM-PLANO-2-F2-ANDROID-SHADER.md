@@ -86,6 +86,8 @@ Corrida #45812668899 (`56d3f91`), `controlo-45812668899/controlo-gles-medida.log
 | Captura | cinzento liso #4D4D4D (`controlo-gles.png`) | cinzento liso #4D4D4D (`android-arena.png`) |
 | Disse «pronto» | sim (`controlo-gles pronto`) | sim, e recebeu o ROOM_SNAPSHOT |
 
+As duas capturas são byte-idênticas (um só pixel #4D4D4D, 640×320) porque uma cor de limpeza lisa codifica sempre igual; por isso as capturas provam só que o ecrã estava cinzento liso na altura da captura, e a identidade de cada captura (controlo vs jogo) prova-se pelos logs (`controlo-gles pronto` no log do controlo; `rede: ROOM_SNAPSHOT` no log do jogo), não pelos PNGs.
+
 **Leitura:** o shader de cena do Godot 4.7.2 com o material **por omissão** já passa o tecto de 261 do SwiftShader.
 Também o shader de canvas do `Label` por omissão. Por isso, o tecto deste emulador é **menor do que o mínimo** que o
 Godot 4.7.2 (Compatibility) exige para os seus próprios shaders. O jogo tem mais falhas só porque tem mais materiais e
