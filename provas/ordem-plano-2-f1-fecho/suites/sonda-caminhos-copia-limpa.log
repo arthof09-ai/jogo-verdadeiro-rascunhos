@@ -1,0 +1,5 @@
+# comando: python -I .github/sonda/caminhos_pc.py --raiz . --base .github/sonda/caminhos-pc-base.txt   (numa cÃ³pia limpa, git archive de d5ceb8a)
+caminhos do PC: 347 ocorrências no total; 347 na linha de base (348 entradas), 0 novas; 1 entradas da base já não existem.
+  (a base pode encolher: correr com --gerar depois da redacção)
+Sonda limpa: nenhum caminho do PC novo.
+exit=0

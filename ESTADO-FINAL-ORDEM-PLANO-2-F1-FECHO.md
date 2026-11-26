@@ -47,3 +47,64 @@ Tudo em `provas/ordem-plano-2-f1/dados/recontar/`, ao lado dos JSONs (o `README.
   contagens de 2M sementes, recontadas fora da ferramenta, só batem se a face for a 1.ª saída em todas as sementes.
 - **Critério de aceite** (um terceiro reconta pares e corrida4em6 a partir do pacote sem correr a ferramenta original): o
   `recontar.py` e a fórmula da corrida4em6 fazem-no só com o que está em `dados/recontar/`.
+
+## 3. F6 — PANORAMA: o caso está verde (não precisou de ressalva)
+
+`rascunhos/cliente/testes/camera_segue.gd`, **caso 11**: a colocação dela chega como evento com a câmara já em
+**PANORAMA** (snapshot do lobby, `definir_modo(PANORAMA)`, depois o evento `colocacao` dela na casa (38, 4)).
+
+| Verificação | Resultado |
+|---|---|
+| No Panorama a imagem continua no centro da arena (`_foco_alvo()` = centro; o Panorama não usa o foco) | ok |
+| Mas a primeira vez fica feita: `camera.foco` = a casa dela e `_focou = true` | ok |
+| De volta à Fixa, **sem mais eventos**, ela está no terço central | ok, (0,500; 0,500) |
+
+- **`camera_segue`: 22 de 22**, exit 0, 0 erros de script, sobre `d5ceb8a` (o caso 11 é o `529b126`; corri-o antes de o
+  cometer, sobre `1e7f803`, e o `arena.gd` não mudou).
+- **Mutações, as duas repostas:**
+  - SEM-FOCO-NO-EVENTO (`if _focar_primeira_vez():` → `if false and …`) dá **19 de 22**. Falham o caso 10 e as duas
+    verificações do foco no caso 11.
+  - PANORAMA-NAO-FOCA, uma mutação nova (`return false` no `_focar_primeira_vez` quando o modo é PANORAMA), dá
+    **20 de 22**. Só falha o caso 11. Antes dele, nenhum caso via esta mutação.
+- O código (`arena.gd`, `camera_mesa.gd`) não mudou: o caminho já estava certo, só faltava prová-lo.
+- `ci/passo-camera-segue.patch` espera agora «22 de 22» (`git apply --check` OK). **Continua por aplicar**: o token deste PC
+  não tem o âmbito `workflow`.
+
+## 4. Suites desta ordem (Godot 4.7.2 `--headless`, depois do `--import` do clone novo)
+
+Mudaram um teste do Godot e documentos, e não mudou código do jogo. Por isso corri só o que estas mudanças tocam:
+
+| Suite | Resultado | Log |
+|---|---|---|
+| `camera_segue` | 22 de 22 | `provas/ordem-plano-2-f1-fecho/suites/camera_segue.log` |
+| `camera_segue-SEM-FOCO-NO-EVENTO` · `-PANORAMA-NAO-FOCA` | 19 de 22 · 20 de 22 (repostas) | idem |
+| canário de privacidade | **10 de 10** | `…/canario_privacidade.log` |
+| sonda dos caminhos do PC (cópia limpa, `git archive`) | 0 novas, exit 0 | `…/sonda-caminhos-copia-limpa.log` |
+| listas da retoma | 0 novos, 0 tirados (`camera_segue.gd` `9a147723…` → `5473c72d…`) | `…/actualizar-listas.log` |
+| recontagem do D-AUD-15 | iguais à ferramenta (§2) | `provas/ordem-plano-2-f1/dados/recontar/recontar.txt` |
+
+Não voltei a correr o servidor (446/446 na F1, 453/453 na ADENDA), porque nada do servidor mudou. O CI corre-o (§6).
+Privacidade: só nomes fictícios; os caminhos do PC não aparecem nas provas novas.
+
+## 5. Commits
+
+| Commit | O quê |
+|---|---|
+| `2f7b6f6` | F4: as cinco correcções, no PARCIAL, no README, no `resumo.txt` e no `suites.sh`, e este ESTADO-FINAL (§1). **Por engano levou também** os ficheiros gerados do F5 (`dados/recontar/`: `gerar-pares.mjs`, `recontar.py` e os CSV). Não reescrevi a linha. |
+| `1e7f803` | F5: o README e a saída da recontagem, a leitura das linhas 788-801 e o §2 |
+| `529b126` | F6: o caso 11 do `camera_segue`, as mutações e o patch do CI a «22 de 22» |
+| `d5ceb8a` | listas da retoma sincronizadas |
+| (este) | os logs das suites do fecho e este ESTADO-FINAL completo |
+| (o seguinte) | a nota do CI |
+
+## 6. Nota do CI
+
+(no commit seguinte)
+
+## 7. O que continua aberto na F1 (fora desta ordem)
+
+1. A batalha de bancada na ponta: acabada por morte, com vídeo dos dois ecrãs, as capturas do terço central e 0
+   colocações duplicadas. Precisa do PC livre.
+2. O «na vez» contra o banner em 20 vezes seguidas (D-AUD-03, a bancada do coordenador).
+3. Aplicar `ci/passo-camera-segue.patch` («22 de 22»). Precisa de alguém com o âmbito `workflow`.
+4. Se a conferência quiser, a leitura das linhas 788-801 por um terceiro (§2, ressalva).
