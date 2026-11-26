@@ -12,7 +12,7 @@ Batedora de Bancada; «Mestre da prova»). Nos logs, `<sede>` e `<casa>` substit
 | `web-ci-swiftshader/` | A mesma prova, em SwiftShader (WebGL por software), **como correrá no CI** quando o
 workflow «Aparelhos (F2)» for activado. | «pronto» em **4,5 s**, `ROOM_SNAPSHOT` recebido, V1.0 com todos os
 campos (1,5 FPS: é o SwiftShader, não o jogo) |
-| `windows/` | JV2.1b: o `Assimilacao.console.exe` exportado entra pela linha de comando e recebe o snapshot | `ROOM_SNAPSHOT seq=5 fase=combate plataforma=Windows` **2,1 s** depois de arrancar. 0 erros de script |
+| `windows/` | JV2.1b: o `Assimilacao.console.exe` exportado entra pela linha de comando, recebe o snapshot e **fica 30 s na mesa** | **26/11 (ORDEM-PLANO-2-F2-PROVA-WINDOWS, `corrida-30s/`):** pelo guião cometido `rascunhos/servidor/aparelhos/prova-windows.ps1`; `ROOM_SNAPSHOT seq=5 fase=combate plataforma=Windows`; ENTROU→SAIU **30,201 s**, SAIU 16 ms depois da morte pelo harness; logs inteiros em UTF-8; exit 0. A corrida de 24/11 (2,1 s até ao snapshot, sessão de 160 ms) fica ao lado; ver `windows/README.md` |
 | `qr/` | JV3.4: o QR lido por um decodificador independente (OpenCV 5.1) | **15 de 15** QR (versões 1-10, máscaras várias) lidos certos. A página `/qr` fotografada no Chromium dá `http://192.168.1.20:8080/` |
 | `rede-3-bots/` | JV3.4: 3 bots com 25 s sem rede para 2 deles | Hash lógico **igual** (`ea32c627…`). Seq contínuo nos três (0 buracos, 0 repetidos). Reentrada **6,45 s** e **3,21 s** depois de a rede voltar |
 | `rede-da-casa/` | JV3.4b: a prova com o telemóvel do Mestre | **PENDENTE** (sem o Mestre na hora). O guião exacto está em `PASSOS-PENDENTES.md` |
@@ -25,6 +25,7 @@ depois da entrada. Os `web-03-medicao-*.png` mostram o ecrã com o JSON da V1.0.
 Mestre e a prova do APK num Android a correr. As duas primeiras dependem da JV3.4b (ver `rede-da-casa/`). A terceira
 depende do job `android` do workflow, que está em `ci-pendente/` (ver o ESTADO-FINAL).
 
-Os logs `qr.log` e `prova-windows.log` saíram da consola do Windows em CP1252 e têm caracteres fora de UTF-8;
+Nota de 24/11 (o método corrigiu-se na ORDEM-PLANO-2-F2-PROVA-WINDOWS: os logs da prova do Windows de 26/11 são inteiros e
+normalizados para UTF-8 pelo guião, e a origem do aviso do canário está em `windows/README.md`). Os logs `qr.log` e `prova-windows.log` saíram da consola do Windows em CP1252 e têm caracteres fora de UTF-8;
 o conteúdo é o lido aqui. O `canario.log` abre com um aviso `Unicode parsing error … Unexpected NUL character`
 do Godot antes do primeiro teste — benigno, de origem não determinada; o canário dá 10/10 na mesma.
