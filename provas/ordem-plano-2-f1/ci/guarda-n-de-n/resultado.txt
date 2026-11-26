@@ -1,0 +1,5 @@
+ok -> exit 0 | camera_segue: 22 de 22 (N de N)
+falha -> exit 1 | ::error::camera_segue: 21 de 22 (tem de ser N de N)
+sem -> exit 1 | ::error::camera_segue: esperava 1 linha final «N de N», há 0
+duas -> exit 1 | ::error::camera_segue: esperava 1 linha final «N de N», há 2
+zero -> exit 1 | ::error::camera_segue: 0 de 0 (tem de ser N de N)
