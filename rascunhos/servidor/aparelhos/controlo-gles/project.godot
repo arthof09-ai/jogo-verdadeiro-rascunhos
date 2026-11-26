@@ -1,0 +1,18 @@
+; ORDEM-PLANO-2-F2-ANDROID-SHADER: o projecto de CONTROLO. Um Godot 4.7.2 vazio (nenhum shader, nenhum recurso do jogo),
+; com o mesmo renderizador (Compatibility) e o mesmo modelo de export Android do jogo. Corre no mesmo emulador do CI:
+; se o SwiftShader recusar o link aqui também, os erros «active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS» são
+; dos shaders INTERNOS do Godot no tecto do emulador, e não dos shaders do jogo.
+
+config_version=5
+
+[application]
+
+config/name="Controlo GLES"
+run/main_scene="res://controlo.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
