@@ -53,8 +53,7 @@ else
 fi
 # ORDEM-PLANO-2-F2-ANDROID-SHADER: a seguir, no MESMO emulador e com o MESMO motor, o controlo dos shaders (um Godot
 # vazio, ver controlo-gles.sh). É uma medição: o exit deste guião continua a ser o da prova.
-PCK_CONTROLO="$(dirname "$0")/controlo-gles.pck"
-if [ -s "$PCK_CONTROLO" ]; then
-  bash "$(dirname "$0")/controlo-gles.sh" "$PCK_CONTROLO" "$SAIDA" "$SAIDA/android-godot.log" || echo "(o controlo GLES não correu até ao fim; a prova não depende dele)"
+if [ -s "$(dirname "$0")/controlo-gles-assets.zip" ]; then
+  bash "$(dirname "$0")/controlo-gles.sh" "$APK" "$SAIDA" "$SAIDA/android-godot.log" || echo "(o controlo GLES não correu até ao fim; a prova não depende dele)"
 fi
 exit $r
