@@ -1,7 +1,6 @@
 # Provas da ORDEM-PLANO-2-F1-FECHO-VIDEO (F1 batalha na ponta com vídeo · F2 «na vez» 20× · F3 patch do CI)
 
-O ESTADO-FINAL é `ESTADO-FINAL-ORDEM-PLANO-2-F1-FECHO-VIDEO.md`, na raiz. Este README é o índice das provas da F1 (e da F2,
-no commit seguinte). As provas da F3 estão em `provas/ordem-plano-2-f1/ci/` (o patch e a pasta `guarda-n-de-n/`).
+O ESTADO-FINAL é `ESTADO-FINAL-ORDEM-PLANO-2-F1-FECHO-VIDEO.md`, na raiz. Este README é o índice das provas da F1 e da F2. As provas da F3 estão em `provas/ordem-plano-2-f1/ci/` (o patch e a pasta `guarda-n-de-n/`).
 
 ## F1 — a batalha (26/11/2026, 19:29:09–19:31:19 -03)
 
@@ -99,6 +98,26 @@ batalha que o journal não tenha.
   (seq 56).
 - A corrida desta ordem que começou às 16:57 (no `e89235a`, a ponta de então) também acabou por morte, com vídeo. Ficou
   fora do pacote porque a ponta mudou entretanto (`cf1d315`, um commit do Android) e a ordem pede a batalha na ponta.
+
+## F2 — o «na vez» 20 vezes (26/11/2026, 19:24:33–19:28:35 -03)
+
+A tabela com as 20 medições está em **`f2-na-vez.md`**: vez, banner, caixa, concorda/discorda. Mesma ponta, mesmo
+servidor e os mesmos dois clientes, em **modo manual**, para as vezes dos monstros ficarem paradas no ecrã. São 20 vezes
+seguidas e todas diferentes (os `turno` com seq 3 a 51, rodadas 1 a 7). No início da vez **6 concordam e 14 discordam**.
+As discordâncias ficam registadas para a bancada do coordenador (D-AUD-03). Vídeos na sede:
+
+| ficheiro (na sede) | duração | resolução | SHA-256 |
+|---|---|---|---|
+| `video/f2-na-vez-jogadora.mp4` | 4:34.70 | 1280×720 | `f31420f7226620f1eabaa4188317a3b93ebe5ebea21ac79be2f06b7748d76195` |
+| `video/f2-na-vez-mestre.mp4` | 4:34.53 | 1600×900 | `5bfb29374a8782d84381733689c4efafec443b5842b5466fe5474aa06cd7b886` |
+
+| caminho | o quê |
+|---|---|
+| `f2-na-vez.md` | a tabela das 20 vezes e as discordâncias explicadas |
+| `journal/f2/` | o journal bruto da F2 + `relato-journal.md` (51 ✔ / 0 ✘) |
+| `capturas/f2/f2-grupo-*.png` | as faixas de cima da jogadora (banner + caixa), início e depois, 5 vezes por imagem |
+| `capturas/f2/f1-auto-inicio-das-vezes-dela.png` | o mesmo recorte no modo auto (a batalha F1): «A sua vez» × «Bruto 1 na vez» |
+| `guioes/lancar4.ps1`, `ligar4.ps1`, `v.ps1`, `f2-vezes.sh` | os guiões da F2 |
 
 ## Índice
 
