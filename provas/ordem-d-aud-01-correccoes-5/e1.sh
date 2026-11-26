@@ -33,5 +33,5 @@ if [ "$(conta "$MUTADA")" != "1" ] || [ "$(conta "$ORIGINAL")" != "0" ]; then ec
 corre pecas_mestre-SEM-B1
 cd "$R" && git checkout -- "$ALVO" && trap - EXIT
 echo "reposto=$(git diff --quiet -- "$ALVO" && echo sim || echo NAO)" >> "$L/resumo.txt"
-sed -i "s|$B|<sede>|g" "$L"/*.log
+sed -i -e "s|$B|<sede>|g" -e "s|$(cygpath -m "$B" 2>/dev/null || echo "$B")|<sede>|g" "$L"/*.log
 echo FIM >> "$L/resumo.txt"

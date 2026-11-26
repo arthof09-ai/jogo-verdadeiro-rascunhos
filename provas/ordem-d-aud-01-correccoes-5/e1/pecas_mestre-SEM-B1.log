@@ -397,7 +397,7 @@ WARNING: MASTER_VIEW: vista_sem_pedido — o pedido não saiu 40 vezes seguidas 
   ok    «Alto»: relva a 1,0 e clima no Alto
   ok    um nome que não é perfil não muda nada
   ok    nenhum texto visível com «prime» ou «carregar» []
-comandos escritos em C:/Users/Pierre/RPG_Local/jogo-verdadeiro/ordem-d-aud-01-correccoes-5-pc/tmp/e1/comandos-pecas_mestre-SEM-B1.jsonl: 32
+comandos escritos em <sede>/tmp/e1/comandos-pecas_mestre-SEM-B1.jsonl: 32
 == o mapa reutilizado é o mesmo mapa (ordem 54) ==
   ok    o mapa sozinho (filmes, medições) constrói-se sempre: reutilizar_molde nasce desligado
   ok    as duas arenas pedem o molde pelo módulo partilhado (campo_da_mesa.montar_mapa)
