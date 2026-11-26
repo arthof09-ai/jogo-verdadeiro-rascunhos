@@ -1,0 +1,2 @@
+-		largura_folha = largura_col1 + margem * 2.0
++		largura_folha = largura_col1 + margem * 3.0  # MUTACAO

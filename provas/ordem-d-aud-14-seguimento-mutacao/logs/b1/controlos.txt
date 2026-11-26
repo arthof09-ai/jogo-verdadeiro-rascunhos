@@ -1,0 +1,16 @@
+### controlo 1: o teste deixa de disparar (um «Godot» falso que sai 0 sem falhas)
+== mutação feita (só na cópia de trabalho):
+ rascunhos/cliente/cenas/mestre/mestre.gd | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+-	_abas.get_tab_bar().minimum_size_changed.connect(_ao_mudar_barra_abas)
++	pass  # MUTACAO (D-AUD-14-SEGUIMENTO-MUTACAO): sem a ligação, a folha não se volta a medir
+== ficheiro reposto: git diff vazio em rascunhos/cliente/cenas/mestre/mestre.gd
+== com a mutação: rc=0 · falhas=0 (do bloco D-AUD-14: 0+0+0+0) · «ecrã do Mestre: 0 falha(s), 0 sem medida» · erros de script=0
+MUTACAO NAO APANHADA COMO DEVIA (esperado: rc=1, 4 falhas do bloco D-AUD-14, «ecrã do Mestre: 4 falha(s), 0 sem medida», 0 erros)
+# saída: 1
+mestre.gd reposto: sim
+
+### controlo 2: o mestre.gd já tem alterações por cometer (não se toca nele)
+PARAR: rascunhos/cliente/cenas/mestre/mestre.gd já tem alterações por cometer
+# saída: 1
+a alteração alheia ficou intacta: sim

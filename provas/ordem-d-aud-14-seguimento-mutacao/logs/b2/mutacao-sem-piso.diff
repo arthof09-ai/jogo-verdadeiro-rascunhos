@@ -1,0 +1,2 @@
+-	largura_folha = maxf(largura_folha, largura_col1 + margem * 2.0)
++	pass  # MUTACAO sem piso

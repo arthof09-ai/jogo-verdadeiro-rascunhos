@@ -1,0 +1,16 @@
+== mutação feita (só na cópia de trabalho):
+warning: in the working copy of 'rascunhos/cliente/cenas/mestre/mestre.gd', LF will be replaced by CRLF the next time Git touches it
+ rascunhos/cliente/cenas/mestre/mestre.gd | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+warning: in the working copy of 'rascunhos/cliente/cenas/mestre/mestre.gd', LF will be replaced by CRLF the next time Git touches it
+-	_abas.get_tab_bar().minimum_size_changed.connect(_ao_mudar_barra_abas)
++	pass  # MUTACAO (D-AUD-14-SEGUIMENTO-MUTACAO): sem a ligação, a folha não se volta a medir
+== ficheiro reposto: git diff vazio em rascunhos/cliente/cenas/mestre/mestre.gd
+== com a mutação: rc=1 · falhas=4 (do bloco D-AUD-14: 1+1+1+1) · «ecrã do Mestre: 4 falha(s), 0 sem medida» · erros de script=0
+  FALHA (1600, 900) directo: a folha é a da letra actual (864 = 883 unidades)
+  FALHA (800, 450): a folha é a da letra actual (943 = 1231 unidades)
+  MEDIDA MESTRE-LARGURA (1600, 900) directo=880 px depois de (800, 450)=712 px
+  FALHA (800, 450) → (1600, 900): a folha é a da letra actual (1066 = 883 unidades)
+  FALHA (1600, 900): o tabuleiro tem a mesma largura aberto directo (880 px) e depois de (800, 450) (712 px)
+MUTACAO APANHADA: 4 falhas, as quatro do bloco D-AUD-14; o teste da largura dispara.
+# saída: 0
