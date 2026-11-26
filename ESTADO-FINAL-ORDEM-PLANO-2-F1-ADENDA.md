@@ -93,9 +93,12 @@ saem como `<sede>`.
 |---|---|
 | `15bc45e` | o teste novo `d-aud-12-snapshot-novo.test.mjs` |
 | `dee1a39` | listas da retoma sincronizadas (1 novo, 0 tirados) |
-| (este) | provas e este ESTADO-FINAL |
-| (a seguir) | nota do CI |
+| `6622b3e` | provas e este ESTADO-FINAL |
+| (este) | nota do CI |
 
 ## 5. Nota do CI
 
-Fica no commit seguinte, com os números das corridas.
+No `6622b3e`, os três workflows deram success: **Testes dos rascunhos 45878098210**, **Sonda de privacidade 45878098178** e
+**Aparelhos (F2) 45878098146**. O teste novo entra sozinho no CI, porque o CI corre `testes/*.test.mjs`, e passa mesmo com o
+`--permission` da corrida (só usa dados em memória). O job `retoma-pc` está verde, o que quer dizer que as listas do `dee1a39`
+batem.
