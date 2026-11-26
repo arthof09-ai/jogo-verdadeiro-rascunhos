@@ -14,11 +14,13 @@
 // Código de saída 0 se tudo acontecer antes do tempo limite (120 s), 1 se não (ou se um canário chegar).
 import { randomUUID } from 'node:crypto';
 import { SENHAS } from '../testes/ajudantes.mjs';
+import { acusacao } from './canarios.mjs';
 
 const porta = Number(process.argv[2] ?? 8765);
 // ORDEM-PLANO-2-F1 (D-AUD-12): a criatura colocada tem número («Orc 1»); as salas de antes, «Orc».
 const eOrc = (n) => typeof n === 'string' && /^Orc( \d+)?$/.test(n);
-const CANARIOS = ['Orc Verdadeiro', '7777', 'CANARIO-DESGRACA', 'CANARIO-FANTASMA', '9137'];
+// Os canários e o detector estão em `canarios.mjs` (ORDEM-PLANO-2-F1-F8): os numéricos só casam como número inteiro e
+// fora dos campos de id, e a acusação traz a mensagem acusada completa.
 const marcos = [];
 const marcar = (t) => {
   if (!marcos.includes(t)) {
@@ -48,13 +50,13 @@ function falhar(texto) {
   process.exit(1);
 }
 
-function conferirCanarios(texto, onde) {
-  const vazados = CANARIOS.filter((c) => texto.includes(c));
-  if (vazados.length) falhar(`canários do Mestre no fio dela (${onde}): ${vazados.join(', ')}`);
+function conferirCanarios(mensagens, onde) {
+  const acusada = acusacao(mensagens, onde);
+  if (acusada) falhar(acusada);
 }
 
 function terminar() {
-  conferirCanarios(recebido.join('\n'), 'tudo junto, no fim'); // a rede de trás
+  conferirCanarios(recebido, 'tudo junto, no fim'); // a rede de trás: todas outra vez, uma a uma
   const vazias = FASES.filter((f) => conferidas[f] === 0);
   if (vazias.length) falhar('fases sem mensagens conferidas: ' + vazias.join(', '));
   const resumo = FASES.map((f) => `${f} ${conferidas[f]}`).join(', ');
@@ -87,7 +89,7 @@ function ligar() {
     if (m.type === 'ROOM_EVENT' && m.tipo === 'fim' && fase === 'voltar') fase = 'fim';
     if (m.type === 'ROOM_EVENT' && m.tipo === 'recomeco') fase = 'recomeço';
     conferidas[fase] += 1;
-    conferirCanarios(texto, `fase ${fase}, ${m.type}${m.tipo ? ' ' + m.tipo : ''}`);
+    conferirCanarios([texto], `fase ${fase}, ${m.type}${m.tipo ? ' ' + m.tipo : ''}`);
     if (m.type === 'ROOM_SNAPSHOT' && fase === 'voltar') marcar('snapshot do voltar visto');
     if (m.type === 'ROOM_SNAPSHOT' && fase === 'recomeço') marcar('snapshot do recomeço visto');
     if (Number.isInteger(m.revision) && m.revision > revision) revision = m.revision;
