@@ -114,8 +114,8 @@ comentada.
 | `63fd6e2` | J-F5: o teste e as provas |
 | `e33a40b` | J-F6: o diff regenerado |
 | `d0c88c2` | listas da retoma sincronizadas (0 novos, 0 tirados; `d-aud-12-snapshot-novo.test.mjs` `90267348…` → `9c2d44e7…`) |
-| (este) | este ESTADO-FINAL |
-| (a seguir) | nota do CI |
+| `0a92b26` | este ESTADO-FINAL |
+| (este+1) | nota do CI |
 
 Ambiente: Node v26.13.0, Python 3.12.10, Godot 4.7.2 `--headless`. Privacidade: só fichas fictícias, os caminhos do PC saem
 como `<sede>`, e a sonda dos caminhos está limpa (0 novas). Um incidente sem consequência: no J-F4, o `sed` da redacção deu erro
@@ -123,4 +123,10 @@ depois do push. Conferi a seguir que os logs enviados não tinham nenhum caminho
 
 ## Nota do CI
 
-(no commit seguinte)
+No `0a92b26` (este ESTADO-FINAL), os três workflows deram success: **Testes dos rascunhos 45910449195**, **Sonda de
+privacidade 45910449112** e **Aparelhos (F2) 45910449238**. O job `retoma-pc` está verde, o que quer dizer que as listas do
+`d0c88c2` batem. O CI corre o `d-aud-12-snapshot-novo.test.mjs` novo dentro de `testes/*.test.mjs`.
+
+Pelo caminho, no `32a1a5b` (J-F4), o «Testes dos rascunhos» 45910157411 falhou só no `retoma-pc` («o clone nao bate com
+depois.txt»). O teste tinha mudado de hash antes de as listas serem sincronizadas no `d0c88c2`. Todos os outros jobs desse run
+deram success.
