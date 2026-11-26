@@ -144,6 +144,10 @@ test('D-AUD-12 adenda: a sala REABERTA do journal, a jogadora à espera — o sn
   const h = entrarEm(sala2, 'heroina', '10.0.0.9');
   const lobby = snapshotsEm(h.mensagens).at(-1);
   assert.equal(lobby.fase, 'lobby', 'à espera do Mestre: só o lobby');
+  // J-F5 (PLANO-2-F1-ADENDA-J-F1-J-F6): o lobby da espera não traz figuras — medido, não só lido no código.
+  registar('sala-reaberta-lobby-heroina', lobby);
+  assert.ok(Array.isArray(lobby.figuras), 'o snapshot do lobby tem a lista de figuras');
+  assert.equal(lobby.figuras.length, 0, 'à espera do Mestre: o snapshot do lobby traz 0 figuras');
   const rm = entrarEm(sala2, 'mestre', '10.0.0.8');
   const snap = rm.saidas.filter((s) => s.seatId === h.seatId && s.msg.type === 'ROOM_SNAPSHOT').map((s) => s.msg).at(-1);
   assert.ok(snap, 'o Mestre entra: a jogadora recebe o snapshot da batalha');
