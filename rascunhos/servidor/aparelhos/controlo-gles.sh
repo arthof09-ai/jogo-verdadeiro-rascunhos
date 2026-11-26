@@ -46,7 +46,7 @@ python3 - "$APK_JOGO" "$T/controlo-gles.apk" <<'EOF' | tee "$SAIDA/controlo-gles
 import sys, zipfile, hashlib
 for n in ('lib/x86_64/libgodot_android.so', 'classes.dex'):
     h = [hashlib.sha256(zipfile.ZipFile(f).read(n)).hexdigest() for f in sys.argv[1:3]]
-    print('%s jogo=%s controlo=%s %s' % (n, h[0][:16], h[1][:16], 'IGUAL' if h[0] == h[1] else 'DIFERENTE'))
+    print('%s jogo=%s controlo=%s %s' % (n, h[0], h[1], 'IGUAL' if h[0] == h[1] else 'DIFERENTE'))
 EOF
 adb wait-for-device
 adb shell am force-stop "$PACOTE" || true
