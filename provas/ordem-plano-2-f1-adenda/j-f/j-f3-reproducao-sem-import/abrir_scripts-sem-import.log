@@ -1,0 +1,256 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ok    res://arte/ambiente/color_script.gd
+SCRIPT ERROR: Parse Error: Could not find type "AplicadorPerfil" in the current scope.
+   at: GDScript::reload (res://arte/cenas/clareira_prova.gd:57)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Parse Error: Could not find type "ColorScript" in the current scope.
+   at: GDScript::reload (res://arte/cenas/clareira_prova.gd:60)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Parse Error: Identifier "ColorScript" not declared in the current scope.
+   at: GDScript::reload (res://arte/cenas/clareira_prova.gd:76)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Parse Error: Identifier "AplicadorPerfil" not declared in the current scope.
+   at: GDScript::reload (res://arte/cenas/clareira_prova.gd:121)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+ERROR: Failed to load script "res://arte/cenas/clareira_prova.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+FALHA res://arte/cenas/clareira_prova.gd
+ok    res://arte/clima/clima.gd
+ok    res://arte/clima/integrador_vento.gd
+ok    res://arte/ferramentas/capturar_kit.gd
+ok    res://arte/perfis/aplicar_perfil.gd
+SCRIPT ERROR: Parse Error: Identifier "AplicadorPerfil" not declared in the current scope.
+   at: GDScript::reload (res://arte/perfis/escolha_perfil.gd:37)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Parse Error: Cannot infer the type of "nome" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://arte/perfis/escolha_perfil.gd:37)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Parse Error: Identifier "AplicadorPerfil" not declared in the current scope.
+   at: GDScript::reload (res://arte/perfis/escolha_perfil.gd:43)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Parse Error: Cannot infer the type of "chave" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://arte/perfis/escolha_perfil.gd:43)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+ERROR: Failed to load script "res://arte/perfis/escolha_perfil.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+FALHA res://arte/perfis/escolha_perfil.gd
+ok    res://arte/pincel/gerar_pincel.gd
+ok    res://autojogo/autojogo.gd
+ok    res://autojogo/ia_bancada.gd
+ok    res://autojogo/lugar_bancada.gd
+ok    res://camera/camera_mesa.gd
+SCRIPT ERROR: Parse Error: Could not find type "AplicadorPerfil" in the current scope.
+   at: GDScript::reload (res://cenas/arena/arena.gd:94)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Parse Error: Could not resolve external class member "ligar_perfil".
+   at: GDScript::reload (res://cenas/arena/arena.gd:161)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Parse Error: Could not resolve external class member "perfil_no_mapa".
+   at: GDScript::reload (res://cenas/arena/arena.gd:894)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+ERROR: Failed to load script "res://cenas/arena/arena.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+FALHA res://cenas/arena/arena.gd
+ok    res://cenas/arena/assentamento.gd
+ok    res://cenas/arena/bacias_do_relevo.gd
+SCRIPT ERROR: Parse Error: Could not find type "AplicadorPerfil" in the current scope.
+   at: GDScript::reload (res://cenas/arena/campo_da_mesa.gd:281)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Parse Error: Could not find type "AplicadorPerfil" in the current scope.
+   at: GDScript::reload (res://cenas/arena/campo_da_mesa.gd:288)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Parse Error: Could not find type "AplicadorPerfil" in the current scope.
+   at: GDScript::reload (res://cenas/arena/campo_da_mesa.gd:295)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Parse Error: Identifier "AplicadorPerfil" not declared in the current scope.
+   at: GDScript::reload (res://cenas/arena/campo_da_mesa.gd:296)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Parse Error: Identifier "AplicadorPerfil" not declared in the current scope.
+   at: GDScript::reload (res://cenas/arena/campo_da_mesa.gd:298)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+ERROR: Failed to load script "res://cenas/arena/campo_da_mesa.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+FALHA res://cenas/arena/campo_da_mesa.gd
+ok    res://cenas/arena/clima_arena.gd
+ok    res://cenas/arena/ferramentas/capturar_arena.gd
+SCRIPT ERROR: Parse Error: Identifier "AplicadorPerfil" not declared in the current scope.
+   at: GDScript::reload (res://cenas/arena/ferramentas/provar_assentamento.gd:261)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://cenas/arena/ferramentas/capturar_terreno_44.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+ERROR: Failed to load script "res://cenas/arena/ferramentas/capturar_terreno_44.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+ok    res://cenas/arena/ferramentas/capturar_terreno_44.gd
+ok    res://cenas/arena/ferramentas/chuva_no_mapa.gd
+ok    res://cenas/arena/ferramentas/clima_no_mapa.gd
+ok    res://cenas/arena/ferramentas/exportar_terreno.gd
+ok    res://cenas/arena/ferramentas/medir_mapa_jogavel.gd
+ok    res://cenas/arena/ferramentas/medir_pixeis_neve.gd
+ok    res://cenas/arena/ferramentas/medir_toque_rasante.gd
+ok    res://cenas/arena/ferramentas/neve_no_mapa.gd
+SCRIPT ERROR: Parse Error: Identifier "AplicadorPerfil" not declared in the current scope.
+   at: GDScript::reload (res://cenas/arena/ferramentas/provar_assentamento.gd:261)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+ERROR: Failed to load script "res://cenas/arena/ferramentas/provar_assentamento.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+FALHA res://cenas/arena/ferramentas/provar_assentamento.gd
+ok    res://cenas/arena/ferramentas/provar_pes_bloqueadas.gd
+ok    res://cenas/arena/ferramentas/provar_terreno_servidor.gd
+ok    res://cenas/arena/ferramentas/recortar_centro.gd
+ok    res://cenas/arena/ferramentas/sonda_zona.gd
+ok    res://cenas/arena/ferramentas/sondar_zonas_terreno.gd
+ok    res://cenas/comum/marcador_alvo.gd
+ok    res://cenas/comum/marcador_figura.gd
+ok    res://cenas/comum/nomes_sem_sobrepor.gd
+ok    res://cenas/lobby/lobby.gd
+ok    res://cenas/mestre/aba_agir.gd
+ok    res://cenas/mestre/aba_mesa.gd
+ok    res://cenas/mestre/aba_registo.gd
+SCRIPT ERROR: Parse Error: Could not find type "AplicadorPerfil" in the current scope.
+   at: GDScript::reload (res://cenas/mestre/arena_mestre.gd:84)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Parse Error: Identifier "AplicadorPerfil" not declared in the current scope.
+   at: GDScript::reload (res://cenas/mestre/arena_mestre.gd:161)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Parse Error: Could not resolve external class member "ligar_perfil".
+   at: GDScript::reload (res://cenas/mestre/arena_mestre.gd:164)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Parse Error: Could not resolve external class member "perfil_no_mapa".
+   at: GDScript::reload (res://cenas/mestre/arena_mestre.gd:232)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+ERROR: Failed to load script "res://cenas/mestre/arena_mestre.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+FALHA res://cenas/mestre/arena_mestre.gd
+ok    res://cenas/mestre/camara_livre.gd
+ok    res://cenas/mestre/controlos_camara_livre.gd
+ok    res://cenas/mestre/ferramentas/capturar_mestre_45.gd
+ok    res://cenas/mestre/ferramentas/medir_perfil_mestre_52.gd
+ok    res://cenas/mestre/ferramentas/provar_mestre_no_relevo.gd
+ok    res://cenas/mestre/ferramentas/provar_molde_54.gd
+ok    res://cenas/mestre/ferramentas/provar_recusa_no_ecra.gd
+SCRIPT ERROR: Parse Error: Identifier "AplicadorPerfil" not declared in the current scope.
+   at: GDScript::reload (res://cenas/mestre/mestre.gd:1399)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+SCRIPT ERROR: Parse Error: Cannot infer the type of "chave" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://cenas/mestre/mestre.gd:1399)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+ERROR: Failed to load script "res://cenas/mestre/mestre.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+FALHA res://cenas/mestre/mestre.gd
+ok    res://cenas/mestre/modelo_mestre.gd
+ok    res://cenas/mestre/textos_mestre.gd
+ok    res://dados/apresentacao.gd
+ok    res://estado/estado.gd
+ok    res://hud/caixa_ordem.gd
+ok    res://hud/frases_batalha.gd
+ok    res://hud/hud.gd
+ok    res://hud/ordem_turnos.gd
+ok    res://hud/retratos.gd
+ok    res://mapa/floresta/arvore_ancestral.gd
+ok    res://mapa/floresta/camera_livre.gd
+ok    res://mapa/floresta/campo_floresta.gd
+ok    res://mapa/floresta/ciclo_dia.gd
+ok    res://mapa/floresta/erros_floresta.gd
+ok    res://mapa/floresta/ferramentas/capturar_floresta.gd
+ok    res://mapa/floresta/ferramentas/cozer_camadas.gd
+ok    res://mapa/floresta/ferramentas/cozer_ceu.gd
+ok    res://mapa/floresta/ferramentas/filmar_ancestral.gd
+ok    res://mapa/floresta/ferramentas/filmar_dia.gd
+ok    res://mapa/floresta/ferramentas/folha_contacto.gd
+ok    res://mapa/floresta/ferramentas/provar_altura.gd
+ok    res://mapa/floresta/ferramentas/provar_ancestral.gd
+ok    res://mapa/floresta/ferramentas/provar_ciclo_vento.gd
+ok    res://mapa/floresta/ferramentas/provar_costura.gd
+ok    res://mapa/floresta/ferramentas/provar_estacoes.gd
+ok    res://mapa/floresta/ferramentas/provar_fases_lua.gd
+ok    res://mapa/floresta/formas_floresta.gd
+ok    res://mapa/floresta/grelha_floresta.gd
+ok    res://mapa/floresta/lago_floresta.gd
+ok    res://mapa/floresta/lote_malha.gd
+ok    res://mapa/floresta/molde_floresta.gd
+ok    res://mapa/floresta/paleta_floresta.gd
+ok    res://mapa/floresta/rastro_relva.gd
+ok    res://mapa/floresta/relevo_floresta.gd
+ok    res://mapa/floresta/relva_floresta.gd
+ok    res://mapa/floresta/sombras_floresta.gd
+ok    res://mapa/floresta/vento_mundo.gd
+ok    res://medicao/medicao.gd
+ok    res://rede/fila_intencoes.gd
+ok    res://rede/rede.gd
+ok    res://rede/uuid.gd
+ok    res://rede/validar_entrada.gd
+ok    res://testes/abrir_clareira.gd
+ok    res://testes/abrir_mestre.gd
+ok    res://testes/aparelhos_f2.gd
+ok    res://testes/caixa_janela.gd
+ok    res://testes/caixa_jogadora.gd
+ok    res://testes/camera_segue.gd
+ok    res://testes/canario_privacidade.gd
+ok    res://testes/casos_retrato.gd
+ok    res://testes/clima_forte.gd
+ok    res://testes/converter_nado.gd
+ok    res://testes/e2e_mestre.gd
+ok    res://testes/foto_mestre.gd
+ok    res://testes/foto_sem_caixa.gd
+ok    res://testes/hud_acoes.gd
+ok    res://testes/medir_ligacao_arranque.gd
+ok    res://testes/medir_mestre.gd
+ok    res://testes/medir_painel_config.gd
+SCRIPT ERROR: Parse Error: Identifier "AplicadorPerfil" not declared in the current scope.
+   at: GDScript::reload (res://testes/pecas_mestre.gd:1843)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+ERROR: Failed to load script "res://testes/pecas_mestre.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _verificar (res://testes/abrir_scripts.gd:27)
+FALHA res://testes/pecas_mestre.gd
+ok    res://testes/rodar_testes.gd
+ok    res://testes/video_clima.gd
+ok    res://testes/video_grama.gd
+ok    res://testes/video_lago.gd
+ok    res://testes/video_ordem.gd
+113 scripts, 8 falhas

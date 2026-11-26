@@ -1,0 +1,415 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Could not find version of build tools that matches Target SDK, using 34.0.0
+[   0% ] first_scan_filesystem | Started Inicialização do Projeto (5 steps)
+[   0% ] first_scan_filesystem | Escaneando estrutura de arquivos...
+[  16% ] first_scan_filesystem | Carregando nomes de classe globais...
+[  33% ] first_scan_filesystem | Verificando GDExtensions...
+[  50% ] first_scan_filesystem | Criando scripts autoload...
+[  66% ] first_scan_filesystem | Inicializando plugins...
+[  83% ] first_scan_filesystem | Iniciando escaneamento de arquivos...
+[ DONE ] first_scan_filesystem
+
+[   0% ] update_scripts_classes | Started Registrando classes globais... (115 steps)
+[   0% ] update_scripts_classes | ColorScript
+[   0% ] update_scripts_classes | 
+[   1% ] update_scripts_classes | 
+[   2% ] update_scripts_classes | 
+[   3% ] update_scripts_classes | 
+[   4% ] update_scripts_classes | AplicadorPerfil
+[   5% ] update_scripts_classes | 
+[   6% ] update_scripts_classes | 
+[   6% ] update_scripts_classes | 
+[   7% ] update_scripts_classes | 
+[   8% ] update_scripts_classes | 
+[   9% ] update_scripts_classes | 
+[  10% ] update_scripts_classes | 
+[  11% ] update_scripts_classes | 
+[  12% ] update_scripts_classes | 
+[  12% ] update_scripts_classes | 
+[  13% ] update_scripts_classes | 
+[  14% ] update_scripts_classes | 
+[  15% ] update_scripts_classes | 
+[  16% ] update_scripts_classes | 
+[  17% ] update_scripts_classes | 
+[  18% ] update_scripts_classes | 
+[  18% ] update_scripts_classes | 
+[  19% ] update_scripts_classes | 
+[  20% ] update_scripts_classes | 
+[  21% ] update_scripts_classes | 
+[  22% ] update_scripts_classes | 
+[  23% ] update_scripts_classes | 
+[  24% ] update_scripts_classes | 
+[  25% ] update_scripts_classes | 
+[  25% ] update_scripts_classes | 
+[  26% ] update_scripts_classes | 
+[  27% ] update_scripts_classes | 
+[  28% ] update_scripts_classes | 
+[  29% ] update_scripts_classes | 
+[  30% ] update_scripts_classes | 
+[  31% ] update_scripts_classes | 
+[  31% ] update_scripts_classes | 
+[  32% ] update_scripts_classes | 
+[  33% ] update_scripts_classes | 
+[  34% ] update_scripts_classes | 
+[  35% ] update_scripts_classes | 
+[  36% ] update_scripts_classes | 
+[  37% ] update_scripts_classes | 
+[  37% ] update_scripts_classes | 
+[  38% ] update_scripts_classes | 
+[  39% ] update_scripts_classes | 
+[  40% ] update_scripts_classes | 
+[  41% ] update_scripts_classes | 
+[  42% ] update_scripts_classes | 
+[  43% ] update_scripts_classes | 
+[  43% ] update_scripts_classes | 
+[  44% ] update_scripts_classes | 
+[  45% ] update_scripts_classes | 
+[  46% ] update_scripts_classes | 
+[  47% ] update_scripts_classes | 
+[  48% ] update_scripts_classes | 
+[  49% ] update_scripts_classes | 
+[  50% ] update_scripts_classes | 
+[  50% ] update_scripts_classes | 
+[  51% ] update_scripts_classes | 
+[  52% ] update_scripts_classes | 
+[  53% ] update_scripts_classes | 
+[  54% ] update_scripts_classes | 
+[  55% ] update_scripts_classes | 
+[  56% ] update_scripts_classes | 
+[  56% ] update_scripts_classes | 
+[  57% ] update_scripts_classes | 
+[  58% ] update_scripts_classes | 
+[  59% ] update_scripts_classes | 
+[  60% ] update_scripts_classes | 
+[  61% ] update_scripts_classes | 
+[  62% ] update_scripts_classes | 
+[  62% ] update_scripts_classes | 
+[  63% ] update_scripts_classes | 
+[  64% ] update_scripts_classes | 
+[  65% ] update_scripts_classes | 
+[  66% ] update_scripts_classes | 
+[  67% ] update_scripts_classes | 
+[  68% ] update_scripts_classes | 
+[  68% ] update_scripts_classes | 
+[  69% ] update_scripts_classes | 
+[  70% ] update_scripts_classes | 
+[  71% ] update_scripts_classes | 
+[  72% ] update_scripts_classes | 
+[  73% ] update_scripts_classes | 
+[  74% ] update_scripts_classes | 
+[  75% ] update_scripts_classes | 
+[  75% ] update_scripts_classes | 
+[  76% ] update_scripts_classes | 
+[  77% ] update_scripts_classes | 
+[  78% ] update_scripts_classes | 
+[  79% ] update_scripts_classes | 
+[  80% ] update_scripts_classes | 
+[  81% ] update_scripts_classes | 
+[  81% ] update_scripts_classes | 
+[  82% ] update_scripts_classes | 
+[  83% ] update_scripts_classes | 
+[  84% ] update_scripts_classes | 
+[  85% ] update_scripts_classes | 
+[  86% ] update_scripts_classes | 
+[  87% ] update_scripts_classes | 
+[  87% ] update_scripts_classes | 
+[  88% ] update_scripts_classes | 
+[  89% ] update_scripts_classes | 
+[  90% ] update_scripts_classes | 
+[  91% ] update_scripts_classes | 
+[  92% ] update_scripts_classes | 
+[  93% ] update_scripts_classes | 
+[  93% ] update_scripts_classes | 
+[  94% ] update_scripts_classes | 
+[  95% ] update_scripts_classes | 
+[  96% ] update_scripts_classes | 
+[  97% ] update_scripts_classes | 
+[  98% ] update_scripts_classes | 
+[ DONE ] update_scripts_classes
+
+[   0% ] _update_scan_actions | Started Escaneando ações... (88 steps)
+[   0% ] _update_scan_actions | ceu_pinceladas.png
+[   1% ] _update_scan_actions | pincel_mascara.png
+[   2% ] _update_scan_actions | rampa_casca.png
+[   3% ] _update_scan_actions | rampa_chao.png
+[   4% ] _update_scan_actions | rampa_folhagem.png
+[   5% ] _update_scan_actions | rampa_metal.png
+[   6% ] _update_scan_actions | rampa_pedra.png
+[   7% ] _update_scan_actions | rampa_pele.png
+[   8% ] _update_scan_actions | rampa_tecido.png
+[  10% ] _update_scan_actions | 01_centro-em-jogo-mover_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m.jpg
+[  11% ] _update_scan_actions | 01_centro-em-jogo-mover_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m_MOVIMENTO-2s.png
+[  12% ] _update_scan_actions | 02_centro-em-jogo-ataque_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m.jpg
+[  13% ] _update_scan_actions | 03_canto-NO_olha-centro_360_foco-x-14,3-z-14,3_rumo-135_incl+32_dist+18,0m.jpg
+[  14% ] _update_scan_actions | 04_canto-NE_olha-centro_360_foco-x+14,3-z-14,3_rumo+135_incl+32_dist+18,0m.jpg
+[  15% ] _update_scan_actions | 05_canto-SE_olha-centro_360_foco-x+14,3-z+14,3_rumo+45_incl+32_dist+18,0m.jpg
+[  16% ] _update_scan_actions | 06_canto-SO_olha-centro_360_foco-x-14,3-z+14,3_rumo-45_incl+32_dist+18,0m.jpg
+[  17% ] _update_scan_actions | 07_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0.jpg
+[  19% ] _update_scan_actions | 07_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0_MOVIMENTO-2s.png
+[  20% ] _update_scan_actions | 08_panorama_PANORAMA_foco-x+0,0-z+0,0_rumo+0_incl+78_dist+26,1m.jpg
+[  21% ] _update_scan_actions | 09_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+0_incl+20_dist+45,0m.jpg
+[  22% ] _update_scan_actions | 10_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+45_incl+20_dist+45,0m.jpg
+[  23% ] _update_scan_actions | 11_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+90_incl+20_dist+45,0m.jpg
+[  24% ] _update_scan_actions | 12_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+135_incl+20_dist+45,0m.jpg
+[  25% ] _update_scan_actions | 13_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+180_incl+20_dist+45,0m.jpg
+[  26% ] _update_scan_actions | 14_volta360-rasante_360_foco-x+0,0-z+0,0_rumo-135_incl+20_dist+45,0m.jpg
+[  28% ] _update_scan_actions | 15_volta360-rasante_360_foco-x+0,0-z+0,0_rumo-90_incl+20_dist+45,0m.jpg
+[  29% ] _update_scan_actions | 16_volta360-rasante_360_foco-x+0,0-z+0,0_rumo-45_incl+20_dist+45,0m.jpg
+[  30% ] _update_scan_actions | 17_centro-em-jogo-perfil-BAIXO_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m.jpg
+[  31% ] _update_scan_actions | 18_centro-em-jogo-perfil-MEDIO_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m.jpg
+[  32% ] _update_scan_actions | 19_perto-figuras-rasante_360_foco-x-2,3-z-0,8_rumo+200_incl+20_dist+9,0m.jpg
+[  33% ] _update_scan_actions | 20_perto-encosta-NO_360_foco-x-9,8-z-8,3_rumo+160_incl+20_dist+10,4m.jpg
+[  34% ] _update_scan_actions | ancestral_face-leste_camara-a-1374m_olhos-101m_fov12.jpg
+[  35% ] _update_scan_actions | ancestral_face-norte_camara-a-1374m_olhos-101m_fov12.jpg
+[  37% ] _update_scan_actions | ancestral_face-oeste_camara-a-1374m_olhos-101m_fov12.jpg
+[  38% ] _update_scan_actions | ancestral_face-sul_camara-a-1374m_olhos-101m_fov12.jpg
+[  39% ] _update_scan_actions | _folha_filme_dia.jpg
+[  40% ] _update_scan_actions | _folha_filme_vento.jpg
+[  41% ] _update_scan_actions | _folha_horas.jpg
+[  42% ] _update_scan_actions | c43_01h00_noite.jpg
+[  43% ] _update_scan_actions | c43_04h00_noite.jpg
+[  44% ] _update_scan_actions | c43_05h30_madrugada.jpg
+[  46% ] _update_scan_actions | c43_07h00_manha.jpg
+[  47% ] _update_scan_actions | c43_10h00_dia.jpg
+[  48% ] _update_scan_actions | c43_13h00_dia.jpg
+[  49% ] _update_scan_actions | c43_16h00_dia.jpg
+[  50% ] _update_scan_actions | c43_18h30_entardecer.jpg
+[  51% ] _update_scan_actions | c43_19h45_noite.jpg
+[  52% ] _update_scan_actions | c43_22h00_noite.jpg
+[  53% ] _update_scan_actions | _folha_fases.jpg
+[  55% ] _update_scan_actions | c55_22h00_1-nova.jpg
+[  56% ] _update_scan_actions | c55_22h00_2-crescente.jpg
+[  57% ] _update_scan_actions | c55_22h00_3-cheia.jpg
+[  58% ] _update_scan_actions | c55_22h00_4-minguante.jpg
+[  59% ] _update_scan_actions | _folha_estacoes.jpg
+[  60% ] _update_scan_actions | c56_18h00_1-primavera.jpg
+[  61% ] _update_scan_actions | c56_18h00_2-verao.jpg
+[  62% ] _update_scan_actions | c56_18h00_3-outono.jpg
+[  64% ] _update_scan_actions | c56_18h00_4-inverno.jpg
+[  65% ] _update_scan_actions | _folha_1.jpg
+[  66% ] _update_scan_actions | _folha_2.jpg
+[  67% ] _update_scan_actions | _folha_3.jpg
+[  68% ] _update_scan_actions | _folha_4.jpg
+[  69% ] _update_scan_actions | _folha_5.jpg
+[  70% ] _update_scan_actions | 01_centro_olha-norte_x+0,0_z+0,0_olhos1,7m_az-7,0_incl+3,0.jpg
+[  71% ] _update_scan_actions | 01_centro_olha-norte_x+0,0_z+0,0_olhos1,7m_az-7,0_incl+3,0_MOVIMENTO-2s.png
+[  73% ] _update_scan_actions | 01_centro_olha-norte_x+0,0_z+0,0_olhos1,7m_az-7,0_incl+3,0_SO-FUNDO.jpg
+[  74% ] _update_scan_actions | 02_centro_olha-leste_x+0,0_z+0,0_olhos1,7m_az+90,0_incl+3,0.jpg
+[  75% ] _update_scan_actions | 03_centro_olha-sul_x+0,0_z+0,0_olhos1,7m_az+180,0_incl+3,0.jpg
+[  76% ] _update_scan_actions | 04_centro_olha-oeste_x+0,0_z+0,0_olhos1,7m_az-90,0_incl+3,0.jpg
+[  77% ] _update_scan_actions | 05_canto-NO_olha-centro_x-25,5_z-28,5_olhos1,7m_az+138,0_incl+0,0.jpg
+[  78% ] _update_scan_actions | 06_canto-NE_olha-centro_x+29,0_z-26,0_olhos1,7m_az-132,0_incl+0,0.jpg
+[  79% ] _update_scan_actions | 07_canto-SE_olha-centro_x+25,0_z+29,5_olhos1,7m_az-40,0_incl+0,0.jpg
+[  80% ] _update_scan_actions | 08_canto-SO_olha-centro_x-29,5_z+25,5_olhos1,7m_az+49,0_incl+0,0.jpg
+[  82% ] _update_scan_actions | 09_canto-NO_olha-fora_x-25,5_z-28,5_olhos1,7m_az-45,0_incl+4,0.jpg
+[  83% ] _update_scan_actions | 10_canto-NE_olha-fora_x+29,0_z-26,0_olhos1,7m_az+45,0_incl+4,0.jpg
+[  84% ] _update_scan_actions | 11_canto-SE_olha-fora_x+25,0_z+29,5_olhos1,7m_az+135,0_incl+4,0.jpg
+[  85% ] _update_scan_actions | 12_canto-SO_olha-fora_x-29,5_z+25,5_olhos1,7m_az-135,0_incl+4,0.jpg
+[  86% ] _update_scan_actions | 13_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0.jpg
+[  87% ] _update_scan_actions | 13_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0_MOVIMENTO-2s.png
+[  88% ] _update_scan_actions | 13_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0_SO-FUNDO.jpg
+[  89% ] _update_scan_actions | 14_alto_mapa-inteiro_x+0,0_z+46,0_olhos34,0m_az+0,0_incl-40,0.jpg
+[  91% ] _update_scan_actions | 15_centro_olha-nordeste_x+0,0_z+0,0_olhos1,7m_az+45,0_incl+3,0.jpg
+[  92% ] _update_scan_actions | 16_centro_olha-sueste_x+0,0_z+0,0_olhos1,7m_az+135,0_incl+3,0.jpg
+[  93% ] _update_scan_actions | 17_centro_olha-sudoeste_x+0,0_z+0,0_olhos1,7m_az-135,0_incl+3,0.jpg
+[  94% ] _update_scan_actions | 18_centro_olha-noroeste_x+0,0_z+0,0_olhos1,7m_az-45,0_incl+3,0.jpg
+[  95% ] _update_scan_actions | ceu_camadas_v1.png
+[  96% ] _update_scan_actions | ceu_floresta_v2.png
+[  97% ] _update_scan_actions | ceu_floresta_v3.png
+[ DONE ] _update_scan_actions
+
+[   0% ] reimport | Started (Re)Importando Recursos (88 steps)
+[   0% ] reimport | Preparando arquivos para reimportação...
+[   1% ] reimport | Preparando arquivos para reimportação...
+[   2% ] reimport | Preparando arquivos para reimportação...
+[   3% ] reimport | Preparando arquivos para reimportação...
+[   4% ] reimport | Preparando arquivos para reimportação...
+[   5% ] reimport | Preparando arquivos para reimportação...
+[   6% ] reimport | Preparando arquivos para reimportação...
+[   7% ] reimport | Preparando arquivos para reimportação...
+[   8% ] reimport | Preparando arquivos para reimportação...
+[  10% ] reimport | Preparando arquivos para reimportação...
+[  11% ] reimport | Preparando arquivos para reimportação...
+[  12% ] reimport | Preparando arquivos para reimportação...
+[  13% ] reimport | Preparando arquivos para reimportação...
+[  14% ] reimport | Preparando arquivos para reimportação...
+[  15% ] reimport | Preparando arquivos para reimportação...
+[  16% ] reimport | Preparando arquivos para reimportação...
+[  17% ] reimport | Preparando arquivos para reimportação...
+[  19% ] reimport | Preparando arquivos para reimportação...
+[  20% ] reimport | Preparando arquivos para reimportação...
+[  21% ] reimport | Preparando arquivos para reimportação...
+[  22% ] reimport | Preparando arquivos para reimportação...
+[  23% ] reimport | Preparando arquivos para reimportação...
+[  24% ] reimport | Preparando arquivos para reimportação...
+[  25% ] reimport | Preparando arquivos para reimportação...
+[  26% ] reimport | Preparando arquivos para reimportação...
+[  28% ] reimport | Preparando arquivos para reimportação...
+[  29% ] reimport | Preparando arquivos para reimportação...
+[  30% ] reimport | Preparando arquivos para reimportação...
+[  31% ] reimport | Preparando arquivos para reimportação...
+[  32% ] reimport | Preparando arquivos para reimportação...
+[  33% ] reimport | Preparando arquivos para reimportação...
+[  34% ] reimport | Preparando arquivos para reimportação...
+[  35% ] reimport | Preparando arquivos para reimportação...
+[  37% ] reimport | Preparando arquivos para reimportação...
+[  38% ] reimport | Preparando arquivos para reimportação...
+[  39% ] reimport | Preparando arquivos para reimportação...
+[  40% ] reimport | Preparando arquivos para reimportação...
+[  41% ] reimport | Preparando arquivos para reimportação...
+[  42% ] reimport | Preparando arquivos para reimportação...
+[  43% ] reimport | Preparando arquivos para reimportação...
+[  44% ] reimport | Preparando arquivos para reimportação...
+[  46% ] reimport | Preparando arquivos para reimportação...
+[  47% ] reimport | Preparando arquivos para reimportação...
+[  48% ] reimport | Preparando arquivos para reimportação...
+[  49% ] reimport | Preparando arquivos para reimportação...
+[  50% ] reimport | Preparando arquivos para reimportação...
+[  51% ] reimport | Preparando arquivos para reimportação...
+[  52% ] reimport | Preparando arquivos para reimportação...
+[  53% ] reimport | Preparando arquivos para reimportação...
+[  55% ] reimport | Preparando arquivos para reimportação...
+[  56% ] reimport | Preparando arquivos para reimportação...
+[  57% ] reimport | Preparando arquivos para reimportação...
+[  58% ] reimport | Preparando arquivos para reimportação...
+[  59% ] reimport | Preparando arquivos para reimportação...
+[  60% ] reimport | Preparando arquivos para reimportação...
+[  61% ] reimport | Preparando arquivos para reimportação...
+[  62% ] reimport | Preparando arquivos para reimportação...
+[  64% ] reimport | Preparando arquivos para reimportação...
+[  65% ] reimport | Preparando arquivos para reimportação...
+[  66% ] reimport | Preparando arquivos para reimportação...
+[  67% ] reimport | Preparando arquivos para reimportação...
+[  68% ] reimport | Preparando arquivos para reimportação...
+[  69% ] reimport | Preparando arquivos para reimportação...
+[  70% ] reimport | Preparando arquivos para reimportação...
+[  71% ] reimport | Preparando arquivos para reimportação...
+[  73% ] reimport | Preparando arquivos para reimportação...
+[  74% ] reimport | Preparando arquivos para reimportação...
+[  75% ] reimport | Preparando arquivos para reimportação...
+[  76% ] reimport | Preparando arquivos para reimportação...
+[  77% ] reimport | Preparando arquivos para reimportação...
+[  78% ] reimport | Preparando arquivos para reimportação...
+[  79% ] reimport | Preparando arquivos para reimportação...
+[  80% ] reimport | Preparando arquivos para reimportação...
+[  82% ] reimport | Preparando arquivos para reimportação...
+[  83% ] reimport | Preparando arquivos para reimportação...
+[  84% ] reimport | Preparando arquivos para reimportação...
+[  85% ] reimport | Preparando arquivos para reimportação...
+[  86% ] reimport | Preparando arquivos para reimportação...
+[  87% ] reimport | Preparando arquivos para reimportação...
+[  88% ] reimport | Preparando arquivos para reimportação...
+[  89% ] reimport | Preparando arquivos para reimportação...
+[  91% ] reimport | Preparando arquivos para reimportação...
+[  92% ] reimport | Preparando arquivos para reimportação...
+[  93% ] reimport | Preparando arquivos para reimportação...
+[  94% ] reimport | Preparando arquivos para reimportação...
+[  95% ] reimport | Preparando arquivos para reimportação...
+[  96% ] reimport | Preparando arquivos para reimportação...
+[  97% ] reimport | Preparando arquivos para reimportação...
+[   0% ] reimport | Executando operações pré-reimportação...
+[   0% ] reimport | 01_centro_olha-norte_x+0,0_z+0,0_olhos1,7m_az-7,0_incl+3,0_SO-FUNDO.jpg
+[   1% ] reimport | 01_centro_olha-norte_x+0,0_z+0,0_olhos1,7m_az-7,0_incl+3,0_MOVIMENTO-2s.png
+[   1% ] reimport | 01_centro_olha-norte_x+0,0_z+0,0_olhos1,7m_az-7,0_incl+3,0_MOVIMENTO-2s.png
+[   2% ] reimport | 01_centro_olha-norte_x+0,0_z+0,0_olhos1,7m_az-7,0_incl+3,0.jpg
+[   3% ] reimport | _folha_5.jpg
+[   4% ] reimport | _folha_4.jpg
+[   5% ] reimport | _folha_3.jpg
+[   6% ] reimport | _folha_2.jpg
+[   7% ] reimport | _folha_1.jpg
+[   8% ] reimport | c56_18h00_4-inverno.jpg
+[  10% ] reimport | c56_18h00_3-outono.jpg
+[  11% ] reimport | c56_18h00_2-verao.jpg
+[  12% ] reimport | c56_18h00_1-primavera.jpg
+[  13% ] reimport | _folha_estacoes.jpg
+[  14% ] reimport | c55_22h00_4-minguante.jpg
+[  15% ] reimport | c55_22h00_3-cheia.jpg
+[  16% ] reimport | c55_22h00_2-crescente.jpg
+[  17% ] reimport | c55_22h00_1-nova.jpg
+[  19% ] reimport | _folha_fases.jpg
+[  20% ] reimport | c43_22h00_noite.jpg
+[  21% ] reimport | c43_19h45_noite.jpg
+[  22% ] reimport | c43_18h30_entardecer.jpg
+[  23% ] reimport | c43_16h00_dia.jpg
+[  24% ] reimport | ceu_floresta_v3.png
+[  25% ] reimport | ceu_floresta_v2.png
+[  26% ] reimport | ceu_camadas_v1.png
+[  28% ] reimport | 18_centro_olha-noroeste_x+0,0_z+0,0_olhos1,7m_az-45,0_incl+3,0.jpg
+[  29% ] reimport | 17_centro_olha-sudoeste_x+0,0_z+0,0_olhos1,7m_az-135,0_incl+3,0.jpg
+[  30% ] reimport | 16_centro_olha-sueste_x+0,0_z+0,0_olhos1,7m_az+135,0_incl+3,0.jpg
+[  31% ] reimport | 15_centro_olha-nordeste_x+0,0_z+0,0_olhos1,7m_az+45,0_incl+3,0.jpg
+[  32% ] reimport | 14_alto_mapa-inteiro_x+0,0_z+46,0_olhos34,0m_az+0,0_incl-40,0.jpg
+[  33% ] reimport | 13_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0_SO-FUNDO.jpg
+[  34% ] reimport | 13_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0_MOVIMENTO-2s.png
+[  35% ] reimport | 13_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0.jpg
+[  37% ] reimport | 12_canto-SO_olha-fora_x-29,5_z+25,5_olhos1,7m_az-135,0_incl+4,0.jpg
+[  38% ] reimport | 11_canto-SE_olha-fora_x+25,0_z+29,5_olhos1,7m_az+135,0_incl+4,0.jpg
+[  39% ] reimport | 10_canto-NE_olha-fora_x+29,0_z-26,0_olhos1,7m_az+45,0_incl+4,0.jpg
+[  40% ] reimport | 09_canto-NO_olha-fora_x-25,5_z-28,5_olhos1,7m_az-45,0_incl+4,0.jpg
+[  41% ] reimport | 08_canto-SO_olha-centro_x-29,5_z+25,5_olhos1,7m_az+49,0_incl+0,0.jpg
+[  42% ] reimport | 07_canto-SE_olha-centro_x+25,0_z+29,5_olhos1,7m_az-40,0_incl+0,0.jpg
+[  43% ] reimport | 06_canto-NE_olha-centro_x+29,0_z-26,0_olhos1,7m_az-132,0_incl+0,0.jpg
+[  43% ] reimport | 06_canto-NE_olha-centro_x+29,0_z-26,0_olhos1,7m_az-132,0_incl+0,0.jpg
+[  44% ] reimport | 05_canto-NO_olha-centro_x-25,5_z-28,5_olhos1,7m_az+138,0_incl+0,0.jpg
+[  46% ] reimport | 04_centro_olha-oeste_x+0,0_z+0,0_olhos1,7m_az-90,0_incl+3,0.jpg
+[  47% ] reimport | 03_centro_olha-sul_x+0,0_z+0,0_olhos1,7m_az+180,0_incl+3,0.jpg
+[  48% ] reimport | 02_centro_olha-leste_x+0,0_z+0,0_olhos1,7m_az+90,0_incl+3,0.jpg
+[  49% ] reimport | 11_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+90_incl+20_dist+45,0m.jpg
+[  50% ] reimport | 10_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+45_incl+20_dist+45,0m.jpg
+[  51% ] reimport | 09_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+0_incl+20_dist+45,0m.jpg
+[  52% ] reimport | 08_panorama_PANORAMA_foco-x+0,0-z+0,0_rumo+0_incl+78_dist+26,1m.jpg
+[  53% ] reimport | 07_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0_MOVIMENTO-2s.png
+[  55% ] reimport | 07_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0.jpg
+[  56% ] reimport | 06_canto-SO_olha-centro_360_foco-x-14,3-z+14,3_rumo-45_incl+32_dist+18,0m.jpg
+[  57% ] reimport | 05_canto-SE_olha-centro_360_foco-x+14,3-z+14,3_rumo+45_incl+32_dist+18,0m.jpg
+[  58% ] reimport | 04_canto-NE_olha-centro_360_foco-x+14,3-z-14,3_rumo+135_incl+32_dist+18,0m.jpg
+[  59% ] reimport | 03_canto-NO_olha-centro_360_foco-x-14,3-z-14,3_rumo-135_incl+32_dist+18,0m.jpg
+[  60% ] reimport | 02_centro-em-jogo-ataque_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m.jpg
+[  61% ] reimport | 01_centro-em-jogo-mover_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m_MOVIMENTO-2s.png
+[  62% ] reimport | 01_centro-em-jogo-mover_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m.jpg
+[  64% ] reimport | rampa_tecido.png
+[  65% ] reimport | rampa_pele.png
+[  66% ] reimport | rampa_pedra.png
+[  67% ] reimport | rampa_metal.png
+[  68% ] reimport | rampa_folhagem.png
+[  68% ] reimport | rampa_folhagem.png
+[  69% ] reimport | rampa_chao.png
+[  70% ] reimport | rampa_casca.png
+[  71% ] reimport | pincel_mascara.png
+[  73% ] reimport | ceu_pinceladas.png
+[  74% ] reimport | c43_13h00_dia.jpg
+[  75% ] reimport | c43_10h00_dia.jpg
+[  76% ] reimport | c43_07h00_manha.jpg
+[  77% ] reimport | c43_05h30_madrugada.jpg
+[  78% ] reimport | c43_04h00_noite.jpg
+[  79% ] reimport | c43_01h00_noite.jpg
+[  80% ] reimport | _folha_horas.jpg
+[  82% ] reimport | _folha_filme_vento.jpg
+[  82% ] reimport | _folha_filme_vento.jpg
+[  83% ] reimport | _folha_filme_dia.jpg
+[  84% ] reimport | ancestral_face-sul_camara-a-1374m_olhos-101m_fov12.jpg
+[  85% ] reimport | ancestral_face-oeste_camara-a-1374m_olhos-101m_fov12.jpg
+[  86% ] reimport | ancestral_face-norte_camara-a-1374m_olhos-101m_fov12.jpg
+[  87% ] reimport | ancestral_face-leste_camara-a-1374m_olhos-101m_fov12.jpg
+[  88% ] reimport | 20_perto-encosta-NO_360_foco-x-9,8-z-8,3_rumo+160_incl+20_dist+10,4m.jpg
+[  89% ] reimport | 19_perto-figuras-rasante_360_foco-x-2,3-z-0,8_rumo+200_incl+20_dist+9,0m.jpg
+[  91% ] reimport | 18_centro-em-jogo-perfil-MEDIO_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m.jpg
+[  92% ] reimport | 17_centro-em-jogo-perfil-BAIXO_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m.jpg
+[  93% ] reimport | 16_volta360-rasante_360_foco-x+0,0-z+0,0_rumo-45_incl+20_dist+45,0m.jpg
+[  94% ] reimport | 15_volta360-rasante_360_foco-x+0,0-z+0,0_rumo-90_incl+20_dist+45,0m.jpg
+[  95% ] reimport | 14_volta360-rasante_360_foco-x+0,0-z+0,0_rumo-135_incl+20_dist+45,0m.jpg
+[  96% ] reimport | 13_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+180_incl+20_dist+45,0m.jpg
+[  97% ] reimport | 12_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+135_incl+20_dist+45,0m.jpg
+[  98% ] reimport | Finalizando Importação de Recursos...
+[ DONE ] reimport
+
+[   0% ] reimport | Started (Re)Importando Recursos (88 steps)
+[   0% ] reimport | Executando operações pós-reimportação...
+[ DONE ] reimport
+
+[   0% ] loading_editor_layout | Started Carregando editor (5 steps)
+[   0% ] loading_editor_layout | Carregando layout do editor...
+[  16% ] loading_editor_layout | Carregando abas...
+[ DONE ] loading_editor_layout
+
