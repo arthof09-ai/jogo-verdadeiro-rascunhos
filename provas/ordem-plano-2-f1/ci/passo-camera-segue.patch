@@ -13,7 +13,7 @@ index e76ff2b..28d5ea9 100644
 +          set -o pipefail
 +          timeout 120 "$GODOT" --headless --path . -s res://testes/camera_segue.gd 2>&1 | tee "$RUNNER_TEMP/camera_segue.gd.log"
 +          ! grep -E "SCRIPT ERROR|Parse Error|Compile Error" "$RUNNER_TEMP/camera_segue.gd.log"
-+          tr -d '\r' < "$RUNNER_TEMP/camera_segue.gd.log" | grep -E "^19 de 19 verificações passaram\.$"
++          tr -d '\r' < "$RUNNER_TEMP/camera_segue.gd.log" | grep -E "^22 de 22 verificações passaram\.$"
        # Ordem CAIXA-JANELA-CI (F5 da conferência da CAIXA-PADRAO-CORRECOES): a suite caixa_janela corre aqui, com o
        # mesmo arranque que a casa usa no PC (--headless, sem ecrã, sem servidor). O log e a prova de disparo ficam no
        # artefacto «caixa-janela». Aplicado pelo coordenador (F1 da sentença da CAIXA-JANELA-CI, 22/11/2026).

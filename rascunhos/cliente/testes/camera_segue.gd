@@ -16,6 +16,8 @@ extends SceneTree
 ##   8. no Panorama nada muda (o Panorama não usa o foco: camera_mesa.gd `_foco_alvo`);
 ##   9. o snapshot com ela já colocada (o caminho da bancada preparada, que já funcionava) foca como antes.
 ##  10. a colocação dela numa casa que já cai no terço central: a primeira vez foca na mesma (só o foco do evento o faz).
+##  11. a colocação dela chega com a câmara no PANORAMA: a imagem fica no Panorama, mas a primeira vez fica feita (o foco
+##      guarda a casa dela) e, de volta à Fixa, ela está no terço central sem mais eventos.
 ## Grelha 50×50 @ 1,5 m (a grelha-mapa da linha), janela 1280×720 (a da jogadora na bancada).
 ## Código de saída 0 se tudo passa, 1 se algo falha.
 
@@ -205,6 +207,28 @@ func _correr() -> void:
 	_ok(_no_terco_central(g), "a casa %s já se via no terço central antes de ela chegar (%.3f, %.3f)" % [perto, g.x, g.y])
 	_ok(_perto(arena3.camera.foco, arena3.centro_casa(perto)), "o foco é a casa dela %s (foco %s)" % [perto, arena3.camera.foco])
 	arena3.queue_free()
+	await _quadros(2)
+
+	# ORDEM-PLANO-2-F1-FECHO (F6, 26/11): o «focar a primeira vez» no EVENTO com a câmara em PANORAMA. O caso 8 só prova o
+	# seguir no Panorama (com o _focou já feito); aqui a jogadora está no Panorama quando a colocação dela chega.
+	# Esperado: a imagem fica no Panorama (o centro da arena, camera_mesa.gd `_foco_alvo`), mas o foco guarda a casa dela e
+	# a primeira vez fica feita; ao voltar à Fixa, sem mais nenhum evento, a câmara está nela e ela no terço central.
+	print("== 11. Panorama: a colocação dela chega com a câmara no Panorama ==")
+	_snapshot("lobby", [], "")
+	var arena4 = (load("res://cenas/arena/arena.tscn") as PackedScene).instantiate()
+	root.add_child(arena4)
+	await _quadros(4)
+	var cam4 = arena4.camera
+	cam4.definir_modo(CameraMesa.Modo.PANORAMA)
+	var meio4 := Vector3(arena4.origem.x + arena4.largura * arena4.casa_m * 0.5, 0.0, arena4.origem.y + arena4.altura * arena4.casa_m * 0.5)
+	_evento("colocacao", {"figuraId": "j1", "nomePublico": "Arqueira de Bancada", "lado": "jogadora", "x": CASA_DELA.x, "y": CASA_DELA.y, "orientacao": "S", "visivel": "de_pe"})
+	await _quadros(2)
+	_ok(cam4.modo == CameraMesa.Modo.PANORAMA and _perto(cam4._foco_alvo(), meio4), "no Panorama a imagem continua no centro da arena (alvo %s)" % cam4._foco_alvo())
+	_ok(_perto(cam4.foco, arena4.centro_casa(CASA_DELA)) and arena4._focou, "mas a primeira vez fica feita: o foco guarda a casa dela %s (foco %s)" % [CASA_DELA, cam4.foco])
+	cam4.definir_modo(CameraMesa.Modo.FIXA)
+	f = _no_ecra(arena4, CASA_DELA)
+	_ok(_no_terco_central(f), "de volta à Fixa, sem mais eventos, ela está no terço central (%.3f, %.3f)" % [f.x, f.y])
+	arena4.queue_free()
 	await _quadros(2)
 
 	print("")
