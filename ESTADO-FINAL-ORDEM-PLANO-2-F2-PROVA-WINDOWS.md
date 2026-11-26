@@ -6,7 +6,7 @@ recebeu o `ROOM_SNAPSHOT` e **ficou 30 s na mesa** (ENTROU→SAIU = **30,201 s**
 matar por comando, com o instante registado. Os logs estão inteiros, com o exit code, e em UTF-8. As suites estão
 verdes (com a ressalva do CRLF do clone, §3). O CI está na Nota do CI no fim.
 
-- **Executor:** Claude (opus), PC (conta 2). **Data:** 26/11/2026, ~07:38–08:10 (-03).
+- **Executor:** Claude (opus), PC (conta 2). **Data:** 26/11/2026, ~07:38–07:55 (-03).
 - **Linha:** `fable/integracao-50`, trabalho directo. A `main` não foi tocada.
 - **Ponta de partida:** `acffac1` (clone). Antes de cometer, o `git fetch` deu `e2d784a`: um só commit novo, que só
   muda `ESTADO-FINAL-ORDEM-D-AUD-14-SEGUIMENTO-MUTACAO.md` (3 linhas). Reabri os meus commits sobre `e2d784a` sem
@@ -25,7 +25,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File rascunhos/servidor/aparelhos
 
 Os passos, cada um com a hora no `procedimento.log` (UTC, o relógio da mesa, e local -03):
 
-1. `--import` e `--export-release Windows` (o preset do `export_presets.cfg`), com o exit de cada um. Depois o tamanho
+1. `--import` e `--export-release Windows` (o preset do `export_presets.cfg`), com o exit de cada um registado. Só o exit do export falha a prova; o do import é apenas registado. Depois o tamanho
    e o SHA-256 dos dois `.exe`. Com `-SemExport`, usa o `build/windows` que lá estiver.
 2. `node aparelhos/mesa-prova.mjs --porta=8090 --host=127.0.0.1 --pin=11223344 --mestre-auto` (os argumentos da
    corrida de 24/11). Espera o `pronto-mesa-prova`.
@@ -64,11 +64,11 @@ Corrida de 26/11/2026, sobre `acffac1`, com o Godot 4.7.2.stable.official.ed1daf
 | Medida | Valor (do `procedimento.log` e do `mesa.log`) |
 |---|---|
 | Export Windows | exit 0. `Assimilacao.exe` com 197 737 240 B, SHA-256 `a9e40c2b…ec1f9c11`. `Assimilacao.console.exe` com 188 928 B, SHA-256 `52bdcae9…8c8600df` |
-| Linha de comando recebida | `"<sede>\repo\build\windows\Assimilacao.console.exe" --headless -- --servidor=127.0.0.1:8090 "--entrar-nome=Espadachim de Bancada" --entrar-senha=prova-espadachim`. O filho `Assimilacao.exe` (pid 11008) recebeu o mesmo, com o nome inteiro entre aspas |
-| `ROOM_SNAPSHOT` | `rede: ROOM_SNAPSHOT seq=5 fase=combate plataforma=Windows`, 6,9 s depois de o cliente arrancar (em 24/11 foram 2,1 s; nesta corrida o `.exe` acabara de ser exportado) |
+| Linha de comando recebida | `"<sede>\repo\build\windows\Assimilacao.console.exe" --headless -- --servidor=127.0.0.1:8090 "--entrar-nome=Espadachim de Bancada" --entrar-senha=prova-espadachim`. O filho `Assimilacao.exe` (pid 11008) recebeu os mesmos argumentos, com o nome inteiro entre aspas; o caminho do `.exe` na linha do filho vem sem aspas (só o invólucro o traz entre aspas) |
+| `ROOM_SNAPSHOT` | `rede: ROOM_SNAPSHOT seq=5 fase=combate plataforma=Windows`, 6,9 s depois de o cliente arrancar no cronómetro interno do guião (6,267 s entre as linhas do procedimento.log; em 24/11 foram 2,1 s; nesta corrida o `.exe` acabara de ser exportado) |
 | **ENTROU** (mesa, UTC) | **10:44:14.171** `ENTROU Espadachim de Bancada (senha/PIN; ip 127.0.0.1)` |
 | Na mesa | Conferido a +5, +10, +15, +20, +25 e +30 s: invólucro vivo, processo do jogo vivo (1 de 1), a mesa sem SAIU |
-| **MORTE** | **10:44:44.356 UTC** (07:44:44.356 -03), 30,104 s depois do snapshot. O harness fez `Stop-Process -Id 11008 -Force` (o jogo) e `Stop-Process -Id 29844 -Force` (o invólucro). O invólucro saiu com o exit −1 (0xFFFFFFFF, o código do `TerminateProcess`) |
+| **MORTE** | **10:44:44.356 UTC** (07:44:44.356 -03), 30,110 s depois do snapshot (relógio da mesa; 30,104 s no cronómetro do passo 5). O harness fez `Stop-Process -Id 11008 -Force` (o jogo) e `Stop-Process -Id 29844 -Force` (o invólucro). O invólucro saiu com o exit −1 (0xFFFFFFFF, o código do `TerminateProcess`) |
 | **SAIU** (mesa, UTC) | **10:44:44.372** `SAIU Espadachim de Bancada`, 16 ms depois da morte |
 | Sessão | ENTROU→SAIU = **30,201 s**. Em 24/11 tinham sido 160 ms |
 | Erros de script | 0 |
@@ -107,7 +107,7 @@ por esta ordem passaram pelo `file`: UTF-8 ou ASCII, nenhum noutra codificação
 de idempotência do servidor junta o lugar e o id com um NUL. As duas suites lêem essa fixture. Confirmei-o numa cópia
 descartável do canário (no worktree LF, reposta com `git checkout`): pus um `printerr` antes e outro depois do
 `JSON.parse_string(FileAccess.get_file_as_string(p))`, e o aviso sai entre os dois. Um script vazio no mesmo projecto
-não o dá. É benigno, e nem o teste nem a fixture mudam (o jogo não se toca).
+não o dá. Decidi não mexer nem no teste nem na fixture (o jogo não se toca): o aviso é só ruído nas duas suites, e nenhuma asserção lê esse valor.
 
 ## 3. Suites (item 4) — `provas/ordem-plano-2-f2/windows/suites/`
 

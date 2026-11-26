@@ -25,7 +25,7 @@ foi o que aconteceu na 1.ª tentativa desta ordem, ver o ESTADO-FINAL).
 | `windows.log` / `windows.err` | A saída inteira do `.exe` (sem filtro) |
 | `import.log`, `export-Windows.log` (+ `.err`) | A saída inteira do import e do export (47 KB; o export de 24/11 tinha ficado em 950 B, sem as linhas de ficheiro a ficheiro). Trazem as sequências de cor ANSI do Godot, como saíram |
 
-Números: snapshot 6,9 s depois de arrancar o cliente; o cliente ficou **30,104 s** depois do snapshot; a mesa mediu
+Números: snapshot 6,9 s depois de arrancar o cliente; o cliente ficou **30,110 s** depois do snapshot (relógio da mesa); a mesa mediu
 **ENTROU→SAIU = 30,201 s**; o `SAIU` veio **16 ms depois** da morte (10:44:44.356 UTC); antes dela, 6 conferências
 sem `SAIU` e com o processo vivo; 0 erros de script; exit do guião 0.
 
