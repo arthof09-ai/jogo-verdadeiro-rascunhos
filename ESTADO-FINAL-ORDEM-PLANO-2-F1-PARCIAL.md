@@ -1,5 +1,11 @@
 # ESTADO FINAL (PARCIAL) — ORDEM-PLANO-2-F1 · A BATALHA QUE SE VÊ (D-AUD-05, D-AUD-12, D-AUD-15)
 
+> **Corrigido no fecho (ORDEM-PLANO-2-F1-FECHO, F4, 26/11):** (a) «igual byte a byte» → as contagens da série 1..N são
+> idênticas e os ficheiros diferem (§2.3); (b) «Suspeita AFASTADA» → suspeita não confirmada pela barra da ordem, com o
+> sinal amarelo (§2.3); (c) «19 de 19 na ponta» e «corrida de dados na ponta» → `279f0d7` + o caso 10 (§2.1, §2.3); (d) o
+> contador de falhas do `resumo.txt` (§3); (e) o `servidor.log` (446/446) no pacote (§3). O resto do texto é o de 26/11.
+> O fecho está em `ESTADO-FINAL-ORDEM-PLANO-2-F1-FECHO.md`.
+
 Dono: Muse (CM-000009). Linha `fable/integracao-50`, directamente na linha. Retoma de 26/11/2026 (14:17–14:40 -03), PC do
 cunhado. A 1.ª corrida (23/11 21:37 → 24/11 02:11) morreu no limite semanal. O agente da sessão 1 ficou órfão até às
 05:03, quando o vigia o parou (`AVISO-VIGIA-JANELA-2026-11-24-0453.txt`).
@@ -23,7 +29,8 @@ outro site), o Discord, o WhatsApp e, na 1.ª leitura, o jogo «ROB RUN». Não 
 - `arena.gd`: `_focar_primeira_vez()` é chamado pelo snapshot **e** pelo evento. `_seguir_minha()` corre nos eventos
   `movimento`/`colocacao` da própria figura e só recentra quando ela sairia do terço central (`SEGUIR_SEMPRE := false`,
   `MEIA_JANELA_SEGUIR := 1/6`). Isto conserva o arrasto; o Panorama não muda. `camera_mesa.gd` não foi tocado.
-- Teste `rascunhos/cliente/testes/camera_segue.gd`: **19 de 19** na ponta.
+- Teste `rascunhos/cliente/testes/camera_segue.gd`: **19 de 19** sobre `279f0d7` + o caso 10 (o caso 10 é o `4caa2f1`;
+  corri-o antes de o cometer).
 - **Achado da retoma, já corrigido no teste (`4caa2f1`):** a mutação SEM-FOCO-NO-EVENTO dava **17 de 17** no teste de 23/11.
   O seguir apanhava a colocação fora do terço central, e o «focar a primeira vez» do evento não tinha caso próprio. O
   caso 10 (a colocação dela numa casa que já se via no terço central) prova-o: com a mutação, 18 de 19.
@@ -40,7 +47,7 @@ outro site), o Discord, o WhatsApp e, na 1.ª leitura, o jogo «ROB RUN». Não 
 - Na bancada de 23/11: «Lobo 1», «Lobo 2», «Bruto 1» no journal; «Lobo de Bancada 2 (Lobo 2)» no tabuleiro e no Registo do
   Mestre (`corrida-23-11/capturas/d02-mestre-registo-fim.png`).
 
-### 2.3 D-AUD-15 — os dados são justos (ponta, 26/11)
+### 2.3 D-AUD-15 — os dados são justos (`279f0d7` + o caso 10, 26/11)
 
 `provas/ordem-plano-2-f1/dados/` (ferramenta `ferramentas/dados-justos.mjs`, pelo caminho real do ataque:
 `criarSala` → `ROOM_INTENT atacar` → `Vlab.resolverAtaque`, motor VLAB `a91c021c…`):
@@ -56,10 +63,12 @@ outro site), o Discord, o WhatsApp e, na 1.ª leitura, o jogo «ROB RUN». Não 
 | sementes 1..N (repetível) | 4,966 % – 5,033 % | 0,034 pp | DENTRO | 31,97, p = 0,031 | p = 0,027 |
 | CSPRNG do servidor (`rngNode`) | 4,973 % – 5,025 % | 0,027 pp | DENTRO | 16,96, p = 0,592 | p = 0,831 |
 
-- **Veredicto: a suspeita fica AFASTADA.** Quatro ou mais faces iguais seguidas em 6 d20 têm probabilidade de 0,035 %.
+- **Veredicto: suspeita não confirmada pela barra da ordem (±0,06 pp); χ² p=0,031 e pares p=0,027 na série 1..N ficam
+  registados como sinal amarelo.** Quatro ou mais faces iguais seguidas em 6 d20 têm probabilidade de 0,035 % pelo Monte
+  Carlo da ferramenta (sem semente). O valor exacto é 29/80000 = 0,03625 % (F5, `dados/recontar/`).
   O journal privado da auditoria já não está no disco (saiu nas limpezas). Os 6 registos ficaram em
-  `dados/registados-auditoria.json` (tirados dele em 24/11) e a ferramenta lê-os com `--registados`. A série 1..N de 26/11 é
-  igual byte a byte à de 24/11 (`dados/24-11/`).
+  `dados/registados-auditoria.json` (tirados dele em 24/11) e a ferramenta lê-os com `--registados`. Na série 1..N, as contagens de
+  26/11 e de 24/11 (`dados/24-11/`) são idênticas. Os ficheiros diferem (ms, série CSPRNG, corrida4em6).
 
 ### 2.4 A batalha de bancada de 23/11 (sobre `4739849`) — feita, **sem vídeo**
 
@@ -96,7 +105,7 @@ Guião `provas/ordem-plano-2-f1/suites.sh`. Os logs e o `resumo.txt` estão em `
 
 | Suite | Resultado |
 |---|---|
-| servidor (`testes/*.test.mjs`, sem `--permission`, como nas ordens anteriores) | 446/446 |
+| servidor (`testes/*.test.mjs`, sem `--permission`, como nas ordens anteriores) | 446/446 (`suites/servidor.log`, no pacote) |
 | motor real | 6/6 |
 | prova da caixa | PROVA OK |
 | `abrir_scripts` · `medir_painel_config` · `medir_mestre` · `aparelhos_f2` | exit 0 |
@@ -114,7 +123,9 @@ Guião `provas/ordem-plano-2-f1/suites.sh`. Os logs e o `resumo.txt` estão em `
 | Sonda dos caminhos do PC | na cópia limpa: 0 novas, exit 0. Na árvore de trabalho deu exit 1 só por 5 ficheiros que o git ignora (`bancada-rede/privado/…/preparar.log` ×4 e `.godot/editor/project_metadata.cfg`). |
 
 Todas as suites deram 0 `SCRIPT ERROR / Parse Error / Compile Error`. As mutações deram: SEM-FOCO-NO-EVENTO 18/19,
-SEM-SEGUIR 15/19, SEM-ORDINAL 5 falhas. Os três ficheiros foram repostos e o `git diff` ficou vazio.
+SEM-SEGUIR 15/19, SEM-ORDINAL 5 falhas. No `resumo.txt`, o contador de falhas conta testes falhados, não linhas `✖`.
+O SEM-ORDINAL falha 5, não 11: as 11 linhas `✖` do log são 5 testes, o cabeçalho `✖ failing tests:` e os mesmos 5
+repetidos no fim. Os três ficheiros foram repostos e o `git diff` ficou vazio.
 
 Privacidade: só nomes fictícios (Arqueira de Bancada, Lobo, Bruto). Não há e-mails nas provas e os caminhos do PC saem
 como `<sede>`.

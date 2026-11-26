@@ -1,7 +1,7 @@
 # commit: 279f0d71baa1f18e8a663b1685db50df75f5c74c
 camera_segue-SEM-FOCO-NO-EVENTO exit=1 falhas=1 fim=«18 de 19 verificações passaram. » reposto=sim
 camera_segue-SEM-SEGUIR exit=1 falhas=4 fim=«15 de 19 verificações passaram. » reposto=sim
-d-aud-12-SEM-ORDINAL exit=1 falhas=11 fim=«ℹ pass 3 ℹ fail 5 » reposto=sim
+d-aud-12-SEM-ORDINAL exit=1 falhas=5 fim=«ℹ pass 3 ℹ fail 5 » reposto=sim
 servidor exit=0 ℹ tests 446 ℹ pass 446 ℹ fail 0 ℹ skipped 0 
 prova-caixa exit=0 PROVA OK
 motor-real exit=0 ℹ pass 6 ℹ fail 0 
@@ -25,3 +25,4 @@ validar-abrir_mestre exit=0
 sonda-caminhos exit=1
 FIM
 sonda-caminhos-copia-limpa exit=0 (a sonda-caminhos exit=1 de cima são 5 ficheiros ignorados pelo git: 4 preparar.log de bancada-rede/privado/ e .godot/editor/project_metadata.cfg)
+# F4 do fecho (26/11): falhas= conta testes falhados. O SEM-ORDINAL estava com falhas=11, que eram as linhas «✖» do log do node (5 testes + «✖ failing tests:» + os 5 repetidos); são 5 testes falhados («ℹ fail 5»).

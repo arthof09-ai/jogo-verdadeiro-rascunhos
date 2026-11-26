@@ -42,8 +42,11 @@ assert s.count(a)==1; open(p,'w',encoding='utf8',newline='').write(s.replace(a,b
   "$@" >> "$L/$n.log" 2>&1; e=$?
   cd "$R" && git checkout -- "$ALVO" && trap - EXIT
   if ! git diff --quiet -- "$ALVO"; then echo "PARAR: $ALVO não ficou reposto"; exit 1; fi
-  echo "$n exit=$e falhas=$(grep -cE '  FALHA |^not ok|✖' "$L/$n.log") fim=«$(grep -E 'verificações passaram|^ℹ (pass|fail) ' "$L/$n.log" | tr '\n' ' ')» reposto=$(git diff --quiet -- "$ALVO" && echo sim || echo NAO)" >> "$L/resumo.txt"
+  echo "$n exit=$e falhas=$(falhas "$L/$n.log") fim=«$(grep -E 'verificações passaram|^ℹ (pass|fail) ' "$L/$n.log" | tr '\n' ' ')» reposto=$(git diff --quiet -- "$ALVO" && echo sim || echo NAO)" >> "$L/resumo.txt"
 }
+# F4 do fecho (26/11): falhas = testes falhados. No log do node é o «ℹ fail N» (as linhas «✖» repetem cada teste no
+# resumo final e o cabeçalho «✖ failing tests:» também tem «✖»); no Godot, uma linha «  FALHA » por verificação falhada.
+falhas() { local f; f=$(grep -oE '^ℹ fail [0-9]+' "$1" | tail -1 | grep -oE '[0-9]+$'); [ -n "$f" ] && echo "$f" || grep -cE '  FALHA |^not ok' "$1"; }
 cam() { cd "$R/rascunhos/cliente" && godot "$L/$1.log" --path . -s res://testes/camera_segue.gd; }
 ARENA=rascunhos/cliente/cenas/arena/arena.gd
 muta camera_segue-SEM-FOCO-NO-EVENTO "$ARENA" '	if _focar_primeira_vez():' '	if false and _focar_primeira_vez():  # MUTACAO (PLANO-2-F1): o evento não foca' \
