@@ -152,4 +152,12 @@ Corri `python3 retoma-i0004/actualizar-listas.py` depois de cada commit que mudo
 
 ## Nota do CI
 
-(por preencher depois do push)
+No `cbf1d1a` (o ESTADO-FINAL; a ponta com todos os commits desta ordem):
+
+- **Testes dos rascunhos `45843086838`: success.** Os 10 jobs: cliente, godot-cliente, protocolo, provas-mapa,
+  servidor, retoma-pc, validador-glb, ponta-a-ponta, motor-real, foto-mestre.
+- **Sonda de privacidade `45843085942`: success.**
+- **Aparelhos (F2) `45843086527`: success**, nos 6 jobs (qr, exportar, rede-3-bots, android, windows, web-chromium).
+
+Antes disso, no `881616b` (o 2.º commit da 1.ª sessão, empurrado sem as listas sincronizadas), os Testes
+`45840459710` falharam só no `retoma-pc`. O `678577c` sincronizou as listas, e no `cbf1d1a` o `retoma-pc` está verde.
