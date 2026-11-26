@@ -15,6 +15,7 @@ extends SceneTree
 ##   7. o movimento de OUTRA figura não mexe na câmara;
 ##   8. no Panorama nada muda (o Panorama não usa o foco: camera_mesa.gd `_foco_alvo`);
 ##   9. o snapshot com ela já colocada (o caminho da bancada preparada, que já funcionava) foca como antes.
+##  10. a colocação dela numa casa que já cai no terço central: a primeira vez foca na mesma (só o foco do evento o faz).
 ## Grelha 50×50 @ 1,5 m (a grelha-mapa da linha), janela 1280×720 (a da jogadora na bancada).
 ## Código de saída 0 se tudo passa, 1 se algo falha.
 
@@ -187,6 +188,23 @@ func _correr() -> void:
 	f = _no_ecra(arena2, Vector2i(12, 30))
 	_ok(_no_terco_central(f), "e ela está no terço central (%.3f, %.3f)" % [f.x, f.y])
 	arena2.queue_free()
+	await _quadros(2)
+
+	# ORDEM-PLANO-2-F1 (mutação SEM-FOCO-NO-EVENTO, 26/11): o caso 2 cai fora do terço central e o seguir também o apanha;
+	# só este prova o «focar a primeira vez» no evento — a casa dela já cai no terço central do enquadramento de partida,
+	# o seguir não mexeria, e a câmara tem de ir mesmo assim à casa dela.
+	print("== 10. a colocação dela já dentro do terço central: a primeira vez foca na mesma ==")
+	_snapshot("lobby", [], "")
+	var arena3 = (load("res://cenas/arena/arena.tscn") as PackedScene).instantiate()
+	root.add_child(arena3)
+	await _quadros(4)
+	var perto := Vector2i(26, 26)
+	var g := _no_ecra(arena3, perto)
+	_evento("colocacao", {"figuraId": "j1", "nomePublico": "Arqueira de Bancada", "lado": "jogadora", "x": perto.x, "y": perto.y, "orientacao": "S", "visivel": "de_pe"})
+	await _quadros(2)
+	_ok(_no_terco_central(g), "a casa %s já se via no terço central antes de ela chegar (%.3f, %.3f)" % [perto, g.x, g.y])
+	_ok(_perto(arena3.camera.foco, arena3.centro_casa(perto)), "o foco é a casa dela %s (foco %s)" % [perto, arena3.camera.foco])
+	arena3.queue_free()
 	await _quadros(2)
 
 	print("")
