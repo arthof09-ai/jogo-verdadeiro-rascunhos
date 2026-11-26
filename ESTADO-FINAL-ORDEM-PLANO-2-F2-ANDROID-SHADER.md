@@ -52,7 +52,7 @@ Para a pergunta dos shaders, a resposta é **(a): o tecto do SwiftShader**. O «
 O driver do emulador é o GLES antigo do SwiftShader (`OpenGL ES 3.0 SwiftShader 4.0.0.1`). Nas fontes
 (`fontes/swiftshader-*.excerto`, google/swiftshader `103a69bd`, o último commit com o `src/OpenGL/libGLESv2`):
 
-- `Config.hpp`: `FRAGMENT_UNIFORM_VECTORS = 264`
+- `Config.hpp` (`src/Main/Config.hpp`): `FRAGMENT_UNIFORM_VECTORS = 264`
 - `Context.h`: `MAX_FRAGMENT_UNIFORM_VECTORS = sw::FRAGMENT_UNIFORM_VECTORS - 3, // Reserve space for gl_DepthRange`, ou seja **261**
 - `Program.cpp`: `appendToInfoLog("Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (%d)", MAX_FRAGMENT_UNIFORM_VECTORS)`. O número entre parênteses é a constante do driver, e não a contagem do shader
 
