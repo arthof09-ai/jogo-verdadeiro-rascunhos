@@ -1,0 +1,412 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Could not find version of build tools that matches Target SDK, using 34.0.0
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialização do Projeto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando estrutura de arquivos...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Carregando nomes de classe globais...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Criando scripts autoload...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneamento de arquivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registrando classes globais... (115 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | ColorScript[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   1% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   2% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   3% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   4% ] [90m[1mupdate_scripts_classes[22m | AplicadorPerfil[39m[0m
+[   5% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   6% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   6% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   7% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   8% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   9% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  10% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  11% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  12% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  12% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  13% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  14% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  15% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  16% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  17% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  18% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  18% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  19% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  20% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  21% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  22% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  23% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  24% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  25% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  25% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  26% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  27% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  28% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  29% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  30% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  31% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  31% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  32% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  34% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  35% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  36% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  37% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  37% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  38% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  39% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  40% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  41% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  42% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  43% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  43% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  44% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  45% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  46% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  47% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  48% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  49% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  51% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  52% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  53% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  54% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  55% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  56% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  56% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  57% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  58% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  59% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  60% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  61% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  63% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  64% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  65% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  66% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  67% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  68% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  68% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  69% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  70% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  72% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  74% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  76% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  77% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  78% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  79% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  80% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  81% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  81% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  82% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  83% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  85% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  86% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  87% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  87% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  88% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  89% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  90% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  91% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  92% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  94% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  95% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  96% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  97% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  98% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Escaneando ações... (88 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | ceu_pinceladas.png[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | pincel_mascara.png[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | rampa_casca.png[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | rampa_chao.png[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | rampa_folhagem.png[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | rampa_metal.png[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | rampa_pedra.png[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | rampa_pele.png[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | rampa_tecido.png[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | 01_centro-em-jogo-mover_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m.jpg[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | 01_centro-em-jogo-mover_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m_MOVIMENTO-2s.png[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | 02_centro-em-jogo-ataque_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m.jpg[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | 03_canto-NO_olha-centro_360_foco-x-14,3-z-14,3_rumo-135_incl+32_dist+18,0m.jpg[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | 04_canto-NE_olha-centro_360_foco-x+14,3-z-14,3_rumo+135_incl+32_dist+18,0m.jpg[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | 05_canto-SE_olha-centro_360_foco-x+14,3-z+14,3_rumo+45_incl+32_dist+18,0m.jpg[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | 06_canto-SO_olha-centro_360_foco-x-14,3-z+14,3_rumo-45_incl+32_dist+18,0m.jpg[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | 07_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0.jpg[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | 07_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0_MOVIMENTO-2s.png[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | 08_panorama_PANORAMA_foco-x+0,0-z+0,0_rumo+0_incl+78_dist+26,1m.jpg[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | 09_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+0_incl+20_dist+45,0m.jpg[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | 10_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+45_incl+20_dist+45,0m.jpg[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | 11_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+90_incl+20_dist+45,0m.jpg[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | 12_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+135_incl+20_dist+45,0m.jpg[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | 13_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+180_incl+20_dist+45,0m.jpg[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | 14_volta360-rasante_360_foco-x+0,0-z+0,0_rumo-135_incl+20_dist+45,0m.jpg[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | 15_volta360-rasante_360_foco-x+0,0-z+0,0_rumo-90_incl+20_dist+45,0m.jpg[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | 16_volta360-rasante_360_foco-x+0,0-z+0,0_rumo-45_incl+20_dist+45,0m.jpg[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | 17_centro-em-jogo-perfil-BAIXO_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m.jpg[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | 18_centro-em-jogo-perfil-MEDIO_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m.jpg[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | 19_perto-figuras-rasante_360_foco-x-2,3-z-0,8_rumo+200_incl+20_dist+9,0m.jpg[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | 20_perto-encosta-NO_360_foco-x-9,8-z-8,3_rumo+160_incl+20_dist+10,4m.jpg[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | ancestral_face-leste_camara-a-1374m_olhos-101m_fov12.jpg[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | ancestral_face-norte_camara-a-1374m_olhos-101m_fov12.jpg[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | ancestral_face-oeste_camara-a-1374m_olhos-101m_fov12.jpg[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | ancestral_face-sul_camara-a-1374m_olhos-101m_fov12.jpg[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | _folha_filme_dia.jpg[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | _folha_filme_vento.jpg[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | _folha_horas.jpg[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | c43_01h00_noite.jpg[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | c43_04h00_noite.jpg[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | c43_05h30_madrugada.jpg[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | c43_07h00_manha.jpg[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | c43_10h00_dia.jpg[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | c43_13h00_dia.jpg[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | c43_16h00_dia.jpg[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | c43_18h30_entardecer.jpg[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | c43_19h45_noite.jpg[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | c43_22h00_noite.jpg[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | _folha_fases.jpg[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | c55_22h00_1-nova.jpg[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | c55_22h00_2-crescente.jpg[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | c55_22h00_3-cheia.jpg[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | c55_22h00_4-minguante.jpg[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | _folha_estacoes.jpg[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | c56_18h00_1-primavera.jpg[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | c56_18h00_2-verao.jpg[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | c56_18h00_3-outono.jpg[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | c56_18h00_4-inverno.jpg[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | _folha_1.jpg[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | _folha_2.jpg[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | _folha_3.jpg[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | _folha_4.jpg[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | _folha_5.jpg[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | 01_centro_olha-norte_x+0,0_z+0,0_olhos1,7m_az-7,0_incl+3,0.jpg[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | 01_centro_olha-norte_x+0,0_z+0,0_olhos1,7m_az-7,0_incl+3,0_MOVIMENTO-2s.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | 01_centro_olha-norte_x+0,0_z+0,0_olhos1,7m_az-7,0_incl+3,0_SO-FUNDO.jpg[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | 02_centro_olha-leste_x+0,0_z+0,0_olhos1,7m_az+90,0_incl+3,0.jpg[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | 03_centro_olha-sul_x+0,0_z+0,0_olhos1,7m_az+180,0_incl+3,0.jpg[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | 04_centro_olha-oeste_x+0,0_z+0,0_olhos1,7m_az-90,0_incl+3,0.jpg[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | 05_canto-NO_olha-centro_x-25,5_z-28,5_olhos1,7m_az+138,0_incl+0,0.jpg[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | 06_canto-NE_olha-centro_x+29,0_z-26,0_olhos1,7m_az-132,0_incl+0,0.jpg[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | 07_canto-SE_olha-centro_x+25,0_z+29,5_olhos1,7m_az-40,0_incl+0,0.jpg[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | 08_canto-SO_olha-centro_x-29,5_z+25,5_olhos1,7m_az+49,0_incl+0,0.jpg[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | 09_canto-NO_olha-fora_x-25,5_z-28,5_olhos1,7m_az-45,0_incl+4,0.jpg[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | 10_canto-NE_olha-fora_x+29,0_z-26,0_olhos1,7m_az+45,0_incl+4,0.jpg[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | 11_canto-SE_olha-fora_x+25,0_z+29,5_olhos1,7m_az+135,0_incl+4,0.jpg[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | 12_canto-SO_olha-fora_x-29,5_z+25,5_olhos1,7m_az-135,0_incl+4,0.jpg[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | 13_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0.jpg[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | 13_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0_MOVIMENTO-2s.png[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | 13_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0_SO-FUNDO.jpg[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | 14_alto_mapa-inteiro_x+0,0_z+46,0_olhos34,0m_az+0,0_incl-40,0.jpg[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | 15_centro_olha-nordeste_x+0,0_z+0,0_olhos1,7m_az+45,0_incl+3,0.jpg[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | 16_centro_olha-sueste_x+0,0_z+0,0_olhos1,7m_az+135,0_incl+3,0.jpg[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | 17_centro_olha-sudoeste_x+0,0_z+0,0_olhos1,7m_az-135,0_incl+3,0.jpg[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | 18_centro_olha-noroeste_x+0,0_z+0,0_olhos1,7m_az-45,0_incl+3,0.jpg[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | ceu_camadas_v1.png[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | ceu_floresta_v2.png[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | ceu_floresta_v3.png[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importando Recursos (88 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  26% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  44% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  46% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  49% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  53% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  55% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  73% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  79% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  97% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[   0% ] [90m[1mreimport[22m | Executando operações pré-reimportação...[39m[0m
+[   0% ] [90m[1mreimport[22m | 01_centro_olha-norte_x+0,0_z+0,0_olhos1,7m_az-7,0_incl+3,0_SO-FUNDO.jpg[39m[0m
+[   1% ] [90m[1mreimport[22m | 01_centro_olha-norte_x+0,0_z+0,0_olhos1,7m_az-7,0_incl+3,0_MOVIMENTO-2s.png[39m[0m
+[   1% ] [90m[1mreimport[22m | 01_centro_olha-norte_x+0,0_z+0,0_olhos1,7m_az-7,0_incl+3,0_MOVIMENTO-2s.png[39m[0m
+[   2% ] [90m[1mreimport[22m | 01_centro_olha-norte_x+0,0_z+0,0_olhos1,7m_az-7,0_incl+3,0.jpg[39m[0m
+[   3% ] [90m[1mreimport[22m | _folha_5.jpg[39m[0m
+[   4% ] [90m[1mreimport[22m | _folha_4.jpg[39m[0m
+[   5% ] [90m[1mreimport[22m | _folha_3.jpg[39m[0m
+[   6% ] [90m[1mreimport[22m | _folha_2.jpg[39m[0m
+[   7% ] [90m[1mreimport[22m | _folha_1.jpg[39m[0m
+[   8% ] [90m[1mreimport[22m | c56_18h00_4-inverno.jpg[39m[0m
+[  10% ] [90m[1mreimport[22m | c56_18h00_3-outono.jpg[39m[0m
+[  11% ] [90m[1mreimport[22m | c56_18h00_2-verao.jpg[39m[0m
+[  12% ] [90m[1mreimport[22m | c56_18h00_1-primavera.jpg[39m[0m
+[  13% ] [90m[1mreimport[22m | _folha_estacoes.jpg[39m[0m
+[  14% ] [90m[1mreimport[22m | c55_22h00_4-minguante.jpg[39m[0m
+[  15% ] [90m[1mreimport[22m | c55_22h00_3-cheia.jpg[39m[0m
+[  16% ] [90m[1mreimport[22m | c55_22h00_2-crescente.jpg[39m[0m
+[  17% ] [90m[1mreimport[22m | c55_22h00_1-nova.jpg[39m[0m
+[  19% ] [90m[1mreimport[22m | _folha_fases.jpg[39m[0m
+[  20% ] [90m[1mreimport[22m | c43_22h00_noite.jpg[39m[0m
+[  21% ] [90m[1mreimport[22m | c43_19h45_noite.jpg[39m[0m
+[  22% ] [90m[1mreimport[22m | c43_18h30_entardecer.jpg[39m[0m
+[  23% ] [90m[1mreimport[22m | c43_16h00_dia.jpg[39m[0m
+[  24% ] [90m[1mreimport[22m | ceu_floresta_v3.png[39m[0m
+[  25% ] [90m[1mreimport[22m | ceu_floresta_v2.png[39m[0m
+[  26% ] [90m[1mreimport[22m | ceu_camadas_v1.png[39m[0m
+[  28% ] [90m[1mreimport[22m | 18_centro_olha-noroeste_x+0,0_z+0,0_olhos1,7m_az-45,0_incl+3,0.jpg[39m[0m
+[  29% ] [90m[1mreimport[22m | 17_centro_olha-sudoeste_x+0,0_z+0,0_olhos1,7m_az-135,0_incl+3,0.jpg[39m[0m
+[  30% ] [90m[1mreimport[22m | 16_centro_olha-sueste_x+0,0_z+0,0_olhos1,7m_az+135,0_incl+3,0.jpg[39m[0m
+[  31% ] [90m[1mreimport[22m | 15_centro_olha-nordeste_x+0,0_z+0,0_olhos1,7m_az+45,0_incl+3,0.jpg[39m[0m
+[  32% ] [90m[1mreimport[22m | 14_alto_mapa-inteiro_x+0,0_z+46,0_olhos34,0m_az+0,0_incl-40,0.jpg[39m[0m
+[  33% ] [90m[1mreimport[22m | 13_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0_SO-FUNDO.jpg[39m[0m
+[  34% ] [90m[1mreimport[22m | 13_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0_MOVIMENTO-2s.png[39m[0m
+[  35% ] [90m[1mreimport[22m | 13_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0.jpg[39m[0m
+[  37% ] [90m[1mreimport[22m | 12_canto-SO_olha-fora_x-29,5_z+25,5_olhos1,7m_az-135,0_incl+4,0.jpg[39m[0m
+[  38% ] [90m[1mreimport[22m | 11_canto-SE_olha-fora_x+25,0_z+29,5_olhos1,7m_az+135,0_incl+4,0.jpg[39m[0m
+[  39% ] [90m[1mreimport[22m | 10_canto-NE_olha-fora_x+29,0_z-26,0_olhos1,7m_az+45,0_incl+4,0.jpg[39m[0m
+[  40% ] [90m[1mreimport[22m | 09_canto-NO_olha-fora_x-25,5_z-28,5_olhos1,7m_az-45,0_incl+4,0.jpg[39m[0m
+[  41% ] [90m[1mreimport[22m | 08_canto-SO_olha-centro_x-29,5_z+25,5_olhos1,7m_az+49,0_incl+0,0.jpg[39m[0m
+[  42% ] [90m[1mreimport[22m | 07_canto-SE_olha-centro_x+25,0_z+29,5_olhos1,7m_az-40,0_incl+0,0.jpg[39m[0m
+[  43% ] [90m[1mreimport[22m | 06_canto-NE_olha-centro_x+29,0_z-26,0_olhos1,7m_az-132,0_incl+0,0.jpg[39m[0m
+[  44% ] [90m[1mreimport[22m | 05_canto-NO_olha-centro_x-25,5_z-28,5_olhos1,7m_az+138,0_incl+0,0.jpg[39m[0m
+[  46% ] [90m[1mreimport[22m | 04_centro_olha-oeste_x+0,0_z+0,0_olhos1,7m_az-90,0_incl+3,0.jpg[39m[0m
+[  47% ] [90m[1mreimport[22m | 03_centro_olha-sul_x+0,0_z+0,0_olhos1,7m_az+180,0_incl+3,0.jpg[39m[0m
+[  48% ] [90m[1mreimport[22m | 02_centro_olha-leste_x+0,0_z+0,0_olhos1,7m_az+90,0_incl+3,0.jpg[39m[0m
+[  49% ] [90m[1mreimport[22m | 11_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+90_incl+20_dist+45,0m.jpg[39m[0m
+[  50% ] [90m[1mreimport[22m | 10_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+45_incl+20_dist+45,0m.jpg[39m[0m
+[  51% ] [90m[1mreimport[22m | 09_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+0_incl+20_dist+45,0m.jpg[39m[0m
+[  52% ] [90m[1mreimport[22m | 08_panorama_PANORAMA_foco-x+0,0-z+0,0_rumo+0_incl+78_dist+26,1m.jpg[39m[0m
+[  53% ] [90m[1mreimport[22m | 07_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0_MOVIMENTO-2s.png[39m[0m
+[  55% ] [90m[1mreimport[22m | 07_longe_vista-ref07_x+5,0_z+27,0_olhos2,3m_az-11,0_incl+1,0.jpg[39m[0m
+[  56% ] [90m[1mreimport[22m | 06_canto-SO_olha-centro_360_foco-x-14,3-z+14,3_rumo-45_incl+32_dist+18,0m.jpg[39m[0m
+[  57% ] [90m[1mreimport[22m | 05_canto-SE_olha-centro_360_foco-x+14,3-z+14,3_rumo+45_incl+32_dist+18,0m.jpg[39m[0m
+[  58% ] [90m[1mreimport[22m | 04_canto-NE_olha-centro_360_foco-x+14,3-z-14,3_rumo+135_incl+32_dist+18,0m.jpg[39m[0m
+[  59% ] [90m[1mreimport[22m | 03_canto-NO_olha-centro_360_foco-x-14,3-z-14,3_rumo-135_incl+32_dist+18,0m.jpg[39m[0m
+[  60% ] [90m[1mreimport[22m | 02_centro-em-jogo-ataque_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m.jpg[39m[0m
+[  61% ] [90m[1mreimport[22m | 01_centro-em-jogo-mover_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m_MOVIMENTO-2s.png[39m[0m
+[  62% ] [90m[1mreimport[22m | 01_centro-em-jogo-mover_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m.jpg[39m[0m
+[  64% ] [90m[1mreimport[22m | rampa_tecido.png[39m[0m
+[  65% ] [90m[1mreimport[22m | rampa_pele.png[39m[0m
+[  66% ] [90m[1mreimport[22m | rampa_pedra.png[39m[0m
+[  67% ] [90m[1mreimport[22m | rampa_metal.png[39m[0m
+[  68% ] [90m[1mreimport[22m | rampa_folhagem.png[39m[0m
+[  69% ] [90m[1mreimport[22m | rampa_chao.png[39m[0m
+[  70% ] [90m[1mreimport[22m | rampa_casca.png[39m[0m
+[  71% ] [90m[1mreimport[22m | pincel_mascara.png[39m[0m
+[  73% ] [90m[1mreimport[22m | ceu_pinceladas.png[39m[0m
+[  74% ] [90m[1mreimport[22m | c43_13h00_dia.jpg[39m[0m
+[  75% ] [90m[1mreimport[22m | c43_10h00_dia.jpg[39m[0m
+[  76% ] [90m[1mreimport[22m | c43_07h00_manha.jpg[39m[0m
+[  77% ] [90m[1mreimport[22m | c43_05h30_madrugada.jpg[39m[0m
+[  78% ] [90m[1mreimport[22m | c43_04h00_noite.jpg[39m[0m
+[  79% ] [90m[1mreimport[22m | c43_01h00_noite.jpg[39m[0m
+[  80% ] [90m[1mreimport[22m | _folha_horas.jpg[39m[0m
+[  82% ] [90m[1mreimport[22m | _folha_filme_vento.jpg[39m[0m
+[  83% ] [90m[1mreimport[22m | _folha_filme_dia.jpg[39m[0m
+[  84% ] [90m[1mreimport[22m | ancestral_face-sul_camara-a-1374m_olhos-101m_fov12.jpg[39m[0m
+[  85% ] [90m[1mreimport[22m | ancestral_face-oeste_camara-a-1374m_olhos-101m_fov12.jpg[39m[0m
+[  86% ] [90m[1mreimport[22m | ancestral_face-norte_camara-a-1374m_olhos-101m_fov12.jpg[39m[0m
+[  87% ] [90m[1mreimport[22m | ancestral_face-leste_camara-a-1374m_olhos-101m_fov12.jpg[39m[0m
+[  88% ] [90m[1mreimport[22m | 20_perto-encosta-NO_360_foco-x-9,8-z-8,3_rumo+160_incl+20_dist+10,4m.jpg[39m[0m
+[  89% ] [90m[1mreimport[22m | 19_perto-figuras-rasante_360_foco-x-2,3-z-0,8_rumo+200_incl+20_dist+9,0m.jpg[39m[0m
+[  91% ] [90m[1mreimport[22m | 18_centro-em-jogo-perfil-MEDIO_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m.jpg[39m[0m
+[  92% ] [90m[1mreimport[22m | 17_centro-em-jogo-perfil-BAIXO_FIXA_foco-x+0,8-z+0,8_rumo+0_incl+55_dist+18,0m.jpg[39m[0m
+[  93% ] [90m[1mreimport[22m | 16_volta360-rasante_360_foco-x+0,0-z+0,0_rumo-45_incl+20_dist+45,0m.jpg[39m[0m
+[  94% ] [90m[1mreimport[22m | 15_volta360-rasante_360_foco-x+0,0-z+0,0_rumo-90_incl+20_dist+45,0m.jpg[39m[0m
+[  95% ] [90m[1mreimport[22m | 14_volta360-rasante_360_foco-x+0,0-z+0,0_rumo-135_incl+20_dist+45,0m.jpg[39m[0m
+[  96% ] [90m[1mreimport[22m | 13_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+180_incl+20_dist+45,0m.jpg[39m[0m
+[  97% ] [90m[1mreimport[22m | 12_volta360-rasante_360_foco-x+0,0-z+0,0_rumo+135_incl+20_dist+45,0m.jpg[39m[0m
+[  98% ] [90m[1mreimport[22m | Finalizando Importação de Recursos...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importando Recursos (88 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Executando operações pós-reimportação...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Carregando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Carregando layout do editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Carregando abas...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m

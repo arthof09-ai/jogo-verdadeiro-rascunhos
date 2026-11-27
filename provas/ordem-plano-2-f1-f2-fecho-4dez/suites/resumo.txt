@@ -1,0 +1,18 @@
+# commit: 8541f2011d49a3c6bef4c5c7889a7e763bf17551
+# Godot: 4.7.2.stable.official.ed1daf0bf; node v26.13.0
+servidor exit=0 ℹ tests 459 ℹ pass 459 ℹ fail 0 
+abrir_scripts exit=0 scriptErrors=0 fim=«113 scripts, 0 falhas»
+rodar_testes exit=0 scriptErrors=0 fim=«333 de 333 verificações passaram.»
+abrir_mestre exit=0 scriptErrors=0 fim=«67 de 67 verificações passaram.»
+pecas_mestre exit=0 scriptErrors=0 fim=«337 de 337 verificações passaram.»
+medir_mestre exit=0 scriptErrors=0 fim=«»
+hud_acoes exit=0 scriptErrors=0 fim=«70 de 70 verificações passaram.»
+caixa_jogadora exit=0 scriptErrors=0 fim=«70 de 70 verificações passaram.»
+caixa_janela exit=0 scriptErrors=0 fim=«123 de 123 verificações passaram.»
+canario_privacidade exit=0 scriptErrors=0 fim=«10 de 10 verificações passaram.»
+camera_segue exit=0 scriptErrors=0 fim=«22 de 22 verificações passaram.»
+aparelhos_f2 exit=0 scriptErrors=0 fim=«»
+camera_segue guarda N de N: 22 de 22 ok
+validar-pecas_mestre exit=0
+validar-abrir_mestre exit=0
+FIM

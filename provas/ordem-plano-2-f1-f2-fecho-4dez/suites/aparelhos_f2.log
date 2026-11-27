@@ -1,0 +1,51 @@
+# comando: cd rascunhos/cliente && MESTRE_COMANDOS=<sede>/…/suites/comandos-aparelhos_f2.jsonl timeout 300 Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://testes/aparelhos_f2.gd
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+== Testes dos aparelhos (Ordem PLANO-2-F2) ==
+  ok    JV2.1b: Android liga a ws://192.168.1.20:8080/ws
+  ok    JV2.1b: Android liga a ws://10.0.2.2:8080/ws
+  ok    JV2.1b: Android liga a ws://172.16.0.5/ws
+  ok    JV2.1b: Android liga a ws://172.31.255.1:80/ws
+  ok    JV2.1b: Android liga a ws://127.0.0.1:8080/ws
+  ok    JV2.1b: Android liga a ws://localhost:8080/ws
+  ok    JV2.1b: Android liga a ws://mesa.local:8080/ws
+  ok    JV2.1b: Android liga a ws://169.254.3.4/ws
+  ok    JV2.1b: Android liga a ws://[::1]:8080/ws
+  ok    JV2.1b: Android liga a ws://[fd12:3456::1]:8080/ws
+  ok    JV2.1b: Android liga a ws://[fe80::1]/ws
+  ok    JV2.1b: Android liga a wss://exemplo.org/ws
+  ok    JV2.1b: Android liga a wss://8.8.8.8/ws
+  ok    JV2.1b: Android NÃO liga em claro a ws://8.8.8.8:8080/ws
+  ok    JV2.1b: Android NÃO liga em claro a ws://172.32.0.1/ws
+  ok    JV2.1b: Android NÃO liga em claro a ws://172.15.9.9/ws
+  ok    JV2.1b: Android NÃO liga em claro a ws://192.169.0.1/ws
+  ok    JV2.1b: Android NÃO liga em claro a ws://exemplo.org/ws
+  ok    JV2.1b: Android NÃO liga em claro a ws://11.0.0.1/ws
+  ok    JV2.1b: Android NÃO liga em claro a ws://[2001:db8::1]/ws
+  ok    JV2.1b: Android NÃO liga em claro a ws://192.168.1/ws
+  ok    JV2.1b: Android NÃO liga em claro a ws://192.168.1.300/ws
+  ok    JV2.1b: Android NÃO liga em claro a http://192.168.1.2/ws
+  ok    JV2.1b: Android NÃO liga em claro a ws://
+  ok    JV2.1b: Android NÃO liga em claro a ws://local/ws
+  ok    JV2.1b: Android NÃO liga em claro a ws://localhost.exemplo.org/ws
+  ok    JV2.1b: nome e senha vêm dos argumentos
+  ok    JV2.1b: sem senha não há entrada automática
+  ok    JV2.1b: sem argumentos não há entrada automática
+  ok    JV3.4b: tecto da espera × 1,2 = 9.6 s < 30 s
+  ok    JV3.4b: a primeira tentativa continua a 1 s
+  ok    V1.0: mediana de 10..100 = 55
+  ok    V1.0: p5 de 10..100 = 14,5 (interpolado)
+  ok    V1.0: sem amostras → 0
+  ok    V1.0: o JSON traz «formato»
+  ok    V1.0: o JSON traz «quadros»
+  ok    V1.0: o JSON traz «fps_mediana»
+  ok    V1.0: o JSON traz «fps_p5»
+  ok    V1.0: o JSON traz «chamadas_mediana»
+  ok    V1.0: o JSON traz «chamadas_max»
+  ok    V1.0: o JSON traz «gpu»
+  ok    V1.0: o JSON traz «dpr»
+  ok    V1.0: o JSON traz «viewport»
+  ok    V1.0: o JSON traz «janela_s»
+  ok    V1.0: formato e chamadas (mediana 7, máx 9)
+  ok    V1.0: 5 s + 55 s = 1 minuto
+== 46 de 46 ==
