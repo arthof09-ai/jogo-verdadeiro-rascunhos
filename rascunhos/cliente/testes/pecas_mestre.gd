@@ -442,7 +442,8 @@ func _correr() -> void:
 		cmds_saiu.append(str(cmd.get("type", "")))
 	if not cmds_saiu.is_empty():
 		_responder(c, _ultimo())  # para uma falha aqui não derrubar as verificações seguintes
-		c._aba_agir.iniciar_mover()
+	# D-AUD-01-CORRECCOES-6 (J4): a mitigação já não re-arma o «Mover» (re-armar lia as casas novas e mascarava o
+	# refresco em falta); sem o refresco, a casa que entrou é engolida e a FALHA mostra-o (`[]`).
 	var antes_e := _comandos.size()
 	c.casa_tocada(casa_entrou)
 	var cmds_entrou: Array = _comandos.slice(antes_e)
