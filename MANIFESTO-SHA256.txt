@@ -440,7 +440,7 @@ e14511a90bcc17de22e2daf6c4634b9c2a7a3dc1390e5fc883f521a4ffd5006e  rascunhos/serv
 d8e8e5b5319d3df004810523c3ba47de3c5f46fd0dab1d1224c469fae7af38cc  rascunhos/servidor/testes/cura.test.mjs
 896c7c3f8bd169bc6c70522e6bf7d1277799deb450cfc5fea3233feae5aef2bd  rascunhos/servidor/testes/d-aud-07-registo.test.mjs
 f189327ea35a04e976dd036aefc19774ca422dd07f665d1e7c7c658bafb1674c  rascunhos/servidor/testes/d-aud-12-ordinal.test.mjs
-9c2d44e7f48290e6ea23e70e80d920571cc5a0f40abc6c7310434c1a6d3a7deb  rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs
+c7084e7ded54015d2a4a422b82575c2a964f8eff8e26aacc4052d50737ce9238  rascunhos/servidor/testes/d-aud-12-snapshot-novo.test.mjs
 06e32ec607028243530e2ba8ab5d84903bde6031698f57d4d3b53353f5ffffe0  rascunhos/servidor/testes/dados-fisicos.test.mjs
 c2de43cf1039fc9743c9470a2416f082ba873529bbdbd37db73395716c770ddb  rascunhos/servidor/testes/e2e-canarios.test.mjs
 7df50d3cb02dc338fd2db238ae0e48594043bced36b4a113974ba2aad702c23f  rascunhos/servidor/testes/fichas.test.mjs
