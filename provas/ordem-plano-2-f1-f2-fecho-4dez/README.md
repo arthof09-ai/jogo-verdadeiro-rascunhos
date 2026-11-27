@@ -42,3 +42,28 @@ Números (relógio da mesa, UTC; local = UTC−3):
 - 0 erros de script; **exit do guião 0** (`PROVA WINDOWS OK; exit 0`).
 
 Logs inteiros em UTF-8: `procedimento.log`, `mesa.log`/`.err`, `windows.log`/`.err` (sem import/export: `-SemExport`).
+
+## B3 — o ensaio da casa PREPARADO, POR CORRER (é do Mestre, com o celular) — `ensaio-4dez/`
+
+| Ficheiro | O quê |
+|---|---|
+| `arrancar-ensaio.cmd` / `.ps1` | a mesa do ensaio num duplo clique: o servidor de **produção** (`servidor-ws.js` + journal) pela bancada de rede (`preparar.mjs --motor=real --modo=auto --fichas=acertam`, host 0.0.0.0), com o export web na mesma origem do `ws://…/ws` (`pastaEstatica`), as medições V1.0 (`medicoes`) e o QR; o porteiro prepara a batalha (Arqueira de Bancada contra o Lobo e o Bruto de Bancada) e sai; Enter no fim guarda journal, registo e medições em `<sede>\ensaio-4dez-privado\resultado-<data>\` (fora do Git) |
+| `conferir-ensaio.mjs` | confere por máquina o resultado: turnos ≥ 10, um só `fim {"desfecho":"morte"}`, 0 colocações duplicadas (ids e casas), seq contínuo, SAIU → ENTROU da jogadora, campos da V1.0. Ensaiado sobre o journal da F1 (`f1-1929`): 16 turnos, `fim` seq 78 morte, 3 colocações sem repetidos, exit 0 |
+| `GUIA-ENSAIO-4DEZ.md` | o guia passo a passo para o Mestre (~15 min; errata E-2 aplicada: a via principal do build é o artefacto do CI verde) |
+| `REGISTO-ENSAIO-4DEZ.md` | o registo por preencher (critérios, horas, cronómetro, fotos, saída do conferidor) |
+
+**Build:** o artefacto `export-web` do run `45946124164` (ponta `c64719d`), copiado para a pasta partilhada
+`13 — Trabalho das cadeiras\f1-f2-fecho-4dez\build-web\` com o `SHA256SUMS.txt` (`index.pck` `fa4ee2b3…967499b`,
+`index.wasm` `fc74679e…bfa57d0`, `index.html` `e0a57e96…ff2947a8`). O lançador acha-o em `build/web/` ou nessa pasta.
+
+**Verificado no PC em 27/11 (13:16–13:25 −03), duas arrancadas do lançador** (a 2.ª depois de corrigir a codificação
+do `.ps1` e do `porteiro.log`): motor `real` (SHA-256 `a91c021c…`, o do CI), porteiro `MASTER_LOBBY_SET`/`START`/2×`PLACE` →
+`APLICADA`; `curl` a partir do IP da rede `http://192.168.1.38:8080` com cache-busting (`?cb=<ns>`): `index.html`,
+`index.js`, `index.wasm` (39.514.754 B, `application/wasm`), `index.pck` (88.462.328 B) — SHA-256 do servido **igual**
+ao do artefacto; na 1.ª arrancada também os 3 restantes (`index.audio.worklet.js`, `index.audio.position.worklet.js`,
+`index.png`); `/` = `index.html`; `/qr` 200 com os links `/` e `/?medir=1`; `/?medir=1` 200; cabeçalho
+`Cache-Control: no-cache`. Uma sonda pela rede (`ws://192.168.1.38:8080/ws`, `ROOM_JOIN` jogadora por nome e senha, o
+caminho do lobby web) recebeu `ROOM_WELCOME` e `ROOM_SNAPSHOT seq=5 fase=pausa` em 10 ms (pausa = a mesa espera o
+Mestre, que entra no navegador do PC com o PIN e carrega «Continuar»). A mesa de verificação foi fechada.
+
+**O ensaio NÃO correu**: é do Mestre, com o celular dele, na sessão de 4/12.
