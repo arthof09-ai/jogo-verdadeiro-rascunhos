@@ -67,3 +67,9 @@ caminho do lobby web) recebeu `ROOM_WELCOME` e `ROOM_SNAPSHOT seq=5 fase=pausa` 
 Mestre, que entra no navegador do PC com o PIN e carrega «Continuar»). A mesa de verificação foi fechada.
 
 **O ensaio NÃO correu**: é do Mestre, com o celular dele, na sessão de 4/12.
+
+## Ressalva ao B1 — a ponta andou e a repetibilidade da web falha escondida
+
+Nos runs da Aparelhos (F2) das pontas novas (`5c4e689` 46031007547, `8541f20` 46032812667, `17015a3` 46033830951) o
+log do `web-chromium` traz `FALHA repetir dá o mesmo ±10 %: fps_p5 …` (0.7 → 0.9, 0.5 → 0.4, 0.4 → 0.3) e o job sai
+`success`: o passo faz `prova-web.mjs … | grep -vE …` sem `set -o pipefail`. Detalhe no ESTADO-FINAL, §B1.3.
