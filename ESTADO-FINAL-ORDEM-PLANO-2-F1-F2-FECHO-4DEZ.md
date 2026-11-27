@@ -25,7 +25,7 @@ Trabalho das cadeiras\f1-f2-fecho-4dez\`.
   1. `5c4e689` — B1+B2 (o run `45946124164` lido por dentro; Windows 30 s na mesa);
   2. `8541f20` — B3 (o ensaio preparado: lançador, conferidor, guia, registo);
   3. `17015a3` — C (suites no PC; listas 0/0);
-  4. o commit deste ESTADO-FINAL (e a nota do CI a seguir).
+  4. `1d4ce44` — este ESTADO-FINAL; 5. a nota do CI do `1d4ce44` (o commit seguinte).
 
 ## A. F1 — a F3b
 
@@ -183,8 +183,12 @@ ficheiros (**0 novos, 0 tirados** nesta passagem)»; `git diff retoma-i0004` com
 | `8541f20` | 46032812632 success | 46032812667 tentativa 1 failure (qr, Chromium sem DevTools) → tentativa 2 success (web: FALHA ±10 % escondida) | 46032812726 success |
 | `17015a3` | 46033830661 success, 10/10 jobs | 46033830951 success, 6/6 (web: FALHA ±10 % escondida) | 46033830721 success |
 
-O run do Testes **não tem** o passo `camera_segue` nem o artefacto `camera-segue` (F3b por fechar). Os runs do commit
-deste ESTADO-FINAL vão na nota a seguir.
+O run do Testes **não tem** o passo `camera_segue` nem o artefacto `camera-segue` (F3b por fechar).
+
+**Nota do CI do commit do ESTADO-FINAL (`1d4ce44`):** Testes dos rascunhos 46035012214 success 10/10; Aparelhos (F2)
+46035012222 success 6/6 — no log do web-chromium, outra vez `FALHA repetir dá o mesmo ±10 %: fps_p5 0.4 → 0.7`
+(`fps_mediana 0.7 → 0.7` e `chamadas_mediana 87 → 87` ok), escondida como em B1.3; Sonda de privacidade 46035012164
+success. Os runs do commit desta nota não estão registados aqui.
 
 ## O que fica pendente, e de quem
 
