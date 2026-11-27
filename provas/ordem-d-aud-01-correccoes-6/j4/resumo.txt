@@ -1,0 +1,5 @@
+# commit: 2e226c70dbfa7deea82cad857675110e6b6633ed
+pecas_mestre exit=0 falhas=0 scriptErrors=0 fim=«336 de 336 verificações passaram.»
+pecas_mestre-SEM-REFRESCO exit=1 falhas=1 falhas-correccoes-6=0 falhas-correccoes-5=1 falhas-correccoes-5-B2=0 falhas-correccoes-4=0 scriptErrors=0 fim=«335 de 336 verificações passaram.» reposto=sim
+pecas_mestre-SEM-B1 exit=1 falhas=3 falhas-correccoes-6=0 falhas-correccoes-5=0 falhas-correccoes-5-B2=1 falhas-correccoes-4=2 scriptErrors=0 fim=«333 de 336 verificações passaram.» reposto=sim
+FIM
