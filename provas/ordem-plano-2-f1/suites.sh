@@ -42,11 +42,20 @@ assert s.count(a)==1; open(p,'w',encoding='utf8',newline='').write(s.replace(a,b
   "$@" >> "$L/$n.log" 2>&1; e=$?
   cd "$R" && git checkout -- "$ALVO" && trap - EXIT
   if ! git diff --quiet -- "$ALVO"; then echo "PARAR: $ALVO não ficou reposto"; exit 1; fi
-  echo "$n exit=$e falhas=$(falhas "$L/$n.log") fim=«$(grep -E 'verificações passaram|^ℹ (pass|fail) ' "$L/$n.log" | tr '\n' ' ')» reposto=$(git diff --quiet -- "$ALVO" && echo sim || echo NAO)" >> "$L/resumo.txt"
+  local nf; if ! nf="$(falhas "$L/$n.log")"; then echo "PARAR: $L/$n.log não traz nenhuma marca de falha nem de resumo (exit=$e) — não registo falhas=0"; exit 1; fi
+  echo "$n exit=$e falhas=$nf fim=«$(grep -E 'verificações passaram|^ℹ (pass|fail) ' "$L/$n.log" | tr '\n' ' ')» reposto=$(git diff --quiet -- "$ALVO" && echo sim || echo NAO)" >> "$L/resumo.txt"
 }
 # F4 do fecho (26/11): falhas = testes falhados. No log do node é o «ℹ fail N» (as linhas «✖» repetem cada teste no
 # resumo final e o cabeçalho «✖ failing tests:» também tem «✖»); no Godot, uma linha «  FALHA » por verificação falhada.
-falhas() { local f; f=$(grep -oE '^ℹ fail [0-9]+' "$1" | tail -1 | grep -oE '[0-9]+$'); [ -n "$f" ] && echo "$f" || grep -cE '  FALHA |^not ok' "$1"; }
+# J-F8 (ORDEM-PLANO-2-F1-ADENDA-J-F7-J-F8, 26/11): sem o «ℹ fail N» (o node morreu antes do resumo), já não se devolve 0 em
+# silêncio: conta-se uma linha «✖ » por teste falhado só na lista dos testes, antes do cabeçalho «✖ failing tests:» (depois
+# dele cada teste repete-se), mais as «  FALHA » do Godot e os «not ok» do TAP. Se o log não trouxer nenhuma marca — nem de
+# falha nem de resumo («ℹ pass N», «verificações passaram») —, falhas() sai com 1 e o muta() aborta com PARAR, em vez de
+# registar falhas=0. (Num describe com subtestes, o «✖» do pai também conta; os testes destas provas não têm subtestes.)
+falhas() { local f; f=$(grep -oE '^ℹ fail [0-9]+' "$1" | tail -1 | grep -oE '[0-9]+$'); [ -n "$f" ] && { echo "$f"; return 0; }
+  f=$(( $(grep -cE '  FALHA ' "$1") + $(grep -cE '^not ok' "$1") + $(sed '/^✖ failing tests:/,$d' "$1" | grep -cE '^ *✖ ') ))
+  if [ "$f" = 0 ] && ! grep -qE 'verificações passaram|^ℹ pass [0-9]+' "$1"; then return 1; fi
+  echo "$f"; }
 cam() { cd "$R/rascunhos/cliente" && godot "$L/$1.log" --path . -s res://testes/camera_segue.gd; }
 ARENA=rascunhos/cliente/cenas/arena/arena.gd
 muta camera_segue-SEM-FOCO-NO-EVENTO "$ARENA" '	if _focar_primeira_vez():' '	if false and _focar_primeira_vez():  # MUTACAO (PLANO-2-F1): o evento não foca' \

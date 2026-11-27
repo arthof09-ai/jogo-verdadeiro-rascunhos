@@ -1,0 +1,24 @@
+J-F8 (ORDEM-PLANO-2-F1-ADENDA-J-F7-J-F8, 26/11/2026) — o falhas() já não devolve 0 em silêncio num log do node sem
+«ℹ fail N».
+
+O que mudou, igual nos dois guiões (provas/ordem-plano-2-f1-adenda/suites.sh e provas/ordem-plano-2-f1/suites.sh):
+- falhas(): o «ℹ fail N», quando existe, continua a mandar. Sem ele, soma as «  FALHA » (Godot), os «not ok» (TAP) e as
+  linhas «✖ » da lista dos testes, só até ao cabeçalho «✖ failing tests:» (depois dele cada teste repete-se). Se o log não
+  tiver nenhuma marca — nem de falha nem de resumo («ℹ pass N», «verificações passaram») —, sai com 1;
+- muta(): se o falhas() sair com 1, pára com «PARAR: … não traz nenhuma marca de falha nem de resumo — não registo
+  falhas=0» (o ficheiro mutado já está reposto nessa altura).
+
+Provas:
+- conferir-falhas.sh / .log — tira o muta() e o falhas() de cada guião e corre o muta() a sério num repo git temporário,
+  com um comando que despeja um log sintético. «antigo» é o que o falhas() de antes dava:
+    node-sem-resumo (7 testes falhados, sem «ℹ fail N»)  antigo=0 → falhas=7
+    node-morto-na-lista (sem «ℹ …», com a lista final)    antigo=0 → falhas=7
+    node-completo (controlo, «ℹ fail 7»)                   7 → 7
+    godot-3-falhas                                         3 → 3
+    godot-verde («verificações passaram»)                  0 → 0
+    sem-marcas                                             antigo=0 → o muta() aborta com PARAR (exit 1), sem linha no resumo
+- corrida-focada-mutacao/ — SO_MUTACAO=1 bash provas/ordem-plano-2-f1-adenda/suites.sh, com os guiões por cometer:
+  «d-aud-12-snapshot-SEM-SUFIXO-NA-FIGURA-PUBLICA exit=1 falhas=7 fim=«ℹ pass 0 ℹ fail 7 » reposto=sim».
+
+O provas/ordem-plano-2-f1/suites.sh não foi corrido por inteiro (pede GODOT e MOTOR_MJS e as suas três mutações); só o
+muta()/falhas() dele passou pelo conferir-falhas.sh.

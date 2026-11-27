@@ -1,0 +1,7 @@
+# commit: 8fd4cda9051718ecbf4a9657629cedc0d657d527 · árvore testada: 3d77f793fffb220637ff5487aa143076df55d152 (NÃO é a do commit, 77f417fff6cdd9d46ea4d256ca01e6407642cda1: o HEAD mais o que está por cometer, abaixo; diff em arvore-por-cometer.diff)
+# por cometer:  M provas/ordem-plano-2-f1-adenda/suites.sh
+# por cometer:  M provas/ordem-plano-2-f1/suites.sh
+# por cometer: ?? provas/ordem-plano-2-f1-adenda/j-f/j-f8-falhas-sem-resumo/conferir-falhas.log
+# por cometer: ?? provas/ordem-plano-2-f1-adenda/j-f/j-f8-falhas-sem-resumo/conferir-falhas.sh
+d-aud-12-snapshot-SEM-SUFIXO-NA-FIGURA-PUBLICA exit=1 falhas=7 fim=«ℹ pass 0 ℹ fail 7 » reposto=sim
+FIM (SO_MUTACAO=1: só o passo da mutação)

@@ -1,0 +1,120 @@
+diff --git a/provas/ordem-plano-2-f1-adenda/j-f/j-f8-falhas-sem-resumo/conferir-falhas.log b/provas/ordem-plano-2-f1-adenda/j-f/j-f8-falhas-sem-resumo/conferir-falhas.log
+new file mode 100644
+index 0000000..597b266
+--- /dev/null
++++ b/provas/ordem-plano-2-f1-adenda/j-f/j-f8-falhas-sem-resumo/conferir-falhas.log
+@@ -0,0 +1,16 @@
++# comando: bash provas/ordem-plano-2-f1-adenda/j-f/j-f8-falhas-sem-resumo/conferir-falhas.sh   (HEAD 8fd4cda + os dois suites.sh por cometer)
++== provas/ordem-plano-2-f1-adenda/suites.sh (cópia de trabalho, sha256 8dc8ad20c697)
++node-sem-resumo      antigo=0  muta_exit=0 resumo=«node-sem-resumo exit=0 falhas=7» saida=«(sem abortar) » reposto=sim
++node-morto-na-lista  antigo=0  muta_exit=0 resumo=«node-morto-na-lista exit=0 falhas=7» saida=«(sem abortar) » reposto=sim
++node-completo        antigo=7  muta_exit=0 resumo=«node-completo exit=0 falhas=7» saida=«(sem abortar) » reposto=sim
++godot-3-falhas       antigo=3  muta_exit=0 resumo=«godot-3-falhas exit=0 falhas=3» saida=«(sem abortar) » reposto=sim
++godot-verde          antigo=0  muta_exit=0 resumo=«godot-verde exit=0 falhas=0» saida=«(sem abortar) » reposto=sim
++sem-marcas           antigo=0  muta_exit=1 resumo=«» saida=«PARAR: <tmp>/L/sem-marcas.log não traz nenhuma marca de falha nem de resumo (exit=0) — não registo falhas=0 » reposto=sim
++== provas/ordem-plano-2-f1/suites.sh (cópia de trabalho, sha256 ecad2931b7df)
++node-sem-resumo      antigo=0  muta_exit=0 resumo=«node-sem-resumo exit=0 falhas=7» saida=«(sem abortar) » reposto=sim
++node-morto-na-lista  antigo=0  muta_exit=0 resumo=«node-morto-na-lista exit=0 falhas=7» saida=«(sem abortar) » reposto=sim
++node-completo        antigo=7  muta_exit=0 resumo=«node-completo exit=0 falhas=7» saida=«(sem abortar) » reposto=sim
++godot-3-falhas       antigo=3  muta_exit=0 resumo=«godot-3-falhas exit=0 falhas=3» saida=«(sem abortar) » reposto=sim
++godot-verde          antigo=0  muta_exit=0 resumo=«godot-verde exit=0 falhas=0» saida=«(sem abortar) » reposto=sim
++sem-marcas           antigo=0  muta_exit=1 resumo=«» saida=«PARAR: <tmp>/L/sem-marcas.log não traz nenhuma marca de falha nem de resumo (exit=0) — não registo falhas=0 » reposto=sim
++# exit=0
+diff --git a/provas/ordem-plano-2-f1-adenda/j-f/j-f8-falhas-sem-resumo/conferir-falhas.sh b/provas/ordem-plano-2-f1-adenda/j-f/j-f8-falhas-sem-resumo/conferir-falhas.sh
+new file mode 100644
+index 0000000..6827b25
+--- /dev/null
++++ b/provas/ordem-plano-2-f1-adenda/j-f/j-f8-falhas-sem-resumo/conferir-falhas.sh
+@@ -0,0 +1,37 @@
++#!/bin/bash
++# J-F8 (ORDEM-PLANO-2-F1-ADENDA-J-F7-J-F8, 26/11/2026) — confere o falhas()/muta() dos dois guiões sobre logs sintéticos.
++# Tira as funções muta() e falhas() de cada suites.sh tal como estão cometidas e corre o muta() a sério (mutação num
++# ficheiro de um repo git temporário, reposta com git checkout), com um «comando» que só despeja um log sintético:
++#   node-sem-resumo        o log da corrida focada do J-F1 cortado no «ℹ tests» (o node morreu antes do resumo): 7 «✖», sem
++#                          «ℹ fail N» e sem o cabeçalho «✖ failing tests:»
++#   node-morto-na-lista    o mesmo log sem as linhas «ℹ …», mas com a lista final «✖ failing tests:» (que repete os 7)
++#   node-completo          o log cometido, inteiro (controlo: «ℹ fail 7»)
++#   godot-3-falhas         3 linhas «  FALHA », sem resumo
++#   godot-verde            «12 verificações passaram» (controlo: 0 legítimo)
++#   sem-marcas             só um «✔» e lixo, sem falha nem resumo → o muta() tem de abortar com PARAR
++#   bash provas/ordem-plano-2-f1-adenda/j-f/j-f8-falhas-sem-resumo/conferir-falhas.sh
++set -u
++R0="$(git rev-parse --show-toplevel)"; cd "$R0"
++FOC=provas/ordem-plano-2-f1-adenda/j-f/j-f2-corrida-focada-arvore-limpa/d-aud-12-snapshot-SEM-SUFIXO-NA-FIGURA-PUBLICA.log
++T="$(mktemp -d)"; trap 'rm -rf "$T"' EXIT
++mkdir -p "$T/sint"
++sed '/^ℹ tests /,$d' "$FOC" > "$T/sint/node-sem-resumo.log"
++grep -v '^ℹ ' "$FOC" > "$T/sint/node-morto-na-lista.log"
++cp "$FOC" "$T/sint/node-completo.log"
++printf 'a correr\n  FALHA a\n  ok b\n  FALHA c\n  FALHA d\n' > "$T/sint/godot-3-falhas.log"
++printf 'a correr\n  ok a\n12 verificações passaram\n' > "$T/sint/godot-verde.log"
++printf '✔ um teste (1ms)\nSegmentation fault\n' > "$T/sint/sem-marcas.log"
++antigo() { local f; f=$(grep -oE '^ℹ fail [0-9]+' "$1" | tail -1 | grep -oE '[0-9]+$'); [ -n "$f" ] && echo "$f" || grep -cE '  FALHA |^not ok' "$1"; }
++for G in provas/ordem-plano-2-f1-adenda/suites.sh provas/ordem-plano-2-f1/suites.sh; do
++  echo "== $G (cópia de trabalho, sha256 $(sha256sum "$G" | cut -c1-12))"
++  FUN="$( sed -n '/^muta() {/,/^}/p' "$G"; sed -n '/^falhas() {/,/echo "\$f"; }$/p' "$G" )"
++  for s in node-sem-resumo node-morto-na-lista node-completo godot-3-falhas godot-verde sem-marcas; do
++    r="$T/r-$s"; rm -rf "$r"; mkdir -p "$r/L"; git -C "$r" init -q; printf 'x\nORIGINAL\ny\n' > "$r/alvo.txt"
++    git -C "$r" add alvo.txt; git -C "$r" -c user.name=t -c user.email=t@t commit -qm base
++    out="$( cd "$r" && R="$r" L="$r/L" P="${PYTHON:-python}" bash -c "$FUN"'
++      muta '"$s"' alvo.txt ORIGINAL MUTADA cat "$0"; echo "(sem abortar)"' "$T/sint/$s.log" 2>&1 )"; e=$?
++    printf '%-20s antigo=%-2s muta_exit=%s resumo=«%s» saida=«%s» reposto=%s\n' "$s" "$(antigo "$T/sint/$s.log")" "$e" \
++      "$(sed 's/ fim=.*//' "$r/L/resumo.txt" 2>/dev/null)" "$(echo "$out" | sed "s|$r|<tmp>|g" | tr '\n' ' ')" \
++      "$(git -C "$r" diff --quiet && echo sim || echo NAO)"
++  done
++done
+diff --git a/provas/ordem-plano-2-f1-adenda/suites.sh b/provas/ordem-plano-2-f1-adenda/suites.sh
+index 1d54c93..ba5d903 100644
+--- a/provas/ordem-plano-2-f1-adenda/suites.sh
++++ b/provas/ordem-plano-2-f1-adenda/suites.sh
+@@ -58,12 +58,21 @@ assert s.count(a)==1; open(p,'w',encoding='utf8',newline='').write(s.replace(a,b
+   "$@" >> "$L/$n.log" 2>&1; e=$?
+   cd "$R" && git checkout -- "$ALVO" && trap - EXIT
+   if ! git diff --quiet -- "$ALVO"; then echo "PARAR: $ALVO não ficou reposto"; exit 1; fi
+-  echo "$n exit=$e falhas=$(falhas "$L/$n.log") fim=«$(grep -E 'verificações passaram|^ℹ (pass|fail) ' "$L/$n.log" | tr '\n' ' ')» reposto=$(git diff --quiet -- "$ALVO" && echo sim || echo NAO)" >> "$L/resumo.txt"
++  local nf; if ! nf="$(falhas "$L/$n.log")"; then echo "PARAR: $L/$n.log não traz nenhuma marca de falha nem de resumo (exit=$e) — não registo falhas=0"; exit 1; fi
++  echo "$n exit=$e falhas=$nf fim=«$(grep -E 'verificações passaram|^ℹ (pass|fail) ' "$L/$n.log" | tr '\n' ' ')» reposto=$(git diff --quiet -- "$ALVO" && echo sim || echo NAO)" >> "$L/resumo.txt"
+ }
+ # J-F1 (26/11, o F4(d) do fecho da F1, repetido aqui): falhas = testes falhados. No log do node é o «ℹ fail N» — as linhas
+ # «✖» repetem cada teste na lista final e o cabeçalho «✖ failing tests:» também tem «✖» (7 testes davam 15); no Godot, uma
+ # linha «  FALHA » por verificação falhada. A mesma função que o provas/ordem-plano-2-f1/suites.sh já tem.
+-falhas() { local f; f=$(grep -oE '^ℹ fail [0-9]+' "$1" | tail -1 | grep -oE '[0-9]+$'); [ -n "$f" ] && echo "$f" || grep -cE '  FALHA |^not ok' "$1"; }
++# J-F8 (ORDEM-PLANO-2-F1-ADENDA-J-F7-J-F8, 26/11): sem o «ℹ fail N» (o node morreu antes do resumo), já não se devolve 0 em
++# silêncio: conta-se uma linha «✖ » por teste falhado só na lista dos testes, antes do cabeçalho «✖ failing tests:» (depois
++# dele cada teste repete-se), mais as «  FALHA » do Godot e os «not ok» do TAP. Se o log não trouxer nenhuma marca — nem de
++# falha nem de resumo («ℹ pass N», «verificações passaram») —, falhas() sai com 1 e o muta() aborta com PARAR, em vez de
++# registar falhas=0. (Num describe com subtestes, o «✖» do pai também conta; os testes destas provas não têm subtestes.)
++falhas() { local f; f=$(grep -oE '^ℹ fail [0-9]+' "$1" | tail -1 | grep -oE '[0-9]+$'); [ -n "$f" ] && { echo "$f"; return 0; }
++  f=$(( $(grep -cE '  FALHA ' "$1") + $(grep -cE '^not ok' "$1") + $(sed '/^✖ failing tests:/,$d' "$1" | grep -cE '^ *✖ ') ))
++  if [ "$f" = 0 ] && ! grep -qE 'verificações passaram|^ℹ pass [0-9]+' "$1"; then return 1; fi
++  echo "$f"; }
+ snap() { cd "$R/rascunhos/servidor" && PROVA_SNAPSHOT=1 node --test --test-reporter=spec testes/d-aud-12-snapshot-novo.test.mjs; }
+ muta d-aud-12-snapshot-SEM-SUFIXO-NA-FIGURA-PUBLICA rascunhos/servidor/nucleo/projecao.js   '    nomePublico: nomePublicoDaFigura(fig, fichas[fig.fichaId]),'   '    nomePublico: nomePublicoDe(fichas[fig.fichaId]), // MUTACAO (PLANO-2-F1-ADENDA): o snapshot sem o número' snap
+ # J-F1: SO_MUTACAO=1 corre só o passo da mutação (a prova focada do contador) e pára aqui.
+diff --git a/provas/ordem-plano-2-f1/suites.sh b/provas/ordem-plano-2-f1/suites.sh
+index d2b95e4..17721fb 100644
+--- a/provas/ordem-plano-2-f1/suites.sh
++++ b/provas/ordem-plano-2-f1/suites.sh
+@@ -42,11 +42,20 @@ assert s.count(a)==1; open(p,'w',encoding='utf8',newline='').write(s.replace(a,b
+   "$@" >> "$L/$n.log" 2>&1; e=$?
+   cd "$R" && git checkout -- "$ALVO" && trap - EXIT
+   if ! git diff --quiet -- "$ALVO"; then echo "PARAR: $ALVO não ficou reposto"; exit 1; fi
+-  echo "$n exit=$e falhas=$(falhas "$L/$n.log") fim=«$(grep -E 'verificações passaram|^ℹ (pass|fail) ' "$L/$n.log" | tr '\n' ' ')» reposto=$(git diff --quiet -- "$ALVO" && echo sim || echo NAO)" >> "$L/resumo.txt"
++  local nf; if ! nf="$(falhas "$L/$n.log")"; then echo "PARAR: $L/$n.log não traz nenhuma marca de falha nem de resumo (exit=$e) — não registo falhas=0"; exit 1; fi
++  echo "$n exit=$e falhas=$nf fim=«$(grep -E 'verificações passaram|^ℹ (pass|fail) ' "$L/$n.log" | tr '\n' ' ')» reposto=$(git diff --quiet -- "$ALVO" && echo sim || echo NAO)" >> "$L/resumo.txt"
+ }
+ # F4 do fecho (26/11): falhas = testes falhados. No log do node é o «ℹ fail N» (as linhas «✖» repetem cada teste no
+ # resumo final e o cabeçalho «✖ failing tests:» também tem «✖»); no Godot, uma linha «  FALHA » por verificação falhada.
+-falhas() { local f; f=$(grep -oE '^ℹ fail [0-9]+' "$1" | tail -1 | grep -oE '[0-9]+$'); [ -n "$f" ] && echo "$f" || grep -cE '  FALHA |^not ok' "$1"; }
++# J-F8 (ORDEM-PLANO-2-F1-ADENDA-J-F7-J-F8, 26/11): sem o «ℹ fail N» (o node morreu antes do resumo), já não se devolve 0 em
++# silêncio: conta-se uma linha «✖ » por teste falhado só na lista dos testes, antes do cabeçalho «✖ failing tests:» (depois
++# dele cada teste repete-se), mais as «  FALHA » do Godot e os «not ok» do TAP. Se o log não trouxer nenhuma marca — nem de
++# falha nem de resumo («ℹ pass N», «verificações passaram») —, falhas() sai com 1 e o muta() aborta com PARAR, em vez de
++# registar falhas=0. (Num describe com subtestes, o «✖» do pai também conta; os testes destas provas não têm subtestes.)
++falhas() { local f; f=$(grep -oE '^ℹ fail [0-9]+' "$1" | tail -1 | grep -oE '[0-9]+$'); [ -n "$f" ] && { echo "$f"; return 0; }
++  f=$(( $(grep -cE '  FALHA ' "$1") + $(grep -cE '^not ok' "$1") + $(sed '/^✖ failing tests:/,$d' "$1" | grep -cE '^ *✖ ') ))
++  if [ "$f" = 0 ] && ! grep -qE 'verificações passaram|^ℹ pass [0-9]+' "$1"; then return 1; fi
++  echo "$f"; }
+ cam() { cd "$R/rascunhos/cliente" && godot "$L/$1.log" --path . -s res://testes/camera_segue.gd; }
+ ARENA=rascunhos/cliente/cenas/arena/arena.gd
+ muta camera_segue-SEM-FOCO-NO-EVENTO "$ARENA" '	if _focar_primeira_vez():' '	if false and _focar_primeira_vez():  # MUTACAO (PLANO-2-F1): o evento não foca' \

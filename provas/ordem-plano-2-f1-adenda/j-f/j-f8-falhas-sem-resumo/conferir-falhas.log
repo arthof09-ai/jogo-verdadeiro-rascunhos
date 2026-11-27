@@ -1,0 +1,16 @@
+# comando: bash provas/ordem-plano-2-f1-adenda/j-f/j-f8-falhas-sem-resumo/conferir-falhas.sh   (HEAD 8fd4cda + os dois suites.sh por cometer)
+== provas/ordem-plano-2-f1-adenda/suites.sh (cópia de trabalho, sha256 8dc8ad20c697)
+node-sem-resumo      antigo=0  muta_exit=0 resumo=«node-sem-resumo exit=0 falhas=7» saida=«(sem abortar) » reposto=sim
+node-morto-na-lista  antigo=0  muta_exit=0 resumo=«node-morto-na-lista exit=0 falhas=7» saida=«(sem abortar) » reposto=sim
+node-completo        antigo=7  muta_exit=0 resumo=«node-completo exit=0 falhas=7» saida=«(sem abortar) » reposto=sim
+godot-3-falhas       antigo=3  muta_exit=0 resumo=«godot-3-falhas exit=0 falhas=3» saida=«(sem abortar) » reposto=sim
+godot-verde          antigo=0  muta_exit=0 resumo=«godot-verde exit=0 falhas=0» saida=«(sem abortar) » reposto=sim
+sem-marcas           antigo=0  muta_exit=1 resumo=«» saida=«PARAR: <tmp>/L/sem-marcas.log não traz nenhuma marca de falha nem de resumo (exit=0) — não registo falhas=0 » reposto=sim
+== provas/ordem-plano-2-f1/suites.sh (cópia de trabalho, sha256 ecad2931b7df)
+node-sem-resumo      antigo=0  muta_exit=0 resumo=«node-sem-resumo exit=0 falhas=7» saida=«(sem abortar) » reposto=sim
+node-morto-na-lista  antigo=0  muta_exit=0 resumo=«node-morto-na-lista exit=0 falhas=7» saida=«(sem abortar) » reposto=sim
+node-completo        antigo=7  muta_exit=0 resumo=«node-completo exit=0 falhas=7» saida=«(sem abortar) » reposto=sim
+godot-3-falhas       antigo=3  muta_exit=0 resumo=«godot-3-falhas exit=0 falhas=3» saida=«(sem abortar) » reposto=sim
+godot-verde          antigo=0  muta_exit=0 resumo=«godot-verde exit=0 falhas=0» saida=«(sem abortar) » reposto=sim
+sem-marcas           antigo=0  muta_exit=1 resumo=«» saida=«PARAR: <tmp>/L/sem-marcas.log não traz nenhuma marca de falha nem de resumo (exit=0) — não registo falhas=0 » reposto=sim
+# exit=0
