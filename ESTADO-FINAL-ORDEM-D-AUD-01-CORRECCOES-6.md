@@ -146,7 +146,14 @@ Testes e Sonda deram verde em cada commit da ordem:
 | `386813e` (J8) | `45936124943` success | `45936124948` success | success |
 | `2e226c7` (J4) | `45936228985` success | `45936229018` success | success |
 | `57779cd` (prova J4) | `45936407923` success | `45936408008` success | success |
-| `9c831f9` (J1) | `45936571109` success | `45936571146` success | a correr à hora desta escrita |
-| `4e64bb0` (prova final) | a correr à hora desta escrita | `45936927244` success | a correr |
+| `9c831f9` (J1) | `45936571109` success | `45936571146` success | (não esperei) |
+| `4e64bb0` (prova final) | `45936927442` success | `45936927244` success | a correr |
+| **`0aac77a`** (README + ESTADO-FINAL, ponta antes desta nota) | **`45937037447` success** | **`45937037487` success** | `45937037558` a correr |
 
-A ponta nova (este commit) e o `4e64bb0` ficam na nota do CI, no commit a seguir.
+**`0aac77a`, os 10 jobs dos Testes deram success:** servidor, validador-glb, motor-real (6 pass, 0 fail),
+protocolo, cliente, godot-cliente, foto-mestre, provas-mapa, ponta-a-ponta e retoma-pc. No log do job cliente o
+`pecas_mestre` dá **337 de 337**, e a verificação «D-AUD-01-CORRECCOES-6 (J1)» está «ok» (33 casas destacadas, 33
+armadas). O retoma-pc ficou verde em todos os commits: as listas foram sincronizadas no mesmo commit (§5).
+
+O «Aparelhos (F2)» não entra no critério desta ordem, que é Testes + Sonda. Esta nota só mexe no ESTADO-FINAL, não
+em `rascunhos/`.
