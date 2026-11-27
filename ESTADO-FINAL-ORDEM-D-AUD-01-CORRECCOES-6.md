@@ -147,8 +147,9 @@ Testes e Sonda deram verde em cada commit da ordem:
 | `2e226c7` (J4) | `45936228985` success | `45936229018` success | success |
 | `57779cd` (prova J4) | `45936407923` success | `45936408008` success | success |
 | `9c831f9` (J1) | `45936571109` success | `45936571146` success | (não esperei) |
-| `4e64bb0` (prova final) | `45936927442` success | `45936927244` success | a correr |
-| **`0aac77a`** (README + ESTADO-FINAL, ponta antes desta nota) | **`45937037447` success** | **`45937037487` success** | `45937037558` a correr |
+| `4e64bb0` (prova final) | `45936927442` success | `45936927244` success | `45936927214` success |
+| **`0aac77a`** (README + ESTADO-FINAL, ponta antes desta nota) | **`45937037447` success** | **`45937037487` success** | `45937037558` success |
+| **`34d35df`** (nota do CI, ponta final) | **`45937407007` success** | **`45937407109` success** | `45937407100` success |
 
 **`0aac77a`, os 10 jobs dos Testes deram success:** servidor, validador-glb, motor-real (6 pass, 0 fail),
 protocolo, cliente, godot-cliente, foto-mestre, provas-mapa, ponta-a-ponta e retoma-pc. No log do job cliente o
@@ -157,3 +158,5 @@ armadas). O retoma-pc ficou verde em todos os commits: as listas foram sincroniz
 
 O «Aparelhos (F2)» não entra no critério desta ordem, que é Testes + Sonda. Esta nota só mexe no ESTADO-FINAL, não
 em `rascunhos/`.
+
+**Adenda do coordenador (27/11 02:26, sentença 975/1000 da conferência):** os Aparelhos `45937037558` (`0aac77a`) e `45936927214` (`4e64bb0`) terminaram `success` depois desta nota escrita (01:01:49 e 01:01:00 -03). Ponta final `34d35df`: Testes `45937407007`, Sonda `45937407109`, Aparelhos `45937407100`, todos `success`, 10/10 jobs. Esta adenda só mexe no ESTADO-FINAL, não em `rascunhos/`.
