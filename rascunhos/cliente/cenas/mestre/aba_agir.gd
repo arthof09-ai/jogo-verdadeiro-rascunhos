@@ -158,11 +158,18 @@ func iniciar_mover() -> void:
 
 
 ## As casas do `mover` das opções (vazio se não houver).
+## D-AUD-01-CORRECCOES-6 (J8): um `mover` que não seja lista dá vazio; casas sem `x`/`y` saltam (antes davam a
+## casa-fantasma (-1,-1)) e as repetidas contam uma vez.
 func _casas_de(op: Dictionary) -> Array[Vector2i]:
 	var casas: Array[Vector2i] = []
-	for c in op.get("mover", []):
-		if c is Dictionary:
-			casas.append(Vector2i(int(c.get("x", -1)), int(c.get("y", -1))))
+	var lista = op.get("mover", [])
+	if not (lista is Array):
+		return casas
+	for c in lista:
+		if c is Dictionary and c.has("x") and c.has("y"):
+			var casa := Vector2i(int(c.get("x")), int(c.get("y")))
+			if not casas.has(casa):
+				casas.append(casa)
 	return casas
 
 
