@@ -1,0 +1,31 @@
+# DEPOIS (J-F7) — ponta 143c819 + o teste por cometer (conferir com «msg ?? 'snapshot'»)
+# comando: cd rascunhos/servidor && PROVA_SNAPSHOT=1 node --test --test-reporter=spec testes/d-aud-12-snapshot-novo.test.mjs
+# node v26.13.0
+PROVA entrada-tardia-espectador: ["Heroína Teste@2,2","Orc 1@2,6","Orc 2@5,6","Lobo 1@9,9"]
+PROVA reentrada-heroina: ["Heroína Teste@2,2","Orc 1@2,6","Orc 2@5,6","Lobo 1@9,9"]
+PROVA reentrada-espectador: ["Heroína Teste@2,2","Orc 1@2,6","Orc 2@5,6","Lobo 1@9,9"]
+PROVA resync-heroina: ["Heroína Teste@2,2","Orc 1@2,6","Orc 2@5,6","Lobo 1@9,9"]
+PROVA resync-espectador: ["Heroína Teste@2,2","Orc 1@2,6","Orc 2@5,6","Lobo 1@9,9"]
+PROVA resync-pos-recomeco-heroina: ["Heroína Teste@2,2","Orc 1@2,6","Orc 2@5,6","Lobo 1@9,9"]
+PROVA resync-pos-recomeco-espectador: ["Heroína Teste@2,2","Orc 1@2,6","Orc 2@5,6","Lobo 1@9,9"]
+PROVA recomeco-heroina: ["Heroína Teste@2,2","Orc 1@2,6","Orc 2@5,6","Lobo 1@9,9"]
+PROVA recomeco-espectador: ["Heroína Teste@2,2","Orc 1@2,6","Orc 2@5,6","Lobo 1@9,9"]
+PROVA sala-reaberta-heroina: ["Heroína Teste@2,2","Lobo 1@9,9","Orc 1@2,6","Orc 2@5,6"]
+PROVA sala-reaberta-lobby-heroina: []
+PROVA sala-reaberta-fim-da-espera-heroina: ["Heroína Teste@2,2","Lobo 1@9,9","Orc 1@2,6","Orc 2@5,6"]
+✔ D-AUD-12 adenda: quem entra a meio da batalha recebe o snapshot já com «Orc 1»/«Orc 2» (15.0208ms)
+✔ D-AUD-12 adenda: REENTRADA — a jogadora sai e volta; o snapshot novo mantém «Orc 1»/«Orc 2» (8.41ms)
+✔ D-AUD-12 adenda: RESYNC — um lastSeq que o servidor não consegue servir dá snapshot, com «Orc 1»/«Orc 2» (4.508ms)
+✔ D-AUD-12 adenda: RESYNC depois do recomeço (lastSeq antes do corte) — o snapshot mantém «Orc 1»/«Orc 2» (6.4393ms)
+✔ D-AUD-12 adenda: RECOMEÇO — o snapshot que vai a todos mantém «Orc 1»/«Orc 2» (5.1631ms)
+✔ D-AUD-12 adenda: a sala REABERTA do journal, o Mestre já dentro — a jogadora entra e vê «Orc 1»/«Orc 2» (8.202ms)
+✔ D-AUD-12 adenda: a sala REABERTA do journal, a jogadora à espera — o snapshot da batalha, quando o Mestre volta, traz «Orc 1»/«Orc 2» (6.7811ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 138.2205
+# exit=0

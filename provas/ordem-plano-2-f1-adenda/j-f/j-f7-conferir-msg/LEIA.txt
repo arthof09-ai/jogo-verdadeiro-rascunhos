@@ -1,0 +1,16 @@
+J-F7 (ORDEM-PLANO-2-F1-ADENDA-J-F7-J-F8, 26/11/2026) — d-aud-12-snapshot-novo.test.mjs: o `conferir` já não passa uma
+`msg` indefinida ao `assert.deepEqual`.
+
+O que mudou no teste (l. 23):
+  -  assert.deepEqual(porCasa(snap), ESPERADO, msg);
+  +  assert.deepEqual(porCasa(snap), ESPERADO, msg ?? 'snapshot'); // J-F7: sem «msg», o node dava TypeError em vez do diff
+Os 3 testes que chamam `conferir(snap)` sem mensagem (entrada-tardia, l. 50; sala-reaberta, Mestre já dentro, l. 139;
+sala-reaberta, jogadora à espera, l. 156) falhavam, com a mutação, com TypeError [ERR_INVALID_ARG_TYPE] e sem o diff
+(j-f4-snapshot-sem-sort/regressao-snapshot-ANTES.log). Agora falham com AssertionError «snapshot» e o diff actual/expected.
+
+Logs (node v26.13.0), sobre a ponta 143c819 + o teste por cometer:
+- regressao-snapshot-ANTES.log   a mutação da adenda (o snapshot sem o número; a linha do mutacao-figuraPublica.diff),
+                                 reposta com git checkout: 0 de 7; 7 AssertionError, 0 TypeError
+- regressao-snapshot-DEPOIS.log  7 de 7, 12 linhas PROVA
+- servidor.log                   testes/*.test.mjs: 459 de 459 (eram 453 no J-F5; os 6 a mais são o e2e-canarios.test.mjs
+                                 do F8 da ORDEM-PLANO-2-F1-F7-F8, dd7b1ef/de10b86 — não deste ponto)

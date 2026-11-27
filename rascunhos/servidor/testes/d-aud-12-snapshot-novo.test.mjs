@@ -20,7 +20,7 @@ const nomes = (snap) => snap.figuras.map((f) => `${f.nomePublico}@${f.x},${f.y}`
 const porCasa = (snap) => Object.fromEntries(snap.figuras.map((f) => [`${f.x},${f.y}`, f.nomePublico]));
 function conferir(snap, msg) {
   assert.equal(snap.figuras.length, 4, `${msg ?? 'snapshot'}: 4 figuras`);
-  assert.deepEqual(porCasa(snap), ESPERADO, msg);
+  assert.deepEqual(porCasa(snap), ESPERADO, msg ?? 'snapshot'); // J-F7: sem «msg», o node dava TypeError em vez do diff
 }
 const snapshotsEm = (msgs) => msgs.filter((x) => x.type === 'ROOM_SNAPSHOT');
 
