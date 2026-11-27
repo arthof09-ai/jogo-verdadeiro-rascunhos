@@ -457,6 +457,22 @@ func _correr() -> void:
 		_responder(c, cmd)
 	_rede._ao_receber(JSON.stringify(op_orig))
 	c.aplicar_vista(vista)
+	# D-AUD-01-CORRECCOES-6 (J1, sentença 820): com o «Mover» armado, outro desenho troca o destaque (aqui o esquema
+	# da Mesa: ligá-lo desenha as casas do esquema por cima). Chegam as MESMAS opções pela Rede (mesma revisão, mesma
+	# vez): o atualizar() tem de repor o destaque do «Mover». Com o «if novas != _casas:» da CORRECCOES-5 as casas
+	# eram iguais e o destaque ficava o do esquema.
+	c._aba_agir.iniciar_mover()
+	var casas_j1: Array[Vector2i] = c._aba_agir._casas.duplicate()
+	var armado_j1: bool = c._aba_agir.a_mover and not casas_j1.is_empty() and c._arena.casas_destacadas() == casas_j1
+	c._aba_mesa.ligar_esquema(true)
+	var tapado_j1: bool = c._arena.casas_destacadas() != casas_j1
+	_rede._ao_receber(JSON.stringify(op_orig))
+	var reposto_j1: bool = c._aba_agir.a_mover and c._aba_agir._casas == casas_j1 and c._arena.casas_destacadas() == c._aba_agir._casas
+	_ok(armado_j1 and tapado_j1 and reposto_j1,
+		"D-AUD-01-CORRECCOES-6 (J1): «Mover» armado (%s) → o esquema da Mesa troca o destaque (%s) → as MESMAS opções pela Rede → o destaque volta a ser o do «Mover» (%s: %d casas destacadas, %d armadas)"
+		% [armado_j1, tapado_j1, reposto_j1, c._arena.casas_destacadas().size(), c._aba_agir._casas.size()])
+	c._aba_mesa.ligar_esquema(false)
+	c._aba_agir._cancelar.pressed.emit()
 	if not opcoes["ataques"].is_empty():
 		var a: Dictionary = opcoes["ataques"][0]
 		c._aba_agir.agir({"tipo": "atacar", "alvoId": a["alvoId"], "arma": a["arma"]})

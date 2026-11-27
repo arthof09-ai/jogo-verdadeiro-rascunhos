@@ -110,10 +110,11 @@ func atualizar(_vista: Dictionary = {}) -> void:
 		# depois de aprovar um cartão de IA). As casas armadas passam a ser as novas: uma casa que saiu deixa de mandar
 		# um MASTER_ACT que o servidor recusa e uma que entrou deixa de ser engolida. Fica armado (e a ficha guardada
 		# do «Colocar» também); o `Info` mostra a contagem nova (fim desta função).
+		# D-AUD-01-CORRECCOES-6 (J1): o destaque é reposto SEMPRE, mesmo com as mesmas casas — outro desenho (p.ex. o
+		# do esquema da Mesa) pode tê-lo trocado entretanto, e o «Mover» armado tem de mostrar as casas que aceita.
 		var novas := _casas_de(op)
-		if novas != _casas:
-			_casas = novas
-			mestre.destacar(_casas)
+		_casas = novas
+		mestre.destacar(_casas)
 	if tem_mover:
 		_botao(Textos.MOVER, iniciar_mover)
 	# ORDEM-D-AUD-06: os alvos dos ataques ficam marcados na arena (o mesmo marcador da jogadora).
