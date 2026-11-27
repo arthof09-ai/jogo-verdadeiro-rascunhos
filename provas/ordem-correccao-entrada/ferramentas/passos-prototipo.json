@@ -1,0 +1,8 @@
+[{"espera":3000},{"foto":"01-filme"},{"espera":20000},{"foto":"02-tres-botoes"},
+ {"tocar":"#ent-mestre"},{"espera":1500},{"foto":"03-vista-mestre"},
+ {"tocar":"#ent-senha-ligacao"},{"espera":800},{"estado":"04-senha-aberta"},
+ {"tocar":"#ent-senha-campo"},{"espera":400},{"estado":"05-campo-tocado"},
+ {"inserir":"1234"},{"espera":300},{"estado":"06-escrito"},
+ {"tocar":"#ent-entrar-senha"},{"espera":3500},{"estado":"07-depois-entrar"},
+ {"tocar":"#ent-fechar-mestre"},{"espera":800},
+ {"tocar":"#ent-config"},{"espera":1500},{"estado":"08-config"}]

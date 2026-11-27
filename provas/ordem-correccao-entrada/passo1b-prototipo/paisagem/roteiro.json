@@ -1,0 +1,204 @@
+{
+ "url": "http://127.0.0.1:8571/jogo-t1/index.html",
+ "ecran": [
+  640,
+  360,
+  3
+ ],
+ "passos": [
+  {
+   "passo": {
+    "espera": 3000
+   }
+  },
+  {
+   "passo": {
+    "foto": "01-filme"
+   }
+  },
+  {
+   "passo": {
+    "espera": 20000
+   }
+  },
+  {
+   "passo": {
+    "foto": "02-tres-botoes"
+   }
+  },
+  {
+   "passo": {
+    "tocar": "#ent-mestre"
+   },
+   "xy": [
+    189,
+    320
+   ]
+  },
+  {
+   "passo": {
+    "espera": 1500
+   }
+  },
+  {
+   "passo": {
+    "foto": "03-vista-mestre"
+   }
+  },
+  {
+   "passo": {
+    "tocar": "#ent-senha-ligacao"
+   },
+   "xy": [
+    320,
+    215
+   ]
+  },
+  {
+   "passo": {
+    "espera": 800
+   }
+  },
+  {
+   "passo": {
+    "estado": "04-senha-aberta"
+   },
+   "estado": {
+    "focado": "INPUT#ent-senha-campo.ent-campo",
+    "teclado_abre": true,
+    "tipo": "password",
+    "valor_len": 0,
+    "janela": [
+     640,
+     360
+    ]
+   }
+  },
+  {
+   "passo": {
+    "tocar": "#ent-senha-campo"
+   },
+   "xy": [
+    320,
+    236
+   ]
+  },
+  {
+   "passo": {
+    "espera": 400
+   }
+  },
+  {
+   "passo": {
+    "estado": "05-campo-tocado"
+   },
+   "estado": {
+    "focado": "INPUT#ent-senha-campo.ent-campo",
+    "teclado_abre": true,
+    "tipo": "password",
+    "valor_len": 0,
+    "janela": [
+     640,
+     360
+    ]
+   }
+  },
+  {
+   "passo": {
+    "inserir": "1234"
+   }
+  },
+  {
+   "passo": {
+    "espera": 300
+   }
+  },
+  {
+   "passo": {
+    "estado": "06-escrito"
+   },
+   "estado": {
+    "focado": "INPUT#ent-senha-campo.ent-campo",
+    "teclado_abre": true,
+    "tipo": "password",
+    "valor_len": 4,
+    "janela": [
+     640,
+     360
+    ]
+   }
+  },
+  {
+   "passo": {
+    "tocar": "#ent-entrar-senha"
+   },
+   "xy": [
+    320,
+    306
+   ]
+  },
+  {
+   "passo": {
+    "espera": 3500
+   }
+  },
+  {
+   "passo": {
+    "estado": "07-depois-entrar"
+   },
+   "estado": {
+    "focado": "INPUT#ent-senha-campo.ent-campo",
+    "teclado_abre": true,
+    "tipo": "password",
+    "valor_len": 0,
+    "janela": [
+     640,
+     360
+    ]
+   }
+  },
+  {
+   "passo": {
+    "tocar": "#ent-fechar-mestre"
+   },
+   "xy": [
+    415,
+    117
+   ]
+  },
+  {
+   "passo": {
+    "espera": 800
+   }
+  },
+  {
+   "passo": {
+    "tocar": "#ent-config"
+   },
+   "xy": [
+    450,
+    320
+   ]
+  },
+  {
+   "passo": {
+    "espera": 1500
+   }
+  },
+  {
+   "passo": {
+    "estado": "08-config"
+   },
+   "estado": {
+    "focado": "BODY",
+    "teclado_abre": false,
+    "valor_len": null,
+    "janela": [
+     640,
+     360
+    ]
+   }
+  }
+ ],
+ "consola": []
+}

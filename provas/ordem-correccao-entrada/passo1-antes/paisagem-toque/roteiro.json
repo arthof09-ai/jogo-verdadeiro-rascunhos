@@ -1,0 +1,99 @@
+{
+ "url": "http://127.0.0.1:8580/",
+ "ecran": [
+  640,
+  360,
+  3
+ ],
+ "passos": [
+  {
+   "passo": {
+    "consola": "^pronto$",
+    "ms": 90000
+   },
+   "consola": "pronto"
+  },
+  {
+   "passo": {
+    "espera": 5000
+   }
+  },
+  {
+   "passo": {
+    "tocarXY": [
+     320,
+     172
+    ]
+   }
+  },
+  {
+   "passo": {
+    "espera": 600
+   }
+  },
+  {
+   "passo": {
+    "estado": "02-campo-tocado"
+   },
+   "estado": {
+    "focado": "DIV.ime",
+    "teclado_abre": true,
+    "valor_len": null,
+    "janela": [
+     640,
+     360
+    ]
+   }
+  },
+  {
+   "passo": {
+    "inserir": "Arqueira"
+   }
+  },
+  {
+   "passo": {
+    "espera": 800
+   }
+  },
+  {
+   "passo": {
+    "estado": "03-depois-de-escrever"
+   },
+   "estado": {
+    "focado": "DIV.ime",
+    "teclado_abre": true,
+    "valor_len": null,
+    "janela": [
+     640,
+     360
+    ]
+   }
+  }
+ ],
+ "consola": [
+  {
+   "s": 1.33,
+   "texto": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+  },
+  {
+   "s": 1.5,
+   "texto": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+  },
+  {
+   "s": 1.68,
+   "texto": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+  },
+  {
+   "s": 5.1,
+   "texto": "[floresta] pronta em 3081 ms | {\"ancestral_altura_m\":260.0,\"ancestral_cimo_medido_m\":259.8,\"ancestral_dist_m\":580.0,\"ancestral_largura_medida_m\":412.3,\"ancestral_outeiro_tri\":22820,\"ancestral_pagodes\":42,\"ancestral_pagodes_no_ar\":0,\"ancestral_partes\":{\"construcao\":15368,\"folha\":57720,\"luz\":2160,\"mad"
+  },
+  {
+   "s": 5.24,
+   "texto": "pronto"
+  },
+  {
+   "s": 5.29,
+   "texto": "pronto"
+  }
+ ]
+}

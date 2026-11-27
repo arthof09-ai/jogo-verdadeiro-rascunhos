@@ -1,0 +1,62 @@
+{
+ "url": "http://127.0.0.1:8580/",
+ "ecran": [
+  360,
+  640,
+  3
+ ],
+ "passos": [
+  {
+   "passo": {
+    "consola": "^pronto$",
+    "ms": 90000
+   },
+   "consola": "pronto"
+  },
+  {
+   "passo": {
+    "espera": 6000
+   }
+  },
+  {
+   "passo": {
+    "estado": "01-entrada-nasce"
+   },
+   "estado": {
+    "focado": "DIV.ime",
+    "teclado_abre": true,
+    "valor_len": null,
+    "janela": [
+     360,
+     640
+    ]
+   }
+  }
+ ],
+ "consola": [
+  {
+   "s": 2.72,
+   "texto": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+  },
+  {
+   "s": 2.91,
+   "texto": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+  },
+  {
+   "s": 3.15,
+   "texto": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+  },
+  {
+   "s": 8.16,
+   "texto": "[floresta] pronta em 4607 ms | {\"ancestral_altura_m\":260.0,\"ancestral_cimo_medido_m\":259.8,\"ancestral_dist_m\":580.0,\"ancestral_largura_medida_m\":412.3,\"ancestral_outeiro_tri\":22820,\"ancestral_pagodes\":42,\"ancestral_pagodes_no_ar\":0,\"ancestral_partes\":{\"construcao\":15368,\"folha\":57720,\"luz\":2160,\"mad"
+  },
+  {
+   "s": 8.31,
+   "texto": "pronto"
+  },
+  {
+   "s": 8.34,
+   "texto": "pronto"
+  }
+ ]
+}

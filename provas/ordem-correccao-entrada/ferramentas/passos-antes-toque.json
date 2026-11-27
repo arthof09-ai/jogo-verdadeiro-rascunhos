@@ -1,0 +1,3 @@
+[{"consola":"^pronto$","ms":90000},{"espera":5000},
+ {"tocarXY":[320,172]},{"espera":600},{"estado":"02-campo-tocado"},
+ {"inserir":"Arqueira"},{"espera":800},{"estado":"03-depois-de-escrever"}]

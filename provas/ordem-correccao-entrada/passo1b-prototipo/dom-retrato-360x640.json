@@ -1,0 +1,59 @@
+{
+ "janela": [
+  360,
+  640,
+  3
+ ],
+ "canvas": null,
+ "focado": "BODY#",
+ "controlos": [
+  {
+   "tag": "BUTTON",
+   "id": "ent-mestre",
+   "cls": "ent-btn",
+   "tipo": "button",
+   "txt": "ENTRAR COMO MESTRE",
+   "caixa": [
+    54,
+    466,
+    252,
+    46
+   ],
+   "fonte": "15.36px",
+   "cor": "rgb(236, 210, 138)",
+   "fundo": "rgba(0, 0, 0, 0)"
+  },
+  {
+   "tag": "BUTTON",
+   "id": "ent-jogadora",
+   "cls": "ent-btn",
+   "tipo": "button",
+   "txt": "ENTRAR COMO JOGADORA",
+   "caixa": [
+    54,
+    522,
+    252,
+    46
+   ],
+   "fonte": "16px",
+   "cor": "rgb(236, 210, 138)",
+   "fundo": "rgba(0, 0, 0, 0)"
+  },
+  {
+   "tag": "BUTTON",
+   "id": "ent-config",
+   "cls": "ent-btn",
+   "tipo": "button",
+   "txt": "CONFIGURAÇÕES",
+   "caixa": [
+    54,
+    578,
+    252,
+    46
+   ],
+   "fonte": "13px",
+   "cor": "rgb(236, 210, 138)",
+   "fundo": "rgba(0, 0, 0, 0)"
+  }
+ ]
+}
