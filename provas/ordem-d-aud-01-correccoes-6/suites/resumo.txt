@@ -1,0 +1,19 @@
+# commit: 9c831f90289a5daa43ee3ac797bd2f2aac61a8c1
+pecas_mestre-SEM-REFRESCO exit=1 falhas=1 falhas-correccoes-6=0 falhas-correccoes-5=1 falhas-correccoes-5-B2=0 falhas-correccoes-4=0 scriptErrors=0 fim=«336 de 337 verificações passaram.» reposto=sim
+pecas_mestre-SEM-J1 exit=1 falhas=1 falhas-correccoes-6=1 falhas-correccoes-5=0 falhas-correccoes-5-B2=0 falhas-correccoes-4=0 scriptErrors=0 fim=«336 de 337 verificações passaram.» reposto=sim
+pecas_mestre-SEM-B1 exit=1 falhas=3 falhas-correccoes-6=0 falhas-correccoes-5=0 falhas-correccoes-5-B2=1 falhas-correccoes-4=2 scriptErrors=0 fim=«334 de 337 verificações passaram.» reposto=sim
+servidor exit=0
+prova-caixa exit=0
+motor-real SALTOU (sem MOTOR_MJS neste PC; corre no CI, job motor-real)
+abrir_scripts exit=0 scriptErrors=0 fim=«113 scripts, 0 falhas»
+rodar_testes exit=0 scriptErrors=0 fim=«333 de 333 verificações passaram.»
+abrir_mestre exit=0 scriptErrors=0 fim=«67 de 67 verificações passaram.»
+pecas_mestre exit=0 scriptErrors=0 fim=«337 de 337 verificações passaram.»
+medir_mestre exit=0 scriptErrors=0 fim=«»
+hud_acoes exit=0 scriptErrors=0 fim=«70 de 70 verificações passaram.»
+caixa_jogadora exit=0 scriptErrors=0 fim=«70 de 70 verificações passaram.»
+caixa_janela exit=0 scriptErrors=0 fim=«123 de 123 verificações passaram.»
+canario_privacidade exit=0 scriptErrors=0 fim=«10 de 10 verificações passaram.»
+validar-pecas_mestre exit=0
+validar-abrir_mestre exit=0
+FIM

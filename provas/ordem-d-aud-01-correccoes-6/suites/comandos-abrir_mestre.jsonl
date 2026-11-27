@@ -1,0 +1,9 @@
+{"cartaoId":"c1","cmdId":"cmd-teste-1","decisao":"editar","edicao":{"desgraca":"cai"},"revision":0,"roomId":"sala-teste","type":"MASTER_APPROVE","v":2}
+{"cartaoId":"c1","cmdId":"cmd-teste-2","decisao":"aprovar","revision":0,"roomId":"sala-teste","type":"MASTER_APPROVE","v":2}
+{"cartaoId":"c1","cmdId":"cmd-teste-3","decisao":"recusar","revision":0,"roomId":"sala-teste","type":"MASTER_APPROVE","v":2}
+{"aceitar":true,"cmdId":"cmd-teste-4","intentId":"dados-1","revision":0,"roomId":"sala-teste","type":"MASTER_CONFIRM_DICE","v":2}
+{"cartaoId":"c9","cmdId":"cmd-teste-5","decisao":"aprovar","revision":0,"roomId":"sala-teste","type":"MASTER_APPROVE","v":2}
+{"cartaoId":"c-amigo","cmdId":"cmd-teste-6","decisao":"editar","edicao":{"aliadoAtingidoId":"f1a88a9eef918a8b4","desgraca":"acerta-amigo"},"revision":0,"roomId":"sala-teste","type":"MASTER_APPROVE","v":2}
+{"cartaoId":"c-um-amigo","cmdId":"cmd-teste-7","decisao":"editar","edicao":{"desgraca":"acerta-amigo"},"revision":0,"roomId":"sala-teste","type":"MASTER_APPROVE","v":2}
+{"cartaoId":"c-nada","cmdId":"cmd-teste-8","decisao":"recusar","edicao":{"semDesgraca":true},"revision":0,"roomId":"sala-teste","type":"MASTER_APPROVE","v":2}
+{"casaM":2.0,"cmdId":"cmd-teste-9","op":"escala","revision":0,"roomId":"sala-teste","type":"MASTER_SUPERVISOR","v":2}
